@@ -1,30 +1,9 @@
 More information at http://www.phpfastcache.com
-E-Mail: khoaofgod@yahoo.com
----------------------------
-*** CHMOD 0777 or any Writable Permission for caching.0777 file.
 ---------------------------
 Reduce Database Calls
 
 Your website have 10,000 visitors who are online, and your dynamic page have to send 10,000 same queries to database on every page load. 
 With phpFastCache, your page only send 1 query to DB, and use the cache to serve 9,999 other visitors.
-
-<?php
-    // make sure YOU CHMOD 0777 for Caching.0777, and put it same PATH with php_fast_cache.php
-    include("php_fast_cache.php");
-    // try to get from Cache first.
-    $products = phpFastCache::get("products_page");
-
-    if($products == null) {
-        $products = YOUR DB QUERIES || GET_PRODUCTS_FUNCTION;
-
-        // set products in to cache in 600 seconds = 5 minutes
-        phpFastCache::set("products_page",$products,600);
-    }
-
-    foreach($products as $product) {
-        // Output Your Contents HERE
-    }
-?>
 
 ---------------------------
 phpFastCache is Lightweight, Fastest & Security, use only 1 file to store all objects. 
@@ -51,4 +30,8 @@ Try it and you will love phpFastCache
 
 Hey hey! Are you lazy to learn new thing? 
 Dude, phpFastCache only uses 2 simple methods: set & get =.=!
+---------------------------
+E-Mail: khoaofgod@yahoo.com
+---------------------------
+*** CHMOD 0777 or any Writable Permission for caching.0777 file.
 ---------------------------

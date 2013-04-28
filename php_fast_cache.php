@@ -3,7 +3,7 @@
     // Author: Khoa Bui
     // E-mail: khoaofgod@yahoo.com
     // Website: http://www.phpfastcache.com
-    // PHP Fast Cache is simple caching build on SQLite & PDO.
+    // PHP Fast Cache is simple caching build on PDO
 
     class phpFastCache {
         private static $pdo = "";
@@ -36,7 +36,7 @@
             $result = $stm->fetch();
             $res['record'] = $result['total'];
             if(self::$path!="memory") {
-                $res['size'] = filesize(self::$path."/".self::$filename);
+                $res['size'] = filesize(self::getPath()."/".self::$filename);
             }
 
             return $res;
@@ -156,27 +156,41 @@
 
         }
 
+        private static function getPath() {
+            if(self::$path == "") {
+                self::$path = dirname(__FILE__);
+                return self::$path;
+            }
+
+            if(self::$path == "memory") {
+                self::$path = dirname(__FILE__);
+            }
+
+            return self::$path;
+
+        }
+
         private static function db($option = array()) {
             $vacuum = false;
             if(self::$pdo=="") {
               //  self::$pdo == new PDO("sqlite:".self::$path."/cachedb.sqlite");
                 if(self::$path!="memory") {
-                    if(self::$path == "") {
-                        self::$path = dirname(__FILE__);
+                    if(!is_writable(self::getPath()."/".self::$filename)) {
+                        die("Please CHMOD 0777 or any Writable Permission for ".self::getPath()."/".self::$filename);
                     }
                     try {
-                        self::$pdo = new PDO("sqlite:".self::$path."/".self::$filename);
+                        self::$pdo = new PDO("sqlite:".self::getPath()."/".self::$filename);
                         self::$pdo->setAttribute(PDO::ATTR_ERRMODE,
                             PDO::ERRMODE_EXCEPTION);
 
-                        $time = filemtime(self::$path."/".self::$filename);
+                        $time = filemtime(self::getPath()."/".self::$filename);
                         if($time + (3600*48) < @date("U")) {
                             $vacuum = true;
                         }
 
 
                     } catch (PDOException $e) {
-                        die("Can't connect to caching file ".self::$path."/".self::$filename);
+                        die("Can't connect to caching file ".self::getPath()."/".self::$filename);
                     }
 
 
@@ -252,10 +266,11 @@
 
         private function cookie($cookie_file)
         {
+            $cookie_file = self::getPath()."/".$cookie_file;
             if (file_exists($cookie_file)) {
                 $this->cookie_file = $cookie_file;
             } else {
-                @fopen($cookie_file, 'w+') or $this->error('The cookie file could not be opened. Make sure this directory has the correct permissions');
+                @fopen($cookie_file, 'w+') or $this->error('The cookie.txt file could not be opened. Please create cookie.txt and chmod 0777 for it.');
                 $this->cookie_file = $cookie_file;
                 @fclose($this->cookie_file);
             }
@@ -353,6 +368,7 @@
         private function error($error)
         {
             echo $error;
+            die("");
         }
 
         public static function getBycURL($name, $url = "http://", $time_in_second = 600, $skip_if_exist = false,

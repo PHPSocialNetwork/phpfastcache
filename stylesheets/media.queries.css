@@ -1,0 +1,242 @@
+/*-----------------------------------------------------------------------------------
+
+	Theme Name: FluidApp
+	Author: Two2Twelve Themes
+	Author URI: http://themes.two2twelve.com
+	Version: 1.1
+	
+	Stylesheet: Media Queries
+	
+-----------------------------------------------------------------------------------*/
+/* For iPhones and Mobile */
+@media only screen and (max-width:750px) { 
+
+	div#page_wrapper {
+		width: 320px;
+		overflow: hidden;
+		margin: 0 auto;
+	}
+	.container {
+		width: auto;
+		margin: 0 auto;
+	}
+	header {
+		padding: 0px 10px 0px 10px;
+		margin-bottom: 0px;
+	}
+		header nav ul,
+		header nav span.arrow { display: none !important; }
+		header .select-menu   { display: block; }
+	section { padding: 0px 10px 0px 10px; }
+	section #app_info {
+		text-align: center;
+		float: none;
+		width: 100%;
+		padding: 0;
+		margin-top: 30px;
+	}
+		section #app_info a.logo img{ width: 260px; }
+		section #app_info span.tagline {
+			margin-bottom: 15px;
+			font-size: 18px;
+		}
+		section #app_info p { margin-bottom: 20px; }
+		section #app_info .buttons { width: 320px; float: none; margin: 0 auto; }
+			section #app_info .buttons a:first-child { margin: 0; }
+			.large_button,
+			section #app_info .buttons .large_button {
+				width: 115px;
+				font-size: 17px;
+				margin-left: 10px;
+			}
+				.large_button em { font-size: 8px; }
+				section #app_info .buttons .large_button#blackberry,
+				.large_button#blackberry,
+				section #app_info .buttons .large_button#windows,
+				.large_button#windows { font-size: 14px }
+	section #pages {
+		background: none;
+		width: 100%;
+		float: none;
+		padding: 0;
+		margin-top: 10px;
+	}
+	section #pages .top_shadow {
+		background: url('../images/light-shadow_vertical.png') no-repeat top center;
+		width: 320px;
+		height: 60px;
+		position: static;
+	}
+	section #pages .bottom_shadow { display: none; }
+	section #pages div.page 			{ padding-top: 20px; }
+	section #pages .content_box 	{ padding-top: 5px; }
+	/* Homepage Slider */
+	div#slider { width: 320px; height: 400px; margin: -30px 0px 0px 0px; }
+		div.echo-nav { width: 320px; } 
+			div.echo-nav a{ width: 20px; }
+		div#slider div.slide { height: 400px; }
+			div#slider div.slide .background {
+				top: 60px;
+				left: -5px;
+			}
+			div#slider div.slide .foreground {
+				left: 85px;
+				top: 40px;			
+			}
+		/* iPhone 5 */
+		div.slide .background.iphone-5-black,
+		div.slide .background.iphone-5-white { -webkit-background-size: 213px 320px; background-size: 213px 320px; }
+			div.slide .background.iphone-5-black img,
+			div.slide .background.iphone-5-black iframe,
+			div.slide .background.iphone-5-white img,
+			div.slide .background.iphone-5-white iframe { width: 112px; height: 200px; top: 42px; left: 50px; }
+		div.slide .foreground.iphone-5-black,
+		div.slide .foreground.iphone-5-white { -webkit-background-size: 216px 350px; background-size: 216px 350px; }
+			div.slide .foreground.iphone-5-black img,
+			div.slide .foreground.iphone-5-black iframe,
+			div.slide .foreground.iphone-5-white img,
+			div.slide .foreground.iphone-5-white iframe { width: 124px; height: 218px; top: 46px; left: 48px; }	
+		/* iPhone 4S */
+		div.slide .background.iphone-black,
+		div.slide .background.iphone-white { -webkit-background-size: 220px 321px; background-size: 220px 321px; }
+			div.slide .background.iphone-black img,
+			div.slide .background.iphone-black iframe,
+			div.slide .background.iphone-white img,
+			div.slide .background.iphone-white iframe { width: 123px; height: 185px; top: 50px; left: 47px; }
+		div.slide .foreground.iphone-black,
+		div.slide .foreground.iphone-white { -webkit-background-size: 225px 348px; background-size: 225px 348px; }
+			div.slide .foreground.iphone-black img,
+			div.slide .foreground.iphone-black iframe,
+			div.slide .foreground.iphone-white img,
+			div.slide .foreground.iphone-white iframe { width: 133px; height: 200px; top: 55px; left: 48px; }
+		/* Blackberry */
+		div.slide .background.blackberry { -webkit-background-size: 220px 289px; background-size: 220px 289px; }
+			div.slide .background.blackberry img,
+			div.slide .background.blackberry iframe { width: 120px; height: 156px; top: 43px; left: 47px; }
+		div.slide .foreground.blackberry { -webkit-background-size: 225px 315px; background-size: 225px 315px; }
+			div.slide .foreground.blackberry img,
+			div.slide .foreground.blackberry iframe { width: 130px; height: 169px; top: 47px; left: 46px; }
+		/* Android */
+		div.slide .background.android { -webkit-background-size: 220px 303px; background-size: 220px 303px; }
+			div.slide .background.android img,
+			div.slide .background.android iframe { width: 117px; height: 184px; top: 47px; left: 54px; }
+		div.slide .foreground.android { -webkit-background-size: 230px 327px; background-size: 230px 327px; }
+			div.slide .foreground.android img,
+			div.slide .foreground.android iframe { width: 125px; height: 196px; top: 52px; left: 55px; }
+		/* Windows */
+		div.slide .background.windows { -webkit-background-size: 220px 313px; background-size: 220px 313px; }
+			div.slide .background.windows img,
+			div.slide .background.windows iframe { width: 115px; height: 185px; top: 35px; left: 54px; }
+		div.slide .foreground.windows { -webkit-background-size: 230px 346px; background-size: 230px 346px; }
+			div.slide .foreground.windows img,
+			div.slide .foreground.windows iframe { width: 125px; height: 207px; top: 38px; left: 54px; }
+		/* iPads */
+		div.slide .ipad-black,
+		div.slide .ipad-white { -webkit-background-size: 325px 334px; background-size: 325px 334px; }
+			div.slide .ipad-black img,
+			div.slide .ipad-black iframe,
+			div.slide .ipad-white img,
+			div.slide .ipad-white iframe { width: 182px; height: 242px; top: 26px; left: 70px; }
+	/* Team */
+	div.about_us .one_half {
+		float: none;
+		width: 100%;
+	}
+	div.about_us .one_half.column_last {
+		border-bottom: 1px solid #eaeaea;
+		padding-bottom: 20px;
+		margin-bottom: 0;
+	}
+	div.team_members .person{
+		float: none;
+		width: 100%;
+	}
+		div.team_members .person:last-child { margin-bottom: 0; }
+	/* Features */
+	div.feature_list .one_half {
+		float: none;
+		width: 100%;
+	}
+	div.feature_list .one_half:last-child { margin-bottom: 0; }
+	/* Screenshots */
+	div.screenshot_grid .one_third {
+		width: 45%;
+	}
+	div.screenshot_grid .one_third.column_last { 
+		margin-right: 4% !important;
+	}
+	div.screenshot_grid div a { width: 120px; height: 85px; }
+	/* Updates */
+	article.release { width: 300px; }
+	article.release:last-child { margin-bottom: 0; }
+		article.release h2 { padding-right: 5px; }
+	/* Press */
+	div.press_mentions ul li:last-child { margin-bottom: 0; }
+	/* Contact */
+	div#contact_form p.left,
+	div#contact_form p.right {
+		float: none;
+		width: auto;
+		margin-bottom: 20px;
+	}
+	div#contact_form div.row { margin-bottom: 0px; }
+	div#contact_form textarea {
+		width: 280px;
+		margin-top: 10px;
+	}
+	/* Footer */
+	footer { padding-top: 20px;	}
+	
+}
+/* For iPads and Tablets */
+@media screen and (min-width:751px) and (max-width:970px) { 
+
+	div#page_wrapper {
+		width: 768px;
+		overflow: hidden;
+		margin: 0 auto;
+	}
+	.container {
+		width: auto;
+		margin: 0 auto;
+	}
+
+	header {
+		padding: 0px 20px 0px 10px;
+		margin-bottom: 0px;
+	}
+	div#slider {
+		margin-left: -40px;
+		margin-top: 0px;
+	}
+	section {
+		padding: 0px 10px 0px 10px;
+	}
+	section #app_info {
+		text-align: center;
+		float: none;
+		width: 550px;
+		padding: 0;
+		margin: 30px auto 0px auto;
+	}
+		section #app_info .buttons { width: 360px; float: none; margin: 0 auto; }
+			section #app_info .buttons a:first-child { margin: 0; }
+	section #pages {
+		background: none;
+		width: 550px;
+		float: none;
+		padding: 0;
+		margin: 20px auto 0px auto;
+	}
+	section #pages .top_shadow {
+		background: url('../images/light-shadow-ipad_vertical.png') no-repeat top center;
+		width: 550px;
+		height: 60px;
+		position: static;
+	}
+	section #pages .bottom_shadow { display: none; }
+	section #pages div.page 			{ padding-top: 30px; }
+	section #pages .content_box 	{ padding-top: 5px; }
+	/* Footer */
+	footer { padding-top: 20px;	}
+}

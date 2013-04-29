@@ -1,0 +1,103 @@
+/*-----------------------------------------------------------------------------------
+
+	Theme Name: FluidApp
+	Author: Two2Twelve Themes
+	Author URI: http://themes.two2twelve.com
+	Version: 1.1
+	
+	Stylesheet: Dark
+	
+-----------------------------------------------------------------------------------*/
+/* Global */
+body {
+	background: url('../images/dark-bg.png') repeat top left;
+}
+/* Header & Navigation */
+header {
+	background: rgba(255,255,255,0.05);
+	border-color: #343434;
+}
+	header nav ul li a					{ color: #777; }
+	header nav ul li a:hover 		{ color: #999; }
+	header nav ul li.current a	{ color: #fff; }
+	header nav span.arrow {	background: url('../images/dark-nav_arrow.png') no-repeat; top: 59px; }
+	/* Sub Nav */
+	header nav ul li ul li { 
+		background: rgba(255,255,255,0.05);
+		border-color: #343434;	
+	}
+	header nav ul li ul li:last-child { border-color: #343434; }
+	header nav ul li ul li a { color: #777; }
+	header nav ul li ul li a:hover { color: #999; }
+/* App Info */
+section #app_info span.tagline { color: #fff; }
+section #app_info p 					 { color: #a6a6a6; }
+section #app_info .price 			 { background: url('../images/dark-arrow.png') no-repeat top center; }
+	section #app_info .price p 	 { color: #fff; }
+section #pages 								 { background: transparent url('../images/dark-page_shadow.png') repeat-y top left; }
+section #pages .top_shadow 		 { background: transparent url('../images/dark-page_shadow_top.png') no-repeat top left; }
+section #pages .bottom_shadow  { background: transparent url('../images/dark-page_shadow_bottom.png') no-repeat top left; }
+/* Home  */
+div.echo-nav a					{ background: #444; }
+	div.echo-nav a.active { background: #aaa; }
+/* Team */
+div.team_members .person a:hover { color: #fff; }
+/* Screenshots  */
+div.screenshot_grid div a,
+a.fancybox {
+	border: solid 5px #fff;
+	border: solid 5px rgba(255, 255, 255, 0.03);
+}
+/* Updates */
+article.release 						{ border-bottom-color: #444; } 
+	article.release span.date { color: #666; }
+	article.release ul li	    { color: #a6a6a6; }
+/* Footer */
+footer p 				 { background: rgba(255,255,255,0.05); color: #777; }
+	footer p:hover { background: rgba(255,255,255,0.06); color: #aaa; }
+/* Press */
+div.press_mentions ul li .logo { border-color: #333; }
+div.press_mentions ul li address 				 { color: #666; }
+div.press_mentions ul li address a:hover { color: #fff;	}
+/* Typography */
+h2,h3,h4,h5 		 { color: #fff; }
+section #pages p,
+section #pages ul { color: #a6a6a6; }
+/* Lists */
+ul.social li a { background: url('../images/dark-social.png') no-repeat top left; }
+div.toggle_list ul li div.title {
+	background: #2d2d2d;
+	border-color: #383838;
+}
+	div.toggle_list ul li div.title h3 { color: #fff; }
+	div.toggle_list ul li div.content {
+		background: #181818;
+		border-color: #323232;
+	}
+	div.tabs ul.nav li a {
+	   background: #313131;
+	   border: 1px solid #323232;
+	}
+	div.tabs ul.nav li.current a {
+	   background: #181818;
+		 border-color: #323232;
+  	 color: #fff;
+	}
+	div.tabs .pane {    
+		background: #181818;
+	  border: 1px solid #323232;
+	}
+/* Forms */
+input[type="text"],
+input[type="email"],
+textarea { border-color: #444; color: #fff; }
+textarea { background: #292929; border-color: #333; }
+label { color: #fff; }
+
+/* For iPhones and Mobile */
+@media only screen and (max-width:750px) {
+	section #pages .top_shadow { background: url('../images/dark-shadow_vertical.png') no-repeat top center !important; }
+}
+@media screen and (min-width:751px) and (max-width:970px) { 
+	section #pages .top_shadow { background: url('../images/dark-shadow-ipad_vertical.png') no-repeat top center !important; }
+}

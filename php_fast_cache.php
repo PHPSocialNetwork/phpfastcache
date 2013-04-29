@@ -4,22 +4,116 @@
     // E-mail: khoaofgod@yahoo.com
     // Website: http://www.phpfastcache.com
     // PHP Fast Cache is simple caching build on PDO
+/*
+ * Example:
+ * phpFastCache::$storage = "auto"; // use multi files for caching.
+ * phpFastCache::$autosize = 40; megabytes size for each cache file.
+ * phpFastCache::$path  = "/PATH/TO/CACHE/FOLDER";
+ *
+ * phpFastCache::set("keyword", $value, $time_in_second);
+ * $value = phpFastCache::get("keyword");
+ *
+ */
 
     class phpFastCache {
         private static $pdo = "";
-        public static  $path = "";
+        public static $options = array();
+        public static $storage = "single"; // single | auto
+        public static $autosize = 40; // Megabytes
+        public static $path = "";
         private static $filename = "caching.0777";
 
         private static $table = "objects";
+        private static $autodb = "";
+        private static $multiPDO = array();
 
-        public static function delete($name) {
-            $name = self::safename($name);
-            self::db()->exec("DELETE FROM ".self::$table." WHERE `name`='".$name."'");
+        private static function selectDB($object) {
+            $res = array(
+                'db'    => "",
+                'item'  => "",
+            );
+            if(is_array($object)) {
+                $key = array_keys($object);
+                $key = $key[0];
+                $res['db'] = $key;
+                $res['item'] = self::safename($object[$key]);
+            } else {
+                $res['item'] = self::safename($object);
+            }
+
+            // for auto database
+            if($res['db'] == "" && self::$storage!= "single") {
+                $create_table = false;
+                if(!file_exists('sqlite:'.self::getPath().'/phpfastcache.c')) {
+                    $create_table = true;
+                }
+                if(self::$autodb == "") {
+                    try {
+                        self::$autodb = new PDO('sqlite:'.self::getPath().'/phpfastcache.c');
+                        self::$autodb->setAttribute(PDO::ATTR_ERRMODE,
+                            PDO::ERRMODE_EXCEPTION);
+
+                    } catch (PDOException $e) {
+                        die("Please CHMOD 0777 or Writable Permission for ".self::getPath());
+                    }
+
+                }
+
+                if($create_table == true) {
+                    self::$autodb->exec('CREATE TABLE IF NOT EXISTS "main"."db" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "item" VARCHAR NOT NULL  UNIQUE , "dbname" INTEGER NOT NULL )');
+                }
+
+                $db = self::$autodb->prepare("SELECT * FROM `db` WHERE `item`=:item");
+                $db->execute(array(
+                    ":item" => $res['item'],
+                ));
+                $row = $db->fetch(PDO::FETCH_ASSOC);
+                if(isset($row['dbname'])) {
+                    // found key
+                    $res['db'] = $row['dbname'].".cache";
+                } else {
+                    // not key // check filesize
+                    if((Int)self::$autosize < 10) {
+                        self::$autosize = 10;
+                    }
+                    // get last key
+                    $db = self::$autodb->prepare("SELECT * FROM `db` ORDER BY `id` DESC");
+                    $db->execute();
+                    $row = $db->fetch(PDO::FETCH_ASSOC);
+                    $dbname = isset($row['dbname']) ? $row['dbname'] : 1;
+                    $fsize = file_exists(self::getPath()."/".$dbname.".cache") ? filesize(self::getPath()."/".$dbname.".cache") : 0;
+                    if($fsize > (1024*1024*(Int)self::$autosize)) {
+                        $dbname = (Int)$dbname + 1;
+                    }
+                    $res['db'] = $dbname;
+
+                }
+            }
+
+            return $res;
+
+        }
+
+        public static function delete($name = "string|array(db->item)") {
+            $db = self::selectDB($name);
+            $name = $db['item'];
+
+            self::db(array('db'=>$db['db']))->exec("DELETE FROM ".self::$table." WHERE `name`='".$name."'");
         }
 
         public static function resetAll() {
-            self::db(array("skip_clean" => true))->exec("drop table if exists ".self::$table);
-            self::initDatabase();
+            if(self::$storage == "single") {
+                self::db(array("skip_clean" => true))->exec("drop table if exists ".self::$table);
+                self::initDatabase();
+            } else {
+                $dir = opendir(self::getPath());
+                while($file = readdir($dir)) {
+                    if(strpos($file,".cache") !== false) {
+                        unlink(self::getPath()."/".$file);
+                    }
+                }
+            }
+
 
         }
 
@@ -43,14 +137,16 @@
         }
 
         public static function increment($name ,$step = 1) {
-            $name = self::safename($name);
+            $db = self::selectDB($name);
+            $name = $db['item'];
+            // array('db'=>$db['db'])
+
             $int = self::get($name);
-            echo $int;
+           // echo $int."xxx";
             try {
-                $stm = self::db()->prepare("UPDATE ".self::$table." SET `value`=:int + :step WHERE `name`=:name ");
+                $stm = self::db(array('db'=>$db['db']))->prepare("UPDATE ".self::$table." SET `value`=:new WHERE `name`=:name ");
                 $stm->execute(array(
-                    ":int"  => $int,
-                    ":step" => $step,
+                    ":new" => $int + $step,
                     ":name" =>  $name,
                 ));
 
@@ -67,13 +163,15 @@
         }
 
         public static function decrement($name, $step = 1) {
-            $name = self::safename($name);
+            $db = self::selectDB($name);
+            $name = $db['item'];
+            // array('db'=>$db['db'])
+
             $int = self::get($name);
             try {
-                $stm = self::db()->prepare("UPDATE ".self::$table." SET `value`=:int - :step WHERE `name`=:name ");
+                $stm = self::db(array('db'=>$db['db']))->prepare("UPDATE ".self::$table." SET `value`=:new WHERE `name`=:name ");
                 $stm->execute(array(
-                    ":int"  => $int,
-                    ":step" => $step,
+                    ":new"  => $int - $step,
                     ":name" =>  $name,
                 ));
 
@@ -85,10 +183,13 @@
         }
 
         public static function get($name) {
-            $name = self::safename($name);
-            $stm = self::db()->prepare("SELECT * FROM ".self::$table." WHERE `name`='".$name."'");
+            $db = self::selectDB($name);
+            $name = $db['item'];
+            // array('db'=>$db['db'])
+            $stm = self::db(array('db'=>$db['db']))->prepare("SELECT * FROM ".self::$table." WHERE `name`='".$name."'");
             $stm->execute();
-            $res = $stm->fetch();
+            $res = $stm->fetch(PDO::FETCH_ASSOC);
+
             if(!isset($res['value'])) {
                 return null;
             } else {
@@ -97,23 +198,27 @@
         }
 
         private static function encode($value) {
-            $value = !is_string($value) && !is_numeric($value)  ? serialize($value) : $value;
+            $value = serialize($value);
             return $value;
         }
 
         private static function decode($value) {
-            if(!is_numeric($value) && !is_string($value)) {
-                $value = unserialize($value);
+            $x = @unserialize($value);
+            if($x == false) {
+                return $value;
+            } else {
+                return $x;
             }
-            return $value;
         }
 
         public static function set($name,$value,$time_in_second = 600, $skip_if_existing = false) {
-            $name = self::safename($name);
-            $insert = false;
+            $db = self::selectDB($name);
+            $name = $db['item'];
+            // array('db'=>$db['db'])
+
             if($skip_if_existing == true) {
                 try {
-                    $insert = self::db()->prepare("INSERT OR IGNORE INTO ".self::$table." (name,value,added,endin) VALUES(:name,:value,:added,:endin)");
+                    $insert = self::db(array('db'=>$db['db']))->prepare("INSERT OR IGNORE INTO ".self::$table." (name,value,added,endin) VALUES(:name,:value,:added,:endin)");
                     try {
                         $value = self::encode($value);
                     } catch(Exception $e) {
@@ -134,7 +239,7 @@
 
             } else {
                 try {
-                    $insert = self::db()->prepare("INSERT OR REPLACE INTO ".self::$table." (name,value,added,endin) VALUES(:name,:value,:added,:endin)");
+                    $insert = self::db(array('db'=>$db['db']))->prepare("INSERT OR REPLACE INTO ".self::$table." (name,value,added,endin) VALUES(:name,:value,:added,:endin)");
                     try {
                         $value = self::encode($value);
                     } catch(Exception $e) {
@@ -166,78 +271,181 @@
                 self::$path = dirname(__FILE__);
             }
 
-            return self::$path;
+            if(self::$storage != "single") {
+                if(!file_exists(self::$path."/cache.storage/") || !is_writable(self::$path."/cache.storage/")) {
+                    die("Sorry, Please create ".self::$path."/cache.storage/ and SET Mode 0777 or any Writable Permission!" );
+                }
+                return self::$path."/cache.storage/";
+            } else {
+                return self::$path;
+            }
+
+
 
         }
 
         private static function db($option = array()) {
             $vacuum = false;
-            if(self::$pdo=="") {
-              //  self::$pdo == new PDO("sqlite:".self::$path."/cachedb.sqlite");
-                if(self::$path!="memory") {
-                    if(!is_writable(self::getPath()."/".self::$filename)) {
-                        die("Please CHMOD 0777 or any Writable Permission for ".self::getPath()."/".self::$filename);
-                    }
-                    try {
-                        self::$pdo = new PDO("sqlite:".self::getPath()."/".self::$filename);
-                        self::$pdo->setAttribute(PDO::ATTR_ERRMODE,
-                            PDO::ERRMODE_EXCEPTION);
+            $dbname = isset($option['db']) ? $option['db'] : "";
+            $dbname = $dbname != "" ? $dbname : self::$filename;
+            if($dbname!=self::$filename) {
+                $dbname = $dbname.".cache";
+            }
 
-                        $time = filemtime(self::getPath()."/".self::$filename);
-                        if($time + (3600*48) < @date("U")) {
-                            $vacuum = true;
+
+            $initDB = false;
+
+            if(self::$storage == "single") {
+                // start self PDO
+                if(self::$pdo=="") {
+                  //  self::$pdo == new PDO("sqlite:".self::$path."/cachedb.sqlite");
+                    if(self::$path!="memory") {
+                        if(!file_exists(self::getPath()."/".$dbname)) {
+                            $initDB = true;
+                        } else {
+                            if(!is_writable(self::getPath()."/".$dbname)) {
+                                    die("Please CHMOD 0777 or any Writable Permission for ".self::getPath()."/".$dbname);
+                            }
                         }
 
 
-                    } catch (PDOException $e) {
-                        die("Can't connect to caching file ".self::getPath()."/".self::$filename);
+
+                        try {
+                            self::$pdo = new PDO("sqlite:".self::getPath()."/".$dbname);
+                            self::$pdo->setAttribute(PDO::ATTR_ERRMODE,
+                                PDO::ERRMODE_EXCEPTION);
+
+                            if($initDB == true) {
+                                self::initDatabase();
+                            }
+
+                            $time = filemtime(self::getPath()."/".$dbname);
+                            if($time + (3600*48) < @date("U")) {
+                                $vacuum = true;
+                            }
+
+
+
+                        } catch (PDOException $e) {
+                            die("Can't connect to caching file ".self::getPath()."/".$dbname);
+                        }
+
+
+                    } else {
+                        self::$pdo = new PDO("sqlite::memory:");
+                        self::$pdo->setAttribute(PDO::ATTR_ERRMODE,
+                            PDO::ERRMODE_EXCEPTION);
+
+                        self::initDatabase();
                     }
 
+                    // remove old cache
+                    if(!isset($option['skip_clean'])) {
+
+                        try {
+                            self::$pdo->exec("DELETE FROM ".self::$table." WHERE (`added` + `endin`) < ".@date("U"));
+                        } catch(PDOException $e) {
+                            die("Please re-upload the caching file ".$dbname." and chmod it 0777 or Writable permission!");
+                        }
+                    }
+
+                    // auto Vaccuum() every 48 hours
+                    if($vacuum == true) {
+                        self::$pdo->exec('VACUUM');
+                    }
+
+
+                    return self::$pdo;
 
                 } else {
-                    self::$pdo = new PDO("sqlite::memory:");
-                    self::$pdo->setAttribute(PDO::ATTR_ERRMODE,
-                        PDO::ERRMODE_EXCEPTION);
-
-                    self::initDatabase();
+                    return self::$pdo;
                 }
-
-                // remove old cache
-                if(!isset($option['skip_clean'])) {
-                    try {
-                        self::$pdo->exec("DELETE FROM ".self::$table." WHERE (`added` + `endin`) < ".@date("U"));
-                    } catch(PDOException $e) {
-                        die("Please re-upload the caching file ".self::$filename." and chmod it 0777 or Writable permission!");
-                    }
-                }
-
-                // auto Vaccuum() every 48 hours
-                if($vacuum == true) {
-                    self::dbVACUUM();
-                }
-
-
-                return self::$pdo;
+                // end self pdo
 
             } else {
-                return self::$pdo;
+
+                // start self PDO
+                if(!isset(self::$multiPDO[$dbname])) {
+                    //  self::$pdo == new PDO("sqlite:".self::$path."/cachedb.sqlite");
+                    if(self::$path!="memory") {
+                        if(!file_exists(self::getPath()."/".$dbname)) {
+                            $initDB = true;
+                        } else {
+                            if(!is_writable(self::getPath()."/".$dbname)) {
+                                    die("Please CHMOD 0777 or any Writable Permission for PATH ".self::getPath());
+                            }
+                        }
+
+
+
+                        try {
+                            self::$multiPDO[$dbname] = new PDO("sqlite:".self::getPath()."/".$dbname);
+                            self::$multiPDO[$dbname]->setAttribute(PDO::ATTR_ERRMODE,
+                                PDO::ERRMODE_EXCEPTION);
+
+                            if($initDB == true) {
+                                self::initDatabase(self::$multiPDO[$dbname]);
+                            }
+
+                            $time = filemtime(self::getPath()."/".$dbname);
+                            if($time + (3600*48) < @date("U")) {
+                                $vacuum = true;
+                            }
+
+
+
+                        } catch (PDOException $e) {
+                            die("Can't connect to caching file ".self::getPath()."/".$dbname);
+                        }
+
+
+                    }
+
+                    // remove old cache
+                    if(!isset($option['skip_clean'])) {
+                        try {
+                            self::$multiPDO[$dbname]->exec("DELETE FROM ".self::$table." WHERE (`added` + `endin`) < ".@date("U"));
+                        } catch(PDOException $e) {
+                            die("Please re-upload the caching file ".$dbname." and chmod it 0777 or Writable permission!");
+                        }
+                    }
+
+                    // auto Vaccuum() every 48 hours
+                    if($vacuum == true) {
+                        self::$multiPDO[$dbname]->exec('VACUUM');
+                    }
+
+
+                    return self::$multiPDO[$dbname];
+
+                } else {
+                    return self::$multiPDO[$dbname];
+                }
+                // end self pdo
+
             }
 
 
 
 
-        }
-
-        private static function initDatabase() {
-            self::dbVACUUM();
-            self::db(array("skip_clean" => true))->exec('CREATE TABLE IF NOT EXISTS "'.self::$table.'" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "name" VARCHAR UNIQUE NOT NULL  , "value" BLOB, "added" INTEGER NOT NULL  DEFAULT 0, "endin" INTEGER NOT NULL  DEFAULT 0)');
-            self::db(array("skip_clean" => true))->exec('CREATE INDEX "lookup" ON "'.self::$table.'" ("added" ASC, "endin" ASC)');
 
         }
 
-        private static function dbVACUUM () {
-            self::db(array("skip_clean" => true))->exec('VACUUM');
+        private static function initDatabase($object = null) {
+            if($object == null) {
+                self::db(array("skip_clean" => true))->exec('CREATE TABLE IF NOT EXISTS "'.self::$table.'" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "name" VARCHAR UNIQUE NOT NULL  , "value" BLOB, "added" INTEGER NOT NULL  DEFAULT 0, "endin" INTEGER NOT NULL  DEFAULT 0)');
+                self::db(array("skip_clean" => true))->exec('CREATE INDEX "lookup" ON "'.self::$table.'" ("added" ASC, "endin" ASC)');
+                self::db(array("skip_clean" => true))->exec('VACUUM');
+            } else {
+                $object->exec('CREATE TABLE IF NOT EXISTS "'.self::$table.'" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "name" VARCHAR UNIQUE NOT NULL  , "value" BLOB, "added" INTEGER NOT NULL  DEFAULT 0, "endin" INTEGER NOT NULL  DEFAULT 0)');
+                $object->exec('CREATE INDEX "lookup" ON "'.self::$table.'" ("added" ASC, "endin" ASC)');
+                $object->exec('VACUUM');
+            }
+
+
         }
+
+
 
 
 
@@ -410,6 +618,7 @@
             $data = self::get($name);
             if($data == null) {
                 $curl = new phpFastCache();
+
                 $curl->cURL();
                 if($option['user_agent']!="") {
                     $curl->user_agent = $option['user_agent'];

@@ -70,7 +70,7 @@
                 $row = $db->fetch(PDO::FETCH_ASSOC);
                 if(isset($row['dbname'])) {
                     // found key
-                    $res['db'] = $row['dbname'].".cache";
+                    $res['db'] = $row['dbname'];
                 } else {
                     // not key // check filesize
                     if((Int)self::$autosize < 10) {
@@ -85,6 +85,16 @@
                     if($fsize > (1024*1024*(Int)self::$autosize)) {
                         $dbname = (Int)$dbname + 1;
                     }
+                    try {
+                        $insert = self::$autodb->prepare("INSERT INTO `db` (`item`,`dbname`) VALUES(:item,:dbname)");
+                        $insert->execute(array(
+                            ":item" => $res['item'],
+                            ":dbname"   => $dbname
+                        ));
+                    } catch (PDOException $e) {
+                        die('Database Error - Check A look at self::$autodb->prepare("INSERT INTO ');
+                    }
+
                     $res['db'] = $dbname;
 
                 }
@@ -109,7 +119,7 @@
                 $dir = opendir(self::getPath());
                 while($file = readdir($dir)) {
                     if(strpos($file,".cache") !== false) {
-                        unlink(self::getPath()."/".$file);
+                        @unlink(self::getPath()."/".$file);
                     }
                 }
             }

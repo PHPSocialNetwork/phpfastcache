@@ -272,8 +272,18 @@
             }
 
             if(self::$storage != "single") {
+
                 if(!file_exists(self::$path."/cache.storage/") || !is_writable(self::$path."/cache.storage/")) {
-                    die("Sorry, Please create ".self::$path."/cache.storage/ and SET Mode 0777 or any Writable Permission!" );
+                    if(!file_exists(self::$path."/cache.storage/")) {
+                        @mkdir(self::$path."/cache.storage/",0777);
+                    }
+                    if(!is_writable(self::$path."/cache.storage/")) {
+                        @chmod(self::$path."/cache.storage/",0777);
+                    }
+                    if(!file_exists(self::$path."/cache.storage/") || !is_writable(self::$path."/cache.storage/")) {
+                        die("Sorry, Please create ".self::$path."/cache.storage/ and SET Mode 0777 or any Writable Permission!" );
+                    }
+
                 }
                 return self::$path."/cache.storage/";
             } else {
@@ -293,6 +303,7 @@
             }
 
 
+
             $initDB = false;
 
             if(self::$storage == "single") {
@@ -304,7 +315,10 @@
                             $initDB = true;
                         } else {
                             if(!is_writable(self::getPath()."/".$dbname)) {
-                                    die("Please CHMOD 0777 or any Writable Permission for ".self::getPath()."/".$dbname);
+                                    @chmod(self::getPath()."/".$dbname,0777);
+                                    if(!is_writable(self::getPath()."/".$dbname)) {
+                                        die("Please CHMOD 0777 or any Writable Permission for ".self::getPath()."/".$dbname);
+                                    }
                             }
                         }
 
@@ -372,7 +386,10 @@
                             $initDB = true;
                         } else {
                             if(!is_writable(self::getPath()."/".$dbname)) {
-                                    die("Please CHMOD 0777 or any Writable Permission for PATH ".self::getPath());
+                                    @chmod(self::getPath()."/".$dbname,0777);
+                                    if(!is_writable(self::getPath()."/".$dbname)) {
+                                        die("Please CHMOD 0777 or any Writable Permission for PATH ".self::getPath());
+                                    }
                             }
                         }
 

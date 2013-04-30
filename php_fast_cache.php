@@ -274,7 +274,6 @@
         private static function getPath() {
             if(self::$path == "") {
                 self::$path = dirname(__FILE__);
-                return self::$path;
             }
 
             if(self::$path == "memory") {

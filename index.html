@@ -101,6 +101,8 @@
 
                phpFastCache dropped the database load to almost nothing, yielding faster page load times for users, better resource utilization. <b>It is simple yet powerful</b>
 
+                <br><br>
+                phpFastCache also supports APC, MemCache, MemCached, WinCache, Files & PDO. It will auto detect and pick a good cache for your pages.
 
             </p>
 			
@@ -138,8 +140,8 @@
                                 <p class="drop-counter" style="visibility: hidden;">(<span>80</span> Visitors)</p>
 
                                 <div class="one_half">
-                                    <p>From Apr 28 2013, phpFastCache is available in GitHub, and it  also support more objects type caching.<br><br>
-                                        API & Document is fully updated.<br><br>
+                                    <p>Supported APC, MemCache, MemCached, WinCache, Files & PDO<br><br>
+                                        You won't need to rewrite your code again when you change your Server<br><br>
                                     </p>
                                 </div>
                                 <div class="one_half column_last">
@@ -177,8 +179,8 @@
 			<div id="document" class="page">
 				
 				<h1>Document & API</h1>
-                <div >
-                    <h2>phpFastCache_v1.2.zip</h2>
+                <div>
+                    <a href="https://github.com/khoaofgod/phpfastcache/archive/master.zip"><h2>phpFastCache_v1.3.zip</h2></a>
                     <div class="one_half">
                         <p>From Apr 28 2013, phpFastCache is available in GitHub, and it  also support more objects type caching.<br><br>
                             API Functions are available below.<br><br>
@@ -200,7 +202,7 @@
                                     <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
                                 </div>
                                 <div class="content" style="display: none;">
-                                    <p>All you need are PHP 5.1+ with PDO Supported.</p>
+                                    <p>All you need are PHP 5.1+</p>
 
                                     <p>It works with All Operating System, all database, and all Web Server that support PHP 5+</p>
                                     <p>phpFastCache is Open Source, feel FREE to edit and join our GitHub Community.</p>
@@ -212,10 +214,9 @@
                                     <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
                                 </div>
                                 <div class="content" style="display: none;">
-                                    <p>Just 3 steps:<br>
+                                    <p>Just 2 steps:<br>
                                         1. Click Download & Unzip<br>
-                                        2. CHMOD 0777 or any writable permission for file "caching.0777"<br>
-                                        3. Include("php_fast_cache.php");</p>
+                                        2. Include("php_fast_cache.php");</p>
                                     <p>You are Ready to speed up your slowly website!</p>
                                     <p>phpFastCache::set("item_name", $value, 600); <br>
                                         $value = phpFastCache::get("item_name"); <br>
@@ -228,19 +229,22 @@
                                     <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
                                 </div>
                                 <div class="content" style="display: none;">
-                                    <p>phpFastCache is Lightweight, Fastest & Security, use only 1 file to store all objects. You can hide the cache file by set phpFastCache::$path = "PATH/";
+                                    <p>phpFastCache is Lightweight, Fastest & Security, supported many caching class (APC, MemCached, MemCache, Files, PDO, WinCache).
                                     </p>
                                     <p>It is more simple by Set, Get, and automatic clean up cache. It is also save more CPU usage than using other file cache.</p>
-                                    <p>phpFastCache can't fast like A Memory Caching. Memory is always faster than file system, but phpFastCache is more easier than all other caching on integrated into your code. You won't need root permission, you don't need to edit php.ini,
-                                        and will never worry about your server memory by caching again.<br>
+                                    <p>phpFastCache can run as Memory Caching. Memory is always faster than file system.<br><br>
+                                        phpFastCache supported: Files, APC, PDO, MemCached, MemCache and WinCache; It is more easier than all other caching on integrated into your code. You won't need root permission, you don't need to edit php.ini,
+                                        and will never worry about your server memory by caching again.<br><br>
                                         Are you thinking about DSO, CGI, FastCgi, suPHP? phpFastCache can run on all of them.
+                                        If you want to change your cache $storage when your move your web server, just set it from $storage = "apc" to "memcached" , "wincache" , "files" , or simple with "auto" detect.
                                     </p>
                                     <p>phpFastCache can run on shared hosting, VPS, Dedicated Server, and help you save lot of cost from upgrading your Web Server. phpFastCache help thousand of website already.</p>
-                                    <p>It's so simple to move from Server to Server. Just copy/download/upload your files! You're done! You won't need to worry about deleting thousand of cache files, or re-setup the server, and edit your php.ini again.</p>
+
 
                                     <p>And It's open Source you can edit the source code by your own ^_^<br>
                                         Try it and you will love phpFastCache<br><br>
-                                    Hey hey! Are you lazy to learn new thing? Dude, phpFastCache only uses 2 simple methods: set & get =.=!<br>
+                                    Hey hey! Are you lazy to learn new thing?<br>
+                                    Dude, phpFastCache only uses 2 simple methods: SET & GET =.=!<br>
                                     </p>
 
                                 </div>
@@ -297,88 +301,86 @@
                                 </div>
                                 <div class="content" style="display: none;">
                                     <p>
-                                    <table width=100% class="table" >
-                                    <tr>
-                                        <td>phpFastCache::$storage = "auto"</td>
-                                        <td>&nbsp;&nbsp;&nbsp;</td>
-                                        <td>Enable Multiple Files Cache</td>
-                                    </tr>
+                                        <pre class="prettyprint php">
 
-                                    <tr>
-                                        <td>phpFastCache::$autosize = 40</td>
-                                        <td>&nbsp;&nbsp;&nbsp;</td>
-                                        <td>Maximum 40MB per Cache File</td>
-                                    </tr>
+     Optional Config || You can skip these config, everything is Automatic ^_^
+     You never have to rewrite your code again when you change from files to APC, or APC to MemCache ... etc.
+     -----------------------------
+     phpFastCache::$storage = "auto"; // auto | pdo | mpdo | files | memcache | memcached | apc | wincache
+     -----------------------------
+     Just Remember Only 2 Functions: Set & Get.
+     SET Functions
+     phpFastCache::set("item_name", $value, second);
+     OR
+     phpFastCache::set("item_name", $value, second, true); // skip if existing
 
-                                    <tr>
-                                        <td>phpFastCache::$path = STRING</td>
-                                        <td>&nbsp;&nbsp;&nbsp;</td>
-                                        <td>Default is blank(automatic detect PATH). Set path to caching.0777 file. If $path = "memory", caching will write in to memory limit by PHP. Memory will be clean up after process web server finish the script.</td>
-                                    </tr>
+     phpFastCache::set(array("apc" => "item_name"), $value, 600);
+     phpFastCache::set(array("files" => "item_name"), $value, 600);
+     phpFastCache::set(array("memcached" => "item_name"), $value, 600);
+     phpFastCache::set(array("pdo" => "item_name"), $value, 600);
 
+     phpFastCache::set(array("files/2013/categories" => "item_name"), $value, 600);
+     phpFastCache::set(array("db1" => "item_name"), $value, 600);
+     phpFastCache::set(array("db2" => "item_name"), $value, 600);
+     phpFastCache::set(array("db3" => "item_name"), $value, 600);
+     phpFastCache::set(array("prefix" => "item_name"), $value, 600);
 
-                                        <tr>
-                                            <td>phpFastCache::resetAll()</td>
-                                            <td>&nbsp;&nbsp;&nbsp;</td>
-                                            <td>Reset everything in Cache</td>
-                                        </tr>
+     GET FUNCTIONS ( return NULL or Value of item )
+     phpFastCache::get("item_name");
+     phpFastCache::get(array("prefix" => "item_name"));
 
-                                        <tr>
-                                            <td>phpFastCache::showStats(true|false)</td>
-                                            <td>&nbsp;&nbsp;&nbsp;</td>
-                                            <td>Return an information of caching file as Array.</td>
-                                        </tr>
+     -----------------------------
+     -----------------------------
+     -----------------------------
+     -----------------------------
 
-                                        <tr>
-                                            <td>phpFastCache::increment("keyword",1)</td>
-                                            <td>&nbsp;&nbsp;&nbsp;</td>
-                                            <td>Increase Value of Object by 1</td>
-                                        </tr>
+     Others Functions if you are interesting
+     item_name can be string or array("where" => "name");
 
-                                        <tr>
-                                            <td>phpFastCache::delete("keyword")</td>
-                                            <td>&nbsp;&nbsp;&nbsp;</td>
-                                            <td>Delete an Item by keyword in caching</td>
-                                        </tr>
+     phpFastCache::delete("item_name");
+     phpFastCache::cleanup("item_name");
+     phpFastCache::stats();
+     phpFastCache::increment("item_name", $step = 1);
+     phpFastCache::decrement("item_name", $step = 1);
+     phpFastCache::exists("item_name");
 
-                                        <tr>
-                                            <td>phpFastCache::decrement("keyword",1)</td>
-                                            <td>&nbsp;&nbsp;&nbsp;</td>
-                                            <td>Decrease Value of Object by 1</td>
-                                        </tr>
+     -----------------------------
+     -----------------------------
+     -----------------------------
+     phpFastCache::setMulti(array(
+                               array("a","hello",600),
+                               array("b","value")),
+                           500,
+                           false);
 
+     phpFastCache::setMulti(array(
+                               array("a","hello"),
+                               array("b","value")),
+                            360024);
 
+     phpFastCache::setMulti(array(
+                               array("files" => "a", "data", 360024),
+                               array("apc"   => "b", "hello world", 500),
+                               array("c", "array|object|info"));
 
-                                        <tr>
-                                            <td>phpFastCache::getBycURL("keyword",$url,$time)</td>
-                                            <td>&nbsp;&nbsp;&nbsp;</td>
-                                            <td>Get content $URL by cURL. Supported: <br>
-                                                    + $time in second<br>
-                                                    + $skip if keyword existing<br>
-                                                    + $options = array(<br>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ref"   => "URL REF",<br>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"user"  =>  "username",<br>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"pass"  =>  "passwd",<br>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"hash"  =>  "WHM Access",<br>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ssl"   =>   false|true<br>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"user_agent"    =>  "STRING")<br>
-                                            </td>
-                                        </tr>
+     phpFastCache::getMulti(array("a","b","c"));
+     phpFastCache::getMulti(array("files"  =>  "a", "apc"  => "b", "c"));
 
-                                        <tr>
-                                            <td>phpFastCache::postBycURL("keyword",$url,$data)</td>
-                                            <td>&nbsp;&nbsp;&nbsp;</td>
-                                            <td>Post content $URL by cURL. Supported: <br>
-                                                + $data = array("a"=>"val")<br>
-                                                + $time in second<br>
-                                                + $skip if keyword existing<br>
-                                                + $options = array()<br>
-                                            </td>
-                                        </tr>
+     phpFastCache::deleteMulti(array("a","b","c"));
+     phpFastCache::deleteMulti(array("files"   =>  "a", "memcached"    => "b", "c"));
 
 
-                                        </tbody>
-                                    </table>
+     ----------------------------
+     Custom PATH & Security
+     phpFastCache::$path = "/PATH/FOR_PDO_FILES/"; need chmod 0777 or writable mode
+     phpFastCache::$securityKey = "cache.storage"; default cache folder name;
+     phpFastCache::$server = array(
+                       array("localhost",11211,30),
+                       array("localhost",11211,70)
+                   );  <-- Memcache Server
+
+
+                                        </pre>
                                     </p>
                                 </div>
                             </li>
@@ -407,6 +409,11 @@
 &lt;?php
     // In your config file
     include("php_fast_cache.php");
+    // This is Optional Config only. You can skip these lines.
+    // phpFastCache support "apc", "memcache", "memcached", "wincache" ,"files", "pdo" and "mpdo"
+    // You don't need to change your code when you change your caching system. Or simple keep it auto
+    phpFastCache::$storage = "auto";
+    // End Optionals
 
     // In your Class, Functions, PHP Pages
     // try to get from Cache first.
@@ -428,7 +435,7 @@
 
                 <h1>Improve cURL & API Calls </h1>
 
-                <p>You are using Bing API, Google API or cURL and your API transactions are limited? phpFastCache supported cURL and automatic cache to system to save your Server CPU, Memory and API Transactions.
+                <p>You are using Bing API, Google API or cURL and your API transactions are limited? phpFastCache can save your Server CPU & API Transactions.
                     You can use phpFastCache::set() to do it yourself too.
                 </p>
                 <br>
@@ -439,7 +446,9 @@
     $results = phpFastCache::get("keyword,page");
 
     if($results == null) {
-        $results = phpFastCache::getBycURL("keyword,page", "http://www.youtube.com/api/json/url/keyword/page", 600);
+        $results = phpFastCache::set("keyword,page",
+                    cURL->get("http://www.youtube.com/api/json/url/keyword/page"),
+                    600);
     }
 
     foreach($results as $video) {
@@ -458,11 +467,11 @@
 <pre class="prettyprint php">
 &lt;?php
     // try to get from Cache first.
-    $html = phpFastCache::get("keyword,page");
+    $html = phpFastCache::get(array("files" => "keyword,page"));
 
     if($html == null) {
         $html = Render Your Page || Widget || "Hello World";
-        phpFastCache::set("keyword,page",$html);
+        phpFastCache::set(array("files" => "keyword,page"),$html);
     }
 
     echo or return your $html;
@@ -471,10 +480,10 @@
                 </p>
 
                 <br><br>
-                <h1>Enable Multi Caching Files </h1>
+                <h1>Enable Multi Caching Method </h1>
 
-                <p>If you want  to cache so many data, I suggest you enable Multi Caching Files. This Example will set up multiple caching files, and maximum 50MB per file.
-                It's good for caching cURL Data and API call results.</p>
+                <p>phpFastCache support multiple caching methods: Files, PDO, APC, WinCache, MemCache and MemCached. This Example will set up multiple caching files, maximum 50MB per file, and you can SET/Get from APC, MemCache .. etc.
+                It's good for caching cURL Data and API call results. You can mix multiple methods with phpFastCache. For example, mix files caches with APC, or PDO and memcached.</p>
                 <br>
                 <p>
 <pre class="prettyprint php">
@@ -483,18 +492,47 @@
     include("php_fast_cache.php");
     phpFastCache::$storage = "auto";
     phpFastCache::$autosize = 50;
-    phpFastCache::$path = "";
+    phpFastCache::$path = "/PATH/TO/SECURITY/PLACE/";
+    phpFastCache::$securityKey = "yourkeyhere";
 
     // in your PHP Class, Functions, Pages
     // try to get from Cache first.
-    $html = phpFastCache::get("keyword,page");
-
-    if($html == null) {
-        $html = Render Your Page || Widget || "Hello World";
-        phpFastCache::set("keyword,page",$html);
+    $html1 = phpFastCache::get("keyword1");
+    if($html1 == null) {
+        $html1 = Render Your Page || Widget || "Hello World";
+        phpFastCache::set("keyword1",$html1);
     }
 
-    echo or return your $html;
+    $html2 = phpFastCache::get(array("files" => "keyword2"));
+    if($html2 == null) {
+        $html2 = Render Your Page || Widget || "Hello World";
+        phpFastCache::set(array("files" => "keyword2"),$html2);
+    }
+
+    // Mixing Value & Cache
+    $html3 = phpFastCache::get(array("memcached" => "keyword3"));
+    if($html3 == null) {
+        $html3 = Render Your Page || Widget || "Hello World";
+        phpFastCache::set(array("memcached" => "keyword3"),$html3);
+    }
+
+
+    $html3 = phpFastCache::getMulti(array(array("memcached" => "keyword3"),
+                                          array("apc" => "keyword"),
+                                          "keyword4",
+                                    ));
+    if($html3['keyword4'] == null) {
+        $html3 = Render Your Page || Widget || "Hello World";
+        phpFastCache::set("keyword4"),$html3);
+    }
+
+    if($html3['apc_keyword'] == null) {
+        phpFastCache::setMulti(array(array("memcached" => "keyword3", $html3, 600),
+                                     array("apc"    => "keyword", "HELLO WORLD")),
+                                3600*24,false);
+
+    }
+
 ?&gt;
 </pre>
                 </p>
@@ -512,6 +550,19 @@
 				<h1>Updates</h1>
 				
 				<div class="releases">
+                    <article class="release">
+                        <h2>Version 1.3</h2>
+                        <span class="date">Released on May 6th, 2013</span>
+                        <ul>
+                            <li class="new"><span><b>New</b></span> APC, MemCache, MemCached, WinCache, Files Supported</li>
+                            <li class="new"><span><b>New</b></span> Added $storage = "auto"</li>
+                            <li class="new"><span><b>New</b></span> Added exists, setMulti, getMulti, deleteMulti</li>
+                            <li class="fix"><span><b>Fix</b></span> Removed Cache.0777 files</li>
+                            <li class="fix"><span><b>Fix</b></span> Improve Security with $securityKey = "keyword"</li>
+                            <li class="fix"><span><b>Fix</b></span> Removed PDO Required</li>
+                        </ul>
+                    </article>
+
 					<article class="release">
 						<h2>Version 1.2</h2>
 						<span class="date">Released on April 30th, 2013</span>

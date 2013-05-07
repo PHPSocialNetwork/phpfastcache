@@ -41,6 +41,7 @@
         * phpFastCache::increment("item_name", $step = 1);
         * phpFastCache::decrement("item_name", $step = 1);
         * phpFastCache::exists("item_name");
+        * print_r(phpFastCache::$sys);
         *
         * -----------------------------
         * -----------------------------

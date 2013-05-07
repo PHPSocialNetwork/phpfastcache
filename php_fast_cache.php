@@ -31,7 +31,7 @@
         private static $autodb = "";
         private static $multiPDO = array();
 
-        private static $sys = "";
+        public static $sys = "";
         private static $checked = array(
                 "path"  =>  false,
                 "servers"   =>  array()

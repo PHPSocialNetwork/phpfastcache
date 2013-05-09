@@ -164,7 +164,7 @@
                 self::$path = dirname(__FILE__);
             }
             
-            if($skip_create == false || self::$checked['path'] == false) {
+            if($skip_create == false && self::$checked['path'] == false) {
                 if(!file_exists(self::$path."/".self::$securityKey."/") || !is_writable(self::$path."/".self::$securityKey."/")) {
                     if(!file_exists(self::$path."/".self::$securityKey."/")) {
                         @mkdir(self::$path."/".self::$securityKey."/",0777);

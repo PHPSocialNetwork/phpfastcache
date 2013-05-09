@@ -158,8 +158,12 @@
         // PATH Edit by SecurityKey
         // Auto create, Chmod and Warning
         private static function getPath($skip_create = false) {
-
-            self::$path = dirname(__FILE__);
+            
+            if (self::$path=='')
+            {
+                self::$path = dirname(__FILE__);
+            }
+            
             if($skip_create == false || self::$checked['path'] == true) {
                 if(!file_exists(self::$path."/".self::$securityKey."/") || !is_writable(self::$path."/".self::$securityKey."/")) {
                     if(!file_exists(self::$path."/".self::$securityKey."/")) {

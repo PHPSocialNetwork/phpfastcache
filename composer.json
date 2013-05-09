@@ -1,5 +1,5 @@
 {
- "name": "phpFastCache/phpFastCache",
+ "name": "phpfastcache/phpfastcache",
     "require": {
         "php": ">=5.1.0"        
     }

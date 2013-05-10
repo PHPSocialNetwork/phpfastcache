@@ -203,9 +203,14 @@
                     self::$sys['method'] = "apc";
 
                 } else {
-
-
-                    $info = self::decode(file_get_contents(self::getPath()."/config.".$os['os']['unique'].".cache.ini"));
+                    
+                    $info = self::systemInfo();
+                    
+                    if (file_exists(self::getPath()."/config.".$os['os']['unique'].".cache.ini"))
+                    {
+                        $info = self::decode(file_get_contents(self::getPath()."/config.".$os['os']['unique'].".cache.ini"));
+                    }
+                    
                     $reconfig = false;
 
 

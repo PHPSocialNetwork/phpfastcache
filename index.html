@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>phpFastCache - Fastest PHP Caching - Reduce mySQL Calls, Improve Speed - High Performance object caching system</title>
+	<title>phpFastCache - Fastest PHP Caching Class - Reduce mySQL Calls, Improve Speed - High Performance object caching system</title>
 
-    <meta name="description" content="Looking for fastest PHP Cache method? phpFastCache is a high-performance, distributed object caching system, generic in nature, but intended for use in speeding up dynamic web applications by alleviating database load." />
-    <meta name="keywords" content="php cache, php object cache, php page cache, php database reduce load, php mysql faster, mysql optimize, mysql tunning" />
+    <meta name="description" content="Looking for fastest PHP Cache Class? phpFastCache is a high-performance, distributed object caching system, generic in nature, but intended for use in speeding up dynamic web applications by alleviating database load." />
+    <meta name="keywords" content="php caching class, php cache class, simple php cache, php cache, php object cache, php page cache, php database reduce load, php mysql faster, mysql optimize, mysql tunning" />
 
     <meta name="google-site-verification" content="2bpKxpBV7IuqGhzgx5jBzl4dZDoIR2XP6ia5ROP5ElA" />
 
@@ -141,7 +141,7 @@
                                 <p class="drop-counter" style="visibility: hidden;">(<span>80</span> Visitors)</p>
 
                                 <div class="one_half">
-                                    <p> phpFastCache also supports APC, MemCache, MemCached, WinCache, Files<br><br>
+                                    <p> phpFastCache also supports APC, XCache, MemCache, MemCached, WinCache, Files<br><br>
                                         You will never have to rewrite your code again when you change your servers<br><br>
                                     </p>
                                 </div>
@@ -234,7 +234,7 @@
                                     </p>
                                     <p>It is more simple by Set, Get, and automatic clean up cache. It is also save more CPU usage than using other file cache.</p>
                                     <p>phpFastCache can run as Memory Caching. Memory is always faster than file system.<br><br>
-                                        phpFastCache supported: Files, APC, PDO, MemCached, MemCache and WinCache; It is more easier than all other caching on integrated into your code. You won't need root permission, you don't need to edit php.ini,
+                                        phpFastCache supported: Files, APC, PDO, MemCached, MemCache, XCache and WinCache; It is more easier than all other caching on integrated into your code. You won't need root permission, you don't need to edit php.ini,
                                         and will never worry about your server memory by caching again.<br><br>
                                         Are you thinking about DSO, CGI, FastCgi, suPHP? phpFastCache can run on all of them.
                                         If you want to change your cache $storage when your move your web server, just set it from $storage = "apc" to "memcached" , "wincache" , "files" , or simple with "auto" detect.
@@ -307,7 +307,7 @@
      Optional Config || You can skip these config, everything is Automatic ^_^
      You never have to rewrite your code again when you change from files to APC, or APC to MemCache ... etc.
      -----------------------------
-     phpFastCache::$storage = "auto"; // auto | pdo | mpdo | files | memcache | memcached | apc | wincache
+     phpFastCache::$storage = "auto"; // auto | pdo | mpdo | files | memcache | memcached | apc | wincache | xcache
      -----------------------------
      Just Remember Only 2 Functions: Set & Get.
      SET Functions
@@ -344,7 +344,7 @@
      phpFastCache::increment("item_name", $step = 1);
      phpFastCache::decrement("item_name", $step = 1);
      phpFastCache::exists("item_name");
-     print_r(phpFastCache::$sys);
+     print_r(phpFastCache::systemInfo());
 
      -----------------------------
      -----------------------------
@@ -381,6 +381,17 @@
                        array("localhost",11211,70)
                    );  <-- Memcache Server
 
+     phpFastCache::$useTmpCache = true; // faster checking cache for LOOP Only. If you don't use LOOP, don't spend more memory.
+     Example:
+     WHILE() {
+       $cache = phpFastCache::get("name");
+     }
+     LOOP() {
+       $cache = phpFastCache::get("name");
+     }
+        --> THE NAME maybe duplicated some times, if you set $useTmpCache it will check from $Tmp first before IT connect to Cache Memory or Open Files to check.
+            Will be faster a little bit if you know what you are doing.
+
 
                                         </pre>
                                     </p>
@@ -412,7 +423,7 @@
     // In your config file
     include("php_fast_cache.php");
     // This is Optional Config only. You can skip these lines.
-    // phpFastCache support "apc", "memcache", "memcached", "wincache" ,"files", "pdo" and "mpdo"
+    // phpFastCache support "apc", "memcache", "memcached", "wincache" ,"files", "pdo", "mpdo" and "xcache"
     // You don't need to change your code when you change your caching system. Or simple keep it auto
     phpFastCache::$storage = "auto";
     // End Optionals
@@ -484,7 +495,7 @@
                 <br><br>
                 <h1>Enable Multi Caching Method </h1>
 
-                <p>phpFastCache support multiple caching methods: Files, PDO, APC, WinCache, MemCache and MemCached. This Example will set up multiple caching files, maximum 50MB per file, and you can SET/Get from APC, MemCache .. etc.
+                <p>phpFastCache support multiple caching methods: Files, PDO, APC, WinCache, XCache, MemCache and MemCached. This Example will set up multiple caching files, maximum 50MB per file, and you can SET/Get from APC, MemCache .. etc.
                 It's good for caching cURL Data and API call results. You can mix multiple methods with phpFastCache. For example, mix files caches with APC, or PDO and memcached.</p>
                 <br>
                 <p>
@@ -552,6 +563,14 @@
 				<h1>Updates</h1>
 				
 				<div class="releases">
+                    <article class="release">
+                        <h2>Version 1.3.0.1</h2>
+                        <span class="date">Released on May 11th, 2013</span>
+                        <ul>
+                            <li class="new"><span><b>New</b></span> X-Cache Supported</li>
+                        </ul>
+                    </article>
+
                     <article class="release">
                         <h2>Version 1.3</h2>
                         <span class="date">Released on May 6th, 2013</span>

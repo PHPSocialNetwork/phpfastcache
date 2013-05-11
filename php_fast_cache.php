@@ -1,13 +1,8 @@
 <?php
-    // phpFastCache
-    // Author: Khoa Bui
-    // E-mail: khoaofgod@yahoo.com
-    // Website: http://www.phpfastcache.com
-    // PHP Fast Cache is simple caching build on PDO
 /*
+ * ALl EXAMPLE & DOCUMENT ARE ON www.phpFastCache.com
  * Example:
  * phpFastCache::$storage = "auto"; // use multi files for caching.
- * phpFastCache::$autosize = 40; megabytes size for each cache file.
  * phpFastCache::$path  = "/PATH/TO/CACHE/FOLDER";
  *
  * phpFastCache::set("keyword", $value, $time_in_second);
@@ -17,7 +12,7 @@
 
     class phpFastCache {
 
-        public static $storage = "auto"; // PDO | mpdo | Auto | Files | memcache | apc | wincache
+        public static $storage = "auto"; // PDO | mpdo | Auto | Files | memcache | apc | wincache | xcache
 
         public static $autosize = 40; // Megabytes
         public static $path = "";
@@ -25,7 +20,7 @@
         public static $option = array();
         public static $server = array(array("localhost",11211));
 
-        private static $supported_api = array("pdo","mpdo","files","memcache","memcached","apc","wincache");
+        private static $supported_api = array("pdo","mpdo","files","memcache","memcached","apc","xcache","wincache");
         private static $filename = "PDO.Caching";
         private static $table = "objects";
         private static $autodb = "";
@@ -64,12 +59,14 @@
                 self::$sys['method'] = "pdo";
                 self::$sys['drivers'] = array(
                     "apc"   =>  false,
+                    "xcache"    => false,
                     "memcache"  => false,
                     "memcached"  => false,
                     "wincache"  => false,
                     "pdo"       => false,
                     "mpdo"     => false,
                     "files"     => false,
+
                 );
 
 
@@ -80,6 +77,14 @@
                     self::$sys['drivers']['apc']   = true;
                     self::$sys['storage'] = "memory";
                     self::$sys['method'] = "apc";
+                }
+
+                // Check xcache
+                if(extension_loaded('xcache') && function_exists("xcache_get"))
+                {
+                    self::$sys['drivers']['xcache']   = true;
+                    self::$sys['storage'] = "memory";
+                    self::$sys['method'] = "xcache";
                 }
 
                 if(extension_loaded('wincache') && function_exists("wincache_ucache_set"))
@@ -202,22 +207,21 @@
                     self::$sys['storage'] = "memory";
                     self::$sys['method'] = "apc";
 
+                }elseif(extension_loaded('xcache'))
+                {
+                    self::$sys['drivers']['xcache']   = true;
+                    self::$sys['storage'] = "memory";
+                    self::$sys['method'] = "xcache";
+
                 } else {
 
-                    $reconfig = false;
-                    
-                    if (file_exists(self::getPath()."/config.".$os['os']['unique'].".cache.ini"))
-                    {
-                        $info = self::decode(file_get_contents(self::getPath()."/config.".$os['os']['unique'].".cache.ini"));
-                    } else {
-                        $info = self::systemInfo();
-                        $reconfig = true;
-                    }
-                    
 
+                    $info = self::decode(file_get_contents(self::getPath()."/config.".$os['os']['unique'].".cache.ini"));
+                    $reconfig = false;
 
 
                     if(isset($info['os']['unique'])) {
+
                         if($info['os']['unique'] != $os['os']['unique']) {
                             $reconfig = true;
                         }
@@ -340,6 +344,9 @@
                 case "apc":
                     return self::apc_cleanup($option);
                     break;
+                case "xcache":
+                    return self::xcache_cleanup($option);
+                    break;
                 default:
                     return self::pdo_cleanup($option);
                     break;
@@ -371,6 +378,9 @@
                     break;
                 case "apc":
                     return self::apc_delete($name);
+                    break;
+                case "xcache":
+                    return self::xcache_delete($name);
                     break;
                 default:
                     return self::pdo_delete($name);
@@ -404,6 +414,9 @@
                     break;
                 case "apc":
                     return self::apc_exist($name);
+                    break;
+                case "xcache":
+                    return self::xcache_exist($name);
                     break;
                 default:
                     return self::pdo_exist($name);
@@ -486,6 +499,9 @@
                 case "apc":
                         return self::apc_set($name,$value,$time_in_second, $skip_if_existing);
                     break;
+                case "xcache":
+                    return self::xcache_set($name,$value,$time_in_second, $skip_if_existing);
+                    break;
                 default:
                         return self::pdo_set($name,$value,$time_in_second, $skip_if_existing);
                     break;
@@ -522,6 +538,9 @@
                 case "apc":
                     return self::apc_decrement($name, $step);
                     break;
+                case "xcache":
+                    return self::xcache_decrement($name, $step);
+                    break;
                 default:
                     return self::pdo_decrement($name, $step);
                     break;
@@ -554,6 +573,9 @@
                     break;
                 case "apc":
                     return self::apc_get($name);
+                    break;
+                case "xcache":
+                    return self::xcache_get($name);
                     break;
                 default:
                     return self::pdo_get($name);
@@ -603,6 +625,9 @@
                 case "apc":
                     return self::apc_stats();
                     break;
+                case "xcache":
+                    return self::xcache_stats();
+                    break;
                 default:
                     return self::pdo_stats();
                     break;
@@ -632,6 +657,9 @@
                     break;
                 case "apc":
                     return self::apc_increment($name, $step);
+                    break;
+                case "xcache":
+                    return self::xcache_increment($name, $step);
                     break;
                 default:
                     return self::pdo_increment($name, $step);
@@ -668,35 +696,7 @@
 
         }
 
-        private static function files_deleteMulti($mname = array()) {
-            $res = array();
-            foreach($mname as $name){
-                $res[] = self::files_delete($name);
-            }
-            return $res;
-        }
 
-        private static function files_getMulti($mname = array()) {
-            $res = array();
-            foreach($mname as $name){
-                $res[] = self::files_get($name);
-            }
-            return $res;
-        }
-
-        private static function files_setMulti($mname = array(), $time_in_second_for_all = 600, $skip_for_all = false) {
-            $res = array();
-            foreach($mname as $object){
-                $name = isset($object[0]) ? $object[0] : "";
-                $value = isset($object[1]) ? $object[1] : "";
-                $time = isset($object[2]) ? $object[2] : $time_in_second_for_all;
-                $skip = isset($object[3]) ? $object[3] : $skip_for_all;
-                if($name!="" && $value!="") {
-                    $res[] = self::files_set($name,$value, $time, $skip);
-                }
-            }
-            return $res;
-        }
 
         private static function files_set($name,$value,$time_in_second = 600, $skip_if_existing = false) {
 
@@ -947,6 +947,88 @@
 
 
         /*
+         * Begin XCache Static
+         * http://xcache.lighttpd.net/wiki/XcacheApi
+         */
+
+        private static function xcache_exist($name) {
+            $name = self::getMemoryName($name);
+            if(xcache_isset($name)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+
+        private static function xcache_set($name,$value,$time_in_second = 600, $skip_if_existing = false) {
+            $name = self::getMemoryName($name);
+            if($skip_if_existing == true) {
+                if(!self::xcache_exist($name)) {
+                    return xcache_set($name,$value,$time_in_second);
+                }
+            } else {
+                return xcache_set($name,$value,$time_in_second);
+            }
+        }
+
+        private static function xcache_get($name) {
+
+            $name = self::getMemoryName($name);
+
+            $data = xcache_get($name);
+
+            if($data === false || $data == "") {
+                return null;
+            }
+            return $data;
+
+        }
+
+        private static function xcache_stats() {
+            try {
+                return xcache_list(XC_TYPE_PHP,100);
+            } catch(Exception $e) {
+                return array();
+            }
+        }
+
+        private static function xcache_cleanup($option = array()) {
+            xcache_clear_cache(XC_TYPE_PHP);
+            return true;
+        }
+
+        private static function xcache_delete($name) {
+            $name = self::getMemoryName($name);
+            return xcache_unset($name);
+        }
+
+        private static function xcache_increment($name, $step = 1) {
+            $orgi = $name;
+            $name = self::getMemoryName($name);
+            $ret =xcache_inc($name, $step);
+            if($ret === false) {
+                self::xcache_set($orgi,$step,3600);
+                return $step;
+            } else {
+                return $ret;
+            }
+        }
+
+        private static function xcache_decrement($name, $step = 1) {
+            $orgi = $name;
+            $name = self::getMemoryName($name);
+            $ret = xcache_dec($name, $step);
+            if($ret === false) {
+                self::xcache_set($orgi,$step,3600);
+                return $step;
+            } else {
+                return $ret;
+            }
+        }
+
+
+        /*
          * Begin APC Static
          * http://www.php.net/manual/en/ref.apc.php
          */
@@ -960,36 +1042,6 @@
             }
         }
 
-        private static function apc_deleteMulti($mname = array()) {
-            $res = array();
-            foreach($mname as $name){
-                $res[] = self::apc_delete($name);
-            }
-            return $res;
-        }
-
-        private static function apc_getMulti($mname = array()) {
-            $res = array();
-            foreach($mname as $name){
-                $res[] = self::apc_get($name);
-            }
-            return $res;
-        }
-
-        private static function apc_setMulti($mname = array(), $time_in_second_for_all = 600, $skip_for_all = false) {
-            $res = array();
-            foreach($mname as $object){
-                $name = isset($object[0]) ? $object[0] : "";
-                $value = isset($object[1]) ? $object[1] : "";
-                $time = isset($object[2]) ? $object[2] : $time_in_second_for_all;
-                $skip = isset($object[3]) ? $object[3] : $skip_for_all;
-                if($name!="" && $value!="") {
-                    $res[] = self::apc_set($name,$value, $time, $skip);
-                }
-
-            }
-            return $res;
-        }
 
         private static function apc_set($name,$value,$time_in_second = 600, $skip_if_existing = false) {
             $name = self::getMemoryName($name);
@@ -1021,7 +1073,7 @@
             }
         }
 
-        private static function apc_cleanup() {
+        private static function apc_cleanup($option = array()) {
            return apc_clear_cache("user");
         }
 
@@ -1045,7 +1097,7 @@
         private static function apc_decrement($name, $step = 1) {
             $orgi = $name;
             $name = self::getMemoryName($name);
-            $ret = apc_inc($name, $step, $fail);
+            $ret = apc_dec($name, $step, $fail);
             if($ret === false) {
                 self::apc_set($orgi,$step,3600);
                 return $step;
@@ -1080,13 +1132,7 @@
 
         }
 
-        private static function memcache_deleteMulti($mname = array()) {
-            $res = array();
-            foreach($mname as $name){
-                $res[] = self::memcache_delete($name);
-            }
-            return $res;
-        }
+
 
         private static function memcache_exist($name) {
             $x = self::memcache_get($name);
@@ -1097,28 +1143,9 @@
             }
         }
 
-        private static function memcache_getMulti($mname = array()) {
-            $res = array();
-            foreach($mname as $name){
-                $res[] = self::memcache_get($name);
-            }
-            return $res;
-        }
 
-        private static function memcache_setMulti($mname = array(), $time_in_second_for_all = 600, $skip_for_all = false) {
-            $res = array();
-            foreach($mname as $object){
-                $name = isset($object[0]) ? $object[0] : "";
-                $value = isset($object[1]) ? $object[1] : "";
-                $time = isset($object[2]) ? $object[2] : $time_in_second_for_all;
-                $skip = isset($object[3]) ? $object[3] : $skip_for_all;
-                if($name!="" && $value!="") {
-                    $res[] = self::memcache_set($name,$value, $time, $skip);
-                }
 
-            }
-            return $res;
-        }
+
 
 
         private static function memcache_set($name,$value,$time_in_second = 600, $skip_if_existing = false) {
@@ -1210,36 +1237,6 @@
             }
         }
 
-        private static function memcached_getMulti($mname = array()) {
-            $res = array();
-            foreach($mname as $name){
-                $res[] = self::memcached_get($name);
-            }
-            return $res;
-        }
-
-        private static function memcached_deleteMulti($mname = array()) {
-            $res = array();
-            foreach($mname as $name){
-                $res[] = self::memcached_delete($name);
-            }
-            return $res;
-        }
-
-        private static function memcached_setMulti($mname = array(), $time_in_second_for_all = 600, $skip_for_all = false) {
-            $res = array();
-            foreach($mname as $object){
-                $name = isset($object[0]) ? $object[0] : "";
-                $value = isset($object[1]) ? $object[1] : "";
-                $time = isset($object[2]) ? $object[2] : $time_in_second_for_all;
-                $skip = isset($object[3]) ? $object[3] : $skip_for_all;
-                if($name!="" && $value!="") {
-                    $res[] = self::memcached_set($name,$value, $time, $skip);
-                }
-
-            }
-            return $res;
-        }
 
 
         private static function memcached_set($name,$value,$time_in_second = 600, $skip_if_existing = false) {
@@ -1302,36 +1299,7 @@
             }
         }
 
-        private static function wincache_deleteMulti($mname = array()) {
-            $res = array();
-            foreach($mname as $name){
-                $res[] = self::wincache_delete($name);
-            }
-            return $res;
-        }
 
-        private static function wincache_getMulti($mname = array()) {
-            $res = array();
-            foreach($mname as $name){
-                $res[] = self::wincache_get($name);
-            }
-            return $res;
-        }
-
-        private static function wincache_setMulti($mname = array(), $time_in_second_for_all = 600, $skip_for_all = false) {
-            $res = array();
-            foreach($mname as $object){
-                $name = isset($object[0]) ? $object[0] : "";
-                $value = isset($object[1]) ? $object[1] : "";
-                $time = isset($object[2]) ? $object[2] : $time_in_second_for_all;
-                $skip = isset($object[3]) ? $object[3] : $skip_for_all;
-                if($name!="" && $value!="") {
-                    $res[] = self::wincache_set($name,$value, $time, $skip);
-                }
-
-            }
-            return $res;
-        }
 
 
         private static function wincache_set($name,$value,$time_in_second = 600, $skip_if_existing = false) {
@@ -1404,36 +1372,6 @@
             }
 
         }
-
-        private static function pdo_deleteMulti($mname = array()) {
-            $res = array();
-            foreach($mname as $name){
-                $res[] = self::pdo_delete($name);
-            }
-            return $res;
-        }
-
-        private static function pdo_getMulti($mname = array()) {
-            $res = array();
-            foreach($mname as $name){
-                $res[] = self::pdo_get($name);
-            }
-            return $res;
-        }
-
-        private static function pdo_setMulti($mname = array(), $time_in_second_for_all = 600, $skip_for_all = false) {
-            $res = array();
-            foreach($mname as $object){
-                $name = isset($object[0]) ? $object[0] : "";
-                $value = isset($object[1]) ? $object[1] : "";
-                $time = isset($object[2]) ? $object[2] : $time_in_second_for_all;
-                $skip = isset($object[3]) ? $object[3] : $skip_for_all;
-                if($name!="" && $value!="") {
-                    $res[] = self::pdo_set($name,$value, $time, $skip);
-                }
-            }
-            return $res;
-        }        
 
 
         private static function pdo_cleanup($option = "") {

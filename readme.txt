@@ -1,12 +1,13 @@
 More information at http://www.phpfastcache.com
 One Class uses for All Cache. You don't need to rewrite your code many times again.
-Supported: Files, MemCache, MemCached, APC, WinCache, PDO with SQLite
+Supported: Files, MemCache, MemCached, APC, WinCache, X-Cache, PDO with SQLite
 ---------------------------
 Reduce Database Calls
 
 Your website have 10,000 visitors who are online, and your dynamic page have to send 10,000 same queries to database on every page load.
 With phpFastCache, your page only send 1 query to DB, and use the cache to serve 9,999 other visitors.
 
+```php
 <?php
     include("php_fast_cache.php");
     // try to get from Cache first.
@@ -22,13 +23,14 @@ With phpFastCache, your page only send 1 query to DB, and use the cache to serve
     foreach($products as $product) {
         // Output Your Contents HERE
     }
-?>
+```
 ---------------------------
+```php
 include("php_fast_cache.php");
 /*
 * Optional Config || You can skip these config, everything is Automatic ^_^
 * -----------------------------
-* phpFastCache::$storage = "auto"; // auto | pdo | mpdo | files | memcache | memcached | apc | wincache
+* phpFastCache::$storage = "auto"; // auto | pdo | mpdo | files | memcache | memcached | apc | wincache | xcache
 * -----------------------------
 * Just Remember Only 2 Functions: Set & Get.
 * SET Functions
@@ -106,5 +108,6 @@ include("php_fast_cache.php");
 * -----------------------------
 * -----------------------------
 */
+```
 ---------------------------
 E-Mail: khoaofgod@yahoo.com

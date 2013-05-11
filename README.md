@@ -67,7 +67,7 @@ include("php_fast_cache.php");
 * phpFastCache::increment("item_name", $step = 1);
 * phpFastCache::decrement("item_name", $step = 1);
 * phpFastCache::exists("item_name");
-* print_r(phpFastCache::$sys);
+* print_r(phpFastCache::systemInfo());
 *
 * -----------------------------
 * -----------------------------
@@ -103,6 +103,16 @@ include("php_fast_cache.php");
 *                   array("localhost",11211,30),
 *                   array("localhost",11211,70)
 *               );  <-- Memcache Server
+* phpFastCache::$useTmpCache = true; // faster checking cache for LOOP Only. If you don't use LOOP, don't spend more memory.
+* Example:
+* WHILE() {
+*   $cache = phpFastCache::get("name");
+* }
+* LOOP() {
+*   $cache = phpFastCache::get("name");
+* }
+*    --> THE NAME maybe duplicated some times, if you set $useTmpCache it will check from $Tmp first before IT connect to Cache Memory or Open Files to check.
+*        Will be faster a little bit if you know what you are doing.
 * -----------------------------
 * -----------------------------
 * -----------------------------

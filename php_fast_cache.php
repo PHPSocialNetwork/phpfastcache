@@ -11,15 +11,19 @@
  */
 
     class phpFastCache {
-
+        // Public OPTIONS
+        // Can be set by phpFastCache::$option_name = $value|array|string
         public static $storage = "auto"; // PDO | mpdo | Auto | Files | memcache | apc | wincache | xcache
-
         public static $autosize = 40; // Megabytes
-        public static $path = "";
-        public static $securityKey = "cache.storage";
+        public static $path = ""; // PATH/TO/CACHE/ default will be current path
+        public static $securityKey = "cache.storage"; // phpFastCache::$securityKey = "newKey";
         public static $option = array();
-        public static $server = array(array("localhost",11211));
+        public static $server = array(array("localhost",11211)); // for MemCache
+        public static $useTmpCache = false; // use for get from Tmp Memory, will be faster in checking cache on LOOP.
 
+
+        // NOTHING TO CHANGE FROM HERE
+        private static $Tmp = array();
         private static $supported_api = array("pdo","mpdo","files","memcache","memcached","apc","xcache","wincache");
         private static $filename = "PDO.Caching";
         private static $table = "objects";
@@ -322,6 +326,8 @@
 
         public static function cleanup($option = "") {
             $api = self::autoconfig();
+            self::$Tmp = array();
+
             switch ($api) {
                 case "pdo":
                     return self::pdo_cleanup($option);
@@ -357,6 +363,13 @@
         public static function delete($name = "string|array(db->item)") {
 
             $api = self::autoconfig($name);
+            if(self::$useTmpCache == true) {
+                $tmp_name = md5(serialize($api.$name));
+                if(isset(self::$Tmp[$tmp_name])) {
+                    unset(self::$Tmp[$tmp_name]);
+                }
+            }
+
             switch ($api) {
                 case "pdo":
                     return self::pdo_delete($name);
@@ -477,6 +490,11 @@
 
         public static function set($name,$value,$time_in_second = 600, $skip_if_existing = false) {
             $api = self::autoconfig($name);
+            if(self::$useTmpCache == true) {
+                $tmp_name = md5(serialize($api.$name));
+                self::$Tmp[$tmp_name] = $value;
+            }
+
             switch ($api) {
                 case "pdo":
                         return self::pdo_set($name,$value,$time_in_second, $skip_if_existing);
@@ -516,6 +534,15 @@
 
         public static function decrement($name, $step = 1) {
             $api = self::autoconfig($name);
+            if(self::$useTmpCache == true) {
+                $tmp_name = md5(serialize($api.$name));
+                if(isset(self::$Tmp[$tmp_name])) {
+                    self::$Tmp[$tmp_name] = (Int)self::$Tmp[$tmp_name] - $step;
+                } else {
+                    self::$Tmp[$tmp_name] = $step;
+                }
+
+            }
             switch ($api) {
                 case "pdo":
                     return self::pdo_decrement($name, $step);
@@ -551,6 +578,13 @@
 
         public static function get($name) {
             $api = self::autoconfig($name);
+            if(self::$useTmpCache == true) {
+                $tmp_name = md5(serialize($api.$name));
+                if(isset(self::$Tmp[$tmp_name])) {
+                    return self::$Tmp[$tmp_name];
+                }
+
+            }
 
             switch ($api) {
                 case "pdo":
@@ -636,6 +670,17 @@
 
         public static function increment($name, $step = 1) {
             $api = self::autoconfig($name);
+
+            if(self::$useTmpCache == true) {
+                $tmp_name = md5(serialize($api.$name));
+                if(isset(self::$Tmp[$tmp_name])) {
+                    self::$Tmp[$tmp_name] = (Int)self::$Tmp[$tmp_name] + $step;
+                } else {
+                    self::$Tmp[$tmp_name] = $step;
+                }
+
+            }
+
             switch ($api) {
                 case "pdo":
                     return self::pdo_increment($name, $step);

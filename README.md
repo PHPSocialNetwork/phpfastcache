@@ -1,3 +1,5 @@
+UPDATED: Added X-Cache
+
 More information at http://www.phpfastcache.com
 One Class uses for All Cache. You don't need to rewrite your code many times again.
 Supported: Files, MemCache, MemCached, APC, WinCache, X-Cache, PDO with SQLite

@@ -224,13 +224,13 @@
 
                 } else {
 
-                    $info = self::systemInfo();
-                    
-                    if (file_exists(self::getPath()."/config.".$os['os']['unique'].".cache.ini")) 
+                    if (file_exists(self::getPath()."/config.".$os['os']['unique'].".cache.ini"))
                     {
                         $info = self::decode(file_get_contents(self::getPath()."/config.".$os['os']['unique'].".cache.ini"));
-                    }                    
-                    
+                    } else {
+                        $info = self::systemInfo();
+                    }
+
                     $reconfig = false;
 
                     if(isset($info['os']['unique'])) {

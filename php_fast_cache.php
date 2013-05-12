@@ -1053,14 +1053,14 @@
 
         private static function xcache_stats() {
             try {
-                return xcache_list(XC_TYPE_PHP,100);
+                return xcache_list(XC_TYPE_VAR,100);
             } catch(Exception $e) {
                 return array();
             }
         }
 
         private static function xcache_cleanup($option = array()) {
-            xcache_clear_cache(XC_TYPE_PHP);
+            xcache_clear_cache(XC_TYPE_VAR);
             return true;
         }
 

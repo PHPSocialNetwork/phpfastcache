@@ -223,7 +223,7 @@
                     self::$sys['method'] = "xcache";
 
                 } else {
-
+                    // fix PATH for existing
                     if (file_exists(self::getPath()."/config.".$os['os']['unique'].".cache.ini"))
                     {
                         $info = self::decode(file_get_contents(self::getPath()."/config.".$os['os']['unique'].".cache.ini"));
@@ -262,7 +262,6 @@
 
                 if(in_array(self::$storage,array("files","pdo","mpdo"))) {
                     self::$sys['storage'] = "disk";
-
                 }elseif(in_array(self::$storage,array("apc","memcache","memcached","wincache","xcache"))) {
                     self::$sys['storage'] = "memory";
                 } else {
@@ -1036,6 +1035,7 @@
             } else {
                 return xcache_set($name,$value,$time_in_second);
             }
+            return false;
         }
 
         private static function xcache_get($name) {

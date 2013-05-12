@@ -17,7 +17,7 @@ With phpFastCache, your page only send 1 query to DB, and use the cache to serve
     if($products == null) {
         $products = YOUR DB QUERIES || GET_PRODUCTS_FUNCTION;
 
-        // set products in to cache in 600 seconds = 5 minutes
+        // set products in to cache in 600 seconds = 10 minutes
         phpFastCache::set("products_page",$products,600);
     }
 

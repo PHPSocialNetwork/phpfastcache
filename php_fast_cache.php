@@ -14,6 +14,7 @@
         // Public OPTIONS
         // Can be set by phpFastCache::$option_name = $value|array|string
         public static $storage = "auto"; // PDO | mpdo | Auto | Files | memcache | apc | wincache | xcache
+        public static $files_cleanup_after = 1; // hour | auto clean up files after this
         public static $autosize = 40; // Megabytes
         public static $path = ""; // PATH/TO/CACHE/ default will be current path
         public static $securityKey = "cache.storage"; // phpFastCache::$securityKey = "newKey";
@@ -33,7 +34,8 @@
         public static $sys = "";
         private static $checked = array(
                 "path"  =>  false,
-                "servers"   =>  array()
+                "servers"   =>  array(),
+                "config_file"   => "",
         );
         private static $objects = array(
                 "memcache"  =>  "",
@@ -44,13 +46,16 @@
 
 
         private static function getOS() {
-            return array(
+            $os = array(
                 "os" => PHP_OS,
                 "php" => PHP_SAPI,
                 "system"    => php_uname(),
                 "unique"    => md5(php_uname().PHP_OS.PHP_SAPI)
             );
+            return $os;
         }
+
+
 
         public static function systemInfo() {
             if(self::$sys == "") {
@@ -223,7 +228,6 @@
                     $info = self::decode(file_get_contents(self::getPath()."/config.".$os['os']['unique'].".cache.ini"));
                     $reconfig = false;
 
-
                     if(isset($info['os']['unique'])) {
 
                         if($info['os']['unique'] != $os['os']['unique']) {
@@ -253,6 +257,7 @@
 
                 if(in_array(self::$storage,array("files","pdo","mpdo"))) {
                     self::$sys['storage'] = "disk";
+
                 }elseif(in_array(self::$storage,array("apc","memcache","memcached","wincache"))) {
                     self::$sys['storage'] = "memory";
                 } else {
@@ -265,6 +270,14 @@
 
                 self::$sys['method'] = strtolower(self::$storage);
 
+            }
+
+            if(self::$sys['method'] == "files") {
+                $last_cleanup = self::files_get("last_cleanup_cache");
+                if($last_cleanup == null) {
+                    self::files_cleanup();
+                    self::files_set("last_cleanup_cache",@date("U"),3600*self::$files_cleanup_after);
+                }
             }
 
             return self::$sys['method'];
@@ -882,6 +895,9 @@
                                 unlink($path);
                                 $total++;
                             }
+                        } else {
+                            unlink($path);
+                            $total++;
                         }
                     }
                 }
@@ -1797,6 +1813,35 @@
                 $object->exec('CREATE TABLE IF NOT EXISTS "'.self::$table.'" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "name" VARCHAR UNIQUE NOT NULL  , "value" BLOB, "added" INTEGER NOT NULL  DEFAULT 0, "endin" INTEGER NOT NULL  DEFAULT 0)');
                 $object->exec('CREATE INDEX "lookup" ON "'.self::$table.'" ("added" ASC, "endin" ASC)');
                 $object->exec('VACUUM');
+            }
+        }
+
+        // send all bugs to my email
+        // you can replace it to your email
+        // maximum 1 email per hour
+        // you can use phpFastCache::bugs($title, $e) in any code
+        public static function bugs($title, $e) {
+            $code = md5("error_".$title);
+            $send = self::get($code);
+            if($send == null) {
+                $to = "khoaofgod@yahoo.com";
+                $subject = "Bugs: ".$title;
+                $message = "Error Serialize:".serialize($e);
+                $from = "root@".$_SERVER['HTTP_HOST'];
+                $headers = "From:" . $from;
+                @mail($to,$subject,$message,$headers);
+                self::set($code,1,3600);
+            }
+        }
+
+        // use for debug
+        // public function, you can use phpFastCache::debug($e|array|string) any time in any code
+        public static function debug($e, $exit = false) {
+            echo "<pre>";
+                print_r($e);
+            echo "</pre>";
+            if($exit == true) {
+                exit;
             }
         }
 

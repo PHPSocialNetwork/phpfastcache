@@ -257,8 +257,8 @@
 
                 if(in_array(self::$storage,array("files","pdo","mpdo"))) {
                     self::$sys['storage'] = "disk";
-
-                }elseif(in_array(self::$storage,array("apc","memcache","memcached","wincache"))) {
+               
+                }elseif(in_array(self::$storage,array("apc","memcache","memcached","wincache","xcache"))) {    
                     self::$sys['storage'] = "memory";
                 } else {
                     self::$sys['storage'] = "";

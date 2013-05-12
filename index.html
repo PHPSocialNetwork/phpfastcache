@@ -376,6 +376,8 @@
      Custom PATH & Security
      phpFastCache::$path = "/PATH/FOR_PDO_FILES/"; need chmod 0777 or writable mode
      phpFastCache::$securityKey = "cache.storage"; default cache folder name;
+     phpFastCache::$files_cleanup_after = 1; hour collect expired files
+
      phpFastCache::$server = array(
                        array("localhost",11211,30),
                        array("localhost",11211,70)
@@ -568,6 +570,7 @@
                         <span class="date">Released on May 11th, 2013</span>
                         <ul>
                             <li class="new"><span><b>New</b></span> X-Cache Supported</li>
+                            <li class="fix"><span><b>Fix</b></span> phpFastCache::$files_cleanup_after = 1; // hour</li>
                         </ul>
                     </article>
 
@@ -712,8 +715,7 @@ counter" href="http://statcounter.com/" target="_blank"><img
             alt="free hit counter"></a></div></noscript>
     <!-- End of StatCounter Code for Default Guide -->
     <div id="cursor"></div>
-<!--
+
     <iframe src="http://www.HotScripts.com/?RID=N866835" height=1 width=1 frameborder=0 border=0 ></iframe>
--->
 </body>
 </html>

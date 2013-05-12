@@ -1,5 +1,3 @@
-UPDATED: Added X-Cache
-
 More information at http://www.phpfastcache.com
 One Class uses for All Cache. You don't need to rewrite your code many times again.
 Supported: Files, MemCache, MemCached, APC, WinCache, X-Cache, PDO with SQLite
@@ -14,6 +12,7 @@ With phpFastCache, your page only send 1 query to DB, and use the cache to serve
     include("php_fast_cache.php");
     // try to get from Cache first.
     $products = phpFastCache::get("products_page");
+    phpFastCache::$storage = "auto";
 
     if($products == null) {
         $products = YOUR DB QUERIES || GET_PRODUCTS_FUNCTION;
@@ -101,6 +100,7 @@ include("php_fast_cache.php");
 * Custom PATH & Security
 * phpFastCache::$path = "/PATH/FOR_PDO_FILES/"; need chmod 0777 or writable mode
 * phpFastCache::$securityKey = "cache.storage"; default cache folder name;
+* phpFastCache::$files_cleanup_after = 1; hour collect expired files
 * phpFastCache::$server = array(
 *                   array("localhost",11211,30),
 *                   array("localhost",11211,70)

@@ -888,7 +888,7 @@
                             // nothing;
                         }
                     }
-                    elseif(strpos($path,".c.html")) {
+                    elseif(strpos($path,".c.html")!== false) {
                         $data = self::decode($path);
                         if(isset($data['value']) && isset($data['time']) && isset($data['endin'])) {
                             if($data['time'] + $data['endin'] < @date("U")) {

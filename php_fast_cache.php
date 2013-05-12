@@ -1,5 +1,5 @@
 <?php
-/*
+/* Updated 5/12/2013
  * ALl EXAMPLE & DOCUMENT ARE ON www.phpFastCache.com
  * Example:
  * phpFastCache::$storage = "auto"; // use multi files for caching.
@@ -224,14 +224,19 @@
 
                 } else {
                     // fix PATH for existing
+                    $reconfig = false;
+
                     if (file_exists(self::getPath()."/config.".$os['os']['unique'].".cache.ini"))
                     {
                         $info = self::decode(file_get_contents(self::getPath()."/config.".$os['os']['unique'].".cache.ini"));
+                        if(!isset($info['value'])) {
+                            $reconfig = true;
+                        } else {
+                            $info = $info['value'];
+                        }
                     } else {
                         $info = self::systemInfo();
                     }
-
-                    $reconfig = false;
 
                     if(isset($info['os']['unique'])) {
 
@@ -312,20 +317,12 @@
 
 
         private static function encode($value,$time_in_second = "") {
-            if($time_in_second == "") {
-                $value = serialize($value);
-                return $value;
-            } else {
-                $value = serialize(array(
-                        "time"  =>  @date("U"),
-                        "endin"  =>  $time_in_second,
-                        "value"  =>  $value
-                ));
-                return $value;
-            }
-
-
-
+            $value = serialize(array(
+                "time"  => @date("U"),
+                "value" => $value,
+                "endin" => $time_in_second
+            ));
+            return $value;
         }
 
         private static function decode($value) {
@@ -600,18 +597,20 @@
                 if(isset(self::$Tmp[$tmp_name])) {
                     return self::$Tmp[$tmp_name];
                 }
-
             }
 
+
+            // for files, check it if NULL and "empty" string
             switch ($api) {
                 case "pdo":
                     return self::pdo_get($name);
                     break;
                 case "mpdo":
                     return self::pdo_get($name);
+
                     break;
                 case "files":
-                    return self::files_get($name);
+                    return  self::files_get($name);
                     break;
                 case "memcache":
                     return self::memcache_get($name);
@@ -620,18 +619,19 @@
                     return self::memcached_get($name);
                     break;
                 case "wincache":
-                    return self::wincache_get($name);
+                    return  self::wincache_get($name);
                     break;
                 case "apc":
-                    return self::apc_get($name);
+                    return  self::apc_get($name);
                     break;
                 case "xcache":
-                    return self::xcache_get($name);
+                    return   self::xcache_get($name);
                     break;
                 default:
-                    return self::pdo_get($name);
+                    return  self::pdo_get($name);
                     break;
             }
+
         }
 
 
@@ -736,26 +736,12 @@
          */
 
         private static function files_exist($name) {
-            $db = self::selectDB($name);
-            $name = $db['item'];
-            $folder = $db['db'];
-
-            $path = self::getPath();
-            $tmp = explode("/",$folder);
-            foreach($tmp as $dir) {
-                if($dir!="" && $dir !="." && $dir!="..") {
-                    $path.="/".$dir;
-                }
-            }
-
-            $file = $path."/".$name.".c.html";
-
-            if(!file_exists($file)) {
+            $data = self::files_get($name);
+            if($data == null) {
                 return false;
             } else {
                 return true;
             }
-
         }
 
 
@@ -831,7 +817,7 @@
                 return null;
             }
 
-            return $data['value'];
+            return isset($data['value']) ? $data['value'] : null;
         }
 
         private static function files_stats($dir = "") {
@@ -1560,7 +1546,10 @@
             if(!isset($res['value'])) {
                 return null;
             } else {
-                return self::decode($res['value']);
+                // decode value on SQL;
+                $data = self::decode($res['value']);
+                // check if VALUE on string encode
+                return isset($data['value']) ? $data['value'] : null;
             }
         }
 
@@ -1573,7 +1562,7 @@
             try {
                 $stm = self::db(array('db'=>$db['db']))->prepare("UPDATE ".self::$table." SET `value`=:new WHERE `name`=:name ");
                 $stm->execute(array(
-                    ":new"  => $int - $step,
+                    ":new"  => self::encode($int - $step),
                     ":name" =>  $name,
                 ));
 
@@ -1594,7 +1583,7 @@
             try {
                 $stm = self::db(array('db'=>$db['db']))->prepare("UPDATE ".self::$table." SET `value`=:new WHERE `name`=:name ");
                 $stm->execute(array(
-                    ":new" => $int + $step,
+                    ":new" => self::encode($int + $step),
                     ":name" =>  $name,
                 ));
 

@@ -258,7 +258,7 @@
                 if(in_array(self::$storage,array("files","pdo","mpdo"))) {
                     self::$sys['storage'] = "disk";
 
-                }elseif(in_array(self::$storage,array("apc","memcache","memcached","wincache"))) {
+                }elseif(in_array(self::$storage,array("apc","memcache","memcached","wincache","xcache"))) {
                     self::$sys['storage'] = "memory";
                 } else {
                     self::$sys['storage'] = "";
@@ -851,7 +851,7 @@
                         $total['files'] = $total['files'] + $in['files'];
                     }
 
-                    elseif(strpos($path,".c.html")) {
+                    elseif(strpos($path,".c.html")!== false) {
                         $data = self::decode($path);
                         if(isset($data['value']) && isset($data['time']) && isset($data['endin'])) {
                             $total['files']++;
@@ -888,7 +888,7 @@
                             // nothing;
                         }
                     }
-                    elseif(strpos($path,".c.html")!== false) {
+                    elseif(strpos($path,".c.html")!==false) {
                         $data = self::decode($path);
                         if(isset($data['value']) && isset($data['time']) && isset($data['endin'])) {
                             if($data['time'] + $data['endin'] < @date("U")) {

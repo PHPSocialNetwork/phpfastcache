@@ -6,7 +6,7 @@
  * More information at http://www.phpfastcache.com
  */
 
-include("../Stable_phpFastCache_1.3.1/php_fast_cache.php");
+include("php_fast_cache.php");
 $caching = array("auto","files","pdo","mpdo","xcache","apc","memcache","memcached","wincache");
 $tmp = new phpFastCache();
 // data use for caching ^ testing

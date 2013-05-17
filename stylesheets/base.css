@@ -462,7 +462,7 @@ div.team_members {
 			float: left;
 			margin-right: 15px;
 		}
-		div.team_members .person h3 {
+		div.team_members .person .h3 {
 			margin-bottom: 3px;
 		}
 		div.team_members .person span,
@@ -723,16 +723,31 @@ footer {
 /*--------------------------------------------
 12. Typography
 ---------------------------------------------*/
+h1,h2,h3,h4,h5,h6 {
 
-.h1,h2,h3,h4,h5,h6 { margin-bottom: 15px; }
+    color: #A6A6A6 !important;
+    font-size: 12px !important;
+    display: inline;
+
+
+    font-family: "Helvetica Neue", helvetica, sans-serif !important;
+    font-weight: normal  !important;
+
+}
+.inline {
+    display: inline;
+}
+.h1,.h2,.h3,.h4,.h5,.h6 { margin-bottom: 15px; color:#fff; }
+
 .h1 {
 	font-family: 'Quicksand', sans-serif;
 	color: #aaa;
 	font-size: 28px;
 	font-weight: normal;
 	letter-spacing: -0.05em;
+
 }
-h2 {
+.h2 {
 	font-size: 16px;
 	color: #353535;
 }
@@ -747,17 +762,17 @@ h2 {
 	h2.icon.help 			{ background-position: 0px -126px; }
 	h2.icon.pencil 		{ background-position: 0px -168px; }
 	h2.icon.graph 		{ background-position: 0px -210px; }
-h3 {
+.h3 {
 	font-size: 14px;
 	color: #353535;
 }
-h4 {
+.h4 {
 	font-size: 13px;
 }
-h5 {
+.h5 {
 	font-size: 12px;
 }
-h6 {
+.h6 {
 	font-size: 11px;
 	text-transform: uppercase;
 	color: #999;
@@ -1115,8 +1130,8 @@ div.toggle_list {
 				cursor: pointer;
 				position: relative;
 			}
-				div.toggle_list ul li div.title h3 { margin: 0; color: #4b4b4b; font-size: 13px; }
-				div.toggle_list ul li .title h3 span { font-family: "Quicksand"; color: #1c9eda; padding-right: 8px; }
+				div.toggle_list ul li div.title .h3 { margin: 0 !important; color: #fff !important; font-size: 13px !important; }
+				div.toggle_list ul li .title .h3 span { font-family: "Quicksand" !important; color: #1c9eda !important; padding-right: 8px !important; }
 				div.toggle_list ul li div.title a.toggle_link {
 					position: absolute;
 					top: 5px;

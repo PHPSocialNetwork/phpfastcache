@@ -723,8 +723,9 @@ footer {
 /*--------------------------------------------
 12. Typography
 ---------------------------------------------*/
-h1,h2,h3,h4,h5,h6 { margin-bottom: 15px; }
-h1 {
+
+.h1,h2,h3,h4,h5,h6 { margin-bottom: 15px; }
+.h1 {
 	font-family: 'Quicksand', sans-serif;
 	color: #aaa;
 	font-size: 28px;
@@ -761,7 +762,7 @@ h6 {
 	text-transform: uppercase;
 	color: #999;
 }
-p {
+p, h1 {
 	font-size: 12px;
 	line-height: 20px;
 }

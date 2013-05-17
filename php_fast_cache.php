@@ -1,5 +1,5 @@
 <?php
-/* Updated 5/12/2013
+/* Updated 5/16/2013
  * ALl EXAMPLE & DOCUMENT ARE ON www.phpFastCache.com
  * Example:
  * phpFastCache::$storage = "auto"; // use multi files for caching.
@@ -984,9 +984,9 @@
             $name = $folder."_".$name;
 
             // connect memory server
-            if(self::$sys['method'] == "memcache") {
+            if(self::$sys['method'] == "memcache" || $db['db'] == "memcache") {
                 self::memcache_addserver();
-            }elseif(self::$sys['method'] == "memcached") {
+            }elseif(self::$sys['method'] == "memcached" || $db['db'] == "memcached") {
                 self::memcached_addserver();
             }elseif(self::$sys['method'] == "wincache") {
                 // init WinCache here

@@ -1,5 +1,5 @@
 <?php
-/* Updated 5/16/2013
+/* Updated 5/31/2013
  * ALl EXAMPLE & DOCUMENT ARE ON www.phpFastCache.com
  * Example:
  * phpFastCache::$storage = "auto"; // use multi files for caching.
@@ -226,9 +226,9 @@
                     // fix PATH for existing
                     $reconfig = false;
 
-                    if (file_exists(self::getPath()."/config.".$os['os']['unique'].".cache.ini"))
+                    if (file_exists(self::getPath()."/config.".$os['unique'].".cache.ini"))
                     {
-                        $info = self::decode(file_get_contents(self::getPath()."/config.".$os['os']['unique'].".cache.ini"));
+                        $info = self::decode(file_get_contents(self::getPath()."/config.".$os['unique'].".cache.ini"));
                         if(!isset($info['value'])) {
                             $reconfig = true;
                         } else {
@@ -240,21 +240,21 @@
 
                     if(isset($info['os']['unique'])) {
 
-                        if($info['os']['unique'] != $os['os']['unique']) {
+                        if($info['os']['unique'] != $os['unique']) {
                             $reconfig = true;
                         }
                     } else {
                         $reconfig = true;
                     }
 
-                    if(!file_exists(self::getPath()."/config.".$os['os']['unique'].".cache.ini") || $reconfig == true) {
+                    if(!file_exists(self::getPath()."/config.".$os['unique'].".cache.ini") || $reconfig == true) {
                         $info = self::systemInfo();
                         try {
-                            $f = fopen(self::getPath()."/config.".$os['os']['unique'].".cache.ini","w+");
+                            $f = fopen(self::getPath()."/config.".$os['unique'].".cache.ini","w+");
                             fwrite($f,self::encode($info));
                             fclose($f);
                         } catch (Exception $e) {
-                            die("Please chmod 0777 ".self::getPath()."/config.".$os['os']['unique'].".cache.ini");
+                            die("Please chmod 0777 ".self::getPath()."/config.".$os['unique'].".cache.ini");
                         }
                     }
 
@@ -881,7 +881,7 @@
                     elseif(strpos($path,".c.html")!==false) {
                         $data = self::decode($path);
                         if(isset($data['value']) && isset($data['time']) && isset($data['endin'])) {
-                            if($data['time'] + $data['endin'] < @date("U")) {
+                            if((Int)$data['time'] + (Int)$data['endin'] < @date("U")) {
                                 unlink($path);
                                 $total++;
                             }
@@ -894,7 +894,6 @@
 
             }
             return $total;
-
         }
 
         private static function files_delete($name) {

@@ -1,13 +1,8 @@
 <?php
 /* Updated 5/31/2013
  * ALl EXAMPLE & DOCUMENT ARE ON www.phpFastCache.com
- * Example:
- * phpFastCache::$storage = "auto"; // use multi files for caching.
- * phpFastCache::$path  = "/PATH/TO/CACHE/FOLDER";
- *
- * phpFastCache::set("keyword", $value, $time_in_second);
- * $value = phpFastCache::get("keyword");
- *
+ * IF YOU FOUND A BUG, PLEASE GO THERE: https://github.com/khoaofgod/phpfastcache/issues?state=open
+ * Open new issue and I will fix it for you in 24 hours
  */
 
     class phpFastCache {

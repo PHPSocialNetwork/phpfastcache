@@ -1,0 +1,12 @@
+phpFastCache
+------------------------------------------------
+Copyright &copy; 2013 by phpFastCache.com
+Author: khoaofgod@yahoo.com
+
+License: Open Source
+------------------------------------------------
+1. You have my permission to edit, update anything on the source code.
+2. You have my permission to use this class on any projects ( included commercial projects )
+3. You have to put "phpFastCache" as one of your class / modules on your copyright "pages" / information.
+4. You don't need to put phpFastCache or link to my website under your website / app footer.
+5. Enjoy and contact me anytime for fix bugs.

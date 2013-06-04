@@ -1,5 +1,5 @@
 <?php
-/* Updated 5/31/2013
+/* Updated 6/4/2013
  * ALl EXAMPLE & DOCUMENT ARE ON www.phpFastCache.com
  * IF YOU FOUND A BUG, PLEASE GO THERE: https://github.com/khoaofgod/phpfastcache/issues?state=open
  * Open new issue and I will fix it for you in 24 hours
@@ -1836,5 +1836,3 @@
     }
 
 
-
-?>

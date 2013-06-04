@@ -19,7 +19,6 @@ class phpFastCache {
     public static $debugging = false; // turn true for debugging
     private static $step_debugging = 0;
 
-
     // NOTHING TO CHANGE FROM HERE
     private static $Tmp = array();
     private static $supported_api = array("pdo","mpdo","files","memcache","memcached","apc","xcache","wincache");

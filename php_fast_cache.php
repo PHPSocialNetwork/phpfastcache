@@ -1,5 +1,5 @@
 <?php
-/* Updated 6/4/2013 at 11 AM.
+/* Revisiion 616
  * ALl EXAMPLE & DOCUMENT ARE ON www.phpFastCache.com
  * IF YOU FOUND A BUG, PLEASE GO THERE: https://github.com/khoaofgod/phpfastcache/issues?state=open
  * Open new issue and I will fix it for you in 24 hours
@@ -27,7 +27,7 @@ class phpFastCache {
     private static $autodb = "";
     private static $multiPDO = array();
 
-    public static $sys = "";
+    public static $sys = array();
     private static $checked = array(
         "path"  =>  false,
         "servers"   =>  array(),

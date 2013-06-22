@@ -1,5 +1,5 @@
 <?php
-/* Revisiion 616
+/* Revision 617
  * ALl EXAMPLE & DOCUMENT ARE ON www.phpFastCache.com
  * IF YOU FOUND A BUG, PLEASE GO THERE: https://github.com/khoaofgod/phpfastcache/issues?state=open
  * Open new issue and I will fix it for you in 24 hours
@@ -17,9 +17,10 @@ class phpFastCache {
     public static $server = array(array("localhost",11211)); // for MemCache
     public static $useTmpCache = false; // use for get from Tmp Memory, will be faster in checking cache on LOOP.
     public static $debugging = false; // turn true for debugging
-    private static $step_debugging = 0;
+
 
     // NOTHING TO CHANGE FROM HERE
+    private static $step_debugging = 0;
     private static $Tmp = array();
     private static $supported_api = array("pdo","mpdo","files","memcache","memcached","apc","xcache","wincache");
     private static $filename = "pdo.caching";
@@ -54,9 +55,9 @@ class phpFastCache {
 
 
     public static function systemInfo() {
-        self::startDebug(self::$sys,"Check Sys");
+        self::startDebug(self::$sys,"Check Sys",__LINE__,__FUNCTION__);
 
-        if(self::$sys == "" || self::$sys === "") {
+        if(count(self::$sys) == 0 ) {
 
             self::startDebug("Start System Info");
 
@@ -256,6 +257,7 @@ class phpFastCache {
 
                     }
 
+
                 } else {
 
                     $info = self::systemInfo();
@@ -272,8 +274,9 @@ class phpFastCache {
                 }
 
                 if(!file_exists(self::getPath()."/config.".$os['unique'].".cache.ini") || $reconfig == true) {
-                    $info = self::systemInfo();
 
+                    $info = self::systemInfo();
+                    self::$sys = $info;
                     self::startDebug($info,"Check Info",__LINE__,__FUNCTION__);
 
                     try {
@@ -284,9 +287,13 @@ class phpFastCache {
                     } catch (Exception $e) {
                         die("Please chmod 0777 ".self::getPath()."/config.".$os['unique'].".cache.ini");
                     }
+                } else {
+
                 }
 
             }
+
+
 
             self::$storage = self::$sys['method'];
 
@@ -317,7 +324,7 @@ class phpFastCache {
             }
         }
 
-        self::startDebug(self::$sys,"Check Sys",__LINE__,__FUNCTION__);
+        self::startDebug(self::$sys,"Check RETURN SYS",__LINE__,__FUNCTION__);
 
         return self::$sys['method'];
 

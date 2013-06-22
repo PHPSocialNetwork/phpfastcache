@@ -41,7 +41,6 @@ class phpFastCache {
     );
 
 
-
     private static function getOS() {
         $os = array(
             "os" => PHP_OS,
@@ -55,11 +54,11 @@ class phpFastCache {
 
 
     public static function systemInfo() {
-        self::startDebug(self::$sys,"Check Sys",__LINE__,__FUNCTION__);
+        // self::startDebug(self::$sys,"Check Sys",__LINE__,__FUNCTION__);
 
         if(count(self::$sys) == 0 ) {
 
-            self::startDebug("Start System Info");
+            // self::startDebug("Start System Info");
 
             self::$sys['os'] = self::getOS();
 
@@ -167,7 +166,7 @@ class phpFastCache {
 
         }
 
-        self::startDebug(self::$sys);
+        // self::startDebug(self::$sys);
         return self::$sys;
     }
 
@@ -206,19 +205,19 @@ class phpFastCache {
     // return method automatic;
     // APC will be TOP, then Memcached, Memcache, PDO and Files
     public static function autoconfig($name = "") {
-        self::startDebug($name,"Check Name",__LINE__,__FUNCTION__);
+        // self::startDebug($name,"Check Name",__LINE__,__FUNCTION__);
 
         $cache = self::cacheMethod($name);
         if($cache != "" && $cache != self::$storage && $cache!="auto") {
             return $cache;
         }
 
-        self::startDebug($cache,"Check Cache",__LINE__,__FUNCTION__);
+        // self::startDebug($cache,"Check Cache",__LINE__,__FUNCTION__);
 
         $os = self::getOS();
-        self::startDebug(self::$storage,"User Set",__LINE__,__FUNCTION__);
+        // self::startDebug(self::$storage,"User Set",__LINE__,__FUNCTION__);
         if(self::$storage == "" || self::$storage == "auto") {
-            self::startDebug(self::$storage,"User Set Auto",__LINE__,__FUNCTION__);
+            // self::startDebug(self::$storage,"User Set Auto",__LINE__,__FUNCTION__);
 
             if(extension_loaded('apc') && ini_get('apc.enabled') && strpos(PHP_SAPI,"CGI") === false)
             {
@@ -227,26 +226,26 @@ class phpFastCache {
                 self::$sys['storage'] = "memory";
                 self::$sys['method'] = "apc";
 
-                self::startDebug(self::$sys,"GOT APC",__LINE__,__FUNCTION__);
+                // self::startDebug(self::$sys,"GOT APC",__LINE__,__FUNCTION__);
 
             }elseif(extension_loaded('xcache'))
             {
                 self::$sys['drivers']['xcache']   = true;
                 self::$sys['storage'] = "memory";
                 self::$sys['method'] = "xcache";
-                self::startDebug(self::$sys,"GOT XCACHE",__LINE__,__FUNCTION__);
+                // self::startDebug(self::$sys,"GOT XCACHE",__LINE__,__FUNCTION__);
 
             } else {
                 // fix PATH for existing
                 $reconfig = false;
-                self::startDebug(self::getPath()."/config.".$os['unique'].".cache.ini","CHECK CONFIG FILE",__LINE__,__FUNCTION__);
+                // self::startDebug(self::getPath()."/config.".$os['unique'].".cache.ini","CHECK CONFIG FILE",__LINE__,__FUNCTION__);
 
 
                 if (file_exists(self::getPath()."/config.".$os['unique'].".cache.ini"))
                 {
                     $info = self::decode(file_get_contents(self::getPath()."/config.".$os['unique'].".cache.ini"));
 
-                    self::startDebug($info,"CHECK INFO",__LINE__,__FUNCTION__);
+                    // self::startDebug($info,"CHECK INFO",__LINE__,__FUNCTION__);
 
                     if(!isset($info['value'])) {
                         $reconfig = true;
@@ -261,7 +260,7 @@ class phpFastCache {
                 } else {
 
                     $info = self::systemInfo();
-                    self::startDebug($info,"CHECK INFO BY SYSTEM INFO",__LINE__,__FUNCTION__);
+                    // self::startDebug($info,"CHECK INFO BY SYSTEM INFO",__LINE__,__FUNCTION__);
                 }
 
                 if(isset($info['os']['unique'])) {
@@ -277,7 +276,7 @@ class phpFastCache {
 
                     $info = self::systemInfo();
                     self::$sys = $info;
-                    self::startDebug($info,"Check Info",__LINE__,__FUNCTION__);
+                    // self::startDebug($info,"Check Info",__LINE__,__FUNCTION__);
 
                     try {
                         $f = fopen(self::getPath()."/config.".$os['unique'].".cache.ini","w+");
@@ -324,7 +323,7 @@ class phpFastCache {
             }
         }
 
-        self::startDebug(self::$sys,"Check RETURN SYS",__LINE__,__FUNCTION__);
+        // self::startDebug(self::$sys,"Check RETURN SYS",__LINE__,__FUNCTION__);
 
         return self::$sys['method'];
 
@@ -636,7 +635,7 @@ class phpFastCache {
             }
         }
 
-        self::startDebug($api,"API",__LINE__,__FUNCTION__);
+        // self::startDebug($api,"API",__LINE__,__FUNCTION__);
 
         // for files, check it if NULL and "empty" string
         switch ($api) {
@@ -1577,7 +1576,7 @@ class phpFastCache {
         $name = $db['item'];
         // array('db'=>$db['db'])
 
-        self::startDebug($db,"",__LINE__,__FUNCTION__);
+        // self::startDebug($db,"",__LINE__,__FUNCTION__);
 
         $stm = self::db(array('db'=>$db['db']))->prepare("SELECT * FROM ".self::$table." WHERE `name`='".$name."'");
         $stm->execute();
@@ -1700,7 +1699,7 @@ class phpFastCache {
             $dbname = $dbname.".cache";
         }
         // debuging
-        self::startDebug(self::$storage,"Check Storage",__LINE__,__FUNCTION__);
+        // self::startDebug(self::$storage,"Check Storage",__LINE__,__FUNCTION__);
         $initDB = false;
 
         if(self::$storage == "pdo") {

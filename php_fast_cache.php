@@ -1,5 +1,5 @@
 <?php
-/* Revision 617
+/* Revision 618
  * ALl EXAMPLE & DOCUMENT ARE ON www.phpFastCache.com
  * IF YOU FOUND A BUG, PLEASE GO THERE: https://github.com/khoaofgod/phpfastcache/issues?state=open
  * Open new issue and I will fix it for you in 24 hours
@@ -13,6 +13,7 @@ class phpFastCache {
     public static $autosize = 40; // Megabytes
     public static $path = ""; // PATH/TO/CACHE/ default will be current path
     public static $securityKey = "cache.storage"; // phpFastCache::$securityKey = "newKey";
+    public static $securityHtAccess = true; // auto create .htaccess
     public static $option = array();
     public static $server = array(array("localhost",11211)); // for MemCache
     public static $useTmpCache = false; // use for get from Tmp Memory, will be faster in checking cache on LOOP.
@@ -27,6 +28,7 @@ class phpFastCache {
     private static $table = "objects";
     private static $autodb = "";
     private static $multiPDO = array();
+
 
     public static $sys = array();
     private static $checked = array(
@@ -173,11 +175,51 @@ class phpFastCache {
     // return Folder Cache PATH
     // PATH Edit by SecurityKey
     // Auto create, Chmod and Warning
+
+    // Revision 618
+    // PHP_SAPI =  apache2handler should go to tmp
+    private static function isPHPModule() {
+        if(PHP_SAPI == "apache2handler") {
+            return true;
+        } else {
+            if(strpos(PHP_SAPI,"handler") !== false) {
+                return true;
+            }
+        }
+        return false;
+    }
+    // Revision 618
+    // Security with .htaccess
+    static function htaccessGen($path = "") {
+        if(self::$securityHtAccess == true) {
+
+            if(!file_exists($path."/.htaccess")) {
+             //   echo "write me";
+                $html = "order deny, allow \r\n
+deny from all \r\n
+allow from 127.0.0.1";
+                $f = @fopen($path."/.htaccess","w+");
+                @fwrite($f,$html);
+                @fclose($f);
+            } else {
+             //   echo "got me";
+            }
+        }
+
+    }
+
     private static function getPath($skip_create = false) {
 
         if (self::$path=='')
         {
-            self::$path = dirname(__FILE__);
+            // revision 618
+            if(self::isPHPModule()) {
+                $tmp_dir = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
+                self::$path = $tmp_dir;
+            } else {
+                self::$path = dirname(__FILE__);
+            }
+
         }
 
         if($skip_create == false && self::$checked['path'] == false) {
@@ -195,7 +237,12 @@ class phpFastCache {
             }
 
             self::$checked['path'] = true;
+            // Revision 618
+            self::htaccessGen(self::$path."/".self::$securityKey."/");
+
         }
+
+
 
         return self::$path."/".self::$securityKey."/";
 

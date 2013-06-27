@@ -2,6 +2,7 @@
 /* Revision 618
  * ALl EXAMPLE & DOCUMENT ARE ON www.phpFastCache.com
  * IF YOU FOUND A BUG, PLEASE GO THERE: https://github.com/khoaofgod/phpfastcache/issues?state=open
+ * Please feel free
  * Open new issue and I will fix it for you in 24 hours
  */
 

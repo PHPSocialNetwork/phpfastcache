@@ -1,8 +1,7 @@
 <?php
-/* Revision 618
+/* Revision 619
  * ALl EXAMPLE & DOCUMENT ARE ON www.phpFastCache.com
  * IF YOU FOUND A BUG, PLEASE GO THERE: https://github.com/khoaofgod/phpfastcache/issues?state=open
- * Please feel free
  * Open new issue and I will fix it for you in 24 hours
  */
 
@@ -1632,6 +1631,8 @@ allow from 127.0.0.1";
 
         if(!isset($res['value'])) {
             return null;
+        } elseif((Int)$res['added'] + (Int)$res['endin'] <= (Int)@date("U")) {
+            return null;
         } else {
             // decode value on SQL;
             $data = self::decode($res['value']);
@@ -1778,8 +1779,17 @@ allow from 127.0.0.1";
                     }
 
                     $time = filemtime(self::getPath()."/".$dbname);
-                    if($time + (3600*48) < @date("U")) {
+                    if($time + (3600*24) < @date("U")) {
                         $vacuum = true;
+                    }
+
+                    // Revision 619
+                    // auto Vaccuum() every 48 hours
+                    if($vacuum == true) {
+                        if(!isset($option['skip_clean'])) {
+                            self::$objects['pdo']->exec("DELETE FROM ".self::$table." WHERE (`added` + `endin`) < ".@date("U"));
+                        }
+                        self::$objects['pdo']->exec('VACUUM');
                     }
 
 
@@ -1789,20 +1799,8 @@ allow from 127.0.0.1";
                 }
 
 
-                // remove old cache
-                if(!isset($option['skip_clean'])) {
 
-                    try {
-                        self::$objects['pdo']->exec("DELETE FROM ".self::$table." WHERE (`added` + `endin`) < ".@date("U"));
-                    } catch(PDOexception  $e) {
-                        die("Please re-upload the caching file ".$dbname." and chmod it 0777 or Writable permission!");
-                    }
-                }
 
-                // auto Vaccuum() every 48 hours
-                if($vacuum == true) {
-                    self::$objects['pdo']->exec('VACUUM');
-                }
 
 
                 return self::$objects['pdo'];
@@ -1841,32 +1839,27 @@ allow from 127.0.0.1";
                         }
 
                         $time = filemtime(self::getPath()."/".$dbname);
-                        if($time + (3600*48) < @date("U")) {
+                        if($time + (3600*24) < @date("U")) {
                             $vacuum = true;
                         }
 
-
+                        // Revision 619
+                        if($vacuum == true) {
+                            if(!isset($option['skip_clean'])) {
+                                self::$multiPDO[$dbname]->exec("DELETE FROM ".self::$table." WHERE (`added` + `endin`) < ".@date("U"));
+                            }
+                            self::$multiPDO[$dbname]->exec('VACUUM');
+                        }
 
                     } catch (PDOexception  $e) {
-                        die("Can't connect to caching file ".self::getPath()."/".$dbname);
+                        // Revision 619
+                       die("Can't connect to caching file ".self::getPath()."/".$dbname);
                     }
 
 
                 }
 
-                // remove old cache
-                if(!isset($option['skip_clean'])) {
-                    try {
-                        self::$multiPDO[$dbname]->exec("DELETE FROM ".self::$table." WHERE (`added` + `endin`) < ".@date("U"));
-                    } catch(PDOexception  $e) {
-                        die("Please re-upload the caching file ".$dbname." and chmod it 0777 or Writable permission!");
-                    }
-                }
 
-                // auto Vaccuum() every 48 hours
-                if($vacuum == true) {
-                    self::$multiPDO[$dbname]->exec('VACUUM');
-                }
 
 
                 return self::$multiPDO[$dbname];

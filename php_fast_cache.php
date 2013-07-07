@@ -1,7 +1,7 @@
 <?php
-/* Revision 619
+/* Revision 620
  * ALl EXAMPLE & DOCUMENT ARE ON www.phpFastCache.com
- * IF YOU FOUND A BUG, PLEASE GO THERE: https://github.com/khoaofgod/phpfastcache/issues?state=open
+ * IF YOU FOUND A BUG, PLEASE GO THERE: https://github.com/khoaofgod/phpfastcache/issues?page=1&state=closed
  * Open new issue and I will fix it for you in 24 hours
  */
 
@@ -1246,13 +1246,13 @@ allow from 127.0.0.1";
      * Begin Memcache Static
      * http://www.php.net/manual/en/class.memcache.php
      */
-    private static function memcache_addserver() {
+    public static function memcache_addserver() {
         if(!isset(self::$checked['memcache'])) {
             self::$checked['memcache'] = array();
         }
 
         if(self::$objects['memcache'] == "") {
-            self::$objects['memcache'] = new Memcache;
+            self::$objects['memcache'] = new Memcache();
 
             foreach(self::$server as $server) {
                 $name = isset($server[0]) ? $server[0] : "";
@@ -1336,13 +1336,13 @@ allow from 127.0.0.1";
      * Begin Memcached Static
      */
 
-    private static function memcached_addserver() {
+    public static function memcached_addserver() {
         if(!isset(self::$checked['memcached'])) {
             self::$checked['memcached'] = array();
         }
 
         if(self::$objects['memcached'] == "") {
-            self::$objects['memcached'] = new Memcache;
+            self::$objects['memcached'] = new Memcached();
 
             foreach(self::$server as $server) {
                 $name = isset($server[0]) ? $server[0] : "";

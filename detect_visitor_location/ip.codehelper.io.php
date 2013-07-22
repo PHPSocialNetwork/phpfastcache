@@ -49,4 +49,21 @@ class ip_codehelper {
 
         return $data;
     }
+
+    public function SSLForwardJS() {
+        $ip = $this->getRealIP();
+        if(!class_exists("phpFastCache")) {
+            die("Please required phpFastCache Class");
+        }
+
+        // you should change this to cURL()
+        $data = phpFastCache::get("codehelper_ip_ssl".md5($ip));
+        // caching 1 week
+        if($data == null) {
+            $url = "http://api.codehelper.io/ips/?callback=codehelper_ip_callback&ip=".$ip;
+            $data = file_get_contents($url);
+            phpFastCache::set("codehelper_ip_ssl".md5($ip),$data,3600*24*7);
+        }
+        return $data;
+    }
 }

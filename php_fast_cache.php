@@ -1,8 +1,9 @@
 <?php
 /* Revision 620
  * ALl EXAMPLE & DOCUMENT ARE ON www.phpFastCache.com
- * IF YOU FOUND A BUG, PLEASE GO THERE: https://github.com/khoaofgod/phpfastcache/issues?page=1&state=closed
+ * IF YOU FOUND A BUG, PLEASE GO THERE: http://www.codehelper.io <-- Post your issues and I will fix it.
  * Open new issue and I will fix it for you in 24 hours
+ * I stopped support issues on GitHub
  */
 
 class phpFastCache {

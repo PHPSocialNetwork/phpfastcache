@@ -1131,7 +1131,7 @@ allow from 127.0.0.1";
 
     private static function xcache_cleanup($option = array()) {
         // Revision 621
-        
+
         $cnt = xcache_count(XC_TYPE_VAR);
         for ($i=0; $i < $cnt; $i++) {
             xcache_clear_cache(XC_TYPE_VAR, $i);

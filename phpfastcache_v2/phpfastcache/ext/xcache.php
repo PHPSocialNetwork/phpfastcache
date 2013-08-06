@@ -6,9 +6,9 @@
  * Example at our website, any bugs, problems, please visit http://www.codehelper.io
  */
 
-class phpfastcache_xcache extends phpfastcache_method {
+class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
 
-    function checkMethod() {
+    function checkdriver() {
         // Check xcache
         if(extension_loaded('xcache') && function_exists("xcache_get"))
         {
@@ -20,8 +20,8 @@ class phpfastcache_xcache extends phpfastcache_method {
 
     function __construct($option = array()) {
         $this->setOption($option);
-        if(!$this->checkMethod()) {
-            return false;
+        if(!$this->checkdriver() && !isset($option['skipError'])) {
+            throw new Exception("Can't use this driver for your website!");
         }
 
     }

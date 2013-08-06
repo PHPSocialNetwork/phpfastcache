@@ -5,9 +5,9 @@
  * Example at our website, any bugs, problems, please visit http://www.codehelper.io
  */
 
-class phpfastcache_files extends  phpfastcache_method {
+class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
 
-    function checkMethod() {
+    function checkdriver() {
         if(is_writable($this->getPath())) {
             return true;
         } else {
@@ -24,8 +24,8 @@ class phpfastcache_files extends  phpfastcache_method {
         $this->setOption($option);
         $this->getPath();
 
-        if(!$this->checkMethod()) {
-            return false;
+        if(!$this->checkdriver() && !isset($option['skipError'])) {
+            throw new Exception("Can't use this driver for your website!");
         }
 
     }
@@ -44,7 +44,7 @@ class phpfastcache_files extends  phpfastcache_method {
         if($skip == false) {
             if(!file_exists($path)) {
                 if(!@mkdir($path,0777)) {
-                    die("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!");
+                    throw new Exception("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!",92);
                 }
 
             } elseif(!is_writeable($path)) {
@@ -67,7 +67,7 @@ class phpfastcache_files extends  phpfastcache_method {
          * Skip if Existing Caching in Options
          */
         if(isset($option['skipExisting']) && $option['skipExisting'] == true && file_exists($file_path)) {
-            $content = file_get_contents($file_path);
+            $content = $this->readfile($file_path);
             $old = $this->decode($content);
             $toWrite = false;
             if($this->isExpired($old)) {
@@ -76,11 +76,14 @@ class phpfastcache_files extends  phpfastcache_method {
         }
 
         if($toWrite == true) {
-            $f = fopen($file_path,"w+");
-            fwrite($f,$data);
-            fclose($f);
+                $f = fopen($file_path,"w+");
+                fwrite($f,$data);
+                fclose($f);
         }
     }
+
+
+
 
     function get($keyword, $option = array()) {
 
@@ -89,7 +92,8 @@ class phpfastcache_files extends  phpfastcache_method {
             return null;
         }
 
-        $object = $this->decode(file_get_contents($file_path));
+        $content = $this->readfile($file_path);
+        $object = $this->decode($content);
         if($this->isExpired($object)) {
             @unlink($file_path);
             return null;
@@ -118,18 +122,26 @@ class phpfastcache_files extends  phpfastcache_method {
         );
 
         $path = $this->getPath();
-        $dir = opendir($path);
+        $dir = @opendir($path);
+        if(!$dir) {
+            throw new Exception("Can't read PATH:".$path,94);
+        }
+
         $total = 0;
         $removed = 0;
         while($file=readdir($dir)) {
             if($file!="." && $file!=".." && is_dir($path."/".$file)) {
                 // read sub dir
-                $subdir = opendir($path."/".$file);
+                $subdir = @opendir($path."/".$file);
+                if(!$subdir) {
+                    throw new Exception("Can't read path:".$path."/".$file,93);
+                }
+
                 while($f = readdir($subdir)) {
                     if($f!="." && $f!="..") {
                         $file_path = $path."/".$file."/".$f;
                         $size = filesize($file_path);
-                        $object = $this->decode(file_get_contents($file_path));
+                        $object = $this->decode($this->readfile($file_path));
                         if($this->isExpired($object)) {
                             unlink($file_path);
                             $removed = $removed + $size;
@@ -183,7 +195,7 @@ class phpfastcache_files extends  phpfastcache_method {
             return $step;
         }
 
-        $object = $this->decode(file_get_contents($file_path));
+        $object = $this->decode($this->readfile($file_path));
         if($this->isExpired($object)) {
             $this->set($keyword,$step,3600);
             return $step;
@@ -207,7 +219,7 @@ class phpfastcache_files extends  phpfastcache_method {
             return $step;
         }
 
-        $object = $this->decode(file_get_contents($file_path));
+        $object = $this->decode($this->readfile($file_path));
         if($this->isExpired($object)) {
             $this->set($keyword,$step,3600);
             return $step;

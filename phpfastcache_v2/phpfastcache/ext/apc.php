@@ -7,8 +7,8 @@
  */
 
 
-class phpfastcache_apc extends phpfastcache_method {
-    function checkMethod() {
+class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
+    function checkdriver() {
         // Check apc
         if(extension_loaded('apc') && ini_get('apc.enabled'))
         {
@@ -20,8 +20,8 @@ class phpfastcache_apc extends phpfastcache_method {
 
     function __construct($option = array()) {
         $this->setOption($option);
-        if(!$this->checkMethod()) {
-            return false;
+        if(!$this->checkdriver() && !isset($option['skipError'])) {
+            throw new Exception("Can't use this driver for your website!");
         }
     }
 

@@ -6,7 +6,7 @@
  */
 
 
-class phpfastcache_auto extends phpfastcache_method {
+class phpfastcache_auto extends phpFastCache implements phpfastcache_driver  {
     var $auto = "";
     var $instant = "";
 
@@ -15,60 +15,60 @@ class phpfastcache_auto extends phpfastcache_method {
 
         $this->option['cachePath'] = $this->getPath();
 
-        $method = $this->autoMethod();
-        require_once(dirname(__FILE__)."/".$method.".php");
-        $method = "phpfastcache_".$method;
-        $this->instant = new $method();
+        $driver = $this->autodriver();
+        require_once(dirname(__FILE__)."/".$driver.".php");
+        $driver = "phpfastcache_".$driver;
+        $this->instant = new $driver();
 
     }
 
-    function checkMethod() {
+    function checkdriver() {
         return true;
     }
 
     /*
      * Pick A Good One
      */
-    function autoMethod() {
+    function autodriver() {
 
-        $method = "files";
+        $driver = "files";
         if($this->auto == "") {
             if(extension_loaded('apc') && ini_get('apc.enabled') && strpos(PHP_SAPI,"CGI") === false)
             {
-                    $method = "apc";
+                    $driver = "apc";
             }elseif(extension_loaded('xcache'))
             {
-                    $method = "xcache";
+                    $driver = "xcache";
             }elseif(extension_loaded('pdo_sqlite') && is_writeable($this->option['cachePath'])) {
-                    $method = "sqlite";
+                    $driver = "sqlite";
             }elseif(is_writeable($this->option['cachePath'])) {
-                    $method = "files";
+                    $driver = "files";
             }else if(class_exists("memcached")) {
-                    $method = "memcached";
+                    $driver = "memcached";
             }elseif(extension_loaded('wincache') && function_exists("wincache_ucache_set")) {
-                    $method = "wincache";
+                    $driver = "wincache";
             }elseif(extension_loaded('xcache') && function_exists("xcache_get")) {
-                    $method = "xcache";
+                    $driver = "xcache";
             }else if(function_exists("memcache_connect")) {
-                    $method = "memcache";
+                    $driver = "memcache";
             }else {
                 while($file = readdir(__FILE__)) {
                     if($file!="." && $file!=".." && strpos($file,".php") !== false) {
                         require_once(dirname(__FILE__)."/".$file);
                         $namex = str_replace(".php","",$file);
                         $class = "phpfastcache_".$namex;
-                        $method = new $class();
-                        $method->option = $this->option;
-                        if($method->checkMethod()) {
-                            $method = $namex;
+                        $driver = new $class();
+                        $driver->option = $this->option;
+                        if($driver->checkdriver()) {
+                            $driver = $namex;
                         }
                     }
                 }
             }
         }
 
-        $this->auto = $method;
-        return $method;
+        $this->auto = $driver;
+        return $driver;
     }
 
     function set($keyword, $value = "", $time = 300, $option = array() ) {

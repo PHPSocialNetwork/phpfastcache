@@ -8,11 +8,11 @@
  */
 
 
-class phpfastcache_memcache extends phpfastcache_method {
+class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver {
 
     var $instant;
 
-    function checkMethod() {
+    function checkdriver() {
         // Check memcache
         if(function_exists("memcache_connect")) {
             return true;
@@ -22,8 +22,8 @@ class phpfastcache_memcache extends phpfastcache_method {
 
     function __construct($option = array()) {
         $this->setOption($option);
-        if(!$this->checkMethod()) {
-            return false;
+        if(!$this->checkdriver() && !isset($option['skipError'])) {
+            throw new Exception("Can't use this driver for your website!");
         }
         $this->instant = new Memcache();
     }

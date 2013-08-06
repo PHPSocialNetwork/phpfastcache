@@ -8,9 +8,9 @@
  */
 
 
-class phpfastcache_example extends phpfastcache_method {
+class phpfastcache_example extends phpFastCache implements phpfastcache_driver  {
 
-    function checkMethod() {
+    function checkdriver() {
         // return true;
         return false;
     }
@@ -19,17 +19,17 @@ class phpfastcache_example extends phpfastcache_method {
 
     function __construct($option = array()) {
         $this->setOption($option);
-        if(!$this->checkMethod()) {
-            return false;
+        if(!$this->checkdriver() && !isset($option['skipError'])) {
+            throw new Exception("Can't use this driver for your website!");
         }
 
     }
 
     function set($keyword, $value = "", $time = 300, $option = array() ) {
         if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
-            // skip method
+            // skip driver
         } else {
-            // add method
+            // add driver
         }
 
     }

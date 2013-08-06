@@ -9,11 +9,12 @@
 include("phpfastcache/phpfastcache.php");
 
 // auto, files, sqlite, memcache, memcached, xcache, wincache, apc
-$cache = phpFastCache("auto");
+$cache = phpFastCache();
 // OR $cache = new phpFastCache();
 
 // try get in cache first
-$products = $cache->my_products_page1;
+$products = $cache->my_products_page2;
+
 
 if($products == null) {
     echo " NO CACHE HERE, I DO SOME FUNCTIONS | PRODUCTS = ";
@@ -21,7 +22,7 @@ if($products == null) {
     $products = "A | B | C | ARRAY | OBJECT | 1 | 2 | 3 | .. Etc";
     // write products into cache for 10 minutes and use cache to serv others visitors
     // 600 seconds = 10 minutes
-     $cache->my_products_page1 = array($products,600);
+    $cache->my_products_page2 = array($products,5);
 
 } else {
     echo " THIS TIME USED CACHE, NO QUERY, NO FUNCTIONS TO GET PRODUCTS = ";

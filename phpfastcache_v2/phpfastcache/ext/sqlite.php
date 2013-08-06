@@ -7,7 +7,7 @@
  */
 
 
-class phpfastcache_sqlite extends phpfastcache_method {
+class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
     var $max_size = 10; // 10 mb
 
     var $instant = array();
@@ -161,7 +161,7 @@ class phpfastcache_sqlite extends phpfastcache_method {
 
 
 
-    function checkMethod() {
+    function checkdriver() {
         if(extension_loaded('pdo_sqlite') && is_writeable($this->getPath())) {
            return true;
         }
@@ -176,8 +176,8 @@ class phpfastcache_sqlite extends phpfastcache_method {
          * init the path
          */
         $this->setOption($option);
-        if(!$this->checkMethod()) {
-            return false;
+        if(!$this->checkdriver() && !isset($option['skipError'])) {
+            throw new Exception("Can't use this driver for your website!");
         }
 
         if(!file_exists($this->getPath()."/sqlite")) {

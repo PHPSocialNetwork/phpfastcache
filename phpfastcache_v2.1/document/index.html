@@ -11,22 +11,21 @@ xmlns="http://www.w3.org/TR/REC-html40">
 <meta name=Generator content="Microsoft Word 15">
 <meta name=Originator content="Microsoft Word 15">
 <link rel=File-List href="index_files/filelist.xml">
-<title>phpFastCache Document</title>
 <!--[if gte mso 9]><xml>
  <o:DocumentProperties>
   <o:Author>Ken Le</o:Author>
   <o:Template>Ion design (blank).dotx</o:Template>
   <o:LastAuthor>Ken Le</o:LastAuthor>
   <o:Revision>2</o:Revision>
-  <o:TotalTime>129</o:TotalTime>
-  <o:Created>2013-08-05T18:09:00Z</o:Created>
-  <o:LastSaved>2013-08-05T18:09:00Z</o:LastSaved>
+  <o:TotalTime>158</o:TotalTime>
+  <o:Created>2013-08-07T09:32:00Z</o:Created>
+  <o:LastSaved>2013-08-07T09:32:00Z</o:LastSaved>
   <o:Pages>1</o:Pages>
-  <o:Words>1334</o:Words>
-  <o:Characters>7610</o:Characters>
-  <o:Lines>63</o:Lines>
-  <o:Paragraphs>17</o:Paragraphs>
-  <o:CharactersWithSpaces>8927</o:CharactersWithSpaces>
+  <o:Words>1503</o:Words>
+  <o:Characters>8573</o:Characters>
+  <o:Lines>71</o:Lines>
+  <o:Paragraphs>20</o:Paragraphs>
+  <o:CharactersWithSpaces>10056</o:CharactersWithSpaces>
   <o:Version>15.00</o:Version>
  </o:DocumentProperties>
  <o:CustomDocumentProperties>
@@ -706,19 +705,19 @@ target="index_files/props002.xml">
 	mso-font-pitch:variable;
 	mso-font-signature:-536870145 1791492095 134217746 0 131231 0;}
 @font-face
-	{font-family:"\@SimSun";
-	panose-1:2 1 6 0 3 1 1 1 1 1;
-	mso-font-charset:134;
-	mso-generic-font-family:auto;
-	mso-font-pitch:variable;
-	mso-font-signature:3 680460288 22 0 262145 0;}
-@font-face
 	{font-family:"\@Meiryo";
 	panose-1:2 11 6 4 3 5 4 4 2 4;
 	mso-font-charset:128;
 	mso-generic-font-family:swiss;
 	mso-font-pitch:variable;
 	mso-font-signature:-536870145 1791492095 134217746 0 131231 0;}
+@font-face
+	{font-family:"\@SimSun";
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 680460288 22 0 262145 0;}
  /* Style Definitions */
  p.MsoNormal, li.MsoNormal, div.MsoNormal
 	{mso-style-unhide:no;
@@ -2014,15 +2013,17 @@ minutes before send another query.<o:p></o:p></span></p>
 
 <p class=MsoNormal>&lt;?php</p>
 
-<p class=MsoNormal>Required_once(“phpfastcache/phpfastcache.php”);</p>
+<p class=MsoNormal>Required_once(“phpfastcache/phpfastcache.php”);<br>
+// change<b style='mso-bidi-font-weight:normal'> auto </b>to: files, sqlite,
+memcache, memcached, xcache, wincache, apc or simple with “auto”…etc<br>
+phpFastCache::setup(“storage”,<b style='mso-bidi-font-weight:normal'>”auto”</b>);</p>
 
-<p class=MsoNormal>// change<b style='mso-bidi-font-weight:normal'> auto </b>to:
-files, sqlite, memcache, memcached, xcache, wincache, apc…etc<b
-style='mso-bidi-font-weight:normal'><br>
-$cache = phpFastCache(“auto”);<o:p></o:p></b></p>
+<p class=MsoNormal><b style='mso-bidi-font-weight:normal'>$cache =
+phpFastCache();<o:p></o:p></b></p>
 
 <p class=MsoNormal>// GET FROM CACHE FIRST<br>
-<b style='mso-bidi-font-weight:normal'>$products = $cache-&gt;get(“my_products”);</b></p>
+<b style='mso-bidi-font-weight:normal'>$products =
+$cache-&gt;get(“my_products”);</b></p>
 
 <p class=MsoNormal>If($products == null) {<br>
 <span style='mso-tab-count:1'>            </span>$products = “MY QUERY RESULTS
@@ -2113,8 +2114,8 @@ style='mso-list:Ignore'>5.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp
 
 </div>
 
-<p class=MsoNormal>Cool, man. Take at look at how easy on caching with phpFastCache.
-Here is the list of all the functions.</p>
+<p class=MsoNormal>Cool, man. Take at look at how easy on caching with
+phpFastCache. Here is the list of all the functions.</p>
 
 <ol style='margin-top:0in' start=1 type=1>
  <li class=MsoNormal style='mso-list:l2 level1 lfo4'>require_once(“phpfastcache/phpfastcache.php”);</li>
@@ -2156,8 +2157,8 @@ Enjoy it!</p>
      $cache-&gt;keyword2;</li>
  <li class=MsoNormal style='mso-list:l4 level1 lfo5'>$data =
      __c()-&gt;keyword3;</li>
- <li class=MsoNormal style='mso-list:l4 level1 lfo5'>$cache-&gt;keyword5 = array($data_need_set
-     , $time_in_second);</li>
+ <li class=MsoNormal style='mso-list:l4 level1 lfo5'>$cache-&gt;keyword5 =
+     array($data_need_set , $time_in_second);</li>
  <li class=MsoNormal style='mso-list:l4 level1 lfo5'>$cache-&gt;my_products =
      array($products, 300);</li>
  <li class=MsoNormal style='mso-list:l4 level1 lfo5'>__c()-&gt;enjoy =
@@ -2224,8 +2225,7 @@ or any methods:</p>
  <li class=MsoNormal style='mso-list:l3 level1 lfo8'>$data =
      __c()-&gt;get(“keyword”);</li>
  <li class=MsoNormal style='mso-list:l3 level1 lfo8'>$data = __c()-&gt;keyword;</li>
- <li class=MsoNormal style='mso-list:l3 level1 lfo8'>$data =
-     $cache-&gt;memcache-&gt;keyword;</li>
+ <li class=MsoNormal style='mso-list:l3 level1 lfo8'>$data = $cache-&gt;memcache-&gt;keyword;</li>
  <li class=MsoNormal style='mso-list:l3 level1 lfo8'>$data =
      __c()-&gt;files-&gt;get(“keyword”);</li>
  <li class=MsoNormal style='mso-list:l3 level1 lfo8'>$data =
@@ -2281,18 +2281,39 @@ file. You use:</p>
 “files”;</span><o:p></o:p></b></p>
 
 <p class=MsoNormal>After this line, any where you use $cache = phpFastCache()
-or __c(); it will use “files” caching method.</p>
+or __c(); it will use “files” caching method.<br>
+<span style='background:yellow;mso-highlight:yellow'>For detail of config,
+please look at examples/2.setup.php</span> <span style='font-family:Wingdings;
+mso-ascii-font-family:"Century Gothic";mso-hansi-font-family:"Century Gothic";
+mso-char-type:symbol;mso-symbol-font-family:Wingdings'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Wingdings'>ç</span></span> this is full setup;</p>
 
 <p class=MsoNormal><o:p>&nbsp;</o:p></p>
 
-<p class=MsoNormal><span style='color:red'><o:p>&nbsp;</o:p></span></p>
+<h2>Setup MemCache Default Server</h2>
 
-<p class=MsoNormal><span class=Heading2Char><span style='font-size:14.0pt;
-line-height:110%'>For Memcache Server</span></span><br>
+<p class=MsoNormal><br>
 $server = array(array(“127.0.0.1”,11211,100),<br>
 <span style='mso-spacerun:yes'>  </span><span style='mso-tab-count:2'>                      </span><span
 style='mso-spacerun:yes'>  </span>array(“server2”,12212,80),<br>
-<span style='mso-spacerun:yes'>  </span><span style='mso-tab-count:2'>                      </span>);<br>
+<span style='mso-spacerun:yes'>  </span><span style='mso-tab-count:2'>                      </span>);</p>
+
+<p class=MsoNormal>Default Config for all phpFastCache(“memcache”); and __c();
+// default will be 127.0.0.1 with port 11211<o:p></o:p></p>
+
+<p class=MsoNormal><b style='mso-bidi-font-weight:normal'>Require_once(“phpfastcache/phpfastcache.php”);<br>
+<span style='background:yellow;mso-highlight:yellow'>phpFastCache::setup(“server”,
+$server);</span> <o:p></o:p></b></p>
+
+<p class=MsoNormal>// After this config, all memcache will be setup to default
+server<o:p></o:p></p>
+
+<p class=MsoNormal>$memcache = __c();<br>
+$memcache-&gt;get(“something”);<o:p></o:p></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>// Setup Server for 1 instance<br>
 $cache = phpFastCache(“memcache”);<br>
 $cache-&gt;option(“server”, $server);</p>
 
@@ -2300,8 +2321,6 @@ $cache-&gt;option(“server”, $server);</p>
 do not use $cache = new phpFastCache(“memcache”);</span> <br>
 Because we don’t want PHP try to connect to memcache server every time. We only
 want keep 1 connection by 1 instance for whole php script.</p>
-
-<p class=MsoNormal><o:p>&nbsp;</o:p></p>
 
 <p class=MsoNormal><o:p>&nbsp;</o:p></p>
 
@@ -2317,8 +2336,8 @@ problem.</p>
 <p class=MsoNormal>If you’re using PHP as Apache Module, PHP as Nobody, then
 you will get the problem with Files Permission. However, don’t worry about
 this, phpFastCache will auto detect and use one of your “tmp” directory or
-“upload” directory that you have permission to write to setup your Files
-Caching there.</p>
+“upload” directory that you have permission to write to setup your Files Caching
+there.</p>
 
 <p class=MsoNormal>In case that phpFastCache couldn’t look for any folders have
 write permission and You don’t have /tmp folder in your server, then
@@ -2326,6 +2345,11 @@ phpFastCache will tell you that you have to setup one PATH for your Files
 Caching.</p>
 
 <p class=MsoNormal>Here is how to setup the PATH to custom place:</p>
+
+<p class=MsoNormal><b style='mso-bidi-font-weight:normal'>Require_once(“phpfastcache/phpfastcache.php”);<br>
+phpFastCache::setup(“path”,”/home/your/path”);<o:p></o:p></b></p>
+
+<p class=MsoNormal><b style='mso-bidi-font-weight:normal'>OR<o:p></o:p></b></p>
 
 <p class=MsoNormal><b style='mso-bidi-font-weight:normal'>$cache =
 phpFastCache(“files”);<br>
@@ -2337,6 +2361,25 @@ $cache-&gt;option(“securityKey”,”cache.folder”);<o:p></o:p></b></p>
 will automatic create .htaccess and block any request from outside to that
 folder, but I suggest you setup the path outside of your public_html for more
 security.</span></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<h2>Fallback Driver</h2>
+
+<p class=MsoNormal>For example, you use travelling between many drivers, and
+$cache-&gt;memcached, $cache-&gt;files, $cache-&gt;apc</p>
+
+<p class=MsoNormal>And then when you moved your Web Hosting, the new server
+doesn’t have memcached or apc. So, the traveling links will be break and you
+got errors.</p>
+
+<p class=MsoNormal>In Your config files.</p>
+
+<p class=MsoNormal><b style='mso-bidi-font-weight:normal'>Require_once(“phpfastcache/phpfastcache.php”);<br>
+phpFastCache::setup(“fallback”, array(“memcached” =&gt; “files”, “apc” =&gt; “files));<o:p></o:p></b></p>
+
+<p class=MsoNormal>From this line, any traveling links to memcached and apc
+will use “files” driver. And you don’t need to re-code your php files again.</p>
 
 <p class=MsoNormal><o:p>&nbsp;</o:p></p>
 

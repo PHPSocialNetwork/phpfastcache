@@ -5,6 +5,7 @@
  * Example at our website, any bugs, problems, please visit http://www.codehelper.io
  */
 
+
 require_once(dirname(__FILE__)."/driver.php");
 
 // short function
@@ -24,50 +25,87 @@ if(!function_exists("phpFastCache")) {
     }
 }
 
+
 // main class
 class phpFastCache {
     public static $instances = array();
-    public static $storage = "auto"; // default for Global System
+    public static $storage = "auto";
+    public static $config = array(
+            "storage"   =>  "auto",
+            "fallback"  =>  array(
+                                "example"   =>  "files",
+            ),
+            "securityKey"   =>  "auto",
+            "htaccess"      => true,
+            "path"      =>  "",
+
+            "server"        =>  array(
+                array("127.0.0.1",11211,1),
+                //  array("new.host.ip",11211,1),
+            ),
+
+    );
+
     var $tmp = array();
-    var $checked = array(
+    var  $checked = array(
         "path"  => false,
+        "fallback"  => false,
     );
     var $driver = NULL;
 
     // default options, this will be merge to Driver's Options
     var $option = array(
         "path"  =>  "", // path for cache folder
-        "htaccess"  => true, // auto create htaccess
-        "securityKey"   => "auto",  // Key Folder, Setup Per Domain will good.
-        "server"        =>  array(
-            array("127.0.0.1",11211,1),
-            //  array("new.host.ip",11211,1),
-        ),
-
+        "htaccess"  => null, // auto create htaccess
+        "securityKey"   => null,  // Key Folder, Setup Per Domain will good.
         "system"        =>  array(),
         "storage"       =>  "",
         "cachePath"     =>  "",
     );
 
+    public static function setup($name,$value = "") {
+        if(!is_array($name)) {
+            if($name == "storage") {
+                self::$storage = $value;
+            }
+
+            self::$config[$name] = $value;
+        } else {
+            foreach($name as $n=>$value) {
+                self::setup($n,$value);
+            }
+        }
+
+    }
+
     function __construct($storage = "", $option = array()) {
+        if(isset(self::$config['fallback'][$storage])) {
+            $storage = self::$config['fallback'][$storage];
+        }
+
         if($storage == "") {
             $storage = self::$storage;
+            self::option("storage", $storage);
+
         } else {
             self::$storage = $storage;
         }
+
         $this->tmp['storage'] = $storage;
 
-        $this->option = array_merge($this->option, $option);
+        $this->option = array_merge($this->option, self::$config, $option);
 
-        if($this->isExistingDriver($storage)) {
+        if($storage!="auto" && $storage!="" && $this->isExistingDriver($storage)) {
             $driver = "phpfastcache_".$storage;
         } else {
-            $storage = "auto";
-            require_once(dirname(__FILE__)."/ext/auto.php");
-            $driver = "phpfastcache_auto";
+            $storage = $this->autoDriver();
+            self::$storage = $storage;
+            $driver = "phpfastcache_".$storage;
         }
+        require_once(dirname(__FILE__)."/ext/".$storage.".php");
 
         $this->option("storage",$storage);
+
         if($this->option['securityKey'] == "auto" || $this->option['securityKey'] == "") {
             $this->option['securityKey'] = "cache.storage.".$_SERVER['HTTP_HOST'];
         }
@@ -75,6 +113,54 @@ class phpFastCache {
 
         $this->driver = new $driver($this->option);
 
+    }
+
+
+
+    /*
+     * For Auto Driver
+     *
+     */
+
+    function autoDriver() {
+
+        $driver = "files";
+
+        if(extension_loaded('apc') && ini_get('apc.enabled') && strpos(PHP_SAPI,"CGI") === false)
+        {
+            $driver = "apc";
+        }elseif(extension_loaded('xcache'))
+        {
+            $driver = "xcache";
+        }elseif(extension_loaded('pdo_sqlite') && is_writeable($this->option['cachePath'])) {
+            $driver = "sqlite";
+        }elseif(is_writeable($this->option['cachePath'])) {
+            $driver = "files";
+        }else if(class_exists("memcached")) {
+            $driver = "memcached";
+        }elseif(extension_loaded('wincache') && function_exists("wincache_ucache_set")) {
+            $driver = "wincache";
+        }elseif(extension_loaded('xcache') && function_exists("xcache_get")) {
+            $driver = "xcache";
+        }else if(function_exists("memcache_connect")) {
+            $driver = "memcache";
+        }else {
+            while($file = readdir(__FILE__)) {
+                if($file!="." && $file!=".." && strpos($file,".php") !== false) {
+                    require_once(dirname(__FILE__)."/".$file);
+                    $namex = str_replace(".php","",$file);
+                    $class = "phpfastcache_".$namex;
+                    $driver = new $class($this->option);
+                    $driver->option = $this->option;
+                    if($driver->checkdriver()) {
+                        $driver = $namex;
+                    }
+                }
+            }
+        }
+
+
+        return $driver;
     }
 
     function option($name, $value = null) {
@@ -85,15 +171,26 @@ class phpFastCache {
                 return null;
             }
         } else {
+
+            if($name == "path") {
+                $this->checked['path'] = false;
+                $this->driver->checked['path'] = false;
+            }
+
+            self::$config[$name] = $value;
             $this->option[$name] = $value;
             $this->driver->option[$name] = $this->option[$name];
+
             return $this;
         }
     }
 
     public function setOption($option = array()) {
-        $this->option = array_merge($this->option, $option);
+        $this->option = array_merge($this->option, self::$config, $option);
+        $this->checked['path'] = false;
     }
+
+
 
     function __get($name) {
         $this->driver->option = $this->option;
@@ -110,11 +207,7 @@ class phpFastCache {
         }
     }
 
-    function __call($name, $arg) {
-        $this->driver->option = $this->option;
-        $res = call_user_func_array($name, $arg);
-        return $res;
-    }
+
 
     /*
      * Only require_once for the class u use.
@@ -126,7 +219,6 @@ class phpFastCache {
             if(class_exists("phpfastcache_".$class)) {
                 return true;
             }
-
         }
 
         return false;
@@ -177,11 +269,11 @@ class phpFastCache {
 
 
 
-    }
+        }
 
-    $example = new phpfastcache_example($this->option);
-    $this->option("path",$example->getPath(true));
-    return $this->option;
+        $example = new phpfastcache_example($this->option);
+        $this->option("path",$example->getPath(true));
+        return $this->option;
     }
 
 
@@ -305,9 +397,14 @@ allow from 127.0.0.1";
     /*
      * return PATH for Files & PDO only
      */
-    public function getPath($skip_create = false) {
+    public function getPath($create_path = false) {
 
-        if ($this->option("path") =='')
+        if($this->option['path'] == "" && self::$config['path']!="") {
+            $this->option("path", self::$config['path']);
+        }
+
+
+        if ($this->option['path'] =='')
         {
             // revision 618
             if($this->isPHPModule()) {
@@ -318,31 +415,35 @@ allow from 127.0.0.1";
                 $this->option("path", dirname(__FILE__));
             }
 
-        }
-
-        if($skip_create == false && $this->checked['path'] == false) {
-            if(!file_exists($this->option("path")."/".$this->option("securityKey")."/")) {
-                if(!file_exists($this->option("path")."/".$this->option("securityKey")."/")) {
-                    @mkdir($this->option("path")."/".$this->option("securityKey")."/",0777);
-                }
-                if(!is_writable($this->option("path")."/".$this->option("securityKey")."/")) {
-                    @chmod($this->option("path")."/".$this->option("securityKey")."/",0777);
-                }
-                if(!file_exists($this->option("path")."/".$this->option("securityKey")."/") || !is_writable($this->option("path")."/".$this->option("securityKey")."/")) {
-                    throw new Exception("Sorry, Please create ".$this->option("path")."/".$this->option("securityKey")."/ and SET Mode 0777 or any Writable Permission!" , 100);
-                }
-
+            if(self::$config['path'] == "") {
+                self::$config['path']=  $this->option("path");
             }
 
-            $this->checked['path'] = true;
-            // Revision 618
-            $this->htaccessGen($this->option("path")."/".$this->option("securityKey")."/");
-
         }
 
-        $this->option['cachePath'] = $this->option("path")."/".$this->option("securityKey")."/";
-        // $this->option['cachePath'] = str_replace("//","/",$this->option['cachePath']);
 
+        $full_path = $this->option("path")."/".$this->option("securityKey")."/";
+
+        if($create_path == false && $this->checked['path'] == false) {
+
+            if(!file_exists($full_path) || !is_writable($full_path)) {
+                if(!file_exists($full_path)) {
+                    @mkdir($full_path,0777);
+                }
+                if(!is_writable($full_path)) {
+                    @chmod($full_path,0777);
+                }
+                if(!file_exists($full_path) || !is_writable($full_path)) {
+                    throw new Exception("Sorry, Please create ".$this->option("path")."/".$this->option("securityKey")."/ and SET Mode 0777 or any Writable Permission!" , 100);
+                }
+            }
+
+
+            $this->checked['path'] = true;
+            $this->htaccessGen($full_path);
+        }
+
+        $this->option['cachePath'] = $full_path;
         return $this->option['cachePath'];
     }
 

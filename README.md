@@ -12,9 +12,11 @@ With phpFastCache, your page only send 1 query to DB, and use the cache to serve
 ```php
 <?php
     include("php_fast_cache.php");
+    phpFastCache::$storage = "auto";
+
     // try to get from Cache first.
     $products = phpFastCache::get("products_page");
-    phpFastCache::$storage = "auto";
+
 
     if($products == null) {
         $products = YOUR DB QUERIES || GET_PRODUCTS_FUNCTION;

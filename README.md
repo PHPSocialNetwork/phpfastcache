@@ -4,6 +4,7 @@ More information at http://www.phpfastcache.com
 One Class uses for All Cache. You don't need to rewrite your code many times again.
 
 Version 1.x : One Single Class
+
 Version 2.x : Multiple Drivers
 
 All of them supported: Files, MemCache, MemCached, APC, WinCache, X-Cache, PDO with SQLite

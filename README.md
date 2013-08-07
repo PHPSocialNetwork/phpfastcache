@@ -2,12 +2,7 @@ Simple Yet Powerful PHP Caching Class
 ---------------------------
 More information at http://www.phpfastcache.com
 One Class uses for All Cache. You don't need to rewrite your code many times again.
-
-Version 1.x : One Single Class
-
-Version 2.x : Multiple Drivers
-
-All of them supported: Files, MemCache, MemCached, APC, WinCache, X-Cache, PDO with SQLite
+Supported: Files, MemCache, MemCached, APC, WinCache, X-Cache, PDO with SQLite
 
 ---------------------------
 Reduce Database Calls
@@ -17,119 +12,92 @@ With phpFastCache, your page only send 1 query to DB, and use the cache to serve
 
 ```php
 <?php
-    include("php_fast_cache.php");
-    phpFastCache::$storage = "auto";
+/*
+ * Welcome to Learn Lesson
+ * This is very Simple PHP Code of Caching
+ */
 
-    // try to get from Cache first.
-    $products = phpFastCache::get("products_page");
+// Require Library
+// Keep it Auto or setup it as "files","sqlite","wincache" ,"apc","memcache","memcached", "xcache"
+require_once("../phpfastcache/phpfastcache.php");
+phpFastCache::setup("storage","auto");
 
+// simple Caching with:
+$cache = phpFastCache();
 
-    if($products == null) {
-        $products = YOUR DB QUERIES || GET_PRODUCTS_FUNCTION;
+// Try to get $products from Caching First
+// product_page is "identity keyword";
+$products = $cache->get("product_page");
 
-        // set products in to cache in 600 seconds = 10 minutes
-        phpFastCache::set("products_page",$products,600);
-    }
+if($products == null) {
+    $products = "DB QUERIES | FUNCTION_GET_PRODUCTS | ARRAY | STRING | OBJECTS";
+    // Write products to Cache in 10 minutes with same keyword
+    $cache->set("product_page",$products , 600);
+}
 
-    foreach($products as $product) {
-        // Output Your Contents HERE
-    }
+// use your products here or return it;
+echo $products;
 ```
 ---------------------------
 ```php
-include("php_fast_cache.php");
-/*
-* Optional Config || You can skip these config, everything is Automatic ^_^
-* -----------------------------
-* phpFastCache::$storage = "auto"; // auto | pdo | mpdo | files | memcache | memcached | apc | wincache | xcache
-* -----------------------------
-* Just Remember Only 2 Functions: Set & Get.
-* SET Functions
-* phpFastCache::set("item_name", $value, second);
-* OR
-* phpFastCache::set("item_name", $value, second, true); // skip if existing
-*
-* phpFastCache::set(array("apc" => "item_name"), $value, 600);
-* phpFastCache::set(array("files" => "item_name"), $value, 600);
-* phpFastCache::set(array("memcached" => "item_name"), $value, 600);
-* phpFastCache::set(array("pdo" => "item_name"), $value, 600);
-*
-* phpFastCache::set(array("files/2013/categories" => "item_name"), $value, 600);
-* phpFastCache::set(array("db1" => "item_name"), $value, 600);
-* phpFastCache::set(array("db2" => "item_name"), $value, 600);
-* phpFastCache::set(array("db3" => "item_name"), $value, 600);
-* phpFastCache::set(array("prefix" => "item_name"), $value, 600);
-*
-* GET FUNCTIONS ( return NULL or Value of item )
-* phpFastCache::get("item_name");
-* phpFastCache::get(array("prefix" => "item_name"));
-*
-* -----------------------------
-* -----------------------------
-* -----------------------------
-* -----------------------------
-*
-* Others Functions if you are interesting
-* item_name can be string or array("where" => "name");
-*
-* phpFastCache::delete("item_name");
-* phpFastCache::cleanup("item_name");
-* phpFastCache::stats();
-* phpFastCache::increment("item_name", $step = 1);
-* phpFastCache::decrement("item_name", $step = 1);
-* phpFastCache::exists("item_name");
-* print_r(phpFastCache::systemInfo());
-*
-* -----------------------------
-* -----------------------------
-* -----------------------------
-* phpFastCache::setMulti(array(
-*                                   array("a","hello",600),
-*                           array("b","value")),
-*                       500,
-*                       false);
-*
-* phpFastCache::setMulti(array(
-*                           array("a","hello"),
-*                           array("b","value")),
-*                        3600*24);
-*
-* phpFastCache::setMulti(array(
-*                           array("files" => "a", "data", 3600*24),
-*                           array("apc"   => "b", "hello world", 500),
-*                           array("c", "array|object|info"));
-*
-* phpFastCache::getMulti(array("a","b","c"));
-* phpFastCache::getMulti(array("files"  =>  "a", "apc"  => "b", "c"));
-*
-* phpFastCache::deleteMulti(array("a","b","c"));
-* phpFastCache::deleteMulti(array("files"   =>  "a", "memcached"    => "b", "c"));
-*
-*
-* ----------------------------
-* Custom PATH & Security
-* phpFastCache::$path = "/PATH/FOR_PDO_FILES/"; need chmod 0777 or writable mode
-* phpFastCache::$securityKey = "cache.storage"; default cache folder name;
-* phpFastCache::$files_cleanup_after = 1; hour collect expired files
-* phpFastCache::$server = array(
-*                   array("localhost",11211,30),
-*                   array("localhost",11211,70)
-*               );  <-- Memcache Server
-* phpFastCache::$useTmpCache = true; // faster checking cache for LOOP Only. If you don't use LOOP, don't spend more memory.
-* Example:
-* WHILE() {
-*   $cache = phpFastCache::get("name");
-* }
-* LOOP() {
-*   $cache = phpFastCache::get("name");
-* }
-*    --> THE NAME maybe duplicated some times, if you set $useTmpCache it will check from $Tmp first before IT connect to Cache Memory or Open Files to check.
-*        Will be faster a little bit if you know what you are doing.
-* -----------------------------
-* -----------------------------
-* -----------------------------
-* -----------------------------
-*/
-```
----------------------------
-E-Mail: khoaofgod@yahoo.com
+<?php
+
+// in your config files
+include("phpfastcache/phpfastcache.php");
+// auto | memcache | files ...etc. Will be default for $cache = __c();
+phpFastCache::$storage = "auto";
+
+$cache1 = phpFastCache("files");
+$cache1->option("path","/PATH/TO/SOME_WHERE/STORE_FILES/");
+
+$cache2 = __c("memcache");
+$server = array(array("127.0.0.1",11211,100), array("128.5.1.3",11215,80));
+$cache2->option("server", $server);
+
+$cache3 = new phpFastCache("apc");
+
+// How to Write?
+$cache1->set("keyword1", "string|number|array|object", 300);
+$cache2->keyword2 = array("something here", 600);
+__c()->keyword3 = array("array|object", 3600*24);
+
+// How to Read?
+$data = $cache1->get("keyword1");
+$data = $cache2->keyword2;
+$data = __c()->keyword3;
+$data = __c()->get("keyword4");
+
+// Free to Travel between any caching methods
+
+$cache1 = phpFastCache("files");
+$cache1->set("keyword1", $value, $time);
+$cache1->memcache->set("keyword1", $value, $time);
+$cache1->apc->set("whatever", $value, 300);
+
+$cache2 = __c("apc");
+$cache2->keyword1 = array("so cool", 300);
+$cache2->files->keyword1 = array("Oh yeah!", 600);
+
+$data = __c("memcache")->get("keyword1");
+$data = __c("files")->get("keyword2");
+$data = __c()->keyword3;
+
+// Multiple ? No Problem
+
+$list = $cache1->getMulti(array("key1","key2","key3"));
+$cache2->setMulti(array("key1","value1", 300),
+    array("key2","value2", 600),
+    array("key3","value3", 1800),
+                      );
+
+$list = $cache1->apc->getMulti(array("key1","key2","key3"));
+__c()->memcache->getMulti(array("a","b","c"));
+
+// Others
+$cache->delete("keyword");
+$cache->increment("keyword", $step = 1);
+$cache->decrement("keyword", $step = 1);
+$cache->clean();
+$cache->stats();
+$cache->isExisting("keyword");
+````

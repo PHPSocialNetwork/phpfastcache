@@ -12,23 +12,31 @@ Reduce Database Calls
 Your website have 10,000 visitors who are online, and your dynamic page have to send 10,000 same queries to database on every page load.
 With phpFastCache, your page only send 1 query to DB, and use the cache to serve 9,999 other visitors.
 
-```php
 <?php
-    include("phpfastcache/phpfastcache.php");
-    phpFastCache::$storage = "auto";
+/*
+ * Welcome to Learn Lesson
+ * This is very Simple PHP Code of Caching
+ */
 
-    // try to get from Cache first.
-    $products = __c()->get("products_page");
+// Require Library
+// Keep it Auto or setup it as "files","sqlite","wincache" ,"apc","memcache","memcached", "xcache"
+require_once("../phpfastcache/phpfastcache.php");
+phpFastCache::setup("storage","auto");
 
+// simple Caching with:
+$cache = phpFastCache();
 
-    if($products == null) {
-        $products = YOUR DB QUERIES || GET_PRODUCTS_FUNCTION;
+// Try to get $products from Caching First
+// product_page is "identity keyword";
+$products = $cache->get("product_page");
 
-        // set products in to cache in 600 seconds = 10 minutes
-        __c()->set("products_page",$products,600);
-    }
+if($products == null) {
+    $products = "DB QUERIES | FUNCTION_GET_PRODUCTS | ARRAY | STRING | OBJECTS";
+    // Write products to Cache in 10 minutes with same keyword
+    $cache->set("product_page",$products , 600);
+}
 
-    foreach($products as $product) {
-        // Output Your Contents HERE
-    }
-```
+// use your products here or return it;
+echo $products;
+
+?>

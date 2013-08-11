@@ -8,11 +8,10 @@
  */
 
 // use Files Cache for Whole Page / Widget
-$cache = phpFastCache("files");
 
 // keyword = Webpage_URL
-$keyword = md5($_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']);
-$html = $cache->get($keyword);
+$keyword_webpage = md5($_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']);
+$html = __c("files")->get($keyword_webpage);
 
 if($html == null) {
     ob_start();
@@ -24,7 +23,7 @@ if($html == null) {
     // GET HTML WEBPAGE
     $html = ob_get_contents();
     // Save to Cache 30 minutes
-    $cache->set($keyword,$html, 1800);
+    __c("files")->set($keyword_webpage,$html, 1800);
 }
 
 echo $html;

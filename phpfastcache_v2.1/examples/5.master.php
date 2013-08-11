@@ -5,7 +5,7 @@ include("phpfastcache/phpfastcache.php");
 // auto | memcache | files ...etc. Will be default for $cache = __c();
 phpFastCache::$storage = "auto";
 
-$cache1 = phpFastCache("files");
+$cache1 = phpFastCache();
 $cache1->option("path","/PATH/TO/SOME_WHERE/STORE_FILES/");
 
 $cache2 = __c("memcache");

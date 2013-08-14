@@ -57,6 +57,7 @@ class phpFastCache {
         "fallback"  => false,
         "hook"      => false,
     );
+    var $is_driver = false;
     var $driver = NULL;
 
     // default options, this will be merge to Driver's Options
@@ -82,12 +83,21 @@ class phpFastCache {
             "expired_in"  => $time,
             "expired_time"  => @date("U") + (Int)$time,
         );
+        if($this->is_driver == true) {
+            return $this->driver_set($keyword,$object,$time,$option);
+        } else {
+            return $this->driver->driver_set($keyword,$object,$time,$option);
+        }
 
-        return $this->driver->driver_set($keyword,$object,$time,$option);
     }
 
     function get($keyword, $option = array()) {
-        $object = $this->driver->driver_get($keyword,$option);
+        if($this->is_driver == true) {
+            $object = $this->driver_get($keyword,$option);
+        } else {
+            $object = $this->driver->driver_get($keyword,$option);
+        }
+
         if($object == null) {
             return null;
         }
@@ -95,7 +105,12 @@ class phpFastCache {
     }
 
     function getInfo($keyword, $option = array()) {
-        $object = $this->driver->driver_get($keyword,$option);
+        if($this->is_driver == true) {
+            $object = $this->driver_get($keyword,$option);
+        } else {
+            $object = $this->driver->driver_get($keyword,$option);
+        }
+
         if($object == null) {
             return null;
         }
@@ -103,27 +118,48 @@ class phpFastCache {
     }
 
     function delete($keyword, $option = array()) {
-        return $this->driver->driver_delete($keyword,$option);
+        if($this->is_driver == true) {
+            return $this->driver_delete($keyword,$option);
+        } else {
+            return $this->driver->driver_delete($keyword,$option);
+        }
+
     }
 
     function stats($option = array()) {
-        return $this->driver->driver_stats($option);
+        if($this->is_driver == true) {
+            return $this->driver_stats($option);
+        } else {
+            return $this->driver->driver_stats($option);
+        }
+
     }
 
     function clean($option = array()) {
-        return $this->driver->driver_clean($option);
+        if($this->is_driver == true) {
+            return $this->driver_clean($option);
+        } else {
+            return $this->driver->driver_clean($option);
+        }
+
     }
 
     function isExisting($keyword) {
-        if(method_exists($this->driver,"driver_isExisting")) {
-            return $this->driver->driver_isExisting($keyword);
-        } else {
-            $data = $this->get($keyword);
-            if($data == null) {
-                return false;
-            } else {
-                return true;
+        if($this->is_driver == true) {
+            if(method_exists($this,"driver_isExisting")) {
+                return $this->driver_isExisting($keyword);
             }
+        } else {
+            if(method_exists($this->driver,"driver_isExisting")) {
+                return $this->driver->driver_isExisting($keyword);
+            }
+        }
+
+        $data = $this->get($keyword);
+        if($data == null) {
+            return false;
+        } else {
+            return true;
         }
 
     }
@@ -294,6 +330,7 @@ class phpFastCache {
 
 
         $this->driver = new $driver($this->option);
+        $this->driver->is_driver = true;
 
     }
 
@@ -315,9 +352,6 @@ class phpFastCache {
             $driver = "sqlite";
         }elseif(is_writeable($this->getPath())) {
             $driver = "files";
-        }elseif(extension_loaded('xcache'))
-        {
-            $driver = "xcache";
         }else if(class_exists("memcached")) {
             $driver = "memcached";
         }elseif(extension_loaded('wincache') && function_exists("wincache_ucache_set")) {

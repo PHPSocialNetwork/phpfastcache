@@ -324,10 +324,11 @@ class phpFastCache {
         }else if(function_exists("memcache_connect")) {
             $driver = "memcache";
         }else {
-            $dir = opendir(dirname(__FILE__)."/drivers/");
+            $path = dirname(__FILE__)."/drivers";
+            $dir = opendir($path);
             while($file = readdir($dir)) {
                 if($file!="." && $file!=".." && strpos($file,".php") !== false) {
-                    require_once(dirname(__FILE__)."/".$file);
+                    require_once($path."/".$file);
                     $namex = str_replace(".php","",$file);
                     $class = "phpfastcache_".$namex;
                     $driver = new $class($this->option);

@@ -311,13 +311,13 @@ class phpFastCache {
         if(extension_loaded('apc') && ini_get('apc.enabled') && strpos(PHP_SAPI,"CGI") === false)
         {
             $driver = "apc";
+        }elseif(extension_loaded('pdo_sqlite') && is_writeable($this->getPath())) {
+            $driver = "sqlite";
+        }elseif(is_writeable($this->getPath())) {
+            $driver = "files";
         }elseif(extension_loaded('xcache'))
         {
             $driver = "xcache";
-        }elseif(extension_loaded('pdo_sqlite') && is_writeable($this->option['cachePath'])) {
-            $driver = "sqlite";
-        }elseif(is_writeable($this->option['cachePath'])) {
-            $driver = "files";
         }else if(class_exists("memcached")) {
             $driver = "memcached";
         }elseif(extension_loaded('wincache') && function_exists("wincache_ucache_set")) {
@@ -334,8 +334,10 @@ class phpFastCache {
                     require_once($path."/".$file);
                     $namex = str_replace(".php","",$file);
                     $class = "phpfastcache_".$namex;
-                    $driver = new $class($this->option);
-                    $driver->option = $this->option;
+                    $option = $this->option;
+                    $option['skipError'] = true;
+                    $driver = new $class($option);
+                    $driver->option = $option;
                     if($driver->checkdriver()) {
                         $driver = $namex;
                     }

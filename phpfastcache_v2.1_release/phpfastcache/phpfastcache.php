@@ -18,17 +18,20 @@ if(!function_exists("__c")) {
 // main function
 if(!function_exists("phpFastCache")) {
     function phpFastCache($storage = "", $option = array()) {
-        if(!isset(phpFastCache::$instances[$storage])) {
-            phpFastCache::$instances[$storage] = new phpFastCache($storage, $option);
+        if(!isset(phpFastCache_instances::$instances[$storage])) {
+            phpFastCache_instances::$instances[$storage] = new phpFastCache($storage, $option);
         }
-        return phpFastCache::$instances[$storage];
+        return phpFastCache_instances::$instances[$storage];
     }
 }
 
+class phpFastCache_instances {
+    public static $instances = array();
+}
 
 // main class
 class phpFastCache {
-    public static $instances = array();
+
     public static $storage = "auto";
     public static $config = array(
             "storage"   =>  "auto",

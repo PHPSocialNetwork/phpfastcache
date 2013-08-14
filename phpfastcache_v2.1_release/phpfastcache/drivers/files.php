@@ -96,6 +96,7 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
         $object = $this->decode($content);
         if($this->isExpired($object)) {
             @unlink($file_path);
+            $this->auto_clean_expired();
             return null;
         }
 
@@ -159,6 +160,14 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
                 "Current"   => $res['size'],
        );
        return $res;
+    }
+
+    function auto_clean_expired() {
+        $autoclean = $this->get("keyword_clean_up_driver_files");
+        if($autoclean == null) {
+            $this->set("keyword_clean_up_driver_files",3600*24);
+            $res = $this->stats();
+        }
     }
 
     function driver_clean($option = array()) {

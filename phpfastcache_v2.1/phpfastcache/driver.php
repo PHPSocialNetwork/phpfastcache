@@ -16,52 +16,36 @@ interface phpfastcache_driver {
      function checkdriver();
 
     /*
-     * check Existing cache
-     * return true if exist and false if not
-     */
-     function isExisting($keyword);
-
-    /*
      * SET
      * set a obj to cache
      */
-     function set($keyword, $value = "", $time = 300, $option = array() );
+     function driver_set($keyword, $value = "", $time = 300, $option = array() );
 
     /*
      * GET
      * return null or value of cache
      */
-     function get($keyword, $option = array());
+     function driver_get($keyword, $option = array());
 
     /*
      * Stats
      * Show stats of caching
      * Return array ("info","size","data")
      */
-     function stats($option = array());
+     function driver_stats($option = array());
 
     /*
      * Delete
      * Delete a cache
      */
-     function delete($keyword, $option = array());
+     function driver_delete($keyword, $option = array());
 
     /*
      * clean
      * Clean up whole cache
      */
-     function clean($option = array());
+     function driver_clean($option = array());
 
-    /*
-     * Increment
-     */
-     function increment($keyword, $step = 1, $option = array());
-
-    /*
-     * Decrement
-     */
-
-     function decrement($keyword, $step = 1,  $option = array());
 
 
 

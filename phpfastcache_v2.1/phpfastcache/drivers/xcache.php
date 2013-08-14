@@ -26,7 +26,7 @@ class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
 
     }
 
-    function set($keyword, $value = "", $time = 300, $option = array() ) {
+    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
 
         if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
             if(!$this->isExisting($keyword)) {
@@ -38,7 +38,7 @@ class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
         return false;
     }
 
-    function get($keyword, $option = array()) {
+    function driver_get($keyword, $option = array()) {
         // return null if no caching
         // return value if in caching
         $data = xcache_get($keyword);
@@ -48,11 +48,11 @@ class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
         return $data;
     }
 
-    function delete($keyword, $option = array()) {
+    function driver_delete($keyword, $option = array()) {
         return xcache_unset($keyword);
     }
 
-    function stats($option = array()) {
+    function driver_stats($option = array()) {
         $res = array(
             "info"  =>  "",
             "size"  =>  "",
@@ -67,7 +67,7 @@ class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
         return $res;
     }
 
-    function clean($option = array()) {
+    function driver_clean($option = array()) {
         $cnt = xcache_count(XC_TYPE_VAR);
         for ($i=0; $i < $cnt; $i++) {
             xcache_clear_cache(XC_TYPE_VAR, $i);
@@ -75,7 +75,7 @@ class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
         return true;
     }
 
-    function isExisting($keyword) {
+    function driver_isExisting($keyword) {
         if(xcache_isset($keyword)) {
             return true;
         } else {
@@ -83,26 +83,6 @@ class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
         }
     }
 
-    function increment($keyword,$step = 1 , $option = array()) {
-
-        $ret =xcache_inc($keyword, $step);
-        if($ret === false) {
-            $this->set($keyword,$step,3600);
-            return $step;
-        } else {
-            return $ret;
-        }
-    }
-
-    function decrement($keyword,$step = 1 , $option = array()) {
-        $ret = xcache_dec($keyword, $step);
-        if($ret === false) {
-            $this->set($keyword,$step,3600);
-            return $step;
-        } else {
-            return $ret;
-        }
-    }
 
 
 }

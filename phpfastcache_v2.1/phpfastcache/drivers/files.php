@@ -57,10 +57,10 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
     }
 
 
-    function set($keyword, $value = "", $time = 300, $option = array() ) {
+    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
         $file_path = $this->getFilePath($keyword);
       //  echo "<br>DEBUG SET: ".$keyword." - ".$value." - ".$time."<br>";
-        $data = $this->encode($value, $time, $option);
+        $data = $this->encode($value);
 
         $toWrite = true;
         /*
@@ -85,7 +85,7 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
 
 
 
-    function get($keyword, $option = array()) {
+    function driver_get($keyword, $option = array()) {
 
         $file_path = $this->getFilePath($keyword);
         if(!file_exists($file_path)) {
@@ -99,10 +99,10 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
             return null;
         }
 
-        return $object['data'];
+        return $object;
     }
 
-    function delete($keyword, $option = array()) {
+    function driver_delete($keyword, $option = array()) {
         $file_path = $this->getFilePath($keyword,true);
         if(@unlink($file_path)) {
             return true;
@@ -114,7 +114,7 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
     /*
      * Return total cache size + auto removed expired files
      */
-    function stats($option = array()) {
+    function driver_stats($option = array()) {
         $res = array(
             "info"  =>  "",
             "size"  =>  "",
@@ -161,11 +161,12 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
        return $res;
     }
 
-    function clean($option = array()) {
+    function driver_clean($option = array()) {
         return $this->stats($option);
     }
 
-    function isExisting($keyword) {
+
+    function driver_isExisting($keyword) {
         $file_path = $this->getFilePath($keyword,true);
         if(!file_exists($file_path)) {
             return false;
@@ -181,60 +182,15 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
     }
 
     function isExpired($object) {
-        if(@date("U") >= $object['exp']) {
+
+        if(@date("U") >= $object['expired_time']) {
             return true;
         } else {
             return false;
         }
     }
 
-    function increment($keyword,$step =1 , $option = array()) {
-        $file_path = $this->getFilePath($keyword);
-        if(!file_exists($file_path)) {
-            $this->set($keyword,$step,3600);
-            return $step;
-        }
 
-        $object = $this->decode($this->readfile($file_path));
-        if($this->isExpired($object)) {
-            $this->set($keyword,$step,3600);
-            return $step;
-        }
-
-        $next = (Int)$object['data'] + $step;
-        $object['data'] = $next;
-
-        $string = serialize($object);
-
-        $f = fopen($file_path,"w+");
-        fwrite($f,$string);
-        fclose($f);
-        return $next;
-    }
-
-    function decrement($keyword,$step =1 , $option = array()) {
-        $file_path = $this->getFilePath($keyword);
-        if(!file_exists($file_path)) {
-            $this->set($keyword,$step,3600);
-            return $step;
-        }
-
-        $object = $this->decode($this->readfile($file_path));
-        if($this->isExpired($object)) {
-            $this->set($keyword,$step,3600);
-            return $step;
-        }
-
-        $next = (Int)$object['data'] - $step;
-        $object['data'] = $next;
-
-        $string = serialize($object);
-
-        $f = fopen($file_path,"w+");
-        fwrite($f,$string);
-        fclose($f);
-        return $next;
-    }
 
 
 }

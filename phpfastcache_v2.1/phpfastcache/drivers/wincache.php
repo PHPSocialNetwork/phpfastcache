@@ -23,7 +23,7 @@ class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver 
 
     }
 
-    function set($keyword, $value = "", $time = 300, $option = array() ) {
+    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
         if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
             return wincache_ucache_add($keyword, $value, $time);
         } else {
@@ -31,7 +31,7 @@ class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver 
         }
     }
 
-    function get($keyword, $option = array()) {
+    function driver_get($keyword, $option = array()) {
         // return null if no caching
         // return value if in caching
 
@@ -44,11 +44,11 @@ class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver 
         }
     }
 
-    function delete($keyword, $option = array()) {
+    function driver_delete($keyword, $option = array()) {
         return wincache_ucache_delete($keyword);
     }
 
-    function stats($option = array()) {
+    function driver_stats($option = array()) {
         $res = array(
             "info"  =>  "",
             "size"  =>  "",
@@ -57,12 +57,12 @@ class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver 
         return $res;
     }
 
-    function clean($option = array()) {
+    function driver_clean($option = array()) {
         wincache_ucache_clear();
         return true;
     }
 
-    function isExisting($keyword) {
+    function driver_isExisting($keyword) {
         if(wincache_ucache_exists($keyword)) {
             return true;
         } else {
@@ -70,13 +70,6 @@ class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver 
         }
     }
 
-    public function increment($keyword, $step = 1, $option = array()) {
-        return wincache_ucache_inc($keyword, $step);
-    }
-
-    public function decrement($keyword, $step = 1,  $option = array()) {
-        return wincache_ucache_dec($keyword, $step);
-    }
 
 
 }

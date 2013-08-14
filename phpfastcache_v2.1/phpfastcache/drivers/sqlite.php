@@ -189,7 +189,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
     }
 
 
-    function set($keyword, $value = "", $time = 300, $option = array() ) {
+    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
         $skipExisting = isset($option['skipExisting']) ? $option['skipExisting'] : false;
         $toWrite = true;
 
@@ -209,7 +209,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
                 $stm = $this->db($keyword)->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
                 $stm->execute(array(
                     ":keyword"  => $keyword,
-                    ":object"   =>  $this->encode($value,$time,$option),
+                    ":object"   =>  $this->encode($value),
                     ":exp"      => @date("U") + (Int)$time,
                 ));
 
@@ -218,7 +218,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
                 $stm = $this->db($keyword,true)->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
                 $stm->execute(array(
                     ":keyword"  => $keyword,
-                    ":object"   =>  $this->encode($value,$time,$option),
+                    ":object"   =>  $this->encode($value),
                     ":exp"      => @date("U") + (Int)$time,
                 ));
             }
@@ -230,7 +230,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
 
     }
 
-    function get($keyword, $option = array()) {
+    function driver_get($keyword, $option = array()) {
         // return null if no caching
         // return value if in caching
         try {
@@ -259,7 +259,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
 
         if(isset($row['id'])) {
             $data = $this->decode($row['object']);
-            return $data['data'];
+            return $data;
         }
 
 
@@ -267,7 +267,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
     }
 
     function isExpired($row) {
-        if(isset($row['exp']) && @date("U") >= $row['exp']) {
+        if(isset($row['expired_time']) && @date("U") >= $row['expired_time']) {
             return true;
         }
 
@@ -282,7 +282,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
         ));
     }
 
-    function delete($keyword, $option = array()) {
+    function driver_delete($keyword, $option = array()) {
         $stm = $this->db($keyword)->prepare("DELETE FROM `caching` WHERE (`keyword`=:keyword) OR (`exp` <= :U)");
         $stm->execute(array(
             ":keyword"   => $keyword,
@@ -290,7 +290,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
         ));
     }
 
-    function stats($option = array()) {
+    function driver_stats($option = array()) {
         $res = array(
             "info"  =>  "",
             "size"  =>  "",
@@ -330,7 +330,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
         return $res;
     }
 
-    function clean($option = array()) {
+    function driver_clean($option = array()) {
         // delete everything before reset indexing
         $dir = opendir($this->path);
         while($file = readdir($dir)) {
@@ -340,7 +340,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
         }
     }
 
-    function isExisting($keyword) {
+    function driver_isExisting($keyword) {
         $stm = $this->db($keyword)->prepare("SELECT COUNT(`id`) as `total` FROM `caching` WHERE `keyword`=:keyword");
         $stm->execute(array(
             ":keyword"   => $keyword
@@ -353,55 +353,5 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
         }
     }
 
-    function increment($keyword,$step =1, $option = array()) {
-        $stm = $this->db($keyword)->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
-        $stm->execute(array(
-            ":keyword"  =>  $keyword
-        ));
-        $row = $stm->fetch(PDO::FETCH_ASSOC);
-        if(!isset($row['keyword'])) {
-            $this->set($keyword,$step,3600);
-            return $step;
-        }
-
-        $object = unserialize($row['object']);
-        $next = (Int)$object['data'] + $step;
-        $object['data'] = $next;
-        $string = serialize($object);
-
-        $stm = $this->db($keyword)->prepare("UPDATE `caching` set `object`=:object WHERE `keyword`=:keyword LIMIT 1");
-        $stm->execute(array(
-            ":keyword"  => $keyword,
-            ":object"   => $string,
-        ));
-
-        return $next;
-
-    }
-
-    function decrement($keyword,$step =1 , $option = array()) {
-        $stm = $this->db($keyword)->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
-        $stm->execute(array(
-            ":keyword"  =>  $keyword
-        ));
-        $row = $stm->fetch(PDO::FETCH_ASSOC);
-        if(!isset($row['keyword'])) {
-            $this->set($keyword,$step,3600);
-            return $step;
-        }
-
-        $object = unserialize($row['object']);
-        $next = (Int)$object['data'] - $step;
-        $object['data'] = $next;
-        $string = serialize($object);
-
-        $stm = $this->db($keyword)->prepare("UPDATE `caching` set `object`=:object WHERE `keyword`=:keyword LIMIT 1");
-        $stm->execute(array(
-            ":keyword"  => $keyword,
-            ":object"   => $string,
-        ));
-
-        return $next;
-    }
 
 }

@@ -25,7 +25,7 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
         }
     }
 
-    function set($keyword, $value = "", $time = 300, $option = array() ) {
+    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
         if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
             return apc_add($keyword,$value,$time);
         } else {
@@ -33,7 +33,7 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
         }
     }
 
-    function get($keyword, $option = array()) {
+    function driver_get($keyword, $option = array()) {
         // return null if no caching
         // return value if in caching
 
@@ -45,11 +45,11 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
 
     }
 
-    function delete($keyword, $option = array()) {
+    function driver_delete($keyword, $option = array()) {
         return apc_delete($keyword);
     }
 
-    function stats($option = array()) {
+    function driver_stats($option = array()) {
         $res = array(
             "info" => "",
             "size"  => "",
@@ -65,11 +65,11 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
         return $res;
     }
 
-    function clean($option = array()) {
+    function driver_clean($option = array()) {
         return apc_clear_cache("user");
     }
 
-    function isExisting($keyword) {
+    function driver_isExisting($keyword) {
         if(apc_exists($keyword)) {
             return true;
         } else {
@@ -78,25 +78,7 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
     }
 
 
-    function increment($keyword,$step =1 , $option = array()) {
-        $ret = apc_inc($keyword, $step, $fail);
-        if($ret === false) {
-            $this->set($keyword,$step,3600);
-            return $step;
-        } else {
-            return $ret;
-        }
-    }
 
-    function decrement($keyword,$step =1 , $option = array()) {
-        $ret = apc_dec($keyword, $step, $fail);
-        if($ret === false) {
-            $this->set($keyword,$step,3600);
-            return $step;
-        } else {
-            return $ret;
-        }
-    }
 
 
 }

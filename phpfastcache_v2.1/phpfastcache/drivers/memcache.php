@@ -46,7 +46,7 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
         }
     }
 
-    function set($keyword, $value = "", $time = 300, $option = array() ) {
+    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
         $this->connectServer();
         if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
             return $this->instant->add($keyword, $value, false, $time );
@@ -57,7 +57,7 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
 
     }
 
-    function get($keyword, $option = array()) {
+    function driver_get($keyword, $option = array()) {
         $this->connectServer();
         // return null if no caching
         // return value if in caching
@@ -69,12 +69,12 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
         }
     }
 
-    function delete($keyword, $option = array()) {
+    function driver_delete($keyword, $option = array()) {
         $this->connectServer();
          $this->instant->delete($keyword);
     }
 
-    function stats($option = array()) {
+    function driver_stats($option = array()) {
         $this->connectServer();
         $res = array(
             "info"  => "",
@@ -86,12 +86,12 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
 
     }
 
-    function clean($option = array()) {
+    function driver_clean($option = array()) {
         $this->connectServer();
         $this->instant->flush();
     }
 
-    function isExisting($keyword) {
+    function driver_isExisting($keyword) {
         $this->connectServer();
         $x = $this->get($keyword);
         if($x == null) {
@@ -101,14 +101,6 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
         }
     }
 
-    function increment($keyword,$step =1 , $option = array()) {
-        $this->connectServer();
-        $this->instant->increment($keyword, $step);
-    }
 
-    function decrement($keyword,$step =1 , $option = array()) {
-        $this->connectServer();
-        $this->instant->decrement($keyword, $step);
-    }
 
 }

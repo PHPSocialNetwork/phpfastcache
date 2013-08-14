@@ -25,7 +25,7 @@ class phpfastcache_example extends phpFastCache implements phpfastcache_driver  
 
     }
 
-    function set($keyword, $value = "", $time = 300, $option = array() ) {
+    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
         if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
             // skip driver
         } else {
@@ -34,18 +34,18 @@ class phpfastcache_example extends phpFastCache implements phpfastcache_driver  
 
     }
 
-    function get($keyword, $option = array()) {
+    function driver_get($keyword, $option = array()) {
         // return null if no caching
         // return value if in caching
 
         return null;
     }
 
-    function delete($keyword, $option = array()) {
+    function driver_delete($keyword, $option = array()) {
 
     }
 
-    function stats($option = array()) {
+    function driver_stats($option = array()) {
         $res = array(
             "info"  => "",
             "size"  =>  "",
@@ -55,20 +55,14 @@ class phpfastcache_example extends phpFastCache implements phpfastcache_driver  
         return $res;
     }
 
-    function clean($option = array()) {
+    function driver_clean($option = array()) {
 
     }
 
-    function isExisting($keyword) {
+    function driver_isExisting($keyword) {
 
     }
 
-    function increment($keyword,$step =1 , $option = array()) {
 
-    }
-
-    function decrement($keyword,$step =1 , $option = array()) {
-
-    }
 
 }

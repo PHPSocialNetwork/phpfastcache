@@ -44,12 +44,15 @@ class phpFastCache {
                 //  array("new.host.ip",11211,1),
             ),
 
+            "extensions"    =>  array(),
+
     );
 
     var $tmp = array();
     var  $checked = array(
         "path"  => false,
         "fallback"  => false,
+        "hook"      => false,
     );
     var $driver = NULL;
 
@@ -61,7 +64,183 @@ class phpFastCache {
         "system"        =>  array(),
         "storage"       =>  "",
         "cachePath"     =>  "",
+
     );
+
+
+    /*
+     * Basic Method
+     */
+
+    function set($keyword, $value = "", $time = 300, $option = array() ) {
+        $object = array(
+            "value" => $value,
+            "write_time"  => @date("U"),
+            "expired_in"  => $time,
+            "expired_time"  => @date("U") + (Int)$time,
+        );
+
+        return $this->driver->driver_set($keyword,$object,$time,$option);
+    }
+
+    function get($keyword, $option = array()) {
+        $object = $this->driver->driver_get($keyword,$option);
+        if($object == null) {
+            return null;
+        }
+        return $object['value'];
+    }
+
+    function getInfo($keyword, $option = array()) {
+        $object = $this->driver->driver_get($keyword,$option);
+        if($object == null) {
+            return null;
+        }
+        return $object;
+    }
+
+    function delete($keyword, $option = array()) {
+        return $this->driver->driver_delete($keyword,$option);
+    }
+
+    function stats($option = array()) {
+        return $this->driver->driver_stats($option);
+    }
+
+    function clean($option = array()) {
+        return $this->driver->driver_clean($option);
+    }
+
+    function isExisting($keyword) {
+        if(method_exists($this->driver,"driver_isExisting")) {
+            return $this->driver->driver_isExisting($keyword);
+        } else {
+            $data = $this->get($keyword);
+            if($data == null) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+    }
+
+    function increment($keyword, $step = 1 , $option = array()) {
+        $object = $this->get($keyword);
+        if($object == null) {
+            return false;
+        } else {
+            $value = (Int)$object['value'] + (Int)$step;
+            $time = $object['expired_time'] - @date("U");
+            $this->set($keyword,$value, $time, $option);
+            return true;
+        }
+    }
+
+    function decrement($keyword, $step = 1 , $option = array()) {
+        $object = $this->get($keyword);
+        if($object == null) {
+            return false;
+        } else {
+            $value = (Int)$object['value'] - (Int)$step;
+            $time = $object['expired_time'] - @date("U");
+            $this->set($keyword,$value, $time, $option);
+            return true;
+        }
+    }
+    /*
+     * Extend more time
+     */
+    function touch($keyword, $time = 300, $option = array()) {
+        $object = $this->get($keyword);
+        if($object == null) {
+            return false;
+        } else {
+            $value = $object['value'];
+            $time = $object['expired_time'] - @date("U") + $time;
+            $this->set($keyword, $value,$time, $option);
+            return true;
+        }
+    }
+
+
+    /*
+    * Other Functions Built-int for phpFastCache since 1.3
+    */
+
+    public function setMulti($list = array()) {
+        foreach($list as $array) {
+            $this->set($array[0], isset($array[1]) ? $array[1] : 300, isset($array[2]) ? $array[2] : array());
+        }
+    }
+
+    public function getMulti($list = array()) {
+        $res = array();
+        foreach($list as $array) {
+            $name = $array[0];
+            $res[$name] = $this->get($name, isset($array[1]) ? $array[1] : array());
+        }
+        return $res;
+    }
+
+    public function getInfoMulti($list = array()) {
+        $res = array();
+        foreach($list as $array) {
+            $name = $array[0];
+            $res[$name] = $this->getInfo($name, isset($array[1]) ? $array[1] : array());
+        }
+        return $res;
+    }
+
+    public function deleteMulti($list = array()) {
+        foreach($list as $array) {
+            $this->delete($array[0], isset($array[1]) ? $array[1] : array());
+        }
+    }
+
+    public function isExistingMulti($list = array()) {
+        $res = array();
+        foreach($list as $array) {
+            $name = $array[0];
+            $res[$name] = $this->isExisting($name);
+        }
+        return $res;
+    }
+
+    public function incrementMulti($list = array()) {
+        $res = array();
+        foreach($list as $array) {
+            $name = $array[0];
+            $res[$name] = $this->increment($name, $array[1], isset($array[2]) ? $array[2] : array());
+        }
+        return $res;
+    }
+
+    public function decrementMulti($list = array()) {
+        $res = array();
+        foreach($list as $array) {
+            $name = $array[0];
+            $res[$name] = $this->decrement($name, $array[1], isset($array[2]) ? $array[2] : array());
+        }
+        return $res;
+    }
+
+    public function touchMulti($list = array()) {
+        $res = array();
+        foreach($list as $array) {
+            $name = $array[0];
+            $res[$name] = $this->touch($name, $array[1], isset($array[2]) ? $array[2] : array());
+        }
+        return $res;
+    }
+
+
+    /*
+     * Begin Parent Classes;
+     */
+
+
+
 
     public static function setup($name,$value = "") {
         if(!is_array($name)) {
@@ -102,7 +281,7 @@ class phpFastCache {
             self::$storage = $storage;
             $driver = "phpfastcache_".$storage;
         }
-        require_once(dirname(__FILE__)."/ext/".$storage.".php");
+        require_once(dirname(__FILE__)."/drivers/".$storage.".php");
 
         $this->option("storage",$storage);
 
@@ -214,8 +393,8 @@ class phpFastCache {
      * Not use autoload default of PHP and don't need to load all classes as default
      */
     private function isExistingDriver($class) {
-        if(file_exists(dirname(__FILE__)."/ext/".$class.".php")) {
-            require_once(dirname(__FILE__)."/ext/".$class.".php");
+        if(file_exists(dirname(__FILE__)."/drivers/".$class.".php")) {
+            require_once(dirname(__FILE__)."/drivers/".$class.".php");
             if(class_exists("phpfastcache_".$class)) {
                 return true;
             }
@@ -236,14 +415,14 @@ class phpFastCache {
 
             $this->option['system']['drivers'] = array();
 
-            $dir = @opendir(dirname(__FILE__)."/ext/");
+            $dir = @opendir(dirname(__FILE__)."/drivers/");
             if(!$dir) {
                 throw new Exception("Can't open file dir ext",100);
             }
 
             while($file = @readdir($dir)) {
                 if($file!="." && $file!=".." && strpos($file,".php") !== false) {
-                    require_once(dirname(__FILE__)."/ext/".$file);
+                    require_once(dirname(__FILE__)."/drivers/".$file);
                     $namex = str_replace(".php","",$file);
                     $class = "phpfastcache_".$namex;
                     $this->option['skipError'] = true;
@@ -277,39 +456,7 @@ class phpFastCache {
     }
 
 
-    /*
-      * Other Functions Built-int for phpFastCache since 1.3
-      */
 
-    public function setMulti($list = array()) {
-        foreach($list as $array) {
-            $this->set($array[0], isset($array[1]) ? $array[1] : 300, isset($array[2]) ? $array[2] : array());
-        }
-    }
-
-    public function getMulti($list = array()) {
-        $res = array();
-        foreach($list as $array) {
-            $name = $array[0];
-            $res[$name] = $this->get($name, isset($array[1]) ? $array[1] : array());
-        }
-        return $res;
-    }
-
-    public function deleteMulti($list = array()) {
-        foreach($list as $array) {
-            $this->delete($array[0], isset($array[1]) ? $array[1] : array());
-        }
-    }
-
-    public function isExistingMulti($list = array()) {
-        $res = array();
-        foreach($list as $array) {
-            $name = $array[0];
-            $res[$name] = $this->isExisting($name);
-        }
-        return $res;
-    }
 
 
     public function getOS() {
@@ -326,17 +473,8 @@ class phpFastCache {
     /*
      * Object for Files & SQLite
      */
-    public function encode($data,$time_in_second = 600, $option = array()) {
-        $object = array(
-            "data"  => $data,
-            "time"  => $time_in_second,
-            "exp"   => (Int)@date("U") + (Int)$time_in_second,
-        );
-        foreach($option as $name=>$value) {
-            $object['option'][$name] = $value;
-        }
-
-        return serialize($object);
+    public function encode($data) {
+        return serialize($data);
     }
 
     public function decode($value) {
@@ -473,40 +611,6 @@ allow from 127.0.0.1";
         }
     }
 
-    /*
-     * Basic Method
-     */
 
-    function set($keyword, $value = "", $time = 300, $option = array() ) {
-        return $this->driver->set($keyword,$value,$time,$option);
-    }
-
-    function get($keyword, $option = array()) {
-        return $this->driver->get($keyword,$option);
-    }
-
-    function delete($keyword, $option = array()) {
-        return $this->driver->delete($keyword,$option);
-    }
-
-    function stats($option = array()) {
-        return $this->driver->stats($option);
-    }
-
-    function clean($option = array()) {
-        return $this->driver->clean($option);
-    }
-
-    function isExisting($keyword) {
-        return $this->driver->isExisting($keyword);
-    }
-
-    function increment($keyword,$step =1 , $option = array()) {
-        return $this->driver->increment($keyword, $step, $option);
-    }
-
-    function decrement($keyword,$step =1 , $option = array()) {
-        return $this->driver->decrement($keyword,$step,$option);
-    }
 
 }

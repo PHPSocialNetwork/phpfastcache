@@ -162,7 +162,31 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
     }
 
     function driver_clean($option = array()) {
-        return $this->stats($option);
+
+        $path = $this->getPath();
+        $dir = @opendir($path);
+        if(!$dir) {
+            throw new Exception("Can't read PATH:".$path,94);
+        }
+
+        while($file=readdir($dir)) {
+            if($file!="." && $file!=".." && is_dir($path."/".$file)) {
+                // read sub dir
+                $subdir = @opendir($path."/".$file);
+                if(!$subdir) {
+                    throw new Exception("Can't read path:".$path."/".$file,93);
+                }
+
+                while($f = readdir($subdir)) {
+                    if($f!="." && $f!="..") {
+                        $file_path = $path."/".$file."/".$f;
+                        unlink($file_path);
+                    }
+                } // end read subdir
+            } // end if
+        } // end while
+
+
     }
 
 

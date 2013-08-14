@@ -12,36 +12,27 @@ With phpFastCache, your page only send 1 query to DB, and use the cache to serve
 
 ```php
 <?php
-/*
- * Welcome to Learn Lesson
- * This is very Simple PHP Code of Caching
- */
+    include("phpfastcache/phpfastcache.php");
+    phpFastCache::$storage = "auto";
 
-// Require Library
-// Keep it Auto or setup it as "files","sqlite","wincache" ,"apc","memcache","memcached", "xcache"
-require_once("../phpfastcache/phpfastcache.php");
-phpFastCache::setup("storage","auto");
+    // try to get from Cache first.
+    $products = __c()->get("products_page");
 
-// simple Caching with:
-$cache = phpFastCache();
 
-// Try to get $products from Caching First
-// product_page is "identity keyword";
-$products = $cache->get("product_page");
+    if($products == null) {
+        $products = YOUR DB QUERIES || GET_PRODUCTS_FUNCTION;
 
-if($products == null) {
-    $products = "DB QUERIES | FUNCTION_GET_PRODUCTS | ARRAY | STRING | OBJECTS";
-    // Write products to Cache in 10 minutes with same keyword
-    $cache->set("product_page",$products , 600);
-}
+        // set products in to cache in 600 seconds = 10 minutes
+        __c()->set("products_page",$products,600);
+    }
 
-// use your products here or return it;
-echo $products;
+    foreach($products as $product) {
+        // Output Your Contents HERE
+    }
 ```
 ---------------------------
 ```php
 <?php
-
 /*
  * List of function and example
  */

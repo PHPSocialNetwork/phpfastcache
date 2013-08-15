@@ -121,17 +121,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
         /*
          * Default is fastcache
          */
-        $instant = "fastcache";
-
-        $size = file_exists($this->path."/dbfastcache") ? filesize($this->path."/dbfastcache") : 1;
-
-        $size = round($size / 1024 / 1024,1);
-        if($size > $this->max_size) {
-            /*
-             * switch to indexing mode
-             */
-            $instant = $this->indexing($keyword);
-        }
+        $instant = $this->indexing($keyword);
 
         /*
          * init instant

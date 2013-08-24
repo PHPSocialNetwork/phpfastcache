@@ -66,7 +66,8 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
     }
 
     function driver_clean($option = array()) {
-        return apc_clear_cache("user");
+        @apc_clear_cache();
+        @apc_clear_cache("user");
     }
 
     function driver_isExisting($keyword) {

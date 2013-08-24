@@ -56,6 +56,7 @@ phpFastCache::setup($config);
 // OR
 
 phpFastCache::setup("storage","files");
+phpFastCache::setup("path", dirname(__FILE__));
 
 /*
  * End Optional Config

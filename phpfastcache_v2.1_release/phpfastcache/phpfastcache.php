@@ -558,8 +558,8 @@ allow from 127.0.0.1";
     }
 
     /*
-        * Check phpModules or CGI
-        */
+    * Check phpModules or CGI
+    */
 
     public function isPHPModule() {
         if(PHP_SAPI == "apache2handler") {

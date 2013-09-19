@@ -226,9 +226,9 @@
                     // fix PATH for existing
                     $reconfig = false;
 
-                    if (file_exists(self::getPath()."/config.".$os['os']['unique'].".cache.ini"))
+                    if (file_exists(self::getPath()."/config.".$os['unique'].".cache.ini"))
                     {
-                        $info = self::decode(file_get_contents(self::getPath()."/config.".$os['os']['unique'].".cache.ini"));
+                        $info = self::decode(file_get_contents(self::getPath()."/config.".$os['unique'].".cache.ini"));
                         if(!isset($info['value'])) {
                             $reconfig = true;
                         } else {
@@ -240,21 +240,21 @@
 
                     if(isset($info['os']['unique'])) {
 
-                        if($info['os']['unique'] != $os['os']['unique']) {
+                        if($info['os']['unique'] != $os['unique']) {
                             $reconfig = true;
                         }
                     } else {
                         $reconfig = true;
                     }
 
-                    if(!file_exists(self::getPath()."/config.".$os['os']['unique'].".cache.ini") || $reconfig == true) {
+                    if(!file_exists(self::getPath()."/config.".$os['unique'].".cache.ini") || $reconfig == true) {
                         $info = self::systemInfo();
                         try {
-                            $f = fopen(self::getPath()."/config.".$os['os']['unique'].".cache.ini","w+");
+                            $f = fopen(self::getPath()."/config.".$os['unique'].".cache.ini","w+");
                             fwrite($f,self::encode($info));
                             fclose($f);
                         } catch (Exception $e) {
-                            die("Please chmod 0777 ".self::getPath()."/config.".$os['os']['unique'].".cache.ini");
+                            die("Please chmod 0777 ".self::getPath()."/config.".$os['unique'].".cache.ini");
                         }
                     }
 

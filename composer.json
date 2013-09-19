@@ -1,0 +1,19 @@
+{
+ "name": "phpfastcache/phpfastcache",
+ "type": "library",
+ "description": "PHP Cache Class - Supported APC, MemCached, WinCache, Files, PDO, Reduce mySQL Call by Caching",
+ "keywords": ["cache","caching","php cache","mysql cache","apc cache","apc","memcache","memcached","wincache","files cache","pdo cache","cache class"],
+ "homepage": "http://www.phpfastcache.com",
+ "license": "Open Source",
+ "authors": [
+        {
+            "name": "Khoa Bui",
+            "email": "khoaofgod@yahoo.com",
+            "homepage": "http://www.phpfastcache.com",
+            "role": "Developer"
+        }
+    ], 
+    "require": {
+        "php": ">=5.1.0"        
+    }
+}

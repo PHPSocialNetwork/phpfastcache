@@ -36,7 +36,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
         $dir = opendir($this->path);
         while($file = readdir($dir)) {
             if($file != "." && $file!=".." && $file != "indexing" && $file!="dbfastcache") {
-                unlink($this->path."/".$file);
+                @unlink($this->path."/".$file);
             }
         }
 
@@ -325,7 +325,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
         $dir = opendir($this->path);
         while($file = readdir($dir)) {
             if($file != "." && $file!="..") {
-                unlink($this->path."/".$file);
+                @unlink($this->path."/".$file);
             }
         }
     }

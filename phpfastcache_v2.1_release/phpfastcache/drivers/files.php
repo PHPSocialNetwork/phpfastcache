@@ -29,15 +29,24 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
         }
 
     }
+    
+    private function encodeFilename($keyword) {
+        return rtrim(base64_encode($keyword), '=');
+    }
+    
+    private function decodeFilename($filename) {
+        return base64_decode($filename);
+    }
 
     /*
      * Return $FILE FULL PATH
      */
     private function getFilePath($keyword, $skip = false) {
         $path = $this->getPath();
-        $code = md5($keyword);
-        $folder = substr($code,0,2);
-        $path = $path."/".$folder;
+        
+        $filename = $this->encodeFilename($keyword);        
+        $folder = substr($filename,0,2);
+        $path = $path.DIRECTORY_SEPARATOR.$folder;
         /*
          * Skip Create Sub Folders;
          */
@@ -52,7 +61,7 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
             }
         }
 
-        $file_path = $path."/".$code.".txt";
+        $file_path = $path."/".$filename.".txt";
         return $file_path;
     }
 
@@ -212,6 +221,32 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
                 return true;
             }
         }
+    }
+    
+    function globToRegex($globPattern) {
+        $regex = preg_quote($globPattern, '/');
+        $regex = str_replace('\*', '.*', $regex);
+        $regex = str_replace('\?', '.', $regex);
+        return '/^' . $regex . '$/';
+    }
+    
+    function driver_search($query) {
+        $output = array();
+        $regex = $this->globToRegex($query);
+        foreach (glob($this->getPath() . DIRECTORY_SEPARATOR . '*') as $folderPath) {
+            foreach (glob($folderPath . DIRECTORY_SEPARATOR . '*.txt') as $filePath) {
+                $filename =  basename($filePath, '.txt');
+                $cacheKey = $this->decodeFilename($filename);
+                if ($cacheKey === false) continue;
+                if (preg_match($regex, $cacheKey)) {
+                    $output[] = array(
+                        'key' => $cacheKey,
+                        'value' => $this->get($cacheKey),
+                    );
+                }
+            }
+        }
+        return $output;
     }
 
     function isExpired($object) {

@@ -171,10 +171,15 @@ class phpFastCache {
     // The function returns an array with the matched key/value pairs.
     function search($query) {
         if($this->is_driver == true) {
-            return $this->driver_search($query);
+            if(method_exists($this,"driver_search")) {
+                return $this->driver_search($query);
+            }
         } else {
-            return $this->driver->driver_search($query);
+            if(method_exists($this->driver,"driver_isExisting")) {
+                return $this->driver->driver_search($query);
+            }
         }
+        throw new Exception('Search method is not supported by this driver.');
 
     }
 

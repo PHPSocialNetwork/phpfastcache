@@ -12,8 +12,11 @@
             "homepage": "http://www.phpfastcache.com",
             "role": "Developer"
         }
-    ], 
+    ],
     "require": {
-        "php": ">=5.1.0"        
+        "php": ">=5.1.0"
+    },
+    "autoload": {
+        "files": ["phpfastcache_v2.1_release/phpfastcache/phpfastcache.php"]
     }
 }

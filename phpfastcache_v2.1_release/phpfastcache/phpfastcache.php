@@ -105,7 +105,7 @@ class phpFastCache {
     }
 
     function _get($key){
-    	// this method gets values by array-style keys: arrayName[key1][key2]
+        // this method gets values by array-style keys: arrayName[key1][key2]
     	$result = null;
     	$array = Array();
     	$array_name = null;
@@ -125,82 +125,77 @@ class phpFastCache {
     		$keys = $keys[0];
 
     		if (!empty($keys) && !empty($array)) {
-
-    			foreach ($keys as $k => $v) {
-    				$keys[$k] = substr($v, 1, -1);
-    			}
-    			foreach ($keys as $subkey){
-    				if (array_key_exists($subkey, $array)) {
-    					$result = $array[$subkey];
-    					if (is_array($result)) $array = $result;
-
-    				} else $result = null;
-    			}
+	    		foreach ($keys as $k => $v) {
+	    			$keys[$k] = substr($v, 1, -1);
+	    		}
+	    		foreach ($keys as $subkey){
+					if (array_key_exists($subkey, $array)) {
+		    			$result = $array[$subkey];
+		    			if (is_array($result)) $array = $result;
+	    			} else $result = null;
+	    		}
     		} else {
     			$result = $array;
     		}
-    	}
+		}
 
-    	return $result;
+		return $result;
     }
 
-    function _set($key, $value, $time = 600){
-        // sets values by array-style keys: arrayName[key1][key2]
-        if ($this->enabled) {
-            $result = Array();
-            $array_name = null;
+	function _set($key, $value, $time = 600){
+	    // sets values by array-style keys: arrayName[key1][key2]
+        $result = Array();
+        $array_name = null;
 
-            $keys = Array();
-            $key_list = new SplQueue();
+        $key_list = Array();
 
-            // get array name
-            $array_name_pattern = "#^[a-zA-Z\d\_$]*#";
-            preg_match($array_name_pattern, $key, $array_name);
-            $array_name = $array_name[0];
+        // get array name
+        $array_name_pattern = "#^[a-zA-Z\d\_$]*#";
+        preg_match($array_name_pattern, $key, $array_name);
+        $array_name = $array_name[0];
 
-            $key_pattern = '#\[[a-zA-Z\'\"\/\_\d]*\]#';
-            preg_match_all($key_pattern, $key, $keys);
-            $keys = $keys[0];
+        $key_pattern = '#\[[a-zA-Z\'\"\/\_\d]*\]#';
+        preg_match_all($key_pattern, $key, $keys);
+        $keys = $keys[0];
 
-            if (!empty($keys)) {
-                foreach ($keys as $k => $v) {
-                    // load key queue
-                    $keys[$k] = substr($v, 1, -1);
-                    $key_list->enqueue($keys[$k]);
-                }
-
-                $orig_array = $this->get($array_name);
-                $result = $this->replace($key_list, $orig_array, $value);
-
-                // update cache
-                $this->set($array_name, $result, $time);
+        if (!empty($keys)) {
+            foreach ($keys as $k => $v) {
+                // load key queue
+                $key_list[] = substr($v, 1, -1);
             }
+
+            $orig_array = $this->get($array_name);
+            $result = $this->replace($key_list, $orig_array, $value);
+            // update cache
+            $this->set($array_name, $result, $time);
         }
-    }
+	}
 
-    function replace(SplQueue $key_list, &$array, $value){
-        if (!$key_list->isEmpty()) {
-            $new_key = $key_list->dequeue();
-            $new_value = &$array[$new_key];
+	function replace($key_list, &$array, $value){
+	    if (!empty($key_list)) {
+	        $new_key = array_shift($key_list);
+	        $new_value = &$array[$new_key];
 
-            if (!$key_list->isEmpty()) {
+            if (!empty($key_list)) {
                 // need deeper
                 $this->replace($key_list, $new_value, $value);
-            } else {
-                // found target
-                if ($value){
-                    $new_value = $value;
-                } else {
-                    unset($array[$new_key]);
-                }
-            }
-        }
+	        } else {
+	            // found target
+	            if ($value){
+	                // update
+	                $new_value = $value;
+	            } else {
+	                // delete
+	                unset($array[$new_key]);
+	            }
+	        }
+	    }
 
         return $array;
     }
 
     function _delete($key){
-        // sets values by array-style keys: arrayName[key1][key2]
+        // removes values by array-style keys: arrayName[key1][key2]
         $this->_set($key, null);
     }
 

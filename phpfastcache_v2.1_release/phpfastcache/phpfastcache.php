@@ -608,10 +608,11 @@ allow from 127.0.0.1";
 
             if(!file_exists($full_path) || !is_writable($full_path)) {
                 if(!file_exists($full_path)) {
-                    @mkdir($full_path,0777);
+                    @mkdir($full_path,0775);
+                    @chmod($full_path,0775);
                 }
                 if(!is_writable($full_path)) {
-                    @chmod($full_path,0777);
+                    @chmod($full_path,0775);
                 }
                 if(!file_exists($full_path) || !is_writable($full_path)) {
                     throw new Exception("Sorry, Please create ".$this->option("path")."/".$this->option("securityKey")."/ and SET Mode 0777 or any Writable Permission!" , 100);

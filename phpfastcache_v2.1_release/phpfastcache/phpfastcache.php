@@ -258,6 +258,25 @@ class phpFastCache {
         }
 
     }
+    
+    // Searches though the cache for keys that match the given query.
+    // `$query` is a glob-like, which supports these two special characters:
+    // - "*" - match 0 or more characters.
+    // - "?" - match one character.
+    // The function returns an array with the matched key/value pairs.
+    function search($query) {
+        if($this->is_driver == true) {
+            if(method_exists($this,"driver_search")) {
+                return $this->driver_search($query);
+            }
+        } else {
+            if(method_exists($this->driver,"driver_isExisting")) {
+                return $this->driver->driver_search($query);
+            }
+        }
+        throw new Exception('Search method is not supported by this driver.');
+
+    }
 
     function increment($keyword, $step = 1 , $option = array()) {
         $object = $this->get($keyword);

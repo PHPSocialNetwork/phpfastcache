@@ -101,7 +101,7 @@ class phpFastCache {
         if($object == null) {
             return null;
         }
-        return $object['value'];
+        return isset($option['all_keys']) && $option['all_keys'] ? $object : $object['value'];
     }
 
     function _get($key){
@@ -258,7 +258,7 @@ class phpFastCache {
         }
 
     }
-    
+
     // Searches though the cache for keys that match the given query.
     // `$query` is a glob-like, which supports these two special characters:
     // - "*" - match 0 or more characters.
@@ -279,7 +279,7 @@ class phpFastCache {
     }
 
     function increment($keyword, $step = 1 , $option = array()) {
-        $object = $this->get($keyword);
+        $object = $this->get($keyword, array('all_keys' => true));
         if($object == null) {
             return false;
         } else {
@@ -291,7 +291,7 @@ class phpFastCache {
     }
 
     function decrement($keyword, $step = 1 , $option = array()) {
-        $object = $this->get($keyword);
+        $object = $this->get($keyword, array('all_keys' => true));
         if($object == null) {
             return false;
         } else {
@@ -305,7 +305,7 @@ class phpFastCache {
      * Extend more time
      */
     function touch($keyword, $time = 300, $option = array()) {
-        $object = $this->get($keyword);
+        $object = $this->get($keyword, array('all_keys' => true));
         if($object == null) {
             return false;
         } else {

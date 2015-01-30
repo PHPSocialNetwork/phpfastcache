@@ -1,0 +1,15 @@
+
+Version 2.4
+------ None-Expired Object
+set("keyword",$value);
+
+------ Default Time 300 seconds changed to None-Expired
+
+------ Improved Files Cache
+added missed cache to skip errors when disk is full neither busy
+
+------ New Driver: "redis"
+use redis
+
+
+

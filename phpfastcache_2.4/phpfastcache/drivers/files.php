@@ -85,9 +85,14 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
         }
 
         if($toWrite == true) {
-                $f = fopen($file_path,"w+");
-                fwrite($f,$data);
-                fclose($f);
+                try {
+                    $f = fopen($file_path, "w+");
+                    fwrite($f, $data);
+                    fclose($f);
+                } catch (Exception $e) {
+                    // miss cache
+                    return false;
+                }
         }
     }
 
@@ -153,7 +158,7 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
                         $size = filesize($file_path);
                         $object = $this->decode($this->readfile($file_path));
                         if($this->isExpired($object)) {
-                            unlink($file_path);
+                            @unlink($file_path);
                             $removed = $removed + $size;
                         }
                         $total = $total + $size;
@@ -198,7 +203,7 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
                 while($f = readdir($subdir)) {
                     if($f!="." && $f!="..") {
                         $file_path = $path."/".$file."/".$f;
-                        unlink($file_path);
+                        @unlink($file_path);
                     }
                 } // end read subdir
             } // end if

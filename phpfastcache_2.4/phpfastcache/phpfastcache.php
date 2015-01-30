@@ -35,9 +35,14 @@ class phpFastCache {
     public static $storage = "auto";
     public static $config = array(
             "storage"   =>  "auto",
+            /*
+             * Fall back when old driver is not support
+             */
             "fallback"  =>  array(
                                 "example"   =>  "files",
+                                "old_driver"  =>  "new_driver"
             ),
+
             "securityKey"   =>  "auto",
             "htaccess"      => true,
             "path"      =>  "",
@@ -76,13 +81,24 @@ class phpFastCache {
      * Basic Method
      */
 
-    function set($keyword, $value = "", $time = 300, $option = array() ) {
+    function set($keyword, $value = "", $time = 0, $option = array() ) {
+        /*
+         * Infinity Time
+         * Khoa. B
+         */
+        if((Int)$time <= 0) {
+            // 5 years, however memcached or memory cached will gone when u restart it
+            // just recommended for sqlite. files
+            $time = 3600*24*365*5;
+        }
+
         $object = array(
             "value" => $value,
             "write_time"  => @date("U"),
             "expired_in"  => $time,
             "expired_time"  => @date("U") + (Int)$time,
         );
+
         if($this->is_driver == true) {
             return $this->driver_set($keyword,$object,$time,$option);
         } else {
@@ -323,7 +339,7 @@ class phpFastCache {
 
     public function setMulti($list = array()) {
         foreach($list as $array) {
-            $this->set($array[0], isset($array[1]) ? $array[1] : 300, isset($array[2]) ? $array[2] : array());
+            $this->set($array[0], isset($array[1]) ? $array[1] : 0, isset($array[2]) ? $array[2] : array());
         }
     }
 

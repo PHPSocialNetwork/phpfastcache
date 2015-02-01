@@ -10,6 +10,7 @@ require_once("../phpfastcache/phpfastcache.php");
 
 // simple Caching with:
 $cache = phpFastCache();
+// $cache = phpFastCache("redis");
 
 // Try to get $products from Caching First
 // product_page is "identity keyword";

@@ -2,7 +2,7 @@ Simple Yet Powerful PHP Caching Class
 ---------------------------
 More information at http://www.phpfastcache.com
 One Class uses for All Cache. You don't need to rewrite your code many times again.
-Supported: Files, MemCache, MemCached, APC, WinCache, X-Cache, PDO with SQLite
+Supported: Redis, Cookie, Files, MemCache, MemCached, APC, WinCache, X-Cache, PDO with SQLite
 
 ---------------------------
 Reduce Database Calls

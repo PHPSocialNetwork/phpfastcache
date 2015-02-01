@@ -45,7 +45,7 @@ $data = __c()->keyword3;
 $list = $cache1->getMulti(array("key1","key2","key3"));
 $cache2->setMulti(array("key1","value1", 300),
     array("key2","value2", 600),
-    array("key3","value3", 1800),
+    array("key3","value3", 1800)
                       );
 
 $list = $cache1->apc->getMulti(array("key1","key2","key3"));

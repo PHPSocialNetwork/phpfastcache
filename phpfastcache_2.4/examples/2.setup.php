@@ -30,11 +30,7 @@ $config = array(
          * Example, in your code, you use memcached, apc..etc, but when you moved your web hosting
          * The new hosting don't have memcached, or apc. What you do? Set fallback that driver to other driver.
          */
-        "fallback"  =>  array(
-                "example"   =>  "files",
-                "memcache"  =>  "files",
-                "apc"       =>  "sqlite",
-        ),
+        "fallback"  =>  "files",
 
         /*
          * .htaccess protect
@@ -45,10 +41,14 @@ $config = array(
         /*
          * Default Memcache Server for all $cache = phpFastCache("memcache");
          */
-        "server"        =>  array(
+        "memcache"        =>  array(
                 array("127.0.0.1",11211,1),
             //  array("new.host.ip",11211,1),
         ),
+		// Default server for redis
+		"redis"         =>  array("127.0.0.1",6379),
+
+
 );
 
 phpFastCache::setup($config);

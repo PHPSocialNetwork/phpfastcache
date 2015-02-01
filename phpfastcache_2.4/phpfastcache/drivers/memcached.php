@@ -14,20 +14,26 @@ class phpfastcache_memcached extends phpFastCache implements phpfastcache_driver
         if(class_exists("Memcached")) {
             return true;
         }
+	    $this->fallback = true;
        return false;
     }
 
     function __construct($option = array()) {
-        $this->setOption($option);
-        if(!$this->checkdriver() && !isset($option['skipError'])) {
-            throw new Exception("Can't use this driver for your website!");
-        }
 
-        $this->instant = new Memcached();
+	    $this->setOption($option);
+	    if(!$this->checkdriver() && !isset($option['skipError'])) {
+		    $this->fallback = true;
+	    }
+		if(class_exists("Memcached")) {
+			$this->instant = new Memcached();
+		} else {
+			$this->fallback = true;
+		}
+
     }
 
     function connectServer() {
-        $s = $this->option['server'];
+        $s = $this->option['memcache'];
         if(count($s) < 1) {
             $s = array(
                 array("127.0.0.1",11211,100),
@@ -41,9 +47,13 @@ class phpfastcache_memcached extends phpFastCache implements phpfastcache_driver
             $checked = $name."_".$port;
             if(!isset($this->checked[$checked])) {
                 if($sharing >0 ) {
-                    $this->instant->addServer($name,$port,$sharing);
+                    if(!$this->instant->addServer($name,$port,$sharing)) {
+	                    $this->fallback = true;
+                    }
                 } else {
-                    $this->instant->addServer($name,$port);
+                    if(!$this->instant->addServer($name,$port)) {
+	                    $this->fallback = true;
+                    }
                 }
                 $this->checked[$checked] = 1;
             }

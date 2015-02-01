@@ -4,54 +4,54 @@
  * khoaofgod@gmail.com
  * Website: http://www.phpfastcache.com
  * Example at our website, any bugs, problems, please visit http://faster.phpfastcache.com
+ *
+ * Redis Extension with:
+ * http://pecl.php.net/package/redis
  */
 
 
 class phpfastcache_redis extends phpFastCache implements phpfastcache_driver {
 
-    var $instant;
 
     function checkdriver() {
         // Check memcache
-        if(function_exists("memcache_connect")) {
+        if(class_exists("Redis")) {
             return true;
         }
+	    $this->fallback = true;
         return false;
     }
 
     function __construct($option = array()) {
         $this->setOption($option);
         if(!$this->checkdriver() && !isset($option['skipError'])) {
-            throw new Exception("Can't use this driver for your website!");
+	        $this->fallback = true;
         }
-        $this->instant = new Memcache();
+	    if(class_exists("Redis")) {
+		    $this->instant = new Redis();
+	    }
+
     }
 
     function connectServer() {
-        $server = $this->option['server'];
-        if(count($server) < 1) {
-            $server = array(
-                array("127.0.0.1",11211),
-            );
-        }
+	    if(is_null($this->instant)) {
+		    $server = isset($this->option['redis']) ? $this->option['redis'] : array("127.0.0.1",6389);
+		    $p1 = isset($server[0]) ? $server[0] : "127.0.0.1";
+		    $p2 = isset($server[1]) ? $server[1] : 6389;
+		    $p3 = isset($server[2]) ? $server[2] : 0;
 
-        foreach($server as $s) {
-            $name = $s[0]."_".$s[1];
-            if(!isset($this->checked[$name])) {
-                $this->instant->addserver($s[0],$s[1]);
-                $this->checked[$name] = 1;
-            }
-
-        }
+		    if(!$this->instant->connect($p1,$p2,$p3)) {
+			    $this->fallback = true;
+		    }
+	    }
     }
 
     function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
         $this->connectServer();
         if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
-            return $this->instant->add($keyword, $value, false, $time );
-
+	        return $this->instant->set($keyword, $value, array('xx', 'ex' => $time));
         } else {
-            return $this->instant->set($keyword, $value, false, $time );
+            return $this->instant->set($keyword, $value, $time);
         }
 
     }
@@ -78,7 +78,7 @@ class phpfastcache_redis extends phpFastCache implements phpfastcache_driver {
         $res = array(
             "info"  => "",
             "size"  =>  "",
-            "data"  => $this->instant->getStats(),
+            "data"  => $this->instant->info(),
         );
 
         return $res;
@@ -87,12 +87,12 @@ class phpfastcache_redis extends phpFastCache implements phpfastcache_driver {
 
     function driver_clean($option = array()) {
         $this->connectServer();
-        $this->instant->flush();
+        $this->instant->flushDB();
     }
 
     function driver_isExisting($keyword) {
         $this->connectServer();
-        $x = $this->get($keyword);
+        $x = $this->instant->exists($keyword);
         if($x == null) {
             return false;
         } else {

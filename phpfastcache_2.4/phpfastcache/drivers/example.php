@@ -15,7 +15,9 @@ class phpfastcache_example extends phpFastCache implements phpfastcache_driver  
         return false;
     }
 
+	function connectServer() {
 
+	}
 
     function __construct($option = array()) {
         $this->setOption($option);

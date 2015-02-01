@@ -155,6 +155,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
         if(extension_loaded('pdo_sqlite') && is_writeable($this->getPath())) {
            return true;
         }
+	    $this->fallback = true;
         return false;
     }
 
@@ -167,12 +168,12 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
          */
         $this->setOption($option);
         if(!$this->checkdriver() && !isset($option['skipError'])) {
-            throw new Exception("Can't use this driver for your website!");
+	        $this->fallback = true;
         }
 
         if(!file_exists($this->getPath()."/sqlite")) {
             if(!@mkdir($this->getPath()."/sqlite",0777)) {
-                die("Sorry, Please CHMOD 0777 for this path: ".$this->getPath());
+	            $this->fallback = true;
             }
         }
         $this->path = $this->getPath()."/sqlite";

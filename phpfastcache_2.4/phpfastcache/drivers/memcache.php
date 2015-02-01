@@ -17,19 +17,25 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
         if(function_exists("memcache_connect")) {
             return true;
         }
+	    $this->fallback = true;
         return false;
     }
 
     function __construct($option = array()) {
         $this->setOption($option);
         if(!$this->checkdriver() && !isset($option['skipError'])) {
-            throw new Exception("Can't use this driver for your website!");
+	        $this->fallback = true;
         }
-        $this->instant = new Memcache();
+	    if(class_exists("Memcache")) {
+		    $this->instant = new Memcache();
+	    } else {
+		    $this->fallback = true;
+	    }
+
     }
 
     function connectServer() {
-        $server = $this->option['server'];
+        $server = $this->option['memcache'];
         if(count($server) < 1) {
             $server = array(
                 array("127.0.0.1",11211),
@@ -39,7 +45,9 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
         foreach($server as $s) {
             $name = $s[0]."_".$s[1];
             if(!isset($this->checked[$name])) {
-                $this->instant->addserver($s[0],$s[1]);
+                if(!$this->instant->addserver($s[0],$s[1])) {
+	                $this->fallback = true;
+                }
                 $this->checked[$name] = 1;
             }
 

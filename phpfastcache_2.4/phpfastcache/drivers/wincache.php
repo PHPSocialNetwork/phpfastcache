@@ -12,13 +12,14 @@ class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver 
         {
             return true;
         }
+	    $this->fallback = true;
         return false;
     }
 
     function __construct($option = array()) {
         $this->setOption($option);
         if(!$this->checkdriver() && !isset($option['skipError'])) {
-            throw new Exception("Can't use this driver for your website!");
+	        $this->fallback = true;
         }
 
     }

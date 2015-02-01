@@ -1,4 +1,3 @@
-
 Version 2.4
 ------ None-Expired Object
 set("keyword",$value);
@@ -9,15 +8,27 @@ set("keyword",$value);
 added missed cache to skip errors when disk is full neither busy
 
 ------ New Driver: "redis"
-use predis_1.0 as extension
+use "pecl install redis"
+
+------ New Driver: "cookie"
+Just something fun that phpFastCache can store your data on Visitors Browser, for next time they come the page load fast ^_^
+Fun driver only. Don't blame me.
 
 ------ Temporary Disabled phpfastCache
 set this on your config files
 phpFastCache::$disabled = true;
 After this line, phpFastCache will always return null;
 
+------ Added Composer
 
------- Added Compossor
+------ Add Run Method
+$cache->run("driver_function","a","b","c");
+
+------ Add Fallback
+When Memcached, APC or Redis failed, then A Fallback Driver will be run
+
+
+
 
 
 

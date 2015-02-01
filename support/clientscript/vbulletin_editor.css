@@ -1,0 +1,159 @@
+/*======================================================================*\
+|| #################################################################### ||
+|| # vBulletin 4.2.1
+|| # ---------------------------------------------------------------- # ||
+|| # All code in this file is ©2000-2013 vBulletin Solutions Inc.     # ||
+|| # This file may not be redistributed in whole or significant part. # ||
+|| # ---------------- VBULLETIN IS NOT FREE SOFTWARE ---------------- # ||
+|| # http://www.vbulletin.com | http://www.vbulletin.com/license.html # ||
+|| #################################################################### ||
+\*======================================================================*/
+
+/* the container for the editor */
+.vBulletin_editor
+{
+	border: 2px groove;
+}
+
+/* the container for all the edit controls */
+#controlbar, .controlbar
+{
+	padding: 2px;
+}
+
+/* an individual button */
+.imagebutton
+{
+	left: 0px;
+	top: 0px;
+}
+
+/* an individual WYSIWYG color element in the color popup */
+.ocolor
+{
+	padding: 2px;
+	font-size: 1px;
+}
+
+/* WYSIWYG the part of the color element that gets colored */
+.ocolor div
+{
+	width: 10px;
+	height: 10px;
+	border: 1px solid #ACA899;
+}
+
+/* WYSIWYG font, size and smilie elements within popups */
+.ofont, .osize, .osmilie, .otextlink
+{
+	font: 11px tahoma;
+	cursor: default;
+}
+
+/* style for WYSIWYG font option elements */
+.ofont
+{
+	padding: 0px 4px 0px 10px;
+	font-size: 14px;
+	height: 20px;
+}
+
+/* style for WYSIWYG size option elements */
+.osize
+{
+	padding: 0px 4px 0px 4px;
+	width: 30px;
+}
+
+/* the smilie image within a WYSIWYG smilie popup */
+.osmilie img
+{
+	vertical-align: middle;
+	margin: 4px;
+}
+
+/* text buttons within popup menus */
+.otextlink
+{
+	text-align: center;
+	margin-top: 4px;
+	height: 20px;
+}
+
+/* the left cell of a WYSIWYG popup menu control */
+.popup_feedback
+{
+	font: 11px tahoma;
+	height: 18px;
+	padding: 0px 3px 0px 3px;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+/* the container window for a WYSIWYG popup menu */
+.popupwindow
+{
+	border: 1px solid APPWORKSPACE;
+	padding: 3px;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	z-index: 5;
+}
+
+/* the WYSIWYG color popup */
+#popup_forecolor
+{
+	padding: 3px;
+}
+
+/* the WYSIWYG font popup */
+#popup_fontname
+{
+	padding: 1px;
+	overflow: auto;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+/* the WYSIWYG size popup */
+#popup_fontsize
+{
+	padding: 1px;
+}
+
+/* the WYSIWYG smilie popup */
+#popup_smilie
+{
+	padding: 1px;
+	overflow: auto;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+/* the WYSIWYG attach popup */
+#popup_attach
+{
+	padding: 1px;
+	overflow: auto;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+/* the context-notification area for WYSIWYG font and size feedback */
+#fontOut, #sizeOut, .popup_feedback div
+{
+	height: 16px;
+	border: 0px solid;
+	padding: 0px 2px 0px 2px;
+	cursor: default;
+	font: 11px tahoma;
+	overflow: hidden;
+}
+
+/*======================================================================*\
+|| ####################################################################
+|| # Downloaded: 16:55, Fri Jul 19th 2013
+|| # CVS: $RCSfile$ - $Revision: 32878 $
+|| ####################################################################
+\*======================================================================*/

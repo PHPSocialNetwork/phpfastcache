@@ -1,0 +1,8 @@
+ul.tab_list {
+	right: 0px;
+}
+ul.tab_list li {
+	float: right;
+	margin-left: 1px;
+	margin-right: 0px;
+}

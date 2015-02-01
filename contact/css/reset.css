@@ -1,0 +1,33 @@
+html, body, h1, h2, h3, h4, h5, h6, p, ol, ul, li, pre, code, address, variable, form, fieldset, blockquote {
+	padding: 0;
+	margin: 0;
+	font-size: 100%;
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+td, th, caption {
+	font-weight: normal;
+	text-align: left;
+}
+img, fieldset {
+	border: 0;
+}
+ol {
+	padding: 0;
+	list-style: decimal;
+}
+ul {
+	padding: 0;
+	list-style: square;
+}
+li {
+	margin: 0;
+	padding: 0;
+}
+q:before, q:after {
+	content: '';
+}

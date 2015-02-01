@@ -1,0 +1,92 @@
+[13-May-2013 15:24:15 UTC] PHP Warning:  include(/home/easyjque/public_html/domain/phpfastcache.com/dev/includes/config.php) [<a href='function.include'>function.include</a>]: failed to open stream: No such file or directory in /home/easyjque/public_html/domain/phpfastcache.com/dev/includes/class_core.php on line 3409
+[13-May-2013 15:24:15 UTC] PHP Warning:  include() [<a href='function.include'>function.include</a>]: Failed opening '/home/easyjque/public_html/domain/phpfastcache.com/dev/includes/config.php' for inclusion (include_path='.:/usr/lib/php:/usr/local/lib/php:/usr/local/Zend/share/zf/library') in /home/easyjque/public_html/domain/phpfastcache.com/dev/includes/class_core.php on line 3409
+[13-May-2013 16:00:04 UTC] PHP Fatal error:  Out of memory (allocated 5505024) (tried to allocate 1728843 bytes) in /home/easyjque/public_html/domain/phpfastcache.com/dev/install/includes/class_upgrade.php on line 1091
+[19-May-2013 05:28:44 UTC] PHP Fatal error:  PHP Startup: apc_mmap: mmap failed: in Unknown on line 0
+[19-May-2013 05:28:56 UTC] PHP Fatal error:  PHP Startup: apc_mmap: mmap failed: in Unknown on line 0
+[19-May-2013 05:28:56 UTC] PHP Fatal error:  PHP Startup: apc_mmap: mmap failed: in Unknown on line 0
+[19-Jul-2013 23:14:00 UTC] PHP Warning:  mysqli_get_server_info(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 162
+[19-Jul-2013 23:14:00 UTC] PHP Warning:  mysqli_real_escape_string(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 35
+[19-Jul-2013 23:14:00 UTC] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, null given in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 568
+[22-Jul-2013 04:07:04 UTC] PHP Warning:  mysqli_get_server_info(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 162
+[22-Jul-2013 04:07:04 UTC] PHP Warning:  mysqli_real_escape_string(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 35
+[22-Jul-2013 04:07:04 UTC] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, null given in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 568
+[24-Jul-2013 06:21:47 UTC] PHP Warning:  mysqli_get_server_info(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 162
+[24-Jul-2013 06:21:47 UTC] PHP Warning:  mysqli_real_escape_string(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 35
+[24-Jul-2013 06:21:47 UTC] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, null given in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 568
+[26-Jul-2013 07:11:36 UTC] PHP Warning:  mysqli_get_server_info(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 162
+[26-Jul-2013 07:11:36 UTC] PHP Warning:  mysqli_real_escape_string(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 35
+[26-Jul-2013 07:11:36 UTC] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, null given in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 568
+[28-Jul-2013 06:39:59 UTC] PHP Warning:  mysqli_get_server_info(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 162
+[28-Jul-2013 06:39:59 UTC] PHP Warning:  mysqli_real_escape_string(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 35
+[28-Jul-2013 06:39:59 UTC] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, null given in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 568
+[30-Jul-2013 06:52:49 UTC] PHP Warning:  mysqli_get_server_info(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 162
+[30-Jul-2013 06:52:49 UTC] PHP Warning:  mysqli_real_escape_string(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 35
+[30-Jul-2013 06:52:49 UTC] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, null given in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 568
+[31-Jul-2013 08:17:24 UTC] PHP Warning:  mysqli_get_server_info(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 162
+[31-Jul-2013 08:17:24 UTC] PHP Warning:  mysqli_real_escape_string(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 35
+[31-Jul-2013 08:17:24 UTC] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, null given in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 568
+[31-Jul-2013 08:17:24 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php:162) in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 28
+[31-Jul-2013 09:23:12 UTC] PHP Warning:  mysqli_get_server_info(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 162
+[31-Jul-2013 09:23:12 UTC] PHP Warning:  mysqli_real_escape_string(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 35
+[31-Jul-2013 09:23:12 UTC] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, null given in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 568
+[31-Jul-2013 09:23:12 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php:162) in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 28
+[31-Jul-2013 10:57:06 UTC] PHP Warning:  mysqli_get_server_info(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 162
+[31-Jul-2013 10:57:06 UTC] PHP Warning:  mysqli_real_escape_string(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 35
+[31-Jul-2013 10:57:06 UTC] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, null given in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 568
+[31-Jul-2013 10:57:06 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php:162) in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 28
+[31-Jul-2013 12:04:40 UTC] PHP Warning:  mysqli_get_server_info(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 162
+[31-Jul-2013 12:04:40 UTC] PHP Warning:  mysqli_real_escape_string(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 35
+[31-Jul-2013 12:04:40 UTC] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, null given in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 568
+[31-Jul-2013 12:04:45 UTC] PHP Warning:  mysqli_get_server_info(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 162
+[31-Jul-2013 12:04:45 UTC] PHP Warning:  mysqli_real_escape_string(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 35
+[31-Jul-2013 12:04:45 UTC] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, null given in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 568
+[31-Jul-2013 12:04:45 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php:162) in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 28
+[31-Jul-2013 12:31:46 UTC] PHP Warning:  mysqli_get_server_info(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 162
+[31-Jul-2013 12:31:46 UTC] PHP Warning:  mysqli_real_escape_string(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 35
+[31-Jul-2013 12:31:46 UTC] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, null given in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 568
+[31-Jul-2013 12:31:46 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php:162) in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 28
+[31-Jul-2013 13:46:15 UTC] PHP Warning:  mysqli_get_server_info(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 162
+[31-Jul-2013 13:46:15 UTC] PHP Warning:  mysqli_real_escape_string(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 35
+[31-Jul-2013 13:46:15 UTC] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, null given in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 568
+[31-Jul-2013 13:46:16 UTC] PHP Warning:  mysqli_get_server_info(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 162
+[31-Jul-2013 13:46:17 UTC] PHP Warning:  mysqli_real_escape_string(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 35
+[31-Jul-2013 13:46:17 UTC] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, null given in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 568
+[31-Jul-2013 13:46:17 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php:162) in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 28
+[02-Aug-2013 08:36:06 UTC] PHP Warning:  mysqli_get_server_info(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 162
+[02-Aug-2013 08:36:06 UTC] PHP Warning:  mysqli_real_escape_string(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 35
+[02-Aug-2013 08:36:06 UTC] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, null given in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 568
+[04-Aug-2013 10:53:01 UTC] PHP Warning:  mysqli_get_server_info(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 162
+[04-Aug-2013 10:53:01 UTC] PHP Warning:  mysqli_real_escape_string(): invalid object or resource mysqli
+ in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseo_db.php on line 35
+[04-Aug-2013 10:53:01 UTC] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, null given in /home/easyjque/public_html/domain/phpfastcache.com/dev/vbseo/includes/functions_vbseocp_abstract.php on line 568

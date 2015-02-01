@@ -1,0 +1,71 @@
+	/**
+	 * Custom YUI Grids for vBulletin
+	 * By default, they're 750px width, but could change depending on override
+	 * tvb-l1 : 160px on the left
+	 * tvb-l2 : 180px on the left
+	 * tvb-l3 : 240px on the left
+	 * tvb-l4 : 300px on the left
+	 * tvb-r1 : 160px on the right
+	 * tvb-r2 : 180px on the right
+	 * tvb-r3 : 240px on the right
+	 * tvb-r4 : 300px on the right
+	*/
+
+	.yui-tvb-l1,.yui-tvb-l2,.yui-tvb-l3,.yui-tvb-l4,.yui-tvb-r1,.yui-tvb-r2,.yui-tvb-r3,.yui-tvb-r4 {
+		margin:auto;
+		text-align:left;
+		width:57.69em;*width:56.25em;
+		min-width:750px;
+	}
+
+	.yui-tvb-l1 #yui-main,
+	.yui-tvb-l2 #yui-main,
+	.yui-tvb-l3 #yui-main,
+	.yui-tvb-l4 #yui-main{float:right;margin-left:-25em;/* IE: preserve layout at narrow widths */}
+
+	.yui-tvb-r1 #yui-main,
+	.yui-tvb-r2 #yui-main,
+	.yui-tvb-r3 #yui-main,
+	.yui-tvb-r4 #yui-main{float:left;margin-right:-25em;/* IE: preserve layout at narrow widths */}
+
+	/* 
+		Subsection: For Specific Template Presets
+	*/
+
+	.yui-tvb-l1 .yui-b {float:left;width:12.30769em;*width:12.00em;}
+	.yui-tvb-l1 #yui-main .yui-b{margin-left:13.30769em;*margin-left:13.05em;}
+
+	.yui-tvb-l2 .yui-b {float:left;width:13.8461em;*width:13.50em;}
+	.yui-tvb-l2 #yui-main .yui-b {margin-left:14.8461em;*margin-left:14.55em;}
+
+	.yui-tvb-l3 .yui-b {float:left;width:18.4615em;*width:18.00em;}
+	.yui-tvb-l3 #yui-main .yui-b {margin-left:19.4615em;*margin-left:19.125em;}
+
+	.yui-tvb-l4 .yui-b {float:left;width:23.0769em;*width:22.50em;}
+	.yui-tvb-l4 #yui-main .yui-b {margin-left:24.0769em;*margin-left:23.62em;}
+
+	.yui-tvb-r1 .yui-b {float:right;width:12.30769em;*width:12.00em;}
+	.yui-tvb-r1 #yui-main .yui-b {margin-right:13.30769em;*margin-right:13.05em;}
+
+	.yui-tvb-r2 .yui-b {float:right;width:13.8456em;*width:13.50em;}
+	.yui-tvb-r2 #yui-main .yui-b {margin-right:14.8456em;*margin-right:14.55em;}
+
+	.yui-tvb-r3 .yui-b {float:right;width:18.4615em;*width:18.00em;}
+	.yui-tvb-r3 #yui-main .yui-b {margin-right:19.4615em;*margin-right:19.125em;}
+
+	.yui-tvb-r4 .yui-b {float:right;width:23.0769em;*width:22.50em;}
+	.yui-tvb-r4 #yui-main .yui-b {margin-right:24.0769em;*margin-right:23.62em;}
+
+	.yui-tvb-l25 {float:left;clear:right;width:25%;padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;}
+	.yui-tvb-r25 {float:right;width:24%;padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;}
+	.yui-tvb-l30 {float:left;clear:right;width:29%;padding:0px;margin:0px 0.5%;}
+	.yui-tvb-r30 {float:right;clear:left;width:30%;padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;}
+	.yui-tvb-30 {left:30%;width:30%;padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;}
+	.yui-tvb-l40 {width:39%;float:left;clear:right;padding:0px ;margin:0px 0.5%;}
+	.yui-tvb-r40 {width:39%;float:right;padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;}
+	.yui-tvb-40 {clear:right;left:30%;width:40%;padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;}
+	.yui-tvb-50 {left:25%;width:40%;padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;}
+	.yui-tvb-l50 {float:left;clear:right;width:46%;padding:0px 0px 0px 0px;margin:0px 2%;}
+	.yui-tvb-l60 {width:59%;float:left;padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;}
+	.yui-tvb-r60 {width:59%;float:right;clear:right;padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;}
+	.yui-tvb-70 {width:70%;float:clear;padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;}

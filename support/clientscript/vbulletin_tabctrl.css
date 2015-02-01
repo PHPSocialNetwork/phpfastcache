@@ -1,0 +1,70 @@
+ul.tab_list {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	overflow: hidden;
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+}
+/* tabs */
+ul.tab_list li {
+	float: left;
+	margin-left: 0px;
+	margin-right: 1px;
+	white-space: nowrap;
+	overflow: hidden;
+	padding: 4px;
+	position: relative;
+	cursor: pointer;
+	/*-moz-border-radius: 4px 8px 0px 0px; KD:  can't use this because of FF background-image overflow problems */
+}
+/* unselected tabs */
+ul.tab_list li.thead {
+	font-weight: normal;
+}
+/* selected tabs */
+ul.tab_list li.tcat {
+	height: 1.5em;
+	border-bottom: none;
+	border-bottom-width: 0px;
+	font-weight: bold;
+	font-size: 10pt;
+	position: relative;
+}
+/* links within tabs */
+ul.tab_list li a {
+	text-decoration: none;
+	cursor: default;
+}
+ul.tab_list li.overflow_tab {
+	width: auto;
+	text-align: center;
+	font-weight: bold;
+	display: none;
+}
+/* the popup overflow tab list */
+ul.tab_popup {
+	position: absolute;
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+}
+/* individual elements in the popup list */
+ul.tab_popup li {
+	width: 200px;
+}
+ul.tab_list li.thead:hover, ul.tab_list li.thead:hover *, ul.tab_popup li.vbmenu_option:hover, ul.tab_popup li.vbmenu_option:hover * {
+	background: white;
+	color: black;
+}
+div.tab_header {
+	margin-top: -1px;
+	border-bottom: none;
+	border-bottom-width: 0px;
+	padding: 4px;
+	clear: both;
+}
+.tab_content {
+	margin-bottom: 6px;
+}

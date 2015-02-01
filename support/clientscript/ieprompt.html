@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Enter text...</title>
+<script type="text/javascript">
+<!--
+var ul = null;
+var list = "";
+var listmode = false;
+
+function init_dialog()
+{
+	if (typeof(window.dialogArguments) == "undefined")
+	{
+		document.getElementById("textlabel").innerHTML = "<strong>Error</strong>: window.dialogArguments undefined - Exiting";
+		return;
+	}
+
+	document.body.scroll = "no";
+	document.dir = window.dialogArguments.dir;
+	document.title = window.dialogArguments.title;
+	document.getElementById("textlabel").innerHTML = window.dialogArguments.label;
+	document.getElementById("textinput").value = window.dialogArguments.value;
+	if (window.dialogArguments.forceltr)
+	{
+		document.getElementById("textinput").dir = 'ltr';
+	}
+	
+	if (document.getElementById("textinput").value == "http://")
+	{
+		document.getElementById("textinput").select();
+	}
+
+	listmode = (typeof(window.dialogArguments.listtype) != "undefined" ? true : false);
+
+	if (listmode)
+	{
+		ul = document.getElementById("listcontainer").appendChild(document.createElement((window.dialogArguments.listtype == 1 ? "ol" : "ul")));
+	}
+	else
+	{
+		document.getElementById("listcontainer").style.display = "none";
+	}
+
+	document.getElementById("submitbutton").onclick = (listmode ? click_another : click_ok);
+	document.getElementById("cancelbutton").onclick = click_cancel;
+	document.getElementById("textinput").onkeypress = handle_keypress;
+}
+
+function handle_keypress()
+{
+	return (window.event.keyCode == 13 ? (listmode ? click_another() : click_ok()) : true);
+}
+
+function click_cancel()
+{
+	window.returnValue = (listmode ? list : null);
+	window.close();
+	return false;
+}
+
+function click_ok()
+{
+	window.returnValue = (listmode ? list : document.getElementById("textinput").value);
+	window.close();
+	return false;
+}
+
+function click_another()
+{
+	var textinput = document.getElementById("textinput");
+	if (textinput.value == "")
+	{
+		click_ok();
+	}
+	else
+	{
+		var li = ul.appendChild(document.createElement("li"));
+			li.appendChild(document.createTextNode(textinput.value));
+			li.scrollIntoView();
+		list += "[*]" + textinput.value + "\n";
+		textinput.value = "";
+		textinput.focus();
+		return false;
+	}
+}
+//-->
+</script>
+<style type="text/css">
+<!--
+body {
+	margin:0px;
+	color:buttontext;
+	background-color:appworkspace;
+	font:11px Verdana, Arial, Helvetica, sans-serif;
+}
+#inputrow {
+	margin-top:1px;
+	padding:6px;
+	color:black;
+	background-color:white;
+}
+#inputrow label {
+	margin-top:13px;
+	display:block;
+}
+#listcontainer {
+	margin-top:6px;
+	width:300px;
+	height:60px;
+	overflow:auto;
+	border:1px inset;
+	background-color:buttonface;
+	color:buttontext;
+}
+#submitrow {
+	margin-top:1px;
+	padding:6px;
+	border-top:2px outset;
+	border-bottom:2px outset;
+	color:buttontext;
+	background-color:buttonface;
+	text-align:right;
+}
+#inputrow input {
+	width:300px;
+	font:10pt Verdana, Arial, Helvetica, sans-serif;
+}
+#submitrow input {
+	width:85px;
+	font:11px Tahoma, Verdana, Arial, Helvetica, sans-serif;
+}
+//-->
+</style>
+</head>
+<body onload="init_dialog()">
+	<div id="inputrow">
+		<img src="../image.php?type=ieprompt" alt="Javascript Prompt" />
+		<label id="textlabel" for="textinput">Enter text...</label>
+		<input type="text" id="textinput" />
+		<div id="listcontainer"></div>
+	</div>
+	<div id="submitrow">
+		<input type="button" id="submitbutton" value="Ok" />
+		<input type="button" id="cancelbutton" value="Cancel" />
+	</div>
+</body>
+</html>

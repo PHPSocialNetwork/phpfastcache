@@ -1,0 +1,2 @@
+[02-Aug-2014 21:40:11 UTC] PHP Warning:  require_once(../phpfastcache/phpfastcache.php): failed to open stream: No such file or directory in /home/easyjque/public_html/domain/phpfastcache.com/examples/2.setup.php on line 7
+[02-Aug-2014 21:40:11 UTC] PHP Fatal error:  require_once(): Failed opening required '../phpfastcache/phpfastcache.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/easyjque/public_html/domain/phpfastcache.com/examples/2.setup.php on line 7

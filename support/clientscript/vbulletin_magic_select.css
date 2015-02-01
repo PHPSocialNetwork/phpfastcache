@@ -1,0 +1,46 @@
+.vB_MagicSelect, .vB_MagicSelect_hover, .vB_MagicSelect_preload {
+	white-space:nowrap;
+}
+
+.vB_MagicSelectCursor {
+	cursor:default;
+}
+
+.vB_MagicSelect {
+	border:none;
+	padding:1px;
+	background-color:transparent;
+}
+
+.vB_MagicSelect_hover {
+	border:1px solid rgb(34,84,177);
+	padding:0px;
+	background-color:white;
+}
+
+.vB_MagicSelect img, .vB_MagicSelect_hover img {
+	padding:1px;
+	vertical-align:text-top;
+}
+
+.vB_MagicSelect .vB_MagicSelect_button {
+	background-color:transparent;
+}
+
+.vB_MagicSelect_hover .vB_MagicSelect_button {
+	background-color:rgb(215,231,253);
+}
+
+.vB_MagicSelect_preload {
+	border:none;
+	padding:2px 1px 3px 1px;
+	background-color:transparent;
+}
+
+.vB_MagicSelect_wrappable {
+	white-space:normal;
+}
+
+.vB_MagicSelect_margin {
+	margin:0px 0px 2px 0px;
+}

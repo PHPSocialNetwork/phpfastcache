@@ -1,0 +1,24 @@
+# Comment the following line (add '#' at the beginning)
+# to disable mod_rewrite functions.
+# Please note: you still need to disable the hack in
+# the vBSEO control panel to stop url rewrites.
+RewriteEngine On
+
+# Some servers require the Rewritebase directive to be
+# enabled (remove '#' at the beginning to activate)
+# Please note: when enabled, you must include the path
+# to your root vB folder (i.e. RewriteBase /forums/)
+#RewriteBase /
+
+#RewriteCond %{HTTP_HOST} !^www\.yourdomain\.com
+#RewriteRule (.*) http://www.yourdomain.com/forums/$1 [L,R=301]
+
+RewriteRule ^((urllist|sitemap_).*\.(xml|txt)(\.gz)?)$ vbseo_sitemap/vbseo_getsitemap.php?sitemap=$1 [L]
+
+RewriteCond %{REQUEST_URI} !(admincp/|modcp/|cron|vbseo_sitemap|api\.php)
+RewriteRule ^((archive/)?(.*\.php(/.*)?))$ vbseo.php [L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !/(admincp|modcp|clientscript|cpstyles|images)/
+RewriteRule ^(.+)$ vbseo.php [L,QSA]

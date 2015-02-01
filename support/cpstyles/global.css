@@ -1,0 +1,96 @@
+/*======================================================================*\
+|| #################################################################### ||
+|| # vBulletin 4.2.1
+|| # ---------------------------------------------------------------- # ||
+|| # All code in this file is ©2000-2013 vBulletin Solutions Inc.     # ||
+|| # This file may not be redistributed in whole or significant part. # ||
+|| # ---------------- VBULLETIN IS NOT FREE SOFTWARE ---------------- # ||
+|| # http://www.vbulletin.com | http://www.vbulletin.com/license.html # ||
+|| #################################################################### ||
+\*======================================================================*/
+
+/**
+* vBulletin Global CSS
+*/
+
+/* Auto-clearing of floats */
+.floatcontainer:after, .block_row:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+.floatcontainer {
+	display: inline-block;
+}
+/* IE-Mac hide \*/
+* html .floatcontainer {
+	height: 1%;
+}
+.floatcontainer {
+	display: block;
+}
+
+.cms_widget_config_400 {
+	width:400px;
+}
+
+.cms_widget_config_450 {
+	width:450px;
+}
+
+.cms_widget_config_500 {
+	width:500px;
+}
+
+.cms_widget_config_550 {
+	width:550px;
+}
+
+.cms_widget_config_600 {
+	width:600px;
+}
+
+.cms_widget_config_650 {
+	width:650px;
+}
+
+.cms_widget_config_700 {
+	width:700px;
+}
+
+.cms_widget_config_750 {
+	width:750px;
+}
+
+.cms_widget_config_800 {
+	width:800px;
+}
+
+ul.floatlist {
+	margin:0;
+	padding:0;
+}
+
+ul.floatlist li {
+	list-style:none;
+	margin:0px;
+	padding:1px;
+}
+
+.section_row {
+	background-color:#DDDDDD;
+}
+
+.yui-main, .yui-b, .yui-g {
+	width: 100%;
+	float: left;
+}
+
+/*======================================================================*\
+|| ####################################################################
+|| # Downloaded: 16:55, Fri Jul 19th 2013
+|| # CVS: $RCSfile$ - $Revision: 36294 $
+|| ####################################################################
+\*======================================================================*/

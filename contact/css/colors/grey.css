@@ -1,0 +1,62 @@
+#jpreBar {
+	background: #5A5A5A url('../images/skillbar-score-bg-grey.jpg') !important;
+}
+
+h1 {
+	color: #5A5A5A;
+}
+
+h3 {
+	border-bottom-color: #5A5A5A;
+}
+
+#rootContainer {
+	border-right-color: #5A5A5A;
+}
+
+span.skillScoreWrapper span {
+	background: #5A5A5A url('../../images/skillbar-score-bg-grey.jpg') left top repeat-x;
+}
+
+.profileDownload a:hover {
+	background-color: #333;
+}
+
+.portfolioItems li a.link:hover, #contactInfo a:hover {
+	color: #5A5A5A;
+}
+
+#contactForm input[type="submit"]:hover {
+	background-color: #5A5A5A;
+}
+
+#nav a.activeMenu {
+	color: #5A5A5A;
+}
+
+#nav a#homeLink.activeMenu {
+	background-position: 0 -318px;
+}
+
+#nav a#profileLink.activeMenu {
+	background-position: 0 -345px;
+}
+
+#nav a#portfolioLink.activeMenu {
+	background-position: 0 -371px;
+}
+
+#nav a#contactLink.activeMenu {
+	background-position: 0 -397px;
+}
+
+::-moz-selection {
+	background: #5A5A5A;
+	color: #fff;
+	text-shadow: none;
+}
+::selection {
+	background: #5A5A5A;
+	color: #fff;
+	text-shadow: none;
+}

@@ -18,6 +18,8 @@ local.properties
 
 .idea
 
+.idea/
+
 # External tool builders
 .externalToolBuilders/
 

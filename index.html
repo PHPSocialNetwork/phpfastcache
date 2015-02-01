@@ -203,11 +203,13 @@
                 <p class="drop-counter" style="visibility: hidden;">(<span>80</span> Visitors)</p>
 
                 <div class="one_half">
-                    <p class="inline"> Supported</p> <h3>APC</h3>
+                    <p class="inline"> Supported</p> <h3>Redis</h3>
+                    <p class="inline">,</p> <h3>APC</h3>
                     <p class="inline">,</p> <h3>XCache</h3>
                     <p class="inline">,</p> <h3>MemCache</h3>
                     <p class="inline">,</p> <h3>MemCached</h3>
                     <p class="inline">,</p> <h3>WinCache</h3>
+                    <p class="inline">,</p> <h3>Cookie</h3>
                     <p class="inline">, Files<br><br>
                         You will never have to rewrite your</p> <h2>PHP caching class</h2><p  class="inline"> again when you change your servers<br><br>
                 </p>
@@ -304,7 +306,7 @@
 <pre class="prettyprint php">
 &lt;?php
     require_once("phpfastcache/phpfastcache.php");
-    // auto, files, sqlite, xcache, memcache, apc, memcached, wincache
+    // auto, redis, cookie, files, sqlite, xcache, memcache, apc, memcached, wincache
     phpFastCache::setup("storage","auto");
     phpFastCache::setup("path", dirname(__FILE__)); // Path For Files
 
@@ -779,10 +781,12 @@ $cache->isExisting("keyword");
     // In your config file
     include("phpfastcache/phpfastcache.php");
     phpFastCache::setup("storage","auto");
+    // phpFastCache::setup("storage","redis");
 
-    // phpFastCache support "apc", "memcache", "memcached", "wincache" ,"files", "sqlite" and "xcache"
+    // phpFastCache support "redis", "cookie", "apc", "memcache", "memcached", "wincache" ,"files", "sqlite" and "xcache"
     // You don't need to change your code when you change your caching system. Or simple keep it auto
     $cache = phpFastCache();
+    // $cache = phpFastCache("memcache");
 
     // In your Class, Functions, PHP Pages
     // try to get from Cache first. product_page = YOUR Identity Keyword
@@ -964,6 +968,19 @@ $cache->isExisting("keyword");
     <div class="h1">Updates</div>
 
     <div class="releases">
+
+        <article class="release">
+            <div class="h2">Version 2.4</div>
+            <span class="date">Released on Feb 01, 2014</span>
+            <ul>
+                <li class="new"><span><b>New</b></span> Redis Supported</li>
+                <li class="new"><span><b>New</b></span> Cookie Supported</li>
+                <li class="new"><span><b>New</b></span> Tempory Disabled Caching</li>
+                <li class="new"><span><b>New</b></span> Run Method</li>
+                <li class="fix"><span><b>Improved</b></span> Improved Files Cache</li>
+                <li class="fix"><span><b>Improved</b></span> Fallback Driver</li>
+            </ul>
+        </article>
 
         <article class="release">
             <div class="h2">Version 2.0 & Revision 621</div>

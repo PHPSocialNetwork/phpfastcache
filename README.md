@@ -50,10 +50,16 @@ $cache = phpFastCache();
 
 // Write into cache
 $cache->set("keyword", "data | array | object", 300);
+$cache->set("keyword", "data | array | object"); // <-- Non-Expired Objects without Time, until you delete the cache.
 
-// Read from Cache | return null or data
+// Read from Cache | return "null" or "data"
 $data = $cache->get("keyword");
 echo $data;
+
+// Temporary disabled phpFastCache
+phpFastCache::$disabled = true;
+$data = $cache->get("keyword");
+echo $data; // ALWAYS RETURN NULL;
 
 // Read object information | value | time from cache
 $object = $cache->getInfo("keyword");

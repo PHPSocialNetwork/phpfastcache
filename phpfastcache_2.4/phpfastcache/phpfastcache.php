@@ -1,8 +1,8 @@
 <?php
 /*
- * khoaofgod@yahoo.com
+ * khoaofgod@gmail.com
  * Website: http://www.phpfastcache.com
- * Example at our website, any bugs, problems, please visit http://www.codehelper.io
+ * Example at our website, any bugs, problems, please visit http://faster.phpfastcache.com
  */
 
 
@@ -76,6 +76,8 @@ class phpFastCache {
 
     );
 
+    public static $disabled = false;
+
 
     /*
      * Basic Method
@@ -91,6 +93,16 @@ class phpFastCache {
             // just recommended for sqlite. files
             $time = 3600*24*365*5;
         }
+
+        /*
+         * Temporary disabled phpFastCache::$disabled = true
+         * Khoa. B
+         */
+
+        if(self::$disabled === true) {
+            return false;
+        }
+
 
         $object = array(
             "value" => $value,
@@ -108,6 +120,15 @@ class phpFastCache {
     }
 
     function get($keyword, $option = array()) {
+        /*
+       * Temporary disabled phpFastCache::$disabled = true
+       * Khoa. B
+       */
+
+        if(self::$disabled === true) {
+            return null;
+        }
+
         if($this->is_driver == true) {
             $object = $this->driver_get($keyword,$option);
         } else {

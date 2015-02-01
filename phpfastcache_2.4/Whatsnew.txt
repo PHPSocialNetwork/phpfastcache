@@ -9,7 +9,18 @@ set("keyword",$value);
 added missed cache to skip errors when disk is full neither busy
 
 ------ New Driver: "redis"
-use redis
+use predis_1.0 as extension
+
+------ Temporary Disabled phpfastCache
+set this on your config files
+phpFastCache::$disabled = true;
+After this line, phpFastCache will always return null;
+
+
+------ Added Compossor
+
+
+
 
 
 

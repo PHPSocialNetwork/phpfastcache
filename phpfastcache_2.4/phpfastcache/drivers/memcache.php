@@ -45,10 +45,16 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
         foreach($server as $s) {
             $name = $s[0]."_".$s[1];
             if(!isset($this->checked[$name])) {
-                if(!$this->instant->addserver($s[0],$s[1])) {
-	                $this->fallback = true;
-                }
-                $this->checked[$name] = 1;
+	            try {
+		            if(!$this->instant->addserver($s[0],$s[1])) {
+			            $this->fallback = true;
+		            }
+		            $this->checked[$name] = 1;
+	            } catch(Exception $e) {
+		            $this->fallback = true;
+	            }
+
+
             }
 
         }

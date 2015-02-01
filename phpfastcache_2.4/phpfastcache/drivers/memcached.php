@@ -46,16 +46,21 @@ class phpfastcache_memcached extends phpFastCache implements phpfastcache_driver
             $sharing = isset($server[2]) ? $server[2] : 0;
             $checked = $name."_".$port;
             if(!isset($this->checked[$checked])) {
-                if($sharing >0 ) {
-                    if(!$this->instant->addServer($name,$port,$sharing)) {
-	                    $this->fallback = true;
-                    }
-                } else {
-                    if(!$this->instant->addServer($name,$port)) {
-	                    $this->fallback = true;
-                    }
-                }
-                $this->checked[$checked] = 1;
+	            try {
+		            if($sharing >0 ) {
+			            if(!$this->instant->addServer($name,$port,$sharing)) {
+				            $this->fallback = true;
+			            }
+		            } else {
+			            if(!$this->instant->addServer($name,$port)) {
+				            $this->fallback = true;
+			            }
+		            }
+		            $this->checked[$checked] = 1;
+	            } catch (Exception $e) {
+		            $this->fallback = true;
+	            }
+
             }
         }
     }

@@ -9,16 +9,25 @@
 require_once("phpfastcache/phpfastcache.php");
 
 // simple Caching with:
-$cache = phpFastCache("memcache");
+$cache = phpFastCache("redis");
+
+
+if($cache->fallback == true) {
+	echo " USE BACK UP DRIVER = ".phpFastCache::$config['fallback']." <br>";
+} else {
+	echo ' DRIVER IS GOOD <br>';
+}
+
+
 
 // Try to get $products from Caching First
 // product_page is "identity keyword";
-$products = $cache->get("product_page");
+$products = $cache->get("product_page2");
 
 if($products == null) {
 	$products = "DB QUERIES | FUNCTION_GET_PRODUCTS | ARRAY | STRING | OBJECTS";
 	// Write products to Cache in 10 minutes with same keyword
-	$cache->set("product_page",$products , 600);
+	$cache->set("product_page2",$products , 2);
 
 	echo " --> NO CACHE ---> DB | Func | API RUN FIRST TIME ---> ";
 
@@ -27,6 +36,6 @@ if($products == null) {
 }
 
 // use your products here or return it;
-echo $products;
+echo "Products = ".$products;
 
 

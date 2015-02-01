@@ -33,6 +33,11 @@ class phpfastcache_memcached extends phpFastCache implements phpfastcache_driver
     }
 
     function connectServer() {
+
+	    if($this->checkdriver() == false) {
+		    return false;
+	    }
+
         $s = $this->option['memcache'];
         if(count($s) < 1) {
             $s = array(
@@ -52,6 +57,7 @@ class phpfastcache_memcached extends phpFastCache implements phpfastcache_driver
 				            $this->fallback = true;
 			            }
 		            } else {
+
 			            if(!$this->instant->addServer($name,$port)) {
 				            $this->fallback = true;
 			            }

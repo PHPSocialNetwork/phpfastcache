@@ -17,7 +17,7 @@ if(!function_exists("__c")) {
 
 // main function
 if(!function_exists("phpFastCache")) {
-	function phpFastCache($storage = "", $option = array()) {
+	function phpFastCache($storage = "auto", $option = array()) {
 		if(!isset(phpFastCache_instances::$instances[$storage])) {
 			phpFastCache_instances::$instances[$storage] = new phpFastCache($storage, $option);
 		}
@@ -49,7 +49,7 @@ class phpFastCache {
 			//  array("new.host.ip",11211,1),
 		),
 
-		"redis"         =>  array("127.0.0.1",6389),
+		"redis"         =>  array("127.0.0.1",6379),
 
 		"extensions"    =>  array(),
 
@@ -137,7 +137,7 @@ class phpFastCache {
 			return null;
 		}
 
-		if($this->is_driver == true) {
+		if($this->is_driver === true) {
 			$object = $this->driver_get($keyword,$option);
 		} else {
 			$object = $this->driver->driver_get($keyword,$option);
@@ -489,17 +489,25 @@ class phpFastCache {
 
 
 		$this->driver = new $driver($this->option);
-		$this->driver->is_driver = true;
+
+		$this->fallback = !$this->driver->checkdriver();
+
 		// do fallback
 		if(method_exists($this->driver,"connectServer")) {
 			$this->driver->connectServer();
 		}
 
 		if($this->driver->fallback === true) {
+		//	echo 'Fall Back';
 			require_once(dirname(__FILE__)."/drivers/".$this->option['fallback'].".php");
 			$driver = "phpfastcache_".$this->option['fallback'];
 			$this->option("storage",$this->option['fallback']);
 			$this->driver = new $driver($this->option);
+			$this->driver->is_driver = true;
+			$this->fallback = true;
+		} else {
+			$this->driver->is_driver = true;
+			$this->fallback = false;
 		}
 
 
@@ -823,6 +831,10 @@ allow from 127.0.0.1";
 
 			return $string;
 		}
+	}
+
+	public function backup() {
+		return phpFastCache(self::$config['fallback']);
 	}
 
 

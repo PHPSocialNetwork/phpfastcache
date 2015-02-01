@@ -49,6 +49,7 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
 		            if(!$this->instant->addserver($s[0],$s[1])) {
 			            $this->fallback = true;
 		            }
+
 		            $this->checked[$name] = 1;
 	            } catch(Exception $e) {
 		            $this->fallback = true;
@@ -61,31 +62,36 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
     }
 
     function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
-        $this->connectServer();
-        if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
-            return $this->instant->add($keyword, $value, false, $time );
+	    $this->connectServer();
 
-        } else {
-            return $this->instant->set($keyword, $value, false, $time );
-        }
+	    if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
+		    return $this->instant->add($keyword, $value, false, $time );
 
+	    } else {
+		    return $this->instant->set($keyword, $value, false, $time );
+	    }
     }
 
     function driver_get($keyword, $option = array()) {
-        $this->connectServer();
-        // return null if no caching
-        // return value if in caching
-        $x = $this->instant->get($keyword);
-        if($x == false) {
-            return null;
-        } else {
-            return $x;
-        }
+
+	    $this->connectServer();
+
+	    // return null if no caching
+	    // return value if in caching
+
+	    $x = $this->instant->get($keyword);
+
+	    if($x == false) {
+		    return null;
+	    } else {
+		    return $x;
+	    }
+
     }
 
     function driver_delete($keyword, $option = array()) {
         $this->connectServer();
-         $this->instant->delete($keyword);
+        $this->instant->delete($keyword);
     }
 
     function driver_stats($option = array()) {

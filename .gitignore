@@ -17,7 +17,7 @@ local.properties
 .loadpath
 
 .idea
-
+.gitignore
 .idea/
 
 # External tool builders

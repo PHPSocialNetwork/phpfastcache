@@ -9,7 +9,7 @@
 require_once("phpfastcache.php");
 
 // simple Caching with:
-$cache = phpFastCache("sqlite");
+$cache = phpFastCache("predis");
 
 if($cache->fallback == true) {
 	echo " USE BACK UP DRIVER = ".phpFastCache::$config['fallback']." <br>";

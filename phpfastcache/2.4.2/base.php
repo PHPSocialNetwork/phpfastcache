@@ -809,7 +809,7 @@ allow from 127.0.0.1";
 	 * Use file_get_contents OR ALT read
 	 */
 
-	function readfile($file) {
+	protected function readfile($file) {
 		if(function_exists("file_get_contents")) {
 			return file_get_contents($file);
 		} else {
@@ -830,10 +830,14 @@ allow from 127.0.0.1";
 		}
 	}
 
-	public function backup() {
+	protected function backup() {
 		return phpFastCache(self::$config['fallback']);
 	}
 
+
+	protected function required_extension($name) {
+		require_once(dirname(__FILE__)."/extensions/".$name);
+	}
 
 
 }

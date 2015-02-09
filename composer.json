@@ -5,7 +5,7 @@
     "description": "PHP Cache Class - Supported APC, MemCached, WinCache, Files, PDO, Reduce mySQL Call by Caching",
     "keywords": ["cache","caching","php cache","mysql cache","apc cache","apc","memcache","memcached","wincache","files cache","pdo cache","cache class"],
     "homepage": "http://www.phpfastcache.com",
-    "license": "Open Source",
+    "license": "MIT",
     "authors": [
             {
                 "name": "Khoa Bui",

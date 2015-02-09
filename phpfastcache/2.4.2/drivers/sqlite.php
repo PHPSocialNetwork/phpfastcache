@@ -317,18 +317,25 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
                 $size = filesize($file_path);
                 $total = $total + $size;
 
-                $PDO = new PDO("sqlite:".$file_path);
-                $PDO->setAttribute(PDO::ATTR_ERRMODE,
-                    PDO::ERRMODE_EXCEPTION);
+	            try {
+		            $PDO = new PDO("sqlite:".$file_path);
+		            $PDO->setAttribute(PDO::ATTR_ERRMODE,
+			            PDO::ERRMODE_EXCEPTION);
 
-                $stm = $PDO->prepare("DELETE FROM `caching` WHERE `exp` <= :U");
-                $stm->execute(array(
-                    ":U"    =>  @date("U"),
-                ));
+		            $stm = $PDO->prepare("DELETE FROM `caching` WHERE `exp` <= :U");
+		            $stm->execute(array(
+			            ":U"    =>  @date("U"),
+		            ));
 
-                $PDO->exec("VACUUM;");
-                $size = filesize($file_path);
-                $optimized = $optimized + $size;
+		            $PDO->exec("VACUUM;");
+		            $size = filesize($file_path);
+		            $optimized = $optimized + $size;
+	            } catch (PDOException $e) {
+		            $size = 0;
+		            $optimized = 0;
+	            }
+
+
 
             }
         }

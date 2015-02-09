@@ -629,13 +629,10 @@ class phpFastCache {
 	 * return System Information
 	 */
 	public function systemInfo() {
+		$backup_option = $this->option;
 		if(count($this->option("system")) == 0 ) {
-
-
 			$this->option['system']['driver'] = "files";
-
 			$this->option['system']['drivers'] = array();
-
 			$dir = @opendir(dirname(__FILE__)."/drivers/");
 			if(!$dir) {
 				throw new Exception("Can't open file dir ext",100);
@@ -673,6 +670,7 @@ class phpFastCache {
 
 		$example = new phpfastcache_example($this->option);
 		$this->option("path",$example->getPath(true));
+		$this->option = $backup_option;
 		return $this->option;
 	}
 

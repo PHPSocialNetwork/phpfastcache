@@ -1,3 +1,6 @@
+e-mail: khoaofgod@gmail.com
+Composer Require line: https://packagist.org/packages/phpfastcache/phpfastcache
+---------------------------
 Simple Yet Powerful PHP Caching Class
 ---------------------------
 More information at http://www.phpfastcache.com
@@ -20,7 +23,7 @@ With phpFastCache, your page only send 1 query to DB, and use the cache to serve
 
 // Require Library
 // Keep it Auto or setup it as "files","sqlite","wincache" ,"apc","memcache","memcached", "xcache"
-require_once("phpfastcache/phpfastcache.php");
+require_once("phpfastcache.php");
 phpFastCache::setup("storage","auto");
 // phpFastCache::setup("storage","files");
 
@@ -48,7 +51,7 @@ echo $products;
 /*
  * List of function and example
  */
-require_once("phpfastcache/phpfastcache.php");
+require_once("phpfastcache.php");
 $cache = phpFastCache();
 
 // Write into cache

@@ -206,12 +206,18 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
 
                 return true;
             } catch(PDOException $e) {
-                $stm = $this->db($keyword,true)->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
-                $stm->execute(array(
-                    ":keyword"  => $keyword,
-                    ":object"   =>  $this->encode($value),
-                    ":exp"      => @date("U") + (Int)$time,
-                ));
+
+	            try {
+		            $stm = $this->db($keyword,true)->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
+		            $stm->execute(array(
+			            ":keyword"  => $keyword,
+			            ":object"   =>  $this->encode($value),
+			            ":exp"      => @date("U") + (Int)$time,
+		            ));
+	            } catch (PDOException $e) {
+		            return false;
+	            }
+
             }
 
 
@@ -232,12 +238,16 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
             $row = $stm->fetch(PDO::FETCH_ASSOC);
 
         } catch(PDOException $e) {
+			try {
+				$stm = $this->db($keyword,true)->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
+				$stm->execute(array(
+					":keyword"  =>  $keyword
+				));
+				$row = $stm->fetch(PDO::FETCH_ASSOC);
+			} catch(PDOException $e) {
+				return null;
+			}
 
-            $stm = $this->db($keyword,true)->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
-            $stm->execute(array(
-                ":keyword"  =>  $keyword
-            ));
-            $row = $stm->fetch(PDO::FETCH_ASSOC);
         }
 
 
@@ -266,19 +276,29 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
     }
 
     function deleteRow($row) {
-        $stm = $this->db($row['keyword'])->prepare("DELETE FROM `caching` WHERE (`id`=:id) OR (`exp` <= :U) ");
-        $stm->execute(array(
-            ":id"   => $row['id'],
-            ":U"    =>  @date("U"),
-        ));
+	    try {
+		    $stm = $this->db($row['keyword'])->prepare("DELETE FROM `caching` WHERE (`id`=:id) OR (`exp` <= :U) ");
+		    $stm->execute(array(
+			    ":id"   => $row['id'],
+			    ":U"    =>  @date("U"),
+		    ));
+	    } catch (PDOException $e) {
+		    return false;
+	    }
     }
 
     function driver_delete($keyword, $option = array()) {
-        $stm = $this->db($keyword)->prepare("DELETE FROM `caching` WHERE (`keyword`=:keyword) OR (`exp` <= :U)");
-        $stm->execute(array(
-            ":keyword"   => $keyword,
-            ":U"    =>  @date("U"),
-        ));
+	    try {
+		    $stm = $this->db($keyword)->prepare("DELETE FROM `caching` WHERE (`keyword`=:keyword) OR (`exp` <= :U)");
+		    $stm->execute(array(
+			    ":keyword"   => $keyword,
+			    ":U"    =>  @date("U"),
+		    ));
+	    } catch (PDOException $e) {
+		    return false;
+	    }
+
+
     }
 
     function driver_stats($option = array()) {
@@ -337,16 +357,23 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
     }
 
     function driver_isExisting($keyword) {
-        $stm = $this->db($keyword)->prepare("SELECT COUNT(`id`) as `total` FROM `caching` WHERE `keyword`=:keyword");
-        $stm->execute(array(
-            ":keyword"   => $keyword
-        ));
-        $data = $stm->fetch(PDO::FETCH_ASSOC);
-        if($data['total'] >= 1) {
-            return true;
-        } else {
-            return false;
-        }
+	    try {
+		    $stm = $this->db($keyword)->prepare("SELECT COUNT(`id`) as `total` FROM `caching` WHERE `keyword`=:keyword");
+		    $stm->execute(array(
+			    ":keyword"   => $keyword
+		    ));
+		    $data = $stm->fetch(PDO::FETCH_ASSOC);
+		    if($data['total'] >= 1) {
+			    return true;
+		    } else {
+			    return false;
+		    }
+	    } catch (PDOException $e) {
+		    return false;
+	    }
+
+
+
     }
 
 

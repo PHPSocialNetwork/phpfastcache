@@ -17,6 +17,6 @@
         "php": ">=5.1.0"
     },
     "autoload": {
-        "files": ["phpfastcache_2.4/phpfastcache/phpfastcache.php"]
+        "files": ["phpfastcache.php"]
     }
 }

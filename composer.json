@@ -1,7 +1,7 @@
 {
     "name": "phpfastcache/phpfastcache",
-    "description": "PHP Cache Class - Supported APC, MemCached, WinCache, Files, PDO, Reduce mySQL Call by Caching",
     "type": "library",
+    "description": "PHP Cache Class - Supported APC, MemCached, WinCache, Files, PDO, Reduce mySQL Call by Caching",
     "version": "2.4",
     "keywords": ["cache","caching","php cache","mysql cache","apc cache","apc","memcache","memcached","wincache","files cache","pdo cache","cache class"],
     "homepage": "http://www.phpfastcache.com",

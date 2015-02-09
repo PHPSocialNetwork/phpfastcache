@@ -1,5 +1,3 @@
-e-mail: khoaofgod@gmail.com
-Composer Require line: https://packagist.org/packages/phpfastcache/phpfastcache
 ---------------------------
 Simple Yet Powerful PHP Caching Class
 ---------------------------

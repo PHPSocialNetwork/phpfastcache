@@ -16,5 +16,8 @@
         ],
     "require": {
         "php": ">=5.1.0"
+    },
+    "autoload": {
+        "files": ["phpfastcache/phpfastcache.php"]
     }
 }

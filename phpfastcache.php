@@ -5,7 +5,7 @@ require_once(dirname(__FILE__) . "/phpfastcache/2.4.2/base.php");
 // OK, setup your cache
 phpFastCache::$storage = "auto";
 phpFastCache::$config = array(
-	"storage"   =>  "auto",
+	"storage"   =>  phpFastCache::$storage,
 	/*
 	 * Fall back when old driver is not support
 	 */

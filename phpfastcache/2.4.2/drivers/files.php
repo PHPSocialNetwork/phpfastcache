@@ -31,11 +31,13 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
     }
     
     private function encodeFilename($keyword) {
-        return rtrim(base64_encode($keyword), '=');
+	    return trim(trim(preg_replace("/[^a-zA-Z0-9]+/","_",$keyword),"_"));
+        // return rtrim(base64_encode($keyword), '=');
     }
     
     private function decodeFilename($filename) {
-        return base64_decode($filename);
+	    return $filename;
+        // return base64_decode($filename);
     }
 
     /*

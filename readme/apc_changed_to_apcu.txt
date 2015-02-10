@@ -1,0 +1,4 @@
+As we know that APC have been removed.
+
+You can try APCU at:
+http://pecl.php.net/package/APCu

@@ -36,17 +36,53 @@ class phpfastcache_redis extends phpFastCache implements phpfastcache_driver {
 
     function connectServer() {
 
-	    $server = isset($this->option['redis']) ? $this->option['redis'] : array("127.0.0.1",6379);
-	    $p1 = isset($server[0]) ? $server[0] : "127.0.0.1";
-	    $p2 = isset($server[1]) ? $server[1] : 6379;
-	    $p3 = isset($server[2]) ? $server[2] : 0;
+	    $server = isset($this->option['redis']) ? $this->option['redis'] : array(
+																				    "host" => "127.0.0.1",
+																				    "port"  =>  "6379",
+																				    "password"  =>  "",
+																				    "database"  =>  "",
+		                                                                            "timeout"   => "1",
+																			    );
 
 	    if($this->checked_redis === false) {
-		    if(!$this->instant->connect($p1,$p2,$p3)) {
+
+		    $host = $server['host'];
+
+		    $port = isset($server['port']) ? (Int)$server['port'] : "";
+		    if($port!="") {
+			    $c['port'] = $port;
+		    }
+
+		    $password = isset($server['password']) ? $server['password'] : "";
+		    if($password!="") {
+			    $c['password'] = $password;
+		    }
+
+		    $database = isset($server['database']) ? $server['database'] : "";
+		    if($database!="") {
+			    $c['database'] = $database;
+		    }
+
+		    $timeout = isset($server['timeout']) ? $server['timeout'] : "";
+		    if($timeout!="") {
+			    $c['timeout'] = $timeout;
+		    }
+
+		    $read_write_timeout = isset($server['read_write_timeout']) ? $server['read_write_timeout'] : "";
+		    if($read_write_timeout!="") {
+			    $c['read_write_timeout'] = $read_write_timeout;
+		    }
+
+
+
+		    if(!$this->instant->connect($host,(int)$port,(Int)$timeout)) {
 			    $this->checked_redis = true;
 			    $this->fallback = true;
 			    return false;
 		    } else {
+			    if($database!="") {
+				    $this->instant->select((Int)$database);
+			    }
 			    $this->checked_redis = true;
 			    return true;
 		    }

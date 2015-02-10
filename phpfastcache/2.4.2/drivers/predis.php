@@ -35,14 +35,45 @@ class phpfastcache_predis extends phpFastCache implements phpfastcache_driver {
 
     function connectServer() {
 
-	    $server = isset($this->option['redis']) ? $this->option['redis'] : array("127.0.0.1",6379);
-	    $p1 = isset($server[0]) ? $server[0] : "127.0.0.1";
-	    $p2 = isset($server[1]) ? $server[1] : 6379;
-	    $p3 = isset($server[2]) ? $server[2] : 0;
+	    $server = isset($this->option['redis']) ? $this->option['redis'] : array(
+																			    "host" => "127.0.0.1",
+																			    "port"  =>  "6379",
+																			    "password"  =>  "",
+																			    "database"  =>  ""
+																		    );
+
 
 	    if($this->checked_redis === false) {
+			$c = array(
+					"host"  => $server['host'],
+			);
 
-		    $this->instant = new Predis\Client('tcp://'.$p1.':'.$p2);
+		    $port = isset($server['port']) ? $server['port'] : "";
+		    if($port!="") {
+			    $c['port'] = $port;
+		    }
+
+		    $password = isset($server['password']) ? $server['password'] : "";
+		    if($password!="") {
+			    $c['password'] = $password;
+		    }
+
+		    $database = isset($server['database']) ? $server['database'] : "";
+		    if($database!="") {
+			    $c['database'] = $database;
+		    }
+
+		    $timeout = isset($server['timeout']) ? $server['timeout'] : "";
+		    if($timeout!="") {
+			    $c['timeout'] = $timeout;
+		    }
+
+		    $read_write_timeout = isset($server['read_write_timeout']) ? $server['read_write_timeout'] : "";
+		    if($read_write_timeout!="") {
+			    $c['read_write_timeout'] = $read_write_timeout;
+		    }
+
+		    $this->instant = new Predis\Client($c);
 
 		    $this->checked_redis = true;
 

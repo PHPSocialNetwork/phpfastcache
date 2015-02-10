@@ -20,7 +20,13 @@ phpFastCache::$config = array(
 		//  array("new.host.ip",11211,1),
 	),
 
-	"redis"         =>  array("127.0.0.1",6379),
+	"redis"         =>  array(
+		"host"  => "127.0.0.1",
+		"port"  =>  "",
+		"password"  =>  "",
+		"database"  =>  "",
+		"timeout"   =>  ""
+	),
 
 	"extensions"    =>  array(),
 );

@@ -82,6 +82,14 @@ class phpFastCache {
 
 	public static $disabled = false;
 
+	var $chmod_permission = array(
+		"default_module"    =>  "0666",
+		"default_cgi"       =>  "0644",
+		"chmod"             =>  "", // set this one to your chmod | blank will use default chmod above
+	);
+
+	public static $default_chmod = "";
+
 	var $fallback = false;
 	var $instant;
 
@@ -92,6 +100,8 @@ class phpFastCache {
 			return call_user_func(array($this->driver->instant,$command), $params);
 		}
 	}
+
+
 
 	/*
 	 * Basic Method
@@ -461,6 +471,21 @@ class phpFastCache {
 
 	}
 
+	public function __setChmodAuto() {
+		if(phpFastCache::$default_chmod != "") {
+			return phpFastCache::$default_chmod;
+		}
+		else if($this->chmod_permission['chmod'] == "") {
+			if($this->isPHPModule()) {
+				$this->chmod_permission['chmod'] = $this->chmod_permission['default_module'];
+			} else {
+				$this->chmod_permission['chmod'] = $this->chmod_permission['default_cgi'];
+			}
+		}
+
+		return $this->chmod_permission['chmod'];
+	}
+
 	function __construct($storage = "", $option = array()) {
 
 		if($storage == "") {
@@ -791,10 +816,10 @@ allow from 127.0.0.1";
 
 			if(!file_exists($full_path) || !is_writable($full_path)) {
 				if(!file_exists($full_path)) {
-					@mkdir($full_path,0777);
+					@mkdir($full_path,$this->__setChmodAuto());
 				}
 				if(!is_writable($full_path)) {
-					@chmod($full_path,0777);
+					@chmod($full_path,$this->__setChmodAuto());
 				}
 				if(!file_exists($full_path) || !is_writable($full_path)) {
 					throw new Exception("Sorry, Please create ".$this->option("path")."/".$this->option("securityKey")."/ and SET Mode 0777 or any Writable Permission!" , 100);

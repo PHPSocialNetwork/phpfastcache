@@ -172,7 +172,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
         }
 
         if(!file_exists($this->getPath()."/sqlite")) {
-            if(!@mkdir($this->getPath()."/sqlite",0777)) {
+            if(!@mkdir($this->getPath()."/sqlite",$this->__setChmodAuto())) {
 	            $this->fallback = true;
             }
         }

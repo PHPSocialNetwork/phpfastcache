@@ -54,12 +54,12 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
          */
         if($skip == false) {
             if(!file_exists($path)) {
-                if(!@mkdir($path,0777)) {
+                if(!@mkdir($path,$this->__setChmodAuto())) {
                     throw new Exception("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!",92);
                 }
 
             } elseif(!is_writeable($path)) {
-                if(!chmod($path,0777)) {
+                if(!chmod($path,$this->__setChmodAuto())) {
 	                die("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION! MAKE SURE PHP/Apache/WebServer have Write Permission");
                 }
             }

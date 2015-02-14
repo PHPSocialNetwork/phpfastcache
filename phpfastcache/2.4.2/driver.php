@@ -25,7 +25,13 @@ interface phpfastcache_driver {
      * GET
      * return null or value of cache
      */
-     function driver_get($keyword, $option = array());
+     function driver_get($keyword, $option = array('check_expiry' => bool));
+
+    /*
+     * CHECK
+     * return null or value of cache
+     */
+    function driver_check($keyword, $option = array());
 
     /*
      * Stats

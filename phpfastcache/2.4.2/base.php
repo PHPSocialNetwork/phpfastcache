@@ -143,7 +143,7 @@ class phpFastCache {
 
 	}
 
-	function get($keyword, $option = array()) {
+	function get($keyword, $option = array('check_expiry' => true)) {
 		/*
 	   * Temporary disabled phpFastCache::$disabled = true
 	   * Khoa. B
@@ -164,6 +164,18 @@ class phpFastCache {
 		}
 		return isset($option['all_keys']) && $option['all_keys'] ? $object : $object['value'];
 	}
+
+    function check($keyword, $option = array()) {
+        if($this->is_driver === true) {
+            $object = $this->driver_check($keyword,$option);
+        } else {
+            $object = $this->driver->driver_check($keyword,$option);
+        }
+        if($object == null) {
+            return null;
+        }
+        return isset($option['all_keys']) && $option['all_keys'] ? $object : $object['value'];
+    }
 
 	function _get($key){
 		// this method gets values by array-style keys: arrayName[key1][key2]

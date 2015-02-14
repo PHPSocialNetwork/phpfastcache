@@ -12,6 +12,11 @@ require_once("../phpfastcache.php");
 $cache = phpFastCache();
 // $cache = phpFastCache("redis");
 
+
+/* 
+	#1
+*/
+
 // Try to get $products from Caching First
 // product_page is "identity keyword";
 $products = $cache->get("product_page");
@@ -26,3 +31,27 @@ if($products == null) {
 echo $products;
 
 
+/* 
+	#2
+*/
+$test = $cache->check("test");
+
+if($test == null) {
+
+	try {
+		// 1. exec~ db query to another server
+
+		//throw new Exception('the second server does not respond');
+		$test = 'query result';
+		$cache->set('test', $test, 15);
+
+		echo $test.' <- Load Cached data';
+
+	} catch (Exception $e) {
+		$test = $cache->get('test',array('check_expiry' => false));
+		echo $test . ' <- ' .$e->getMessage();
+	}
+
+} else {
+	echo $test.' <- Load Cached data';
+}

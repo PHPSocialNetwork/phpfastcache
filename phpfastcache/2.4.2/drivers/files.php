@@ -100,9 +100,6 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
         }
     }
 
-
-
-
     function driver_get($keyword, $option = array()) {
 
         $file_path = $this->getFilePath($keyword);
@@ -112,10 +109,27 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
 
         $content = $this->readfile($file_path);
         $object = $this->decode($content);
-        if($this->isExpired($object)) {
-            @unlink($file_path);
-            $this->auto_clean_expired();
-            return null;
+
+        if($option['check_expiry']) {
+
+            if($this->isExpired($object)) {
+                @unlink($file_path);
+                $this->auto_clean_expired();
+                return null;
+            }
+        }
+
+        return $object;
+    }
+
+    function driver_check($keyword, $option = array()) {
+
+        $object = $this->driver_get($keyword, array('check_expiry' => false));
+
+        if($object != null) {
+            if($this->isExpired($object)) {
+                return null;
+            }
         }
 
         return $object;

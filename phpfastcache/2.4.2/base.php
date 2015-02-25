@@ -83,9 +83,9 @@ class phpFastCache {
 	public static $disabled = false;
 
 	var $chmod_permission = array(
-		"default_module"    =>  "0666",
-		"default_cgi"       =>  "0644",
-		"chmod"             =>  "", // set this one to your chmod | blank will use default chmod above
+		"default_module"    =>  0666,
+		"default_cgi"       =>  0644,
+		"chmod"             =>  0777, // set this one to your chmod | blank will use default chmod above
 	);
 
 	public static $default_chmod = "";

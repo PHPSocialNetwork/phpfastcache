@@ -36,4 +36,4 @@ phpFastCache::$config = array(
 phpFastCache::$disabled = false;
 
 // default chmod | only change if you know what you are doing
-phpFastCache::$default_chmod = ""; // keep it blank, it will use 666 for module and 644 for cgi
+phpFastCache::$default_chmod = 0777; // keep it blank, it will use 666 for module and 644 for cgi

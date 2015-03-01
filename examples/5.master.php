@@ -3,14 +3,17 @@
 // in your config files
 include("phpfastcache.php");
 // auto | memcache | files ...etc. Will be default for $cache = __c();
-phpFastCache::$storage = "auto";
+phpFastCache::setup("storage","auto");
 
-$cache1 = phpFastCache();
-$cache1->option("path","/PATH/TO/SOME_WHERE/STORE_FILES/");
+$cache1 = phpFastCache("files");
+$cache1->setup("path","/PATH/TO/SOME_WHERE/STORE_FILES/");
 
 $cache2 = __c("memcache");
 $server = array(array("127.0.0.1",11211,100), array("128.5.1.3",11215,80));
-$cache2->option("server", $server);
+$cache2->setup("server", $server);
+
+
+
 
 $cache3 = new phpFastCache("apc");
 
@@ -40,8 +43,9 @@ $data = __c("memcache")->get("keyword1");
 $data = __c("files")->get("keyword2");
 $data = __c()->keyword3;
 
-// Multiple ? No Problem
 
+
+// Multiple ? No Problem
 $list = $cache1->getMulti(array("key1","key2","key3"));
 $cache2->setMulti(array("key1","value1", 300),
     array("key2","value2", 600),
@@ -50,6 +54,8 @@ $cache2->setMulti(array("key1","value1", 300),
 
 $list = $cache1->apc->getMulti(array("key1","key2","key3"));
 __c()->memcache->getMulti(array("a","b","c"));
+
+
 
 // Others
 $cache->delete("keyword");

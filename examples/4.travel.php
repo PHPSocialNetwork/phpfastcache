@@ -24,7 +24,7 @@ $cache->files->keyword = array("array | object", 300);
  * phpFastCache is free traveling
  */
 
-$cache = new phpFastCache("files");
+$cache = phpFastCache("files");
 
 $cache->memcache->keyword = array("data",300);
 $cache->sqlite->set("keyword","data",300);

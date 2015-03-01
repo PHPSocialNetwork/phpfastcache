@@ -11,44 +11,46 @@ require_once("../phpfastcache.php");
  */
 
 $config = array(
-        /*
-         * Default storage
-         * if you set this storage => "files", then $cache = phpFastCache(); <-- will be files cache
-         */
-        "storage"   =>  "auto", // files, sqlite, auto, apc, wincache, xcache, memcache, memcached,
+        "storage"   =>  "auto", // auto, files, sqlite, apc, cookie, memcache, memcached, predis, redis, wincache, xcache
+        "default_chmod" => 0777, // For security, please use 0666 for module and 0644 for cgi.
+
 
         /*
-         * Default Path for Cache on HDD
-         * Use full PATH like /home/username/cache
-         * Keep it blank "", it will automatic setup for you
+         * OTHERS
          */
-        "path"      =>  "" , // default path for files
-        "securityKey"   =>  "", // default will good. It will create a path by PATH/securityKey
 
-        /*
-         * FallBack Driver
-         * Example, in your code, you use memcached, apc..etc, but when you moved your web hosting
-         * The new hosting don't have memcached, or apc. What you do? Set fallback that driver to other driver.
-         */
-        "fallback"  =>  "files",
+        // create .htaccess to protect cache folder
+        // By default the cache folder will try to create itself outside your public_html.
+        // However an htaccess also created in case.
+        "htaccess"      => true,
 
-        /*
-         * .htaccess protect
-         * default will be  true
-         */
-        "htaccess"  =>  true,
+        // path to cache folder, leave it blank for auto detect
+        "path"      =>  "",
+        "securityKey"   =>  "auto", // auto will use domain name, set it to 1 string if you use alias domain name
 
-        /*
-         * Default Memcache Server for all $cache = phpFastCache("memcache");
-         */
+        // MEMCACHE
+
         "memcache"        =>  array(
-                array("127.0.0.1",11211,1),
+            array("127.0.0.1",11211,1),
             //  array("new.host.ip",11211,1),
         ),
-		// Default server for redis
-		"redis"         =>  array("127.0.0.1",6379),
+
+        // REDIS
+        "redis"         =>  array(
+            "host"  => "127.0.0.1",
+            "port"  =>  "",
+            "password"  =>  "",
+            "database"  =>  "",
+            "timeout"   =>  ""
+        ),
+
+        "extensions"    =>  array(),
 
 
+        /*
+         * Fall back when old driver is not support
+         */
+        "fallback"  => "files",
 );
 
 phpFastCache::setup($config);
@@ -64,28 +66,17 @@ phpFastCache::setup("path", dirname(__FILE__));
 
 $config = array(
     // ALL OF YOUR CONFIG HERE
+    // except storage
 );
 
-$cache = phpFastCache("cache_method",$config); // this will be $config['storage'] up there;
+$cache = phpFastCache("files",$config); // this will be $config['storage'] up there;
 
 // changing config example
 $cache->setup("path","new_path");
 
 
-
-
-
 $cache2 = phpFastCache("memcache"); // this will use memcache
-$cache3 = new phpFastCache("apc"); // this will use apc
-
-
-
-// something new ???
-$products = $cache->my_products;
-if($products == null) {
-    $products = "object | array | function_get_products";
-    // write to cache
-    $cache->my_products = array($products, 600);
-}
-
-echo $products;
+$server = array(
+    array("127.0.0.1",11211,1),
+);
+$cache2->setup("memcache",$server);

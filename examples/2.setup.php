@@ -62,10 +62,25 @@ phpFastCache::setup("path", dirname(__FILE__));
  * End Optional Config
  */
 
-$cache = phpFastCache(); // this will be $config['storage'] up there;
+$config = array(
+    // ALL OF YOUR CONFIG HERE
+);
+
+$cache = phpFastCache("cache_method",$config); // this will be $config['storage'] up there;
+
+// changing config example
+$cache->setup("path","new_path");
+
+
+
+
+
 $cache2 = phpFastCache("memcache"); // this will use memcache
 $cache3 = new phpFastCache("apc"); // this will use apc
 
+
+
+// something new ???
 $products = $cache->my_products;
 if($products == null) {
     $products = "object | array | function_get_products";

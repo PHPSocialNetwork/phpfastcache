@@ -4,7 +4,7 @@
  * Here is how to setup and work on phpFastCache fast!
  */
 
-require_once("phpfastcache/phpfastcache.php");
+require_once("phpfastcache.php");
 // auto, files, sqlite, xcache, memcache, apc, memcached, wincache
 phpFastCache::setup("storage","auto");
 

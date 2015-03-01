@@ -4,6 +4,10 @@
  */
 require_once("../phpfastcache/phpfastcache.php");
 $cache = phpFastCache();
+// OR $cache = phpFastCache("files");
+// phpFastCache("sqlite", $config); // with $config is array store full config value
+// $cache->setup("config_key", $config_value); Example: path and /DIR_NAME/_NEW_PATH
+
 
 // Write into cache
 $cache->set("keyword", "data | array | object", 300);

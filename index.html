@@ -793,7 +793,7 @@ $cache->isExisting("keyword");
 
     if($products == null) {
         $products = YOUR DB QUERIES || GET_PRODUCTS_FUNCTION;
-        // set products in to cache in 600 seconds = 10 minutes
+        // set products in to cache in 600 seconds = 10 minutes and 0 = never expired
         $cache->set("product_page", $products,600);
     }
 

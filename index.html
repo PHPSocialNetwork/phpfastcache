@@ -780,10 +780,8 @@ $cache->isExisting("keyword");
 <pre class="prettyprint php">
 &lt;?php
     // In your config file
-    include("phpfastcache/phpfastcache.php");
-    phpFastCache::setup("storage","auto");
-    // phpFastCache::setup("storage","redis");
-
+    include("phpfastcache.php");
+    
     // phpFastCache support "redis", "cookie", "apc", "memcache", "memcached", "wincache" ,"files", "sqlite" and "xcache"
     // You don't need to change your code when you change your caching system. Or simple keep it auto
     $cache = phpFastCache();
@@ -800,7 +798,7 @@ $cache->isExisting("keyword");
     }
 
     // Output Your Contents $products HERE
-?&gt;
+    // LOOP | echo $products 
 </pre>
     </p>
     <br><br>

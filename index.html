@@ -781,9 +781,10 @@ $cache->isExisting("keyword");
 &lt;?php
     // In your config file
     include("phpfastcache.php");
-    
+    // phpFastCache::setup("storage","redis"); default global for everywhere.
     // phpFastCache support "redis", "cookie", "apc", "memcache", "memcached", "wincache" ,"files", "sqlite" and "xcache"
-    // You don't need to change your code when you change your caching system. Or simple keep it auto
+    // You don't need to change your code when you change your caching system. Or simple keep it default.
+    
     $cache = phpFastCache();
     // $cache = phpFastCache("memcache");
 

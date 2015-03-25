@@ -112,10 +112,7 @@ class phpFastCache {
         $path = self::getPath(false,$config);
         if(is_writeable($path)) {
             $driver = "files";
-        }else if(extension_loaded('pdo_sqlite') && is_writeable($path)) {
-            $driver = "sqlite";
-        }else if(extension_loaded('apc') && ini_get('apc.enabled') && strpos(PHP_SAPI,"CGI") === false)
-        {
+        }else if(extension_loaded('apc') && ini_get('apc.enabled') && strpos(PHP_SAPI,"CGI") === false) {
             $driver = "apc";
         }else if(class_exists("memcached")) {
             $driver = "memcached";

@@ -97,8 +97,7 @@ class phpFastCache {
 
 
     public function __call($name, $args) {
-        $str = implode(",",$args);
-        eval('return $this->instance->$name('.$str.');');
+        return call_user_func_array(array($this->instance, $name), $args);
     }
 
 

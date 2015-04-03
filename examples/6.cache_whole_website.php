@@ -33,12 +33,12 @@ if(isset($_GET['somevar']) && $_GET['somevar'] == "something") {
 
 // No caching for logined user
 // can use with $_COOKIE AND $_SESSION
-if(isset($_SESSION) && $_SESSION['logined'] == true) {
+if(isset($_SESSION) && $_SESSION['logined'] === true) {
     $caching = false;
 }
 
 // ONLY ACCESS CACHE IF $CACHE = TRUE
-if($caching == true ) {
+if($caching === true ) {
     $html = __c("files")->get($keyword_webpage);
 }
 

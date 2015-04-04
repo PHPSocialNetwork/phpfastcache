@@ -1,3 +1,5 @@
+[![Code Climate](https://codeclimate.com/github/khoaofgod/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/khoaofgod/phpfastcache)
+
 ---------------------------
 Simple Yet Powerful PHP Caching Class
 ---------------------------

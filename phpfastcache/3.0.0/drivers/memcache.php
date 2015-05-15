@@ -35,7 +35,7 @@ class phpfastcache_memcache extends BasePhpFastCache implements phpfastcache_dri
     }
 
     function connectServer() {
-        $server = $this->option['memcache'];
+        $server = $this->config['memcache'];
         if(count($server) < 1) {
             $server = array(
                 array("127.0.0.1",11211),

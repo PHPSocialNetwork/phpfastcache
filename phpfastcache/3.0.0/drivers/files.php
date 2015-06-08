@@ -22,11 +22,11 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
     function __construct($config = array()) {
         $this->setup($config);
         $this->getPath(); // force create path
-
-        if(!$this->checkdriver() && !isset($config['skipError'])) {
+        $this->config = $config;
+        
+        if(!$this->checkdriver() && !isset($this->config['skipError'])) {
             throw new Exception("Can't use this driver for your website!");
         }
-
     }
     
     private function encodeFilename($keyword) {
@@ -45,9 +45,13 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
     private function getFilePath($keyword, $skip = false) {
         $path = $this->getPath();
         
-        $filename = $this->encodeFilename($keyword);        
-        $folder = substr($filename,0,2);
-        $path = rtrim($path,"/")."/".$folder;
+        $filename = $this->encodeFilename($keyword); 
+        
+        if (!isset($this->config['skipSubdir']) || $this->config['skipSubdir'] === false) {       
+            $folder = substr($filename,0,2);
+            $path = rtrim($path,"/")."/".$folder."/";
+        }
+        
         /*
          * Skip Create Sub Folders;
          */
@@ -64,10 +68,9 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
             }
         }
 
-        $file_path = $path."/".$filename.".txt";
+        $file_path = $path.$filename.".txt";
         return $file_path;
     }
-
 
     function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
         $file_path = $this->getFilePath($keyword);
@@ -78,7 +81,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
         /*
          * Skip if Existing Caching in Options
          */
-        if(isset($option['skipExisting']) && $option['skipExisting'] == true && file_exists($file_path)) {
+        if(isset($option['skipExisting']) && $option['skipExisting'] === true && file_exists($file_path)) {
             $content = $this->readfile($file_path);
             $old = $this->decode($content);
             $toWrite = false;
@@ -87,20 +90,17 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
             }
         }
 
-        if($toWrite == true) {
-                try {
-                    $f = fopen($file_path, "w+");
-                    fwrite($f, $data);
-                    fclose($f);
-                } catch (Exception $e) {
-                    // miss cache
-                    return false;
-                }
+        if($toWrite === true) {
+            try {
+                $f = fopen($file_path, "w+");
+                fwrite($f, $data);
+                fclose($f);
+            } catch (Exception $e) {
+                // miss cache
+                return false;
+            }
         }
     }
-
-
-
 
     function driver_get($keyword, $option = array()) {
 
@@ -148,27 +148,40 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
         $total = 0;
         $removed = 0;
         while($file=readdir($dir)) {
-            if($file!="." && $file!=".." && is_dir($path."/".$file)) {
-                // read sub dir
-                $subdir = @opendir($path."/".$file);
-                if(!$subdir) {
-                    throw new Exception("Can't read path:".$path."/".$file,93);
-                }
-
-                while($f = readdir($subdir)) {
-                    if($f!="." && $f!="..") {
-                        $file_path = $path."/".$file."/".$f;
-                        $size = filesize($file_path);
-                        $object = $this->decode($this->readfile($file_path));
-                        if($this->isExpired($object)) {
-                            @unlink($file_path);
-                            $removed = $removed + $size;
-                        }
-                        $total = $total + $size;
+            if (!isset($this->config['skipSubdir']) || $this->config['skipSubdir'] === false) {
+                if($file!="." && $file!=".." && is_dir($path."/".$file)) {
+                    // read sub dir
+                    $subdir = @opendir($path."/".$file);
+                    if(!$subdir) {
+                        throw new Exception("Can't read path:".$path."/".$file,93);
                     }
-                } // end read subdir
-            } // end if
-       } // end while
+
+                    while($f = readdir($subdir)) {
+                        if($f!="." && $f!="..") {
+                            $file_path = $path."/".$file."/".$f;
+                            $size = filesize($file_path);
+                            $object = $this->decode($this->readfile($file_path));
+                            if($this->isExpired($object)) {
+                                @unlink($file_path);
+                                $removed = $removed + $size;
+                            }
+                            $total = $total + $size;
+                        }
+                    }
+                }
+            } else {
+                if($file!="index.html" && $file!=".htaccess" && is_file($path."/".$file)) {  
+                    $file_path = $path.$file;
+                    $size = filesize($file_path);
+                    $object = $this->decode($this->readfile($file_path));
+                    if($this->isExpired($object)) {
+                        @unlink($file_path);
+                        $removed = $removed + $size;
+                    }
+                    $total = $total + $size;
+                }
+            }
+       }
 
        $res['size']  = $total - $removed;
        $res['info'] = array(
@@ -176,6 +189,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
                 "Removed"   => $removed,
                 "Current"   => $res['size'],
        );
+       
        return $res;
     }
 
@@ -196,25 +210,29 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
         }
 
         while($file=readdir($dir)) {
-            if($file!="." && $file!=".." && is_dir($path."/".$file)) {
-                // read sub dir
-                $subdir = @opendir($path."/".$file);
-                if(!$subdir) {
-                    throw new Exception("Can't read path:".$path."/".$file,93);
-                }
+            if (!isset($this->config['skipSubdir']) || $this->config['skipSubdir'] === false) {
+              if($file!="." && $file!=".." && is_dir($path."/".$file)) {
+                  // read sub dir
+                  $subdir = @opendir($path."/".$file);
+                  if(!$subdir) {
+                      throw new Exception("Can't read path:".$path."/".$file,93);
+                  }
 
-                while($f = readdir($subdir)) {
-                    if($f!="." && $f!="..") {
-                        $file_path = $path."/".$file."/".$f;
-                        @unlink($file_path);
-                    }
-                } // end read subdir
-            } // end if
-        } // end while
-
-
+                  while($f = readdir($subdir)) {
+                      if($f!="." && $f!="..") {
+                          $file_path = $path."/".$file."/".$f;
+                          @unlink($file_path);
+                      }
+                  }
+              }
+            } else {
+              if($file!="index.html" && $file!=".htaccess" && is_file($path."/".$file)) {            
+                  $file_path = $path.$file;
+                  @unlink($file_path);
+              }
+            }
+        }
     }
-
 
     function driver_isExisting($keyword) {
         $file_path = $this->getFilePath($keyword,true);
@@ -239,8 +257,5 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
             return false;
         }
     }
-
-
-
 
 }

@@ -5,76 +5,80 @@
  * Example at our website, any bugs, problems, please visit http://faster.phpfastcache.com
  */
 
-
 require_once(dirname(__FILE__)."/abstract.php");
 require_once(dirname(__FILE__)."/driver.php");
 
 // short function
 if(!function_exists("__c")) {
-	function __c($storage = "", $option = array()) {
-		return phpFastCache($storage, $option);
-	}
+    function __c($storage = "", $option = array()) {
+        return phpFastCache($storage, $option);
+    }
 }
 
 // main function
 if(!function_exists("phpFastCache")) {
-	function phpFastCache($storage = "auto", $config = array()) {
+    function phpFastCache($storage = "auto", $config = array()) {
         $storage = strtolower($storage);
         if(empty($config)) {
             $config = phpFastCache::$config;
+            if($storage == "" || $storage == "auto") {
+                $storage = strtolower($config['storage']);
+            }
         }
 
         if($storage == "" || $storage == "auto") {
             $storage = phpFastCache::getAutoClass($config);
         }
 
-
         $instance = md5(json_encode($config).$storage);
-		if(!isset(phpFastCache_instances::$instances[$instance])) {
+    
+        if(!isset(phpFastCache_instances::$instances[$instance])) {
             $class = "phpfastcache_".$storage;
             phpFastCache::required($storage);
-			phpFastCache_instances::$instances[$instance] = new $class($config);
-		}
+            phpFastCache_instances::$instances[$instance] = new $class($config);
+        }
 
-		return phpFastCache_instances::$instances[$instance];
-	}
+        return phpFastCache_instances::$instances[$instance];
+    }
 }
 
 class phpFastCache_instances {
-	public static $instances = array();
+	  public static $instances = array();
 }
-
 
 // main class
 class phpFastCache {
     public static $disabled = false;
-	public static $config = array(
-        "storage"       =>  "", // blank for auto
-        "default_chmod" =>  0777, // 0777 , 0666, 0644
-		/*
-		 * Fall back when old driver is not support
-		 */
-		"fallback"  => "files",
+    public static $config = array(
+      "storage"       =>  "", // blank for auto
+      "default_chmod" =>  0777, // 0777 , 0666, 0644
 
-		"securityKey"   =>  "auto",
-		"htaccess"      => true,
-		"path"      =>  "",
+      /*
+       * Fall back when old driver is not support
+       */
+      "fallback"  => "files",
 
-		"memcache"        =>  array(
-			array("127.0.0.1",11211,1),
-			//  array("new.host.ip",11211,1),
-		),
+      "securityKey"   =>  "auto",
+      "htaccess"      => true,
+      "path"      =>  "",
 
-		"redis"         =>  array(
-			"host"  => "127.0.0.1",
-			"port"  =>  "",
-			"password"  =>  "",
-			"database"  =>  "",
-			"timeout"   =>  ""
-		),
+      "memcache"        =>  array(
+        array("127.0.0.1",11211,1),
+        //  array("new.host.ip",11211,1),
+      ),
 
-		"extensions"    =>  array(),
-	);
+      "redis"         =>  array(
+        "host"  => "127.0.0.1",
+        "port"  =>  "",
+        "password"  =>  "",
+        "database"  =>  "",
+        "timeout"   =>  ""
+      ),
+
+      "extensions"    =>  array(),
+
+      "skipSubdir"  => false,
+    );
 
     protected static $tmp = array();
     var $instance;
@@ -83,7 +87,7 @@ class phpFastCache {
         if(empty($config)) {
             $config = phpFastCache::$config;
         }
-        $config['storage'] = $storage;
+        $storage = $config['storage'];
 
         $storage = strtolower($storage);
         if($storage == "" || $storage == "auto") {
@@ -93,18 +97,13 @@ class phpFastCache {
         $this->instance = phpFastCache($storage,$config);
     }
 
-
-
-
     public function __call($name, $args) {
         return call_user_func_array(array($this->instance, $name), $args);
     }
 
-
     /*
      * Cores
      */
-
     public static function getAutoClass($config) {
 
         $driver = "files";
@@ -153,7 +152,7 @@ class phpFastCache {
         }
 
         $securityKey = $config['securityKey'];
-        if($securityKey == "" || $securityKey == "auto") {
+        if($securityKey == "auto") {
             $securityKey = self::$config['securityKey'];
             if($securityKey == "auto" || $securityKey == "") {
                 $securityKey = isset($_SERVER['HTTP_HOST']) ? ltrim(strtolower($_SERVER['HTTP_HOST']),"www.") : "default";
@@ -161,13 +160,11 @@ class phpFastCache {
             }
         }
         if($securityKey != "") {
-            $securityKey.= "/";
+            $securityKey = rtrim($securityKey, "/")."/";
         }
 
-        $full_path = $path."/".$securityKey;
+        $full_path = rtrim($path, "/")."/".$securityKey;
         $full_pathx = md5($full_path);
-
-
 
 
         if($skip_create_path  == false && !isset(self::$tmp[$full_pathx])) {
@@ -192,7 +189,6 @@ class phpFastCache {
         return $full_path;
 
     }
-
 
     public static function __setChmodAuto($config) {
         if($config['default_chmod'] == "" || is_null($config['default_chmod'])) {
@@ -250,9 +246,7 @@ allow from 127.0.0.1";
 
             }
         }
-
     }
-
 
     public static function setup($name,$value = "") {
         if(is_array($name)) {

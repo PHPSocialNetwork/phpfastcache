@@ -38,7 +38,7 @@ class phpfastcache_memcached extends BasePhpFastCache implements phpfastcache_dr
 		    return false;
 	    }
 
-        $s = $this->option['memcache'];
+        $s = $this->config['memcache'];
         if(count($s) < 1) {
             $s = array(
                 array("127.0.0.1",11211,100),

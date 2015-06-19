@@ -1,0 +1,2 @@
+# remote2local
+codeigniter远程图片本地化helper

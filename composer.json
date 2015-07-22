@@ -1,0 +1,22 @@
+{
+    "name": "phpfastcache/phpfastcache",
+    "type" : "library",
+    "description": "PHP Cache Class - Supported Redis, Cookie, Predis, APC, MemCached, WinCache, Files, PDO, Reduce mySQL Call by Caching",
+    "keywords": ["cache","caching","php cache","mysql cache","apc cache","apc","memcache","memcached","wincache","files cache","pdo cache","cache class","redis","predis","cookie"],
+    "homepage": "http://www.phpfastcache.com",
+    "license": "MIT",
+    "authors": [
+            {
+                "name": "Khoa Bui",
+                "email": "khoaofgod@gmail.com",
+                "homepage": "http://www.phpfastcache.com",
+                "role": "Developer"
+            }
+        ],
+    "require": {
+        "php": ">=5.1.0"
+    },
+    "autoload": {
+        "files": ["phpfastcache.php"]
+    }
+}

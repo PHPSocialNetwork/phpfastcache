@@ -133,7 +133,7 @@ class phpFastCache {
     }
 
     public static function getPath($skip_create_path = false, $config) {
-        if ($config['path'] == '' )
+        if ( !isset($config['path']) || $config['path'] == '' )
         {
 
             // revision 618
@@ -195,7 +195,7 @@ class phpFastCache {
 
 
     public static function __setChmodAuto($config) {
-        if($config['default_chmod'] == "" || is_null($config['default_chmod'])) {
+        if(!isset($config['default_chmod']) || $config['default_chmod'] == "" || is_null($config['default_chmod'])) {
             return 0777;
         } else {
             return $config['default_chmod'];

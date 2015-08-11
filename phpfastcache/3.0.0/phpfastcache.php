@@ -172,14 +172,14 @@ class phpFastCache {
 
         if($skip_create_path  == false && !isset(self::$tmp[$full_pathx])) {
 
-            if(!file_exists($full_path) || !is_writable($full_path)) {
-                if(!file_exists($full_path)) {
-                    mkdir($full_path,self::__setChmodAuto($config));
+            if(!@file_exists($full_path) || !@is_writable($full_path)) {
+                if(!@file_exists($full_path)) {
+                    @mkdir($full_path,self::__setChmodAuto($config));
                 }
-                if(!is_writable($full_path)) {
-                    chmod($full_path,self::__setChmodAuto($config));
+                if(!@is_writable($full_path)) {
+                    @chmod($full_path,self::__setChmodAuto($config));
                 }
-                if(!file_exists($full_path) || !is_writable($full_path)) {
+                if(!@file_exists($full_path) || !@is_writable($full_path)) {
                     die("Sorry, Please create ".$full_path." and SET Mode 0777 or any Writable Permission!");
                 }
             }

@@ -58,7 +58,9 @@ abstract class BasePhpFastCache {
         if($object == null) {
             return null;
         }
-        return isset($option['all_keys']) && $option['all_keys'] ? $object : $object['value'];
+		
+		$value = isset( $object['value'] ) ? $object['value'] : null;
+		return isset( $option['all_keys'] ) && $option['all_keys'] ? $object : $value;
     }
 
 

@@ -234,7 +234,7 @@ class phpFastCache {
                     die(" NEED WRITEABLE ".$path);
                 }
             }
-            if(!file_exists($path."/.htaccess")) {
+            if(!@file_exists($path."/.htaccess")) {
                 //   echo "write me";
                 $html = "order deny, allow \r\n
 deny from all \r\n

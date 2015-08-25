@@ -52,7 +52,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
          * Skip Create Sub Folders;
          */
         if($skip == false) {
-            if(!file_exists($path)) {
+            if(!@file_exists($path)) {
                 if(!@mkdir($path,$this->__setChmodAuto())) {
                     throw new Exception("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!",92);
                 }
@@ -78,7 +78,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
         /*
          * Skip if Existing Caching in Options
          */
-        if(isset($option['skipExisting']) && $option['skipExisting'] == true && file_exists($file_path)) {
+        if(isset($option['skipExisting']) && $option['skipExisting'] == true && @file_exists($file_path)) {
             $content = $this->readfile($file_path);
             $old = $this->decode($content);
             $toWrite = false;
@@ -89,7 +89,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
         if($toWrite == true) {
                 try {
-                    $f = fopen($file_path, "w+");
+                    $f = @fopen($file_path, "w+");
                     fwrite($f, $data);
                     fclose($f);
                 } catch (Exception $e) {
@@ -105,7 +105,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
     function driver_get($keyword, $option = array()) {
 
         $file_path = $this->getFilePath($keyword);
-        if(!file_exists($file_path)) {
+        if(!@file_exists($file_path)) {
             return null;
         }
 
@@ -147,7 +147,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
         $total = 0;
         $removed = 0;
-        while($file=readdir($dir)) {
+        while($file=@readdir($dir)) {
             if($file!="." && $file!=".." && is_dir($path."/".$file)) {
                 // read sub dir
                 $subdir = @opendir($path."/".$file);
@@ -155,10 +155,10 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
                     throw new Exception("Can't read path:".$path."/".$file,93);
                 }
 
-                while($f = readdir($subdir)) {
+                while($f = @readdir($subdir)) {
                     if($f!="." && $f!="..") {
                         $file_path = $path."/".$file."/".$f;
-                        $size = filesize($file_path);
+                        $size = @filesize($file_path);
                         $object = $this->decode($this->readfile($file_path));
                         if($this->isExpired($object)) {
                             @unlink($file_path);
@@ -195,7 +195,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
             throw new Exception("Can't read PATH:".$path,94);
         }
 
-        while($file=readdir($dir)) {
+        while($file=@readdir($dir)) {
             if($file!="." && $file!=".." && is_dir($path."/".$file)) {
                 // read sub dir
                 $subdir = @opendir($path."/".$file);
@@ -203,7 +203,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
                     throw new Exception("Can't read path:".$path."/".$file,93);
                 }
 
-                while($f = readdir($subdir)) {
+                while($f = @readdir($subdir)) {
                     if($f!="." && $f!="..") {
                         $file_path = $path."/".$file."/".$f;
                         @unlink($file_path);
@@ -218,7 +218,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
     function driver_isExisting($keyword) {
         $file_path = $this->getFilePath($keyword,true);
-        if(!file_exists($file_path)) {
+        if(!@file_exists($file_path)) {
             return false;
         } else {
             // check expired or not

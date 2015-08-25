@@ -33,8 +33,8 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
     function initIndexing(PDO $db) {
 
         // delete everything before reset indexing
-        $dir = opendir($this->path);
-        while($file = readdir($dir)) {
+        $dir = @opendir($this->path);
+        while($file = @readdir($dir)) {
             if($file != "." && $file!=".." && $file != "indexing" && $file!="dbfastcache") {
                 @unlink($this->path."/".$file);
             }
@@ -54,7 +54,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
     function indexing($keyword) {
         if($this->indexing == NULL) {
             $createTable = false;
-            if(!file_exists($this->path."/indexing")) {
+            if(!@file_exists($this->path."/indexing")) {
                 $createTable = true;
             }
 
@@ -81,7 +81,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
 
             // check file size
 
-            $size = file_exists($this->path."/db".$db) ? filesize($this->path."/db".$db) : 1;
+            $size = @file_exists($this->path."/db".$db) ? @filesize($this->path."/db".$db) : 1;
             $size = round($size / 1024 / 1024,1);
 
 
@@ -129,7 +129,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
         if(!isset($this->instant[$instant])) {
             // check DB Files ready or not
             $createTable = false;
-            if(!file_exists($this->path."/db".$instant) || $reset == true) {
+            if(!@file_exists($this->path."/db".$instant) || $reset == true) {
                 $createTable = true;
             }
             $PDO = new PDO("sqlite:".$this->path."/db".$instant);
@@ -171,7 +171,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
 	        $this->fallback = true;
         }
 
-        if(!file_exists($this->getPath()."/sqlite")) {
+        if(!@file_exists($this->getPath()."/sqlite")) {
             if(!@mkdir($this->getPath()."/sqlite",$this->__setChmodAuto())) {
 	            $this->fallback = true;
             }
@@ -310,11 +310,11 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
         $total = 0;
         $optimized = 0;
 
-        $dir = opendir($this->path);
-        while($file = readdir($dir)) {
+        $dir = @opendir($this->path);
+        while($file = @readdir($dir)) {
             if($file!="." && $file!="..") {
                 $file_path = $this->path."/".$file;
-                $size = filesize($file_path);
+                $size = @filesize($file_path);
                 $total = $total + $size;
 
 	            try {
@@ -328,7 +328,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
 		            ));
 
 		            $PDO->exec("VACUUM;");
-		            $size = filesize($file_path);
+		            $size = @filesize($file_path);
 		            $optimized = $optimized + $size;
 	            } catch (PDOException $e) {
 		            $size = 0;
@@ -355,8 +355,8 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
         $this->indexing = NULL;
     
         // delete everything before reset indexing
-        $dir = opendir($this->path);
-        while($file = readdir($dir)) {
+        $dir = @opendir($this->path);
+        while($file = @readdir($dir)) {
             if($file != "." && $file!="..") {
                 @unlink($this->path."/".$file);
             }

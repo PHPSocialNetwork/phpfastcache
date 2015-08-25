@@ -272,7 +272,7 @@ abstract class BasePhpFastCache {
 
     protected function readfile($file) {
         if(function_exists("file_get_contents")) {
-            return file_get_contents($file);
+            return @file_get_contents($file);
         } else {
             $string = "";
 
@@ -328,7 +328,7 @@ abstract class BasePhpFastCache {
     protected function htaccessGen($path = "") {
         if($this->option("htaccess") == true) {
 
-            if(!file_exists($path."/.htaccess")) {
+            if(!@file_exists($path."/.htaccess")) {
                 //   echo "write me";
                 $html = "order deny, allow \r\n
 deny from all \r\n
@@ -408,7 +408,7 @@ allow from 127.0.0.1";
 
 
     protected function isExistingDriver($class) {
-        if(file_exists(dirname(__FILE__)."/drivers/".$class.".php")) {
+        if(@file_exists(dirname(__FILE__)."/drivers/".$class.".php")) {
             require_once(dirname(__FILE__)."/drivers/".$class.".php");
             if(class_exists("phpfastcache_".$class)) {
                 return true;

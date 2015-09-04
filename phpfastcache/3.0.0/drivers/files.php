@@ -59,7 +59,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
             } elseif(!is_writeable($path)) {
                 if(!chmod($path,$this->__setChmodAuto())) {
-	                die("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION! MAKE SURE PHP/Apache/WebServer have Write Permission");
+					throw new Exception("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!",92);
                 }
             }
         }

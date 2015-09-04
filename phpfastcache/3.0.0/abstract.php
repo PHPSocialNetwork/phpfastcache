@@ -249,8 +249,7 @@ abstract class BasePhpFastCache {
     }
 
     public function __call($name, $args) {
-        $str = implode(",",$args);
-        eval('return $this->instant->$name('.$str.');');
+		return call_user_func_array( array( $this->instant, $name ), $args );
     }
 
 

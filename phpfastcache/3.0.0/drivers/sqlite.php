@@ -201,7 +201,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
                 $stm->execute(array(
                     ":keyword"  => $keyword,
                     ":object"   =>  $this->encode($value),
-                    ":exp"      => @date("U") + (Int)$time,
+                    ":exp"      => time() + (Int)$time,
                 ));
 
                 return true;
@@ -212,7 +212,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
 		            $stm->execute(array(
 			            ":keyword"  => $keyword,
 			            ":object"   =>  $this->encode($value),
-			            ":exp"      => @date("U") + (Int)$time,
+			            ":exp"      => time() + (Int)$time,
 		            ));
 	            } catch (PDOException $e) {
 		            return false;
@@ -268,7 +268,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
     }
 
     function isExpired($row) {
-        if(isset($row['exp']) && @date("U") >= $row['exp']) {
+        if(isset($row['exp']) && time() >= $row['exp']) {
             return true;
         }
 
@@ -280,7 +280,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
 		    $stm = $this->db($row['keyword'])->prepare("DELETE FROM `caching` WHERE (`id`=:id) OR (`exp` <= :U) ");
 		    $stm->execute(array(
 			    ":id"   => $row['id'],
-			    ":U"    =>  @date("U"),
+			    ":U"    =>  time(),
 		    ));
 	    } catch (PDOException $e) {
 		    return false;
@@ -292,7 +292,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
 		    $stm = $this->db($keyword)->prepare("DELETE FROM `caching` WHERE (`keyword`=:keyword) OR (`exp` <= :U)");
 		    $stm->execute(array(
 			    ":keyword"   => $keyword,
-			    ":U"    =>  @date("U"),
+			    ":U"    =>  time(),
 		    ));
 	    } catch (PDOException $e) {
 		    return false;
@@ -324,7 +324,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
 
 		            $stm = $PDO->prepare("DELETE FROM `caching` WHERE `exp` <= :U");
 		            $stm->execute(array(
-			            ":U"    =>  @date("U"),
+			            ":U"    =>  time(),
 		            ));
 
 		            $PDO->exec("VACUUM;");

@@ -233,7 +233,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
     function isExpired($object) {
 
-        if(isset($object['expired_time']) && @date("U") >= $object['expired_time']) {
+        if(isset($object['expired_time']) && time() >= $object['expired_time']) {
             return true;
         } else {
             return false;

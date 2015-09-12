@@ -34,9 +34,9 @@ abstract class BasePhpFastCache {
         }
         $object = array(
             "value" => $value,
-            "write_time"  => @date("U"),
+            "write_time"  => time(),
             "expired_in"  => $time,
-            "expired_time"  => @date("U") + (Int)$time,
+            "expired_time"  => time() + (Int)$time,
         );
 
         return $this->driver_set($keyword,$object,$time,$option);
@@ -114,7 +114,7 @@ abstract class BasePhpFastCache {
             return false;
         } else {
             $value = (Int)$object['value'] + (Int)$step;
-            $time = $object['expired_time'] - @date("U");
+            $time = $object['expired_time'] - time();
             $this->set($keyword,$value, $time, $option);
             return true;
         }
@@ -126,7 +126,7 @@ abstract class BasePhpFastCache {
             return false;
         } else {
             $value = (Int)$object['value'] - (Int)$step;
-            $time = $object['expired_time'] - @date("U");
+            $time = $object['expired_time'] - time();
             $this->set($keyword,$value, $time, $option);
             return true;
         }
@@ -140,7 +140,7 @@ abstract class BasePhpFastCache {
             return false;
         } else {
             $value = $object['value'];
-            $time = $object['expired_time'] - @date("U") + $time;
+            $time = $object['expired_time'] - time() + $time;
             $this->set($keyword, $value,$time, $option);
             return true;
         }

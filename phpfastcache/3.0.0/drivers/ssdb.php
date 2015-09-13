@@ -62,7 +62,6 @@ class phpfastcache_ssdb extends BasePhpFastCache implements phpfastcache_driver 
 
     function driver_set($keyword, $value = "", $time = 300, $option = array()) {
         if ($this->connectServer()) {
-            $value = $this->encode($value);
 	        if (isset($option['skipExisting']) && $option['skipExisting'] == true) {
 		        $x = $this->instant->get($keyword);
                 if($x === false) {
@@ -71,6 +70,7 @@ class phpfastcache_ssdb extends BasePhpFastCache implements phpfastcache_driver 
                     return true;
                 }
 	        }
+            $value = $this->encode($value);
 		    return $this->instant->setx($keyword, $value, $time);
         } else {
             return $this->backup()->set($keyword, $value, $time, $option);

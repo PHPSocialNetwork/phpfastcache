@@ -73,6 +73,13 @@ class phpFastCache {
 			"timeout"   =>  ""
 		),
 
+        "ssdb"         =>  array(
+			"host"  => "127.0.0.1",
+			"port"  =>  8888,
+			"password"  =>  "",
+			"timeout"   =>  ""
+		),
+
 		"extensions"    =>  array(),
 	);
 

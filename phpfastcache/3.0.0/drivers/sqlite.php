@@ -43,7 +43,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
         $db->exec('drop table if exists "balancing"');
         $db->exec('CREATE TABLE "balancing" ("keyword" VARCHAR PRIMARY KEY NOT NULL UNIQUE, "db" INTEGER)');
         $db->exec('CREATE INDEX "db" ON "balancing" ("db")');
-        $db->exec('CREATE UNIQUE INDEX "lookup" ON "balacing" ("keyword")');
+        $db->exec('CREATE UNIQUE INDEX "lookup" ON "balancing" ("keyword")');
 
     }
 

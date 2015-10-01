@@ -122,8 +122,4 @@ $cache->decrementMulti(array(
                         array("key2", 2),
                     ));
 
-
-
-
-
-````
+```

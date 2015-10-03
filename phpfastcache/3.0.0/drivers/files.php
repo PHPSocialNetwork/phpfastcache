@@ -28,14 +28,14 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
         }
 
     }
-    
+
     private function encodeFilename($keyword) {
-	    return trim(trim(preg_replace("/[^a-zA-Z0-9]+/","_",$keyword),"_"));
+        return trim(trim(preg_replace("/[^a-zA-Z0-9]+/","_",$keyword),"_"));
         // return rtrim(base64_encode($keyword), '=');
     }
-    
+
     private function decodeFilename($filename) {
-	    return $filename;
+        return $filename;
         // return base64_decode($filename);
     }
 
@@ -44,8 +44,8 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
      */
     private function getFilePath($keyword, $skip = false) {
         $path = $this->getPath();
-        
-        $filename = $this->encodeFilename($keyword);        
+
+        $filename = $this->encodeFilename($keyword);
         $folder = substr($filename,0,2);
         $path = rtrim($path,"/")."/".$folder;
         /*
@@ -59,7 +59,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
             } elseif(!is_writeable($path)) {
                 if(!chmod($path,$this->__setChmodAuto())) {
-					throw new Exception("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!",92);
+                    throw new Exception("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!",92);
                 }
             }
         }
@@ -67,7 +67,6 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
         $file_path = $path."/".$filename.".txt";
         return $file_path;
     }
-
 
     function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
         $file_path = $this->getFilePath($keyword);
@@ -98,9 +97,6 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
                 }
         }
     }
-
-
-
 
     function driver_get($keyword, $option = array()) {
 
@@ -162,19 +158,19 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
                         $object = $this->decode($this->readfile($file_path));
                         if($this->isExpired($object)) {
                             @unlink($file_path);
-                            $removed = $removed + $size;
+                            $removed += $size;
                         }
-                        $total = $total + $size;
+                        $total += $size;
                     }
                 } // end read subdir
             } // end if
        } // end while
 
-       $res['size']  = $total - $removed;
+       $res['size'] = $total - $removed;
        $res['info'] = array(
-                "Total" => $total,
-                "Removed"   => $removed,
-                "Current"   => $res['size'],
+                "Total [bytes]" => $total,
+                "Expired and removed [bytes]" => $removed,
+                "Current [bytes]" => $res['size'],
        );
        return $res;
     }
@@ -212,9 +208,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
             } // end if
         } // end while
 
-
     }
-
 
     function driver_isExisting($keyword) {
         $file_path = $this->getFilePath($keyword,true);
@@ -232,15 +226,11 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
     }
 
     function isExpired($object) {
-
         if(isset($object['expired_time']) && time() >= $object['expired_time']) {
             return true;
         } else {
             return false;
         }
     }
-
-
-
 
 }

@@ -196,7 +196,7 @@ class phpFastCache {
             self::htaccessGen($full_path, $config['htaccess']);
         }
 
-        return $full_path;
+        return realpath($full_path);
 
     }
 

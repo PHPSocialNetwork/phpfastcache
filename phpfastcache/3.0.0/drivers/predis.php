@@ -122,7 +122,7 @@ class phpfastcache_predis extends BasePhpFastCache implements phpfastcache_drive
     function driver_delete($keyword, $option = array()) {
 
         if($this->connectServer()) {
-	        $this->instant->delete($keyword);
+	        $this->instant->del($keyword);
         }
 
     }

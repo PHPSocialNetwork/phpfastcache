@@ -8,6 +8,9 @@
 
 
 class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_driver  {
+    const SQLITE_DIR = 'sqlite';
+    const INDEXING_FILE = 'indexing';
+
     var $max_size = 10; // 10 mb
 
     var $instant = array();
@@ -22,7 +25,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
     function initDB(PDO $db) {
         $db->exec('drop table if exists "caching"');
         $db->exec('CREATE TABLE "caching" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "keyword" VARCHAR UNIQUE, "object" BLOB, "exp" INTEGER)');
-        $db->exec('CREATE UNIQUE INDEX "cleaup" ON "caching" ("keyword","exp")');
+        $db->exec('CREATE UNIQUE INDEX "cleanup" ON "caching" ("keyword","exp")');
         $db->exec('CREATE INDEX "exp" ON "caching" ("exp")');
         $db->exec('CREATE UNIQUE INDEX "keyword" ON "caching" ("keyword")');
     }
@@ -35,7 +38,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
         // delete everything before reset indexing
         $dir = @opendir($this->path);
         while($file = @readdir($dir)) {
-            if($file != "." && $file!=".." && $file != "indexing" && $file!="dbfastcache") {
+            if($file!="." && $file!=".." && $file!=self::INDEXING_FILE && $file!="dbfastcache") {
                 @unlink($this->path."/".$file);
             }
         }
@@ -43,7 +46,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
         $db->exec('drop table if exists "balancing"');
         $db->exec('CREATE TABLE "balancing" ("keyword" VARCHAR PRIMARY KEY NOT NULL UNIQUE, "db" INTEGER)');
         $db->exec('CREATE INDEX "db" ON "balancing" ("db")');
-        $db->exec('CREATE UNIQUE INDEX "lookup" ON "balacing" ("keyword")');
+        $db->exec('CREATE UNIQUE INDEX "lookup" ON "balancing" ("keyword")');
 
     }
 
@@ -54,11 +57,11 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
     function indexing($keyword) {
         if($this->indexing == NULL) {
             $createTable = false;
-            if(!@file_exists($this->path."/indexing")) {
+            if(!@file_exists($this->path."/".self::INDEXING_FILE)) {
                 $createTable = true;
             }
 
-            $PDO = new PDO("sqlite:".$this->path."/indexing");
+            $PDO = new PDO("sqlite:".$this->path."/".self::INDEXING_FILE);
             $PDO->setAttribute(PDO::ATTR_ERRMODE,
                 PDO::ERRMODE_EXCEPTION);
 
@@ -115,8 +118,6 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
         return $db;
     }
 
-
-
     function db($keyword, $reset = false) {
         /*
          * Default is fastcache
@@ -145,17 +146,14 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
 
         }
 
-
         return $this->instant[$instant];
     }
-
-
 
     function checkdriver() {
         if(extension_loaded('pdo_sqlite') && is_writeable($this->getPath())) {
            return true;
         }
-	    $this->fallback = true;
+        $this->fallback = true;
         return false;
     }
 
@@ -168,15 +166,15 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
          */
         $this->setup($config);
         if(!$this->checkdriver() && !isset($config['skipError'])) {
-	        $this->fallback = true;
+            $this->fallback = true;
         }
 
-        if(!@file_exists($this->getPath()."/sqlite")) {
-            if(!@mkdir($this->getPath()."/sqlite",$this->__setChmodAuto())) {
-	            $this->fallback = true;
+        if(!@file_exists($this->getPath()."/".self::SQLITE_DIR)) {
+            if(!@mkdir($this->getPath()."/".self::SQLITE_DIR,$this->__setChmodAuto())) {
+                $this->fallback = true;
             }
         }
-        $this->path = $this->getPath()."/sqlite";
+        $this->path = $this->getPath()."/".self::SQLITE_DIR;
     }
 
 
@@ -207,16 +205,16 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
                 return true;
             } catch(PDOException $e) {
 
-	            try {
-		            $stm = $this->db($keyword,true)->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
-		            $stm->execute(array(
-			            ":keyword"  => $keyword,
-			            ":object"   =>  $this->encode($value),
-			            ":exp"      => time() + (Int)$time,
-		            ));
-	            } catch (PDOException $e) {
-		            return false;
-	            }
+                try {
+                    $stm = $this->db($keyword,true)->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
+                    $stm->execute(array(
+                        ":keyword"  => $keyword,
+                        ":object"   =>  $this->encode($value),
+                        ":exp"      => time() + (Int)$time,
+                    ));
+                } catch (PDOException $e) {
+                    return false;
+                }
 
             }
 
@@ -238,31 +236,27 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
             $row = $stm->fetch(PDO::FETCH_ASSOC);
 
         } catch(PDOException $e) {
-			try {
-				$stm = $this->db($keyword,true)->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
-				$stm->execute(array(
-					":keyword"  =>  $keyword
-				));
-				$row = $stm->fetch(PDO::FETCH_ASSOC);
-			} catch(PDOException $e) {
-				return null;
-			}
+            try {
+                $stm = $this->db($keyword,true)->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
+                $stm->execute(array(
+                    ":keyword"  =>  $keyword
+                ));
+                $row = $stm->fetch(PDO::FETCH_ASSOC);
+            } catch(PDOException $e) {
+                return null;
+            }
 
         }
-
 
         if($this->isExpired($row)) {
             $this->deleteRow($row);
             return null;
         }
 
-
-
         if(isset($row['id'])) {
             $data = $this->decode($row['object']);
             return $data;
         }
-
 
         return null;
     }
@@ -276,31 +270,34 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
     }
 
     function deleteRow($row) {
-	    try {
-		    $stm = $this->db($row['keyword'])->prepare("DELETE FROM `caching` WHERE (`id`=:id) OR (`exp` <= :U) ");
-		    $stm->execute(array(
-			    ":id"   => $row['id'],
-			    ":U"    =>  time(),
-		    ));
-	    } catch (PDOException $e) {
-		    return false;
-	    }
+        try {
+            $stm = $this->db($row['keyword'])->prepare("DELETE FROM `caching` WHERE (`id`=:id) OR (`exp` <= :U) ");
+            $stm->execute(array(
+                ":id"   => $row['id'],
+                ":U"    =>  time(),
+            ));
+        } catch (PDOException $e) {
+            return false;
+        }
     }
 
     function driver_delete($keyword, $option = array()) {
-	    try {
-		    $stm = $this->db($keyword)->prepare("DELETE FROM `caching` WHERE (`keyword`=:keyword) OR (`exp` <= :U)");
-		    $stm->execute(array(
-			    ":keyword"   => $keyword,
-			    ":U"    =>  time(),
-		    ));
-	    } catch (PDOException $e) {
-		    return false;
-	    }
+        try {
+            $stm = $this->db($keyword)->prepare("DELETE FROM `caching` WHERE (`keyword`=:keyword) OR (`exp` <= :U)");
+            $stm->execute(array(
+                ":keyword"   => $keyword,
+                ":U"    =>  time(),
+            ));
+        } catch (PDOException $e) {
+            return false;
+        }
 
 
     }
 
+    /*
+     * Return total cache size + auto removed expired entries
+     */
     function driver_stats($option = array()) {
         $res = array(
             "info"  =>  "",
@@ -315,46 +312,43 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
             if($file!="." && $file!="..") {
                 $file_path = $this->path."/".$file;
                 $size = @filesize($file_path);
-                $total = $total + $size;
+                $total += $size;
+                if ($file!=self::INDEXING_FILE) {
+                    try {
+                        $PDO = new PDO("sqlite:".$file_path);
+                        $PDO->setAttribute(PDO::ATTR_ERRMODE,
+                            PDO::ERRMODE_EXCEPTION);
 
-	            try {
-		            $PDO = new PDO("sqlite:".$file_path);
-		            $PDO->setAttribute(PDO::ATTR_ERRMODE,
-			            PDO::ERRMODE_EXCEPTION);
+                        $stm = $PDO->prepare("DELETE FROM `caching` WHERE `exp` <= :U");
+                        $stm->execute(array(
+                            ":U"    =>  time(),
+                        ));
 
-		            $stm = $PDO->prepare("DELETE FROM `caching` WHERE `exp` <= :U");
-		            $stm->execute(array(
-			            ":U"    =>  time(),
-		            ));
-
-		            $PDO->exec("VACUUM;");
-		            $size = @filesize($file_path);
-		            $optimized = $optimized + $size;
-	            } catch (PDOException $e) {
-		            $size = 0;
-		            $optimized = 0;
-	            }
-
-
-
+                        $PDO->exec("VACUUM;");
+                        $size = @filesize($file_path);
+                    } catch (PDOException $e) {
+                        $res['data'] .= sprintf("%s: %s\n", $file_path, $e->getMessage());
+                    }
+                }
+                $optimized += $size;
             }
         }
-        $res['size'] = round($optimized/1024/1024,1);
+        $res['size'] = $optimized;
         $res['info'] = array(
-            "total" => round($total/1024/1024,1),
-            "optimized" => round($optimized/1024/1024,1),
+            "total before removing expired entries [bytes]" => $total,
+            "optimized after removing expired entries [bytes]" => $optimized,
         );
 
         return $res;
     }
 
     function driver_clean($option = array()) {
-        
+
         // close connection
         $this->instant = array();
         $this->indexing = NULL;
-    
-        // delete everything before reset indexing
+
+        // delete everything
         $dir = @opendir($this->path);
         while($file = @readdir($dir)) {
             if($file != "." && $file!="..") {
@@ -364,24 +358,19 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
     }
 
     function driver_isExisting($keyword) {
-	    try {
-		    $stm = $this->db($keyword)->prepare("SELECT COUNT(`id`) as `total` FROM `caching` WHERE `keyword`=:keyword");
-		    $stm->execute(array(
-			    ":keyword"   => $keyword
-		    ));
-		    $data = $stm->fetch(PDO::FETCH_ASSOC);
-		    if($data['total'] >= 1) {
-			    return true;
-		    } else {
-			    return false;
-		    }
-	    } catch (PDOException $e) {
-		    return false;
-	    }
-
-
-
+        try {
+            $stm = $this->db($keyword)->prepare("SELECT COUNT(`id`) as `total` FROM `caching` WHERE `keyword`=:keyword");
+            $stm->execute(array(
+                ":keyword"   => $keyword
+            ));
+            $data = $stm->fetch(PDO::FETCH_ASSOC);
+            if($data['total'] >= 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            return false;
+        }
     }
-
-
 }

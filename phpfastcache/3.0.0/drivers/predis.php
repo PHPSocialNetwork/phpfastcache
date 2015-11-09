@@ -16,21 +16,22 @@ class phpfastcache_predis extends BasePhpFastCache implements phpfastcache_drive
 
     function checkdriver() {
         // Check memcache
+        if (! class_exists("\\Predis\\Client")) {
 	    $this->required_extension("predis-1.0/autoload.php");
 	    try {
 		    Predis\Autoloader::register();
 	    } catch(Exception $e) {
 
 	    }
-	    return true;
+        }
+        return true;
     }
 
     function __construct($config = array()) {
         $this->setup($config);
+        if (! class_exists("\\Predis\\Client")) {
 	    $this->required_extension("predis-1.0/autoload.php");
-
-
-
+        }
     }
 
     function connectServer() {
@@ -121,7 +122,7 @@ class phpfastcache_predis extends BasePhpFastCache implements phpfastcache_drive
     function driver_delete($keyword, $option = array()) {
 
         if($this->connectServer()) {
-	        $this->instant->delete($keyword);
+	        $this->instant->del($keyword);
         }
 
     }

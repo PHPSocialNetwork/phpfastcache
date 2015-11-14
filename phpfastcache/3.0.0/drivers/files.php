@@ -162,7 +162,9 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
                             $key = $f;
                         }
                         else {
-                            $key = explode(".", $f)[0];
+                            //Because PHP 5.3, this cannot be written in single line
+                            $key = explode(".", $f);
+                            $key = $key[0];
                         }
                         $content[$key] = array("size"=>$size,"write_time"=>$object["write_time"]);
                         if($this->isExpired($object)) {

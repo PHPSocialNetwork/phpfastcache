@@ -143,7 +143,6 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
         $total = 0;
         $removed = 0;
-        $content = array();
         while($file=@readdir($dir)) {
             if($file!="." && $file!=".." && is_dir($path."/".$file)) {
                 // read sub dir
@@ -157,16 +156,6 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
                         $file_path = $path."/".$file."/".$f;
                         $size = @filesize($file_path);
                         $object = $this->decode($this->readfile($file_path));
-
-                        if(strpos($f,".") === false) {
-                            $key = $f;
-                        }
-                        else {
-                            //Because PHP 5.3, this cannot be written in single line
-                            $key = explode(".", $f);
-                            $key = $key[0];
-                        }
-                        $content[$key] = array("size"=>$size,"write_time"=>$object["write_time"]);
                         if($this->isExpired($object)) {
                             @unlink($file_path);
                             $removed += $size;
@@ -183,7 +172,6 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
                 "Expired and removed [bytes]" => $removed,
                 "Current [bytes]" => $res['size'],
        );
-        $res["data"] = $content;
        return $res;
     }
 

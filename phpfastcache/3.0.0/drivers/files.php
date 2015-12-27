@@ -88,8 +88,14 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
         if($toWrite == true) {
                 try {
-                    $f = @fopen($file_path, "w+");
-                    fwrite($f, $data);
+                    $f = @fopen($file_path, "c");
+                    if (flock($f,LOCK_EX| LOCK_NB))  { //got a lock to write;
+                        fwrite($f, $data);
+                        fflush($f);
+                        flock($f,LOCK_UN);
+                    } else {
+                        //arguably the file is being written to so the job is done
+                    }
                     fclose($f);
                 } catch (Exception $e) {
                     // miss cache

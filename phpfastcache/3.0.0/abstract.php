@@ -281,10 +281,10 @@ abstract class BasePhpFastCache {
 
             }
             if (flock($file_handle, LOCK_SH | LOCK_NB)) {
-            while (!feof($file_handle)) {
-                $line = fgets($file_handle);
-                $string .= $line;
-            }
+                while (!feof($file_handle)) {
+                    $line = fgets($file_handle);
+                    $string .= $line;
+                }
             } else {
                 throw new Exception("Can't Read File",96);
             }

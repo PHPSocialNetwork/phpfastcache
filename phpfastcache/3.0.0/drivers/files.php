@@ -70,6 +70,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
     function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
         $file_path = $this->getFilePath($keyword);
+        $tmp_path = $file_path . ".tmp";
       //  echo "<br>DEBUG SET: ".$keyword." - ".$value." - ".$time."<br>";
         $data = $this->encode($value);
 
@@ -86,11 +87,23 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
             }
         }
 
-        if($toWrite == true) {
+        /*
+         * write to intent file to prevent race during read; race during write is ok
+         * because first-to-lock wins and the file will exist before the writer attempts
+         * to write.
+         */
+        if($toWrite == true && !@file_exists($tmp_path && !@file_exists($file_path))) {
                 try {
-                    $f = @fopen($file_path, "w+");
+                    $f = @fopen($tmp_path, "c");
+                    if (flock($f,LOCK_EX| LOCK_NB))  {
                     fwrite($f, $data);
+                        fflush($f);
+                        flock($f,LOCK_UN);
+                    } else {
+                        //arguably the file is being written to so the job is done
+                    }
                     fclose($f);
+                    @rename($tmp_path,$file_path);
                 } catch (Exception $e) {
                     // miss cache
                     return false;

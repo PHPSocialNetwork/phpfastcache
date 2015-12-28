@@ -270,9 +270,6 @@ abstract class BasePhpFastCache {
 
 
     protected function readfile($file) {
-        if(function_exists("file_get_contents")) {
-            return @file_get_contents($file);
-        } else {
             $string = "";
 
             $file_handle = @fopen($file, "r");
@@ -291,7 +288,6 @@ abstract class BasePhpFastCache {
             fclose($file_handle);
 
             return $string;
-        }
     }
 
 

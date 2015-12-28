@@ -270,6 +270,9 @@ abstract class BasePhpFastCache {
 
 
     protected function readfile($file) {
+        if(function_exists("file_get_contents")) {
+            return @file_get_contents($file);
+        } else {
             $string = "";
 
             $file_handle = @fopen($file, "r");
@@ -277,17 +280,14 @@ abstract class BasePhpFastCache {
                 throw new Exception("Can't Read File",96);
 
             }
-            if (flock($file_handle, LOCK_SH | LOCK_NB)) {
-                while (!feof($file_handle)) {
-                    $line = fgets($file_handle);
-                    $string .= $line;
-                }
-            } else {
-                throw new Exception("Can't Read File",96);
+            while (!feof($file_handle)) {
+                $line = fgets($file_handle);
+                $string .= $line;
             }
             fclose($file_handle);
 
             return $string;
+        }
     }
 
 

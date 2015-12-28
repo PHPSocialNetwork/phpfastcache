@@ -52,15 +52,13 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
          * Skip Create Sub Folders;
          */
         if($skip == false) {
-            if(!@file_exists($path)) {
-                if(!@mkdir($path,$this->__setChmodAuto())) {
+            //if it doesn't exist, I can't create it, and nobody beat me to creating it:
+            if(!@is_dir($path) && !@mkdir($path,$this->__setChmodAuto()) && !@is_dir($path)) {
                     throw new Exception("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!",92);
-                }
-
-            } elseif(!is_writeable($path)) {
-                if(!chmod($path,$this->__setChmodAuto())) {
+            }
+            //if it does exist (after someone beat me to it, perhaps), but isn't writable or fixable:
+            if(@is_dir($path) && !is_writeable($path) && !@chmod($path,$this->__setChmodAuto())) {
                     throw new Exception("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!",92);
-                }
             }
         }
 

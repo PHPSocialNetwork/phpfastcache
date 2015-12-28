@@ -159,7 +159,7 @@ class phpFastCache {
             $path = $config['path'];
         }
 
-        $securityKey = $config['securityKey'];
+        $securityKey = array_key_exists('securityKey',$config) ? $config['securityKey'] : "";
         if($securityKey == "" || $securityKey == "auto") {
             $securityKey = self::$config['securityKey'];
             if($securityKey == "auto" || $securityKey == "") {
@@ -193,7 +193,7 @@ class phpFastCache {
 
 
             self::$tmp[$full_pathx] = true;
-            self::htaccessGen($full_path, $config['htaccess']);
+            self::htaccessGen($full_path, array_key_exists('htaccess',$config) ? $config['htaccess'] : false);
         }
 
         return realpath($full_path);

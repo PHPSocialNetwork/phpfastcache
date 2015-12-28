@@ -87,6 +87,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
             }
         }
 
+        $written = true;
         /*
          * write to intent file to prevent race during read; race during write is ok
          * because first-to-lock wins and the file will exist before the writer attempts
@@ -95,20 +96,24 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
         if($toWrite == true && !@file_exists($tmp_path && !@file_exists($file_path))) {
                 try {
                     $f = @fopen($tmp_path, "c");
+                    if ($f) {
                     if (flock($f,LOCK_EX| LOCK_NB))  {
-                    fwrite($f, $data);
-                        fflush($f);
-                        flock($f,LOCK_UN);
+                            $written = ($written && fwrite($f, $data));
+                            $written = ($written && fflush($f));
+                            $written = ($written && flock($f, LOCK_UN));
                     } else {
                         //arguably the file is being written to so the job is done
+                            $written = false;
                     }
-                    fclose($f);
-                    @rename($tmp_path,$file_path);
+                        $written = ($written && @fclose($f));
+                        $written = ($written && @rename($tmp_path,$file_path));
+                    }
                 } catch (Exception $e) {
                     // miss cache
-                    return false;
+                    $written = false;
                 }
         }
+        return $written;
     }
 
     function driver_get($keyword, $option = array()) {

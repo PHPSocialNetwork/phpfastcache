@@ -163,13 +163,14 @@ class phpFastCache {
         if($securityKey == "" || $securityKey == "auto") {
             $securityKey = self::$config['securityKey'];
             if($securityKey == "auto" || $securityKey == "") {
-                $securityKey = isset($_SERVER['HTTP_HOST']) ? ltrim(strtolower($_SERVER['HTTP_HOST']),"www.") : "default";
-                $securityKey = preg_replace("/[^a-zA-Z0-9]+/","",$securityKey);
+                $securityKey = isset($_SERVER['HTTP_HOST']) ? preg_replace('/^www./','',strtolower($_SERVER['HTTP_HOST'])) : "default";
             }
         }
         if($securityKey != "") {
             $securityKey.= "/";
         }
+        
+        $securityKey = self::cleanFileName($securityKey);
 
         $full_path = $path."/".$securityKey;
         $full_pathx = md5($full_path);
@@ -198,6 +199,12 @@ class phpFastCache {
 
         return realpath($full_path);
 
+    }
+    
+    public static function cleanFileName($filename) {
+        $regex = ['/[\?\[\]\/\\\=\<\>\:\;\,\'\"\&\$\#\*\(\)\|\~\`\!\{\}]/','/\.$/','/^\./'];
+        $replace = ['-','',''];
+        return preg_replace($regex,$replace,$filename);
     }
 
 

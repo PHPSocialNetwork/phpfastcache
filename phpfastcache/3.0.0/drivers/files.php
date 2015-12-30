@@ -91,7 +91,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
          * because first-to-lock wins and the file will exist before the writer attempts
          * to write.
          */
-        if($toWrite == true && !@file_exists($tmp_path && !@file_exists($file_path))) {
+        if($toWrite == true && !@file_exists($tmp_path) && !@file_exists($file_path)) {
                 try {
                     $f = @fopen($tmp_path, "c");
                     if ($f) {

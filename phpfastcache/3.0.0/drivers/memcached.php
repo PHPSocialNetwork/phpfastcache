@@ -73,10 +73,17 @@ class phpfastcache_memcached extends BasePhpFastCache implements phpfastcache_dr
 
     function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
         $this->connectServer();
+
+        // Memcache will only allow a expiration timer less than 2592000 seconds,
+        // otherwise, it will assume you're giving it a UNIX timestamp.
+        if($time>2592000) {
+            $time = time()+$time;
+        }
+
         if(isset($option['isExisting']) && $option['isExisting'] == true) {
-            return $this->instant->add($keyword, $value, time() + $time );
+            return $this->instant->add($keyword, $value, $time);
         } else {
-            return $this->instant->set($keyword, $value, time() + $time );
+            return $this->instant->set($keyword, $value, $time);
 
         }
     }

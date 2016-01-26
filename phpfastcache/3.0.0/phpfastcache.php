@@ -202,8 +202,8 @@ class phpFastCache {
     }
     
     public static function cleanFileName($filename) {
-        $regex = ['/[\?\[\]\/\\\=\<\>\:\;\,\'\"\&\$\#\*\(\)\|\~\`\!\{\}]/','/\.$/','/^\./'];
-        $replace = ['-','',''];
+        $regex = array('/[\?\[\]\/\\\=\<\>\:\;\,\'\"\&\$\#\*\(\)\|\~\`\!\{\}]/','/\.$/','/^\./');
+        $replace = array('-','','');
         return preg_replace($regex,$replace,$filename);
     }
 

@@ -175,9 +175,15 @@ abstract class BasePhpFastCache {
         return $res;
     }
 
-    public function deleteMulti($list = array()) {
-        foreach($list as $array) {
-            $this->delete($array[0], isset($array[1]) ? $array[1] : array());
+    public function deleteMulti($list = array(), $option = array()) {
+        foreach($list as $item) {
+            if(is_array($item) && count($item) === 2){
+                $this->delete($item[0], $item[1]);
+            }else if(is_string($item)){
+                $this->delete($item, $option);
+            }else{
+                throw new Exception('Invalid values passed to deleteMulti()');
+            }
         }
     }
 

@@ -175,9 +175,15 @@ abstract class BasePhpFastCache {
         return $res;
     }
 
-    public function deleteMulti($list = array()) {
-        foreach($list as $array) {
-            $this->delete($array[0], isset($array[1]) ? $array[1] : array());
+    public function deleteMulti($list = array(), $option = array()) {
+        foreach($list as $item) {
+            if(is_array($item) && count($item) === 2){
+                $this->delete($item[0], $item[1]);
+            }else if(is_string($item)){
+                $this->delete($item, $option);
+            }else{
+                throw new Exception('Invalid values passed to deleteMulti()');
+            }
         }
     }
 
@@ -271,7 +277,7 @@ abstract class BasePhpFastCache {
 
     protected function readfile($file) {
         if(function_exists("file_get_contents")) {
-            return @file_get_contents($file);
+            return file_get_contents($file);
         } else {
             $string = "";
 
@@ -327,7 +333,7 @@ abstract class BasePhpFastCache {
     protected function htaccessGen($path = "") {
         if($this->option("htaccess") == true) {
 
-            if(!@file_exists($path."/.htaccess")) {
+            if(!file_exists($path."/.htaccess")) {
                 //   echo "write me";
                 $html = "order deny, allow \r\n
 deny from all \r\n
@@ -407,7 +413,7 @@ allow from 127.0.0.1";
 
 
     protected function isExistingDriver($class) {
-        if(@file_exists(dirname(__FILE__)."/drivers/".$class.".php")) {
+        if(file_exists(dirname(__FILE__)."/drivers/".$class.".php")) {
             require_once(dirname(__FILE__)."/drivers/".$class.".php");
             if(class_exists("phpfastcache_".$class)) {
                 return true;

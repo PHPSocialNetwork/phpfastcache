@@ -248,7 +248,7 @@ class phpFastCache {
 					throw new Exception("PLEASE CHMOD ".$path." - 0777 OR ANY WRITABLE PERMISSION!",92);
                 }
             }
-            if(!@file_exists($path."/.htaccess")) {
+            if(!file_exists($path."/.htaccess")) {
                 //   echo "write me";
                 $html = "order deny, allow \r\n
 deny from all \r\n

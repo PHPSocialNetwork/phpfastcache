@@ -17,7 +17,7 @@ $caching = true;
 
 // no caching for some special page;
 // $_SERVER['REQUEST_URI'];
-if(strpos($_SERVER['REQUESR_URI'],"contact") !== false || strpos($_SERVER['REQUESR_URI'],"login") !== false  || strpos($_SERVER['REQUESR_URI'],"register") !== false  ) {
+if(strpos($_SERVER['REQUEST_URI'],"contact") !== false || strpos($_SERVER['REQUEST_URI'],"login") !== false  || strpos($_SERVER['REQUEST_URI'],"register") !== false  ) {
     $caching = false;
 }
 

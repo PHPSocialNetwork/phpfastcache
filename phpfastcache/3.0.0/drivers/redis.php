@@ -36,7 +36,7 @@ class phpfastcache_redis extends BasePhpFastCache implements phpfastcache_driver
 
     function connectServer() {
 
-	    $server = isset($this->option['redis']) ? $this->option['redis'] : array(
+	    $server = isset($this->config['redis']) ? $this->config['redis'] : array(
 																				    "host" => "127.0.0.1",
 																				    "port"  =>  "6379",
 																				    "password"  =>  "",

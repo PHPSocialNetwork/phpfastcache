@@ -28,14 +28,14 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
         }
 
     }
-    
+
     private function encodeFilename($keyword) {
-	    return trim(trim(preg_replace("/[^a-zA-Z0-9]+/","_",$keyword),"_"));
+        return trim(trim(preg_replace("/[^a-zA-Z0-9]+/","_",$keyword),"_"));
         // return rtrim(base64_encode($keyword), '=');
     }
-    
+
     private function decodeFilename($filename) {
-	    return $filename;
+        return $filename;
         // return base64_decode($filename);
     }
 
@@ -44,23 +44,21 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
      */
     private function getFilePath($keyword, $skip = false) {
         $path = $this->getPath();
-        
-        $filename = $this->encodeFilename($keyword);        
+
+        $filename = $this->encodeFilename($keyword);
         $folder = substr($filename,0,2);
         $path = rtrim($path,"/")."/".$folder;
         /*
          * Skip Create Sub Folders;
          */
         if($skip == false) {
-            if(!file_exists($path)) {
-                if(!@mkdir($path,$this->__setChmodAuto())) {
+            //if it doesn't exist, I can't create it, and nobody beat me to creating it:
+            if(!@is_dir($path) && !@mkdir($path,$this->__setChmodAuto()) && !@is_dir($path)) {
                     throw new Exception("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!",92);
-                }
-
-            } elseif(!is_writeable($path)) {
-                if(!chmod($path,$this->__setChmodAuto())) {
-	                die("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION! MAKE SURE PHP/Apache/WebServer have Write Permission");
-                }
+            }
+            //if it does exist (after someone beat me to it, perhaps), but isn't writable or fixable:
+            if(@is_dir($path) && !is_writeable($path) && !@chmod($path,$this->__setChmodAuto())) {
+                    throw new Exception("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!",92);
             }
         }
 
@@ -68,9 +66,9 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
         return $file_path;
     }
 
-
     function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
         $file_path = $this->getFilePath($keyword);
+        $tmp_path = $file_path . ".tmp";
       //  echo "<br>DEBUG SET: ".$keyword." - ".$value." - ".$time."<br>";
         $data = $this->encode($value);
 
@@ -78,7 +76,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
         /*
          * Skip if Existing Caching in Options
          */
-        if(isset($option['skipExisting']) && $option['skipExisting'] == true && file_exists($file_path)) {
+        if(isset($option['skipExisting']) && $option['skipExisting'] == true && @file_exists($file_path)) {
             $content = $this->readfile($file_path);
             $old = $this->decode($content);
             $toWrite = false;
@@ -87,25 +85,39 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
             }
         }
 
-        if($toWrite == true) {
+        $written = true;
+        /*
+         * write to intent file to prevent race during read; race during write is ok
+         * because first-to-lock wins and the file will exist before the writer attempts
+         * to write.
+         */
+        if($toWrite == true && !@file_exists($tmp_path) && !@file_exists($file_path)) {
                 try {
-                    $f = fopen($file_path, "w+");
-                    fwrite($f, $data);
-                    fclose($f);
+                    $f = @fopen($tmp_path, "c");
+                    if ($f) {
+                    if (flock($f,LOCK_EX| LOCK_NB))  {
+                            $written = ($written && fwrite($f, $data));
+                            $written = ($written && fflush($f));
+                            $written = ($written && flock($f, LOCK_UN));
+                    } else {
+                        //arguably the file is being written to so the job is done
+                            $written = false;
+                    }
+                        $written = ($written && @fclose($f));
+                        $written = ($written && @rename($tmp_path,$file_path));
+                    }
                 } catch (Exception $e) {
                     // miss cache
-                    return false;
+                    $written = false;
                 }
         }
+        return $written;
     }
-
-
-
 
     function driver_get($keyword, $option = array()) {
 
         $file_path = $this->getFilePath($keyword);
-        if(!file_exists($file_path)) {
+        if(!@file_exists($file_path)) {
             return null;
         }
 
@@ -122,7 +134,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
     function driver_delete($keyword, $option = array()) {
         $file_path = $this->getFilePath($keyword,true);
-        if(@unlink($file_path)) {
+        if(file_exists($file_path) && @unlink($file_path)) {
             return true;
         } else {
             return false;
@@ -147,7 +159,8 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
         $total = 0;
         $removed = 0;
-        while($file=readdir($dir)) {
+        $content = array();
+        while($file=@readdir($dir)) {
             if($file!="." && $file!=".." && is_dir($path."/".$file)) {
                 // read sub dir
                 $subdir = @opendir($path."/".$file);
@@ -155,27 +168,38 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
                     throw new Exception("Can't read path:".$path."/".$file,93);
                 }
 
-                while($f = readdir($subdir)) {
+                while($f = @readdir($subdir)) {
                     if($f!="." && $f!="..") {
                         $file_path = $path."/".$file."/".$f;
-                        $size = filesize($file_path);
+                        $size = @filesize($file_path);
                         $object = $this->decode($this->readfile($file_path));
+
+                        if(strpos($f,".") === false) {
+                            $key = $f;
+                        }
+                        else {
+                            //Because PHP 5.3, this cannot be written in single line
+                            $key = explode(".", $f);
+                            $key = $key[0];
+                        }
+                        $content[$key] = array("size"=>$size,"write_time"=>$object["write_time"]);
                         if($this->isExpired($object)) {
                             @unlink($file_path);
-                            $removed = $removed + $size;
+                            $removed += $size;
                         }
-                        $total = $total + $size;
+                        $total += $size;
                     }
                 } // end read subdir
             } // end if
        } // end while
 
-       $res['size']  = $total - $removed;
+       $res['size'] = $total - $removed;
        $res['info'] = array(
-                "Total" => $total,
-                "Removed"   => $removed,
-                "Current"   => $res['size'],
+                "Total [bytes]" => $total,
+                "Expired and removed [bytes]" => $removed,
+                "Current [bytes]" => $res['size'],
        );
+        $res["data"] = $content;
        return $res;
     }
 
@@ -195,7 +219,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
             throw new Exception("Can't read PATH:".$path,94);
         }
 
-        while($file=readdir($dir)) {
+        while($file=@readdir($dir)) {
             if($file!="." && $file!=".." && is_dir($path."/".$file)) {
                 // read sub dir
                 $subdir = @opendir($path."/".$file);
@@ -203,7 +227,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
                     throw new Exception("Can't read path:".$path."/".$file,93);
                 }
 
-                while($f = readdir($subdir)) {
+                while($f = @readdir($subdir)) {
                     if($f!="." && $f!="..") {
                         $file_path = $path."/".$file."/".$f;
                         @unlink($file_path);
@@ -212,13 +236,11 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
             } // end if
         } // end while
 
-
     }
-
 
     function driver_isExisting($keyword) {
         $file_path = $this->getFilePath($keyword,true);
-        if(!file_exists($file_path)) {
+        if(!@file_exists($file_path)) {
             return false;
         } else {
             // check expired or not
@@ -232,15 +254,11 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
     }
 
     function isExpired($object) {
-
-        if(isset($object['expired_time']) && @date("U") >= $object['expired_time']) {
+        if(isset($object['expired_time']) && time() >= $object['expired_time']) {
             return true;
         } else {
             return false;
         }
     }
-
-
-
 
 }

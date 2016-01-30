@@ -73,6 +73,13 @@ class phpFastCache {
 			"timeout"   =>  ""
 		),
 
+        "ssdb"         =>  array(
+			"host"  => "127.0.0.1",
+			"port"  =>  8888,
+			"password"  =>  "",
+			"timeout"   =>  ""
+		),
+
 		"extensions"    =>  array(),
 	);
 
@@ -133,7 +140,7 @@ class phpFastCache {
     }
 
     public static function getPath($skip_create_path = false, $config) {
-        if ($config['path'] == '' )
+        if ( !isset($config['path']) || $config['path'] == '' )
         {
 
             // revision 618
@@ -152,17 +159,18 @@ class phpFastCache {
             $path = $config['path'];
         }
 
-        $securityKey = $config['securityKey'];
+        $securityKey = array_key_exists('securityKey',$config) ? $config['securityKey'] : "";
         if($securityKey == "" || $securityKey == "auto") {
             $securityKey = self::$config['securityKey'];
             if($securityKey == "auto" || $securityKey == "") {
-                $securityKey = isset($_SERVER['HTTP_HOST']) ? ltrim(strtolower($_SERVER['HTTP_HOST']),"www.") : "default";
-                $securityKey = preg_replace("/[^a-zA-Z0-9]+/","",$securityKey);
+                $securityKey = isset($_SERVER['HTTP_HOST']) ? preg_replace('/^www./','',strtolower($_SERVER['HTTP_HOST'])) : "default";
             }
         }
         if($securityKey != "") {
             $securityKey.= "/";
         }
+        
+        $securityKey = self::cleanFileName($securityKey);
 
         $full_path = $path."/".$securityKey;
         $full_pathx = md5($full_path);
@@ -172,30 +180,36 @@ class phpFastCache {
 
         if($skip_create_path  == false && !isset(self::$tmp[$full_pathx])) {
 
-            if(!file_exists($full_path) || !is_writable($full_path)) {
-                if(!file_exists($full_path)) {
-                    mkdir($full_path,self::__setChmodAuto($config));
+            if(!@file_exists($full_path) || !@is_writable($full_path)) {
+                if(!@file_exists($full_path)) {
+                    @mkdir($full_path,self::__setChmodAuto($config));
                 }
-                if(!is_writable($full_path)) {
-                    chmod($full_path,self::__setChmodAuto($config));
+                if(!@is_writable($full_path)) {
+                    @chmod($full_path,self::__setChmodAuto($config));
                 }
-                if(!file_exists($full_path) || !is_writable($full_path)) {
-                    die("Sorry, Please create ".$full_path." and SET Mode 0777 or any Writable Permission!");
+                if(!@file_exists($full_path) || !@is_writable($full_path)) {
+					throw new Exception("PLEASE CREATE OR CHMOD ".$full_path." - 0777 OR ANY WRITABLE PERMISSION!",92);
                 }
             }
 
 
             self::$tmp[$full_pathx] = true;
-            self::htaccessGen($full_path, $config['htaccess']);
+            self::htaccessGen($full_path, array_key_exists('htaccess',$config) ? $config['htaccess'] : false);
         }
 
-        return $full_path;
+        return realpath($full_path);
 
+    }
+    
+    public static function cleanFileName($filename) {
+        $regex = array('/[\?\[\]\/\\\=\<\>\:\;\,\'\"\&\$\#\*\(\)\|\~\`\!\{\}]/','/\.$/','/^\./');
+        $replace = array('-','','');
+        return preg_replace($regex,$replace,$filename);
     }
 
 
     public static function __setChmodAuto($config) {
-        if($config['default_chmod'] == "" || is_null($config['default_chmod'])) {
+        if(!isset($config['default_chmod']) || $config['default_chmod'] == "" || is_null($config['default_chmod'])) {
             return 0777;
         } else {
             return $config['default_chmod'];
@@ -231,10 +245,10 @@ class phpFastCache {
                     chmod($path,0777);
                 }
                 catch(Exception $e) {
-                    die(" NEED WRITEABLE ".$path);
+					throw new Exception("PLEASE CHMOD ".$path." - 0777 OR ANY WRITABLE PERMISSION!",92);
                 }
             }
-            if(!file_exists($path."/.htaccess")) {
+            if(!@file_exists($path."/.htaccess")) {
                 //   echo "write me";
                 $html = "order deny, allow \r\n
 deny from all \r\n
@@ -242,7 +256,7 @@ allow from 127.0.0.1";
 
                 $f = @fopen($path."/.htaccess","w+");
                 if(!$f) {
-                    die(" CANT CREATE HTACCESS TO PROTECT FOLDER - PLZ CHMOD 0777 FOR ".$path);
+					throw new Exception("PLEASE CHMOD ".$path." - 0777 OR ANY WRITABLE PERMISSION!",92);
                 }
                 fwrite($f,$html);
                 fclose($f);

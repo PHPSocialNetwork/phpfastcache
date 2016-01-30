@@ -34,9 +34,9 @@ abstract class BasePhpFastCache {
         }
         $object = array(
             "value" => $value,
-            "write_time"  => @date("U"),
+            "write_time"  => time(),
             "expired_in"  => $time,
-            "expired_time"  => @date("U") + (Int)$time,
+            "expired_time"  => time() + (Int)$time,
         );
 
         return $this->driver_set($keyword,$object,$time,$option);
@@ -58,7 +58,9 @@ abstract class BasePhpFastCache {
         if($object == null) {
             return null;
         }
-        return isset($option['all_keys']) && $option['all_keys'] ? $object : $object['value'];
+		
+		$value = isset( $object['value'] ) ? $object['value'] : null;
+		return isset( $option['all_keys'] ) && $option['all_keys'] ? $object : $value;
     }
 
 
@@ -112,7 +114,7 @@ abstract class BasePhpFastCache {
             return false;
         } else {
             $value = (Int)$object['value'] + (Int)$step;
-            $time = $object['expired_time'] - @date("U");
+            $time = $object['expired_time'] - time();
             $this->set($keyword,$value, $time, $option);
             return true;
         }
@@ -124,7 +126,7 @@ abstract class BasePhpFastCache {
             return false;
         } else {
             $value = (Int)$object['value'] - (Int)$step;
-            $time = $object['expired_time'] - @date("U");
+            $time = $object['expired_time'] - time();
             $this->set($keyword,$value, $time, $option);
             return true;
         }
@@ -138,7 +140,7 @@ abstract class BasePhpFastCache {
             return false;
         } else {
             $value = $object['value'];
-            $time = $object['expired_time'] - @date("U") + $time;
+            $time = $object['expired_time'] - time() + $time;
             $this->set($keyword, $value,$time, $option);
             return true;
         }
@@ -247,8 +249,7 @@ abstract class BasePhpFastCache {
     }
 
     public function __call($name, $args) {
-        $str = implode(",",$args);
-        eval('return $this->instant->$name('.$str.');');
+		return call_user_func_array( array( $this->instant, $name ), $args );
     }
 
 
@@ -270,7 +271,7 @@ abstract class BasePhpFastCache {
 
     protected function readfile($file) {
         if(function_exists("file_get_contents")) {
-            return file_get_contents($file);
+            return @file_get_contents($file);
         } else {
             $string = "";
 
@@ -326,7 +327,7 @@ abstract class BasePhpFastCache {
     protected function htaccessGen($path = "") {
         if($this->option("htaccess") == true) {
 
-            if(!file_exists($path."/.htaccess")) {
+            if(!@file_exists($path."/.htaccess")) {
                 //   echo "write me";
                 $html = "order deny, allow \r\n
 deny from all \r\n
@@ -406,7 +407,7 @@ allow from 127.0.0.1";
 
 
     protected function isExistingDriver($class) {
-        if(file_exists(dirname(__FILE__)."/drivers/".$class.".php")) {
+        if(@file_exists(dirname(__FILE__)."/drivers/".$class.".php")) {
             require_once(dirname(__FILE__)."/drivers/".$class.".php");
             if(class_exists("phpfastcache_".$class)) {
                 return true;

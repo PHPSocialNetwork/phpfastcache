@@ -31,10 +31,10 @@ class phpfastcache_xcache extends BasePhpFastCache implements phpfastcache_drive
 
         if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
             if(!$this->isExisting($keyword)) {
-                return xcache_set($keyword,$value,$time);
+                return xcache_set($keyword,serialize($value),$time);
             }
         } else {
-            return xcache_set($keyword,$value,$time);
+            return xcache_set($keyword,serialize($value),$time);
         }
         return false;
     }
@@ -42,7 +42,7 @@ class phpfastcache_xcache extends BasePhpFastCache implements phpfastcache_drive
     function driver_get($keyword, $option = array()) {
         // return null if no caching
         // return value if in caching
-        $data = xcache_get($keyword);
+        $data = unserialize(xcache_get($keyword));
         if($data === false || $data == "") {
             return null;
         }

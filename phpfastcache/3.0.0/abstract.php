@@ -274,11 +274,12 @@ abstract class BasePhpFastCache
     /**
      * @param array $list
      */
-    public function deleteMulti($list = array())
+    public function deleteMulti($list = array(), $option = array())
     {
-        foreach ($list as $array) {
-            $this->delete($array[ 0 ],
-              isset($array[ 1 ]) ? $array[ 1 ] : array());
+        foreach ($list as $item) {
+            if (is_array($item) && count($item) === 2) {
+                $this->delete($item[ 0 ], $item[ 1 ]);
+            }
         }
     }
 
@@ -419,6 +420,7 @@ abstract class BasePhpFastCache
         require_once(dirname(__FILE__) . "/../_extensions/" . $name);
     }
 
+
     /**
      * @param $file
      * @return string
@@ -427,7 +429,7 @@ abstract class BasePhpFastCache
     protected function readfile($file)
     {
         if (function_exists("file_get_contents")) {
-            return @file_get_contents($file);
+            return file_get_contents($file);
         } else {
             $string = "";
 
@@ -492,7 +494,7 @@ abstract class BasePhpFastCache
     {
         if ($this->option("htaccess") == true) {
 
-            if (!@file_exists($path . "/.htaccess")) {
+            if (!file_exists($path . "/.htaccess")) {
                 //   echo "write me";
                 $html = "order deny, allow \r\n
 deny from all \r\n
@@ -510,7 +512,6 @@ allow from 127.0.0.1";
                 //   echo "got me";
             }*/
         }
-
     }
 
     /**
@@ -574,13 +575,14 @@ allow from 127.0.0.1";
         return $this->option;
     }
 
+
     /**
-     * @param string $class
+     * @param $class
      * @return bool
      */
     protected function isExistingDriver($class)
     {
-        if (@file_exists(dirname(__FILE__) . "/drivers/" . $class . ".php")) {
+        if (file_exists(dirname(__FILE__) . "/drivers/" . $class . ".php")) {
             require_once(dirname(__FILE__) . "/drivers/" . $class . ".php");
             if (class_exists("phpfastcache_" . $class)) {
                 return true;

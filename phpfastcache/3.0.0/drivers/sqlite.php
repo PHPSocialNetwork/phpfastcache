@@ -85,10 +85,10 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
     {
 
         // delete everything before reset indexing
-        $dir = @opendir($this->path);
-        while ($file = @readdir($dir)) {
-            if ($file != "." && $file != ".." && $file != self::INDEXING_FILE && $file != "dbfastcache") {
-                @unlink($this->path . "/" . $file);
+        $dir = opendir($this->path);
+        while($file = readdir($dir)) {
+            if($file != "." && $file!=".." && $file != "indexing" && $file!="dbfastcache") {
+                unlink($this->path."/".$file);
             }
         }
 
@@ -109,7 +109,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
     {
         if ($this->indexing == null) {
             $createTable = false;
-            if (!@file_exists($this->path . "/" . self::INDEXING_FILE)) {
+            if(!file_exists($this->path."/indexing")) {
                 $createTable = true;
             }
 
@@ -136,8 +136,8 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
 
             // check file size
 
-            $size = @file_exists($this->path . "/db" . $db) ? @filesize($this->path . "/db" . $db) : 1;
-            $size = round($size / 1024 / 1024, 1);
+            $size = file_exists($this->path."/db".$db) ? filesize($this->path."/db".$db) : 1;
+            $size = round($size / 1024 / 1024,1);
 
 
             if ($size > $this->max_size) {
@@ -188,7 +188,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
         if (!isset($this->instant[ $instant ])) {
             // check DB Files ready or not
             $createTable = false;
-            if (!@file_exists($this->path . "/db" . $instant) || $reset == true) {
+            if(!file_exists($this->path."/db".$instant) || $reset == true) {
                 $createTable = true;
             }
             $PDO = new PDO("sqlite:" . $this->path . "/db" . $instant);
@@ -233,7 +233,7 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
       $time = 300,
       $option = array()
     ) {
-        $skipExisting = isset($option[ 'skipExisting' ]) ? $option[ 'skipExisting' ] : false;
+		$skipExisting = isset($option['skipExisting']) ? $option['skipExisting'] : false;
         $toWrite = true;
 
         // check in cache first
@@ -392,31 +392,33 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
         $total = 0;
         $optimized = 0;
 
-        $dir = @opendir($this->path);
-        while ($file = @readdir($dir)) {
-            if ($file != "." && $file != "..") {
-                $file_path = $this->path . "/" . $file;
-                $size = @filesize($file_path);
-                $total += $size;
-                if ($file != self::INDEXING_FILE) {
-                    try {
-                        $PDO = new PDO("sqlite:" . $file_path);
-                        $PDO->setAttribute(PDO::ATTR_ERRMODE,
-                          PDO::ERRMODE_EXCEPTION);
+        $dir = opendir($this->path);
+        while($file = readdir($dir)) {
+            if($file!="." && $file!="..") {
+                $file_path = $this->path."/".$file;
+                $size = filesize($file_path);
+                $total = $total + $size;
 
-                        $stm = $PDO->prepare("DELETE FROM `caching` WHERE `exp` <= :U");
-                        $stm->execute(array(
-                          ":U" => time(),
-                        ));
+	            try {
+		            $PDO = new PDO("sqlite:".$file_path);
+		            $PDO->setAttribute(PDO::ATTR_ERRMODE,
+			            PDO::ERRMODE_EXCEPTION);
 
-                        $PDO->exec("VACUUM;");
-                        $size = @filesize($file_path);
-                    } catch (PDOException $e) {
-                        $res[ 'data' ] .= sprintf("%s: %s\n", $file_path,
-                          $e->getMessage());
-                    }
-                }
-                $optimized += $size;
+		            $stm = $PDO->prepare("DELETE FROM `caching` WHERE `exp` <= :U");
+		            $stm->execute(array(
+			            ":U"    =>  date("U"),
+		            ));
+
+		            $PDO->exec("VACUUM;");
+		            $size = filesize($file_path);
+		            $optimized = $optimized + $size;
+	            } catch (PDOException $e) {
+		            $size = 0;
+		            $optimized = 0;
+	            }
+
+
+
             }
         }
         $res[ 'size' ] = $optimized;
@@ -436,13 +438,13 @@ class phpfastcache_sqlite extends BasePhpFastCache implements phpfastcache_drive
 
         // close connection
         $this->instant = array();
-        $this->indexing = null;
-
-        // delete everything
-        $dir = @opendir($this->path);
-        while ($file = @readdir($dir)) {
-            if ($file != "." && $file != "..") {
-                @unlink($this->path . "/" . $file);
+        $this->indexing = NULL;
+    
+        // delete everything before reset indexing
+        $dir = opendir($this->path);
+        while($file = readdir($dir)) {
+            if($file != "." && $file!="..") {
+                unlink($this->path."/".$file);
             }
         }
     }

@@ -128,7 +128,7 @@ class phpFastCache
      * @param string $storage
      * @param array $config
      */
-    function __construct($storage = "", $config = array())
+    public function __construct($storage = "", $config = array())
     {
         if (empty($config)) {
             $config = phpFastCache::$config;
@@ -333,7 +333,8 @@ class phpFastCache
                       92);
                 }
             }
-            if (!@file_exists($path . "/.htaccess")) {
+
+            if(!file_exists($path."/.htaccess")) {
                 //   echo "write me";
                 $html = "order deny, allow \r\n
 deny from all \r\n

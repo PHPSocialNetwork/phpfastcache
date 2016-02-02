@@ -157,14 +157,14 @@ abstract class BasePhpFastCache
      * todo: search
      * @param $query
      * @return mixed
-     * @throws \Exception
+     * @throws \phpfastcacheCoreException
      */
     public function search($query)
     {
         if (method_exists($this, "driver_search")) {
             return $this->driver_search($query);
         }
-        throw new Exception('Search method is not supported by this driver.');
+        throw new phpfastcacheCoreException('Search method is not supported by this driver.');
     }
 
     /**
@@ -376,7 +376,7 @@ abstract class BasePhpFastCache
      * @param $name
      * @param $v
      * @return bool|null
-     * @throws \Exception
+     * @throws \phpfastcacheCoreException
      */
     public function __set($name, $v)
     {
@@ -384,7 +384,7 @@ abstract class BasePhpFastCache
             return $this->set($name, $v[ 0 ], $v[ 1 ],
               isset($v[ 2 ]) ? $v[ 2 ] : array());
         } else {
-            throw new Exception("Example ->$name = array('VALUE', 300);", 98);
+            throw new phpfastcacheCoreException("Example ->$name = array('VALUE', 300);", 98);
         }
     }
 
@@ -424,7 +424,7 @@ abstract class BasePhpFastCache
     /**
      * @param $file
      * @return string
-     * @throws \Exception
+     * @throws \phpfastcacheCoreException
      */
     protected function readfile($file)
     {
@@ -435,7 +435,7 @@ abstract class BasePhpFastCache
 
             $file_handle = @fopen($file, "r");
             if (!$file_handle) {
-                throw new Exception("Can't Read File", 96);
+                throw new phpfastcacheCoreException("Can't Read File", 96);
 
             }
             while (!feof($file_handle)) {
@@ -488,7 +488,7 @@ abstract class BasePhpFastCache
     /**
      * Auto Create .htaccess to protect cache folder
      * @param string $path
-     * @throws \Exception
+     * @throws \phpfastcacheCoreException
      */
     protected function htaccessGen($path = "")
     {
@@ -502,7 +502,7 @@ allow from 127.0.0.1";
 
                 $f = @fopen($path . "/.htaccess", "w+");
                 if (!$f) {
-                    throw new Exception("Can't create .htaccess", 97);
+                    throw new phpfastcacheCoreException("Can't create .htaccess", 97);
                 }
                 fwrite($f, $html);
                 fclose($f);
@@ -526,7 +526,7 @@ allow from 127.0.0.1";
     /**
      * return System Information
      * @return mixed
-     * @throws \Exception
+     * @throws \phpfastcacheCoreException
      */
     public function systemInfo()
     {
@@ -536,7 +536,7 @@ allow from 127.0.0.1";
             $this->option[ 'system' ][ 'drivers' ] = array();
             $dir = @opendir(dirname(__FILE__) . "/drivers/");
             if (!$dir) {
-                throw new Exception("Can't open file dir ext", 100);
+                throw new phpfastcacheCoreException("Can't open file dir ext", 100);
             }
 
             while ($file = @readdir($dir)) {

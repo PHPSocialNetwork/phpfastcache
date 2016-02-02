@@ -1,53 +1,67 @@
 <?php
 
-/*
- * khoaofgod@gmail.com
- * Website: http://www.phpfastcache.com
+/**
+ * Interface phpfastcache_driver
+ * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * Example at our website, any bugs, problems, please visit http://faster.phpfastcache.com
  */
-
-
-interface phpfastcache_driver {
-    /*
+interface phpfastcache_driver
+{
+    /**
      * Check if this Cache driver is available for server or not
+     * phpfastcache_driver constructor.
+     * @param array $config
      */
-     function __construct($config = array());
+    public function __construct($config = array());
 
-     function checkdriver();
-
-    /*
-     * SET
-     * set a obj to cache
+    /**
+     * @return mixed
      */
-     function driver_set($keyword, $value = "", $time = 300, $option = array() );
+    public function checkdriver();
 
-    /*
-     * GET
-     * return null or value of cache
+    /**
+     * Set a obj to cache
+     * @param $keyword
+     * @param string $value
+     * @param int $time
+     * @param array $option
+     * @return mixed
      */
-     function driver_get($keyword, $option = array());
+    public function driver_set(
+      $keyword,
+      $value = "",
+      $time = 300,
+      $option = array()
+    );
 
-    /*
-     * Stats
+    /**
+     * Return null or value of cache
+     * @param $keyword
+     * @param array $option
+     * @return mixed
+     */
+    public function driver_get($keyword, $option = array());
+
+    /**
      * Show stats of caching
-     * Return array ("info","size","data")
+     * Return array("info","size","data")
+     * @param array $option
+     * @return mixed
      */
-     function driver_stats($option = array());
+    public function driver_stats($option = array());
 
-    /*
-     * Delete
+    /**
      * Delete a cache
+     * @param $keyword
+     * @param array $option
+     * @return mixed
      */
-     function driver_delete($keyword, $option = array());
+    public function driver_delete($keyword, $option = array());
 
-    /*
-     * clean
+    /**
      * Clean up whole cache
+     * @param array $option
+     * @return mixed
      */
-     function driver_clean($option = array());
-
-
-
-
-
+    public function driver_clean($option = array());
 }

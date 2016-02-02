@@ -1,8 +1,9 @@
 <?php
 
-/*
+/**
  * Welcome to Learn Lesson
  * This is very Simple PHP Code of Caching
+ * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  */
 
 // Require Library
@@ -15,15 +16,15 @@ $cache = phpFastCache();
 // product_page is "identity keyword";
 $products = $cache->get("product_page");
 
-if($products == null) {
-	$products = "DB QUERIES | FUNCTION_GET_PRODUCTS | ARRAY | STRING | OBJECTS";
-	// Write products to Cache in 10 minutes with same keyword
-	$cache->set("product_page",$products , 600);
+if ($products == null) {
+    $products = "DB QUERIES | FUNCTION_GET_PRODUCTS | ARRAY | STRING | OBJECTS";
+    // Write products to Cache in 10 minutes with same keyword
+    $cache->set("product_page", $products, 600);
 
-	echo " --> NO CACHE ---> DB | Func | API RUN FIRST TIME ---> ";
+    echo " --> NO CACHE ---> DB | Func | API RUN FIRST TIME ---> ";
 
 } else {
-	echo " --> USE CACHE --> SERV 10,000+ Visitors FROM CACHE ---> ";
+    echo " --> USE CACHE --> SERV 10,000+ Visitors FROM CACHE ---> ";
 }
 
 // use your products here or return it;

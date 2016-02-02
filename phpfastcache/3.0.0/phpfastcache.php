@@ -7,6 +7,8 @@
 
 require_once(dirname(__FILE__) . "/abstract.php");
 require_once(dirname(__FILE__) . "/driver.php");
+require_once(dirname(__FILE__) . "/exceptions/phpfastcacheCoreException.php");
+require_once(dirname(__FILE__) . "/exceptions/phpfastcacheDriverException.php");
 
 /**
  * Short function
@@ -203,8 +205,7 @@ class phpFastCache
                 $tmp_dir = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
                 $path = $tmp_dir;
             } else {
-                $path = isset($_SERVER[ 'DOCUMENT_ROOT' ]) ? rtrim($_SERVER[ 'DOCUMENT_ROOT' ],
-                    "/") . "/../" : rtrim(dirname(__FILE__), "/") . "/";
+                $path = isset($_SERVER[ 'DOCUMENT_ROOT' ]) ? rtrim($_SERVER[ 'DOCUMENT_ROOT' ], "/") . "/../" : rtrim(dirname(__FILE__), "/") . "/";
             }
 
             if (self::$config[ 'path' ] != "") {
@@ -244,8 +245,7 @@ class phpFastCache
                     @chmod($full_path, self::__setChmodAuto($config));
                 }
                 if (!@file_exists($full_path) || !@is_writable($full_path)) {
-                    throw new Exception("PLEASE CREATE OR CHMOD " . $full_path . " - 0777 OR ANY WRITABLE PERMISSION!",
-                      92);
+                    throw new phpfastcacheCoreException("PLEASE CREATE OR CHMOD " . $full_path . " - 0777 OR ANY WRITABLE PERMISSION!", 92);
                 }
             }
 
@@ -325,16 +325,13 @@ class phpFastCache
     {
 
         if ($create == true) {
-            if (!is_writeable($path)) {
-                try {
-                    chmod($path, 0777);
-                } catch (Exception $e) {
-                    throw new Exception("PLEASE CHMOD " . $path . " - 0777 OR ANY WRITABLE PERMISSION!",
-                      92);
+            if (!is_writable($path)) {
+                if (!chmod($path, 0777)) {
+                    throw new phpfastcacheCoreException("PLEASE CHMOD " . $path . " - 0777 OR ANY WRITABLE PERMISSION!", 92);
                 }
             }
 
-            if(!file_exists($path."/.htaccess")) {
+            if (!file_exists($path . "/.htaccess")) {
                 //   echo "write me";
                 $html = "order deny, allow \r\n
 deny from all \r\n
@@ -342,13 +339,10 @@ allow from 127.0.0.1";
 
                 $f = @fopen($path . "/.htaccess", "w+");
                 if (!$f) {
-                    throw new Exception("PLEASE CHMOD " . $path . " - 0777 OR ANY WRITABLE PERMISSION!",
-                      92);
+                    throw new phpfastcacheCoreException("PLEASE CHMOD " . $path . " - 0777 OR ANY WRITABLE PERMISSION!", 92);
                 }
                 fwrite($f, $html);
                 fclose($f);
-
-
             }
         }
 

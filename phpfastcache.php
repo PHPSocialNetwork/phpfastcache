@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__) . "/phpfastcache/3.0.0/phpfastcache.php");
 
 // OK, setup your cache
-phpFastCache::$config = array(
+phpfastcache::$config = array(
     "storage"   =>  "auto", // auto, files, sqlite, apc, cookie, memcache, memcached, predis, redis, wincache, xcache
     "default_chmod" => 0777, // For security, please use 0666 for module and 0644 for cgi.
 
@@ -49,7 +49,7 @@ phpFastCache::$config = array(
 
 
 // temporary disabled phpFastCache
-phpFastCache::$disabled = false;
+phpfastcache::$disabled = false;
 
 
 

@@ -14,9 +14,14 @@
             }
         ],
     "require": {
-        "php": ">=5.1.0"
+        "php": ">=5.3.0"
     },
     "autoload": {
-        "files": ["phpfastcache.php"]
+        "psr-0": {
+            "Phpfastcache": "src/"
+        },
+        "files": [
+            "src/Phpfastcache/legacy/aliases.php"
+        ]
     }
 }

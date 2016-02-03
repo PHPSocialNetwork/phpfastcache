@@ -18,7 +18,7 @@ class phpfastcache_files extends BasePhpFastCache implements phpfastcache_driver
         $this->getPath(); // force create path
 
         if (!$this->checkdriver() && !isset($config[ 'skipError' ])) {
-            throw new Exception("Can't use this driver for your website!");
+            throw new phpfastcacheDriverException("Can't use this driver for your website!");
         }
 
     }
@@ -78,7 +78,7 @@ class phpfastcache_files extends BasePhpFastCache implements phpfastcache_driver
         if($skip == false) {
             if(!file_exists($path)) {
                 if(!mkdir($path,$this->__setChmodAuto())) {
-                    throw new Exception("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!",92);
+                    throw new phpfastcacheDriverException("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!",92);
                 }
             }
         }
@@ -192,7 +192,7 @@ class phpfastcache_files extends BasePhpFastCache implements phpfastcache_driver
         $path = $this->getPath();
         $dir = @opendir($path);
         if (!$dir) {
-            throw new Exception("Can't read PATH:" . $path, 94);
+            throw new phpfastcacheDriverException("Can't read PATH:" . $path, 94);
         }
 
         $total = 0;
@@ -202,7 +202,7 @@ class phpfastcache_files extends BasePhpFastCache implements phpfastcache_driver
                 // read sub dir
                 $subdir = opendir($path."/".$file);
                 if(!$subdir) {
-                    throw new Exception("Can't read path:".$path."/".$file,93);
+                    throw new phpfastcacheDriverException("Can't read path:".$path."/".$file,93);
                 }
 
                 while($f = readdir($subdir)) {
@@ -264,7 +264,7 @@ class phpfastcache_files extends BasePhpFastCache implements phpfastcache_driver
         $path = $this->getPath();
         $dir = @opendir($path);
         if (!$dir) {
-            throw new Exception("Can't read PATH:" . $path, 94);
+            throw new phpfastcacheDriverException("Can't read PATH:" . $path, 94);
         }
 
         while($file=readdir($dir)) {
@@ -272,7 +272,7 @@ class phpfastcache_files extends BasePhpFastCache implements phpfastcache_driver
                 // read sub dir
                 $subdir = @opendir($path . "/" . $file);
                 if (!$subdir) {
-                    throw new Exception("Can't read path:" . $path . "/" . $file,
+                    throw new phpfastcacheDriverException("Can't read path:" . $path . "/" . $file,
                       93);
                 }
 

@@ -183,12 +183,12 @@ class sqlite extends DriverAbstract implements DriverInterface
      */
     public function db($keyword, $reset = false)
     {
-        /*
+        /**
          * Default is fastcache
          */
         $instant = $this->indexing($keyword);
 
-        /*
+        /**
          * init instant
          */
         if (!isset($this->instant[ $instant ])) {
@@ -276,14 +276,9 @@ class sqlite extends DriverAbstract implements DriverInterface
                 } catch (PDOException $e) {
                     return false;
                 }
-
             }
-
-
         }
-
         return false;
-
     }
 
     /**

@@ -384,7 +384,7 @@ abstract class DriverAbstract
      */
     public function __set($name, $v)
     {
-        if (isset($v[ 1 ]) && is_numeric($v[ 1 ])) {
+        if (isset($v[ 1 ]) && is_scalar($v[ 1 ])) {
             return $this->set($name, $v[ 0 ], $v[ 1 ],
               isset($v[ 2 ]) ? $v[ 2 ] : array());
         } else {

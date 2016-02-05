@@ -1,0 +1,12 @@
+language: php
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+  - nightly
+  # - hhvm We may need to do review this check later
+
+script:
+  - php -f .travis/checkSyntax.php

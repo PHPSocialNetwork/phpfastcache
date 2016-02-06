@@ -39,7 +39,7 @@ abstract class DriverAbstract
      * @param array $option
      * @return bool|null
      */
-    public function set($keyword, $value = "", $time = 0, $option = array())
+    public function set($keyword, $value = '', $time = 0, $option = array())
     {
         /**
          * Infinity Time
@@ -50,7 +50,8 @@ abstract class DriverAbstract
             // just recommended for sqlite. files
             $time = 3600 * 24 * 365 * 5;
         }
-        /*
+
+        /**
          * Temporary disabled phpFastCache::$disabled = true
          * Khoa. B
          */
@@ -75,7 +76,7 @@ abstract class DriverAbstract
      */
     public function get($keyword, $option = array())
     {
-        /*
+       /**
        * Temporary disabled phpFastCache::$disabled = true
        * Khoa. B
        */
@@ -143,7 +144,7 @@ abstract class DriverAbstract
      */
     public function isExisting($keyword)
     {
-        if (method_exists($this, "driver_isExisting")) {
+        if (method_exists($this, 'driver_isExisting')) {
             return $this->driver_isExisting($keyword);
         }
 
@@ -165,7 +166,7 @@ abstract class DriverAbstract
      */
     public function search($query)
     {
-        if (method_exists($this, "driver_search")) {
+        if (method_exists($this, 'driver_search')) {
             return $this->driver_search($query);
         }
         throw new PhpfastcacheDriverException('Search method is not supported by this driver.');
@@ -350,7 +351,7 @@ abstract class DriverAbstract
      * @param $config_name
      * @param string $value
      */
-    public function setup($config_name, $value = "")
+    public function setup($config_name, $value = '')
     {
         /*
          * Config for class
@@ -421,7 +422,7 @@ abstract class DriverAbstract
      */
     protected function required_extension($name)
     {
-        require_once(dirname(__FILE__) . "/../_extensions/" . $name);
+        require_once(dirname(__FILE__) . '/../_extensions/' . $name);
     }
 
 
@@ -432,12 +433,12 @@ abstract class DriverAbstract
      */
     protected function readfile($file)
     {
-        if (function_exists("file_get_contents")) {
+        if (function_exists('file_get_contents')) {
             return file_get_contents($file);
         } else {
-            $string = "";
+            $string = '';
 
-            $file_handle = @fopen($file, "r");
+            $file_handle = @fopen($file, 'r');
             if (!$file_handle) {
                 throw new PhpfastcacheDriverException("Can't Read File", 96);
 
@@ -494,17 +495,17 @@ abstract class DriverAbstract
      * @param string $path
      * @throws \Exception
      */
-    protected function htaccessGen($path = "")
+    protected function htaccessGen($path = '')
     {
-        if ($this->option("htaccess") == true) {
+        if ($this->option('htaccess') == true) {
 
-            if (!file_exists($path . "/.htaccess")) {
+            if (!file_exists($path . '/.htaccess')) {
                 //   echo "write me";
                 $html = "order deny, allow \r\n
 deny from all \r\n
 allow from 127.0.0.1";
 
-                $f = @fopen($path . "/.htaccess", "w+");
+                $f = @fopen($path . '/.htaccess', 'w+');
                 if (!$f) {
                     throw new PhpfastcacheDriverException("Can't create .htaccess", 97);
                 }
@@ -535,21 +536,21 @@ allow from 127.0.0.1";
     public function systemInfo()
     {
         $backup_option = $this->option;
-        if (count($this->option("system")) == 0) {
-            $this->option[ 'system' ][ 'driver' ] = "files";
+        if (count($this->option('system')) == 0) {
+            $this->option[ 'system' ][ 'driver' ] = 'files';
             $this->option[ 'system' ][ 'drivers' ] = array();
-            $dir = @opendir(dirname(__FILE__) . "/drivers/");
+            $dir = @opendir(dirname(__FILE__) . '/drivers/');
             if (!$dir) {
                 throw new PhpfastcacheDriverException("Can't open file dir ext", 100);
             }
 
             while ($file = @readdir($dir)) {
-                if ($file != "." && $file != ".." && strpos($file,
+                if ($file != '.' && $file != '..' && strpos($file,
                     ".php") !== false
                 ) {
                     require_once(dirname(__FILE__) . "/drivers/" . $file);
-                    $namex = str_replace(".php", "", $file);
-                    $class = "phpfastcache_" . $namex;
+                    $namex = str_replace('.php', '', $file);
+                    $class = 'phpfastcache_' . $namex;
                     $this->option[ 'skipError' ] = true;
                     $driver = new $class($this->option);
                     $driver->option = $this->option;
@@ -562,19 +563,16 @@ allow from 127.0.0.1";
                 }
             }
 
-
-            /*
+            /**
              * PDO is highest priority with SQLite
              */
             if ($this->option[ 'system' ][ 'drivers' ][ 'sqlite' ] == true) {
-                $this->option[ 'system' ][ 'driver' ] = "sqlite";
+                $this->option[ 'system' ][ 'driver' ] = 'sqlite';
             }
-
-
         }
 
         $example = new example($this->config);
-        $this->option("path", $example->getPath(true));
+        $this->option('path', $example->getPath(true));
         $this->option = $backup_option;
         return $this->option;
     }
@@ -586,8 +584,8 @@ allow from 127.0.0.1";
      */
     protected function isExistingDriver($class)
     {
-        if (file_exists(dirname(__FILE__) . "/drivers/" . $class . ".php")) {
-            require_once(dirname(__FILE__) . "/drivers/" . $class . ".php");
+        if (file_exists(dirname(__FILE__) . '/drivers/' . $class . '.php')) {
+            require_once(dirname(__FILE__) . '/drivers/' . $class . '.php');
             if (class_exists("phpfastcache_" . $class)) {
                 return true;
             }

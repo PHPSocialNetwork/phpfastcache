@@ -36,8 +36,8 @@ class ssdb extends DriverAbstract implements DriverInterface
     public function checkdriver()
     {
         // Check memcache
-        $this->required_extension("SSDB.php");
-        if (class_exists("SimpleSSDB")) {
+        $this->required_extension('SSDB.php');
+        if (class_exists('SimpleSSDB')) {
             return true;
         }
         $this->fallback = true;
@@ -52,16 +52,16 @@ class ssdb extends DriverAbstract implements DriverInterface
     {
 
         $server = isset($this->config[ 'ssdb' ]) ? $this->config[ 'ssdb' ] : array(
-          "host" => "127.0.0.1",
-          "port" => 8888,
-          "password" => "",
-          "timeout" => 2000,
+          'host' => "127.0.0.1",
+          'port' => 8888,
+          'password' => '',
+          'timeout' => 2000,
         );
 
         if ($this->checked_ssdb === false) {
             $host = $server[ 'host' ];
             $port = isset($server[ 'port' ]) ? (Int)$server[ 'port' ] : 8888;
-            $password = isset($server[ 'password' ]) ? $server[ 'password' ] : "";
+            $password = isset($server[ 'password' ]) ? $server[ 'password' ] : '';
             $timeout = isset($server[ 'timeout' ]) ? (Int)$server[ 'timeout' ] : 2000;
             $this->instant = new SimpleSSDB($host, $port, $timeout);
             if (!empty($password)) {
@@ -86,7 +86,7 @@ class ssdb extends DriverAbstract implements DriverInterface
      * @param array $option
      * @return bool
      */
-    public function driver_set($keyword, $value = "", $time = 300, $option = array())
+    public function driver_set($keyword, $value = '', $time = 300, $option = array())
     {
         if ($this->connectServer()) {
             if (isset($option[ 'skipExisting' ]) && $option[ 'skipExisting' ] == true) {
@@ -144,9 +144,9 @@ class ssdb extends DriverAbstract implements DriverInterface
     {
         if ($this->connectServer()) {
             $res = array(
-              "info" => "",
-              "size" => $this->instant->dbsize(),
-              "data" => $this->instant->info(),
+              'info' => '',
+              'size' => $this->instant->dbsize(),
+              'data' => $this->instant->info(),
             );
 
             return $res;

@@ -26,7 +26,7 @@ class redis extends DriverAbstract implements DriverInterface
         if (!$this->checkdriver() && !isset($config[ 'skipError' ])) {
             $this->fallback = true;
         }
-        if (class_exists("Redis")) {
+        if (class_exists('Redis')) {
             $this->instant = new Redis();
         }
 
@@ -38,7 +38,7 @@ class redis extends DriverAbstract implements DriverInterface
     public function checkdriver()
     {
         // Check memcache
-        if (class_exists("Redis")) {
+        if (class_exists('Redis')) {
             return true;
         }
         $this->fallback = true;
@@ -53,11 +53,11 @@ class redis extends DriverAbstract implements DriverInterface
     {
 
         $server = isset($this->config[ 'redis' ]) ? $this->config[ 'redis' ] : array(
-          "host" => "127.0.0.1",
-          "port" => "6379",
-          "password" => "",
-          "database" => "",
-          "timeout" => "1",
+          'host' => '127.0.0.1',
+          'port' => '6379',
+          'password' => '',
+          'database' => '',
+          'timeout' => '1',
         );
 
         if ($this->checked_redis === false) {
@@ -65,27 +65,27 @@ class redis extends DriverAbstract implements DriverInterface
             $host = $server[ 'host' ];
 
             $port = isset($server[ 'port' ]) ? (Int)$server[ 'port' ] : "";
-            if ($port != "") {
+            if ($port != '') {
                 $c[ 'port' ] = $port;
             }
 
-            $password = isset($server[ 'password' ]) ? $server[ 'password' ] : "";
-            if ($password != "") {
+            $password = isset($server[ 'password' ]) ? $server[ 'password' ] : '';
+            if ($password != '') {
                 $c[ 'password' ] = $password;
             }
 
-            $database = isset($server[ 'database' ]) ? $server[ 'database' ] : "";
-            if ($database != "") {
+            $database = isset($server[ 'database' ]) ? $server[ 'database' ] : '';
+            if ($database != '') {
                 $c[ 'database' ] = $database;
             }
 
-            $timeout = isset($server[ 'timeout' ]) ? $server[ 'timeout' ] : "";
-            if ($timeout != "") {
+            $timeout = isset($server[ 'timeout' ]) ? $server[ 'timeout' ] : '';
+            if ($timeout != '') {
                 $c[ 'timeout' ] = $timeout;
             }
 
-            $read_write_timeout = isset($server[ 'read_write_timeout' ]) ? $server[ 'read_write_timeout' ] : "";
-            if ($read_write_timeout != "") {
+            $read_write_timeout = isset($server[ 'read_write_timeout' ]) ? $server[ 'read_write_timeout' ] : '';
+            if ($read_write_timeout != '') {
                 $c[ 'read_write_timeout' ] = $read_write_timeout;
             }
 
@@ -95,7 +95,7 @@ class redis extends DriverAbstract implements DriverInterface
                 $this->fallback = true;
                 return false;
             } else {
-                if ($database != "") {
+                if ($database != '') {
                     $this->instant->select((Int)$database);
                 }
                 $this->checked_redis = true;
@@ -113,7 +113,7 @@ class redis extends DriverAbstract implements DriverInterface
      * @param array $option
      * @return bool
      */
-    public function driver_set($keyword, $value = "", $time = 300, $option = array())
+    public function driver_set($keyword, $value = '', $time = 300, $option = array())
     {
         if ($this->connectServer()) {
             $value = $this->encode($value);
@@ -157,11 +157,9 @@ class redis extends DriverAbstract implements DriverInterface
      */
     public function driver_delete($keyword, $option = array())
     {
-
         if ($this->connectServer()) {
             $this->instant->delete($keyword);
         }
-
     }
 
     /**
@@ -172,16 +170,14 @@ class redis extends DriverAbstract implements DriverInterface
     {
         if ($this->connectServer()) {
             $res = array(
-              "info" => "",
-              "size" => "",
-              "data" => $this->instant->info(),
+              'info' => '',
+              'size' => '',
+              'data' => $this->instant->info(),
             );
 
             return $res;
         }
-
         return array();
-
     }
 
     /**
@@ -211,6 +207,5 @@ class redis extends DriverAbstract implements DriverInterface
         } else {
             return $this->backup()->isExisting($keyword);
         }
-
     }
 }

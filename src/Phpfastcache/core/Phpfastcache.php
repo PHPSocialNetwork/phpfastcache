@@ -1,6 +1,9 @@
 <?php
 namespace Phpfastcache\core;
 
+use Phpfastcache\exceptions\PhpfastcacheCoreException;
+use Phpfastcache\exceptions\PhpfastcacheDriverException;
+
 /**
  * Class phpFastCache
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
@@ -30,36 +33,36 @@ class Phpfastcache
      * @var array
      */
     public static $config = array(
-      "storage" => "", // blank for auto
-      "default_chmod" => 0777, // 0777 , 0666, 0644
+      'storage' => '', // blank for auto
+      'default_chmod' => 0777, // 0777 , 0666, 0644
 
-      "fallback" => "files", //Fall back when old driver is not support
+      'fallback' => 'files', //Fall back when old driver is not support
 
-      "securityKey" => "auto",
-      "htaccess" => true,
-      "path" => "",
+      'securityKey' => 'auto',
+      'htaccess' => true,
+      'path' => '',
 
-      "memcache" => array(
-        array("127.0.0.1", 11211, 1),
+      'memcache' => array(
+        array('127.0.0.1', 11211, 1),
           //  array("new.host.ip",11211,1),
       ),
 
-      "redis" => array(
-        "host" => "127.0.0.1",
-        "port" => "",
-        "password" => "",
-        "database" => "",
-        "timeout" => "",
+      'redis' => array(
+        'host' => '127.0.0.1',
+        'port' => '',
+        'password' => '',
+        'database' => '',
+        'timeout' => '',
       ),
 
-      "ssdb" => array(
-        "host" => "127.0.0.1",
-        "port" => 8888,
-        "password" => "",
-        "timeout" => "",
+      'ssdb' => array(
+        'host' => '127.0.0.1',
+        'port' => 8888,
+        'password' => '',
+        'timeout' => '',
       ),
 
-      "extensions" => array(),
+      'extensions' => array(),
     );
 
     /**
@@ -77,7 +80,7 @@ class Phpfastcache
      * @param string $storage
      * @param array $config
      */
-    public function __construct($storage = "", $config = array())
+    public function __construct($storage = '', $config = array())
     {
         if (empty($config)) {
             $config = Phpfastcache::$config;
@@ -85,7 +88,7 @@ class Phpfastcache
         $config[ 'storage' ] = $storage;
 
         $storage = strtolower($storage);
-        if ($storage == "" || $storage == "auto") {
+        if ($storage == '' || $storage == 'auto') {
             $storage = self::getAutoClass($config);
         }
 
@@ -115,21 +118,21 @@ class Phpfastcache
     {
         $path = self::getPath(false, $config);
         if (is_writable($path)) {
-            $driver = "files";
-        } else if (extension_loaded('apc') && ini_get('apc.enabled') && strpos(PHP_SAPI, "CGI") === false) {
-            $driver = "apc";
-        } else if (class_exists("memcached")) {
-            $driver = "memcached";
-        } elseif (extension_loaded('wincache') && function_exists("wincache_ucache_set")) {
-            $driver = "wincache";
-        } elseif (extension_loaded('xcache') && function_exists("xcache_get")) {
-            $driver = "xcache";
-        } else if (function_exists("memcache_connect")) {
-            $driver = "memcache";
-        } else if (class_exists("Redis")) {
-            $driver = "redis";
+            $driver = 'files';
+        } else if (extension_loaded('apc') && ini_get('apc.enabled') && strpos(PHP_SAPI, 'CGI') === false) {
+            $driver = 'apc';
+        } else if (class_exists('memcached')) {
+            $driver = 'memcached';
+        } elseif (extension_loaded('wincache') && function_exists('wincache_ucache_set')) {
+            $driver = 'wincache';
+        } elseif (extension_loaded('xcache') && function_exists('xcache_get')) {
+            $driver = 'xcache';
+        } else if (function_exists('memcache_connect')) {
+            $driver = 'memcache';
+        } else if (class_exists('Redis')) {
+            $driver = 'redis';
         } else {
-            $driver = "files";
+            $driver = 'files';
         }
 
         return $driver;
@@ -145,15 +148,14 @@ class Phpfastcache
     {
         if (!isset($config[ 'path' ]) || $config[ 'path' ] == '') {
 
-            // revision 618
             if (self::isPHPModule()) {
                 $tmp_dir = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
                 $path = $tmp_dir;
             } else {
-                $path = isset($_SERVER[ 'DOCUMENT_ROOT' ]) ? rtrim($_SERVER[ 'DOCUMENT_ROOT' ], "/") . "/../" : rtrim(dirname(__FILE__), "/") . "/";
+                $path = isset($_SERVER[ 'DOCUMENT_ROOT' ]) ? rtrim($_SERVER[ 'DOCUMENT_ROOT' ], '/') . '/../' : rtrim(dirname(__FILE__), '/') . '/';
             }
 
-            if (self::$config[ 'path' ] != "") {
+            if (self::$config[ 'path' ] != '') {
                 $path = $config[ 'path' ];
             }
 
@@ -162,21 +164,21 @@ class Phpfastcache
         }
 
         $securityKey = array_key_exists('securityKey',
-          $config) ? $config[ 'securityKey' ] : "";
-        if ($securityKey == "" || $securityKey == "auto") {
+          $config) ? $config[ 'securityKey' ] : '';
+        if ($securityKey == "" || $securityKey == 'auto') {
             $securityKey = self::$config[ 'securityKey' ];
-            if ($securityKey == "auto" || $securityKey == "") {
+            if ($securityKey == 'auto' || $securityKey == '') {
                 $securityKey = isset($_SERVER[ 'HTTP_HOST' ]) ? preg_replace('/^www./',
                   '', strtolower($_SERVER[ 'HTTP_HOST' ])) : "default";
             }
         }
-        if ($securityKey != "") {
-            $securityKey .= "/";
+        if ($securityKey != '') {
+            $securityKey .= '/';
         }
 
         $securityKey = self::cleanFileName($securityKey);
 
-        $full_path = $path . "/" . $securityKey;
+        $full_path = $path . '/' . $securityKey;
         $full_pathx = md5($full_path);
 
 
@@ -190,15 +192,12 @@ class Phpfastcache
                     @chmod($full_path, self::__setChmodAuto($config));
                 }
                 if (!@file_exists($full_path) || !@is_writable($full_path)) {
-                    throw new Exception("PLEASE CREATE OR CHMOD " . $full_path . " - 0777 OR ANY WRITABLE PERMISSION!",
-                      92);
+                    throw new PhpfastcacheCoreException('PLEASE CREATE OR CHMOD ' . $full_path . ' - 0777 OR ANY WRITABLE PERMISSION!', 92);
                 }
             }
 
-
             self::$tmp[ $full_pathx ] = true;
-            self::htaccessGen($full_path, array_key_exists('htaccess',
-              $config) ? $config[ 'htaccess' ] : false);
+            self::htaccessGen($full_path, array_key_exists('htaccess', $config) ? $config[ 'htaccess' ] : false);
         }
 
         return realpath($full_path);
@@ -226,7 +225,7 @@ class Phpfastcache
      */
     public static function __setChmodAuto($config)
     {
-        if (!isset($config[ 'default_chmod' ]) || $config[ 'default_chmod' ] == "" || is_null($config[ 'default_chmod' ])) {
+        if (!isset($config[ 'default_chmod' ]) || $config[ 'default_chmod' ] == '' || is_null($config[ 'default_chmod' ])) {
             return 0777;
         } else {
             return $config[ 'default_chmod' ];
@@ -239,10 +238,10 @@ class Phpfastcache
     protected static function getOS()
     {
         $os = array(
-          "os" => PHP_OS,
-          "php" => PHP_SAPI,
-          "system" => php_uname(),
-          "unique" => md5(php_uname() . PHP_OS . PHP_SAPI),
+          'os' => PHP_OS,
+          'php' => PHP_SAPI,
+          'system' => php_uname(),
+          'unique' => md5(php_uname() . PHP_OS . PHP_SAPI),
         );
         return $os;
     }
@@ -252,10 +251,10 @@ class Phpfastcache
      */
     public static function isPHPModule()
     {
-        if (PHP_SAPI === "apache2handler") {
+        if (PHP_SAPI === 'apache2handler') {
             return true;
         } else {
-            if (strpos(PHP_SAPI, "handler") !== false) {
+            if (strpos(PHP_SAPI, 'handler') !== false) {
                 return true;
             }
         }
@@ -271,11 +270,11 @@ class Phpfastcache
     {
 
         if ($create == true) {
-            if (!is_writeable($path)) {
+            if (!is_writable($path)) {
                 try {
                     chmod($path, 0777);
-                } catch (Exception $e) {
-                    throw new Exception("PLEASE CHMOD " . $path . " - 0777 OR ANY WRITABLE PERMISSION!",
+                } catch (PhpfastcacheDriverException $e) {
+                    throw new PhpfastcacheDriverException('PLEASE CHMOD ' . $path . ' - 0777 OR ANY WRITABLE PERMISSION!',
                       92);
                 }
             }
@@ -286,10 +285,9 @@ class Phpfastcache
 deny from all \r\n
 allow from 127.0.0.1";
 
-                $f = @fopen($path . "/.htaccess", "w+");
+                $f = @fopen($path . '/.htaccess', 'w+');
                 if (!$f) {
-                    throw new Exception("PLEASE CHMOD " . $path . " - 0777 OR ANY WRITABLE PERMISSION!",
-                      92);
+                    throw new PhpfastcacheDriverException('PLEASE CHMOD ' . $path . ' - 0777 OR ANY WRITABLE PERMISSION!', 92);
                 }
                 fwrite($f, $html);
                 fclose($f);
@@ -304,7 +302,7 @@ allow from 127.0.0.1";
      * @param $name
      * @param string $value
      */
-    public static function setup($name, $value = "")
+    public static function setup($name, $value = '')
     {
         if (is_array($name)) {
             self::$config = $name;
@@ -320,9 +318,9 @@ allow from 127.0.0.1";
     {
         echo "Starting Debugging ...<br>\r\n ";
         if (is_array($something)) {
-            echo "<pre>";
+            echo '<pre>';
             print_r($something);
-            echo "</pre>";
+            echo '</pre>';
             var_dump($something);
         } else {
             echo $something;

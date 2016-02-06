@@ -20,7 +20,7 @@ class cookie extends DriverAbstract implements DriverInterface
         if (!$this->checkdriver() && !isset($config[ 'skipError' ])) {
             $this->fallback = true;
         }
-        if (class_exists("Redis")) {
+        if (class_exists('Redis')) {
             $this->instant = new Redis();
         }
 
@@ -32,7 +32,7 @@ class cookie extends DriverAbstract implements DriverInterface
     public function checkdriver()
     {
         // Check memcache
-        if (function_exists("setcookie")) {
+        if (function_exists('setcookie')) {
             return true;
         }
         $this->fallback = true;
@@ -46,7 +46,7 @@ class cookie extends DriverAbstract implements DriverInterface
     {
         // for cookie check output
         if (!isset($_COOKIE[ 'phpfastcache' ])) {
-            if (!@setcookie("phpfastcache", 1, 10)) {
+            if (!@setcookie('phpfastcache', 1, 10)) {
                 $this->fallback = true;
             }
         }
@@ -60,11 +60,11 @@ class cookie extends DriverAbstract implements DriverInterface
      * @param array $option
      * @return bool
      */
-    public function driver_set($keyword, $value = "", $time = 300, $option = array())
+    public function driver_set($keyword, $value = '', $time = 300, $option = array())
     {
         $this->connectServer();
-        $keyword = "phpfastcache_" . $keyword;
-        return @setcookie($keyword, $this->encode($value), $time, "/");
+        $keyword = 'phpfastcache_' . $keyword;
+        return @setcookie($keyword, $this->encode($value), $time, '/');
 
     }
 
@@ -78,7 +78,7 @@ class cookie extends DriverAbstract implements DriverInterface
         $this->connectServer();
         // return null if no caching
         // return value if in caching
-        $keyword = "phpfastcache_" . $keyword;
+        $keyword = 'phpfastcache_' . $keyword;
         $x = isset($_COOKIE[ $keyword ]) ? $this->decode($_COOKIE[ 'keyword' ]) : false;
         if ($x == false) {
             return null;
@@ -94,7 +94,7 @@ class cookie extends DriverAbstract implements DriverInterface
     public function driver_delete($keyword, $option = array())
     {
         $this->connectServer();
-        $keyword = "phpfastcache_" . $keyword;
+        $keyword = 'phpfastcache_' . $keyword;
         @setcookie($keyword, null, -10);
         $_COOKIE[ $keyword ] = null;
     }
@@ -107,9 +107,9 @@ class cookie extends DriverAbstract implements DriverInterface
     {
         $this->connectServer();
         $res = array(
-          "info" => "",
-          "size" => "",
-          "data" => $_COOKIE,
+          'info' => '',
+          'size' => '',
+          'data' => $_COOKIE,
         );
 
         return $res;
@@ -122,7 +122,7 @@ class cookie extends DriverAbstract implements DriverInterface
     {
         $this->connectServer();
         foreach ($_COOKIE as $keyword => $value) {
-            if (strpos($keyword, "phpfastcache") !== false) {
+            if (strpos($keyword, 'phpfastcache') !== false) {
                 @setcookie($keyword, null, -10);
                 $_COOKIE[ $keyword ] = null;
             }

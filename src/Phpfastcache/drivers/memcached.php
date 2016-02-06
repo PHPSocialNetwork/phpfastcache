@@ -27,7 +27,7 @@ class memcached extends DriverAbstract implements DriverInterface
         if (!$this->checkdriver() && !isset($config[ 'skipError' ])) {
             $this->fallback = true;
         }
-        if (class_exists("Memcached")) {
+        if (class_exists('Memcached')) {
             $this->instant = new Memcached();
         } else {
             $this->fallback = true;
@@ -40,7 +40,7 @@ class memcached extends DriverAbstract implements DriverInterface
      */
     public function checkdriver()
     {
-        if (class_exists("Memcached")) {
+        if (class_exists('Memcached')) {
             return true;
         }
         $this->fallback = true;
@@ -61,15 +61,15 @@ class memcached extends DriverAbstract implements DriverInterface
         $s = $this->config[ 'memcache' ];
         if (count($s) < 1) {
             $s = array(
-              array("127.0.0.1", 11211, 100),
+              array('127.0.0.1', 11211, 100),
             );
         }
 
         foreach ($s as $server) {
-            $name = isset($server[ 0 ]) ? $server[ 0 ] : "127.0.0.1";
+            $name = isset($server[ 0 ]) ? $server[ 0 ] : '127.0.0.1';
             $port = isset($server[ 1 ]) ? $server[ 1 ] : 11211;
             $sharing = isset($server[ 2 ]) ? $server[ 2 ] : 0;
-            $checked = $name . "_" . $port;
+            $checked = $name . '_' . $port;
             if (!isset($this->checked[ $checked ])) {
                 try {
                     if ($sharing > 0) {
@@ -100,7 +100,7 @@ class memcached extends DriverAbstract implements DriverInterface
      * @param array $option
      * @return bool
      */
-    public function driver_set($keyword, $value = "", $time = 300, $option = array())
+    public function driver_set($keyword, $value = '', $time = 300, $option = array())
     {
         $this->connectServer();
 
@@ -154,9 +154,9 @@ class memcached extends DriverAbstract implements DriverInterface
     {
         $this->connectServer();
         $res = array(
-          "info" => "",
-          "size" => "",
-          "data" => $this->instant->getStats(),
+          'info' => '',
+          'size' => '',
+          'data' => $this->instant->getStats(),
         );
 
         return $res;

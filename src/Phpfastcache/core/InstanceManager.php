@@ -15,18 +15,18 @@ class InstanceManager
      * @param array $config
      * @return DriverAbstract
      */
-    public static function getInstance($storage = "auto", $config = array())
+    public static function getInstance($storage = 'auto', $config = array())
     {
         $storage = strtolower($storage);
         if (empty($config)) {
             $config = Phpfastcache::$config;
         }
 
-        if ($storage == "" || $storage == "auto") {
+        if ($storage == '' || $storage == 'auto') {
             $storage = Phpfastcache::getAutoClass($config);
         }
 
-        $instance = md5(json_encode($config) . $storage);
+        $instance = md5(serialize($config) . $storage);
         if (!isset(self::$instances[ $instance ])) {
             $class = '\Phpfastcache\drivers\\' . $storage;
             self::$instances[ $instance ] = new $class($config);

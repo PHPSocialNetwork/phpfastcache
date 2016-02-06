@@ -46,7 +46,7 @@ class apc extends DriverAbstract implements DriverInterface
      */
     public function driver_set(
       $keyword,
-      $value = "",
+      $value = '',
       $time = 300,
       $option = array()
     ) {
@@ -92,14 +92,14 @@ class apc extends DriverAbstract implements DriverInterface
     public function driver_stats($option = array())
     {
         $res = array(
-          "info" => "",
-          "size" => "",
-          "data" => "",
+          'info' => '',
+          'size' => '',
+          'data' => '',
         );
 
         try {
-            $res[ 'data' ] = apc_cache_info("user");
-        } catch (Exception $e) {
+            $res[ 'data' ] = apc_cache_info('user');
+        } catch (\Exception $e) {
             $res[ 'data' ] = array();
         }
 
@@ -112,7 +112,7 @@ class apc extends DriverAbstract implements DriverInterface
     public function driver_clean($option = array())
     {
         @apc_clear_cache();
-        @apc_clear_cache("user");
+        @apc_clear_cache('user');
     }
 
     /**

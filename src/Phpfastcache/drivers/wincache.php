@@ -29,7 +29,7 @@ class wincache extends DriverAbstract implements DriverInterface
      */
     public function checkdriver()
     {
-        if (extension_loaded('wincache') && function_exists("wincache_ucache_set")) {
+        if (extension_loaded('wincache') && function_exists('wincache_ucache_set')) {
             return true;
         }
         $this->fallback = true;
@@ -89,9 +89,9 @@ class wincache extends DriverAbstract implements DriverInterface
     public function driver_stats($option = array())
     {
         $res = array(
-          "info" => "",
-          "size" => "",
-          "data" => wincache_scache_info(),
+          'info' => '',
+          'size' => '',
+          'data' => wincache_scache_info(),
         );
         return $res;
     }

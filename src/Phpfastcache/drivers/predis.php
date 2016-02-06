@@ -53,40 +53,40 @@ class predis extends DriverAbstract implements DriverInterface
     {
 
         $server = isset($this->config[ 'redis' ]) ? $this->config[ 'redis' ] : array(
-          "host" => "127.0.0.1",
-          "port" => "6379",
-          "password" => "",
-          "database" => "",
+          'host' => '127.0.0.1',
+          'port' => '6379',
+          'password' => '',
+          'database' => '',
         );
 
 
         if ($this->checked_redis === false) {
             $c = array(
-              "host" => $server[ 'host' ],
+              'host' => $server[ 'host' ],
             );
 
-            $port = isset($server[ 'port' ]) ? $server[ 'port' ] : "";
-            if ($port != "") {
+            $port = isset($server[ 'port' ]) ? $server[ 'port' ] : '';
+            if ($port != '') {
                 $c[ 'port' ] = $port;
             }
 
-            $password = isset($server[ 'password' ]) ? $server[ 'password' ] : "";
-            if ($password != "") {
+            $password = isset($server[ 'password' ]) ? $server[ 'password' ] : '';
+            if ($password != '') {
                 $c[ 'password' ] = $password;
             }
 
-            $database = isset($server[ 'database' ]) ? $server[ 'database' ] : "";
-            if ($database != "") {
+            $database = isset($server[ 'database' ]) ? $server[ 'database' ] : '';
+            if ($database != '') {
                 $c[ 'database' ] = $database;
             }
 
-            $timeout = isset($server[ 'timeout' ]) ? $server[ 'timeout' ] : "";
-            if ($timeout != "") {
+            $timeout = isset($server[ 'timeout' ]) ? $server[ 'timeout' ] : '';
+            if ($timeout != '') {
                 $c[ 'timeout' ] = $timeout;
             }
 
-            $read_write_timeout = isset($server[ 'read_write_timeout' ]) ? $server[ 'read_write_timeout' ] : "";
-            if ($read_write_timeout != "") {
+            $read_write_timeout = isset($server[ 'read_write_timeout' ]) ? $server[ 'read_write_timeout' ] : '';
+            if ($read_write_timeout != '') {
                 $c[ 'read_write_timeout' ] = $read_write_timeout;
             }
 
@@ -112,7 +112,7 @@ class predis extends DriverAbstract implements DriverInterface
      * @param array $option
      * @return mixed
      */
-    public function driver_set($keyword, $value = "", $time = 300, $option = array())
+    public function driver_set($keyword, $value = '', $time = 300, $option = array())
     {
         if ($this->connectServer()) {
             $value = $this->encode($value);
@@ -146,7 +146,6 @@ class predis extends DriverAbstract implements DriverInterface
         } else {
             $this->backup()->get($keyword, $option);
         }
-
     }
 
     /**
@@ -170,9 +169,9 @@ class predis extends DriverAbstract implements DriverInterface
     {
         if ($this->connectServer()) {
             $res = array(
-              "info" => "",
-              "size" => "",
-              "data" => $this->instant->info(),
+              'info' => '',
+              'size' => '',
+              'data' => $this->instant->info(),
             );
 
             return $res;

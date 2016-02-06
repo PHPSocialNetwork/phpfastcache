@@ -47,7 +47,7 @@ class example extends DriverAbstract implements DriverInterface
      * @param int $time
      * @param array $option
      */
-    public function driver_set($keyword, $value = "", $time = 300, $option = array())
+    public function driver_set($keyword, $value = '', $time = 300, $option = array())
     {
         if (isset($option[ 'skipExisting' ]) && $option[ 'skipExisting' ] == true) {
             // skip driver
@@ -86,9 +86,9 @@ class example extends DriverAbstract implements DriverInterface
     public function driver_stats($option = array())
     {
         $res = array(
-          "info" => "",
-          "size" => "",
-          "data" => "",
+          'info' => '',
+          'size' => '',
+          'data' => '',
         );
 
         return $res;

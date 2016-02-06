@@ -70,5 +70,5 @@ interface DriverInterface
      * @param $config_name
      * @param string $value
      */
-    public function setup($config_name, $value = "");
+    public function setup($config_name, $value = '');
 }

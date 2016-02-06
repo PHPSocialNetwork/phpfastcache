@@ -31,7 +31,7 @@ class xcache extends DriverAbstract implements DriverInterface
     public function checkdriver()
     {
         // Check xcache
-        if (extension_loaded('xcache') && function_exists("xcache_get")) {
+        if (extension_loaded('xcache') && function_exists('xcache_get')) {
             return true;
         }
         $this->fallback = true;
@@ -69,7 +69,7 @@ class xcache extends DriverAbstract implements DriverInterface
         // return null if no caching
         // return value if in caching
         $data = unserialize(xcache_get($keyword));
-        if ($data === false || $data == "") {
+        if ($data === false || $data == '') {
             return null;
         }
         return $data;
@@ -92,9 +92,9 @@ class xcache extends DriverAbstract implements DriverInterface
     public function driver_stats($option = array())
     {
         $res = array(
-          "info" => "",
-          "size" => "",
-          "data" => "",
+          'info' => '',
+          'size' => '',
+          'data' => '',
         );
 
         try {

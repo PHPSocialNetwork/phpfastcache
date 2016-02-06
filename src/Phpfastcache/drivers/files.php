@@ -1,5 +1,6 @@
 <?php
 namespace Phpfastcache\drivers;
+
 use Phpfastcache\core\DriverAbstract;
 use Phpfastcache\core\DriverInterface;
 use Phpfastcache\exceptions\PhpfastcacheDriverException;
@@ -25,7 +26,6 @@ class files extends DriverAbstract implements DriverInterface
         if (!$this->checkdriver() && !isset($config[ 'skipError' ])) {
             throw new PhpfastcacheDriverException("Can't use this driver for your website!");
         }
-
     }
 
     /**
@@ -47,7 +47,7 @@ class files extends DriverAbstract implements DriverInterface
      */
     private function encodeFilename($keyword)
     {
-        return trim(trim(preg_replace("/[^a-zA-Z0-9]+/", "_", $keyword), "_"));
+        return trim(trim(preg_replace('/[^a-zA-Z0-9]+/', '_', $keyword), '_'));
         // return rtrim(base64_encode($keyword), '=');
     }
 
@@ -76,19 +76,19 @@ class files extends DriverAbstract implements DriverInterface
 
         $filename = $this->encodeFilename($keyword);
         $folder = substr($filename, 0, 2);
-        $path = rtrim($path, "/") . "/" . $folder;
+        $path = rtrim($path, '/') . '/' . $folder;
         /**
          * Skip Create Sub Folders;
          */
-        if($skip == false) {
-            if(!file_exists($path)) {
-                if(!mkdir($path,$this->__setChmodAuto())) {
-                    throw new PhpfastcacheDriverException("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!",92);
+        if ($skip == false) {
+            if (!file_exists($path)) {
+                if (!mkdir($path, $this->__setChmodAuto())) {
+                    throw new PhpfastcacheDriverException('PLEASE CHMOD ' . $this->getPath() . ' - 0777 OR ANY WRITABLE PERMISSION!', 92);
                 }
             }
         }
 
-        return $path . "/" . $filename . ".txt";
+        return $path . '/' . $filename . '.txt';
     }
 
     /**
@@ -99,10 +99,10 @@ class files extends DriverAbstract implements DriverInterface
      * @return bool
      * @throws \Exception
      */
-    public function driver_set($keyword, $value = "", $time = 300, $option = array())
+    public function driver_set($keyword, $value = '', $time = 300, $option = array())
     {
         $file_path = $this->getFilePath($keyword);
-        $tmp_path = $file_path . ".tmp";
+        $tmp_path = $file_path . '.tmp';
         //  echo "<br>DEBUG SET: ".$keyword." - ".$value." - ".$time."<br>";
         $data = $this->encode($value);
 
@@ -110,7 +110,7 @@ class files extends DriverAbstract implements DriverInterface
         /*
          * Skip if Existing Caching in Options
          */
-        if(isset($option['skipExisting']) && $option['skipExisting'] == true && file_exists($file_path)) {
+        if (isset($option[ 'skipExisting' ]) && $option[ 'skipExisting' ] == true && file_exists($file_path)) {
             $content = $this->readfile($file_path);
             $old = $this->decode($content);
             $toWrite = false;
@@ -125,16 +125,13 @@ class files extends DriverAbstract implements DriverInterface
          * because first-to-lock wins and the file will exist before the writer attempts
          * to write.
          */
-        if($toWrite == true && !file_exists($tmp_path) && !file_exists($file_path)) {
+        if ($toWrite == true && !file_exists($tmp_path) && !file_exists($file_path)) {
 
-            if(($f = fopen($file_path, "w+")) !== false)
-            {
+            if (($f = fopen($file_path, 'w+')) !== false) {
                 fwrite($f, $data);
                 fclose($f);
                 $written = true;
-            }
-            else
-            {
+            } else {
                 $written = false;
             }
         }
@@ -151,7 +148,7 @@ class files extends DriverAbstract implements DriverInterface
     {
 
         $file_path = $this->getFilePath($keyword);
-        if(!file_exists($file_path)) {
+        if (!file_exists($file_path)) {
             return null;
         }
 
@@ -191,9 +188,9 @@ class files extends DriverAbstract implements DriverInterface
     public function driver_stats($option = array())
     {
         $res = array(
-          "info" => "",
-          "size" => "",
-          "data" => "",
+          'info' => '',
+          'size' => '',
+          'data' => '',
         );
 
         $path = $this->getPath();
@@ -204,30 +201,30 @@ class files extends DriverAbstract implements DriverInterface
 
         $total = 0;
         $removed = 0;
-        while($file=readdir($dir)) {
-            if($file!="." && $file!=".." && is_dir($path."/".$file)) {
+        while ($file = readdir($dir)) {
+            if ($file != '.' && $file != '..' && is_dir($path . '/' . $file)) {
                 // read sub dir
-                $subdir = opendir($path."/".$file);
-                if(!$subdir) {
-                    throw new PhpfastcacheDriverException("Can't read path:".$path."/".$file,93);
+                $subdir = opendir($path . "/" . $file);
+                if (!$subdir) {
+                    throw new PhpfastcacheDriverException("Can't read path:" . $path . '/' . $file, 93);
                 }
 
-                while($f = readdir($subdir)) {
-                    if($f!="." && $f!="..") {
-                        $file_path = $path."/".$file."/".$f;
+                while ($f = readdir($subdir)) {
+                    if ($f != '.' && $f != '..') {
+                        $file_path = $path . '/' . $file . '/' . $f;
                         $size = filesize($file_path);
                         $object = $this->decode($this->readfile($file_path));
 
-                        if (strpos($f, ".") === false) {
+                        if (strpos($f, '.') === false) {
                             $key = $f;
                         } else {
                             //Because PHP 5.3, this cannot be written in single line
-                            $key = explode(".", $f);
+                            $key = explode('.', $f);
                             $key = $key[ 0 ];
                         }
                         $content[ $key ] = array(
-                          "size" => $size,
-                          "write_time" => $object[ "write_time" ],
+                          'size' => $size,
+                          'write_time' => $object[ 'write_time' ],
                         );
                         if ($this->isExpired($object)) {
                             @unlink($file_path);
@@ -241,9 +238,9 @@ class files extends DriverAbstract implements DriverInterface
 
         $res[ 'size' ] = $total - $removed;
         $res[ 'info' ] = array(
-          "Total [bytes]" => $total,
-          "Expired and removed [bytes]" => $removed,
-          "Current [bytes]" => $res[ 'size' ],
+          'Total [bytes]' => $total,
+          'Expired and removed [bytes]' => $removed,
+          'Current [bytes]' => $res[ 'size' ],
         );
         $res[ "data" ] = $content;
         return $res;
@@ -254,9 +251,9 @@ class files extends DriverAbstract implements DriverInterface
      */
     public function auto_clean_expired()
     {
-        $autoclean = $this->get("keyword_clean_up_driver_files");
+        $autoclean = $this->get('keyword_clean_up_driver_files');
         if ($autoclean == null) {
-            $this->set("keyword_clean_up_driver_files", 3600 * 24);
+            $this->set('keyword_clean_up_driver_files', 3600 * 24);
             $res = $this->stats();
         }
     }
@@ -274,18 +271,17 @@ class files extends DriverAbstract implements DriverInterface
             throw new PhpfastcacheDriverException("Can't read PATH:" . $path, 94);
         }
 
-        while($file=readdir($dir)) {
-            if($file!="." && $file!=".." && is_dir($path."/".$file)) {
+        while ($file = readdir($dir)) {
+            if ($file != '.' && $file != '..' && is_dir($path . '/' . $file)) {
                 // read sub dir
-                $subdir = @opendir($path . "/" . $file);
+                $subdir = @opendir($path . '/' . $file);
                 if (!$subdir) {
-                    throw new PhpfastcacheDriverException("Can't read path:" . $path . "/" . $file,
-                      93);
+                    throw new PhpfastcacheDriverException("Can't read path:" . $path . '/' . $file, 93);
                 }
 
-                while($f = readdir($subdir)) {
-                    if($f!="." && $f!="..") {
-                        $file_path = $path."/".$file."/".$f;
+                while ($f = readdir($subdir)) {
+                    if ($f != '.' && $f != '..') {
+                        $file_path = $path . '/' . $file . '/' . $f;
                         @unlink($file_path);
                     }
                 } // end read subdir
@@ -299,9 +295,10 @@ class files extends DriverAbstract implements DriverInterface
      * @return bool
      * @throws \Exception
      */
-    public function driver_isExisting($keyword) {
-        $file_path = $this->getFilePath($keyword,true);
-        if(!file_exists($file_path)) {
+    public function driver_isExisting($keyword)
+    {
+        $file_path = $this->getFilePath($keyword, true);
+        if (!file_exists($file_path)) {
             return false;
         } else {
             // check expired or not

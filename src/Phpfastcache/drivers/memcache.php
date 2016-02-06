@@ -26,7 +26,7 @@ class memcache extends DriverAbstract implements DriverInterface
         if (!$this->checkdriver() && !isset($config[ 'skipError' ])) {
             $this->fallback = true;
         }
-        if (class_exists("Memcache")) {
+        if (class_exists('Memcache')) {
             $this->instant = new Memcache();
         } else {
             $this->fallback = true;
@@ -40,7 +40,7 @@ class memcache extends DriverAbstract implements DriverInterface
     public function checkdriver()
     {
         // Check memcache
-        if (function_exists("memcache_connect")) {
+        if (function_exists('memcache_connect')) {
             return true;
         }
         $this->fallback = true;
@@ -55,7 +55,7 @@ class memcache extends DriverAbstract implements DriverInterface
         $server = $this->config[ 'memcache' ];
         if (count($server) < 1) {
             $server = array(
-              array("127.0.0.1", 11211),
+              array('127.0.0.1', 11211),
             );
         }
 
@@ -87,7 +87,7 @@ class memcache extends DriverAbstract implements DriverInterface
      */
     public function driver_set(
       $keyword,
-      $value = "",
+      $value = '',
       $time = 300,
       $option = array()
     ) {
@@ -148,9 +148,9 @@ class memcache extends DriverAbstract implements DriverInterface
     {
         $this->connectServer();
         $res = array(
-          "info" => "",
-          "size" => "",
-          "data" => $this->instant->getStats(),
+          'info' => '',
+          'size' => '',
+          'data' => $this->instant->getStats(),
         );
 
         return $res;

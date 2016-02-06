@@ -38,7 +38,7 @@ class sqlite extends DriverAbstract implements DriverInterface
     /**
      * @var string
      */
-    public $path = "";
+    public $path = '';
 
     /**
      * @var int
@@ -60,14 +60,14 @@ class sqlite extends DriverAbstract implements DriverInterface
             $this->fallback = true;
         }
 
-        if (!file_exists($this->getPath() . "/" . self::SQLITE_DIR)) {
-            if (!mkdir($this->getPath() . "/" . self::SQLITE_DIR,
+        if (!file_exists($this->getPath() . '/' . self::SQLITE_DIR)) {
+            if (!mkdir($this->getPath() . '/' . self::SQLITE_DIR,
               $this->__setChmodAuto())
             ) {
                 $this->fallback = true;
             }
         }
-        $this->path = $this->getPath() . "/" . self::SQLITE_DIR;
+        $this->path = $this->getPath() . '/' . self::SQLITE_DIR;
     }
 
     /**
@@ -93,8 +93,8 @@ class sqlite extends DriverAbstract implements DriverInterface
         // delete everything before reset indexing
         $dir = opendir($this->path);
         while ($file = readdir($dir)) {
-            if ($file != "." && $file != ".." && $file != "indexing" && $file != "dbfastcache") {
-                unlink($this->path . "/" . $file);
+            if ($file != '.' && $file != '..' && $file != 'indexing' && $file != 'dbfastcache') {
+                unlink($this->path . '/' . $file);
             }
         }
 
@@ -115,11 +115,11 @@ class sqlite extends DriverAbstract implements DriverInterface
     {
         if ($this->indexing == null) {
             $createTable = false;
-            if (!file_exists($this->path . "/indexing")) {
+            if (!file_exists($this->path . '/indexing')) {
                 $createTable = true;
             }
 
-            $PDO = new PDO("sqlite:" . $this->path . "/" . self::INDEXING_FILE);
+            $PDO = new PDO("sqlite:" . $this->path . '/' . self::INDEXING_FILE);
             $PDO->setAttribute(PDO::ATTR_ERRMODE,
               PDO::ERRMODE_EXCEPTION);
 
@@ -142,7 +142,7 @@ class sqlite extends DriverAbstract implements DriverInterface
 
             // check file size
 
-            $size = file_exists($this->path . "/db" . $db) ? filesize($this->path . "/db" . $db) : 1;
+            $size = file_exists($this->path . '/db' . $db) ? filesize($this->path . '/db' . $db) : 1;
             $size = round($size / 1024 / 1024, 1);
 
 
@@ -156,10 +156,10 @@ class sqlite extends DriverAbstract implements DriverInterface
         // look for keyword
         $stm = $this->indexing->prepare("SELECT * FROM `balancing` WHERE `keyword`=:keyword LIMIT 1");
         $stm->execute(array(
-          ":keyword" => $keyword,
+          ':keyword' => $keyword,
         ));
         $row = $stm->fetch(PDO::FETCH_ASSOC);
-        if (isset($row[ 'db' ]) && $row[ 'db' ] != "") {
+        if (isset($row[ 'db' ]) && $row[ 'db' ] != '') {
             $db = $row[ 'db' ];
         } else {
             /*
@@ -168,8 +168,8 @@ class sqlite extends DriverAbstract implements DriverInterface
             $db = $this->currentDB;
             $stm = $this->indexing->prepare("INSERT INTO `balancing` (`keyword`,`db`) VALUES(:keyword, :db)");
             $stm->execute(array(
-              ":keyword" => $keyword,
-              ":db" => $db,
+              ':keyword' => $keyword,
+              ':db' => $db,
             ));
         }
 
@@ -194,10 +194,10 @@ class sqlite extends DriverAbstract implements DriverInterface
         if (!isset($this->instant[ $instant ])) {
             // check DB Files ready or not
             $createTable = false;
-            if (!file_exists($this->path . "/db" . $instant) || $reset == true) {
+            if (!file_exists($this->path . '/db' . $instant) || $reset == true) {
                 $createTable = true;
             }
-            $PDO = new PDO("sqlite:" . $this->path . "/db" . $instant);
+            $PDO = new PDO('sqlite:' . $this->path . '/db' . $instant);
             $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             if ($createTable == true) {
@@ -234,7 +234,7 @@ class sqlite extends DriverAbstract implements DriverInterface
      */
     public function driver_set(
       $keyword,
-      $value = "",
+      $value = '',
       $time = 300,
       $option = array()
     ) {
@@ -257,9 +257,9 @@ class sqlite extends DriverAbstract implements DriverInterface
                 $stm = $this->db($keyword)
                   ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
                 $stm->execute(array(
-                  ":keyword" => $keyword,
-                  ":object" => $this->encode($value),
-                  ":exp" => time() + (Int)$time,
+                  ':keyword' => $keyword,
+                  ':object' => $this->encode($value),
+                  ':exp' => time() + (int) $time,
                 ));
 
                 return true;
@@ -269,9 +269,9 @@ class sqlite extends DriverAbstract implements DriverInterface
                     $stm = $this->db($keyword, true)
                       ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
                     $stm->execute(array(
-                      ":keyword" => $keyword,
-                      ":object" => $this->encode($value),
-                      ":exp" => time() + (Int)$time,
+                      ':keyword' => $keyword,
+                      ':object' => $this->encode($value),
+                      ':exp' => time() + (Int)$time,
                     ));
                 } catch (PDOException $e) {
                     return false;
@@ -294,7 +294,7 @@ class sqlite extends DriverAbstract implements DriverInterface
             $stm = $this->db($keyword)
               ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
             $stm->execute(array(
-              ":keyword" => $keyword,
+              ':keyword' => $keyword,
             ));
             $row = $stm->fetch(PDO::FETCH_ASSOC);
 
@@ -303,7 +303,7 @@ class sqlite extends DriverAbstract implements DriverInterface
                 $stm = $this->db($keyword, true)
                   ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
                 $stm->execute(array(
-                  ":keyword" => $keyword,
+                  ':keyword' => $keyword,
                 ));
                 $row = $stm->fetch(PDO::FETCH_ASSOC);
             } catch (PDOException $e) {
@@ -348,8 +348,8 @@ class sqlite extends DriverAbstract implements DriverInterface
             $stm = $this->db($row[ 'keyword' ])
               ->prepare("DELETE FROM `caching` WHERE (`id`=:id) OR (`exp` <= :U) ");
             $stm->execute(array(
-              ":id" => $row[ 'id' ],
-              ":U" => time(),
+              ':id' => $row[ 'id' ],
+              ':U' => time(),
             ));
         } catch (PDOException $e) {
             return false;
@@ -367,14 +367,12 @@ class sqlite extends DriverAbstract implements DriverInterface
             $stm = $this->db($keyword)
               ->prepare("DELETE FROM `caching` WHERE (`keyword`=:keyword) OR (`exp` <= :U)");
             $stm->execute(array(
-              ":keyword" => $keyword,
-              ":U" => time(),
+              ':keyword' => $keyword,
+              ':U' => time(),
             ));
         } catch (PDOException $e) {
             return false;
         }
-
-
     }
 
     /**
@@ -385,16 +383,16 @@ class sqlite extends DriverAbstract implements DriverInterface
     public function driver_stats($option = array())
     {
         $res = array(
-          "info" => "",
-          "size" => "",
-          "data" => "",
+          'info' => '',
+          'size' => '',
+          'data' => '',
         );
         $total = 0;
         $optimized = 0;
 
         $dir = opendir($this->path);
         while ($file = readdir($dir)) {
-            if ($file != "." && $file != "..") {
+            if ($file != '.' && $file != '..') {
                 $file_path = $this->path . "/" . $file;
                 $size = filesize($file_path);
                 $total = $total + $size;
@@ -406,10 +404,10 @@ class sqlite extends DriverAbstract implements DriverInterface
 
                     $stm = $PDO->prepare("DELETE FROM `caching` WHERE `exp` <= :U");
                     $stm->execute(array(
-                      ":U" => date("U"),
+                      ':U' => date('U'),
                     ));
 
-                    $PDO->exec("VACUUM;");
+                    $PDO->exec('VACUUM;');
                     $size = filesize($file_path);
                     $optimized = $optimized + $size;
                 } catch (PDOException $e) {
@@ -422,8 +420,8 @@ class sqlite extends DriverAbstract implements DriverInterface
         }
         $res[ 'size' ] = $optimized;
         $res[ 'info' ] = array(
-          "total before removing expired entries [bytes]" => $total,
-          "optimized after removing expired entries [bytes]" => $optimized,
+          'total before removing expired entries [bytes]' => $total,
+          'optimized after removing expired entries [bytes]' => $optimized,
         );
 
         return $res;
@@ -442,8 +440,8 @@ class sqlite extends DriverAbstract implements DriverInterface
         // delete everything before reset indexing
         $dir = opendir($this->path);
         while ($file = readdir($dir)) {
-            if ($file != "." && $file != "..") {
-                unlink($this->path . "/" . $file);
+            if ($file != '.' && $file != '..') {
+                unlink($this->path . '/' . $file);
             }
         }
     }
@@ -458,7 +456,7 @@ class sqlite extends DriverAbstract implements DriverInterface
             $stm = $this->db($keyword)
               ->prepare("SELECT COUNT(`id`) as `total` FROM `caching` WHERE `keyword`=:keyword");
             $stm->execute(array(
-              ":keyword" => $keyword,
+              ':keyword' => $keyword,
             ));
             $data = $stm->fetch(PDO::FETCH_ASSOC);
             if ($data[ 'total' ] >= 1) {

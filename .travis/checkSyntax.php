@@ -6,7 +6,7 @@
  */
 function read_dir($dir, $ext = null)
 {
-    $list = [];
+    $list = array();
     $dir .= '/';
     if (($res = opendir($dir)) === false) {
         exit(1);

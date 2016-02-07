@@ -2,7 +2,6 @@
 namespace Phpfastcache\drivers;
 
 use Phpfastcache\core\DriverAbstract;
-use Phpfastcache\core\DriverInterface;
 use Phpfastcache\exceptions\PhpfastcacheDriverException;
 
 /**
@@ -10,7 +9,7 @@ use Phpfastcache\exceptions\PhpfastcacheDriverException;
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * Example at our website, any bugs, problems, please visit http://faster.phpfastcache.com
  */
-class files extends DriverAbstract implements DriverInterface
+class files extends DriverAbstract
 {
     /**
      * Init Cache Path

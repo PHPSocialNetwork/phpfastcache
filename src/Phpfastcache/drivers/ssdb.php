@@ -2,7 +2,6 @@
 namespace Phpfastcache\drivers;
 
 use Phpfastcache\core\DriverAbstract;
-use Phpfastcache\core\DriverInterface;
 
 /**
  * Class phpfastcache_ssdb
@@ -13,7 +12,7 @@ use Phpfastcache\core\DriverInterface;
  * http://ssdb.io/
  * Ssdb May requires manuel Daemon run: sudo ./ssdb-server -d ssdb.conf
  */
-class ssdb extends DriverAbstract implements DriverInterface
+class ssdb extends DriverAbstract
 {
 
     /**

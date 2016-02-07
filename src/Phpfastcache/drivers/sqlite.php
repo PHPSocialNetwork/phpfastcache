@@ -2,7 +2,6 @@
 namespace Phpfastcache\drivers;
 
 use Phpfastcache\core\DriverAbstract;
-use Phpfastcache\core\DriverInterface;
 use PDO;
 use PDOException;
 use Phpfastcache\exceptions\PhpfastcacheDriverException;
@@ -12,7 +11,7 @@ use Phpfastcache\exceptions\PhpfastcacheDriverException;
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * Example at our website, any bugs, problems, please visit http://faster.phpfastcache.com
  */
-class sqlite extends DriverAbstract implements DriverInterface
+class sqlite extends DriverAbstract
 {
     /**
      *

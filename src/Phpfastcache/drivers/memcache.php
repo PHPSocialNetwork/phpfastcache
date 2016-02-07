@@ -1,7 +1,6 @@
 <?php
 namespace Phpfastcache\drivers;
 use Phpfastcache\core\DriverAbstract;
-use Phpfastcache\core\DriverInterface;
 use Memcache as MemcacheSoftware;
 
 /**
@@ -9,7 +8,7 @@ use Memcache as MemcacheSoftware;
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * Example at our website, any bugs, problems, please visit http://faster.phpfastcache.com
  */
-class memcache extends DriverAbstract implements DriverInterface
+class memcache extends DriverAbstract
 {
 
     /**

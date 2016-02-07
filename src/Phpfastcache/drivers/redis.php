@@ -1,7 +1,6 @@
 <?php
 namespace Phpfastcache\drivers;
 use Phpfastcache\core\DriverAbstract;
-use Phpfastcache\core\DriverInterface;
 use Redis as RedisSoftware;
 
 /**
@@ -9,7 +8,7 @@ use Redis as RedisSoftware;
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * Example at our website, any bugs, problems, please visit http://faster.phpfastcache.com
  */
-class redis extends DriverAbstract implements DriverInterface
+class redis extends DriverAbstract
 {
 
     /**

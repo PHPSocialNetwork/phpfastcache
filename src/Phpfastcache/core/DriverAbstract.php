@@ -8,7 +8,7 @@ use Phpfastcache\exceptions\PhpfastcacheDriverException;
  * Class BasePhpFastCache
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  */
-abstract class DriverAbstract
+abstract class DriverAbstract implements DriverInterface
 {
 
     /**

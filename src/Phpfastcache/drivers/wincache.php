@@ -1,14 +1,13 @@
 <?php
 namespace Phpfastcache\drivers;
 use Phpfastcache\core\DriverAbstract;
-use Phpfastcache\core\DriverInterface;
 
 /**
  * Class phpfastcache_wincache
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * Example at our website, any bugs, problems, please visit http://faster.phpfastcache.com
  */
-class wincache extends DriverAbstract implements DriverInterface
+class wincache extends DriverAbstract
 {
 
     /**

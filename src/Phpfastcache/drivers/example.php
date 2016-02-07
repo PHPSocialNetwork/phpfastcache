@@ -9,7 +9,7 @@ use Phpfastcache\exceptions\PhpfastcacheDriverException;
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * Example at our website, any bugs, problems, please visit http://faster.phpfastcache.com
  */
-class example extends DriverAbstract implements DriverInterface
+class example extends DriverAbstract
 {
     /**
      * phpfastcache_example constructor.

@@ -1,7 +1,6 @@
 <?php
 namespace Phpfastcache\drivers;
 use Phpfastcache\core\DriverAbstract;
-use Phpfastcache\core\DriverInterface;
 use Predis\Client as PredisSoftware;
 
 /**
@@ -9,7 +8,7 @@ use Predis\Client as PredisSoftware;
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * Example at our website, any bugs, problems, please visit http://faster.phpfastcache.com
  */
-class predis extends DriverAbstract implements DriverInterface
+class predis extends DriverAbstract
 {
 
     /**

@@ -1,4 +1,4 @@
-[![Code Climate](https://codeclimate.com/github/khoaofgod/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/khoaofgod/phpfastcache) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=master)](https://travis-ci.org/PHPSocialNetwork/phpfastcache)
+[![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=master)](https://travis-ci.org/PHPSocialNetwork/phpfastcache)
 ---------------------------
 Simple Yet Powerful PHP Caching Class
 ---------------------------

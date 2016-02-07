@@ -1,12 +1,16 @@
 <?php
 /**
- * This file is being included
- * directly with composer
- * therefore there is not
- * namespace available
+ * This file ensure
+ * a maximum compatibility
+ * for user that do not
+ * make use of composer
  */
 use Phpfastcache\core\InstanceManager;
 
+if(!defined('PHPFASTCACHE_LOADED_VIA_COMPOSER'))
+{
+    require_once 'required_files.php';
+}
 
 /**
  * phpFastCache() Full alias

@@ -21,7 +21,7 @@
             "": "src/"
         },
         "files": [
-            "src/Phpfastcache/legacy/aliases.php"
+            "src/Phpfastcache/legacy/composer.php"
         ]
     }
 }

@@ -11,7 +11,7 @@ use Phpfastcache\core\InstanceManager;
 // print_r(get_loaded_extensions());
 
 // Include composer autoloader
-require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 
 $InstanceCache = InstanceManager::getInstance('ssdb');
 

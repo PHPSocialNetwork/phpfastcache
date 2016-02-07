@@ -5,6 +5,7 @@ use Phpfastcache\core\DriverAbstract;
 use Phpfastcache\core\DriverInterface;
 use PDO;
 use PDOException;
+use Phpfastcache\exceptions\PhpfastcacheDriverException;
 
 /**
  * Class phpfastcache_sqlite
@@ -56,8 +57,8 @@ class sqlite extends DriverAbstract implements DriverInterface
          * init the path
          */
         $this->setup($config);
-        if (!$this->checkdriver() && !isset($config[ 'skipError' ])) {
-            $this->fallback = true;
+        if (!$this->checkdriver()) {
+            throw new PhpfastcacheDriverException('SQLITE is not installed, cannot continue.');
         }
 
         if (!file_exists($this->getPath() . '/' . self::SQLITE_DIR)) {

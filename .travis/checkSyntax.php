@@ -36,7 +36,7 @@ $exit = 0;
 foreach ($list as $file) {
     $output = '';
 
-    exec('php -lf ' . $file, $output, $status);
+    exec('php -lf "' . $file . '"', $output, $status);
     echo(implode("\n", $output) . "\n");
     if ($status != 0) {
         $exit = $status;

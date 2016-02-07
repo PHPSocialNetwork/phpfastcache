@@ -2,6 +2,7 @@
 namespace Phpfastcache\drivers;
 use Phpfastcache\core\DriverAbstract;
 use Phpfastcache\core\DriverInterface;
+use Memcached as MemcachedSoftware;
 
 /**
  * Class phpfastcache_memcached
@@ -22,13 +23,14 @@ class memcached extends DriverAbstract implements DriverInterface
      */
     public function __construct($config = array())
     {
-
         $this->setup($config);
+
         if (!$this->checkdriver() && !isset($config[ 'skipError' ])) {
             $this->fallback = true;
         }
+
         if (class_exists('Memcached')) {
-            $this->instant = new Memcached();
+            $this->instant = new MemcachedSoftware();
         } else {
             $this->fallback = true;
         }
@@ -53,7 +55,6 @@ class memcached extends DriverAbstract implements DriverInterface
      */
     public function connectServer()
     {
-
         if ($this->checkdriver() == false) {
             return false;
         }
@@ -128,7 +129,7 @@ class memcached extends DriverAbstract implements DriverInterface
         // return null if no caching
         // return value if in caching
         $this->connectServer();
-        $x = $this->instant->get($keyword);
+        $x = @$this->instant->get($keyword);// Prevent memcached to return a warning for long keywords
         if ($x == false) {
             return null;
         } else {

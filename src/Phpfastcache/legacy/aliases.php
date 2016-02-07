@@ -19,9 +19,8 @@ if(!defined('PHPFASTCACHE_LOADED_VIA_COMPOSER'))
  * @return mixed
  */
 if(!function_exists("phpFastCache")) {
-	function phpFastCache($storage = 'auto', $config = [])
+	function phpFastCache($storage = 'auto', $config = array())
 	{
-		trigger_error(__FUNCTION__ . '() is deprecated use instanceManager::getInstance() instead.', E_USER_DEPRECATED);
 		return InstanceManager::getInstance($storage, $config);
 	}
 }
@@ -34,9 +33,7 @@ if(!function_exists("phpFastCache")) {
  * @return mixed
  */
 if(!function_exists("__c")) {
-	function __c ( $storage = 'auto' , $config = [ ] ) {
-		trigger_error ( __FUNCTION__ . '() is deprecated use instanceManager::getInstance() instead.' , E_USER_DEPRECATED );
-
+	function __c ( $storage = 'auto' , $config = array() ) {
 		return InstanceManager::getInstance ( $storage , $config );
 	}
 }

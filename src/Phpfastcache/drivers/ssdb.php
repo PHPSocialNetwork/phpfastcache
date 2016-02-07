@@ -1,4 +1,6 @@
 <?php
+namespace Phpfastcache\drivers;
+
 use Phpfastcache\core\DriverAbstract;
 use Phpfastcache\core\DriverInterface;
 
@@ -9,6 +11,7 @@ use Phpfastcache\core\DriverInterface;
  *
  * ssdb official website:
  * http://ssdb.io/
+ * Ssdb May requires manuel Daemon run: sudo ./ssdb-server -d ssdb.conf
  */
 class ssdb extends DriverAbstract implements DriverInterface
 {
@@ -60,10 +63,10 @@ class ssdb extends DriverAbstract implements DriverInterface
 
         if ($this->checked_ssdb === false) {
             $host = $server[ 'host' ];
-            $port = isset($server[ 'port' ]) ? (Int)$server[ 'port' ] : 8888;
+            $port = isset($server[ 'port' ]) ? (int)$server[ 'port' ] : 8888;
             $password = isset($server[ 'password' ]) ? $server[ 'password' ] : '';
-            $timeout = isset($server[ 'timeout' ]) ? (Int)$server[ 'timeout' ] : 2000;
-            $this->instant = new SimpleSSDB($host, $port, $timeout);
+            $timeout = !empty($server[ 'timeout' ]) ? (int) $server[ 'timeout' ] : 2000;
+            $this->instant = new \SimpleSSDB($host, $port, $timeout);
             if (!empty($password)) {
                 $this->instant->auth($password);
             }

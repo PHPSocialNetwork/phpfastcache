@@ -76,6 +76,26 @@ if (is_null($products)) {
 echo $products;
 
 ```
+
+#### Legacy & Easy Upgrade from Old Version
+```php
+// In your config files
+require_once ('Phpfastcache/phpfastcache.php');
+
+$cache = phpFastCache();
+
+/**
+ * Try to get $products from Caching First
+ * product_page is "identity keyword";
+ */
+$key = "product_page";
+$products = $cache->get($key);
+
+// yet it's the same as autoload
+
+```
+
+
 #### Step 3: Enjoy ! Your website is now faster than flash !
 
 For curious developpers, there is a lot of others available examples [here](https://github.com/khoaofgod/phpfastcache/tree/final/examples)

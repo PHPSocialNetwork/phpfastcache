@@ -2,6 +2,7 @@
 namespace Phpfastcache\drivers;
 use Phpfastcache\core\DriverAbstract;
 use Phpfastcache\core\DriverInterface;
+use Predis\Client as PredisSoftware;
 
 /**
  * Class phpfastcache_predis
@@ -90,7 +91,7 @@ class predis extends DriverAbstract implements DriverInterface
                 $c[ 'read_write_timeout' ] = $read_write_timeout;
             }
 
-            $this->instant = new Predis\Client($c);
+            $this->instant = new PredisSoftware($c);
 
             $this->checked_redis = true;
 

@@ -2,6 +2,7 @@
 namespace Phpfastcache\drivers;
 use Phpfastcache\core\DriverAbstract;
 use Phpfastcache\core\DriverInterface;
+use Redis as RedisSoftware;
 
 /**
  * Class phpfastcache_predis
@@ -27,7 +28,7 @@ class redis extends DriverAbstract implements DriverInterface
             $this->fallback = true;
         }
         if (class_exists('Redis')) {
-            $this->instant = new Redis();
+            $this->instant = new RedisSoftware();
         }
 
     }

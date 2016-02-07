@@ -2,6 +2,7 @@
 namespace Phpfastcache\drivers;
 use Phpfastcache\core\DriverAbstract;
 use Phpfastcache\core\DriverInterface;
+use Memcache as MemcacheSoftware;
 
 /**
  * Class phpfastcache_memcache
@@ -27,7 +28,7 @@ class memcache extends DriverAbstract implements DriverInterface
             $this->fallback = true;
         }
         if (class_exists('Memcache')) {
-            $this->instant = new Memcache();
+            $this->instant = new MemcacheSoftware();
         } else {
             $this->fallback = true;
         }

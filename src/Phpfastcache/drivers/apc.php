@@ -2,6 +2,7 @@
 namespace Phpfastcache\drivers;
 use Phpfastcache\core\DriverAbstract;
 use Phpfastcache\core\DriverInterface;
+use Phpfastcache\exceptions\PhpfastcacheDriverException;
 
 /**
  * Class phpfastcache_apc
@@ -18,8 +19,8 @@ class apc extends DriverAbstract implements DriverInterface
     {
         $this->setup($config);
 
-        if (!$this->checkdriver() && !isset($config[ 'skipError' ])) {
-            $this->fallback = true;
+        if (!$this->checkdriver()) {
+            throw new PhpfastcacheDriverException('APC is not installed, cannot continue.');
         }
     }
 

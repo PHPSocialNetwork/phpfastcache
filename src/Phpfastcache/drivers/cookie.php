@@ -58,7 +58,6 @@ class cookie extends DriverAbstract implements DriverInterface
      */
     public function driver_set($keyword, $value = '', $time = 300, $option = array())
     {
-        var_dump($time);
         $this->connectServer();
         $keyword = 'phpfastcache_' . $keyword;
         return setcookie($keyword, $this->encode($value), time() + ($time ? (int) $time : 300), '/');

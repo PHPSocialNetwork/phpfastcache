@@ -20,10 +20,6 @@ class cookie extends DriverAbstract implements DriverInterface
         if (!$this->checkdriver() && !isset($config[ 'skipError' ])) {
             $this->fallback = true;
         }
-        if (class_exists('Redis')) {
-            $this->instant = new Redis();
-        }
-
     }
 
     /**
@@ -62,9 +58,10 @@ class cookie extends DriverAbstract implements DriverInterface
      */
     public function driver_set($keyword, $value = '', $time = 300, $option = array())
     {
+        var_dump($time);
         $this->connectServer();
         $keyword = 'phpfastcache_' . $keyword;
-        return @setcookie($keyword, $this->encode($value), $time, '/');
+        return setcookie($keyword, $this->encode($value), time() + ($time ? (int) $time : 300), '/');
 
     }
 
@@ -79,7 +76,7 @@ class cookie extends DriverAbstract implements DriverInterface
         // return null if no caching
         // return value if in caching
         $keyword = 'phpfastcache_' . $keyword;
-        $x = isset($_COOKIE[ $keyword ]) ? $this->decode($_COOKIE[ 'keyword' ]) : false;
+        $x = isset($_COOKIE[ $keyword ]) ? $this->decode($_COOKIE[ $keyword  ]) : false;
         if ($x == false) {
             return null;
         } else {

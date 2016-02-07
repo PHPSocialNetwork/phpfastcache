@@ -16,6 +16,14 @@
     "require": {
         "php": ">=5.3.0"
     },
+    "suggest": {
+        "ext-apc": "*",
+        "ext-memcached": "*",
+        "ext-memcache": "*",
+        "ext-redis": "*",
+        "ext-predis": "*",
+        "ext-sqlite": "*"
+    },
     "autoload": {
         "psr-4": {
             "": "src/"

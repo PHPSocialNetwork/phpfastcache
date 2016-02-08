@@ -1,6 +1,7 @@
 <?php
 namespace phpFastCache\Core;
 
+use phpFastCache\CacheManager;
 use phpFastCache\Exceptions\phpFastCacheCoreException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 

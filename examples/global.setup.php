@@ -3,6 +3,7 @@
  * Welcome to Learn Lesson
  * This is very Simple PHP Code of Caching
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
+ * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
 // Include composer autoloader

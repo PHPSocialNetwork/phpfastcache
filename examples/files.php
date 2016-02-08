@@ -16,9 +16,9 @@ CacheManager::setup(array(
     "path" => "C:/tmp/"
 ));
 
+// In your class, function, you can call the Cache
 $InstanceCache = CacheManager::Files();
-// OR $InstanceCache = CacheManager::getInstance('files', $setup_config = array()); // files option is implicit but we specify it this time
-// OR $InstanceCache = CacheManager::Files($setup_config = array()); // multi instance
+// OR $InstanceCache = CacheManager::getInstance() <-- open examples/global.setup.php to see more
 
 /**
  * Try to get $products from Caching First

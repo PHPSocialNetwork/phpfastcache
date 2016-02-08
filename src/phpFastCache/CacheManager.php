@@ -23,8 +23,20 @@ class CacheManager
         if (empty($config)) {
             $config = phpFastCache::$config;
         }
-
-        if ($storage == '' || $storage == 'auto') {
+        if(isset(phpFastCache::$config['overwrite'])
+            && phpFastCache::$config['overwrite'] !== ''
+            && phpFastCache::$config['overwrite'] !== 'auto')
+        {
+            phpFastCache::$config['storage'] = phpFastCache::$config['overwrite'];
+            $storage = phpFastCache::$config['overwrite'];
+        }
+        else if(isset(phpFastCache::$config['storage'])
+            && phpFastCache::$config['storage'] !== ''
+            && phpFastCache::$config['storage'] !== 'auto')
+        {
+            $storage = phpFastCache::$config['storage'];
+        }
+        else if ($storage == '' || $storage == 'auto') {
             $storage = phpFastCache::getAutoClass($config);
         }
 

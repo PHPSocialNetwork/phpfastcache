@@ -34,4 +34,12 @@ class CacheManager
 
         return self::$instances[ $instance ];
     }
+	/*
+	 * CacheManager::Files();
+	 * CacheManager::Memcached();
+	 */
+	public static function __callStatic($name, $arguments)
+	{
+		return call_user_func_array(self::getInstance($name), $arguments);
+	}
 }

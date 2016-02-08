@@ -11,6 +11,12 @@
                 "email": "khoaofgod@gmail.com",
                 "homepage": "http://www.phpfastcache.com",
                 "role": "Developer"
+            },
+            {
+                "name": "Georges.L",
+                "email": "contact@geolim4.com",
+                "homepage": "https://github.com/Geolim4",
+                "role": "Developer"
             }
         ],
     "require": {

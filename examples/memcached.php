@@ -10,8 +10,8 @@ use phpFastCache\Core\CacheManager;
 // Include composer autoloader
 require '../vendor/autoload.php';
 
-$InstanceCache = CacheManager::getInstance('memcached');
-
+$InstanceCache = CacheManager::Memcached();
+// OR CacheManager::getInstance('memcached');
 /**
  * Try to get $products from Caching First
  * product_page is "identity keyword";

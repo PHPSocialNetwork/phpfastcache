@@ -9,8 +9,12 @@ use phpFastCache\Core\CacheManager;
 
 // Include composer autoloader
 require '../vendor/autoload.php';
+/*
+ * OR: require_once("../src/phpFastCache/phpFastCache.php");
+ */
 
-$InstanceCache = CacheManager::getInstance('files'); // files option is implicit but we specify it this time
+$InstanceCache = CacheManager::Files();
+// OR $InstanceCache = CacheManager::getInstance('files'); // files option is implicit but we specify it this time
 
 /**
  * Try to get $products from Caching First

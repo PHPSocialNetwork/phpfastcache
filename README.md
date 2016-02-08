@@ -50,7 +50,12 @@ use phpFastCache\Core\CacheManager;
 // Include composer autoloader
 require '../vendor/autoload.php';
 
-$cache = CacheManager::getInstance();
+$cache = CacheManager::Files();
+
+// $cache = CacheManager::Memcached();
+// phpFastCache supported: SSDB, Redis, Predis, Cookie, Files, MemCache, MemCached, APC, WinCache, XCache, SQLite
+// $cache = CacheManager::getInstance("auto", $config);
+// $cache = CacheManager::getInstance("memcached", $server_config);
 
 /**
  * Try to get $products from Caching First
@@ -83,6 +88,8 @@ echo $products;
 require_once ('phpFastCache/phpFastCache.php');
 
 $cache = phpFastCache();
+// $cache = phpFastCache("files");
+// $cache = phpFastCache("memcached");
 
 /**
  * Try to get $products from Caching First

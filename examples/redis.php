@@ -10,7 +10,8 @@ use phpFastCache\Core\CacheManager;
 // Include composer autoloader
 require '../vendor/autoload.php';
 
-$InstanceCache = CacheManager::getInstance('redis');
+$InstanceCache = CacheManager::Redis();
+// OR CacheManager::getInstance('redis');
 
 /**
  * Try to get $products from Caching First

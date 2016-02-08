@@ -5,11 +5,11 @@
  */
 
 // Core files
-require_once __DIR__ . '/../core/DriverAbstract.php';
-require_once __DIR__ . '/../core/DriverInterface.php';
-require_once __DIR__ . '/../core/CacheManager.php';
-require_once __DIR__ . '/../core/phpFastCache.php';
-require_once __DIR__ . '/../core/phpFastCacheExtensions.php';
+require_once __DIR__ . '/../Core/DriverInterface.php';
+require_once __DIR__ . '/../Core/DriverAbstract.php';
+require_once __DIR__ . '/../Core/CacheManager.php';
+require_once __DIR__ . '/../Core/phpFastCache.php';
+require_once __DIR__ . '/../Core/phpFastCacheExtensions.php';
 
 // Drivers files
 require_once __DIR__ . '/../Drivers/apc.php';

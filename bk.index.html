@@ -288,7 +288,7 @@
     <div class="content" style="display: none;">
         <p>Just 2 steps:<br>
             1. Click Download & Unzip<br>
-            2. Include("phpfastcache/phpfastcache.php");</p>
+            2. Include("phpFastCache/phpFastCache.php");</p>
         <p>You are Ready to speed up your slowly website!</p>
         <p>__c()->set("item_name", $value, 600); <br>
             $value = __c()->get("item_name"); <br>
@@ -305,7 +305,7 @@
         <p>
 <pre class="prettyprint php">
 &lt;?php
-    require_once("phpfastcache/phpfastcache.php");
+    require_once("phpFastCache/phpFastCache.php");
     // auto, files, sqlite, xcache, memcache, apc, memcached, wincache
     phpFastCache::setup("storage","auto");
     phpFastCache::setup("path", dirname(__FILE__)); // Path For Files
@@ -354,7 +354,7 @@
  */
 
 // Require Library
-require_once("../phpfastcache/phpfastcache.php");
+require_once("../phpFastCache/phpFastCache.php");
 
 // simple Caching with:
 $cache = phpFastCache();
@@ -390,7 +390,7 @@ echo $products;
  * Learn how to setup phpFastCache ?
  */
 
-require_once("../phpfastcache/phpfastcache.php");
+require_once("../phpFastCache/phpFastCache.php");
 
 /*
  * Now this is Optional Config setup for default phpFastCache
@@ -479,7 +479,7 @@ echo $products;
     /*
      * List of functions and examples
      */
-    require_once("../phpfastcache/phpfastcache.php");
+    require_once("../phpFastCache/phpFastCache.php");
     $cache = phpFastCache();
 
     // Write into cache
@@ -567,7 +567,7 @@ echo $products;
  * Example 1
  */
 
-require_once("../phpfastcache/phpfastcache.php");
+require_once("../phpFastCache/phpFastCache.php");
 
 // get from cache
 $products = __c()->my_products;
@@ -662,7 +662,7 @@ $product = $cache->files->keyword;
 
 
 // in your config files
-include("phpfastcache/phpfastcache.php");
+include("phpFastCache/phpFastCache.php");
 // auto | memcache | files ...etc. Will be default for $cache = __c();
 phpFastCache::$storage = "auto";
 
@@ -779,7 +779,7 @@ $cache->isExisting("keyword");
 <pre class="prettyprint php">
 &lt;?php
     // In your config file
-    include("phpfastcache/phpfastcache.php");
+    include("phpFastCache/phpFastCache.php");
     phpFastCache::setup("storage","auto");
 
     // phpFastCache support "apc", "memcache", "memcached", "wincache" ,"files", "sqlite" and "xcache"
@@ -811,7 +811,7 @@ $cache->isExisting("keyword");
     <p>
 <pre class="prettyprint php">
 &lt;?php
-    include("phpfastcache/phpfastcache.php");
+    include("phpFastCache/phpFastCache.php");
 
     $cache = phpFastCache("memcached");
 
@@ -897,7 +897,7 @@ $cache->isExisting("keyword");
 <pre class="prettyprint php">
 &lt;?php
     // in your config files
-    include("phpfastcache/phpfastcache.php");
+    include("phpFastCache/phpFastCache.php");
     // auto | memcache | files ...etc. Will be default for $cache = __c();
     phpFastCache::$storage = "auto";
 

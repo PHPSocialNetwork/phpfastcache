@@ -4,7 +4,7 @@
  * Learn how to setup phpFastCache ?
  */
 
-require_once("../phpfastcache/phpfastcache.php");
+require_once("../phpFastCache/phpFastCache.php");
 
 /*
  * Now this is Optional Config setup for default phpFastCache

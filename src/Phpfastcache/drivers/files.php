@@ -223,7 +223,7 @@ class files extends DriverAbstract
                         }
                         $content[ $key ] = array(
                           'size' => $size,
-                          'write_time' => $object[ 'write_time' ],
+                          'write_time' => (isset($object[ 'write_time' ]) ? $object[ 'write_time' ] : null),
                         );
                         if ($this->isExpired($object)) {
                             @unlink($file_path);

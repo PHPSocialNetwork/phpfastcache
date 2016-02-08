@@ -361,7 +361,13 @@ abstract class DriverAbstract implements DriverInterface
         } else {
             $this->config[ $config_name ] = $value;
         }
+    }
 
+    /**
+     * @param int $time
+     */
+    public function autoCleanExpired($time = 3600)
+    {
     }
 
     /**
@@ -422,7 +428,7 @@ abstract class DriverAbstract implements DriverInterface
      */
     protected function required_extension($name)
     {
-        require_once(dirname(__FILE__) . '/../_extensions/' . $name);
+        require_once(__DIR__ . '/../_extensions/' . $name);
     }
 
 
@@ -539,7 +545,7 @@ allow from 127.0.0.1";
         if (count($this->option('system')) == 0) {
             $this->option[ 'system' ][ 'driver' ] = 'files';
             $this->option[ 'system' ][ 'drivers' ] = array();
-            $dir = @opendir(dirname(__FILE__) . '/Drivers/');
+            $dir = @opendir(__DIR__ . '/Drivers/');
             if (!$dir) {
                 throw new phpFastCacheDriverException("Can't open file dir ext", 100);
             }
@@ -548,7 +554,7 @@ allow from 127.0.0.1";
                 if ($file != '.' && $file != '..' && strpos($file,
                     ".php") !== false
                 ) {
-                    require_once(dirname(__FILE__) . "/Drivers/" . $file);
+                    require_once(__DIR__ . "/Drivers/" . $file);
                     $namex = str_replace('.php', '', $file);
                     $class = 'phpFastCache_' . $namex;
                     $this->option[ 'skipError' ] = true;
@@ -584,8 +590,8 @@ allow from 127.0.0.1";
      */
     protected function isExistingDriver($class)
     {
-        if (file_exists(dirname(__FILE__) . '/Drivers/' . $class . '.php')) {
-            require_once(dirname(__FILE__) . '/Drivers/' . $class . '.php');
+        if (file_exists(__DIR__ . '/Drivers/' . $class . '.php')) {
+            require_once(__DIR__ . '/Drivers/' . $class . '.php');
             if (class_exists("phpFastCache_" . $class)) {
                 return true;
             }

@@ -1,6 +1,7 @@
 <?php
 namespace phpFastCache\Core;
 
+use phpFastCache\CacheManager;
 use phpFastCache\Exceptions\phpFastCacheCoreException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 
@@ -152,7 +153,7 @@ class phpFastCache
                 $tmp_dir = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
                 $path = $tmp_dir;
             } else {
-                $path = isset($_SERVER[ 'DOCUMENT_ROOT' ]) ? rtrim($_SERVER[ 'DOCUMENT_ROOT' ], '/') . '/../' : rtrim(dirname(__FILE__), '/') . '/';
+                $path = isset($_SERVER[ 'DOCUMENT_ROOT' ]) ? rtrim($_SERVER[ 'DOCUMENT_ROOT' ], '/') . '/../' : rtrim(__DIR__, '/') . '/';
             }
 
             if (self::$config[ 'path' ] != '') {

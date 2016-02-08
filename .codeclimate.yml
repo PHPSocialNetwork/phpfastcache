@@ -4,6 +4,10 @@ engines:
     checks:
       Similar code:
         enabled: false
+      UnusedFormalParameter:
+        enabled: false
+      Controversial/CamelCaseClassName:
+        enabled: false
     config:
       languages:
       - ruby

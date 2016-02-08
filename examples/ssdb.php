@@ -27,9 +27,11 @@ if (is_null($CachedString)) {
     // Write products to Cache in 10 minutes with same keyword
     $InstanceCache->set($key, $CachedString, 600);
 
-    echo "Ssdb Cache --> Cached not enabled --> Reload page !";
+    echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ";
+    echo $CachedString;
 
 } else {
+    echo "READ FROM CACHE // ";
     echo $CachedString;
 }
 

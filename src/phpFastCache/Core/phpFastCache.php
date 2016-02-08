@@ -216,7 +216,7 @@ class phpFastCache
           '/^\./',
         );
         $replace = array('-', '', '');
-        return preg_replace($regex, $replace, $filename);
+        return trim(preg_replace($regex, $replace, trim($filename)),'-');
     }
 
     /**
@@ -305,7 +305,7 @@ allow from 127.0.0.1";
     public static function setup($name, $value = '')
     {
         if (is_array($name)) {
-            self::$config = $name;
+            self::$config = array_merge(self::$config,$name);
         } else {
             self::$config[ $name ] = $value;
         }

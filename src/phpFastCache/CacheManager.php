@@ -36,12 +36,23 @@ class CacheManager
 
         return self::$instances[ $instance ];
     }
-	/*
+	/**
 	 * CacheManager::Files();
 	 * CacheManager::Memcached();
 	 */
 	public static function __callStatic($name, $arguments)
 	{
-		return call_user_func_array(array("self","getInstance"), array($name, $arguments));
+        if(count($arguments) === 1 && isset($arguments[0])) {
+            $arguments = $arguments[0];
+        }
+        switch(strtolower($name)) {
+            case "setup":
+                phpFastCache::setup($arguments);
+                break;
+            default:
+                return call_user_func_array(array("self","getInstance"), array($name, $arguments));
+                break;
+        }
 	}
+
 }

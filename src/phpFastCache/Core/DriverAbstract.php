@@ -357,7 +357,7 @@ abstract class DriverAbstract implements DriverInterface
          * Config for class
          */
         if (is_array($config_name)) {
-            $this->config = $config_name;
+            $this->config = array_merge($this->config, $config_name);
         } else {
             $this->config[ $config_name ] = $value;
         }

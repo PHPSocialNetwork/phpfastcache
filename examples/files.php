@@ -6,14 +6,19 @@
  */
 
 // Include composer autoloader
-// require '../vendor/autoload.php';
-require_once("../src/phpFastCache/phpFastCache.php");
-/*
- * OR: require_once("../src/phpFastCache/phpFastCache.php");
- */
+require '../vendor/autoload.php';
+// OR require_once("../src/phpFastCache/phpFastCache.php");
+
 use phpFastCache\CacheManager;
+
+// Setup File Path on your config files
+CacheManager::setup(array(
+    "path" => "C:/tmp/"
+));
+
 $InstanceCache = CacheManager::Files();
-// OR $InstanceCache = CacheManager::getInstance('files'); // files option is implicit but we specify it this time
+// OR $InstanceCache = CacheManager::getInstance('files', $setup_config = array()); // files option is implicit but we specify it this time
+// OR $InstanceCache = CacheManager::Files($setup_config = array()); // multi instance
 
 /**
  * Try to get $products from Caching First
@@ -23,13 +28,15 @@ $key = "product_page";
 $CachedString = $InstanceCache->get($key);
 
 if (is_null($CachedString)) {
-    $CachedString = "Files Cache --> Cache Enabled --> Well done !";
+    $CachedString = "Files Cache --> Well done !";
     // Write products to Cache in 10 minutes with same keyword
     $InstanceCache->set($key, $CachedString, 600);
 
-    echo "Files Cache --> Cached not enabled --> Reload page !";
+    echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ";
+    echo $CachedString;
 
 } else {
+    echo "READ FROM CACHE // ";
     echo $CachedString;
 }
 

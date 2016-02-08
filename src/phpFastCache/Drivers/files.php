@@ -248,11 +248,11 @@ class files extends DriverAbstract
     /**
      *
      */
-    public function auto_clean_expired()
+    public function auto_clean_expired($time = 3600)
     {
         $autoclean = $this->get('keyword_clean_up_driver_files');
         if ($autoclean == null) {
-            $this->set('keyword_clean_up_driver_files', 3600 * 24);
+            $this->set('keyword_clean_up_driver_files', $time);
             $res = $this->stats();
         }
     }

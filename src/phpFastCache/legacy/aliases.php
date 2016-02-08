@@ -5,7 +5,7 @@
  * for user that do not
  * make use of composer
  */
-use phpFastCache\Core\CacheManager;
+use phpFastCache\CacheManager;
 
 if(!defined('phpFastCache_LOADED_VIA_COMPOSER'))
 {

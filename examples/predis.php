@@ -5,7 +5,7 @@
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  */
 
-use phpFastCache\Core\CacheManager;
+use phpFastCache\CacheManager;
 
 // Include composer autoloader
 require '../vendor/autoload.php';

@@ -5,14 +5,13 @@
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  */
 
-use phpFastCache\Core\CacheManager;
-
 // Include composer autoloader
-require '../vendor/autoload.php';
+// require '../vendor/autoload.php';
+require_once("../src/phpFastCache/phpFastCache.php");
 /*
  * OR: require_once("../src/phpFastCache/phpFastCache.php");
  */
-
+use phpFastCache\CacheManager;
 $InstanceCache = CacheManager::Files();
 // OR $InstanceCache = CacheManager::getInstance('files'); // files option is implicit but we specify it this time
 

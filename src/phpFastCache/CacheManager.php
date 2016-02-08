@@ -1,5 +1,7 @@
 <?php
-namespace phpFastCache\Core;
+namespace phpFastCache;
+use phpFastCache\Core\phpFastCache;
+use phpFastCache\Core\DriverAbstract;
 
 /**
  * Class CacheManager

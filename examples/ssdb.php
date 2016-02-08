@@ -5,7 +5,7 @@
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  */
 
-use phpFastCache\Core\CacheManager;
+use phpFastCache\CacheManager;
 
 // print_r(get_included_files());
 // print_r(get_loaded_extensions());

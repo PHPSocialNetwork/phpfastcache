@@ -45,7 +45,7 @@ composer require phpFastCache/phpFastCache
 
 #### Step 2: Setup your website code to implements phpFastCache bits
 ```php
-use phpFastCache\Core\CacheManager;
+use phpFastCache\CacheManager;
 
 // Include composer autoloader
 require '../vendor/autoload.php';

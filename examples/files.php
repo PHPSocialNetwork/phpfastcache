@@ -13,7 +13,7 @@ use phpFastCache\CacheManager;
 
 // Setup File Path on your config files
 CacheManager::setup(array(
-    "path" => "C:/tmp/"
+    "path" => sys_get_temp_dir(), // or in windows "C:/tmp/"
 ));
 
 // In your class, function, you can call the Cache

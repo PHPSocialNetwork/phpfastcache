@@ -1,5 +1,6 @@
 <?php
 namespace phpFastCache;
+
 use phpFastCache\Core\phpFastCache;
 use phpFastCache\Core\DriverAbstract;
 
@@ -7,6 +8,19 @@ use phpFastCache\Core\DriverAbstract;
  * Class CacheManager
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ *
+ * @method static DriverAbstract Apc() Apc($config = array()) Return a driver "apc" instance
+ * @method static DriverAbstract Cookie() Cookie($config = array()) Return a driver "cookie" instance
+ * @method static DriverAbstract Files() Files($config = array()) Return  a driver "files" instance
+ * @method static DriverAbstract Memcache() Memcache($config = array()) Return a driver "memcache" instance
+ * @method static DriverAbstract Memcached() Memcached($config = array()) Return a driver "memcached" instance
+ * @method static DriverAbstract Predis() Predis($config = array()) Return a driver "predis" instance
+ * @method static DriverAbstract Redis() Redis($config = array()) Return a driver "redis" instance
+ * @method static DriverAbstract Sqlite() Sqlite($config = array()) Return a driver "sqlite" instance
+ * @method static DriverAbstract Ssdb() Ssdb($config = array()) Return a driver "ssdb" instance
+ * @method static DriverAbstract Wincache() Wincache($config = array()) Return a driver "wincache" instance
+ * @method static DriverAbstract Xcache() Xcache($config = array()) Return a driver "xcache" instance
+ *
  */
 class CacheManager
 {
@@ -23,20 +37,12 @@ class CacheManager
         if (empty($config)) {
             $config = phpFastCache::$config;
         }
-        if(isset(phpFastCache::$config['overwrite'])
-            && phpFastCache::$config['overwrite'] !== ''
-            && phpFastCache::$config['overwrite'] !== 'auto')
-        {
-            phpFastCache::$config['storage'] = phpFastCache::$config['overwrite'];
-            $storage = phpFastCache::$config['overwrite'];
-        }
-        else if(isset(phpFastCache::$config['storage'])
-            && phpFastCache::$config['storage'] !== ''
-            && phpFastCache::$config['storage'] !== 'auto')
-        {
-            $storage = phpFastCache::$config['storage'];
-        }
-        else if ($storage == '' || $storage == 'auto') {
+        if (isset(phpFastCache::$config[ 'overwrite' ]) && !in_array(phpFastCache::$config[ 'overwrite' ], array('auto', ''), true)) {
+            phpFastCache::$config[ 'storage' ] = phpFastCache::$config[ 'overwrite' ];
+            $storage = phpFastCache::$config[ 'overwrite' ];
+        } else if (isset(phpFastCache::$config[ 'storage' ]) && !in_array(phpFastCache::$config[ 'storage' ], array('auto', ''), true)) {
+            $storage = phpFastCache::$config[ 'storage' ];
+        } else if (!in_array($storage, array('auto', ''), true)) {
             $storage = phpFastCache::getAutoClass($config);
         }
 
@@ -48,23 +54,21 @@ class CacheManager
 
         return self::$instances[ $instance ];
     }
-	/**
-	 * CacheManager::Files();
-	 * CacheManager::Memcached();
-	 */
-	public static function __callStatic($name, $arguments)
-	{
-        if(count($arguments) === 1 && isset($arguments[0])) {
-            $arguments = $arguments[0];
-        }
-        switch(strtolower($name)) {
-            case "setup":
-                phpFastCache::setup($arguments);
-                break;
-            default:
-                return call_user_func_array(array("self","getInstance"), array($name, $arguments));
-                break;
-        }
-	}
 
+    /**
+     * CacheManager::Files();
+     * CacheManager::Memcached();
+     */
+    public static function __callStatic($name, $arguments)
+    {
+        return self::getInstance($name, (isset($arguments[ 0 ]) ? $arguments[ 0 ] : array()));
+    }
+
+    /**
+     * Shortcut to phpFastCache::setup()
+     */
+    public static function setup($name, $value = '')
+    {
+        phpFastCache::setup($name, $value);
+    }
 }

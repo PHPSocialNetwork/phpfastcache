@@ -6,15 +6,12 @@
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  */
 
-// Require Library
-use phpFastCache\Core\CacheManager;
-use phpFastCache\Core\phpFastCache;
+	// In your config files
+	require_once("phpFastCache/phpFastCache.php");
 
-// Include composer autoloader
-require '../vendor/autoload.php';
+	// now it's time to call the cache "anywhere" on your project
 
-// simple Caching with:
-$cache = CacheManager::getInstance("redis");
+	$cache = phpFastCache("redis");
 
 if ($cache->fallback === true) {
     echo " USE BACK UP DRIVER = " . phpFastCache::$config[ 'fallback' ] . " <br>";

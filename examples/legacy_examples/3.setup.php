@@ -1,9 +1,10 @@
 <?php
-use phpFastCache\Core\CacheManager;
-use phpFastCache\Core\phpFastCache;
+// In your config files
+require_once("../../src/phpFastCache/phpFastCache.php");
 
-// Include composer autoloader
-require '../vendor/autoload.php';
+// now it's time to call the cache "anywhere" on your project
+
+$cache = phpFastCache();
 
 /**
  * Now this is Optional Config setup for default phpFastCache

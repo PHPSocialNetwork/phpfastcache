@@ -5,12 +5,12 @@
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  */
 
-use phpFastCache\Core\CacheManager;
+// In your config files
+require_once("phpFastCache/phpFastCache.php");
 
-// Include composer autoloader
-require '../vendor/autoload.php';
+// now it's time to call the cache "anywhere" on your project
 
-$cache = CacheManager::getInstance();
+$cache = phpFastCache();
 
 /**
  * Try to get $products from Caching First

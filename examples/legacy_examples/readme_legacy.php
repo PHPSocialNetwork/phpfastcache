@@ -35,4 +35,4 @@
 		echo $CachedString;
 	}
 
-	echo '<br /><br /><a href="/">Back to index</a>&nbsp;--&nbsp;<a href="/' . basename(__FILE__) . '">Reload</a>';
+

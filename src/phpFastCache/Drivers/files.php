@@ -155,7 +155,7 @@ class files extends DriverAbstract
         $object = $this->decode($content);
         if ($this->isExpired($object)) {
             @unlink($file_path);
-            $this->auto_clean_expired();
+            $this->autoCleanExpired();
             return null;
         }
 
@@ -245,10 +245,11 @@ class files extends DriverAbstract
         return $res;
     }
 
+
     /**
-     *
+     * @param int $time
      */
-    public function auto_clean_expired($time = 3600)
+    public function autoCleanExpired($time = 3600)
     {
         $autoclean = $this->get('keyword_clean_up_driver_files');
         if ($autoclean == null) {

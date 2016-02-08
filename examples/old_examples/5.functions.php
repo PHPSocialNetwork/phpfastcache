@@ -1,10 +1,10 @@
 <?php
-use phpFastCache\Core\InstanceManager;
+use phpFastCache\Core\CacheManager;
 
 // Include composer autoloader
 require '../vendor/autoload.php';
 
-$cache = InstanceManager::getInstance();
+$cache = CacheManager::getInstance();
 
 // Write into cache
 $cache->set("keyword", "data | array | object", 300);

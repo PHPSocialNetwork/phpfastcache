@@ -6,7 +6,7 @@ use phpFastCache\Exceptions\phpFastCacheDriverException;
 
 /**
  * Class phpFastCache
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpFastCache.com
+ * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  *
  * Handle methods using annotations for IDE
  * because they're handled by __call()
@@ -92,7 +92,7 @@ class phpFastCache
             $storage = self::getAutoClass($config);
         }
 
-        $this->instance = InstanceManager::getInstance($storage, $config);
+        $this->instance = CacheManager::getInstance($storage, $config);
     }
 
     /**

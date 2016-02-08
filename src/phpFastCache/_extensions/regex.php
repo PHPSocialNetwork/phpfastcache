@@ -5,7 +5,7 @@ use phpFastCache\Core\phpFastCacheExtensions;
 /**
  * Working on this
  * Class phpFastCache_ext_regex
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpFastCache.com
+ * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  */
 class phpFastCache_ext_regex extends phpFastCacheExtensions {
 

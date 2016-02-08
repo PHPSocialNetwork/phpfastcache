@@ -5,7 +5,7 @@
  * for user that do not
  * make use of composer
  */
-use phpFastCache\Core\InstanceManager;
+use phpFastCache\Core\CacheManager;
 
 if(!defined('phpFastCache_LOADED_VIA_COMPOSER'))
 {
@@ -21,7 +21,7 @@ if(!defined('phpFastCache_LOADED_VIA_COMPOSER'))
 if(!function_exists("phpFastCache")) {
 	function phpFastCache($storage = 'auto', $config = array())
 	{
-		return InstanceManager::getInstance($storage, $config);
+		return CacheManager::getInstance($storage, $config);
 	}
 }
 
@@ -34,6 +34,6 @@ if(!function_exists("phpFastCache")) {
  */
 if(!function_exists("__c")) {
 	function __c ( $storage = 'auto' , $config = array() ) {
-		return InstanceManager::getInstance ( $storage , $config );
+		return CacheManager::getInstance ( $storage , $config );
 	}
 }

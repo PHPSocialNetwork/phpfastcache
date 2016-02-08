@@ -6,7 +6,7 @@ use phpFastCache\Exceptions\phpFastCacheDriverException;
 
 /**
  * Class BasephpFastCache
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpFastCache.com
+ * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  */
 abstract class DriverAbstract implements DriverInterface
 {

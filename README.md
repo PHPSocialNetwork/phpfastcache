@@ -1,8 +1,8 @@
-[![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpFastCache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpFastCache) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpFastCache.svg?branch=final)](https://travis-ci.org/PHPSocialNetwork/phpFastCache)
+[![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=final)](https://travis-ci.org/PHPSocialNetwork/phpfastcache)
 ---------------------------
 Simple Yet Powerful PHP Caching Class
 ---------------------------
-More information at http://www.phpFastCache.com
+More information at http://www.phpfastcache.com
 One Class uses for All Cache. You don't need to rewrite your code many times again.
 
 Supported: Redis, Predis, Cookie, Files, MemCache, MemCached, APC, WinCache, X-Cache, PDO with SQLite
@@ -45,12 +45,12 @@ composer require phpFastCache/phpFastCache
 
 #### Step 2: Setup your website code to implements phpFastCache bits
 ```php
-use phpFastCache\Core\InstanceManager;
+use phpFastCache\Core\CacheManager;
 
 // Include composer autoloader
 require '../vendor/autoload.php';
 
-$cache = InstanceManager::getInstance();
+$cache = CacheManager::getInstance();
 
 /**
  * Try to get $products from Caching First

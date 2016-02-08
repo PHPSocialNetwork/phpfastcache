@@ -2,15 +2,15 @@
 /**
  * Welcome to Learn Lesson
  * This is very Simple PHP Code of Caching
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpFastCache.com
+ * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  */
 
-use phpFastCache\Core\InstanceManager;
+use phpFastCache\Core\CacheManager;
 
 // Include composer autoloader
 require '../vendor/autoload.php';
 
-$InstanceCache = InstanceManager::getInstance('cookie');
+$InstanceCache = CacheManager::getInstance('cookie');
 
 /**
  * Try to get $products from Caching First

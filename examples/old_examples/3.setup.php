@@ -1,5 +1,5 @@
 <?php
-use phpFastCache\Core\InstanceManager;
+use phpFastCache\Core\CacheManager;
 use phpFastCache\Core\phpFastCache;
 
 // Include composer autoloader
@@ -68,13 +68,13 @@ $config = array(
     // except storage
 );
 
-$cache = InstanceManager::getInstance("files", $config); // this will be $config['storage'] up there;
+$cache = CacheManager::getInstance("files", $config); // this will be $config['storage'] up there;
 
 // changing config example
 $cache->setup("path", "new_path");
 
 
-$cache2 = InstanceManager::getInstance("memcache"); // this will use memcache
+$cache2 = CacheManager::getInstance("memcache"); // this will use memcache
 $server = array(
   array("127.0.0.1", 11211, 1),
 );

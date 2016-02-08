@@ -2,11 +2,11 @@
 namespace phpFastCache\Core;
 
 /**
- * Class InstanceManager
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpFastCache.com
+ * Class CacheManager
+ * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
-class InstanceManager
+class CacheManager
 {
     protected static $instances = array();
 

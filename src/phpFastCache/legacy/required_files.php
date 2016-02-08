@@ -7,7 +7,7 @@
 // Core files
 require_once __DIR__ . '/../core/DriverAbstract.php';
 require_once __DIR__ . '/../core/DriverInterface.php';
-require_once __DIR__ . '/../core/InstanceManager.php';
+require_once __DIR__ . '/../core/CacheManager.php';
 require_once __DIR__ . '/../core/phpFastCache.php';
 require_once __DIR__ . '/../core/phpFastCacheExtensions.php';
 

@@ -1,10 +1,10 @@
 <?php
-use phpFastCache\Core\InstanceManager;
+use phpFastCache\Core\CacheManager;
 
 // Include composer autoloader
 require '../vendor/autoload.php';
 
-$cache = InstanceManager::getInstance();
+$cache = CacheManager::getInstance();
 
 
 // Now, this is magic
@@ -19,7 +19,7 @@ $cache->files->keyword = array("array | object", 300);
  * phpFastCache is free traveling
  */
 
-$cache = InstanceManager::getInstance("files");
+$cache = CacheManager::getInstance("files");
 
 $cache->memcache->keyword = array("data", 300);
 $cache->sqlite->set("keyword", "data", 300);

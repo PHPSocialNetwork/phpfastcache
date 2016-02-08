@@ -2,10 +2,10 @@
 /**
  * Welcome to Learn Lesson
  * This is very Simple PHP Code of Caching
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpFastCache.com
+ * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  */
 
-use phpFastCache\Core\InstanceManager;
+use phpFastCache\Core\CacheManager;
 
 // print_r(get_included_files());
 // print_r(get_loaded_extensions());
@@ -13,7 +13,7 @@ use phpFastCache\Core\InstanceManager;
 // Include composer autoloader
 require '../vendor/autoload.php';
 
-$InstanceCache = InstanceManager::getInstance('ssdb');
+$InstanceCache = CacheManager::getInstance('ssdb');
 
 /**
  * Try to get $products from Caching First

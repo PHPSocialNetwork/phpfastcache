@@ -1,6 +1,6 @@
 phpFastCache
 ------------------------------------------------
-Copyright 2013 - 2015 by phpFastCache.com
+Copyright 2013 - 2015 by phpfastcache.com
 Author: khoaofgod@gmail.com
 
 License Information:

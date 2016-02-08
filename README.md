@@ -36,14 +36,14 @@ As Fast To Implement As Opening a Beer
 ---------------------------
 
 
-#### Step 1: Include phpFastCache in your project with composer:
+#### :thumbsup: Step 1: Include phpFastCache in your project with composer:
 
 
 ```bash
 composer require phpFastCache/phpFastCache
 ```
 
-#### Step 2: Setup your website code to implements phpFastCache bits
+#### :construction: Step 2: Setup your website code to implements phpFastCache bits
 ```php
 use phpFastCache\CacheManager;
 
@@ -82,7 +82,7 @@ echo $products;
 
 ```
 
-#### Legacy & Easy Upgrade from Old Version
+#### :floppy_disk: Legacy & Easy Upgrade from Old Version
 ```php
 // In your config files
 require_once ('phpFastCache/phpFastCache.php');
@@ -103,6 +103,8 @@ $products = $cache->get($key);
 ```
 
 
-#### Step 3: Enjoy ! Your website is now faster than flash !
+#### :zap: Step 3: Enjoy ! Your website is now faster than flash !
+For curious developpers, there is a lot of others available examples [here](https://github.com/khoaofgod/phpFastCache/tree/final/examples).
 
-For curious developpers, there is a lot of others available examples [here](https://github.com/khoaofgod/phpFastCache/tree/final/examples)
+#### :boom: phpFastCache support
+Found an issue or had an idea ? Come here [here](https://github.com/PHPSocialNetwork/phpfastcache/issues) and let you know !

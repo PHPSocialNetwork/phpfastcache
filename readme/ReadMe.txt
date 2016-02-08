@@ -1,7 +1,7 @@
 ---------------------------
 Simple Yet Powerful PHP Caching Class
 ---------------------------
-More information at http://www.phpfastcache.com
+More information at http://www.phpFastCache.com
 One Class uses for All Cache. You don't need to rewrite your code many times again.
 
 Supported: Redis, Predis, Cookie, Files, MemCache, MemCached, APC, WinCache, X-Cache, PDO with SQLite
@@ -9,10 +9,10 @@ Supported: Redis, Predis, Cookie, Files, MemCache, MemCached, APC, WinCache, X-C
 #################################################################################################################
 
 1. Open example.php & exanple2.php for the idea of caching.
-2. open phpfastcache.php for config & variable.
-3. PUT require_once("/PATH/TO/YOUR/phpfastcache/phpfastcache.php"); on your config files like wp-config.php, init.php ...etc and you are good to go.
+2. open phpFastCache.php for config & variable.
+3. PUT require_once("/PATH/TO/YOUR/phpFastCache/phpFastCache.php"); on your config files like wp-config.php, init.php ...etc and you are good to go.
 4. Learn fast, 10 minutes only, read folder /examples/* <-- everything is here. I will update more and more examples on futures.
-5. IF YOU GET INTO ANY PROBLEM, TRY TO POST AT www.phpfastcache.com -> Issues , I online everyday to help and keep tracks bugs. Most of the bugs fix in 12 - 24 hours.
+5. IF YOU GET INTO ANY PROBLEM, TRY TO POST AT www.phpFastCache.com -> Issues , I online everyday to help and keep tracks bugs. Most of the bugs fix in 12 - 24 hours.
 
 #################################################################################################################
 

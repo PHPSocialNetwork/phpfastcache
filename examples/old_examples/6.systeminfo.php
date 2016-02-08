@@ -1,9 +1,9 @@
 <?php
-use Phpfastcache\core\Phpfastcache;
+use phpFastCache\Core\phpFastCache;
 // Include composer autoloader
 require '../vendor/autoload.php';
 
-$cache = new Phpfastcache();
+$cache = new phpFastCache();
 $info = $cache->systemInfo();
 
 echo "<pre>";

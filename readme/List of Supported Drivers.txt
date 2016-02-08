@@ -1,4 +1,4 @@
-Look at this folder: phpfastcache/x.x.x/drivers/*.php
+Look at this folder: phpFastCache/x.x.x/Drivers/*.php
 All files here are supported drivers.
 
 You can build new one, put it here, take a look at the example.php and cookie.php

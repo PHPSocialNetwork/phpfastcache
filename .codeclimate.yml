@@ -28,4 +28,4 @@ ratings:
   - "**.py"
   - "**.rb"
 exclude_paths: []
-- "src/Phpfastcache/_extensions/**"
+- "src/phpFastCache/_extensions/**"

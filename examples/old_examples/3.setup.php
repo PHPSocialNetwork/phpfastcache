@@ -1,6 +1,6 @@
 <?php
-use Phpfastcache\core\InstanceManager;
-use Phpfastcache\core\Phpfastcache;
+use phpFastCache\Core\InstanceManager;
+use phpFastCache\Core\phpFastCache;
 
 // Include composer autoloader
 require '../vendor/autoload.php';
@@ -52,12 +52,12 @@ $config = array(
   "fallback" => "files",
 );
 
-Phpfastcache::setup($config);
+phpFastCache::setup($config);
 
 // OR
 
-Phpfastcache::setup("storage", "files");
-Phpfastcache::setup("path", __DIR__);
+phpFastCache::setup("storage", "files");
+phpFastCache::setup("path", __DIR__);
 
 /*
  * End Optional Config

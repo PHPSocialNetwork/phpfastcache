@@ -1,5 +1,5 @@
 <?php
-use Phpfastcache\core\InstanceManager;
+use phpFastCache\Core\InstanceManager;
 
 // Include composer autoloader
 require '../vendor/autoload.php';

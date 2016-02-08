@@ -2,10 +2,10 @@
 /**
  * Welcome to Learn Lesson
  * This is very Simple PHP Code of Caching
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
+ * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpFastCache.com
  */
 
-use Phpfastcache\core\InstanceManager;
+use phpFastCache\Core\InstanceManager;
 
 // print_r(get_included_files());
 // print_r(get_loaded_extensions());

@@ -3,12 +3,12 @@
 /**
  * Welcome to Learn Lesson
  * This is very Simple PHP Code of Caching
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
+ * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpFastCache.com
  */
 
 // Require Library
-use Phpfastcache\core\InstanceManager;
-use Phpfastcache\core\Phpfastcache;
+use phpFastCache\Core\InstanceManager;
+use phpFastCache\Core\phpFastCache;
 
 // Include composer autoloader
 require '../vendor/autoload.php';
@@ -17,7 +17,7 @@ require '../vendor/autoload.php';
 $cache = InstanceManager::getInstance("redis");
 
 if ($cache->fallback === true) {
-    echo " USE BACK UP DRIVER = " . Phpfastcache::$config[ 'fallback' ] . " <br>";
+    echo " USE BACK UP DRIVER = " . phpFastCache::$config[ 'fallback' ] . " <br>";
 } else {
     echo ' DRIVER IS GOOD <br>';
 }

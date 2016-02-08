@@ -1,8 +1,8 @@
-[![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=final)](https://travis-ci.org/PHPSocialNetwork/phpfastcache)
+[![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpFastCache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpFastCache) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpFastCache.svg?branch=final)](https://travis-ci.org/PHPSocialNetwork/phpFastCache)
 ---------------------------
 Simple Yet Powerful PHP Caching Class
 ---------------------------
-More information at http://www.phpfastcache.com
+More information at http://www.phpFastCache.com
 One Class uses for All Cache. You don't need to rewrite your code many times again.
 
 Supported: Redis, Predis, Cookie, Files, MemCache, MemCached, APC, WinCache, X-Cache, PDO with SQLite
@@ -18,7 +18,7 @@ With phpFastCache, your page only send 1 query to DB, and use the cache to serve
 Rich Development API
 ---------------------------
 
-Phpfastcache offers you a lot of usefull APIS:
+phpFastCache offers you a lot of usefull APIS:
 
 - get() // The getter, obviously
 - set() // The setter, for those who missed it
@@ -36,16 +36,16 @@ As Fast To Implement As Opening a Beer
 ---------------------------
 
 
-#### Step 1: Include phpfastcache in your project with composer:
+#### Step 1: Include phpFastCache in your project with composer:
 
 
 ```bash
-composer require phpfastcache/phpfastcache
+composer require phpFastCache/phpFastCache
 ```
 
-#### Step 2: Setup your website code to implements phpfastcache bits
+#### Step 2: Setup your website code to implements phpFastCache bits
 ```php
-use Phpfastcache\core\InstanceManager;
+use phpFastCache\Core\InstanceManager;
 
 // Include composer autoloader
 require '../vendor/autoload.php';
@@ -80,7 +80,7 @@ echo $products;
 #### Legacy & Easy Upgrade from Old Version
 ```php
 // In your config files
-require_once ('Phpfastcache/phpfastcache.php');
+require_once ('phpFastCache/phpFastCache.php');
 
 $cache = phpFastCache();
 
@@ -98,4 +98,4 @@ $products = $cache->get($key);
 
 #### Step 3: Enjoy ! Your website is now faster than flash !
 
-For curious developpers, there is a lot of others available examples [here](https://github.com/khoaofgod/phpfastcache/tree/final/examples)
+For curious developpers, there is a lot of others available examples [here](https://github.com/khoaofgod/phpFastCache/tree/final/examples)

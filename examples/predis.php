@@ -2,10 +2,10 @@
 /**
  * Welcome to Learn Lesson
  * This is very Simple PHP Code of Caching
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
+ * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpFastCache.com
  */
 
-use Phpfastcache\core\InstanceManager;
+use phpFastCache\Core\InstanceManager;
 
 // Include composer autoloader
 require '../vendor/autoload.php';

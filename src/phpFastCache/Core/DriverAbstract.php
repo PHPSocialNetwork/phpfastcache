@@ -361,7 +361,13 @@ abstract class DriverAbstract implements DriverInterface
         } else {
             $this->config[ $config_name ] = $value;
         }
+    }
 
+    /**
+     * @param int $time
+     */
+    public function autoCleanExpired($time = 3600)
+    {
     }
 
     /**

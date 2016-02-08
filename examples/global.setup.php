@@ -27,7 +27,7 @@ $cache = CacheManager::getInstance(); // return your setup storage
 // OR you can call any type of caching
 // However if your Memcached crash, then you have to modifile your code ::Memcached() to ::Files() , etc...
 $cache_memcache = CacheManager::Memcached(); // return memcache
-$cache_apc = CacheManager::APC(); // return apc
+$cache_apc = CacheManager::Apc(); // return apc
 $cache_redis = CacheManager::Redis(); // return redis
 
 
@@ -50,7 +50,7 @@ CacheManager::setup($config);
 
 $cache = CacheManager::getInstance(); // return Files Cache
 $cache_memcache = CacheManager::Memcached();  // return Files Cache
-$cache_apc = CacheManager::APC();  // return Files Cache
+$cache_apc = CacheManager::Apc();  // return Files Cache
 $cache_redis = CacheManager::Redis();  // return Files Cache
 
 

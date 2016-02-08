@@ -5,18 +5,17 @@
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
+// In your project main config file, you can setup the storage
+use phpFastCache\CacheManager;
 
 // Include composer autoloader
 require '../vendor/autoload.php';
 // OR require_once("../src/phpFastCache/phpFastCache.php");
 
-// In your project main config file, you can setup the storage
-use phpFastCache\CacheManager;
-
 // Setup File Path on your config files
 $config = array(
     "storage"   =>  "files", // ssdb, files, xcache, sqlite, memcache, memcached, redis, predis, apc, cookie, wincache
-    "path" => "C:/tmp/"
+    "path" => sys_get_temp_dir() // or in Windows: "C:/tmp/"
 );
 CacheManager::setup($config);
 
@@ -45,7 +44,7 @@ $cache = CacheManager::getInstance("Files",$config);
 $config = array(
     "storage"   =>  "memcached", // ssdb, files, xcache, sqlite, memcache, memcached, redis, predis, apc, cookie, wincache
     "overwrite"     =>  "files", // Any caching will be overwrite to files cache until your fix your server and removed this line
-    "path" => "C:/tmp/"
+    "path" => sys_get_temp_dir() // or in Windows: "C:/tmp/"
 );
 CacheManager::setup($config);
 

@@ -20,7 +20,7 @@ $key = "product_page";
 $CachedString = $InstanceCache->get($key);
 
 if (is_null($CachedString)) {
-    $CachedString = "SQLite Cache --> Cached Enabled --> Well done !";
+    $CachedString = "Xcache Cache --> Cached Enabled --> Well done !";
     // Write products to Cache in 10 minutes with same keyword
     $InstanceCache->set($key, $CachedString, 600);
 

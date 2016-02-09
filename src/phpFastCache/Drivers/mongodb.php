@@ -5,14 +5,14 @@ use phpFastCache\Core\DriverInterface;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 
 /**
- * Class phpFastCache_example
+ * Class mongodb
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * Example at our website, any bugs, problems, please visit http://faster.phpfastcache.com
  */
-class example extends DriverAbstract
+class mongodb extends DriverAbstract
 {
     /**
-     * phpFastCache_example constructor.
+     * phpFastCache constructor.
      * @param array $config
      */
     public function __construct($config = array())

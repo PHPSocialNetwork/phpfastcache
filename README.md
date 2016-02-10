@@ -21,13 +21,13 @@ Rich Development API
 phpFastCache offers you a lot of usefull APIS:
 
 - get($keyword) // The getter, obviously, return your cache object
-- set($keyword, $something_your_want_to_cache, $time_as_second) // The setter, for those who missed it
+- set($keyword, $something_your_want_to_cache, $time_as_second = 0) // The setter, for those who missed it, put 0 meant cache it forever
 - delete($keyword) // For removing a cached thing
 - clean() // Allow you to completely empty the cache and restart from the beginning
 - touch($keyword, $time_you_want_to_extend) // Allow you to extends the lifetime of an entry without altering the value
 - increment($keyword, $step = 1) // For integer that we can count on
 - decrement($keyword, $step = 1) // Redundant joke...
-- search($string_or_regex, $search_in_value) // Allow you to perform some search on the cache index
+- search($string_or_regex, $search_in_value = false | true) // Allow you to perform some search on the cache index
 - isExisting($keyword) // Check if your cache entry exists, it is the equivalent of isset()
 - stats() // Return the cache statistics, useful for checking disk space used by the cache etc.
 

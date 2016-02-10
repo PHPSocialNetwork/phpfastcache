@@ -66,6 +66,12 @@ abstract class DriverAbstract implements DriverInterface
           "expired_time" => time() + (Int)$time,
         );
 
+        // handle search
+        if($this->config['allow_search'] == true) {
+            $option['tags'] = array("search");
+        }
+
+        // handle tags
         if(isset($option['tags'])) {
             $this->_handleTags($keyword, $time, $option['tags']);
         }
@@ -164,17 +170,66 @@ abstract class DriverAbstract implements DriverInterface
 
     /**
      * Searches though the cache for keys that match the given query.
-     * todo: search
-     * @param $query
+     * @param $query_as_regex_or_string
+     * @param bool $search_in_value
      * @return mixed
-     * @throws \Exception
+     * @throws phpFastCacheDriverException
      */
-    public function search($query)
+    public function search($query_as_regex_or_string, $search_in_value = false)
     {
-        if (method_exists($this, 'driver_search')) {
-            return $this->driver_search($query);
-        }
-        throw new phpFastCacheDriverException('Search method is not supported by this driver.');
+       if($this->config['allow_search'] != true) {
+           throw new phpFastCacheDriverException('Please setup allow_search = true');
+       } else {
+            $list = $this->getTags("search",$search_in_value);
+            $tmp = explode("/",$query_as_regex_or_string,2);
+            $regex = isset($tmp[1]) ? true : false;
+            $return_list = array();
+            foreach($list as $tag) {
+                foreach($tag as $keyword => $value) {
+                    $gotcha = false;
+                    if($search_in_value == true) {
+                        $value = $this->get($keyword);
+                    }
+
+                    if($regex == true && $gotcha == false)
+                    {     // look in keyword
+                        if(preg_match($query_as_regex_or_string,$keyword))
+                        {
+                            $return_list[$keyword] = $value;
+                            $gotcha = true;
+                        }
+                    }
+                    if($gotcha == false ) {
+                        if(strpos($keyword, $query_as_regex_or_string) !== false)
+                        {
+                            $return_list[$keyword] = $value;
+                            $gotcha = true;
+                        }
+                    }
+
+                    if($search_in_value == true && $gotcha == false)
+                    { // value search
+                        if($regex == true &&   $gotcha == false )
+                        {
+                            if (preg_match($query_as_regex_or_string, $value))
+                            {
+                                $return_list[$keyword] = $value;
+                                $gotcha = true;
+                            }
+                        }
+                        if($gotcha == false) {
+                            if (strpos($value, $query_as_regex_or_string) !== false)
+                            {
+                                $return_list[$keyword] = $value;
+                                $gotcha = true;
+                            }
+                        }
+                    }
+                } // each tags loop
+            } // end foreach
+            return $return_list;
+       }
+       return array();
     }
 
     /**

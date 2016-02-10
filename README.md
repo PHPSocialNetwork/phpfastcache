@@ -21,7 +21,7 @@ Rich Development API
 phpFastCache offers you a lot of usefull APIS:
 
 - get($keyword) // The getter, obviously, return your cache object
-- set($keyword, $something_your_to_cache, $time_as_second) // The setter, for those who missed it
+- set($keyword, $something_your_want_to_cache, $time_as_second) // The setter, for those who missed it
 - delete($keyword) // For removing a cached thing
 - clean() // Allow you to completely empty the cache and restart from the beginning
 - touch($keyword, $time_you_want_to_extend) // Allow you to extends the lifetime of an entry without altering the value

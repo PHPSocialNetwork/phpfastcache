@@ -5,7 +5,7 @@ Simple Yet Powerful PHP Caching Class
 More information at http://www.phpfastcache.com
 One Class uses for All Cache. You don't need to rewrite your code many times again.
 
-Supported: Redis, Predis, Cookie, Files, MemCache, MemCached, APC, WinCache, X-Cache, PDO with SQLite
+Supported: SSDB, Redis, Predis, Cookie, Files, MemCache, MemCached, APC, WinCache, X-Cache, PDO with SQLite
 
 ---------------------------
 Reduce Database Calls
@@ -20,16 +20,18 @@ Rich Development API
 
 phpFastCache offers you a lot of usefull APIS:
 
-- get() // The getter, obviously
-- set() // The setter, for those who missed it
-- delete() // For removing a cached thing
+- get($keyword) // The getter, obviously, return your cache object
+- set($keyword, $something_your_to_cache, $time_as_second) // The setter, for those who missed it
+- delete($keyword) // For removing a cached thing
 - clean() // Allow you to completely empty the cache and restart from the beginning
-- touch() // Allow you to extends the lifetime of an entry without altering the value 
-- increment() // For integer that we can count on
-- decrement() // Redundant joke...
+- touch($keyword, $time_you_want_to_extend) // Allow you to extends the lifetime of an entry without altering the value
+- increment($keyword, $step = 1) // For integer that we can count on
+- decrement($keyword, $step = 1) // Redundant joke...
 - search() // Allow you to perform some search on the cache index
-- isExisting() // Check if your cache entry exists, it is the equivalent of isset()
+- isExisting($keyword) // Check if your cache entry exists, it is the equivalent of isset()
 - stats() // Return the cache statistics, useful for checking disk space used by the cache etc.
+
+Also support Multiple calls & Tagging for caching. Look at our examples folders.
 
 ---------------------------
 As Fast To Implement As Opening a Beer

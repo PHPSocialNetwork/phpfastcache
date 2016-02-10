@@ -577,11 +577,11 @@ abstract class DriverAbstract implements DriverInterface
 
     /**
      * @param array $tags
-     * @param bool $with_value
+     * @param bool $return_content
      * @param array $option | $option = array("tags" => array("a","b","c")
      * @return array
      */
-    public function getTags($tags = array(), $with_value = true, $option = array()) {
+    public function getTags($tags = array(), $return_content = true, $option = array()) {
         if(!is_array($tags)) {
             $tags = array($tags);
         }
@@ -601,7 +601,7 @@ abstract class DriverAbstract implements DriverInterface
                     if($tmp < $time) {
                         $tmp = $time;
                     }
-                    if($with_value == true) {
+                    if($return_content == true) {
                         $list_return[$keyword] = $this->get($keyword);
                     } else {
                         $list_return[$keyword] = $time;

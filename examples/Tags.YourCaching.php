@@ -2,6 +2,15 @@
 /*
  * Tagging for Cache
  * Author: Khoaofgod@gmail.com
+ *
+ * @method setTags($keyword, $value, $time , array("tag_a","b","c"));
+ * @method set($keyword, $value, $time, array("tags" => array(1,2,3,4));
+ * @method getTags(array("a","b","c"), $return_content = true | false);
+ * @method getTags("a");
+ * @method touchTags($tags = array(), $time);
+ * @method increaseTags($tags = array(), $step );
+ * @method decreaseTags($tags = array(), $step );
+ * @method deleteTags($tags = array());
  */
 
 use phpFastCache\CacheManager;

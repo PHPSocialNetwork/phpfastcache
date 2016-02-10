@@ -27,11 +27,11 @@ phpFastCache offers you a lot of usefull APIS:
 - touch($keyword, $time_you_want_to_extend) // Allow you to extends the lifetime of an entry without altering the value
 - increment($keyword, $step = 1) // For integer that we can count on
 - decrement($keyword, $step = 1) // Redundant joke...
-- search() // Allow you to perform some search on the cache index
+- search($string_or_regex, $search_in_value) // Allow you to perform some search on the cache index
 - isExisting($keyword) // Check if your cache entry exists, it is the equivalent of isset()
 - stats() // Return the cache statistics, useful for checking disk space used by the cache etc.
 
-Also support Multiple calls & Tagging for caching. Look at our examples folders.
+Also support Multiple calls, Tagging, Setup Folder for caching. Look at our examples folders.
 
 ---------------------------
 As Fast To Implement As Opening a Beer

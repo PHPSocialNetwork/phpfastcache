@@ -34,15 +34,36 @@ $myAppleProducts = $cache->search("apple");
 echo "<pre>";
 print_r($myAppleProducts);
 echo "</pre>";
+/*
+ * Output: Array
+(
+    [my_apple_keyword] => 1612818738
+)
+ */
 
 /// Time for the magic
 $myAppleProducts = $cache->search("/my_[a-zA-Z]+_keyword/i", true);
 echo "<pre>";
 print_r($myAppleProducts);
 echo "</pre>";
+/*
+ * Output:
+ * Array
+(
+    [my_apple_keyword] => Apple is good
+    [my_iphone_keyword] => Android is better than iphone for sure
+)
+ */
 
 /// Time for the magic
 $myAppleProducts = $cache->search("better", true);
 echo "<pre>";
 print_r($myAppleProducts);
 echo "</pre>";
+
+/*
+ * Array
+(
+    [my_iphone_keyword] => Android is better than iphone for sure
+)
+ */

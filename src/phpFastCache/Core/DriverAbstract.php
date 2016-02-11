@@ -33,6 +33,17 @@ abstract class DriverAbstract implements DriverInterface
     public $instant;
 
     /**
+     * @param $keyword
+     * @return string
+     */
+    protected function encodeFilename($keyword)
+    {
+        // return trim(trim(preg_replace('/[^a-zA-Z0-9]+/', '_', $keyword), '_'));
+        // return rtrim(base64_encode($keyword), '=');
+        return md5($keyword);
+    }
+
+    /**
      * Basic Functions
      * @param $keyword
      * @param string $value

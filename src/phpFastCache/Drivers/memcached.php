@@ -1,12 +1,25 @@
 <?php
+/**
+ *
+ * This file is part of phpFastCache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt file.
+ *
+ * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
+ * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ *
+ */
+
 namespace phpFastCache\Drivers;
+
 use phpFastCache\Core\DriverAbstract;
 use Memcached as MemcachedSoftware;
 
 /**
- * Class phpFastCache_memcached
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
- * Example at our website, any bugs, problems, please visit http://faster.phpfastcache.com
+ * Class memcached
+ * @package phpFastCache\Drivers
  */
 class memcached extends DriverAbstract
 {

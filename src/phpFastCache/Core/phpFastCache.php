@@ -1,4 +1,17 @@
 <?php
+/**
+ *
+ * This file is part of phpFastCache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt file.
+ *
+ * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
+ * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ *
+ */
+
 namespace phpFastCache\Core;
 
 use phpFastCache\CacheManager;
@@ -7,7 +20,7 @@ use phpFastCache\Exceptions\phpFastCacheDriverException;
 
 /**
  * Class phpFastCache
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
+ * @package phpFastCache\Core
  *
  * Handle methods using annotations for IDE
  * because they're handled by __call()

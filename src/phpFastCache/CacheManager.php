@@ -42,10 +42,11 @@ class CacheManager
             $storage = phpFastCache::$config[ 'overwrite' ];
         } else if (isset(phpFastCache::$config[ 'storage' ]) && !in_array(phpFastCache::$config[ 'storage' ], array('auto', ''), true)) {
             $storage = phpFastCache::$config[ 'storage' ];
-        } else if (!in_array($storage, array('auto', ''), true)) {
+        } else if (in_array($storage, array('auto', ''), true)) {
             $storage = phpFastCache::getAutoClass($config);
         }
 
+      //  echo $storage."<br>";
         $instance = md5(serialize($config) . $storage);
         if (!isset(self::$instances[ $instance ])) {
             $class = '\phpFastCache\Drivers\\' . $storage;

@@ -40,15 +40,6 @@ class files extends DriverAbstract
         return false;
     }
 
-    /**
-     * @param $keyword
-     * @return string
-     */
-    private function encodeFilename($keyword)
-    {
-        return trim(trim(preg_replace('/[^a-zA-Z0-9]+/', '_', $keyword), '_'));
-        // return rtrim(base64_encode($keyword), '=');
-    }
 
     /**
      * @param $filename

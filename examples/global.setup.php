@@ -15,7 +15,9 @@ require '../vendor/autoload.php';
 // Setup File Path on your config files
 $config = array(
     "storage"   =>  "files", // ssdb, files, xcache, sqlite, memcache, memcached, redis, predis, apc, cookie, wincache
-    "path" => sys_get_temp_dir() // or in Windows: "C:/tmp/"
+    "path" => sys_get_temp_dir(), // or in Windows: "C:/tmp/" or "/path/to/your/cache/folder/"
+    "allow_search"  =>   false, // change to true to turn on search method
+    "overwrite"     =>  "", // when your memcache server broken, simple put "files" here, and it will overwrite everything to files cache until u fixed ur server
 );
 CacheManager::setup($config);
 

@@ -3,6 +3,7 @@ namespace phpFastCache\Core;
 
 use phpFastCache\Drivers\example;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
+use phpFastCache\CacheManager;
 
 /**
  * Class BasephpFastCache
@@ -30,6 +31,17 @@ abstract class DriverAbstract implements DriverInterface
      * @var
      */
     public $instant;
+
+    /**
+     * @param $keyword
+     * @return string
+     */
+    protected function encodeFilename($keyword)
+    {
+        // return trim(trim(preg_replace('/[^a-zA-Z0-9]+/', '_', $keyword), '_'));
+        // return rtrim(base64_encode($keyword), '=');
+        return md5($keyword);
+    }
 
     /**
      * Basic Functions
@@ -64,6 +76,16 @@ abstract class DriverAbstract implements DriverInterface
           "expired_in" => $time,
           "expired_time" => time() + (Int)$time,
         );
+
+        // handle search
+        if(isset($this->config['allow_search']) && $this->config['allow_search'] == true) {
+            $option['tags'] = array("search");
+        }
+
+        // handle tags
+        if(isset($option['tags'])) {
+            $this->_handleTags($keyword, $time, $option['tags']);
+        }
 
         return $this->driver_set($keyword, $object, $time, $option);
 
@@ -159,17 +181,66 @@ abstract class DriverAbstract implements DriverInterface
 
     /**
      * Searches though the cache for keys that match the given query.
-     * todo: search
-     * @param $query
+     * @param $query_as_regex_or_string
+     * @param bool $search_in_value
      * @return mixed
-     * @throws \Exception
+     * @throws phpFastCacheDriverException
      */
-    public function search($query)
+    public function search($query_as_regex_or_string, $search_in_value = false)
     {
-        if (method_exists($this, 'driver_search')) {
-            return $this->driver_search($query);
-        }
-        throw new phpFastCacheDriverException('Search method is not supported by this driver.');
+       if($this->config['allow_search'] != true) {
+           throw new phpFastCacheDriverException('Please setup allow_search = true');
+       } else {
+            $list = $this->getTags("search",$search_in_value);
+            $tmp = explode("/",$query_as_regex_or_string,2);
+            $regex = isset($tmp[1]) ? true : false;
+            $return_list = array();
+            foreach($list as $tag) {
+                foreach($tag as $keyword => $value) {
+                    $gotcha = false;
+                    if($search_in_value == true) {
+                        $value = $this->get($keyword);
+                    }
+
+                    if($regex == true && $gotcha == false)
+                    {     // look in keyword
+                        if(preg_match($query_as_regex_or_string,$keyword))
+                        {
+                            $return_list[$keyword] = $value;
+                            $gotcha = true;
+                        }
+                    }
+                    if($gotcha == false ) {
+                        if(strpos($keyword, $query_as_regex_or_string) !== false)
+                        {
+                            $return_list[$keyword] = $value;
+                            $gotcha = true;
+                        }
+                    }
+
+                    if($search_in_value == true && $gotcha == false)
+                    { // value search
+                        if($regex == true &&   $gotcha == false )
+                        {
+                            if (preg_match($query_as_regex_or_string, $value))
+                            {
+                                $return_list[$keyword] = $value;
+                                $gotcha = true;
+                            }
+                        }
+                        if($gotcha == false) {
+                            if (strpos($value, $query_as_regex_or_string) !== false)
+                            {
+                                $return_list[$keyword] = $value;
+                                $gotcha = true;
+                            }
+                        }
+                    }
+                } // each tags loop
+            } // end foreach
+            return $return_list;
+       }
+       return array();
     }
 
     /**
@@ -278,6 +349,7 @@ abstract class DriverAbstract implements DriverInterface
 
     /**
      * @param array $list
+     * @param array $option
      */
     public function deleteMulti($list = array(), $option = array())
     {
@@ -495,36 +567,6 @@ abstract class DriverAbstract implements DriverInterface
         }
     }
 
-
-    /**
-     * Auto Create .htaccess to protect cache folder
-     * @param string $path
-     * @throws \Exception
-     */
-    protected function htaccessGen($path = '')
-    {
-        if ($this->option('htaccess') == true) {
-
-            if (!file_exists($path . '/.htaccess')) {
-                //   echo "write me";
-                $html = "order deny, allow \r\n
-deny from all \r\n
-allow from 127.0.0.1";
-
-                $f = @fopen($path . '/.htaccess', 'w+');
-                if (!$f) {
-                    throw new phpFastCacheDriverException("Can't create .htaccess", 97);
-                }
-                fwrite($f, $html);
-                fclose($f);
-
-
-            } /*else {
-                //   echo "got me";
-            }*/
-        }
-    }
-
     /**
      * Check phpModules or CGI
      * @return bool
@@ -532,55 +574,6 @@ allow from 127.0.0.1";
     protected function isPHPModule()
     {
         return phpFastCache::isPHPModule();
-    }
-
-    /**
-     * return System Information
-     * @return mixed
-     * @throws \Exception
-     */
-    public function systemInfo()
-    {
-        $backup_option = $this->option;
-        if (count($this->option('system')) == 0) {
-            $this->option[ 'system' ][ 'driver' ] = 'files';
-            $this->option[ 'system' ][ 'drivers' ] = array();
-            $dir = @opendir(__DIR__ . '/Drivers/');
-            if (!$dir) {
-                throw new phpFastCacheDriverException("Can't open file dir ext", 100);
-            }
-
-            while ($file = @readdir($dir)) {
-                if ($file != '.' && $file != '..' && strpos($file,
-                    ".php") !== false
-                ) {
-                    require_once(__DIR__ . "/Drivers/" . $file);
-                    $namex = str_replace('.php', '', $file);
-                    $class = 'phpFastCache_' . $namex;
-                    $this->option[ 'skipError' ] = true;
-                    $driver = new $class($this->option);
-                    $driver->option = $this->option;
-                    if ($driver->checkdriver()) {
-                        $this->option[ 'system' ][ 'drivers' ][ $namex ] = true;
-                        $this->option[ 'system' ][ 'driver' ] = $namex;
-                    } else {
-                        $this->option[ 'system' ][ 'drivers' ][ $namex ] = false;
-                    }
-                }
-            }
-
-            /**
-             * PDO is highest priority with SQLite
-             */
-            if ($this->option[ 'system' ][ 'drivers' ][ 'sqlite' ] == true) {
-                $this->option[ 'system' ][ 'driver' ] = 'sqlite';
-            }
-        }
-
-        $example = new example($this->config);
-        $this->option('path', $example->getPath(true));
-        $this->option = $backup_option;
-        return $this->option;
     }
 
 
@@ -608,4 +601,170 @@ allow from 127.0.0.1";
     {
         return phpFastCache::__setChmodAuto($this->config);
     }
+
+
+    /* FOR PLUGINS TAGS */
+
+    protected function _getTagName($tag) {
+        return "__tag__".$tag;
+    }
+
+    protected function _tagCaching() {
+        return CacheManager::Sqlite(array("path"    => $this->config['path']));
+    }
+
+    /**
+     * @param string $keyword
+     * @param mixed $value
+     * @param integer $time
+     * @param array $tags
+     * @param array $option | $option = array("tags" => array("a","b","c")
+     * @return mixed
+     */
+    public function setTags($keyword, $value = '', $time = 0, $tags = array(), $option = array()) {
+        if(!is_array($tags)) {
+            $tags = array($tags);
+        }
+        $option['tags'] = $tags;
+        return $this->set($keyword,$value,$time, $option);
+    }
+
+    protected function _handleTags($keyword, $time, $tags) {
+        foreach($tags as $tag) {
+            $list = $this->_tagCaching()->get($this->_getTagName($tag));
+            if(is_null($list)) {
+                $list = array();
+            }
+            $list[$keyword] = time() + $time;
+            $this->_tagCaching()->set($this->_getTagName($tag),$list,3600*24*30);
+        }
+    }
+
+
+    /**
+     * @param array $tags
+     * @param bool $return_content
+     * @param array $option | $option = array("tags" => array("a","b","c")
+     * @return array
+     */
+    public function getTags($tags = array(), $return_content = true, $option = array()) {
+        if(!is_array($tags)) {
+            $tags = array($tags);
+        }
+        $keywords = array();
+        $tmp = 0;
+
+        foreach($tags as $tag) {
+            $list = $this->_tagCaching()->get($this->_getTagName($tag));
+            $list_return = array();
+            if(is_null($list)) {
+                $list = array();
+            }
+            foreach($list as $keyword=>$time) {
+                if($time <= time()) {
+                    unset($list[$keyword]);
+                } else {
+                    if($tmp < $time) {
+                        $tmp = $time;
+                    }
+                    if($return_content == true) {
+                        $list_return[$keyword] = $this->get($keyword);
+                    } else {
+                        $list_return[$keyword] = $time;
+                    }
+                }
+            }
+
+            $this->_tagCaching()->set($this->_getTagName($tag),$list,$tmp);
+            $keywords[$tag] = $list_return;
+        }
+        return $keywords;
+    }
+
+    /**
+     * @param array $tags | array("a","b","c")
+     * @param int $time
+     * @param array $options
+     * @return mixed
+     * @internal param array $option | $option = array("tags" => array("a","b","c")
+     */
+    public function touchTags($tags = array(), $time = 300,  $options = array()) {
+        if(!is_array($tags)) {
+            $tags = array($tags);
+        }
+        $lists = $this->getTags($tags);
+        foreach($lists as $tag=>$keywords) {
+            foreach($keywords as $keyword=>$time) {
+                $this->touch($keyword, $time, $options);
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @param array $tags | array("a","b","c")
+     * @param array $option | $option = array("tags" => array("a","b","c")
+     * @return mixed
+     */
+    public function deleteTags($tags = array(), $option = array()) {
+        if(!is_array($tags)) {
+            $tags = array($tags);
+        }
+        $lists = $this->getTags($tags);
+        foreach($lists as $tag=>$keywords) {
+            foreach($keywords as $keyword=>$time) {
+                $this->delete($keyword, $option);
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * @param array $tags | array("a","b","c")
+     * @param integer
+     * @param array $option | $option = array("tags" => array("a","b","c")
+     * @return mixed
+     */
+    public function incrementTags($tags = array(), $step = 1, $option = array()) {
+        if(!is_array($tags)) {
+            $tags = array($tags);
+        }
+        $lists = $this->getTags($tags);
+        foreach($lists as $tag=>$keywords) {
+            foreach($keywords as $keyword=>$time) {
+                $this->increment($keyword, $step, $option);
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @param array $tags | array("a","b","c")
+     * @param integer
+     * @param array $option | $option = array("tags" => array("a","b","c")
+     * @return mixed
+     */
+    public function decrementTags($tags = array(), $step = 1, $option = array()) {
+        if(!is_array($tags)) {
+            $tags = array($tags);
+        }
+        $lists = $this->getTags($tags);
+        foreach($lists as $tag=>$keywords) {
+            foreach($keywords as $keyword=>$time) {
+                $this->decrement($keyword, $step, $option);
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @param $value
+     */
+    protected  function _kbdebug($value) {
+        echo "<pre>";
+        print_r($value);
+        echo "</pre>";
+    }
+
 }

@@ -37,6 +37,9 @@ class phpFastCache
       'storage' => '', // blank for auto
       'default_chmod' => 0777, // 0777 , 0666, 0644
 
+      'overwrite'  =>  "", // files, sqlite, etc it will overwrite ur storage and all other caching for waiting u fix ur server
+      'allow_search'   =>  false, // turn to true will allow $method search("/regex/")
+
       'fallback' => 'files', //Fall back when old driver is not support
 
       'securityKey' => 'auto',

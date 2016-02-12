@@ -27,3 +27,6 @@ require_once __DIR__ . '/../Drivers/xcache.php';
 // Exceptions
 require_once __DIR__ . '/../Exceptions/phpFastCacheCoreException.php';
 require_once __DIR__ . '/../Exceptions/phpFastCacheDriverException.php';
+
+// Utils
+require_once __DIR__ . '/../Util/Languages.php';

@@ -45,6 +45,36 @@ abstract class DriverAbstract implements DriverInterface
     public $instant;
 
     /**
+     * Use for __destruct()
+     * @var array
+     */
+    public static $memory = array(
+
+    );
+
+
+    /**
+     * @return array
+     */
+    public static function getMemory()
+    {
+        return self::$memory;
+    }
+
+    /**
+     * @param array $memory
+     */
+    public static function setMemory($memory)
+    {
+        self::$memory = $memory;
+    }
+
+    public function __destruct() {
+        $storage = $this->config['storage'];
+
+    }
+
+    /**
      * @param $keyword
      * @return string
      */

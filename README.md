@@ -103,14 +103,14 @@ echo $products;
 
 ```
 
-#### :floppy_disk: Legacy & Easy Upgrade from Old Version
+#### :floppy_disk: Legacy / Lazy Method
 ```php
 // In your config files
-require_once ('phpFastCache/phpFastCache.php');
+// require_once ('phpFastCache/phpFastCache.php');
 
 use phpFastCache\CacheManager;
 
-$cache = $cache = CacheManager::Files();
+// $cache = $cache = CacheManager::Files();
 // $cache = phpFastCache();
 // $cache = phpFastCache("files");
 // $cache = phpFastCache("memcached");
@@ -120,7 +120,9 @@ $cache = $cache = CacheManager::Files();
  * product_page is "identity keyword";
  */
 $key = "product_page";
-$products = $cache->get($key);
+// $products = $cache->get($key);
+$products = CacheManager::get($key);
+// CacheManager::set() , ::touch ::increment ::search ..etc, work same way without create new instance
 
 // yet it's the same as autoload
 

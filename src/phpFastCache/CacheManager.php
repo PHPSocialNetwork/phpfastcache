@@ -109,10 +109,24 @@ class CacheManager
     /**
      * CacheManager::Files();
      * CacheManager::Memcached();
+     * CacheManager::get($keyword);
+     * CacheManager::set(), touch, other @method supported
      */
     public static function __callStatic($name, $arguments)
     {
-        return self::getInstance($name, (isset($arguments[ 0 ]) ? $arguments[ 0 ] : array()));
+        $driver = strtolower($name);
+        if(!isset(self::$instances['loaded'][$driver])) {
+            // check only first time
+            if(file_exists(__DIR__."/Drivers/".$driver.".php")) {
+                self::$instances['loaded'][$driver] = true;
+            }
+        }
+        if(isset(self::$instances['loaded'][$driver])) {
+            return self::getInstance($name, (isset($arguments[ 0 ]) ? $arguments[ 0 ] : array()));
+        } else {
+            return call_user_func_array(array(self::getInstance(),$name),$arguments);
+        }
+
     }
 
     /**

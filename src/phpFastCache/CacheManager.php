@@ -142,12 +142,14 @@ class CacheManager
       //  echo "Shut Down ".$instance."<br>";
       //  print_r(self::$hit[$instance]);
       //  print_r(self::$memory[$instance]);
+        $old = self::$instances[$instance]->config['cache_method'];
         self::$instances[$instance]->config['cache_method'] = 1;
         foreach(self::$memory[$instance] as $keyword=>$object) {
             self::$instances[$instance]->set($keyword, $object['value'], $object['expired_in']);
         }
        // print_r(self::$hit[$instance]);
        // echo "</pre>";
+        self::$instances[$instance]->config['cache_method'] = $old;
         self::$memory[$instance] = array();
     }
 }

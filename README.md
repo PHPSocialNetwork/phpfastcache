@@ -8,6 +8,25 @@ One Class uses for All Cache. You don't need to rewrite your code many times aga
 Supported: SSDB, Redis, Predis, Cookie, Files, MemCache, MemCached, APC, WinCache, X-Cache, PDO with SQLite
 
 ---------------------------
+Not a "Traditional" Caching
+---------------------------
+phpFastCache is not a traditional caching method which is keep read and write to files, sqlite or mass connections to memcache, redis, mongodb... phpFastCache use my unique caching method.
+When you use Files, and Sqlite, I am guarantee you still can get fast speed almost like memcache & redis for sure. Also, when you use Memcache / Memcached, your miss hits will be reduce.
+Different with normal caching methods these people sharing them everywhere on Internet, phpFastCache reduce the high I/O load, and faster than traditional caching method at least x7 - 10 times.
+However, some time you still want to use traditional caching, we support them too.
+
+```php
+use phpFastCache\CacheManager;
+
+// Default value: is "phpfastcache" (fastest), you can change to "normal" or "memory" (fast)
+CacheManage::CachingMethod("normal");
+// Recommend: use phpfastcache to reduce files I/O & CPU Load, Memcached missing hits, and make redis and other connections become faster.
+// If you get any error due to Server / Hosting, try to change to "memory" , act almost same way as "phpfastcache" but slower a little bit
+// In bad situation, use "normal" as traditional caching method
+
+```
+
+---------------------------
 Reduce Database Calls
 ---------------------------
 
@@ -49,8 +68,7 @@ composer require phpFastCache/phpFastCache
 ```php
 use phpFastCache\CacheManager;
 
-// Include composer autoloader
-require '../vendor/autoload.php';
+// include vendor / autoload.php / phpFastCache.php / etc
 
 $cache = CacheManager::Files();
 
@@ -89,7 +107,8 @@ echo $products;
 // In your config files
 require_once ('phpFastCache/phpFastCache.php');
 
-$cache = phpFastCache();
+$cache = $cache = CacheManager::Files();
+// $cache = phpFastCache();
 // $cache = phpFastCache("files");
 // $cache = phpFastCache("memcached");
 

@@ -23,6 +23,16 @@ use phpFastCache\CacheManager;
 // Include composer autoloader
 require '../vendor/autoload.php';
 
+CacheManager::setup(array(
+    'redis' => array(
+        'host' => '127.0.0.1',
+        'port' => '',
+        'password' => '',
+        'database' => '',
+        'timeout' => '',
+    ),
+));
+
 $InstanceCache = CacheManager::getInstance('predis');
 
 /**

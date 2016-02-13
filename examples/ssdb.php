@@ -26,6 +26,15 @@ use phpFastCache\CacheManager;
 // Include composer autoloader
 require '../vendor/autoload.php';
 
+CacheManager::setup(array(
+    'ssdb' => array(
+        'host' => '127.0.0.1',
+        'port' => 8888,
+        'password' => '',
+        'timeout' => '',
+    ),
+));
+
 $InstanceCache = CacheManager::getInstance('ssdb');
 
 /**

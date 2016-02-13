@@ -23,6 +23,13 @@ use phpFastCache\CacheManager;
 // Include composer autoloader
 require '../vendor/autoload.php';
 
+CacheManager::setup(array(
+    'memcache' => array(
+        array('127.0.0.1', 11211, 1),
+        //  array("new.host.ip",11211,1),
+    ),
+));
+
 $InstanceCache = CacheManager::Memcache();
 // OR CacheManager::getInstance('memcache');
 /**

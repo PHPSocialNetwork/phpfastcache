@@ -80,7 +80,7 @@ class phpFastCache
       ),
 
       'extensions' => array(),
-      "cache_method"    =>  2
+      "cache_method"    =>  1
     );
 
     /**

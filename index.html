@@ -3,7 +3,7 @@
 <head>
     <title>Simple PHP Cache Class | Fast PHP Caching Class</title>
 
-    <meta name="description" content="PHP cache is free, open source that speed up your website. Php caching class is a simple way to reduce mysql. Support Files, APC, Memcached, WinCache, XCache" />
+    <meta name="description" content="PHP cache is free, open source that speed up your website. Php caching class is a simple way to reduce mysql, cpu load, high io. Support Files, APC, Memcached, WinCache, XCache, Redis, Predis, MongoDB, SSDB" />
     <meta name="keywords" content="php cache, php caching, php cache class, php caching class, simple php cache" />
 
     <meta name="google-site-verification" content="2bpKxpBV7IuqGhzgx5jBzl4dZDoIR2XP6ia5ROP5ElA" />
@@ -17,7 +17,7 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/media.queries.css" />
     <link rel="stylesheet" type="text/css" href="stylesheets/tipsy.css" />
     <link rel="stylesheet" type="text/css" href="javascripts/fancybox/jquery.fancybox-1.3.4.css" />
-    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Nothing+You+Could+Do|Quicksand:400,700,300">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nothing+You+Could+Do|Quicksand:400,700,300">
 
     <!-- Javascripts -->
     <script type="text/javascript" src="javascripts/jquery-1.7.1.min.js"></script>
@@ -98,10 +98,10 @@
         <!-- Start Social Icons -->
         <aside>
             <ul class="social">
-                <li class="facebook"><a href="http://www.facebook.com/khoadev" target=_blank >Facebook</a></li>
-                <li class="twitter"><a href="https://twitter.com/phpfastcache" target=_blank >Twitter</a></li>
-                <li class="email"><a href="mailto:khoaofgod@yahoo.com" title="khoaofgod@gmail.com"  >Email</a></li>
-                <li class="rss"><a href="#updates" title="App Updates">RSS</a></li>
+                <li class="facebook"><a href="http://www.facebook.com/khoadev" target=_blank  rel="nofollow"   >Facebook</a></li>
+                <li class="twitter"><a href="http://www.facebook.com/khoadev" target=_blank  rel="nofollow"   >Twitter</a></li>
+                <li class="email"><a href="mailto:khoaofgod@gmail.com" title="khoaofgod@gmail.com"   rel="nofollow"  >Email</a></li>
+                <li class="rss"><a href="https://github.com/PHPSocialNetwork/phpfastcache/releases"  rel="nofollow"   target=_blank title="App Updates">RSS</a></li>
                 <!-- More Social Icons:
                 <li class="dribbble"><a href="">Dribbble</a></li>
                 <li class="google"><a href="">Google</a></li>
@@ -134,8 +134,8 @@
                 <li><a href="#home">Home</a></li>
                 <li><a href="#example" >Example</a></li>
                 <li><a href="#document">Document</a></li>
-                <li><a href="#updates">Updates</a></li>
-                <li><a href="https://github.com/khoaofgod/phpFastCache/issues"   rel="nofollow" title="You can submit your question here!" target="_blank">Issues</a></li>
+                <li><a href="https://github.com/PHPSocialNetwork/phpfastcache/releases"  rel="nofollow"  target="_blank" >Updates</a></li>
+                <li><a href="https://github.com/khoaofgod/phpFastCache/issues"   rel="nofollow" title="You can submit your question here!" target="_blank">Issues / Help</a></li>
                 <li><a href="https://github.com/khoaofgod/phpFastCache/wiki"  rel="nofollow" target="_blank">Wiki</a></li>
                 <li><a href="/contact/"   rel="nofollow" target=_blank >Contact</a></li>
             </ul>
@@ -211,8 +211,12 @@
                     <p class="inline">,</p> <h3>MemCached</h3>
                     <p class="inline">,</p> <h3>WinCache</h3>
                     <p class="inline">,</p> <h3>Cookie</h3>
+                    <p class="inline">,</p> <h3>Redis</h3>
+                    <p class="inline">,</p> <h3>Predis</h3>
+                    <p class="inline">,</p> <h3>SSDB</h3>
+                    <p class="inline">,</p> <h3>MongoDB</h3>
                     <p class="inline">, Files<br><br>
-                        You will never have to rewrite your</p> <h2>PHP caching class</h2><p  class="inline"> again when you change your servers<br><br>
+                        You will never have to rewrite your</p> <h2>PHP caching class</h2><p  class="inline"> again when you change your servers. Faster than traditional Cache 10 times.<br><br>
                 </p>
                 </div>
                 <div class="one_half column_last">
@@ -275,10 +279,11 @@
         <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
     </div>
     <div class="content" style="display: none;">
-        <p>All you need are PHP 5.1+</p>
+        <p>All you need are PHP 5.3+</p>
 
-        <p>It works with All Operating System, all database, and all Web Server that support PHP 5+</p>
+        <p>It works with All Operating System, all database, and all Web Server that support PHP 5.3+</p>
         <p>phpFastCache is Open Source, feel FREE to edit and join our GitHub Community.</p>
+        <p>For PHP Version < 5.3, please download version 3.x and version 2.0</p>
     </div>
 </li>
 <li>
@@ -287,13 +292,10 @@
         <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
     </div>
     <div class="content" style="display: none;">
-        <p>Just 2 steps:<br>
+        <p>Composer require phpFastCache/phpFastCache - OR Just 2 steps:<br>
             1. Click Download & Unzip<br>
             2. Include("phpFastCache/phpFastCache.php");</p>
         <p>You are Ready to speed up your slowly website!</p>
-        <p>__c()->set("item_name", $value, 600); <br>
-            $value = __c()->get("item_name"); <br>
-        </p>
     </div>
 </li>
 
@@ -306,32 +308,40 @@
         <p>
 <pre class="prettyprint php">
 &lt;?php
-    require_once("phpFastCache/phpFastCache.php");
+    use phpFastCache\CacheManager;
     // auto, redis, cookie, files, sqlite, xcache, memcache, apc, memcached, wincache
-    phpFastCache::setup("storage","auto");
-    phpFastCache::setup("path", dirname(__FILE__)); // Path For Files
 
-     // SET a Data into Cache
-    __c()->set("keyword", "array|object|string|data", $time_in_second);
+    $config = array(
+        "storage"   => "files",
+        "path"      =>  "/path/dir/to/your/cache",
+    );
+    CacheManager::setup($config);
+    CacheManager::CachingMethod("phpfastcache");
 
-    // GET a Data from Cache
-    $data = __c()->get("keyword");
+    $cache = CacheManager::getInstance();
 
-    $object = __c()->getInfo("keyword"); // ARRAY
+    // The getter, obviously, return your cache object
+    $cache->get($keyword);
 
-    // Others Funtions
-    __c()->delete("keyword");
-    __c()->increment("keyword", $step = 1); // TRUE | FALSE
-    __c()->decrement("keyword", $step = 1); // TRUE | FALSE
-    __c()->touch("keyword", $more_time_in_second); // TRUE | FALSE
-    __c()->clean();
-    __c()->stats(); // ARRAY
-    __c()->isExisting("keyword"); // TRUE | FALSE
+    // The setter, for those who missed it, put 0 meant cache it forever
+    $cache->set($keyword, $something_your_want_to_cache, $time_as_second = 0);
 
-    // Direct Keyword SET & GET
-    __c()->keyword = array("array|object|string|data", $time_in_second);
-    $data = __c()->keyword;
+    $cache->delete($keyword); // For removing a cached thing
+    // Allow you to completely empty the cache and restart from the beginning
+    $cache->clean();
 
+    // Allow you to extends the lifetime of an entry without altering the value
+    $cache->touch($keyword, $time_you_want_to_extend);
+    $cache->increment($keyword, $step = 1); // For integer that we can count on
+    $cache->decrement($keyword, $step = 1); // Redundant joke...
+    // Allow you to perform some search on the cache index
+    $cache->search($string_or_regex, $search_in_value = false | true);
+    // Check if your cache entry exists, it is the equivalent of isset()
+    $cache->isExisting($keyword);
+    // Return the cache statistics, useful for checking disk space used by the cache etc.
+    $cache->stats();
+
+    // for Multi Call, Support Tags, Look at Folder Examples
 
 </pre>
 
@@ -355,16 +365,20 @@
  */
 
 // Require Library
-require_once("../phpFastCache/phpFastCache.php");
+use phpFastCache\CacheManager;
+require_once("src/phpFastCache/phpFastCache.php");
 
 // simple Caching with:
-$cache = phpFastCache();
+// $cache = phpFastCache();
+// $cache = CacheManager::getInstance();
+
+$cache = CacheManager::Files();
 
 // Try to get $products from Caching First
 // product_page is "identity keyword";
 $products = $cache->get("product_page");
 
-if($products == null) {
+if(is_null($products)) {
     $products = "DB QUERIES | FUNCTION_GET_PRODUCTS | ARRAY | STRING | OBJECTS";
     // Write products to Cache in 10 minutes with same keyword
     $cache->set("product_page",$products , 600);
@@ -391,8 +405,6 @@ echo $products;
  * Learn how to setup phpFastCache ?
  */
 
-require_once("../phpFastCache/phpFastCache.php");
-
 /*
  * Now this is Optional Config setup for default phpFastCache
  */
@@ -402,7 +414,7 @@ $config = array(
          * Default storage
          * if you set this storage => "files", then $cache = phpFastCache(); <-- will be files cache
          */
-        "storage"   =>  "auto", // files, sqlite, auto, apc, wincache, xcache, memcache, memcached,
+        "storage"   =>  "auto", // ssdb, predis, redis, mongodb , files, sqlite, auto, apc, wincache, xcache, memcache, memcached,
 
         /*
          * Default Path for Cache on HDD
@@ -415,13 +427,9 @@ $config = array(
         /*
          * FallBack Driver
          * Example, in your code, you use memcached, apc..etc, but when you moved your web hosting
-         * The new hosting don't have memcached, or apc. What you do? Set fallback that driver to other driver.
+         * Until you setup your new server caching, use "overwrite" => "files"
          */
-        "fallback"  =>  array(
-                "example"   =>  "files",
-                "memcache"  =>  "files",
-                "apc"       =>  "sqlite",
-        ),
+        "overwrite"  =>  "files", // whatever caching will change to "files" and you don't need to change ur code
 
         /*
          * .htaccess protect
@@ -436,25 +444,46 @@ $config = array(
                 array("127.0.0.1",11211,1),
             //  array("new.host.ip",11211,1),
         ),
+
+
+        'memcache' => array(
+                array('127.0.0.1', 11211, 1),
+                  //  array("new.host.ip",11211,1),
+        ),
+        'redis' => array(
+                'host' => '127.0.0.1',
+                'port' => '',
+                'password' => '',
+                'database' => '',
+                'timeout' => '',
+        ),
+        'ssdb' => array(
+                'host' => '127.0.0.1',
+                'port' => 8888,
+                'password' => '',
+                'timeout' => '',
+        ),
+        // use 1 as normal traditional, 2 = phpfastcache fastest as default, 3 = phpfastcache memory stable
+        "caching_method" => 2,
 );
 
-phpFastCache::setup($config);
+CacheManager::setup($config);
+// If any error, try "memory" first before swich to "normal" as traditional caching
+CacheManager::CachingMethod("phpfastcache");
 
-// OR
-
-phpFastCache::setup("storage","files");
-phpFastCache::setup("path", dirname(__FILE__));
 
 /*
  * End Optional Config
  */
 
 $cache = phpFastCache(); // this will be $config['storage'] up there;
-$cache2 = phpFastCache("memcache"); // this will use memcache
-$cache3 = new phpFastCache("apc"); // this will use apc
+$cache = CacheManager::getInstance(); // this will be $config['storage'] up there;
+$cache = phpFastCache("memcache"); // this will use memcache
+$cache = CacheManager::Files() // this will use Files
+$cache = CacheManager::Predis() // this will use Predis
 
 $products = $cache->my_products;
-if($products == null) {
+if(is_null($products)) {
     $products = "object | array | function_get_products";
     // write to cache
     $cache->my_products = array($products, 600);
@@ -480,8 +509,10 @@ echo $products;
     /*
      * List of functions and examples
      */
-    require_once("../phpFastCache/phpFastCache.php");
+    use phpFastCache\CacheManager;
+
     $cache = phpFastCache();
+    $cache = CacheManager::Files();
 
     // Write into cache
     $cache->set("keyword", "data | array | object", 300);
@@ -544,6 +575,19 @@ echo $products;
                             array("key2", 2),
                         ));
 
+    // Tagging
+    $cache->set($keyword, $value, $time, array("tags" => array("tag1","tag2","tag3"));
+    $cache->setTags($keyword, $value, $time, array("tag1","tag2","tag3"));
+    $list = $cache->getTags(array("tag1"));
+    $cache->deleteTags(array("tag1"));
+    $cache->incrementTags(array("tag1"));
+    $cache->decrementTags(array("tag1"));
+    $cache->touchTags(array("tag1"));
+
+    // Searching
+    $list = $cache->search("string_or_regex", $search_in_value = false | true);
+
+
 
         </pre>
         </p>
@@ -564,31 +608,15 @@ echo $products;
  * shortcut! to make it faster!
  * phpFastCache can use 2 functions:
  * __c() and phpFastCache() at any where without limit
- *
- * Example 1
+ * Or lazy with CacheManager::set && CacheManager::get
  */
 
-require_once("../phpFastCache/phpFastCache.php");
+    use phpFastCache\CacheManager;
 
-// get from cache
-$products = __c()->my_products;
-
-if($products == null) {
-    $products = "ARRAY | OBJECT | FUNCTION GET PRODUCTS";
-    // write to cache;
-    __c()->my_products = array($products, 300);
-}
-
-echo $products;
-
-/*
- * Example 2 - Short Cut
- */
-
-$products = __c("files")->get("keyword");
-
-// Write to Files Cache 24 hours;
-__c("files")->set("keyword","data | something | array | object", 3600*24);
+    $data = CacheManager::get("products_list");
+    // write ?
+    CacheManager::set("products_list", $my_array, 3600*24,
+                  array("tags" =>  array("computer","laptop"));
 
 
         </pre>
@@ -597,135 +625,7 @@ __c("files")->set("keyword","data | something | array | object", 3600*24);
 </li>
 
 
-<li>
-    <div class="title">
-        <div class="h3"><span>X.</span> Traveling</div>
-        <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
-    </div>
-    <div class="content" style="display: none;">
-        <p>
-        <pre class="prettyprint php">
-&lt;?php
 
-        /*
- * One of Great things about phpFastCache is Traveling
- * You can travel between all caching drivers
- */
-
-/*
- * Travel by $cache
- */
-
-$cache = phpFastCache();
-
-
-// Now, this is magic
-$product = $cache->get("keyword");
-$product = $cache->apc->get("keyword");
-$product = $cache->memcached->get("keyword");
-
-$cache->files->set("keyword","array | object",300);
-$cache->files->keyword = array("array | object", 300);
-
-/*
- * phpFastCache is free traveling
- */
-
-$cache = new phpFastCache("files");
-
-$cache->memcache->keyword = array("data",300);
-$cache->sqlite->set("keyword","data",300);
-
-$product = $cache->apc->get("keyword");
-$product = $cache->files->keyword;
-
-/*
- * We use Files cache for widget caching
- * Memory caching like APC, Memcached for DB Caching
- */
-
-
-        </pre>
-        </p>
-    </div>
-</li>
-
-
-<li>
-    <div class="title">
-        <div class="h3"><span>X.</span> Master</div>
-        <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
-    </div>
-    <div class="content" style="display: none;">
-        <p>
-        <pre class="prettyprint php">
-&lt;?php
-
-
-// in your config files
-include("phpFastCache/phpFastCache.php");
-// auto | memcache | files ...etc. Will be default for $cache = __c();
-phpFastCache::$storage = "auto";
-
-$cache1 = phpFastCache();
-$cache1->option("path","/PATH/TO/SOME_WHERE/STORE_FILES/");
-
-$cache2 = __c("memcache");
-$server = array(array("127.0.0.1",11211,100), array("128.5.1.3",11215,80));
-$cache2->option("server", $server);
-
-$cache3 = new phpFastCache("apc");
-
-// How to Write?
-$cache1->set("keyword1", "string|number|array|object", 300);
-$cache2->keyword2 = array("something here", 600);
-__c()->keyword3 = array("array|object", 3600*24);
-
-// How to Read?
-$data = $cache1->get("keyword1");
-$data = $cache2->keyword2;
-$data = __c()->keyword3;
-$data = __c()->get("keyword4");
-
-// Free to Travel between any caching methods
-
-$cache1 = phpFastCache("files");
-$cache1->set("keyword1", $value, $time);
-$cache1->memcache->set("keyword1", $value, $time);
-$cache1->apc->set("whatever", $value, 300);
-
-$cache2 = __c("apc");
-$cache2->keyword1 = array("so cool", 300);
-$cache2->files->keyword1 = array("Oh yeah!", 600);
-
-$data = __c("memcache")->get("keyword1");
-$data = __c("files")->get("keyword2");
-$data = __c()->keyword3;
-
-// Multiple ? No Problem
-
-$list = $cache1->getMulti(array("key1","key2","key3"));
-$cache2->setMulti(array("key1","value1", 300),
-    array("key2","value2", 600),
-    array("key3","value3", 1800),
-                      );
-
-$list = $cache1->apc->getMulti(array("key1","key2","key3"));
-__c()->memcache->getMulti(array("a","b","c"));
-
-// Others
-$cache->delete("keyword");
-$cache->increment("keyword", $step = 1);
-$cache->decrement("keyword", $step = 1);
-$cache->clean();
-$cache->stats();
-$cache->isExisting("keyword");
-
-
-        </pre>
-        </p>
-    </div>
-</li>
 
 
 <li>
@@ -734,11 +634,11 @@ $cache->isExisting("keyword");
         <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
     </div>
     <div class="content" style="display: none;">
-        <p>phpFastCache is Lightweight, Fastest & Security, supported many caching class (APC, MemCached, MemCache, Files, PDO, WinCache).
+        <p>phpFastCache is Lightweight, Fastest & Security, supported many caching class (APC, MemCached, MemCache, Files, PDO, WinCache). PhpFastCache is faster than traditional caching method at least 7-10 times.
         </p>
         <p>It is more simple by Set, Get, and automatic clean up cache. It is also save more CPU usage than using other file cache.</p>
         <p>phpFastCache can run as Memory Caching. Memory is always faster than file system.<br><br>
-            phpFastCache supported: Files, APC, PDO, MemCached, MemCache, XCache and WinCache; It is more easier than all other caching on integrated into your code. You won't need root permission, you don't need to edit php.ini,
+            phpFastCache supported: Redis, Predis, SSDB, MongoDB, Files, APC, PDO, MemCached, MemCache, XCache and WinCache; It is more easier than all other caching on integrated into your code. You won't need root permission, you don't need to edit php.ini,
             and will never worry about your server memory by caching again.<br><br>
             Are you thinking about DSO, CGI, FastCgi, suPHP? phpFastCache can run on all of them.
             If you want to change your cache $storage when your move your web server, just set it from $storage = "apc" to "memcached" , "wincache" , "files" , or simple with "auto" detect.
@@ -746,7 +646,7 @@ $cache->isExisting("keyword");
         <p>phpFastCache can run on shared hosting, VPS, Dedicated Server, and help you save lot of cost from upgrading your Web Server. phpFastCache help thousand of website already.</p>
 
 
-        <p>And It's open Source you can edit the source code by your own ^_^<br>
+        <p>And It's open Source as MIT License<br>
             Try it and you will love phpFastCache<br><br>
             Hey hey! Are you lazy to learn new thing?<br>
             Dude, phpFastCache only uses 2 simple methods: SET & GET =.=!<br>
@@ -769,30 +669,53 @@ $cache->isExisting("keyword");
 
 <!-- Start Screenshots -->
 <div id="example" class="page">
+    <div class="h1">Not a Normal / Traditional Cache</div>
+    <p class="inline">
+        phpFastCache is also a unique caching method, it's not only help reduce Database & API call, but it's
+    </p><h2>PHP Caching Class Reduce CPU High Load & I/O</h2>
+    <p class="inline">
+        . Yes, it faster than traditional / normal caching method these shared everywhere on internet like 7-10 times. Using phpFastCache with Files, you can almost get the same speed like Memcached.
+        Using phpFastCache with Memcached, Redis, SQlite ..etc, you can reduce the missing hit rates, connections number, and CPU Load.
+        This is a unique fastest caching lib.
+    </p>
+    <br>
+    <br>
     <div class="h1">Reduce Database Calls </div>
-
     <h2>PHP Caching Class For Database</h2>
     <p class="inline">: Your website have 10,000 visitors who are online, and your dynamic page have to send 10,000 same queries to database on every page load.
         With phpFastCache, your page only send 1 query to DB, and use the cache to serve 9,999 other visitors.
     </p>
+
     <br>
     <p>
 <pre class="prettyprint php">
 &lt;?php
     // In your config file
-    include("phpFastCache.php");
-    // phpFastCache::setup("storage","redis"); default global for everywhere.
-    // phpFastCache support "redis", "cookie", "apc", "memcache", "memcached", "wincache" ,"files", "sqlite" and "xcache"
-    
-    // You don't need to change your code when you change your caching system, blank will use default global:
-    $cache = phpFastCache(); 
-    // $cache = phpFastCache("memcache");
+    // include("phpFastCache/phpFastCache.php"); or use "Composer" Vendor / Autoload
+    // phpFastCache support "ssdb", "mongodb", "redis", "cookie", "apc", "memcache",
+    // "memcached", "wincache" ,"files", "sqlite" and "xcache"
+
+    use phpFastCache\CacheManager;
+
+    $config = array(
+        "storage"   =>  "files",
+        "path"      =>  "/your_cache_path/dir/",
+    );
+
+    CacheManager::setup($config); // look at folder "Examples" for more setup & config
+    CacheManager::CachingMethod("phpfastcache"); // use "normal" as traditional
+
+    // You don't need to change your code when you change your caching system,
+    $cache = CacheManager::getInstance();
+    // $cache = CacheManager::Files();
+    // $cache = CacheManager::Memcached(); <-- ::Reids() ::Predis() ::ssdb() ..etc
+    // $cache = CacheManager::getInstance("redis", $config);
 
     // In your Class, Functions, PHP Pages
     // try to get from Cache first. product_page = YOUR Identity Keyword
     $products = $cache->get("product_page");
 
-    if($products == null) {
+    if(is_null($products)) {
         $products = YOUR DB QUERIES || GET_PRODUCTS_FUNCTION;
         // set products in to cache in 600 seconds = 10 minutes and 0 = never expired
         $cache->set("product_page", $products,600);
@@ -813,9 +736,9 @@ $cache->isExisting("keyword");
     <p>
 <pre class="prettyprint php">
 &lt;?php
-    include("phpFastCache/phpFastCache.php");
+    use phpFastCache\CacheManager;
 
-    $cache = phpFastCache("memcached");
+    $cache = CacheManager::Memcached();
 
     // try to get from Cache first.
     $results = $cache->get("identity_keyword")
@@ -841,8 +764,10 @@ $cache->isExisting("keyword");
     <p>
 <pre class="prettyprint php">
 &lt;?php
+    use phpFastCache\CacheManager;
+
     // use Files Cache for Whole Page / Widget
-    $cache = phpFastCache("files");
+    $cache = CacheManager::Files();
 
     $html = $cache->widget_1;
 
@@ -865,6 +790,8 @@ $cache->isExisting("keyword");
     <p>
 <pre class="prettyprint php">
 &lt;?php
+    use phpFastCache\CacheManager;
+
     // use Files Cache for Whole Page / Widget
 
     // keyword = Webpage_URL
@@ -899,54 +826,37 @@ $cache->isExisting("keyword");
 <pre class="prettyprint php">
 &lt;?php
     // in your config files
-    include("phpFastCache/phpFastCache.php");
+    // include("phpFastCache/phpFastCache.php");
+    // Use "Composer" / Vendor / Autoload
+
     // auto | memcache | files ...etc. Will be default for $cache = __c();
-    phpFastCache::$storage = "auto";
+    use phpFastCache\CacheManager;
 
-    $cache1 = phpFastCache();
-
-    $cache2 = __c("memcache");
-    $server = array(array("127.0.0.1",11211,100), array("128.5.1.3",11215,80));
-    $cache2->option("server", $server);
-
-    $cache3 = new phpFastCache("apc");
+    $cache = CacheManager::getInstance("memcached");
+    $cache = CacheManager::getInstance("redis");
+    $cache = CacheManager::Files();
+    // Legacy: $cache = phpFastCache();
 
     // How to Write?
-    $cache1->set("keyword1", "string|number|array|object", 300);
-    $cache2->keyword2 = array("something here", 600);
-    __c()->keyword3 = array("array|object", 3600*24);
+    $cache->set("keyword1", "string|number|array|object", 300);
+    // Write with tags
+    $cache->set("keyword2",  "string|number|array|object", 3600,
+                array("tags"   =>  array("computer", "apple","laptop"));
+    $cache->set("keyword3",  "string|number|array|object", 3600*24,
+                array("tags"   =>  array("apple","laptop"));
 
     // How to Read?
-    $data = $cache1->get("keyword1");
-    $data = $cache2->keyword2;
-    $data = __c()->keyword3;
-    $data = __c()->get("keyword4");
-
-    // Free to Travel between any caching methods
-
-    $cache1 = phpFastCache("files");
-    $cache1->set("keyword1", $value, $time);
-    $cache1->memcache->set("keyword1", $value, $time);
-    $cache1->apc->set("whatever", $value, 300);
-
-    $cache2 = __c("apc");
-    $cache2->keyword1 = array("so cool", 300);
-    $cache2->files->keyword1 = array("Oh yeah!", 600);
-
-    $data = __c("memcache")->get("keyword1");
-    $data = __c("files")->get("keyword2");
-    $data = __c()->keyword3;
+    $data = $cache->get("keyword1");
+    $data = $cache->getTags(array("laptop"));
+    $data = $cache->search("string|regrex", $search_value = false | true);
 
     // Multiple ? No Problem
 
-    $list = $cache1->getMulti(array("key1","key2","key3"));
-    $cache2->setMulti(array("key1","value1", 300),
+    $list = $cache->getMulti(array("key1","key2","key3"));
+    $cache->setMulti(array("key1","value1", 300),
                       array("key2","value2", 600),
                       array("key3","value3", 1800),
                       );
-
-    $list = $cache1->apc->getMulti(array("key1","key2","key3"));
-    __c()->memcache->getMulti(array("a","b","c"));
 
     // want more? Check out document in source code
 
@@ -1138,9 +1048,14 @@ $cache->isExisting("keyword");
 
 <!-- Start Footer -->
 <footer class="container">
-    <p>phpFastCache &copy; 2011 - 2015 - A PHP Caching Class - Simple Yet Powerful</p>
+    <p>phpFastCache &copy; 2011 - 2016 - A PHP Caching Class - Simple Yet Powerful</p>
+    <br><br>
+    <a href="https://codeclimate.com/github/PHPSocialNetwork/phpfastcache"  rel="nofollow" target="_blank"><img src="//codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg"></a>
+    <a href="https://codeclimate.com/github/PHPSocialNetwork/phpfastcache"  rel="nofollow" target="_blank"><img src="//travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=final"></a>
+    <a href="https://packagist.org/packages/phpfastcache/phpfastcache"  rel="nofollow" target="_blank"><img src="//img.shields.io/packagist/v/phpfastcache/phpfastcache.svg"></a>
+    <a href="https://packagist.org/packages/phpfastcache/phpfastcache"  rel="nofollow" target="_blank"><img src="//img.shields.io/packagist/dt/phpfastcache/phpfastcache.svg"></a>
+    <a href="https://packagist.org/packages/phpfastcache/phpfastcache"  rel="nofollow" target="_blank"><img src="//img.shields.io/packagist/l/phpfastcache/phpfastcache.svg"></a>
 
-   
 </footer>
 
 <!-- End Footer -->

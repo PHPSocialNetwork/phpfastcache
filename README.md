@@ -107,6 +107,8 @@ echo $products;
 // In your config files
 require_once ('phpFastCache/phpFastCache.php');
 
+use phpFastCache\CacheManager;
+
 $cache = $cache = CacheManager::Files();
 // $cache = phpFastCache();
 // $cache = phpFastCache("files");

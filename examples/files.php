@@ -28,6 +28,11 @@ use phpFastCache\CacheManager;
 CacheManager::setup(array(
     "path" => sys_get_temp_dir(), // or in windows "C:/tmp/"
 ));
+// our unique method of caching, faster than traditional caching which shared everywhere on internet like 7-10 times
+// reduce high load CPU, reduce I/O from files open
+// reduce missing hits of memcache, reduce connection to redis and others caches
+// Accepted value: "normal" < "memory" < "phpfastcache"
+CacheManager::CachingMethod("phpfastcache");
 
 // In your class, function, you can call the Cache
 $InstanceCache = CacheManager::Files();

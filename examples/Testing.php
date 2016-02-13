@@ -35,40 +35,32 @@ require_once("../src/phpFastCache/phpFastCache.php");
 CacheManager::setup(array(
     "path" => "C:/tmp/", // or in windows "C:/tmp/"
 ));
-CacheManager::CachingMethod("normal");
+CacheManager::CachingMethod("phpfastcache");
 
 $start = microtime();
-for($i=1;$i<=1000;$i++) {
+
 // In your class, function, you can call the Cache
-    $cache = CacheManager::Files();
+$InstanceCache = CacheManager::Files();
+// OR $InstanceCache = CacheManager::getInstance() <-- open examples/global.setup.php to see more
 
-    $keyword1 = "my_apple_keyword";
-    $value1 = "Apple is good";
-    $cache->set($keyword1, $value1, 300, array("tags" => array("apple", "laptop", "computer")));
-// OR: $cache->setTags($keyword1,$value1,300, array("computer","laptop"));
+/**
+ * Try to get $products from Caching First
+ * product_page is "identity keyword";
+ */
+$key = "product_page2";
+$CachedString = $InstanceCache->get($key);
 
+if (is_null($CachedString)) {
+    $CachedString = "Files Cache --> Well done !";
+    // Write products to Cache in 10 minutes with same keyword
+    $InstanceCache->set($key, $CachedString, 600);
 
-    $keyword2 = "my_iphone_keyword";
-    $value2 = "Android is better than iphone for sure";
-    $cache->setTags($keyword2, $value2, 800, array("apple", "cellphone"));
+    echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ";
+    echo $CachedString;
 
-
-/// Time for the magic
-    $myAppleProducts = $cache->getTags(array("apple", "laptop"));
-
-
-/// Time for the magic
-    $cellphones = $cache->getTags(array("cellphone"));
-
-
-
-/// Just need Keywords & Expired Time, No Caching Contents => put false at end
-    $myAppleProducts = $cache->getTags(array("apple", "laptop"), false);
-
+} else {
+    echo "READ FROM CACHE // ";
+    echo $CachedString;
 }
-$end = microtime();
-echo round($end - $start,5);
-echo "<pre>";
-print_r(CacheManager::$memory);
-print_r(CacheManager::$hit);
 
+echo '<br /><br /><a href="/">Back to index</a>&nbsp;--&nbsp;<a href="/' . basename(__FILE__) . '">Reload</a>';

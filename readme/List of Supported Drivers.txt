@@ -1,6 +1,0 @@
-Look at this folder: phpFastCache/x.x.x/Drivers/*.php
-All files here are supported drivers.
-
-You can build new one, put it here, take a look at the example.php and cookie.php
-
-If you finish one driver, go to github and commit it, contact me khoaofgod@gmail.com , I put it on release and share for everyone, we thanks to your work.

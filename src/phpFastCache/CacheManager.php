@@ -37,6 +37,8 @@ use phpFastCache\Core\DriverAbstract;
 class CacheManager
 {
     protected static $instances = array();
+    public static $memory = array();
+    public static $config = array();
 
     /**
      * @param string $storage
@@ -61,7 +63,12 @@ class CacheManager
       //  echo $storage."<br>";
         $instance = md5(serialize($config) . $storage);
         if (!isset(self::$instances[ $instance ])) {
+            $config['storage'] = $storage;
             $class = '\phpFastCache\Drivers\\' . $storage;
+            self::$config[$instance] = $config;
+            if(!isset(self::$memory[$instance])) {
+                self::$memory[$instance] = array();
+            }
             self::$instances[ $instance ] = new $class($config);
         }
 

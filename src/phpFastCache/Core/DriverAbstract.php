@@ -44,21 +44,13 @@ abstract class DriverAbstract implements DriverInterface
      */
     public $instant;
 
-    /**
-     * Use for __destruct()
-     * @var array
-     */
-    public static $memory = array(
-
-    );
-
 
     /**
      * @return array
      */
     public static function getMemory()
     {
-        return self::$memory;
+        return CacheManager::$memory;
     }
 
     /**
@@ -66,7 +58,7 @@ abstract class DriverAbstract implements DriverInterface
      */
     public static function setMemory($memory)
     {
-        self::$memory = $memory;
+        CacheManager::$memory = $memory;
     }
 
     public function __destruct() {

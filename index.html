@@ -714,11 +714,13 @@ echo $products;
     // In your Class, Functions, PHP Pages
     // try to get from Cache first. product_page = YOUR Identity Keyword
     $products = $cache->get("product_page");
+    // Lazy? $products = CacheManager::get("keyword");
 
     if(is_null($products)) {
         $products = YOUR DB QUERIES || GET_PRODUCTS_FUNCTION;
         // set products in to cache in 600 seconds = 10 minutes and 0 = never expired
         $cache->set("product_page", $products,600);
+        // CacheManager::set() work the same too
     }
 
     // Output Your Contents $products HERE

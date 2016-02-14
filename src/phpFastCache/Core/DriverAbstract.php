@@ -134,7 +134,7 @@ abstract class DriverAbstract implements DriverInterface
         }
 
         // handle method
-        if(in_array((Int)$this->config['cache_method'], array(2,3))) {
+        if((Int)$this->config['cache_method'] > 1) {
             if(isset(CacheManager::$memory[$this->config['instance']][$keyword])) {
                 $object = CacheManager::$memory[$this->config['instance']][$keyword];
             }
@@ -145,7 +145,7 @@ abstract class DriverAbstract implements DriverInterface
             $object = $this->driver_get($keyword, $option);
 
             // handle method
-            if(in_array((Int)$this->config['cache_method'], array(2,3))) {
+            if((Int)$this->config['cache_method'] > 1) {
                 CacheManager::$memory[$this->config['instance']][$keyword] = $object;
             }
             // end handle method
@@ -166,7 +166,7 @@ abstract class DriverAbstract implements DriverInterface
      */
     public function getInfo($keyword, $option = array())
     {
-        if(in_array((Int)$this->config['cache_method'], array(2,3))) {
+        if((Int)$this->config['cache_method'] > 1) {
             if(isset(CacheManager::$memory[$this->config['instance']][$keyword])) {
                 $object = CacheManager::$memory[$this->config['instance']][$keyword];
             }
@@ -188,7 +188,7 @@ abstract class DriverAbstract implements DriverInterface
     public function delete($keyword, $option = array())
     {
         // handle method
-        if(in_array((Int)$this->config['cache_method'], array(2,3))) {
+        if((Int)$this->config['cache_method'] > 1) {
             // use memory
             CacheManager::$memory[$this->config['instance']][$keyword] = null;
             return true;
@@ -213,7 +213,7 @@ abstract class DriverAbstract implements DriverInterface
     public function clean($option = array())
     {
         // handle method
-        if(in_array((Int)$this->config['cache_method'], array(2,3))) {
+        if((Int)$this->config['cache_method'] > 1) {
             // use memory
             CacheManager::$memory[$this->config['instance']] = array();
         }

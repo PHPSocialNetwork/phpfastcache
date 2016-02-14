@@ -829,9 +829,11 @@ abstract class DriverAbstract implements DriverInterface
     }
 
     public function _hit($index, $step = 1) {
+        /*
         $instance = $this->config['instance'];
         $current = isset(CacheManager::$hit[$instance]['data'][$index]) ? CacheManager::$hit[$instance]['data'][$index] : 0;
         CacheManager::$hit[$instance]['data'][$index] = $current + ($step);
+        */
     }
 
 }

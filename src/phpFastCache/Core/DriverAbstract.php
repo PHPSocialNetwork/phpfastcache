@@ -46,8 +46,8 @@ abstract class DriverAbstract implements DriverInterface
 
 
     public function __destruct() {
-        // clean up the memory and don't want for PHP clean
-        if(isset($this->config['instance'])) {
+        // clean up the memory and don't want for PHP clean for caching method "memory"
+        if(isset($this->config['instance']) && (Int)$this->config['cache_method'] === 3) {
             CacheManager::$memory[$this->config['instance']] = null;
             CacheManager::$instances[$this->config['instance']] = null;
             $this->tmp = null;

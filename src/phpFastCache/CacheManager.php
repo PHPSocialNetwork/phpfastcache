@@ -64,7 +64,7 @@ class CacheManager
 
       //  echo $storage."<br>";
         $instance = md5(serialize($config) . $storage);
-        if (!isset(self::$instances[ $instance ])) {
+        if (!isset(self::$instances[ $instance ]) || is_null(self::$instances[ $instance ])) {
             $class = '\phpFastCache\Drivers\\' . $storage;
             $config['storage'] = $storage;
             $config['instance'] = $instance;

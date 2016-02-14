@@ -45,11 +45,7 @@ abstract class DriverAbstract implements DriverInterface
     public $instant;
 
 
-    public function __destruct() {
-        if((Int)$this->config['cache_method'] == 3) {
-            CacheManager::__caching_method($this->config['instance']);
-        }
-    }
+
 
     /**
      * @param $keyword
@@ -107,9 +103,8 @@ abstract class DriverAbstract implements DriverInterface
         }
 
         // handle method
-        if(in_array((Int)$this->config['cache_method'], array(2,3))) {
+        if((Int)$this->config['cache_method'] > 1) {
             CacheManager::$memory[$this->config['instance']][$keyword] = $object;
-            return true;
         }
 
         $this->_hit("set",1);
@@ -815,9 +810,11 @@ abstract class DriverAbstract implements DriverInterface
      * @param $value
      */
     protected  function _kbdebug($value) {
+        /*
         echo "<pre>";
         print_r($value);
         echo "</pre>";
+        */
     }
 
     public function _hit($index, $step = 1) {

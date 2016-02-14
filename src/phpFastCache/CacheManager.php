@@ -72,9 +72,6 @@ class CacheManager
             if(!isset(self::$memory[$instance])) {
                 self::$memory[$instance] = array();
             }
-            if($config['cache_method'] == 2) {
-                register_shutdown_function('phpFastCache\CacheManager::__caching_method', $instance);
-            }
             self::$instances[ $instance ] = new $class($config);
         }
 
@@ -127,19 +124,4 @@ class CacheManager
         phpFastCache::setup($name, $value);
     }
 
-    public static function __caching_method($instance) {
-        $old = (Int)self::$instances[$instance]->config['cache_method'];
-        if($old == 2) {
-            @ignore_user_abort(true);
-            @set_time_limit(0);
-            @header("Connection: close");
-            @flush();
-        }
-        self::$instances[$instance]->config['cache_method'] = 1;
-        foreach(self::$memory[$instance] as $keyword=>$object) {
-            self::$instances[$instance]->set($keyword, $object['value'], $object['expired_in']);
-        }
-        self::$instances[$instance]->config['cache_method'] = $old;
-        self::$memory[$instance] = array();
-    }
 }

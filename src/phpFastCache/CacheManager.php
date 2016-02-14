@@ -36,7 +36,7 @@ use phpFastCache\Core\DriverAbstract;
  */
 class CacheManager
 {
-    protected static $instances = array();
+    public static $instances = array();
     public static $memory = array();
 
     /**

@@ -45,7 +45,15 @@ abstract class DriverAbstract implements DriverInterface
     public $instant;
 
 
-
+    public function __destruct() {
+        // clean up the memory and don't want for PHP clean
+        if(isset($this->config['instance'])) {
+            CacheManager::$memory[$this->config['instance']] = null;
+            CacheManager::$instances[$this->config['instance']] = null;
+            $this->tmp = null;
+            $this->config = null;
+        }
+    }
 
     /**
      * @param $keyword

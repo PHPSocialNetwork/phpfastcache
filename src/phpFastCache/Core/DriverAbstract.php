@@ -532,15 +532,7 @@ abstract class DriverAbstract implements DriverInterface
         }
     }
 
-    /**
-     * @param $name
-     * @param $args
-     * @return mixed
-     */
-    public function __call($name, $args)
-    {
-        return call_user_func_array(array($this->instant, $name), $args);
-    }
+
 
 
     /**

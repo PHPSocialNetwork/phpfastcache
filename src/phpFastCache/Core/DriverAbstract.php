@@ -45,11 +45,7 @@ abstract class DriverAbstract implements DriverInterface
     public $instant;
 
 
-    public function __destruct() {
-        if((Int)$this->config['cache_method'] == 3) {
-            CacheManager::__caching_method($this->config['instance']);
-        }
-    }
+
 
     /**
      * @param $keyword
@@ -107,9 +103,8 @@ abstract class DriverAbstract implements DriverInterface
         }
 
         // handle method
-        if(in_array((Int)$this->config['cache_method'], array(2,3))) {
+        if((Int)$this->config['cache_method'] > 1) {
             CacheManager::$memory[$this->config['instance']][$keyword] = $object;
-            return true;
         }
 
         $this->_hit("set",1);
@@ -134,7 +129,7 @@ abstract class DriverAbstract implements DriverInterface
         }
 
         // handle method
-        if(in_array((Int)$this->config['cache_method'], array(2,3))) {
+        if((Int)$this->config['cache_method'] > 1) {
             if(isset(CacheManager::$memory[$this->config['instance']][$keyword])) {
                 $object = CacheManager::$memory[$this->config['instance']][$keyword];
             }
@@ -145,7 +140,7 @@ abstract class DriverAbstract implements DriverInterface
             $object = $this->driver_get($keyword, $option);
 
             // handle method
-            if(in_array((Int)$this->config['cache_method'], array(2,3))) {
+            if((Int)$this->config['cache_method'] > 1) {
                 CacheManager::$memory[$this->config['instance']][$keyword] = $object;
             }
             // end handle method
@@ -166,7 +161,7 @@ abstract class DriverAbstract implements DriverInterface
      */
     public function getInfo($keyword, $option = array())
     {
-        if(in_array((Int)$this->config['cache_method'], array(2,3))) {
+        if((Int)$this->config['cache_method'] > 1) {
             if(isset(CacheManager::$memory[$this->config['instance']][$keyword])) {
                 $object = CacheManager::$memory[$this->config['instance']][$keyword];
             }
@@ -188,7 +183,7 @@ abstract class DriverAbstract implements DriverInterface
     public function delete($keyword, $option = array())
     {
         // handle method
-        if(in_array((Int)$this->config['cache_method'], array(2,3))) {
+        if((Int)$this->config['cache_method'] > 1) {
             // use memory
             CacheManager::$memory[$this->config['instance']][$keyword] = null;
             return true;
@@ -213,7 +208,7 @@ abstract class DriverAbstract implements DriverInterface
     public function clean($option = array())
     {
         // handle method
-        if(in_array((Int)$this->config['cache_method'], array(2,3))) {
+        if((Int)$this->config['cache_method'] > 1) {
             // use memory
             CacheManager::$memory[$this->config['instance']] = array();
         }
@@ -532,15 +527,7 @@ abstract class DriverAbstract implements DriverInterface
         }
     }
 
-    /**
-     * @param $name
-     * @param $args
-     * @return mixed
-     */
-    public function __call($name, $args)
-    {
-        return call_user_func_array(array($this->instant, $name), $args);
-    }
+
 
 
     /**
@@ -823,15 +810,19 @@ abstract class DriverAbstract implements DriverInterface
      * @param $value
      */
     protected  function _kbdebug($value) {
+        /*
         echo "<pre>";
         print_r($value);
         echo "</pre>";
+        */
     }
 
     public function _hit($index, $step = 1) {
+        /*
         $instance = $this->config['instance'];
         $current = isset(CacheManager::$hit[$instance]['data'][$index]) ? CacheManager::$hit[$instance]['data'][$index] : 0;
         CacheManager::$hit[$instance]['data'][$index] = $current + ($step);
+        */
     }
 
 }

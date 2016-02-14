@@ -38,8 +38,6 @@ class CacheManager
 {
     protected static $instances = array();
     public static $memory = array();
-    public static $config = array();
-    public static $hit = array();
 
     /**
      * @param string $storage
@@ -71,19 +69,8 @@ class CacheManager
             $config['storage'] = $storage;
             $config['instance'] = $instance;
             $config['class'] = $class;
-            self::$config[$instance] = $config;
             if(!isset(self::$memory[$instance])) {
                 self::$memory[$instance] = array();
-            }
-            if(!isset(self::$hit[$instance])) {
-                self::$hit[$instance] = array(
-                    "class" => $class,
-                    "storage"   => $storage,
-                    "data"  =>  array()
-                );
-                if($config['cache_method'] == 2) {
-                    register_shutdown_function('phpFastCache\CacheManager::__caching_method', $instance);
-                }
             }
             self::$instances[ $instance ] = new $class($config);
         }
@@ -137,19 +124,4 @@ class CacheManager
         phpFastCache::setup($name, $value);
     }
 
-    public static function __caching_method($instance) {
-       // echo "<pre>";
-      //  echo "Shut Down ".$instance."<br>";
-      //  print_r(self::$hit[$instance]);
-      //  print_r(self::$memory[$instance]);
-        $old = self::$instances[$instance]->config['cache_method'];
-        self::$instances[$instance]->config['cache_method'] = 1;
-        foreach(self::$memory[$instance] as $keyword=>$object) {
-            self::$instances[$instance]->set($keyword, $object['value'], $object['expired_in']);
-        }
-       // print_r(self::$hit[$instance]);
-       // echo "</pre>";
-        self::$instances[$instance]->config['cache_method'] = $old;
-        self::$memory[$instance] = array();
-    }
 }

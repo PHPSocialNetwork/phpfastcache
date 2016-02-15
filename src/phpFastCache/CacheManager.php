@@ -53,6 +53,9 @@ class CacheManager
         if(!isset($config['cache_method'])) {
             $config['cache_method'] = phpFastCache::$config['cache_method'];
         }
+        if(!isset($config['limited_memory_each_object'])) {
+            $config['limited_memory_each_object'] = phpFastCache::$config['limited_memory_each_object'];
+        }
         if (isset(phpFastCache::$config[ 'overwrite' ]) && !in_array(phpFastCache::$config[ 'overwrite' ], array('auto', ''), true)) {
             phpFastCache::$config[ 'storage' ] = phpFastCache::$config[ 'overwrite' ];
             $storage = phpFastCache::$config[ 'overwrite' ];

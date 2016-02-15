@@ -98,6 +98,7 @@ abstract class DriverAbstract implements DriverInterface
           "write_time" => time(),
           "expired_in" => $time,
           "expired_time" => time() + (Int)$time,
+          "size"  =>    (is_array($value) || is_object($value)) ? strlen(serialize($value)) : strlen((String)$value)
         );
 
         // handle search
@@ -111,7 +112,7 @@ abstract class DriverAbstract implements DriverInterface
         }
 
         // handle method
-        if((Int)$this->config['cache_method'] > 1) {
+        if((Int)$this->config['cache_method'] > 1 && isset($object['size']) && (Int)$object['size'] <= (Int)$this->config['limited_memory_each_object']) {
             CacheManager::$memory[$this->config['instance']][$keyword] = $object;
         }
 
@@ -148,7 +149,7 @@ abstract class DriverAbstract implements DriverInterface
             $object = $this->driver_get($keyword, $option);
 
             // handle method
-            if((Int)$this->config['cache_method'] > 1) {
+            if((Int)$this->config['cache_method'] > 1 && isset($object['size']) && (Int)$object['size'] <= (Int)$this->config['limited_memory_each_object']) {
                 CacheManager::$memory[$this->config['instance']][$keyword] = $object;
             }
             // end handle method

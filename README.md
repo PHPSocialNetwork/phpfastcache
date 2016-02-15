@@ -19,7 +19,7 @@ However, some time you still want to use traditional caching, we support them to
 use phpFastCache\CacheManager;
 
 // Default value: is "phpfastcache" (fastest), you can change to "normal" or "memory" (fast)
-CacheManage::CachingMethod("normal");
+CacheManager::CachingMethod("normal");
 
 // Recommend: use phpfastcache to reduce files I/O & CPU Load, Memcached missing hits, and make redis and other connections become faster.
 // If you get any error due to Server / Hosting, try to change to "memory" , act almost same way as "phpfastcache" but slower a little bit

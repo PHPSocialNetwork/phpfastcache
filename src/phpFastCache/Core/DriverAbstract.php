@@ -194,8 +194,7 @@ abstract class DriverAbstract implements DriverInterface
         // handle method
         if((Int)$this->config['cache_method'] > 1) {
             // use memory
-            CacheManager::$memory[$this->config['instance']][$keyword] = null;
-            return true;
+            unset(CacheManager::$memory[$this->config['instance']][$keyword]);
         }
         // end handle method
         return $this->driver_delete($keyword, $option);

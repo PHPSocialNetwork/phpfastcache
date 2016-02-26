@@ -38,6 +38,7 @@ class CacheManager
 {
     public static $instances = array();
     public static $memory = array();
+    public static $hit = array();
 
     /**
      * @param string $storage
@@ -75,6 +76,18 @@ class CacheManager
             if(!isset(self::$memory[$instance])) {
                 self::$memory[$instance] = array();
             }
+
+            if(!isset(self::$hit[$instance])) {
+                self::$hit[$instance] = array(
+                        "class" => $class,
+                        "storage"   => $storage,
+                        "data"  =>  array()
+                       );
+                if($config['cache_method'] == 4) {
+                        register_shutdown_function('phpFastCache\CacheManager::__caching_method', $instance);
+                }
+             }
+
             self::$instances[ $instance ] = new $class($config);
         }
 
@@ -89,10 +102,12 @@ class CacheManager
         $string = strtolower($string);
         if(in_array($string,array("normal","traditional"))) {
             phpFastCache::$config['cache_method'] = 1;
-        }else if(in_array($string,array("fastest","phpfastcache"))) {
-            phpFastCache::$config['cache_method'] = 2;
         }else if(in_array($string,array("fast","memory"))) {
+            phpFastCache::$config['cache_method'] = 2;
+        }else if(in_array($string,array("fastest","phpfastcache"))) {
             phpFastCache::$config['cache_method'] = 3;
+        }else if(in_array($string,array("superfast","phpfastcachex"))) {
+            phpFastCache::$config['cache_method'] = 4;
         }
     }
 
@@ -127,4 +142,13 @@ class CacheManager
         phpFastCache::setup($name, $value);
     }
 
+    public static function __caching_method($instance) {
+        $old = self::$instances[$instance]->config['cache_method'];
+        self::$instances[$instance]->config['cache_method'] = 1;
+        foreach(self::$memory[$instance] as $keyword=>$object) {
+                self::$instances[$instance]->set($keyword, $object['value'], $object['expired_in']);
+        }
+         self::$instances[$instance]->config['cache_method'] = $old;
+         self::$memory[$instance] = array();
+     }
 }

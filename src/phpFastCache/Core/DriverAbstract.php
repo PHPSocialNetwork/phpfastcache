@@ -46,12 +46,9 @@ abstract class DriverAbstract implements DriverInterface
 
 
     public function __destruct() {
-        // clean up the memory and don't want for PHP clean for caching method "memory"
+        // clean up the memory and don't want for PHP clean for caching method "phpfastcache"
         if(isset($this->config['instance']) && (Int)$this->config['cache_method'] === 3) {
-            CacheManager::$memory[$this->config['instance']] = null;
-            CacheManager::$instances[$this->config['instance']] = null;
-            $this->tmp = null;
-            $this->config = null;
+            CacheManager::__caching_method($this->config['instance']);
         }
     }
 
@@ -114,8 +111,10 @@ abstract class DriverAbstract implements DriverInterface
         // handle method
         if((Int)$this->config['cache_method'] > 1 && isset($object['size']) && (Int)$object['size'] <= (Int)$this->config['limited_memory_each_object']) {
             CacheManager::$memory[$this->config['instance']][$keyword] = $object;
+            if(in_array((Int)$this->config['cache_method'], array(3,4))) {
+                return true;
+            }
         }
-
         $this->_hit("set",1);
         return $this->driver_set($keyword, $object, $time, $option);
 
@@ -826,11 +825,9 @@ abstract class DriverAbstract implements DriverInterface
     }
 
     public function _hit($index, $step = 1) {
-        /*
         $instance = $this->config['instance'];
         $current = isset(CacheManager::$hit[$instance]['data'][$index]) ? CacheManager::$hit[$instance]['data'][$index] : 0;
         CacheManager::$hit[$instance]['data'][$index] = $current + ($step);
-        */
     }
 
 }

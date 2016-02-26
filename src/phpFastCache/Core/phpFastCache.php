@@ -115,16 +115,6 @@ class phpFastCache
     }
 
     /**
-     * @param $name
-     * @param $args
-     * @return mixed
-     */
-    public function __call($name, $args)
-    {
-        return call_user_func_array(array($this->instance, $name), $args);
-    }
-
-    /**
      * Cores
      */
 

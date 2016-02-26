@@ -665,7 +665,12 @@ abstract class DriverAbstract implements DriverInterface
     }
 
     protected function _tagCaching() {
-        return CacheManager::Sqlite(array("path"    => $this->config['path']));
+        return CacheManager::Sqlite(
+            array(
+                "path"    => $this->config['path'],
+                "cache_method"    =>  3
+            )
+        );
     }
 
     /**

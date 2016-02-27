@@ -36,7 +36,9 @@ use phpFastCache\Core\DriverAbstract;
  */
 class CacheManager
 {
-    protected static $instances = array();
+    public static $instances = array();
+    public static $memory = array();
+    public static $hit = array();
 
     /**
      * @param string $storage
@@ -49,6 +51,12 @@ class CacheManager
         if (empty($config)) {
             $config = phpFastCache::$config;
         }
+        if(!isset($config['cache_method'])) {
+            $config['cache_method'] = phpFastCache::$config['cache_method'];
+        }
+        if(!isset($config['limited_memory_each_object'])) {
+            $config['limited_memory_each_object'] = phpFastCache::$config['limited_memory_each_object'];
+        }
         if (isset(phpFastCache::$config[ 'overwrite' ]) && !in_array(phpFastCache::$config[ 'overwrite' ], array('auto', ''), true)) {
             phpFastCache::$config[ 'storage' ] = phpFastCache::$config[ 'overwrite' ];
             $storage = phpFastCache::$config[ 'overwrite' ];
@@ -60,21 +68,70 @@ class CacheManager
 
       //  echo $storage."<br>";
         $instance = md5(serialize($config) . $storage);
-        if (!isset(self::$instances[ $instance ])) {
+        if (!isset(self::$instances[ $instance ]) || is_null(self::$instances[ $instance ])) {
             $class = '\phpFastCache\Drivers\\' . $storage;
+            $config['storage'] = $storage;
+            $config['instance'] = $instance;
+            $config['class'] = $class;
+            if(!isset(self::$memory[$instance])) {
+                self::$memory[$instance] = array();
+            }
+
+            if(!isset(self::$hit[$instance])) {
+                self::$hit[$instance] = array(
+                        "class" => $class,
+                        "storage"   => $storage,
+                        "data"  =>  array()
+                       );
+                if($config['cache_method'] == 4) {
+                        register_shutdown_function('phpFastCache\CacheManager::__caching_method', null);
+                }
+             }
+
             self::$instances[ $instance ] = new $class($config);
         }
 
         return self::$instances[ $instance ];
     }
 
+    /*
+     * Setup Method
+     * @param string $string | tradtiional(normal), memory (fast), phpfastcache (fastest)
+     */
+    public static function CachingMethod($string = "phpFastCache") {
+        $string = strtolower($string);
+        if(in_array($string,array("normal","traditional"))) {
+            phpFastCache::$config['cache_method'] = 1;
+        }else if(in_array($string,array("fast","memory"))) {
+            phpFastCache::$config['cache_method'] = 2;
+        }else if(in_array($string,array("fastest","phpfastcache"))) {
+            phpFastCache::$config['cache_method'] = 3;
+        }else if(in_array($string,array("superfast","phpfastcachex"))) {
+            phpFastCache::$config['cache_method'] = 4;
+        }
+    }
+
     /**
      * CacheManager::Files();
      * CacheManager::Memcached();
+     * CacheManager::get($keyword);
+     * CacheManager::set(), touch, other @method supported
      */
     public static function __callStatic($name, $arguments)
     {
-        return self::getInstance($name, (isset($arguments[ 0 ]) ? $arguments[ 0 ] : array()));
+        $driver = strtolower($name);
+        if(!isset(self::$instances['loaded'][$driver])) {
+            // check only first time
+            if(file_exists(__DIR__."/Drivers/".$driver.".php")) {
+                self::$instances['loaded'][$driver] = true;
+            }
+        }
+        if(isset(self::$instances['loaded'][$driver])) {
+            return self::getInstance($name, (isset($arguments[ 0 ]) ? $arguments[ 0 ] : array()));
+        } else {
+            return call_user_func_array(array(self::getInstance(),$name),$arguments);
+        }
+
     }
 
     /**
@@ -83,5 +140,26 @@ class CacheManager
     public static function setup($name, $value = '')
     {
         phpFastCache::setup($name, $value);
+    }
+
+    public static function __caching_method($instance = null) {
+        if(is_null($instance)) {
+            foreach(self::$instances as $instance=>$data) {
+                self::__clean_caching_method($instance);
+                unset($data);
+            }
+        } else {
+            self::__clean_caching_method($instance);
+        }
+     }
+    
+    protected static function __clean_caching_method($instance) {
+        $old = self::$instances[$instance]->config['cache_method'];
+        self::$instances[$instance]->config['cache_method'] = 1;
+        foreach(self::$memory[$instance] as $keyword=>$object) {
+            self::$instances[$instance]->set($keyword, $object['value'], $object['expired_in']);
+        }
+        self::$instances[$instance]->config['cache_method'] = $old;
+        self::$memory[$instance] = array();
     }
 }

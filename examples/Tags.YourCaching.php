@@ -33,6 +33,7 @@ require_once("../src/phpFastCache/phpFastCache.php");
 CacheManager::setup(array(
     "path" => "C:/tmp/", // or in windows "C:/tmp/"
 ));
+CacheManager::CachingMethod("phpFastCache");
 
 // In your class, function, you can call the Cache
 $cache = CacheManager::Files();

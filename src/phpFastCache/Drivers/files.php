@@ -104,8 +104,6 @@ class files extends DriverAbstract
     public function driver_set($keyword, $value = '', $time = 300, $option = array())
     {
         $file_path = $this->getFilePath($keyword);
-        $tmp_path = $file_path . '.tmp';
-        //  echo "<br>DEBUG SET: ".$keyword." - ".$value." - ".$time."<br>";
         $data = $this->encode($value);
 
         $toWrite = true;
@@ -121,23 +119,19 @@ class files extends DriverAbstract
             }
         }
 
-        $written = true;
-        /**
-         * write to intent file to prevent race during read; race during write is ok
-         * because first-to-lock wins and the file will exist before the writer attempts
-         * to write.
-         */
-        if ($toWrite == true && !file_exists($tmp_path) && !file_exists($file_path)) {
-
-            if (($f = fopen($file_path, 'w+')) !== false) {
+        // Force write
+        try {
+            if ($toWrite == true) {
+                $f = fopen($file_path, 'w+');
                 fwrite($f, $data);
                 fclose($f);
-                $written = true;
-            } else {
-                $written = false;
+                return true;
             }
+        } catch (\Exception $e) {
+            return false;
         }
-        return $written;
+
+        return false;
     }
 
     /**

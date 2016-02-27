@@ -12,27 +12,32 @@
  *
  */
 
-/**
- * Welcome to Learn Lesson
- * This is very Simple PHP Code of Caching
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
+/*
+ * Tagging for Cache
+ * Author: Khoaofgod@gmail.com
+ *
+ * @method setTags($keyword, $value, $time , array("tag_a","b","c"));
+ * @method set($keyword, $value, $time, array("tags" => array(1,2,3,4));
+ * @method getTags(array("a","b","c"), $return_content = true | false);
+ * @method getTags("a");
+ * @method touchTags($tags = array(), $time);
+ * @method increaseTags($tags = array(), $step );
+ * @method decreaseTags($tags = array(), $step );
+ * @method deleteTags($tags = array());
  */
 
-// Include composer autoloader
-require '../vendor/autoload.php';
-// OR require_once("../src/phpFastCache/phpFastCache.php");
+
 
 use phpFastCache\CacheManager;
+require_once("../src/phpFastCache/phpFastCache.php");
 
 // Setup File Path on your config files
 CacheManager::setup(array(
-    "path" => sys_get_temp_dir(), // or in windows "C:/tmp/"
+    "path" => "C:/tmp/", // or in windows "C:/tmp/"
 ));
-// our unique method of caching, faster than traditional caching which shared everywhere on internet like 7-10 times
-// reduce high load CPU, reduce I/O from files open
-// reduce missing hits of memcache, reduce connection to redis and others caches
-// Accepted value: "normal" < "memory" < "phpfastcache"
 CacheManager::CachingMethod("phpfastcache");
+
+$start = microtime();
 
 // In your class, function, you can call the Cache
 $InstanceCache = CacheManager::Files();
@@ -42,7 +47,7 @@ $InstanceCache = CacheManager::Files();
  * Try to get $products from Caching First
  * product_page is "identity keyword";
  */
-$key = "product_page";
+$key = "product_page2";
 $CachedString = $InstanceCache->get($key);
 
 if (is_null($CachedString)) {
@@ -59,4 +64,3 @@ if (is_null($CachedString)) {
 }
 
 echo '<br /><br /><a href="/">Back to index</a>&nbsp;--&nbsp;<a href="/' . basename(__FILE__) . '">Reload</a>';
-

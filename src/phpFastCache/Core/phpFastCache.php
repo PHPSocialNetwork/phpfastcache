@@ -80,6 +80,8 @@ class phpFastCache
       ),
 
       'extensions' => array(),
+      "cache_method"    =>  2, // 1 = normal, 2 = phpfastcache, 3 = memory
+      "limited_memory_each_object"  =>  128000, // maximum size (bytes) of object store in memory
     );
 
     /**
@@ -110,16 +112,6 @@ class phpFastCache
         }
 
         $this->instance = CacheManager::getInstance($storage, $config);
-    }
-
-    /**
-     * @param $name
-     * @param $args
-     * @return mixed
-     */
-    public function __call($name, $args)
-    {
-        return call_user_func_array(array($this->instance, $name), $args);
     }
 
     /**

@@ -27,6 +27,7 @@ class example extends DriverAbstract
     /**
      * phpFastCache_example constructor.
      * @param array $config
+     * @throws phpFastCacheDriverException
      */
     public function __construct($config = array())
     {
@@ -42,7 +43,6 @@ class example extends DriverAbstract
      */
     public function checkdriver()
     {
-        // return true;
         return false;
     }
 
@@ -59,6 +59,7 @@ class example extends DriverAbstract
      * @param string $value
      * @param int $time
      * @param array $option
+     * @return void
      */
     public function driver_set($keyword, $value = '', $time = 300, $option = array())
     {
@@ -86,6 +87,7 @@ class example extends DriverAbstract
     /**
      * @param $keyword
      * @param array $option
+     * @return void
      */
     public function driver_delete($keyword, $option = array())
     {
@@ -109,6 +111,7 @@ class example extends DriverAbstract
 
     /**
      * @param array $option
+     * @return void
      */
     public function driver_clean($option = array())
     {
@@ -120,6 +123,6 @@ class example extends DriverAbstract
      */
     public function driver_isExisting($keyword)
     {
-
+        
     }
 }

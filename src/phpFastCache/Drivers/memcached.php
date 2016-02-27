@@ -152,6 +152,7 @@ class memcached extends DriverAbstract
     /**
      * @param $keyword
      * @param array $option
+     * @return void
      */
     public function driver_delete($keyword, $option = array())
     {
@@ -177,6 +178,7 @@ class memcached extends DriverAbstract
 
     /**
      * @param array $option
+     * @return void
      */
     public function driver_clean($option = array())
     {

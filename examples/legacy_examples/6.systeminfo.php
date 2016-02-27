@@ -1,7 +1,7 @@
 <?php
 use phpFastCache\Core\phpFastCache;
 // Include composer autoloader
-require '../vendor/autoload.php';
+require_once("../../src/autoload.php");
 
 $cache = new phpFastCache();
 $info = $cache->systemInfo();

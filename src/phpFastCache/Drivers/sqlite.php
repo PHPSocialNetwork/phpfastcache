@@ -61,6 +61,7 @@ class sqlite extends DriverAbstract
      * Init Main Database & Sub Database
      * phpFastCache_sqlite constructor.
      * @param array $config
+     * @throws phpFastCacheDriverException
      */
     public function __construct($config = array())
     {
@@ -271,7 +272,7 @@ class sqlite extends DriverAbstract
                 $stm->execute(array(
                   ':keyword' => $keyword,
                   ':object' => $this->encode($value),
-                  ':exp' => time() + (int) $time,
+                  ':exp' => time() + (int)$time,
                 ));
 
                 return true;
@@ -283,7 +284,7 @@ class sqlite extends DriverAbstract
                     $stm->execute(array(
                       ':keyword' => $keyword,
                       ':object' => $this->encode($value),
-                      ':exp' => time() + (Int)$time,
+                      ':exp' => time() + (int)$time,
                     ));
                 } catch (PDOException $e) {
                     return false;
@@ -441,10 +442,10 @@ class sqlite extends DriverAbstract
 
     /**
      * @param array $option
+     * @return void
      */
     public function driver_clean($option = array())
     {
-
         // close connection
         $this->instant = array();
         $this->indexing = null;

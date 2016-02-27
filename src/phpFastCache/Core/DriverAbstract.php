@@ -27,6 +27,11 @@ abstract class DriverAbstract implements DriverInterface
     /**
      * @var array
      */
+    public $extension_dir = '_extensions';
+
+    /**
+     * @var array
+     */
     public $tmp = array();
 
     /**
@@ -45,10 +50,11 @@ abstract class DriverAbstract implements DriverInterface
     public $instant;
 
 
-    public function __destruct() {
+    public function __destruct()
+    {
         // clean up the memory and don't want for PHP clean for caching method "phpfastcache"
-        if(isset($this->config['instance']) && (Int)$this->config['cache_method'] === 3) {
-            CacheManager::__caching_method($this->config['instance']);
+        if (isset($this->config[ 'instance' ]) && (int)$this->config[ 'cache_method' ] === 3) {
+            CacheManager::cleanCachingMethod($this->config[ 'instance' ]);
         }
     }
 
@@ -78,8 +84,10 @@ abstract class DriverAbstract implements DriverInterface
          * Khoa. B
          */
         if ((int)$time <= 0) {
-            // 5 years, however memcached or memory cached will gone when u restart it
-            // just recommended for sqlite. files
+            /**
+             * 5 years, however memcached or memory cached will gone when u restart it
+             * just recommended for sqlite. files
+             */
             $time = 3600 * 24 * 365 * 5;
         }
 
@@ -94,28 +102,28 @@ abstract class DriverAbstract implements DriverInterface
           "value" => $value,
           "write_time" => time(),
           "expired_in" => $time,
-          "expired_time" => time() + (Int)$time,
-          "size"  =>    (is_array($value) || is_object($value)) ? strlen(serialize($value)) : strlen((String)$value)
+          "expired_time" => time() + (int)$time,
+          "size" => (is_array($value) || is_object($value)) ? strlen(serialize($value)) : strlen((String)$value),
         );
 
         // handle search
-        if(isset($this->config['allow_search']) && $this->config['allow_search'] == true) {
-            $option['tags'] = array("search");
+        if (isset($this->config[ 'allow_search' ]) && $this->config[ 'allow_search' ] == true) {
+            $option[ 'tags' ] = array("search");
         }
 
         // handle tags
-        if(isset($option['tags'])) {
-            $this->_handleTags($keyword, $time, $option['tags']);
+        if (isset($option[ 'tags' ])) {
+            $this->_handleTags($keyword, $time, $option[ 'tags' ]);
         }
 
         // handle method
-        if((Int)$this->config['cache_method'] > 1 && isset($object['size']) && (Int)$object['size'] <= (Int)$this->config['limited_memory_each_object']) {
-            CacheManager::$memory[$this->config['instance']][$keyword] = $object;
-            if(in_array((Int)$this->config['cache_method'], array(3,4))) {
+        if ((int)$this->config[ 'cache_method' ] > 1 && isset($object[ 'size' ]) && (int)$object[ 'size' ] <= (int)$this->config[ 'limited_memory_each_object' ]) {
+            CacheManager::$memory[ $this->config[ 'instance' ] ][ $keyword ] = $object;
+            if (in_array((int)$this->config[ 'cache_method' ], array(3, 4))) {
                 return true;
             }
         }
-        $this->_hit("set",1);
+        $this->_hit("set", 1);
         return $this->driver_set($keyword, $object, $time, $option);
 
     }
@@ -127,29 +135,29 @@ abstract class DriverAbstract implements DriverInterface
      */
     public function get($keyword, $option = array())
     {
-       /**
-       * Temporary disabled phpFastCache::$disabled = true
-       * Khoa. B
-       */
+        /**
+         * Temporary disabled phpFastCache::$disabled = true
+         * Khoa. B
+         */
 
         if (phpFastCache::$disabled === true) {
             return null;
         }
 
         // handle method
-        if((Int)$this->config['cache_method'] > 1) {
-            if(isset(CacheManager::$memory[$this->config['instance']][$keyword])) {
-                $object = CacheManager::$memory[$this->config['instance']][$keyword];
+        if ((int)$this->config[ 'cache_method' ] > 1) {
+            if (isset(CacheManager::$memory[ $this->config[ 'instance' ] ][ $keyword ])) {
+                $object = CacheManager::$memory[ $this->config[ 'instance' ] ][ $keyword ];
             }
         }
 
-        if(!isset($object)) {
-            $this->_hit("get",1);
+        if (!isset($object)) {
+            $this->_hit("get", 1);
             $object = $this->driver_get($keyword, $option);
 
             // handle method
-            if((Int)$this->config['cache_method'] > 1 && isset($object['size']) && (Int)$object['size'] <= (Int)$this->config['limited_memory_each_object']) {
-                CacheManager::$memory[$this->config['instance']][$keyword] = $object;
+            if ((int)$this->config[ 'cache_method' ] > 1 && isset($object[ 'size' ]) && (int)$object[ 'size' ] <= (int)$this->config[ 'limited_memory_each_object' ]) {
+                CacheManager::$memory[ $this->config[ 'instance' ] ][ $keyword ] = $object;
             }
             // end handle method
         }
@@ -169,12 +177,12 @@ abstract class DriverAbstract implements DriverInterface
      */
     public function getInfo($keyword, $option = array())
     {
-        if((Int)$this->config['cache_method'] > 1) {
-            if(isset(CacheManager::$memory[$this->config['instance']][$keyword])) {
-                $object = CacheManager::$memory[$this->config['instance']][$keyword];
+        if ((int)$this->config[ 'cache_method' ] > 1) {
+            if (isset(CacheManager::$memory[ $this->config[ 'instance' ] ][ $keyword ])) {
+                $object = CacheManager::$memory[ $this->config[ 'instance' ] ][ $keyword ];
             }
         }
-        if(!isset($object)) {
+        if (!isset($object)) {
             $object = $this->driver_get($keyword, $option);
         }
         if ($object == null) {
@@ -188,12 +196,12 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $option
      * @return mixed
      */
-    public function delete($keyword, $option = array())
+    public function delete($keyword, array $option = array())
     {
         // handle method
-        if((Int)$this->config['cache_method'] > 1) {
+        if ((int)$this->config[ 'cache_method' ] > 1) {
             // use memory
-            unset(CacheManager::$memory[$this->config['instance']][$keyword]);
+            unset(CacheManager::$memory[ $this->config[ 'instance' ] ][ $keyword ]);
         }
         // end handle method
         return $this->driver_delete($keyword, $option);
@@ -203,7 +211,7 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $option
      * @return mixed
      */
-    public function stats($option = array())
+    public function stats(array $option = array())
     {
         return $this->driver_stats($option);
     }
@@ -212,12 +220,12 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $option
      * @return mixed
      */
-    public function clean($option = array())
+    public function clean(array $option = array())
     {
         // handle method
-        if((Int)$this->config['cache_method'] > 1) {
+        if ((int)$this->config[ 'cache_method' ] > 1) {
             // use memory
-            CacheManager::$memory[$this->config['instance']] = array();
+            CacheManager::$memory[ $this->config[ 'instance' ] ] = array();
         }
         // end handle method
         return $this->driver_clean($option);
@@ -251,50 +259,43 @@ abstract class DriverAbstract implements DriverInterface
      */
     public function search($query_as_regex_or_string, $search_in_value = false)
     {
-       if($this->config['allow_search'] != true) {
-           throw new phpFastCacheDriverException('Please setup allow_search = true');
-       } else {
-            $list = $this->getTags("search",$search_in_value);
-            $tmp = explode("/",$query_as_regex_or_string,2);
-            $regex = isset($tmp[1]) ? true : false;
+        if ($this->config[ 'allow_search' ] != true) {
+            throw new phpFastCacheDriverException('Please setup allow_search = true');
+        } else {
+            $list = $this->getTags("search", $search_in_value);
+            $tmp = explode("/", $query_as_regex_or_string, 2);
+            $regex = isset($tmp[ 1 ]) ? true : false;
             $return_list = array();
-            foreach($list as $tag) {
-                foreach($tag as $keyword => $value) {
+            foreach ($list as $tag) {
+                foreach ($tag as $keyword => $value) {
                     $gotcha = false;
-                    if($search_in_value == true) {
+                    if ($search_in_value == true) {
                         $value = $this->get($keyword);
                     }
 
-                    if($regex == true && $gotcha == false)
-                    {     // look in keyword
-                        if(preg_match($query_as_regex_or_string,$keyword))
-                        {
-                            $return_list[$keyword] = $value;
+                    if ($regex == true && $gotcha == false) {     // look in keyword
+                        if (preg_match($query_as_regex_or_string, $keyword)) {
+                            $return_list[ $keyword ] = $value;
                             $gotcha = true;
                         }
                     }
-                    if($gotcha == false ) {
-                        if(strpos($keyword, $query_as_regex_or_string) !== false)
-                        {
-                            $return_list[$keyword] = $value;
+                    if ($gotcha == false) {
+                        if (strpos($keyword, $query_as_regex_or_string) !== false) {
+                            $return_list[ $keyword ] = $value;
                             $gotcha = true;
                         }
                     }
 
-                    if($search_in_value == true && $gotcha == false)
-                    { // value search
-                        if($regex == true &&   $gotcha == false )
-                        {
-                            if (preg_match($query_as_regex_or_string, $value))
-                            {
-                                $return_list[$keyword] = $value;
+                    if ($search_in_value == true && $gotcha == false) { // value search
+                        if ($regex == true && $gotcha == false) {
+                            if (preg_match($query_as_regex_or_string, $value)) {
+                                $return_list[ $keyword ] = $value;
                                 $gotcha = true;
                             }
                         }
-                        if($gotcha == false) {
-                            if (strpos($value, $query_as_regex_or_string) !== false)
-                            {
-                                $return_list[$keyword] = $value;
+                        if ($gotcha == false) {
+                            if (strpos($value, $query_as_regex_or_string) !== false) {
+                                $return_list[ $keyword ] = $value;
                                 $gotcha = true;
                             }
                         }
@@ -302,8 +303,7 @@ abstract class DriverAbstract implements DriverInterface
                 } // each tags loop
             } // end foreach
             return $return_list;
-       }
-       return array();
+        }
     }
 
     /**
@@ -312,13 +312,13 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $option
      * @return bool
      */
-    public function increment($keyword, $step = 1, $option = array())
+    public function increment($keyword, $step = 1, array $option = array())
     {
         $object = $this->get($keyword, array('all_keys' => true));
         if ($object == null) {
             return false;
         } else {
-            $value = (Int)$object[ 'value' ] + (Int)$step;
+            $value = (int)$object[ 'value' ] + (int)$step;
             $time = $object[ 'expired_time' ] - time();
             $this->set($keyword, $value, $time, $option);
             return true;
@@ -331,13 +331,13 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $option
      * @return bool
      */
-    public function decrement($keyword, $step = 1, $option = array())
+    public function decrement($keyword, $step = 1, array $option = array())
     {
         $object = $this->get($keyword, array('all_keys' => true));
         if ($object == null) {
             return false;
         } else {
-            $value = (Int)$object[ 'value' ] - (Int)$step;
+            $value = (int)$object[ 'value' ] - (int)$step;
             $time = $object[ 'expired_time' ] - time();
             $this->set($keyword, $value, $time, $option);
             return true;
@@ -351,7 +351,7 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $option
      * @return bool
      */
-    public function touch($keyword, $time = 300, $option = array())
+    public function touch($keyword, $time = 300, array $option = array())
     {
         $object = $this->get($keyword, array('all_keys' => true));
         if ($object == null) {
@@ -372,7 +372,7 @@ abstract class DriverAbstract implements DriverInterface
     /**
      * @param array $list
      */
-    public function setMulti($list = array())
+    public function setMulti(array $list = array())
     {
         foreach ($list as $array) {
             $this->set($array[ 0 ], isset($array[ 1 ]) ? $array[ 1 ] : 0,
@@ -384,7 +384,7 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $list
      * @return array
      */
-    public function getMulti($list = array())
+    public function getMulti(array $list = array())
     {
         $res = array();
         foreach ($list as $array) {
@@ -399,7 +399,7 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $list
      * @return array
      */
-    public function getInfoMulti($list = array())
+    public function getInfoMulti(array $list = array())
     {
         $res = array();
         foreach ($list as $array) {
@@ -414,7 +414,7 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $list
      * @param array $option
      */
-    public function deleteMulti($list = array(), $option = array())
+    public function deleteMulti(array $list = array(), array $option = array())
     {
         foreach ($list as $item) {
             if (is_array($item) && count($item) === 2) {
@@ -427,7 +427,7 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $list
      * @return array
      */
-    public function isExistingMulti($list = array())
+    public function isExistingMulti(array $list = array())
     {
         $res = array();
         foreach ($list as $array) {
@@ -441,7 +441,7 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $list
      * @return array
      */
-    public function incrementMulti($list = array())
+    public function incrementMulti(array $list = array())
     {
         $res = array();
         foreach ($list as $array) {
@@ -456,7 +456,7 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $list
      * @return array
      */
-    public function decrementMulti($list = array())
+    public function decrementMulti(array $list = array())
     {
         $res = array();
         foreach ($list as $array) {
@@ -471,7 +471,7 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $list
      * @return array
      */
-    public function touchMulti($list = array())
+    public function touchMulti(array $list = array())
     {
         $res = array();
         foreach ($list as $array) {
@@ -535,8 +535,6 @@ abstract class DriverAbstract implements DriverInterface
     }
 
 
-
-
     /**
      * Base Methods
      */
@@ -552,10 +550,11 @@ abstract class DriverAbstract implements DriverInterface
 
     /**
      * @param $name
+     * @return void
      */
     protected function required_extension($name)
     {
-        require_once(__DIR__ . '/../_extensions/' . $name);
+        require_once(__DIR__ . '/../' . $this->extension_dir . '/' . $name . PHP_EXT);
     }
 
 
@@ -638,14 +637,7 @@ abstract class DriverAbstract implements DriverInterface
      */
     protected function isExistingDriver($class)
     {
-        if (file_exists(__DIR__ . '/Drivers/' . $class . '.php')) {
-            require_once(__DIR__ . '/Drivers/' . $class . '.php');
-            if (class_exists("phpFastCache_" . $class)) {
-                return true;
-            }
-        }
-
-        return false;
+        return class_exists("\\phpFastCache\\Drivers\\{$class}");
     }
 
 
@@ -658,18 +650,25 @@ abstract class DriverAbstract implements DriverInterface
     }
 
 
-    /* FOR PLUGINS TAGS */
-
-    protected function _getTagName($tag) {
-        return "__tag__".$tag;
+    /**
+     * @param $tag
+     * @return string
+     */
+    protected function _getTagName($tag)
+    {
+        return "__tag__" . $tag;
     }
 
-    protected function _tagCaching() {
+    /**
+     * @return \phpFastCache\Core\DriverAbstract
+     */
+    protected function _tagCaching()
+    {
         return CacheManager::Sqlite(
-            array(
-                "path"    => $this->config['path'],
-                "cache_method"    =>  3
-            )
+          array(
+            "path" => $this->config[ 'path' ],
+            "cache_method" => 3,
+          )
         );
     }
 
@@ -681,22 +680,24 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $option | $option = array("tags" => array("a","b","c")
      * @return mixed
      */
-    public function setTags($keyword, $value = '', $time = 0, $tags = array(), $option = array()) {
-        if(!is_array($tags)) {
+    public function setTags($keyword, $value = '', $time = 0, $tags = array(), $option = array())
+    {
+        if (!is_array($tags)) {
             $tags = array($tags);
         }
-        $option['tags'] = $tags;
-        return $this->set($keyword,$value,$time, $option);
+        $option[ 'tags' ] = $tags;
+        return $this->set($keyword, $value, $time, $option);
     }
 
-    protected function _handleTags($keyword, $time, $tags) {
-        foreach($tags as $tag) {
+    protected function _handleTags($keyword, $time, $tags)
+    {
+        foreach ($tags as $tag) {
             $list = $this->_tagCaching()->get($this->_getTagName($tag));
-            if(is_null($list)) {
+            if (is_null($list)) {
                 $list = array();
             }
-            $list[$keyword] = time() + $time;
-            $this->_tagCaching()->set($this->_getTagName($tag),$list,3600*24*30);
+            $list[ $keyword ] = time() + $time;
+            $this->_tagCaching()->set($this->_getTagName($tag), $list, 3600 * 24 * 30);
         }
     }
 
@@ -707,36 +708,37 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $option | $option = array("tags" => array("a","b","c")
      * @return array
      */
-    public function getTags($tags = array(), $return_content = true, $option = array()) {
-        if(!is_array($tags)) {
+    public function getTags($tags = array(), $return_content = true, $option = array())
+    {
+        if (!is_array($tags)) {
             $tags = array($tags);
         }
         $keywords = array();
         $tmp = 0;
 
-        foreach($tags as $tag) {
+        foreach ($tags as $tag) {
             $list = $this->_tagCaching()->get($this->_getTagName($tag));
             $list_return = array();
-            if(is_null($list)) {
+            if (is_null($list)) {
                 $list = array();
             }
-            foreach($list as $keyword=>$time) {
-                if($time <= time()) {
-                    unset($list[$keyword]);
+            foreach ($list as $keyword => $time) {
+                if ($time <= time()) {
+                    unset($list[ $keyword ]);
                 } else {
-                    if($tmp < $time) {
+                    if ($tmp < $time) {
                         $tmp = $time;
                     }
-                    if($return_content == true) {
-                        $list_return[$keyword] = $this->get($keyword);
+                    if ($return_content == true) {
+                        $list_return[ $keyword ] = $this->get($keyword);
                     } else {
-                        $list_return[$keyword] = $time;
+                        $list_return[ $keyword ] = $time;
                     }
                 }
             }
 
-            $this->_tagCaching()->set($this->_getTagName($tag),$list,$tmp);
-            $keywords[$tag] = $list_return;
+            $this->_tagCaching()->set($this->_getTagName($tag), $list, $tmp);
+            $keywords[ $tag ] = $list_return;
         }
         return $keywords;
     }
@@ -748,13 +750,14 @@ abstract class DriverAbstract implements DriverInterface
      * @return mixed
      * @internal param array $option | $option = array("tags" => array("a","b","c")
      */
-    public function touchTags($tags = array(), $time = 300,  $options = array()) {
-        if(!is_array($tags)) {
+    public function touchTags($tags = array(), $time = 300, $options = array())
+    {
+        if (!is_array($tags)) {
             $tags = array($tags);
         }
         $lists = $this->getTags($tags);
-        foreach($lists as $tag=>$keywords) {
-            foreach($keywords as $keyword=>$time) {
+        foreach ($lists as $tag => $keywords) {
+            foreach ($keywords as $keyword => $time) {
                 $this->touch($keyword, $time, $options);
             }
         }
@@ -766,13 +769,14 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $option | $option = array("tags" => array("a","b","c")
      * @return mixed
      */
-    public function deleteTags($tags = array(), $option = array()) {
-        if(!is_array($tags)) {
+    public function deleteTags($tags = array(), $option = array())
+    {
+        if (!is_array($tags)) {
             $tags = array($tags);
         }
         $lists = $this->getTags($tags);
-        foreach($lists as $tag=>$keywords) {
-            foreach($keywords as $keyword=>$time) {
+        foreach ($lists as $tag => $keywords) {
+            foreach ($keywords as $keyword => $time) {
                 $this->delete($keyword, $option);
             }
         }
@@ -786,13 +790,14 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $option | $option = array("tags" => array("a","b","c")
      * @return mixed
      */
-    public function incrementTags($tags = array(), $step = 1, $option = array()) {
-        if(!is_array($tags)) {
+    public function incrementTags($tags = array(), $step = 1, $option = array())
+    {
+        if (!is_array($tags)) {
             $tags = array($tags);
         }
         $lists = $this->getTags($tags);
-        foreach($lists as $tag=>$keywords) {
-            foreach($keywords as $keyword=>$time) {
+        foreach ($lists as $tag => $keywords) {
+            foreach ($keywords as $keyword => $time) {
                 $this->increment($keyword, $step, $option);
             }
         }
@@ -805,13 +810,14 @@ abstract class DriverAbstract implements DriverInterface
      * @param array $option | $option = array("tags" => array("a","b","c")
      * @return mixed
      */
-    public function decrementTags($tags = array(), $step = 1, $option = array()) {
-        if(!is_array($tags)) {
+    public function decrementTags($tags = array(), $step = 1, $option = array())
+    {
+        if (!is_array($tags)) {
             $tags = array($tags);
         }
         $lists = $this->getTags($tags);
-        foreach($lists as $tag=>$keywords) {
-            foreach($keywords as $keyword=>$time) {
+        foreach ($lists as $tag => $keywords) {
+            foreach ($keywords as $keyword => $time) {
                 $this->decrement($keyword, $step, $option);
             }
         }
@@ -821,7 +827,8 @@ abstract class DriverAbstract implements DriverInterface
     /**
      * @param $value
      */
-    protected  function _kbdebug($value) {
+    protected function _kbdebug($value)
+    {
         /*
         echo "<pre>";
         print_r($value);
@@ -829,10 +836,11 @@ abstract class DriverAbstract implements DriverInterface
         */
     }
 
-    public function _hit($index, $step = 1) {
-        $instance = $this->config['instance'];
-        $current = isset(CacheManager::$hit[$instance]['data'][$index]) ? CacheManager::$hit[$instance]['data'][$index] : 0;
-        CacheManager::$hit[$instance]['data'][$index] = $current + ($step);
+    public function _hit($index, $step = 1)
+    {
+        $instance = $this->config[ 'instance' ];
+        $current = isset(CacheManager::$hit[ $instance ][ 'data' ][ $index ]) ? CacheManager::$hit[ $instance ][ 'data' ][ $index ] : 0;
+        CacheManager::$hit[ $instance ][ 'data' ][ $index ] = $current + ($step);
     }
 
 }

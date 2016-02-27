@@ -2,7 +2,7 @@
 use phpFastCache\CacheManager;
 
 // Include composer autoloader
-require '../vendor/autoload.php';
+require_once("../../src/autoload.php");
 
 $cache = CacheManager::getInstance();
 

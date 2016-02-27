@@ -72,7 +72,7 @@ class cookie extends DriverAbstract
     {
         $this->connectServer();
         $keyword = 'phpFastCache_' . $keyword;
-        return setcookie($keyword, $this->encode($value), time() + ($time ? (int) $time : 300), '/');
+        return setcookie($keyword, $this->encode($value), time() + ($time ? (int)$time : 300), '/');
 
     }
 
@@ -87,7 +87,7 @@ class cookie extends DriverAbstract
         // return null if no caching
         // return value if in caching
         $keyword = 'phpFastCache_' . $keyword;
-        $x = isset($_COOKIE[ $keyword ]) ? $this->decode($_COOKIE[ $keyword  ]) : false;
+        $x = isset($_COOKIE[ $keyword ]) ? $this->decode($_COOKIE[ $keyword ]) : false;
         if ($x == false) {
             return null;
         } else {

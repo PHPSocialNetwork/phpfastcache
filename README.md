@@ -65,11 +65,11 @@ As Fast To Implement As Opening a Beer
 composer require phpFastCache/phpFastCache
 ```
 
-#### :construction: Step 2: Setup your website code to implements phpFastCache bits
+#### :construction: Step 2: Setup your website code to implements phpFastCache bits (With Composer)
 ```php
 use phpFastCache\CacheManager;
 
-// include vendor / autoload.php / phpFastCache.php / etc
+// require_once ('vendor/autoload.php');
 
 $cache = CacheManager::Files();
 
@@ -103,10 +103,10 @@ echo $products;
 
 ```
 
-#### :floppy_disk: Legacy / Lazy Method
+#### :floppy_disk: Legacy / Lazy Method (Without Composer)
 ```php
 // In your config files
-// require_once ('phpFastCache/phpFastCache.php');
+// require_once ('phpFastCache/src/autoload.php');
 
 use phpFastCache\CacheManager;
 

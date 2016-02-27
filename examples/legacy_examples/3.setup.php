@@ -1,6 +1,6 @@
 <?php
 // In your config files
-require_once("../../src/phpFastCache/phpFastCache.php");
+require_once("../../src/autoload.php");
 
 // now it's time to call the cache "anywhere" on your project
 

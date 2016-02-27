@@ -32,11 +32,8 @@
         "ext-sqlite": "*"
     },
     "autoload": {
-        "psr-4": {
-            "": "src/"
-        },
         "files": [
-            "src/phpFastCache/legacy/composer.php"
+            "src/autoload.php"
         ]
     }
 }

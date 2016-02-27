@@ -26,6 +26,7 @@ class mongodb extends DriverAbstract
     /**
      * phpFastCache constructor.
      * @param array $config
+     * @throws phpFastCacheDriverException
      */
     public function __construct($config = array())
     {

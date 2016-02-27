@@ -46,7 +46,7 @@ class ssdb extends DriverAbstract
     public function checkdriver()
     {
         // Check memcache
-        $this->required_extension('SSDB.php');
+        $this->required_extension('SSDB');
         if (class_exists('SimpleSSDB')) {
             return true;
         }
@@ -72,7 +72,7 @@ class ssdb extends DriverAbstract
             $host = $server[ 'host' ];
             $port = isset($server[ 'port' ]) ? (int)$server[ 'port' ] : 8888;
             $password = isset($server[ 'password' ]) ? $server[ 'password' ] : '';
-            $timeout = !empty($server[ 'timeout' ]) ? (int) $server[ 'timeout' ] : 2000;
+            $timeout = !empty($server[ 'timeout' ]) ? (int)$server[ 'timeout' ] : 2000;
             $this->instant = new \SimpleSSDB($host, $port, $timeout);
             if (!empty($password)) {
                 $this->instant->auth($password);

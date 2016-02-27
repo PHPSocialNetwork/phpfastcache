@@ -37,7 +37,7 @@ class predis extends DriverAbstract
     {
         $this->setup($config);
         if (!class_exists("\\Predis\\Client")) {
-            $this->required_extension("predis-1.0/autoload.php");
+            $this->required_extension("predis-1.0/autoload");
         }
     }
 
@@ -48,9 +48,9 @@ class predis extends DriverAbstract
     {
         // Check memcache
         if (!class_exists("\\Predis\\Client")) {
-            $this->required_extension("predis-1.0/autoload.php");
+            $this->required_extension("predis-1.0/autoload");
             try {
-                Predis\Autoloader::register();
+                \Predis\Autoloader::register();
             } catch (\Exception $e) {
 
             }
@@ -196,6 +196,7 @@ class predis extends DriverAbstract
 
     /**
      * @param array $option
+     * @return void
      */
     public function driver_clean($option = array())
     {

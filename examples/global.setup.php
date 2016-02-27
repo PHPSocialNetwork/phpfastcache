@@ -23,7 +23,7 @@ use phpFastCache\CacheManager;
 
 // Include composer autoloader
 require '../vendor/autoload.php';
-// OR require_once("../src/phpFastCache/phpFastCache.php");
+// OR require_once("../src/autoload.php");
 
 // Setup File Path on your config files
 $config = array(

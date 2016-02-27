@@ -16,13 +16,10 @@
  * This file ensure
  * a maximum compatibility
  * for user that do not
- * make use of composer
+ * migrated to CacheManager::getInstance()
  */
 use phpFastCache\CacheManager;
 
-if (!defined('phpFastCache_LOADED_VIA_COMPOSER')) {
-    require_once 'required_files.php';
-}
 
 /**
  * phpFastCache() Full alias

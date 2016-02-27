@@ -26,6 +26,7 @@ class apc extends DriverAbstract
     /**
      * phpFastCache_apc constructor.
      * @param array $config
+     * @throws phpFastCacheDriverException
      */
     public function __construct($config = array())
     {
@@ -41,7 +42,6 @@ class apc extends DriverAbstract
      */
     public function checkdriver()
     {
-        // Check apc
         if (extension_loaded('apc') && ini_get('apc.enabled')) {
             return true;
         } else {
@@ -77,9 +77,6 @@ class apc extends DriverAbstract
      */
     public function driver_get($keyword, $option = array())
     {
-        // return null if no caching
-        // return value if in caching
-
         $data = apc_fetch($keyword, $bo);
         if ($bo === false) {
             return null;
@@ -121,6 +118,7 @@ class apc extends DriverAbstract
 
     /**
      * @param array $option
+     * @return void
      */
     public function driver_clean($option = array())
     {

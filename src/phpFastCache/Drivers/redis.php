@@ -77,7 +77,7 @@ class redis extends DriverAbstract
 
             $host = $server[ 'host' ];
 
-            $port = isset($server[ 'port' ]) ? (Int)$server[ 'port' ] : "";
+            $port = isset($server[ 'port' ]) ? (int)$server[ 'port' ] : "";
             if ($port != '') {
                 $c[ 'port' ] = $port;
             }
@@ -103,13 +103,13 @@ class redis extends DriverAbstract
             }
 
 
-            if (!$this->instant->connect($host, (int)$port, (Int)$timeout)) {
+            if (!$this->instant->connect($host, (int)$port, (int)$timeout)) {
                 $this->checked_redis = true;
                 $this->fallback = true;
                 return false;
             } else {
                 if ($database != '') {
-                    $this->instant->select((Int)$database);
+                    $this->instant->select((int)$database);
                 }
                 $this->checked_redis = true;
                 return true;
@@ -167,6 +167,7 @@ class redis extends DriverAbstract
     /**
      * @param $keyword
      * @param array $option
+     * @return void
      */
     public function driver_delete($keyword, $option = array())
     {

@@ -20,7 +20,7 @@
 
 // Include composer autoloader
 require '../vendor/autoload.php';
-// OR require_once("../src/phpFastCache/phpFastCache.php");
+// OR require_once("../src/autoload.php");
 
 use phpFastCache\CacheManager;
 

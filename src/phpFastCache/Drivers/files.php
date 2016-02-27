@@ -52,20 +52,6 @@ class files extends DriverAbstract
         return false;
     }
 
-
-    /**
-     * @param $filename
-     * @return mixed
-     */
-    private function decodeFilename($filename)
-    {
-        return $filename;
-        // return base64_decode($filename);
-    }
-
-    /*
-     * Return $FILE FULL PATH
-     */
     /**
      * @param $keyword
      * @param bool $skip
@@ -228,9 +214,9 @@ class files extends DriverAbstract
                         }
                         $total += $size;
                     }
-                } // end read subdir
-            } // end if
-        } // end while
+                }
+            }
+        }
 
         $res[ 'size' ] = $total - $removed;
         $res[ 'info' ] = array(
@@ -258,6 +244,7 @@ class files extends DriverAbstract
     /**
      * @param array $option
      * @throws \Exception
+     * @return void
      */
     public function driver_clean($option = array())
     {
@@ -281,10 +268,9 @@ class files extends DriverAbstract
                         $file_path = $path . '/' . $file . '/' . $f;
                         @unlink($file_path);
                     }
-                } // end read subdir
-            } // end if
-        } // end while
-
+                }
+            }
+        }
     }
 
     /**

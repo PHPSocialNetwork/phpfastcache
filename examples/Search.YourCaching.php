@@ -21,7 +21,7 @@
  */
 
 use phpFastCache\CacheManager;
-require_once("../src/phpFastCache/phpFastCache.php");
+require_once("../src/autoload.php");
 
 // Setup File Path on your config files
 CacheManager::setup(array(

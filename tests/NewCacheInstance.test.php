@@ -13,7 +13,10 @@ require_once '../src/autoload.php';
 $status = 0;
 echo "Testing new cache instance\n";
 
-$driverInstance = CacheManager::getInstance();
+/**
+ * Testing memcached as it is declared in .travis.yml
+ */
+$driverInstance = CacheManager::getInstance('memcached');
 
 if(!is_object($driverInstance) || !($driverInstance instanceof DriverInterface))
 {

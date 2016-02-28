@@ -20,4 +20,6 @@ php:
   # - hhvm We may need to do review this check later
 
 script:
-  - php -f .travis/checkSyntax.php
+  - php -f tests/SyntaxChecker.test.php
+  - php -f tests/Autoload.test.php
+  - php -f tests/NewCacheInstance.test.php

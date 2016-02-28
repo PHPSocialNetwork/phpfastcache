@@ -37,9 +37,14 @@ foreach ($list as $file) {
     $output = '';
 
     exec('php -lf "' . $file . '"', $output, $status);
-    echo(implode("\n", $output) . "\n");
+
     if ($status != 0) {
         $exit = $status;
+        echo '[FAIL]';
+    }else{
+        echo '[PASS]';
     }
+    echo ' ' . implode("\n", $output);
+    echo "\n";
 }
 exit($exit);

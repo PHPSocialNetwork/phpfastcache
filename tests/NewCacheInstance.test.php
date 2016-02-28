@@ -20,9 +20,9 @@ $driverInstance = CacheManager::getInstance('memcached');
 
 if(!is_object($driverInstance) || !($driverInstance instanceof DriverInterface))
 {
-    echo 'CacheManager::getInstance() returned wrong data:' . gettype($driverInstance) . "\n";
+    echo '[FAIL] CacheManager::getInstance() returned wrong data:' . gettype($driverInstance) . "\n";
     $status = 1;
 }
-echo "CacheManager::getInstance() returned expected object that implements DriverInterface\n";
+echo "[PASS] CacheManager::getInstance() returned expected object that implements DriverInterface\n";
 
 exit($status);

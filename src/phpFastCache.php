@@ -12,14 +12,30 @@
  *
  */
 
-/**
- * This file ensure
- * a maximum compatibility
- * for user that do not
- * migrated to CacheManager::getInstance()
- */
 use phpFastCache\CacheManager;
+define('PHP_EXT', substr(strrchr(__FILE__, '.'), 1));
 
+/**
+ * Register Autoload
+ */
+spl_autoload_register(function ($entity) {
+    // Explode is faster than substr & strstr also more control
+    $module = explode('\\',$entity,2);
+    if ($module[0] !== 'phpFastCache') {
+        /**
+         * Not a part of phpFastCache file
+         * then we return here.
+         */
+        return;
+    }
+
+    $entity = str_replace('\\', '/', $module[1]);
+
+    $path = __DIR__ . '/phpFastCache/' . $entity . '.' . PHP_EXT;
+    if (is_readable($path)) {
+        require_once $path;
+    }
+});
 
 /**
  * phpFastCache() Full alias
@@ -33,8 +49,6 @@ if (!function_exists("phpFastCache")) {
         return CacheManager::getInstance($storage, $config);
     }
 }
-
-
 /**
  * __c() Short alias
  * @param string $storage

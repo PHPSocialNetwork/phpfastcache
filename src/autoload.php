@@ -12,4 +12,4 @@
  *
  */
 
-require_once __DIR__."/phpFastCache.php";
+require_once __DIR__."/phpFastCache/phpFastCache.php";

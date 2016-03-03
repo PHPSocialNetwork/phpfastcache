@@ -22,17 +22,11 @@ require_once __DIR__."/Util/OpenBaseDir.php";
 spl_autoload_register(function ($entity) {
     // Explode is faster than substr & strstr also more control
     $module = explode('\\',$entity,2);
-    if ($module[0] !== 'phpFastCache') {
+    if ($module[0] !== 'phpFastCache'
+        || !OpenBaseDir::checkBaseDir(__DIR__)) {
         /**
          * Not a part of phpFastCache file
          * then we return here.
-         */
-        return;
-    }
-    if(!OpenBaseDir::checkBaseDir(__DIR__)) {
-        /*
-         * in case system have open base_dir, it will check ONE time only for the __DIR__
-         * If open_base_dir is NULL, it skip checking
          */
         return;
     }

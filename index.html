@@ -707,7 +707,7 @@ echo $products;
 
     if(is_null($products)) {
         $products = "YOUR DB QUERIES RESULT AS OBJECT || ARRAY || HTML || GET_PRODUCTS_FUNCTION";
-        // Cache your $products 600 seconds, phpFastCache will take care your heavy traffic
+        // Cache your $products 600 seconds, phpFastCache will take care your heavy traffic.
         CacheManager::set($cache_keyword, $products,600);  // 0 = never expired
     }
 

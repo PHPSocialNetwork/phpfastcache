@@ -13,17 +13,14 @@
  */
 
 use phpFastCache\CacheManager;
-use phpFastCache\Util\OpenBaseDir;
 define('PHP_EXT', substr(strrchr(__FILE__, '.'), 1));
-require_once __DIR__."/Util/OpenBaseDir.php";
 /**
  * Register Autoload
  */
 spl_autoload_register(function ($entity) {
     // Explode is faster than substr & strstr also more control
     $module = explode('\\',$entity,2);
-    if ($module[0] !== 'phpFastCache'
-        || !OpenBaseDir::checkBaseDir(__DIR__)) {
+    if ($module[0] !== 'phpFastCache') {
         /**
          * Not a part of phpFastCache file
          * then we return here.

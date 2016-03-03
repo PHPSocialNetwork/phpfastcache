@@ -21,8 +21,8 @@ class OpenBaseDir {
                         self::$stores[$index] = true;
                         return true;
                     }
-
                 }
+                self::$stores[$index] = false;
             } else {
                 return self::$stores[$index];
             }

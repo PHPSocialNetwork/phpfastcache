@@ -31,7 +31,7 @@ spl_autoload_register(function ($entity) {
 
     $entity = str_replace('\\', '/', $module[1]);
 
-    $path = __DIR__ . '/phpFastCache/' . $entity . '.' . PHP_EXT;
+    $path = __DIR__ . '/' . $entity . '.' . PHP_EXT;
     if (is_readable($path)) {
         require_once $path;
     }

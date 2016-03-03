@@ -691,40 +691,28 @@ echo $products;
 <pre class="prettyprint php">
 &lt;?php
     // In your config file
-    // include("phpFastCache/phpFastCache.php"); or use "Composer" Vendor / Autoload
-    // phpFastCache support "ssdb", "mongodb", "redis", "cookie", "apc", "memcache",
-    // "memcached", "wincache" ,"files", "sqlite" and "xcache"
+    // include("phpFastCache/phpFastCache.php"); or use "Composer" / Autoload
 
     use phpFastCache\CacheManager;
 
     $config = array(
-        "storage"   =>  "files",
+        "storage"   =>  "files", // memcached, redis, ssdb, ..etc
         "path"      =>  "/your_cache_path/dir/",
     );
-
     CacheManager::setup($config); // look at folder "Examples" for more setup & config
-    CacheManager::CachingMethod("phpfastcache"); // use "normal" as traditional
-
-    // You don't need to change your code when you change your caching system,
-    $cache = CacheManager::getInstance();
-    // $cache = CacheManager::Files();
-    // $cache = CacheManager::Memcached(); <-- ::Reids() ::Predis() ::ssdb() ..etc
-    // $cache = CacheManager::getInstance("redis", $config);
 
     // In your Class, Functions, PHP Pages
-    // try to get from Cache first. product_page = YOUR Identity Keyword
-    $products = $cache->get("product_page");
-    // Lazy? $products = CacheManager::get("keyword");
+    // First try to get from Cache first. product_page = YOUR Identity Keyword
+    $products = CacheManager::get("keyword");
 
     if(is_null($products)) {
         $products = YOUR DB QUERIES || GET_PRODUCTS_FUNCTION;
         // set products in to cache in 600 seconds = 10 minutes and 0 = never expired
-        $cache->set("product_page", $products,600);
-        // CacheManager::set() work the same too
+        CacheManager::set("product_page", $products,600);
+        // In next 600 seconds, phpFastCache will take care your heavy traffic
     }
 
-    // Output Your Contents $products HERE
-    // LOOP | echo $products 
+    // LOOP | Output Your $products
 </pre>
     </p>
     <br><br>
@@ -741,6 +729,11 @@ echo $products;
     use phpFastCache\CacheManager;
 
     $cache = CacheManager::Memcached();
+    // Yo? Look at examples Folder.
+    // $cache = CacheManager::getInstance();
+    // $cache = CacheManager::getInstance("redis", $setup);
+    // $cache = CacheManager::Files($setup);
+    // $cache = CacheManager::Redis();
 
     // try to get from Cache first.
     $results = $cache->get("identity_keyword")

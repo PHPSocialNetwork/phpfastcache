@@ -294,7 +294,7 @@
     <div class="content" style="display: none;">
         <p>Composer require phpFastCache/phpFastCache - OR Just 2 steps:<br>
             1. Click Download & Unzip<br>
-            2. Include("phpFastCache.php");</p>
+            2. Include("phpFastCache/phpFastCache.php");</p>
         <p>You are Ready to speed up your slowly website!</p>
     </div>
 </li>
@@ -366,7 +366,7 @@
 
 // Require Library
 use phpFastCache\CacheManager;
-require_once("src/phpFastCache.php");
+require_once("src/phpFastCache/phpFastCache.php");
 
 // simple Caching with:
 // $cache = phpFastCache();
@@ -691,7 +691,7 @@ echo $products;
 <pre class="prettyprint php">
 &lt;?php
     // In your config file
-    // include("phpFastCache.php"); or use "Composer" / Autoload
+    // include("phpFastCache/phpFastCache.php"); or use "Composer" / Autoload
     use phpFastCache\CacheManager;
 
     $config = array(
@@ -820,7 +820,7 @@ echo $products;
 <pre class="prettyprint php">
 &lt;?php
     // in your config files
-    // include("phpFastCache.php");
+    // include("phpFastCache/phpFastCache.php");
     // Use "Composer" / Vendor / Autoload
 
     // auto | memcache | files ...etc. Will be default for $cache = __c();

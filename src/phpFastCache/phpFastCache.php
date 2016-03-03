@@ -13,8 +13,9 @@
  */
 
 use phpFastCache\CacheManager;
+use phpFastCache\Util\OpenBaseDir;
 define('PHP_EXT', substr(strrchr(__FILE__, '.'), 1));
-
+require_once __DIR__."/Util/OpenBaseDir.php";
 /**
  * Register Autoload
  */
@@ -28,9 +29,15 @@ spl_autoload_register(function ($entity) {
          */
         return;
     }
+    if(!OpenBaseDir::checkBaseDir(__DIR__)) {
+        /*
+         * in case system have open base_dir, it will check ONE time only for the __DIR__
+         * If open_base_dir is NULL, it skip checking
+         */
+        return;
+    }
 
     $entity = str_replace('\\', '/', $module[1]);
-
     $path = __DIR__ . '/' . $entity . '.' . PHP_EXT;
     if (is_readable($path)) {
         require_once $path;

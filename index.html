@@ -702,14 +702,14 @@ echo $products;
     CacheManager::setup($config); // look at folder "Examples" for more setup & config
 
     // In your Class, Functions, PHP Pages
-    // First try to get from Cache first. product_page = YOUR Identity Keyword
-    $products = CacheManager::get("keyword");
+    // First try to get from Cache first with an Identity Keyword
+    $cache_keyword = "product page, item sku, md5(url), API url...";
+    $products = CacheManager::get($cache_keyword);
 
     if(is_null($products)) {
-        $products = YOUR DB QUERIES || GET_PRODUCTS_FUNCTION;
-        // set products in to cache in 600 seconds = 10 minutes and 0 = never expired
-        CacheManager::set("product_page", $products,600);
-        // In next 600 seconds, phpFastCache will take care your heavy traffic
+        $products = "YOUR DB QUERIES RESULT AS OBJECT || ARRAY || HTML || GET_PRODUCTS_FUNCTION";
+        // Cache your $products 600 seconds, phpFastCache will take care your heavy traffic // 0 = never expired
+        CacheManager::set($cache_keyword, $products,600);
     }
 
     // LOOP | Output Your $products

@@ -160,12 +160,14 @@ class CacheManager
      */
     protected static function __CleanCachingMethod($instance)
     {
-        $old = self::$instances[ $instance ]->config[ 'cache_method' ];
-        self::$instances[ $instance ]->config[ 'cache_method' ] = 1;
-        foreach (self::$memory[ $instance ] as $keyword => $object) {
-            self::$instances[ $instance ]->set($keyword, $object[ 'value' ], $object[ 'expired_in' ]);
+        if(is_array(self::$memory[ $instance ]) && !empty(self::$memory[ $instance ])) {
+            $old = self::$instances[$instance]->config['cache_method'];
+            self::$instances[$instance]->config['cache_method'] = 1;
+            foreach (self::$memory[$instance] as $keyword => $object) {
+                self::$instances[$instance]->set($keyword, $object['value'], $object['expired_in']);
+            }
+            self::$instances[$instance]->config['cache_method'] = $old;
+            self::$memory[$instance] = array();
         }
-        self::$instances[ $instance ]->config[ 'cache_method' ] = $old;
-        self::$memory[ $instance ] = array();
     }
 }

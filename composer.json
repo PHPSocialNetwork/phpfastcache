@@ -1,5 +1,5 @@
 {
-    "name": "phpFastCache/phpFastCache",
+    "name": "phpfastcache/phpfastcache",
     "type" : "library",
     "description": "PHP Cache Class - Supported Redis, Cookie, Predis, APC, MemCached, WinCache, Files, PDO, Reduce mySQL Call by Caching",
     "keywords": ["cache","caching","php cache","mysql cache","apc cache","apc","memcache","memcached","wincache","files cache","pdo cache","cache class","redis","predis","cookie"],

@@ -72,7 +72,12 @@ class cookie extends DriverAbstract
     {
         $this->connectServer();
         $keyword = 'phpFastCache_' . $keyword;
-        return setcookie($keyword, $this->encode($value), time() + ($time ? (int)$time : 300), '/');
+        $v = $this->encode($value);
+        if(isset($this->config['limited_memory_each_object'])
+            && strlen($v) > $this->config['limited_memory_each_object']) {
+            return false;
+        }
+        return setcookie($keyword, $v, time() + ($time ? (int)$time : 300), '/');
 
     }
 

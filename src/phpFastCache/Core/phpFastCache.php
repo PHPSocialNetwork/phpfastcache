@@ -81,7 +81,7 @@ class phpFastCache
 
       'extensions' => array(),
       "cache_method"    =>  2, // 1 = normal, 2 = phpfastcache, 3 = memory
-      "limited_memory_each_object"  =>  128000, // maximum size (bytes) of object store in memory
+      "limited_memory_each_object"  =>  4000, // maximum size (bytes) of object store in memory
     );
 
     /**

@@ -33,7 +33,7 @@
     },
     "autoload": {
         "files": [
-            "src/autoload.php"
+            "src/phpFastCache/phpFastCache.php"
         ]
     }
 }

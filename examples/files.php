@@ -19,14 +19,14 @@
  */
 
 // Include composer autoloader
-require '../vendor/autoload.php';
+require '../src/autoload.php';
 // OR require_once("../src/autoload.php");
 
 use phpFastCache\CacheManager;
 
 // Setup File Path on your config files
 CacheManager::setup(array(
-    "path" => sys_get_temp_dir(), // or in windows "C:/tmp/"
+   // "path" => sys_get_temp_dir(), // or in windows "C:/tmp/"
 ));
 // our unique method of caching, faster than traditional caching which shared everywhere on internet like 7-10 times
 // reduce high load CPU, reduce I/O from files open

@@ -81,7 +81,7 @@ class phpFastCache
 
       'extensions' => array(),
       "cache_method"    =>  2, // 1 = normal, 2 = phpfastcache, 3 = memory
-      "limited_memory_each_object"  =>  128000, // maximum size (bytes) of object store in memory
+      "limited_memory_each_object"  =>  4000, // maximum size (bytes) of object store in memory
     );
 
     /**
@@ -155,13 +155,16 @@ class phpFastCache
      */
     public static function getPath($skip_create_path = false, $config)
     {
-        if (!isset($config[ 'path' ]) || $config[ 'path' ] == '') {
+        $tmp_dir = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
 
+        if (!isset($config[ 'path' ]) || $config[ 'path' ] == '') {
             if (self::isPHPModule()) {
-                $tmp_dir = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
                 $path = $tmp_dir;
             } else {
-                $path = isset($_SERVER[ 'DOCUMENT_ROOT' ]) ? rtrim($_SERVER[ 'DOCUMENT_ROOT' ], '/') . '/../' : rtrim(__DIR__, '/') . '/';
+                $document_root_path = rtrim($_SERVER[ 'DOCUMENT_ROOT' ], '/') . '/../';
+                $path = isset($_SERVER[ 'DOCUMENT_ROOT' ]) && is_writable($document_root_path)
+                    ? $document_root_path
+                    : rtrim(__DIR__, '/') . '/';
             }
 
             if (self::$config[ 'path' ] != '') {
@@ -187,7 +190,7 @@ class phpFastCache
 
         $securityKey = self::cleanFileName($securityKey);
 
-        $full_path = $path . '/' . $securityKey;
+        $full_path = rtrim($path,'/') . '/' . $securityKey;
         $full_pathx = md5($full_path);
 
 
@@ -199,6 +202,16 @@ class phpFastCache
                 }
                 if (!@is_writable($full_path)) {
                     @chmod($full_path, self::__setChmodAuto($config));
+                }
+                if(!@is_writable($full_path)) {
+                    // switch back to tmp dir again if the path is not writeable
+                    $full_path = rtrim($tmp_dir,'/') . '/' . $securityKey;
+                    if (!@file_exists($full_path)) {
+                        @mkdir($full_path, self::__setChmodAuto($config));
+                    }
+                    if (!@is_writable($full_path)) {
+                        @chmod($full_path, self::__setChmodAuto($config));
+                    }
                 }
                 if (!@file_exists($full_path) || !@is_writable($full_path)) {
                     throw new phpFastCacheCoreException('PLEASE CREATE OR CHMOD ' . $full_path . ' - 0777 OR ANY WRITABLE PERMISSION!', 92);

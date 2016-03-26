@@ -21,9 +21,11 @@
 use phpFastCache\CacheManager;
 
 // Include composer autoloader
-require '../vendor/autoload.php';
+require '../src/autoload.php';
 
-$InstanceCache = CacheManager::getInstance('sqlite');
+CacheManager::setup("storage","sqlite");
+
+$InstanceCache = CacheManager::getInstance();
 
 /**
  * Try to get $products from Caching First
@@ -45,4 +47,29 @@ if (is_null($CachedString)) {
     echo $CachedString;
 }
 
+echo '<br /><br /><a href="/">Back to index</a>&nbsp;--&nbsp;<a href="/' . basename(__FILE__) . '">Reload</a><br>';
+
+$InstanceCache = CacheManager::sqlite();
+
+/**
+ * Try to get $products from Caching First
+ * product_page is "identity keyword";
+ */
+$key = "product_page2";
+$CachedString = $InstanceCache->get($key);
+
+if (is_null($CachedString)) {
+    $CachedString = "SQLite Cache --> Cache Enabled --> Well done !";
+    // Write products to Cache in 10 minutes with same keyword
+    $InstanceCache->set($key, $CachedString, 600);
+
+    echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ";
+    echo $CachedString;
+
+} else {
+    echo "READ FROM CACHE // ";
+    echo $CachedString;
+}
+
 echo '<br /><br /><a href="/">Back to index</a>&nbsp;--&nbsp;<a href="/' . basename(__FILE__) . '">Reload</a>';
+

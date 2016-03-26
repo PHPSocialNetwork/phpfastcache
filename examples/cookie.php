@@ -21,7 +21,12 @@
 use phpFastCache\CacheManager;
 
 // Include composer autoloader
-require '../vendor/autoload.php';
+require '../src/autoload.php';
+
+$config = array(
+    "limited_memory_each_object"    => 4000,
+);
+CacheManager::setup($config);
 
 $InstanceCache = CacheManager::getInstance('cookie');
 

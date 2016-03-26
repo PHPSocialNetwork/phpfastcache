@@ -554,7 +554,7 @@ abstract class DriverAbstract implements DriverInterface
      */
     protected function required_extension($name)
     {
-        require_once(__DIR__ . '/../' . $this->extension_dir . '/' . $name . PHP_EXT);
+        require_once(__DIR__ . '/../' . $this->extension_dir . '/' . $name . '.' . PHP_EXT);
     }
 
 

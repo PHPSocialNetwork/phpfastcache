@@ -21,7 +21,7 @@
 use phpFastCache\CacheManager;
 
 // Include composer autoloader
-require '../vendor/autoload.php';
+require '../src/autoload.php';
 
 CacheManager::setup(array(
     'memcache' => array(

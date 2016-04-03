@@ -21,7 +21,7 @@
 use phpFastCache\CacheManager;
 
 // Include composer autoloader
-require '../vendor/autoload.php';
+require '../src/autoload.php';
 
 CacheManager::setup(array(
     'memcache' => array(
@@ -53,3 +53,6 @@ if (is_null($CachedString)) {
 }
 
 echo '<br /><br /><a href="/">Back to index</a>&nbsp;--&nbsp;<a href="/' . basename(__FILE__) . '">Reload</a>';
+
+// Testing Functions
+require_once __DIR__."/TestingFunctions.php";

@@ -16,7 +16,7 @@ echo "Testing new cache instance\n";
 /**
  * Testing memcached as it is declared in .travis.yml
  */
-$driverInstance = CacheManager::getInstance('memcached');
+$driverInstance = CacheManager::getInstance();
 
 if(!is_object($driverInstance) || !($driverInstance instanceof DriverInterface))
 {

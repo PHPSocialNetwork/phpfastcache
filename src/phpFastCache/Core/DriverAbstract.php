@@ -108,7 +108,7 @@ abstract class DriverAbstract implements DriverInterface
 
         // handle search
         if (isset($this->config[ 'allow_search' ]) && $this->config[ 'allow_search' ] == true) {
-            $option[ 'tags' ] = array("search");
+            $option[ 'tags' ][] = "search";
         }
 
         // handle tags

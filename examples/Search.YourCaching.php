@@ -32,6 +32,8 @@ CacheManager::setup(array(
 // In your class, function, you can call the Cache
 $cache = CacheManager::Files();
 
+echo "<b>Testing Search:</b>";
+
 $keyword1   = "my_apple_keyword";
 $value1     = "Apple is good";
 $cache->set($keyword1,$value1);
@@ -80,3 +82,8 @@ echo "</pre>";
     [my_iphone_keyword] => Android is better than iphone for sure
 )
  */
+
+echo "<hr>";
+echo "<b>Testing Tags:</b>";
+
+include_once __DIR__."/Tags.YourCaching.php";

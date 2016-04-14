@@ -96,7 +96,7 @@ class CacheManager
 
     /**
      * Setup Method
-     * @param string $string | tradtiional(normal), memory (fast), phpfastcache (fastest)
+     * @param string $string | traditional(normal), memory (fast), phpfastcache (fastest)
      */
     public static function CachingMethod($string = "phpFastCache")
     {

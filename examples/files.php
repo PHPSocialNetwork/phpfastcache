@@ -1,41 +1,26 @@
 <?php
 /**
- *
- * This file is part of phpFastCache.
- *
- * @license MIT License (MIT)
- *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
- *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
- * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
- */
-
-/**
  * Welcome to Learn Lesson
  * This is very Simple PHP Code of Caching
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  */
 
 // Include composer autoloader
-require '../src/autoload.php';
-// OR require_once("../src/autoload.php");
+require 'vendor/autoload.php';
+// OR require_once("../src/phpFastCache/phpFastCache.php");
+date_default_timezone_set("Europe/Paris");
+
 
 use phpFastCache\CacheManager;
+use phpFastCache\Core\phpFastCache;
 
 // Setup File Path on your config files
-CacheManager::setup(array(
-   // "path" => sys_get_temp_dir(), // or in windows "C:/tmp/"
+phpFastCache::setup(array(
+    "path" => '/var/www/phpfastcache.dev.geolim4.com/geolim4/tmp', // or in windows "C:/tmp/"
 ));
-// our unique method of caching, faster than traditional caching which shared everywhere on internet like 7-10 times
-// reduce high load CPU, reduce I/O from files open
-// reduce missing hits of memcache, reduce connection to redis and others caches
-// Accepted value: "normal" < "memory" < "phpfastcache"
-CacheManager::CachingMethod("phpfastcache");
 
 // In your class, function, you can call the Cache
-$InstanceCache = CacheManager::Files();
+$InstanceCache = CacheManager::getInstance('files');
 // OR $InstanceCache = CacheManager::getInstance() <-- open examples/global.setup.php to see more
 
 /**
@@ -43,20 +28,21 @@ $InstanceCache = CacheManager::Files();
  * product_page is "identity keyword";
  */
 $key = "product_page";
-$CachedString = $InstanceCache->get($key);
+$CachedString = $InstanceCache->getItem($key);
 
-if (is_null($CachedString)) {
-    $CachedString = "Files Cache --> Well done !";
+if (is_null($CachedString->get())) {
+    //$CachedString = "Files Cache --> Cache Enabled --> Well done !";
     // Write products to Cache in 10 minutes with same keyword
-    $InstanceCache->set($key, $CachedString, 600);
+    $CachedString->set("Files Cache --> Cache Enabled --> Well done !")->expiresAfter(5);
+	$InstanceCache->save($CachedString);
 
     echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ";
-    echo $CachedString;
+    echo $CachedString->get();
 
 } else {
     echo "READ FROM CACHE // ";
-    echo $CachedString;
+	echo $CachedString->getExpirationDate()->format(Datetime::W3C);
+    echo $CachedString->get();
 }
 
-echo '<br /><br /><a href="/">Back to index</a>&nbsp;--&nbsp;<a href="/' . basename(__FILE__) . '">Reload</a>';
-
+echo '<br /><br /><a href="/">Back to index</a>&nbsp;--&nbsp;<a href="./' . basename(__FILE__) . '">Reload</a>';

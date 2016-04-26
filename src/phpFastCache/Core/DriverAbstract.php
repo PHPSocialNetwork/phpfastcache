@@ -14,15 +14,20 @@
 
 namespace phpFastCache\Core;
 
+use phpFastCache\Cache\ExtendedCacheItemInterface;
+use phpFastCache\Cache\ExtendedCacheItemPoolInterface;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\CacheManager;
+use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 
 /**
  * Class DriverAbstract
  * @package phpFastCache\Core
  */
-abstract class DriverAbstract implements DriverInterface
+abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheItemPoolInterface
 {
+    const DRIVER_CHECK_FAILURE = '%s is not installed or misconfigured, cannot continue.';
 
     /**
      * @var array
@@ -32,12 +37,12 @@ abstract class DriverAbstract implements DriverInterface
     /**
      * @var array
      */
-    public $tmp = array();
+    public $tmp = [];
 
     /**
      * @var array default options, this will be merge to Driver's Options
      */
-    public $config = array();
+    public $config = [];
 
     /**
      * @var bool
@@ -45,9 +50,9 @@ abstract class DriverAbstract implements DriverInterface
     public $fallback = false;
 
     /**
-     * @var
+     * @var mixed Instance of driver service
      */
-    public $instant;
+    public $instance;
 
 
     public function __destruct()
@@ -135,6 +140,7 @@ abstract class DriverAbstract implements DriverInterface
      */
     public function get($keyword, $option = array())
     {
+        return false;
         /**
          * Temporary disabled phpFastCache::$disabled = true
          * Khoa. B
@@ -530,7 +536,7 @@ abstract class DriverAbstract implements DriverInterface
             return $this->set($name, $v[ 0 ], $v[ 1 ],
               isset($v[ 2 ]) ? $v[ 2 ] : array());
         } else {
-            throw new phpFastCacheDriverException("Example ->$name = array('VALUE', 300);", 98);
+            throw new phpFastCacheDriverException("Example ->$name = array('VALUE', 300);");
         }
     }
 
@@ -584,18 +590,6 @@ abstract class DriverAbstract implements DriverInterface
             return $string;
         }
     }
-
-    /**
-     * return PATH for Files & PDO only
-     * @param bool $create_path
-     * @return string
-     * @throws \Exception
-     */
-    public function getPath($create_path = false)
-    {
-        return phpFastCache::getPath($create_path, $this->config);
-    }
-
 
     /**
      *  Object for Files & SQLite
@@ -843,4 +837,43 @@ abstract class DriverAbstract implements DriverInterface
         CacheManager::$hit[ $instance ][ 'data' ][ $index ] = $current + ($step);
     }
 
+
+
+    /**
+     * V5: Abstract Methods
+     */
+
+    /**
+     * @param $key
+     * @return mixed
+     */
+    abstract public function driverRead($key);
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return mixed
+     */
+    abstract public function driverWrite(CacheItemInterface $item);
+    
+    /**
+     * @return bool
+     */
+    abstract public function driverClear();
+
+    /**
+     * @return bool
+     */
+    abstract public function driverConnect();
+    
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return bool
+     */
+    abstract public function driverDelete(CacheItemInterface $item);
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return bool
+     */
+    abstract public function driverIsHit(CacheItemInterface $item);
 }

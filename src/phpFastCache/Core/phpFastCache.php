@@ -47,7 +47,6 @@ class phpFastCache
      * @var array
      */
     public static $config = array(
-      'storage' => '', // blank for auto
       'default_chmod' => 0777, // 0777 , 0666, 0644
 
       'overwrite'  =>  "", // files, sqlite, etc it will overwrite ur storage and all other caching for waiting u fix ur server
@@ -59,25 +58,6 @@ class phpFastCache
       'htaccess' => true,
       'path' => '',
 
-      'memcache' => array(
-        array('127.0.0.1', 11211, 1),
-          //  array("new.host.ip",11211,1),
-      ),
-
-      'redis' => array(
-        'host' => '127.0.0.1',
-        'port' => '',
-        'password' => '',
-        'database' => '',
-        'timeout' => '',
-      ),
-
-      'ssdb' => array(
-        'host' => '127.0.0.1',
-        'port' => 8888,
-        'password' => '',
-        'timeout' => '',
-      ),
 
       'extensions' => array(),
       "cache_method"    =>  1, // 1 = normal, 2 = phpfastcache, 3 = memory
@@ -224,7 +204,6 @@ class phpFastCache
         }
 
         return realpath($full_path);
-
     }
 
     /**
@@ -318,7 +297,6 @@ allow from 127.0.0.1";
 
             }
         }
-
     }
 
     /**

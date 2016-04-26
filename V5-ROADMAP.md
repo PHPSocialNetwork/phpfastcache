@@ -12,4 +12,4 @@
 - [ ] Re-implement standalone Autoload for non-composer user
 - [ ] Implement MongoDb Driver
 - [ ] Check Wincache driver in real Windows env (and not in VM)
-- [ ] Final code review + psr2 checks
+- [ ] Final code review + psr2 checks + psr-6 null value as legitimates value.

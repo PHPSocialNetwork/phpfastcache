@@ -20,29 +20,25 @@ CacheManager::setup(array(
 ));
 
 // In your class, function, you can call the Cache
-$InstanceCache = CacheManager::getInstance('sqlite');
-// OR $InstanceCache = CacheManager::getInstance() <-- open examples/global.setup.php to see more
+$InstanceCache = CacheManager::getInstance('redis');
 
 /**
  * Try to get $products from Caching First
  * product_page is "identity keyword";
  */
-$key = "product_page";
+$key = "product_increment";
 $CachedString = $InstanceCache->getItem($key);
-
 if (is_null($CachedString->get())) {
-    //$CachedString = "Files Cache --> Cache Enabled --> Well done !";
-    // Write products to Cache in 10 minutes with same keyword
-    $CachedString->set("Files Cache --> Cache Enabled --> Well done !")->expiresAfter(5);
-	$InstanceCache->save($CachedString);
-
-    echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ";
-    echo $CachedString->get();
+	$CachedString->set(1000)->expiresAfter(10);
+	
+    echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // INCREMENT // ";
+    echo $CachedString->increment()->get();
 
 } else {
-    echo "READ FROM CACHE // ";
-	echo $CachedString->getExpirationDate()->format(Datetime::W3C);
-    echo $CachedString->get();
+    echo "READ FROM CACHE // INCREMENT // ";
+    echo $CachedString->increment()->get();
 }
+
+$InstanceCache->save($CachedString);
 
 echo '<br /><br /><a href="/">Back to index</a>&nbsp;--&nbsp;<a href="./' . basename(__FILE__) . '">Reload</a>';

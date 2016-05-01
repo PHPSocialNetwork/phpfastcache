@@ -6,7 +6,7 @@
  */
 
 // Include composer autoloader
-require 'vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 // OR require_once("../src/phpFastCache/phpFastCache.php");
 date_default_timezone_set("Europe/Paris");
 
@@ -15,7 +15,7 @@ use phpFastCache\CacheManager;
 use phpFastCache\Core\phpFastCache;
 
 // Setup File Path on your config files
-phpFastCache::setup(array(
+CacheManager::setup(array(
     "path" => '/var/www/phpfastcache.dev.geolim4.com/geolim4/tmp', // or in windows "C:/tmp/"
 ));
 

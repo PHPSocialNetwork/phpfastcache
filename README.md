@@ -18,12 +18,9 @@ However, some time you still want to use traditional caching, we support them to
 ```php
 use phpFastCache\CacheManager;
 
-// Default value: is "phpfastcache" (fastest), you can change to "normal" or "memory" (fast)
-CacheManager::CachingMethod("normal");
-
-// Recommend: use phpfastcache to reduce files I/O & CPU Load, Memcached missing hits, and make redis and other connections become faster.
-// If you get any error due to Server / Hosting, try to change to "memory" , act almost same way as "phpfastcache" but slower a little bit
-// In bad situation, use "normal" as traditional caching method
+CacheManager::getInstance('files', $config);
+// An alternative exists:
+CacheManager::Files($config);
 
 ```
 
@@ -40,16 +37,22 @@ Rich Development API
 
 phpFastCache offers you a lot of usefull APIS:
 
-- get($keyword) // The getter, obviously, return your cache object
-- set($keyword, $something_your_want_to_cache, $time_as_second = 0) // The setter, for those who missed it, put 0 meant cache it forever
-- delete($keyword) // For removing a cached thing
+### Item API
+- get() // The getter, obviously, return your cache object
+- set($something_your_want_to_cache, $time_as_second = 0) // The setter, for those who missed it, put 0 meant cache it forever
+- touch($time_you_want_to_extend) // Allow you to extends the lifetime of an entry without altering the value
+- increment($step = 1) // For integer that we can count on
+- decrement($step = 1) // Redundant joke...
+- isHit() // Check if your cache entry exists and is still valid, it is the equivalent of isset()
+
+### ItemPool API
+- delete() // For removing a cached thing
 - clean() // Allow you to completely empty the cache and restart from the beginning
-- touch($keyword, $time_you_want_to_extend) // Allow you to extends the lifetime of an entry without altering the value
-- increment($keyword, $step = 1) // For integer that we can count on
-- decrement($keyword, $step = 1) // Redundant joke...
 - search($string_or_regex, $search_in_value = false | true) // Allow you to perform some search on the cache index
-- isExisting($keyword) // Check if your cache entry exists, it is the equivalent of isset()
-- stats() // Return the cache statistics, useful for checking disk space used by the cache etc.
+- stats() // Return the cache statistics as an object, useful for checking disk space used by the cache etc.
+- searchByTag() // For searching by tag 
+- searchByKey() // For searching by key 
+- searchByValue() // For searching by value (slow) 
 
 Also support Multiple calls, Tagging, Setup Folder for caching. Look at our examples folders.
 
@@ -69,65 +72,50 @@ composer require phpFastCache/phpFastCache
 ```php
 use phpFastCache\CacheManager;
 
-// require_once ('vendor/autoload.php');
+// Setup File Path on your config files
+CacheManager::setup(array(
+    "path" => '/var/www/phpfastcache.dev.geolim4.com/geolim4/tmp', // or in windows "C:/tmp/"
+));
 
-$cache = CacheManager::Files();
-
-// $cache = CacheManager::Memcached();
-// phpFastCache supported: SSDB, Redis, Predis, Cookie, Files, MemCache, MemCached, APC, WinCache, XCache, SQLite
-// $cache = CacheManager::getInstance("auto", $config);
-// $cache = CacheManager::getInstance("memcached", $server_config);
+// In your class, function, you can call the Cache
+$InstanceCache = CacheManager::getInstance('files');
+// OR $InstanceCache = CacheManager::getInstance() <-- open examples/global.setup.php to see more
 
 /**
  * Try to get $products from Caching First
  * product_page is "identity keyword";
  */
 $key = "product_page";
-$products = $cache->get($key);
+$CachedString = $InstanceCache->getItem($key);
 
-if (is_null($products)) {
-    $products = "DB QUERIES | FUNCTION_GET_PRODUCTS | ARRAY | STRING | OBJECTS";
-    // Write products to Cache in 10 minutes with same keyword
-    $cache->set($key, $products, 600);
+$your_product_data = [
+    'First product',
+    'Second product',
+    'Third product'
+    // etc...
+];
 
-    echo " --> NO CACHE ---> DB | Func | API RUN FIRST TIME ---> ";
+if (is_null($CachedString->get())) {
+    $CachedString->set($your_product_data)->expiresAfter(5);//in seconds, also accepts Datetime
+	$InstanceCache->save($CachedString); // Save the cache item just like you do with doctrine and entities
+
+    echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ";
+    echo $CachedString->get();
 
 } else {
-    echo " --> USE CACHE --> SERV 10,000+ Visitors FROM CACHE ---> ";
+    echo "READ FROM CACHE // ";
+    echo $CachedString->get()[0];// Will prints 'First product'
 }
 
 /**
  * use your products here or return it;
  */
-echo $products;
+echo implode('<br />', $CachedString->get());// Will echo your product list
 
 ```
 
 #### :floppy_disk: Legacy / Lazy Method (Without Composer)
-```php
-// In your config files
-// require_once ('phpFastCache/src/autoload.php');
-
-use phpFastCache\CacheManager;
-
-// $cache = $cache = CacheManager::Files();
-// $cache = phpFastCache();
-// $cache = phpFastCache("files");
-// $cache = phpFastCache("memcached");
-
-/**
- * Try to get $products from Caching First
- * product_page is "identity keyword";
- */
-$key = "product_page";
-// $products = $cache->get($key);
-$products = CacheManager::get($key);
-// CacheManager::set() , ::touch ::increment ::search ..etc, work same way without create new instance
-
-// yet it's the same as autoload
-
-```
-
+See the file examples/legacy.php for more information.
 
 #### :zap: Step 3: Enjoy ! Your website is now faster than flash !
 For curious developpers, there is a lot of others available examples [here](https://github.com/khoaofgod/phpFastCache/tree/final/examples).

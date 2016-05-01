@@ -8,9 +8,13 @@
 use phpFastCache\CacheManager;
 
 // Include composer autoloader
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../src/autoload.php';
 
-$InstanceCache = CacheManager::getInstance('predis');
+// Not provided by phpFastCache
+// you have to do it yourself
+require __DIR__ . 'YOUR_PROJECT/fig_cache_interfaces.php';
+
+$InstanceCache = CacheManager::getInstance('memcache');
 
 /**
  * Try to get $products from Caching First
@@ -22,8 +26,8 @@ $CachedString = $InstanceCache->getItem($key);
 if (is_null($CachedString->get())) {
     //$CachedString = "APC Cache --> Cache Enabled --> Well done !";
     // Write products to Cache in 10 minutes with same keyword
-    $CachedString->set("Predis Cache --> Cache Enabled --> Well done !")->expiresAfter(5);
-	$InstanceCache->save($CachedString);
+    $CachedString->set("Memcache Cache --> Cache Enabled --> Well done !")->expiresAfter(5);
+    $InstanceCache->save($CachedString);
 
     echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ";
     echo $CachedString->get();

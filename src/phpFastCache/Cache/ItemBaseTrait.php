@@ -60,9 +60,9 @@ trait ItemBaseTrait
      */
     public function get()
     {
-        if (!$this->fetched) {
+/*        if (!$this->fetched) {
             $this->data = $this->driver->driverRead($this->getKey());
-        }
+        }*/
 
         return $this->data;
     }
@@ -161,13 +161,41 @@ trait ItemBaseTrait
     }
 
     /**
+     * @return $this
+     */
+    public function increment($step = 1)
+    {
+        if(is_int($step)){
+            $this->fetched = true;
+            $this->data += $step;
+        }else{
+            throw new \InvalidArgumentException('$step must be numeric.');
+        }
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function decrement($step = 1)
+    {
+        if(is_int($step)){
+            $this->fetched = true;
+            $this->data -= $step;
+        }else{
+            throw new \InvalidArgumentException('$step must be numeric.');
+        }
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function __sleep()
     {
         $vars = (array) array_keys(get_object_vars($this));
         // Remove unneeded vars
-        unset($vars[array_search('driver', $vars)]);
+        //unset($vars[array_search('driver', $vars)]);
         return $vars;
     }
 }

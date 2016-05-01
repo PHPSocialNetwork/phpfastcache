@@ -17,6 +17,7 @@ namespace phpFastCache\Drivers\Memcache;
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\MemcacheDriverCollisionDetectorTrait;
 use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
 use Memcache as MemcacheSoftware;
@@ -40,7 +41,7 @@ class Driver extends DriverAbstract
         $this->setup($config);
 
         if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverException(sprintf(self::DRIVER_CHECK_FAILURE, 'Memcache'));
+            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, 'Memcache'));
         } else {
             $this->instance = new MemcacheSoftware();
             $this->driverConnect();
@@ -52,7 +53,7 @@ class Driver extends DriverAbstract
      */
     public function driverCheck()
     {
-        return class_exists(MemcacheSoftware::class);
+        return class_exists('Memcache');
     }
 
     /**
@@ -73,7 +74,7 @@ class Driver extends DriverAbstract
                 $ttl = time() + $ttl;
             }
 
-            return $this->instance->set($item->getKey(), $item->get(), false, $ttl);
+            return $this->instance->set($item->getKey(), $this->driverPreWrap($item), false, $ttl);
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -155,7 +156,7 @@ class Driver extends DriverAbstract
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->get($item->getKey()) !== null;
+            return $this->instance->get($item->getKey()) !== null;
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }

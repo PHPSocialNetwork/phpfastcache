@@ -25,10 +25,19 @@ interface ExtendedCacheItemInterface extends CacheItemInterface
      */
     public function isExpired();
 
-
     /**
      * @param \phpFastCache\Cache\ExtendedCacheItemPoolInterface $driver
      * @return mixed
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver);
+
+    /**
+     * @return int
+     */
+    public function increment();
+
+    /**
+     * @return int
+     */
+    public function decrement();
 }

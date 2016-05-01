@@ -14,9 +14,11 @@
 
 namespace phpFastCache\Drivers\Files;
 
+use phpFastCache\Cache\ExtendedCacheItemInterface;
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\PathSeekerTrait;
 use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
 
@@ -38,7 +40,7 @@ class Driver extends DriverAbstract
         $this->setup($config);
 
         if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverException(sprintf(self::DRIVER_CHECK_FAILURE, 'Files'));
+            throw new phpFastCacheDriverCheckException('APC is not installed, cannot continue.');
         }
     }
 
@@ -62,7 +64,7 @@ class Driver extends DriverAbstract
          */
         if ($item instanceof Item) {
             $file_path = $this->getFilePath($item->getKey());
-            $data = $this->encode($item);
+            $data = $this->encode($this->driverPreWrap($item));
 
             $toWrite = true;
             /*
@@ -111,14 +113,14 @@ class Driver extends DriverAbstract
 
         $content = $this->readfile($file_path);
         $object = $this->decode($content);
-        if ($object->isExpired()) {
+
+        if ($this->driverUnwrapTime($object)->getTimestamp() < time()) {
             @unlink($file_path);
-            $this->autoCleanExpired();
 
             return null;
         }
 
-        return $object->get();
+        return $object;
 
     }
 
@@ -199,7 +201,7 @@ class Driver extends DriverAbstract
             return false;
         } else {
             // check expired or not
-            $value = $this->get($item->getKey());
+            $value = $this->driverRead($item->getKey());
 
             return !($value == null);
         }

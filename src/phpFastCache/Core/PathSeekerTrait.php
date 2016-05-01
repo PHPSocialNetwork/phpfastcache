@@ -25,7 +25,7 @@ trait PathSeekerTrait
         $tmp_dir = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
 
         if (!isset($this->config[ 'path' ]) || $this->config[ 'path' ] == '') {
-            if (phpFastCache::isPHPModule()) {
+            if (self::isPHPModule()) {
                 $path = $tmp_dir;
             } else {
                 $document_root_path = rtrim($_SERVER[ 'DOCUMENT_ROOT' ], '/') . '/../';
@@ -102,7 +102,7 @@ trait PathSeekerTrait
      */
     public function isExpired()
     {
-        trigger_error(__FUNCTION__ . '() is deprecated, use CacheItemPrototype::isExpired() instead.', E_USER_DEPRECATED);
+        trigger_error(__FUNCTION__ . '() is deprecated, use ExtendedCacheItemInterface::isExpired() instead.', E_USER_DEPRECATED);
         return true;
     }
 

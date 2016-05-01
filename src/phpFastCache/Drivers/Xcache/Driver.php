@@ -16,6 +16,7 @@ namespace phpFastCache\Drivers\Xcache;
 
 use phpFastCache\Core\StandardPsr6StructureTrait;
 use phpFastCache\Core\DriverAbstract;
+use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
 
@@ -37,7 +38,7 @@ class Driver extends DriverAbstract
         $this->setup($config);
 
         if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverException(sprintf(self::DRIVER_CHECK_FAILURE, 'Xcache'));
+            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, 'Xcache'));
         }
     }
 
@@ -67,7 +68,7 @@ class Driver extends DriverAbstract
             } else {
                 return xcache_set($keyword, serialize($value), $time);
             }*/
-            return xcache_set($item->getKey(), $this->encode($item->get()), $item->getTtl());
+            return xcache_set($item->getKey(), $this->encode($this->driverPreWrap($item)), $item->getTtl());
 
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');

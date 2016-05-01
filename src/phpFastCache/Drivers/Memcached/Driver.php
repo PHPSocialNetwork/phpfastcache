@@ -16,6 +16,7 @@ namespace phpFastCache\Drivers\Memcached;
 
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\MemcacheDriverCollisionDetectorTrait;
+use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
 use Memcached as MemcachedSoftware;
@@ -43,7 +44,7 @@ class Driver extends DriverAbstract
         $this->setup($config);
 
         if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverException(sprintf(self::DRIVER_CHECK_FAILURE, 'Memcached'));
+            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, 'Memcached'));
         } else {
             $this->instance = new MemcachedSoftware();
             $this->driverConnect();
@@ -55,7 +56,7 @@ class Driver extends DriverAbstract
      */
     public function driverCheck()
     {
-        return class_exists(MemcachedSoftware::class);
+        return class_exists('Memcached');
     }
 
     /**
@@ -70,14 +71,14 @@ class Driver extends DriverAbstract
          */
         if ($item instanceof Item) {
             $ttl = $item->getExpirationDate()->getTimestamp() - time();
-var_dump($ttl);
+
             // Memcache will only allow a expiration timer less than 2592000 seconds,
             // otherwise, it will assume you're giving it a UNIX timestamp.
             if ($ttl > 2592000) {
                 $ttl = time() + $ttl;
             }
 
-            return $this->instance->set($item->getKey(), $item->get(), $ttl);
+            return $this->instance->set($item->getKey(), $this->driverPreWrap($item), $ttl);
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -159,7 +160,7 @@ var_dump($ttl);
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->get($item->getKey()) !== null;
+            return $this->instance->get($item->getKey()) !== null;
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }

@@ -12,20 +12,13 @@
  *
  */
 
-namespace phpFastCache\Core;
+namespace phpFastCache\Exceptions;
 
 /**
- * Class phpFastCacheExtensions
- * @package phpFastCache\Core
+ * Class phpFastCacheDriverException
+ * @package phpFastCache\Exceptions
  */
-abstract class phpFastCacheExtensions
+class phpFastCacheDriverCheckException extends phpFastCacheDriverException
 {
-    /**
-     * @param $name
-     * @param $agr
-     */
-    public function __call($name, $agr)
-    {
 
-    }
 }

@@ -16,6 +16,7 @@ namespace phpFastCache\Drivers\Cookie;
 
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
 
@@ -38,7 +39,7 @@ class Driver extends DriverAbstract
         $this->setup($config);
 
         if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverException(sprintf(self::DRIVER_CHECK_FAILURE, 'Cookie'));
+            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, 'Cookie'));
         }
     }
 
@@ -75,7 +76,7 @@ class Driver extends DriverAbstract
         if ($item instanceof Item) {
             $this->driverConnect();
             $keyword = self::PREFIX . $item->getKey();
-            $v = $this->encode($item->get());
+            $v = json_encode($this->driverPreWrap($item));
 
             if (isset($this->config[ 'limited_memory_each_object' ]) && strlen($v) > $this->config[ 'limited_memory_each_object' ]) {
                 return false;
@@ -88,8 +89,9 @@ class Driver extends DriverAbstract
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $key
+     * @param $key
      * @return bool|mixed|null
+     * @throws \phpFastCache\Exceptions\phpFastCacheDriverException
      */
     public function driverRead($key)
     {
@@ -97,12 +99,30 @@ class Driver extends DriverAbstract
         // return null if no caching
         // return value if in caching
         $keyword = self::PREFIX . $key;
-        $x = isset($_COOKIE[ $keyword ]) ? $this->decode($_COOKIE[ $keyword ]) : false;
+        $x = isset($_COOKIE[ $keyword ]) ? $this->decode(json_decode($_COOKIE[ $keyword ], true)) : false;
+
         if ($x == false) {
             return null;
         } else {
+            if(!is_scalar($this->driverUnwrapData($x)) && !is_null($this->driverUnwrapData($x)))
+            {
+                throw new phpFastCacheDriverException('Hacking attempt: The decoding returned a non-scalar value, Cookie driver does not allow this.');
+            }
             return $x;
         }
+    }
+
+    /**
+     * @param $key
+     * @return int
+     */
+    public function driverReadExpirationDate($key)
+    {
+        $this->driverConnect();
+        $keyword = self::PREFIX . $key;
+        $x = isset($_COOKIE[ $keyword ]) ? $this->decode(json_decode($_COOKIE[ $keyword ])->t) : false;
+
+        return $x ? $x - time() : $x;
     }
 
     /**

@@ -16,6 +16,7 @@ namespace phpFastCache\Drivers\Redis;
 
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
 use Redis as RedisClient;
@@ -38,7 +39,7 @@ class Driver extends DriverAbstract
         $this->setup($config);
 
         if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverException(sprintf(self::DRIVER_CHECK_FAILURE, 'Redis'));
+            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, 'Redis'));
         } else {
             $this->driverConnect();
         }
@@ -65,7 +66,7 @@ class Driver extends DriverAbstract
         if ($item instanceof Item) {
             $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
-            return $this->instance->setex($item->getKey(), $ttl, $this->encode($item->get()));
+            return $this->instance->setex($item->getKey(), $ttl, $this->encode($this->driverPreWrap($item)));
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }

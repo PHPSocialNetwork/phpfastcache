@@ -16,6 +16,7 @@ namespace phpFastCache;
 
 use phpFastCache\Core\phpFastCache;
 use phpFastCache\Core\DriverAbstract;
+use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use Psr\Cache\CacheItemPoolInterface;
 
 /**
@@ -37,6 +38,37 @@ use Psr\Cache\CacheItemPoolInterface;
  */
 class CacheManager
 {
+    /**
+     * @var bool
+     */
+    public static $disabled = false;
+
+    /**
+     * @var array
+     */
+    public static $config = [
+      'default_chmod' => 0777, // 0777 , 0666, 0644
+
+      'overwrite' => "", // files, sqlite, etc it will overwrite ur storage and all other caching for waiting u fix ur server
+      'allow_search' => false, // turn to true will allow $method search("/regex/")
+
+      'fallback' => 'files', //Fall back when old driver is not support
+
+      'securityKey' => 'auto',
+      'htaccess' => true,
+      'path' => '',
+
+
+      'extensions' => [],
+      "cache_method" => 2, // 1 = normal, 2 = phpfastcache, 3 = memory
+      "limited_memory_each_object" => 4000, // maximum size (bytes) of object store in memory
+    ];
+
+    /**
+     * @var array
+     */
+    protected static $tmp = [];
+
     protected static $namespacePath;
     protected static $instances = [];
 
@@ -48,9 +80,9 @@ class CacheManager
     public static function getInstance($driver = 'auto', $config = [])
     {
         $driver = ucfirst(strtolower($driver));
-        $config = array_merge(phpFastCache::$config, $config);
+        $config = array_merge(self::$config, $config);
         if ($driver === 'auto') {
-            $driver = phpFastCache::getAutoClass($config);
+            $driver = self::getAutoClass($config);
         }
 
         $instance = crc32($driver . serialize($config));
@@ -63,6 +95,30 @@ class CacheManager
         }
 
         return self::$instances[ $instance ];
+    }
+
+    /**
+     * @param $config
+     * @return string
+     * @throws \Exception
+     */
+    public static function getAutoClass($config)
+    {
+        static $autoDriver;
+        $systemDrivers = ['Sqlite', 'Files', 'Apc', 'Memcache', 'Memcached', 'Predis', 'Redis', 'Ssdb', 'Wincache', 'Xcache'];
+
+        if ($autoDriver === null) {
+            foreach ($systemDrivers as $driver) {
+                try {
+                    self::getInstance($driver, $config);
+                    $autoDriver = $driver;
+                } catch (phpFastCacheDriverCheckException $e) {
+                    continue;
+                }
+            }
+        }
+
+        return $autoDriver;
     }
 
     /**
@@ -103,5 +159,18 @@ class CacheManager
     public static function setNamespacePath($path)
     {
         self::$namespacePath = $path;
+    }
+
+    /**
+     * @param $name
+     * @param string $value
+     */
+    public static function setup($name, $value = '')
+    {
+        if (is_array($name)) {
+            self::$config = array_merge(self::$config, $name);
+        } else {
+            self::$config[ $name ] = $value;
+        }
     }
 }

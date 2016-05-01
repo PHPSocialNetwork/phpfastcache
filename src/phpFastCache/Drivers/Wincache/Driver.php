@@ -16,6 +16,7 @@ namespace phpFastCache\Drivers\Wincache;
 
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
 
@@ -37,7 +38,7 @@ class Driver extends DriverAbstract
         $this->setup($config);
 
         if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverException(sprintf(self::DRIVER_CHECK_FAILURE, 'Wincache'));
+            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, 'Wincache'));
         }
     }
 
@@ -65,7 +66,7 @@ class Driver extends DriverAbstract
             } else {
                 return wincache_ucache_set($keyword, $value, $time);
             }*/
-            return wincache_ucache_set($item->getKey(), $item->get(), $item->getTtl());
+            return wincache_ucache_set($item->getKey(), $this->driverPreWrap($item), $item->getTtl());
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }

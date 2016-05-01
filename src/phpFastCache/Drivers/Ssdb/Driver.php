@@ -16,6 +16,7 @@ namespace phpFastCache\Drivers\Ssdb;
 
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpssdb\Core\SimpleSSDB;
 use phpssdb\Core\SSDB;
@@ -44,7 +45,7 @@ class Driver extends DriverAbstract
         $this->setup($config);
 
         if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverException(sprintf(self::DRIVER_CHECK_FAILURE, 'Ssdb'));
+            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, 'Ssdb'));
         }elseif(!$this->driverConnect()){
             throw new phpFastCacheDriverException('Ssdb is not connected, cannot continue.');
         }
@@ -82,7 +83,7 @@ class Driver extends DriverAbstract
                 }
             }*/
 
-            return $this->instance->setx($item->getKey(), $this->encode($item->get()), $item->getTtl());
+            return $this->instance->setx($item->getKey(), $this->encode($this->driverPreWrap($item)), $item->getTtl());
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }

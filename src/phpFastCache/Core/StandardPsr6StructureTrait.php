@@ -42,14 +42,21 @@ trait StandardPsr6StructureTrait
             if (!array_key_exists($key, $this->itemInstances)) {
                 //(new \ReflectionObject($this))->getNamespaceName()
 
+                /**
+                 * @var $item ExtendedCacheItemInterface
+                 */
                 $class = new \ReflectionClass((new \ReflectionObject($this))->getNamespaceName() . '\Item');
-                $class->newInstanceArgs(array($this, $key));
-                
-                // new Item($this, $key);
+                $item = $class->newInstanceArgs(array($this, $key));
+                $driverArray = $this->driverRead($key);
+                if($driverArray)
+                {
+                    $item->set($this->driverUnwrapData($driverArray));
+                    $item->expiresAt($this->driverUnwrapTime($driverArray));
+                }
+
             }
         } else {
-            throw new \InvalidArgumentException(sprintf('$key must be a string, got type "%s" instead.',
-              gettype($key)));
+            throw new \InvalidArgumentException(sprintf('$key must be a string, got type "%s" instead.', gettype($key)));
         }
 
         return $this->itemInstances[ $key ];
@@ -67,8 +74,7 @@ trait StandardPsr6StructureTrait
 
             return $this;
         } else {
-            throw new \InvalidArgumentException(sprintf('Invalid Item Class "%s" for this driver.',
-              get_class($item)));
+            throw new \InvalidArgumentException(sprintf('Invalid Item Class "%s" for this driver.', get_class($item)));
         }
     }
 

@@ -16,6 +16,7 @@ namespace phpFastCache\Drivers\Apc;
 
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
 
@@ -37,7 +38,7 @@ class Driver extends DriverAbstract
         $this->setup($config);
 
         if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverException(sprintf(self::DRIVER_CHECK_FAILURE, 'APC'));
+            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, 'APC'));
         }
     }
 
@@ -66,8 +67,7 @@ class Driver extends DriverAbstract
         if ($item instanceof Item) {
             $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
-            return apc_store($item->getKey(), $item->getUncommittedData(),
-              ($ttl > 0 ? $ttl : 0));
+            return apc_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }

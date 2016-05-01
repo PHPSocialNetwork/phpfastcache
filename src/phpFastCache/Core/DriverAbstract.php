@@ -75,113 +75,11 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
     }
 
     /**
-     * Basic Functions
-     * @param $keyword
-     * @param string $value
-     * @param int $time
-     * @param array $option
-     * @return bool|null
-     */
-    public function set($keyword, $value = '', $time = 0, $option = array())
-    {
-        /**
-         * Infinity Time
-         * Khoa. B
-         */
-        if ((int)$time <= 0) {
-            /**
-             * 5 years, however memcached or memory cached will gone when u restart it
-             * just recommended for sqlite. files
-             */
-            $time = 3600 * 24 * 365 * 5;
-        }
-
-        /**
-         * Temporary disabled phpFastCache::$disabled = true
-         * Khoa. B
-         */
-        if (phpFastCache::$disabled === true) {
-            return false;
-        }
-        $object = array(
-          "value" => $value,
-          "write_time" => time(),
-          "expired_in" => $time,
-          "expired_time" => time() + (int)$time,
-          "size" => (is_array($value) || is_object($value)) ? strlen(serialize($value)) : strlen((String)$value),
-        );
-
-        // handle search
-        if (isset($this->config[ 'allow_search' ]) && $this->config[ 'allow_search' ] == true) {
-            $option[ 'tags' ] = array("search");
-        }
-
-        // handle tags
-        if (isset($option[ 'tags' ])) {
-            $this->_handleTags($keyword, $time, $option[ 'tags' ]);
-        }
-
-        // handle method
-        if ((int)$this->config[ 'cache_method' ] > 1 && isset($object[ 'size' ]) && (int)$object[ 'size' ] <= (int)$this->config[ 'limited_memory_each_object' ]) {
-            CacheManager::$memory[ $this->config[ 'instance' ] ][ $keyword ] = $object;
-            if (in_array((int)$this->config[ 'cache_method' ], array(3, 4))) {
-                return true;
-            }
-        }
-        $this->_hit("set", 1);
-        return $this->driver_set($keyword, $object, $time, $option);
-
-    }
-
-    /**
-     * @param $keyword
-     * @param array $option
-     * @return mixed
-     */
-    public function get($keyword, $option = array())
-    {
-        return false;
-        /**
-         * Temporary disabled phpFastCache::$disabled = true
-         * Khoa. B
-         */
-
-        if (phpFastCache::$disabled === true) {
-            return null;
-        }
-
-        // handle method
-        if ((int)$this->config[ 'cache_method' ] > 1) {
-            if (isset(CacheManager::$memory[ $this->config[ 'instance' ] ][ $keyword ])) {
-                $object = CacheManager::$memory[ $this->config[ 'instance' ] ][ $keyword ];
-            }
-        }
-
-        if (!isset($object)) {
-            $this->_hit("get", 1);
-            $object = $this->driver_get($keyword, $option);
-
-            // handle method
-            if ((int)$this->config[ 'cache_method' ] > 1 && isset($object[ 'size' ]) && (int)$object[ 'size' ] <= (int)$this->config[ 'limited_memory_each_object' ]) {
-                CacheManager::$memory[ $this->config[ 'instance' ] ][ $keyword ] = $object;
-            }
-            // end handle method
-        }
-
-        if ($object == null) {
-            return null;
-        }
-
-        $value = isset($object[ 'value' ]) ? $object[ 'value' ] : null;
-        return isset($option[ 'all_keys' ]) && $option[ 'all_keys' ] ? $object : $value;
-    }
-
-    /**
      * @param $keyword
      * @param array $option
      * @return null|object
      */
-    public function getInfo($keyword, $option = array())
+    public function getInfo($keyword, $option = [])
     {
         if ((int)$this->config[ 'cache_method' ] > 1) {
             if (isset(CacheManager::$memory[ $this->config[ 'instance' ] ][ $keyword ])) {
@@ -194,30 +92,15 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
         if ($object == null) {
             return null;
         }
+
         return $object;
     }
 
     /**
-     * @param $keyword
      * @param array $option
      * @return mixed
      */
-    public function delete($keyword, array $option = array())
-    {
-        // handle method
-        if ((int)$this->config[ 'cache_method' ] > 1) {
-            // use memory
-            unset(CacheManager::$memory[ $this->config[ 'instance' ] ][ $keyword ]);
-        }
-        // end handle method
-        return $this->driver_delete($keyword, $option);
-    }
-
-    /**
-     * @param array $option
-     * @return mixed
-     */
-    public function stats(array $option = array())
+    public function stats(array $option = [])
     {
         return $this->driver_stats($option);
     }
@@ -226,13 +109,14 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
      * @param array $option
      * @return mixed
      */
-    public function clean(array $option = array())
+    public function clean(array $option = [])
     {
         // handle method
         if ((int)$this->config[ 'cache_method' ] > 1) {
             // use memory
-            CacheManager::$memory[ $this->config[ 'instance' ] ] = array();
+            CacheManager::$memory[ $this->config[ 'instance' ] ] = [];
         }
+
         // end handle method
         return $this->driver_clean($option);
     }
@@ -271,7 +155,7 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
             $list = $this->getTags("search", $search_in_value);
             $tmp = explode("/", $query_as_regex_or_string, 2);
             $regex = isset($tmp[ 1 ]) ? true : false;
-            $return_list = array();
+            $return_list = [];
             foreach ($list as $tag) {
                 foreach ($tag as $keyword => $value) {
                     $gotcha = false;
@@ -313,178 +197,39 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
     }
 
     /**
-     * @param $keyword
-     * @param int $step
-     * @param array $option
-     * @return bool
-     */
-    public function increment($keyword, $step = 1, array $option = array())
-    {
-        $object = $this->get($keyword, array('all_keys' => true));
-        if ($object == null) {
-            return false;
-        } else {
-            $value = (int)$object[ 'value' ] + (int)$step;
-            $time = $object[ 'expired_time' ] - time();
-            $this->set($keyword, $value, $time, $option);
-            return true;
-        }
-    }
-
-    /**
-     * @param $keyword
-     * @param int $step
-     * @param array $option
-     * @return bool
-     */
-    public function decrement($keyword, $step = 1, array $option = array())
-    {
-        $object = $this->get($keyword, array('all_keys' => true));
-        if ($object == null) {
-            return false;
-        } else {
-            $value = (int)$object[ 'value' ] - (int)$step;
-            $time = $object[ 'expired_time' ] - time();
-            $this->set($keyword, $value, $time, $option);
-            return true;
-        }
-    }
-
-    /**
      * Extend more time
      * @param $keyword
      * @param int $time
      * @param array $option
      * @return bool
      */
-    public function touch($keyword, $time = 300, array $option = array())
+    public function touch($keyword, $time = 300, array $option = [])
     {
-        $object = $this->get($keyword, array('all_keys' => true));
+        $object = $this->get($keyword, ['all_keys' => true]);
         if ($object == null) {
             return false;
         } else {
             $value = $object[ 'value' ];
             $time = $object[ 'expired_time' ] - time() + $time;
             $this->set($keyword, $value, $time, $option);
+
             return true;
         }
     }
 
-
-    /**
-     * Other Functions Built-int for phpFastCache since 1.3
-     */
-
-    /**
-     * @param array $list
-     */
-    public function setMulti(array $list = array())
-    {
-        foreach ($list as $array) {
-            $this->set($array[ 0 ], isset($array[ 1 ]) ? $array[ 1 ] : 0,
-              isset($array[ 2 ]) ? $array[ 2 ] : array());
-        }
-    }
-
     /**
      * @param array $list
      * @return array
      */
-    public function getMulti(array $list = array())
+    public function touchMulti(array $list = [])
     {
-        $res = array();
-        foreach ($list as $array) {
-            $name = $array[ 0 ];
-            $res[ $name ] = $this->get($name,
-              isset($array[ 1 ]) ? $array[ 1 ] : array());
-        }
-        return $res;
-    }
-
-    /**
-     * @param array $list
-     * @return array
-     */
-    public function getInfoMulti(array $list = array())
-    {
-        $res = array();
-        foreach ($list as $array) {
-            $name = $array[ 0 ];
-            $res[ $name ] = $this->getInfo($name,
-              isset($array[ 1 ]) ? $array[ 1 ] : array());
-        }
-        return $res;
-    }
-
-    /**
-     * @param array $list
-     * @param array $option
-     */
-    public function deleteMulti(array $list = array(), array $option = array())
-    {
-        foreach ($list as $item) {
-            if (is_array($item) && count($item) === 2) {
-                $this->delete($item[ 0 ], $item[ 1 ]);
-            }
-        }
-    }
-
-    /**
-     * @param array $list
-     * @return array
-     */
-    public function isExistingMulti(array $list = array())
-    {
-        $res = array();
-        foreach ($list as $array) {
-            $name = $array[ 0 ];
-            $res[ $name ] = $this->isExisting($name);
-        }
-        return $res;
-    }
-
-    /**
-     * @param array $list
-     * @return array
-     */
-    public function incrementMulti(array $list = array())
-    {
-        $res = array();
-        foreach ($list as $array) {
-            $name = $array[ 0 ];
-            $res[ $name ] = $this->increment($name, $array[ 1 ],
-              isset($array[ 2 ]) ? $array[ 2 ] : array());
-        }
-        return $res;
-    }
-
-    /**
-     * @param array $list
-     * @return array
-     */
-    public function decrementMulti(array $list = array())
-    {
-        $res = array();
-        foreach ($list as $array) {
-            $name = $array[ 0 ];
-            $res[ $name ] = $this->decrement($name, $array[ 1 ],
-              isset($array[ 2 ]) ? $array[ 2 ] : array());
-        }
-        return $res;
-    }
-
-    /**
-     * @param array $list
-     * @return array
-     */
-    public function touchMulti(array $list = array())
-    {
-        $res = array();
+        $res = [];
         foreach ($list as $array) {
             $name = $array[ 0 ];
             $res[ $name ] = $this->touch($name, $array[ 1 ],
-              isset($array[ 2 ]) ? $array[ 2 ] : array());
+              isset($array[ 2 ]) ? $array[ 2 ] : []);
         }
+
         return $res;
     }
 
@@ -502,13 +247,6 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
         } else {
             $this->config[ $config_name ] = $value;
         }
-    }
-
-    /**
-     * @param int $time
-     */
-    public function autoCleanExpired($time = 3600)
-    {
     }
 
     /**
@@ -534,7 +272,7 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
     {
         if (isset($v[ 1 ]) && is_scalar($v[ 1 ])) {
             return $this->set($name, $v[ 0 ], $v[ 1 ],
-              isset($v[ 2 ]) ? $v[ 2 ] : array());
+              isset($v[ 2 ]) ? $v[ 2 ] : []);
         } else {
             throw new phpFastCacheDriverException("Example ->$name = array('VALUE', 300);");
         }
@@ -551,18 +289,8 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
      */
     protected function backup()
     {
-        return phpFastCache(phpFastCache::$config[ 'fallback' ]);
+        return CacheManager::getInstance(CacheManager::$config[ 'fallback' ]);
     }
-
-    /**
-     * @param $name
-     * @return void
-     */
-    protected function required_extension($name)
-    {
-        require_once(__DIR__ . '/../' . $this->extension_dir . '/' . $name . '.' . PHP_EXT);
-    }
-
 
     /**
      * @param $file
@@ -592,7 +320,9 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
     }
 
     /**
-     *  Object for Files & SQLite
+     * Encode data types such as object/array
+     * for driver that does not support
+     * non-scalar value
      * @param $data
      * @return string
      */
@@ -602,6 +332,9 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
     }
 
     /**
+     * Decode data types such as object/array
+     * for driver that does not support
+     * non-scalar value
      * @param $value
      * @return mixed
      */
@@ -621,7 +354,15 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
      */
     protected function isPHPModule()
     {
-        return phpFastCache::isPHPModule();
+        if (PHP_SAPI === 'apache2handler') {
+            return true;
+        } else {
+            if (strpos(PHP_SAPI, 'handler') !== false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
@@ -632,15 +373,6 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
     protected function isExistingDriver($class)
     {
         return class_exists("\\phpFastCache\\Drivers\\{$class}");
-    }
-
-
-    /**
-     * @return int
-     */
-    protected function __setChmodAuto()
-    {
-        return phpFastCache::__setChmodAuto($this->config);
     }
 
 
@@ -659,10 +391,10 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
     protected function _tagCaching()
     {
         return CacheManager::Sqlite(
-          array(
+          [
             "path" => $this->config[ 'path' ],
             "cache_method" => 3,
-          )
+          ]
         );
     }
 
@@ -674,12 +406,13 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
      * @param array $option | $option = array("tags" => array("a","b","c")
      * @return mixed
      */
-    public function setTags($keyword, $value = '', $time = 0, $tags = array(), $option = array())
+    public function setTags($keyword, $value = '', $time = 0, $tags = [], $option = [])
     {
         if (!is_array($tags)) {
-            $tags = array($tags);
+            $tags = [$tags];
         }
         $option[ 'tags' ] = $tags;
+
         return $this->set($keyword, $value, $time, $option);
     }
 
@@ -688,7 +421,7 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
         foreach ($tags as $tag) {
             $list = $this->_tagCaching()->get($this->_getTagName($tag));
             if (is_null($list)) {
-                $list = array();
+                $list = [];
             }
             $list[ $keyword ] = time() + $time;
             $this->_tagCaching()->set($this->_getTagName($tag), $list, 3600 * 24 * 30);
@@ -702,19 +435,19 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
      * @param array $option | $option = array("tags" => array("a","b","c")
      * @return array
      */
-    public function getTags($tags = array(), $return_content = true, $option = array())
+    public function getTags($tags = [], $return_content = true, $option = [])
     {
         if (!is_array($tags)) {
-            $tags = array($tags);
+            $tags = [$tags];
         }
-        $keywords = array();
+        $keywords = [];
         $tmp = 0;
 
         foreach ($tags as $tag) {
             $list = $this->_tagCaching()->get($this->_getTagName($tag));
-            $list_return = array();
+            $list_return = [];
             if (is_null($list)) {
-                $list = array();
+                $list = [];
             }
             foreach ($list as $keyword => $time) {
                 if ($time <= time()) {
@@ -734,6 +467,7 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
             $this->_tagCaching()->set($this->_getTagName($tag), $list, $tmp);
             $keywords[ $tag ] = $list_return;
         }
+
         return $keywords;
     }
 
@@ -744,10 +478,10 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
      * @return mixed
      * @internal param array $option | $option = array("tags" => array("a","b","c")
      */
-    public function touchTags($tags = array(), $time = 300, $options = array())
+    public function touchTags($tags = [], $time = 300, $options = [])
     {
         if (!is_array($tags)) {
-            $tags = array($tags);
+            $tags = [$tags];
         }
         $lists = $this->getTags($tags);
         foreach ($lists as $tag => $keywords) {
@@ -755,6 +489,7 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
                 $this->touch($keyword, $time, $options);
             }
         }
+
         return true;
     }
 
@@ -763,10 +498,10 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
      * @param array $option | $option = array("tags" => array("a","b","c")
      * @return mixed
      */
-    public function deleteTags($tags = array(), $option = array())
+    public function deleteTags($tags = [], $option = [])
     {
         if (!is_array($tags)) {
-            $tags = array($tags);
+            $tags = [$tags];
         }
         $lists = $this->getTags($tags);
         foreach ($lists as $tag => $keywords) {
@@ -774,6 +509,7 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
                 $this->delete($keyword, $option);
             }
         }
+
         return true;
     }
 
@@ -784,10 +520,10 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
      * @param array $option | $option = array("tags" => array("a","b","c")
      * @return mixed
      */
-    public function incrementTags($tags = array(), $step = 1, $option = array())
+    public function incrementTags($tags = [], $step = 1, $option = [])
     {
         if (!is_array($tags)) {
-            $tags = array($tags);
+            $tags = [$tags];
         }
         $lists = $this->getTags($tags);
         foreach ($lists as $tag => $keywords) {
@@ -795,6 +531,7 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
                 $this->increment($keyword, $step, $option);
             }
         }
+
         return true;
     }
 
@@ -804,10 +541,10 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
      * @param array $option | $option = array("tags" => array("a","b","c")
      * @return mixed
      */
-    public function decrementTags($tags = array(), $step = 1, $option = array())
+    public function decrementTags($tags = [], $step = 1, $option = [])
     {
         if (!is_array($tags)) {
-            $tags = array($tags);
+            $tags = [$tags];
         }
         $lists = $this->getTags($tags);
         foreach ($lists as $tag => $keywords) {
@@ -815,6 +552,7 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
                 $this->decrement($keyword, $step, $option);
             }
         }
+
         return true;
     }
 
@@ -837,7 +575,35 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
         CacheManager::$hit[ $instance ][ 'data' ][ $index ] = $current + ($step);
     }
 
+    /**
+     * @param \phpFastCache\Cache\ExtendedCacheItemInterface $item
+     * @return array
+     */
+    public function driverPreWrap(ExtendedCacheItemInterface $item)
+    {
+        return [
+            'd' => $item->get(),
+            't' => $item->getExpirationDate()
+        ];
+    }
 
+    /**
+     * @param array $wrapper
+     * @return mixed
+     */
+    public function driverUnwrapData(array $wrapper)
+    {
+        return $wrapper['d'];
+    }
+
+    /**
+     * @param array $wrapper
+     * @return \DateTime
+     */
+    public function driverUnwrapTime(array $wrapper)
+    {
+        return $wrapper['t'];
+    }
 
     /**
      * V5: Abstract Methods
@@ -845,10 +611,14 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
 
     /**
      * @param $key
-     * @return mixed
+     * @return array [
+     *      'd' => 'THE ITEM DATA'
+     *      't' => 'THE ITEM DATE EXPIRATION'
+     * ]
+     * 
      */
     abstract public function driverRead($key);
-
+    
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
@@ -864,7 +634,7 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
      * @return bool
      */
     abstract public function driverConnect();
-    
+
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool

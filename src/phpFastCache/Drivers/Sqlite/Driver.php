@@ -20,6 +20,7 @@ use phpFastCache\Cache\ExtendedCacheItemInterface;
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\PathSeekerTrait;
 use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
 
@@ -75,7 +76,7 @@ class Driver extends DriverAbstract
         $this->setup($config);
 
         if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverException(sprintf(self::DRIVER_CHECK_FAILURE, 'Sqlite'));
+            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, 'Sqlite'));
         } else {
             if (!file_exists($this->getSqliteDir()) && !@mkdir($this->getSqliteDir(), $this->setChmodAuto())) {
                 throw new phpFastCacheDriverException(sprintf('Sqlite cannot write in "%s", aborting...', $this->getPath()));
@@ -259,7 +260,7 @@ class Driver extends DriverAbstract
             $toWrite = true;
 
             // check in cache first
-            $in_cache = $this->get($item->getKey(), $this->config);
+            $in_cache = $this->driverRead($item->getKey(), $this->config);
 
             if ($skipExisting == true) {
                 if ($in_cache == null) {
@@ -275,7 +276,7 @@ class Driver extends DriverAbstract
                       ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
                     $stm->execute([
                       ':keyword' => $item->getKey(),
-                      ':object' => $this->encode($item->get()),
+                      ':object' => $this->encode($this->driverPreWrap($item)),
                       ':exp' => time() + $item->getTtl(),
                     ]);
 
@@ -287,7 +288,7 @@ class Driver extends DriverAbstract
                           ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
                         $stm->execute([
                           ':keyword' => $item->getKey(),
-                          ':object' => $this->encode($item->get()),
+                          ':object' => $this->encode($this->driverPreWrap($item)),
                           ':exp' => time() + $item->getTtl(),
                         ]);
                     } catch (PDOException $e) {
@@ -329,7 +330,6 @@ class Driver extends DriverAbstract
             } catch (PDOException $e) {
                 return null;
             }
-
         }
 
         if (isset($row[ 'id' ])) {

@@ -2,13 +2,16 @@
 
 - [x] Refactoring driver to be psr6 compliant
 - [x] Rewrite examples by drivers
-- [ ] Rewrite examples for complex setups 
-- [ ] Rewrite examples for non-composer users + ssdb lib
-- [ ] Rewrite Readme 
+- [x] Rewrite examples for complex setups 
+- [x] Rewrite examples for non-composer users
+- [ ] Rewrite examples for ssdb lib
+- [x] Rewrite Readme 
 - [ ] Rewrite Wiki 
 - [ ] Rewrite tests
-- [ ] Re-implement search() and searchByKey() methods in ExtendedCacheItemPoolInterface 
+- [ ] Rewrite stats method to be implemented in a Stat object
+- [ ] Re-implement searchByValue(), searchByTag() and searchByKey() methods in ExtendedCacheItemPoolInterface 
 - [x] Re-implement [in|de]crement methods in ExtendedCacheItemInterface 
+- [ ] Re-implement touch method in ExtendedCacheItemInterface 
 - [ ] Re-implement standalone Autoload for non-composer user
 - [ ] Implement MongoDb Driver
 - [ ] Check Wincache driver in real Windows env (and not in VM)

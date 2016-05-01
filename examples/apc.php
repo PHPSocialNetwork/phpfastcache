@@ -8,7 +8,7 @@
 use phpFastCache\CacheManager;
 
 // Include composer autoloader
-require 'vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $InstanceCache = CacheManager::getInstance('apc');
 
@@ -22,7 +22,7 @@ $CachedString = $InstanceCache->getItem($key);
 if (is_null($CachedString->get())) {
     //$CachedString = "APC Cache --> Cache Enabled --> Well done !";
     // Write products to Cache in 10 minutes with same keyword
-    $CachedString->set("APC Cache --> Cache Enabled --> Well done !")->expiresAfter(600);
+    $CachedString->set("APC Cache --> Cache Enabled --> Well done !")->expiresAfter(5);
 	$InstanceCache->save($CachedString);
 
     echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ";

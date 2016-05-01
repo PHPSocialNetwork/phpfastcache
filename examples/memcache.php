@@ -8,7 +8,7 @@
 use phpFastCache\CacheManager;
 
 // Include composer autoloader
-require 'vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $InstanceCache = CacheManager::getInstance('memcache');
 

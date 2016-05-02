@@ -77,7 +77,7 @@ class Driver extends DriverAbstract
         $this->setup($config);
 
         if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, 'Sqlite'));
+            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
         } else {
             if (!file_exists($this->getSqliteDir()) && !@mkdir($this->getSqliteDir(), $this->setChmodAuto())) {
                 throw new phpFastCacheDriverException(sprintf('Sqlite cannot write in "%s", aborting...', $this->getPath()));

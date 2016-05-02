@@ -41,7 +41,7 @@ class Driver extends DriverAbstract
         $this->setup($config);
 
         if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverCheckException('APC is not installed, cannot continue.');
+            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
         }
     }
 

@@ -45,7 +45,7 @@ class Driver extends DriverAbstract
         $this->setup($config);
 
         if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, 'Predis'));
+            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
         }else{
             $this->driverConnect();
         }

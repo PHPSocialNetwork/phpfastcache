@@ -42,7 +42,7 @@ class Driver extends DriverAbstract
         $this->setup($config);
 
         if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, 'Memcache'));
+            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
         } else {
             $this->instance = new MemcacheSoftware();
             $this->driverConnect();

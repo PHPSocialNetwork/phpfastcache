@@ -24,7 +24,7 @@ spl_autoload_register(function ($entity) {
          * Not a part of phpFastCache file
          * then we return here.
          */
-        //return;
+        return;
     }else if(strpos($entity, 'Psr\Cache') === 0){
         trigger_error('If you cannot use <b>composer</b>, you have to include manually the Psr\\Cache interfaces.<br />See: https://github.com/php-fig/cache/tree/master/src<br /> Called ' . $entity,
           E_USER_ERROR);

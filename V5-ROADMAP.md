@@ -4,7 +4,7 @@
 - [x] Rewrite examples by drivers
 - [x] Rewrite examples for complex setups 
 - [x] Rewrite examples for non-composer users
-- [ ] Rewrite examples for ssdb lib
+- [x] Rewrite examples for ssdb lib
 - [x] Rewrite Readme 
 - [ ] Rewrite Wiki 
 - [ ] Rewrite tests

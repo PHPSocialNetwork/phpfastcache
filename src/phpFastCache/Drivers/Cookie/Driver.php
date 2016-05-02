@@ -16,6 +16,7 @@ namespace phpFastCache\Drivers\Cookie;
 
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
@@ -189,17 +190,25 @@ class Driver extends DriverAbstract
      *******************/
 
     /**
-     * @return array
+     * @return driverStatistic
      */
     public function getStats()
     {
-        $this->driverConnect();
-        $res = [
-          'info' => '',
-          'size' => '',
-          'data' => $_COOKIE,
-        ];
+        $size = 0;
+        $stat = new driverStatistic();
+        $stat->setData($_COOKIE);
 
-        return $res;
+        /**
+         * Only count PFC Cookie
+         */
+        foreach ($_COOKIE as $key => $value) {
+            if(strpos($key, self::PREFIX) === 0){
+                $size += strlen($value);
+            }
+        }
+
+        $stat->setSize($size);
+
+        return $stat;
     }
 }

@@ -16,6 +16,7 @@ namespace phpFastCache\Drivers\Apc;
 
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
@@ -144,22 +145,13 @@ class Driver extends DriverAbstract
      *******************/
 
     /**
-     * @return array
+     * @return driverStatistic
      */
     public function getStats()
     {
-        $res = [
-          'info' => '',
-          'size' => '',
-          'data' => '',
-        ];
+        $stat = new driverStatistic();
+        $stat->setInfo(apc_cache_info('user'));
 
-        try {
-            $res[ 'data' ] = apc_cache_info('user');
-        } catch (\Exception $e) {
-            $res[ 'data' ] = [];
-        }
-
-        return $res;
+        return $stat;
     }
 }

@@ -16,6 +16,7 @@ namespace phpFastCache\Drivers\Memcached;
 
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\MemcacheDriverCollisionDetectorTrait;
+use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
@@ -317,16 +318,10 @@ class Driver extends DriverAbstract
      *******************/
 
     /**
-     * @return array
+     * @return driverStatistic
      */
     public function getStats()
     {
-        $res = [
-          'info' => '',
-          'size' => '',
-          'data' => $this->instance->getStats(),
-        ];
-
-        return $res;
+        return (new driverStatistic())->setInfo(implode('<br />', (array) $this->instance->getStats()));
     }
 }

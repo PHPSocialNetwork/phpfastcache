@@ -14,6 +14,7 @@
 
 namespace phpFastCache\Cache;
 
+use phpFastCache\Entities\driverStatistic;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use \InvalidArgumentException;
@@ -50,7 +51,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     public function setItem(CacheItemInterface $item);
 
     /**
-     * @return bool
+     * @return driverStatistic
      */
     public function getStats();
 }

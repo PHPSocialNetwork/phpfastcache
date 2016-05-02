@@ -16,6 +16,7 @@ namespace phpFastCache\Drivers\Predis;
 
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
@@ -28,6 +29,11 @@ use Predis\Client as PredisClient;
 class Driver extends DriverAbstract
 {
     use StandardPsr6StructureTrait;
+
+    /**
+     * @var PredisClient Instance of driver service
+     */
+    public $instance;
 
     /**
      * Driver constructor.
@@ -184,16 +190,10 @@ class Driver extends DriverAbstract
      *******************/
 
     /**
-     * @return array
+     * @return driverStatistic
      */
     public function getStats()
     {
-        $res = [
-          'info' => '',
-          'size' => '',
-          'data' => $this->instance->info(),
-        ];
-
-        return $res;
+        return (new driverStatistic())->setInfo(implode('<br />', (array) $this->instance->info()));
     }
 }

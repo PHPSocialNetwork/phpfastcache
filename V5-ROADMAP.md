@@ -8,7 +8,7 @@
 - [x] Rewrite Readme 
 - [ ] Rewrite Wiki 
 - [ ] Rewrite tests
-- [ ] Rewrite stats method to be implemented in a Stat object
+- [x] Rewrite stats method to be implemented in a driverStatistic() object, not a breaking change due to ArrayAccess use, but array use is deprecated
 - [ ] Re-implement searchByValue(), searchByTag() and searchByKey() methods in ExtendedCacheItemPoolInterface 
 - [x] Re-implement [in|de]crement methods in ExtendedCacheItemInterface 
 - [x] Re-implement touch method in ExtendedCacheItemInterface: deprecated in profit CacheItemInterface::expiresAfter()

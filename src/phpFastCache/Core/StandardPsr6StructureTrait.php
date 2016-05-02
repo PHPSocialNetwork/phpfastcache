@@ -17,6 +17,10 @@ namespace phpFastCache\Core;
 use phpFastCache\Cache\ExtendedCacheItemInterface;
 use Psr\Cache\CacheItemInterface;
 
+/**
+ * Trait StandardPsr6StructureTrait
+ * @package phpFastCache\Core
+ */
 trait StandardPsr6StructureTrait
 {
     use ClassNamespaceResolverTrait;

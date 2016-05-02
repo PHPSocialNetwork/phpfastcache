@@ -14,6 +14,7 @@
 
 namespace phpFastCache;
 
+use phpFastCache\Cache\ExtendedCacheItemPoolInterface;
 use phpFastCache\Core\phpFastCache;
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
@@ -75,7 +76,7 @@ class CacheManager
     /**
      * @param string $driver
      * @param array $config
-     * @return CacheItemPoolInterface
+     * @return ExtendedCacheItemPoolInterface
      */
     public static function getInstance($driver = 'auto', $config = [])
     {

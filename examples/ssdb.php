@@ -10,6 +10,12 @@ use phpFastCache\CacheManager;
 // Include composer autoloader
 require __DIR__ . '/../vendor/autoload.php';
 
+// OR without composer:
+// require __DIR__ . '/../src/autoload.php';
+// require __DIR__ . 'YOUR_PROJECT/phpfastcache/phpssdb/src/autoload.php';
+// require __DIR__ . 'YOUR_PROJECT/fig_cache_interfaces.php';
+
+
 $InstanceCache = CacheManager::getInstance('ssdb');
 
 /**

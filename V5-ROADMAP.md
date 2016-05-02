@@ -11,7 +11,7 @@
 - [ ] Rewrite stats method to be implemented in a Stat object
 - [ ] Re-implement searchByValue(), searchByTag() and searchByKey() methods in ExtendedCacheItemPoolInterface 
 - [x] Re-implement [in|de]crement methods in ExtendedCacheItemInterface 
-- [ ] Re-implement touch method in ExtendedCacheItemInterface 
+- [x] Re-implement touch method in ExtendedCacheItemInterface: deprecated in profit CacheItemInterface::expiresAfter()
 - [ ] Re-implement standalone Autoload for non-composer user
 - [ ] Implement MongoDb Driver
 - [ ] Check Wincache driver in real Windows env (and not in VM)

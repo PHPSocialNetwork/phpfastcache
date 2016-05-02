@@ -19,13 +19,12 @@ use phpFastCache\Cache\ExtendedCacheItemPoolInterface;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\CacheManager;
 use Psr\Cache\CacheItemInterface;
-use Psr\Cache\CacheItemPoolInterface;
 
 /**
  * Class DriverAbstract
  * @package phpFastCache\Core
  */
-abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheItemPoolInterface
+abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
 {
     const DRIVER_CHECK_FAILURE      = '%s is not installed or misconfigured, cannot continue.';
     const DRIVER_DATA_WRAPPER_INDEX = 'd';

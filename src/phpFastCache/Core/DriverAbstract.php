@@ -588,6 +588,16 @@ abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
     }
 
     /**
+     * @return string
+     */
+    public function getDriverName()
+    {
+        static $driverName;
+
+        return ($driverName ?: $driverName = ucfirst(substr(strrchr((new \ReflectionObject($this))->getNamespaceName(), '\\'), 1)));
+    }
+
+    /**
      * V5: Abstract Methods
      */
 

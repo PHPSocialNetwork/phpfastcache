@@ -16,6 +16,7 @@ namespace phpFastCache\Drivers\Xcache;
 
 use phpFastCache\Core\StandardPsr6StructureTrait;
 use phpFastCache\Core\DriverAbstract;
+use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
@@ -151,18 +152,10 @@ class Driver extends DriverAbstract
      *******************/
 
     /**
-     * @return array
+     * @return driverStatistic
      */
     public function getStats()
     {
-        $res = [
-          'info' => '',
-          'size' => '',
-          'data' => '',
-        ];
-
-        $res[ 'data' ] = xcache_list(XC_TYPE_VAR, 100);
-
-        return $res;
+        return (new driverStatistic())->setInfo(implode('<br />', (array) xcache_list(XC_TYPE_VAR, 100)));
     }
 }

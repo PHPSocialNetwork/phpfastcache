@@ -18,6 +18,7 @@ use phpFastCache\Cache\ExtendedCacheItemInterface;
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\PathSeekerTrait;
 use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
@@ -214,15 +215,13 @@ class Driver extends DriverAbstract
      *******************/
 
     /**
-     * @return array
+     * @return driverStatistic
+     * @throws \phpFastCache\Exceptions\phpFastCacheCoreException
+     * @throws \phpFastCache\Exceptions\phpFastCacheDriverException
      */
     public function getStats()
     {
-        $res = [
-          'info' => '',
-          'size' => '',
-          'data' => '',
-        ];
+        $stat = new driverStatistic();
 
         $path = $this->getPath();
         $dir = @opendir($path);
@@ -267,14 +266,13 @@ class Driver extends DriverAbstract
             }
         }
 
-        $res[ 'size' ] = $total - $removed;
-        $res[ 'info' ] = [
-          'Total [bytes]' => $total,
-          'Expired and removed [bytes]' => $removed,
-          'Current [bytes]' => $res[ 'size' ],
-        ];
-        $res[ "data" ] = $content;
+        $stat->setData($content)
+            ->setSize($total - $removed)
+            ->setInfo('Total [bytes]: ' . $total . ', '
+              . 'Expired and removed [bytes]: ' . $removed . ', '
+              . 'Current [bytes], ' .  $total - $removed
+            );
 
-        return $res;
+        return $stat;
     }
 }

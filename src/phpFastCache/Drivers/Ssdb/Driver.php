@@ -16,6 +16,7 @@ namespace phpFastCache\Drivers\Ssdb;
 
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpssdb\Core\SimpleSSDB;
@@ -31,7 +32,7 @@ class Driver extends DriverAbstract
     use StandardPsr6StructureTrait;
     
     /**
-     * @var SSDB
+     * @var SimpleSSDB
      */
     public $instance;
 
@@ -188,16 +189,15 @@ class Driver extends DriverAbstract
      *******************/
 
     /**
-     * @return array
+     * @return driverStatistic
      */
     public function getStats()
     {
-        $res = [
-          'info' => '',
-          'size' => $this->instance->dbsize(),
-          'data' => $this->instance->info(),
-        ];
+        $stat = new driverStatistic();
 
-        return $res;
+        $stat->setInfo($this->instance->info());
+        $stat->setSize($this->instance->dbsize());
+
+        return $stat;
     }
 }

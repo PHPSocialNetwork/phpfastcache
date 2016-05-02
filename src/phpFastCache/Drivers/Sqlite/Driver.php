@@ -20,6 +20,7 @@ use phpFastCache\Cache\ExtendedCacheItemInterface;
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\PathSeekerTrait;
 use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
@@ -450,10 +451,13 @@ class Driver extends DriverAbstract
      *******************/
 
     /**
-     * @return array
+     * @return driverStatistic
+     * @throws PDOException
      */
     public function getStats()
     {
+        $stat = new driverStatistic();
+
         $res = [
           'info' => '',
           'size' => '',
@@ -488,12 +492,12 @@ class Driver extends DriverAbstract
                 }
             }
         }
-        $res[ 'size' ] = $optimized;
-        $res[ 'info' ] = [
-          'total before removing expired entries [bytes]' => $total,
-          'optimized after removing expired entries [bytes]' => $optimized,
-        ];
 
-        return $res;
+        $stat->setSize($optimized)
+            ->setInfo('Total before removing expired entries [bytes]: ' . $total . ', '
+            . 'Optimized after removing expired entries [bytes]: ' . $optimized
+          );
+
+        return $stat;
     }
 }

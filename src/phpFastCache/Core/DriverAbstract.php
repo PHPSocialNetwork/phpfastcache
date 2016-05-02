@@ -27,7 +27,9 @@ use Psr\Cache\CacheItemPoolInterface;
  */
 abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheItemPoolInterface
 {
-    const DRIVER_CHECK_FAILURE = '%s is not installed or misconfigured, cannot continue.';
+    const DRIVER_CHECK_FAILURE      = '%s is not installed or misconfigured, cannot continue.';
+    const DRIVER_DATA_WRAPPER_INDEX = 'd';
+    const DRIVER_TIME_WRAPPER_INDEX = 't';
 
     /**
      * @var array
@@ -557,33 +559,14 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
     }
 
     /**
-     * @param $value
-     */
-    protected function _kbdebug($value)
-    {
-        /*
-        echo "<pre>";
-        print_r($value);
-        echo "</pre>";
-        */
-    }
-
-    public function _hit($index, $step = 1)
-    {
-        $instance = $this->config[ 'instance' ];
-        $current = isset(CacheManager::$hit[ $instance ][ 'data' ][ $index ]) ? CacheManager::$hit[ $instance ][ 'data' ][ $index ] : 0;
-        CacheManager::$hit[ $instance ][ 'data' ][ $index ] = $current + ($step);
-    }
-
-    /**
      * @param \phpFastCache\Cache\ExtendedCacheItemInterface $item
      * @return array
      */
     public function driverPreWrap(ExtendedCacheItemInterface $item)
     {
         return [
-            'd' => $item->get(),
-            't' => $item->getExpirationDate()
+          self::DRIVER_DATA_WRAPPER_INDEX => $item->get(),
+          self::DRIVER_TIME_WRAPPER_INDEX => $item->getExpirationDate(),
         ];
     }
 
@@ -593,7 +576,7 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
      */
     public function driverUnwrapData(array $wrapper)
     {
-        return $wrapper['d'];
+        return $wrapper[ self::DRIVER_DATA_WRAPPER_INDEX ];
     }
 
     /**
@@ -602,7 +585,7 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
      */
     public function driverUnwrapTime(array $wrapper)
     {
-        return $wrapper['t'];
+        return $wrapper[ self::DRIVER_TIME_WRAPPER_INDEX ];
     }
 
     /**
@@ -615,16 +598,16 @@ abstract class DriverAbstract implements CacheItemPoolInterface, ExtendedCacheIt
      *      'd' => 'THE ITEM DATA'
      *      't' => 'THE ITEM DATE EXPIRATION'
      * ]
-     * 
+     *
      */
     abstract public function driverRead($key);
-    
+
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
      */
     abstract public function driverWrite(CacheItemInterface $item);
-    
+
     /**
      * @return bool
      */

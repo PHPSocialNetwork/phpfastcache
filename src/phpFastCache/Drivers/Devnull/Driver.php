@@ -12,7 +12,7 @@
  *
  */
 
-namespace phpFastCache\Drivers\Apc;
+namespace phpFastCache\Drivers\Devnull;
 
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\StandardPsr6StructureTrait;

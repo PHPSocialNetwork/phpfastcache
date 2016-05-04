@@ -15,6 +15,6 @@
 - [x] Re-implement touch method in ExtendedCacheItemInterface: deprecated in profit CacheItemInterface::expiresAfter()
 - [ ] Implement MongoDb Driver
 - [ ] Implement CoucheDB Driver
-- [ ] Implement Dev Driver (return null everywhere for development purpose)
+- [x] Implement Dev Driver (return null/bool everywhere for development purpose)
 - [ ] Check Wincache driver in real Windows env (and not in VM)
 - [ ] Final code review + psr2 checks + psr-6 null value as legitimates value.

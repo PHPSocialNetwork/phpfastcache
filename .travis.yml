@@ -12,6 +12,7 @@
 language: php
 services:
   - memcached
+before_script: phpenv config-add var/php/conf/phpfastcache.ini
 php:
   # - 5.3
   # - 5.4

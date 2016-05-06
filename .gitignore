@@ -200,7 +200,7 @@ dist/
 build/
 eggs/
 parts/
-var/
+# var/
 sdist/
 develop-eggs/
 .installed.cfg

@@ -15,10 +15,9 @@
 namespace phpFastCache;
 
 use phpFastCache\Cache\ExtendedCacheItemPoolInterface;
-use phpFastCache\Core\phpFastCache;
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
-use Psr\Cache\CacheItemPoolInterface;
+use CouchbaseCluster;
 
 /**
  * Class CacheManager

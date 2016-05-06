@@ -232,7 +232,7 @@ trait ItemBaseTrait
      * @param array|string $data
      * @return $this
      */
-    public function preppend($data)
+    public function prepend($data)
     {
         if (is_array($this->data)) {
             array_unshift($this->data, $data);

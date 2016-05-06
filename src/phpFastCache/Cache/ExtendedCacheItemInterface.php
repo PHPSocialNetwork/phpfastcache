@@ -66,9 +66,10 @@ interface ExtendedCacheItemInterface extends CacheItemInterface
     public function append($data);
 
     /**
-     * @return $this
+     * @param array|string $data
+     * return $this
      */
-    public function preprend();
+    public function prepend($data);
 
 
     /**

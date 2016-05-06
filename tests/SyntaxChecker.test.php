@@ -35,8 +35,13 @@ $list += read_dir('.', 'tpl');
 $exit = 0;
 foreach ($list as $file) {
     $output = '';
-
-    exec('php -lf "' . $file . '"', $output, $status);
+    if(strpos($file, '/vendor/composer') === false){
+        exec('php -lf "' . $file . '"', $output, $status);
+    }else{
+        echo '[SKIP] ' . $file;
+        echo "\n";
+        continue;
+    }
 
     if ($status != 0) {
         $exit = $status;

@@ -80,7 +80,7 @@ class Driver extends DriverAbstract
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->getBucket()->upsert($item->getKey(), $this->encode($this->driverPreWrap($item)), ['expiry' => $item->getTtl(), 'flags' => 0x01 << 24]);
+            return $this->getBucket()->upsert($item->getKey(), $this->encode($this->driverPreWrap($item)), ['expiry' => $item->getTtl()]);
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }

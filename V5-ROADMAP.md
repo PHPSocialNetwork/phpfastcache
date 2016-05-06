@@ -8,7 +8,7 @@
 - [x] Rewrite examples for ssdb lib
 - [x] Rewrite Readme 
 - [ ] Rewrite Wiki 
-- [ ] Rewrite tests
+- [x] Rewrite tests
 - [x] Rewrite stats method to be implemented in a driverStatistic() object, not a breaking change due to ArrayAccess use, but array use is deprecated
 - [ ] Re-implement searchByValue(), searchByTag() and searchByKey() methods in ExtendedCacheItemPoolInterface 
 - [x] Re-implement [in|de]crement methods in ExtendedCacheItemInterface 

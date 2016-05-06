@@ -125,19 +125,11 @@ class Driver extends DriverAbstract
         {
             $this->instance = $this->instance ?: new RedisClient();
 
-            $server = isset($this->config[ 'redis' ]) ? $this->config[ 'redis' ] : [
-              'host' => '127.0.0.1',
-              'port' => '6379',
-              'password' => '',
-              'database' => '',
-              'timeout' => '1',
-            ];
-
-            $host = $server[ 'host' ];
-            $port = isset($server[ 'port' ]) ? (int)$server[ 'port' ] : '';
-            $password = isset($server[ 'password' ]) ? $server[ 'password' ] : '';
-            $database = isset($server[ 'database' ]) ? $server[ 'database' ] : '';
-            $timeout = isset($server[ 'timeout' ]) ? $server[ 'timeout' ] : '';
+            $host = isset($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1';
+            $port = isset($this->config[ 'port' ]) ? (int)$this->config[ 'port' ] : '6379';
+            $password = isset($this->config[ 'password' ]) ? $this->config[ 'password' ] : '';
+            $database = isset($this->config[ 'database' ]) ? $this->config[ 'database' ] : '';
+            $timeout = isset($this->config[ 'timeout' ]) ? $this->config[ 'timeout' ] : '';
 
             if (!$this->instance->connect($host, (int)$port, (int)$timeout)) {
                 return false;

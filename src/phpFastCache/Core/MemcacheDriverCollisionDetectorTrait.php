@@ -18,7 +18,7 @@ trait MemcacheDriverCollisionDetectorTrait
      */
     public static function checkCollision($driverName)
     {
-        static $CONSTANT_NAME = __NAMESPACE__ . '\MEMCACHE_DRIVER_USED';
+        $CONSTANT_NAME = __NAMESPACE__ . '\MEMCACHE_DRIVER_USED';
 
         if($driverName && is_string($driverName))
         {

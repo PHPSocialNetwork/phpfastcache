@@ -20,7 +20,8 @@ php:
   - 7.0
   # - nightly
   # - hhvm We may need to do review this check later
-
+install:
+  - ./bin/ci/install_dependencies.sh
 script:
   - php -f tests/SyntaxChecker.test.php
   - php -f tests/Autoload.test.php

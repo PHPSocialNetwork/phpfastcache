@@ -54,9 +54,22 @@ interface ExtendedCacheItemInterface extends CacheItemInterface
     public function increment();
 
     /**
+     * @param array|string $data
+     * return $this
+     */
+    public function decrement($data);
+
+    /**
+     * @param array|string $data
+     * return $this
+     */
+    public function append($data);
+
+    /**
      * @return $this
      */
-    public function decrement();
+    public function preprend();
+
 
     /**
      * Sets the expiration time for this cache item.

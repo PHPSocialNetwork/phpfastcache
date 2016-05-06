@@ -120,6 +120,7 @@ trait ItemBaseTrait
     public function touch($time)
     {
         trigger_error('touch() is deprecated and will be removed in the next major release, use CacheItemInterface::expiresAfter() instead');
+
         return $this->expiresAfter($time);
     }
 
@@ -178,30 +179,69 @@ trait ItemBaseTrait
     }
 
     /**
+     * @param int $step
      * @return $this
      */
     public function increment($step = 1)
     {
-        if(is_int($step)){
+        if (is_int($step)) {
             $this->fetched = true;
             $this->data += $step;
-        }else{
+        } else {
             throw new \InvalidArgumentException('$step must be numeric.');
         }
+
         return $this;
     }
 
     /**
+     * @param int $step
      * @return $this
      */
     public function decrement($step = 1)
     {
-        if(is_int($step)){
+        if (is_int($step)) {
             $this->fetched = true;
             $this->data -= $step;
-        }else{
+        } else {
             throw new \InvalidArgumentException('$step must be numeric.');
         }
+
+        return $this;
+    }
+
+    /**
+     * @param array|string $data
+     * @return $this
+     */
+    public function append($data)
+    {
+        if (is_array($this->data)) {
+            array_push($this->data, $data);
+        } else if (is_string($data)) {
+            $this->data .= (string) $data;
+        } else {
+            throw new \InvalidArgumentException('$data must be either array nor string.');
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @param array|string $data
+     * @return $this
+     */
+    public function preppend($data)
+    {
+        if (is_array($this->data)) {
+            array_unshift($this->data, $data);
+        } else if (is_string($data)) {
+            $this->data = (string) $data . $this->data;
+        } else {
+            throw new \InvalidArgumentException('$data must be either array nor string.');
+        }
+
         return $this;
     }
 
@@ -210,7 +250,7 @@ trait ItemBaseTrait
      */
     public function __sleep()
     {
-        $vars = (array) array_keys(get_object_vars($this));
+        $vars = (array)array_keys(get_object_vars($this));
         // Remove unneeded vars
         //unset($vars[array_search('driver', $vars)]);
         return $vars;

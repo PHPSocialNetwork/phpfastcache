@@ -21,7 +21,7 @@ use phpFastCache\Drivers\Redis\Driver as RedisDriver;
 
 /**
  * Class Item
- * @package phpFastCache\Drivers\Apc
+ * @package phpFastCache\Drivers\Redis
  */
 class Item implements ExtendedCacheItemInterface
 {
@@ -29,7 +29,7 @@ class Item implements ExtendedCacheItemInterface
 
     /**
      * Item constructor.
-     * @param \phpFastCache\Drivers\Apc\Driver $driver
+     * @param \phpFastCache\Drivers\Redis\Driver $driver
      * @param $key
      * @throws \InvalidArgumentException
      */

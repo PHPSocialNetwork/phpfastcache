@@ -5,7 +5,22 @@ Simple Yet Powerful PHP Caching Class
 More information at http://www.phpfastcache.com
 One Class uses for All Cache. You don't need to rewrite your code many times again.
 
-Supported: SSDB, Redis, Predis, Cookie, Files, MemCache, MemCached, APC, WinCache, X-Cache, PDO with SQLite
+
+### Supported drivers at this day *
+
+| Regular drivers | High performances drivers | Development driver |
+|-----------------|---------------------------|--------------------|
+| `APC`           | `CouchBase`               | `Devnull`          |
+| `Cookie`        | `Mongodb`                 | `Devfalse`         |
+| `Devnull`       | `Predis`                  | `Devtrue`          |
+| `Files`         | `Redis`                   |                    |
+| `Memcache`      | `Ssdb`                    |                    |
+| `Memcached`     |                           |                    |
+| `Sqlite`        |                           |                    |
+| `Wincache`      |                           |                    |
+| `Xcache`        |                           |                    |
+
+\* Driver descriptions available in DOCS/DRIVERS.md
 
 ---------------------------
 Not a "Traditional" Caching

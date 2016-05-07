@@ -121,7 +121,7 @@ class Driver extends DriverAbstract
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return true;
+            return null;
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }

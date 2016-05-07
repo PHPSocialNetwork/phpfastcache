@@ -1,6 +1,8 @@
 ### Driver descriptions
-* APC
+* Apc
   * The Alternative Php Cache (APC) driver. A memory cache for regular performances.
+* Apcu
+  * The Alternative Php User Cache (APCU) driver. A memory cache for regular performances.
 * Cookie
   * A cookie driver to store non-sensitive scalar (only) data. Limited storage up to 4Ko.
 * Couchbase

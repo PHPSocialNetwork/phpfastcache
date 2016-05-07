@@ -30,7 +30,7 @@ use Psr\Cache\CacheItemInterface;
 class Driver extends DriverAbstract
 {
     use StandardPsr6StructureTrait;
-    
+
     /**
      * @var SimpleSSDB
      */
@@ -47,7 +47,7 @@ class Driver extends DriverAbstract
 
         if (!$this->driverCheck()) {
             throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
-        }elseif(!$this->driverConnect()){
+        } elseif (!$this->driverConnect()) {
             throw new phpFastCacheDriverException('Ssdb is not connected, cannot continue.');
         }
     }
@@ -58,9 +58,10 @@ class Driver extends DriverAbstract
     public function driverCheck()
     {
         static $driverCheck;
-        if($driverCheck === null){
+        if ($driverCheck === null) {
             return ($driverCheck = class_exists('phpssdb\Core\SSDB'));
         }
+
         return $driverCheck;
     }
 
@@ -75,14 +76,14 @@ class Driver extends DriverAbstract
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-/*            if (isset($this->config[ 'skipExisting' ]) && $this->config[ 'skipExisting' ] == true) {
-                $x = $this->instance->get($item->getKey());
-                if ($x === false) {
-                    return false;
-                } elseif (!is_null($x)) {
-                    return true;
-                }
-            }*/
+            /*            if (isset($this->config[ 'skipExisting' ]) && $this->config[ 'skipExisting' ] == true) {
+                            $x = $this->instance->get($item->getKey());
+                            if ($x === false) {
+                                return false;
+                            } elseif (!is_null($x)) {
+                                return true;
+                            }
+                        }*/
 
             return $this->instance->setx($item->getKey(), $this->encode($this->driverPreWrap($item)), $item->getTtl());
         } else {
@@ -129,7 +130,7 @@ class Driver extends DriverAbstract
         $return = null;
         foreach ($this->instance->keys('', '') as $key) {
             $result = $this->instance->del($key);
-            if($result !== false){
+            if ($result !== false) {
                 $return = $result;
             }
         }
@@ -150,9 +151,9 @@ class Driver extends DriverAbstract
         ];
 
         $host = $server[ 'host' ];
-        $port = isset($server[ 'port' ]) ? (int)$server[ 'port' ] : 8888;
+        $port = isset($server[ 'port' ]) ? (int) $server[ 'port' ] : 8888;
         $password = isset($server[ 'password' ]) ? $server[ 'password' ] : '';
-        $timeout = !empty($server[ 'timeout' ]) ? (int)$server[ 'timeout' ] : 2000;
+        $timeout = !empty($server[ 'timeout' ]) ? (int) $server[ 'timeout' ] : 2000;
         $this->instance = new SimpleSSDB($host, $port, $timeout);
         if (!empty($password)) {
             $this->instance->auth($password);

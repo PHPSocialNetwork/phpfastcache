@@ -15,9 +15,9 @@ use phpFastCache\CacheManager;
 use phpFastCache\Core\phpFastCache;
 
 // Setup File Path on your config files
-CacheManager::setup(array(
-    "path" => '/var/www/phpfastcache.dev.geolim4.com/geolim4/tmp', // or in windows "C:/tmp/"
-));
+CacheManager::setup([
+  "path" => '/var/www/phpfastcache.dev.geolim4.com/geolim4/tmp', // or in windows "C:/tmp/"
+]);
 
 // In your class, function, you can call the Cache
 $InstanceCache = CacheManager::getInstance('redis');
@@ -29,8 +29,8 @@ $InstanceCache = CacheManager::getInstance('redis');
 $key = "product_increment";
 $CachedString = $InstanceCache->getItem($key);
 if (is_null($CachedString->get())) {
-	$CachedString->set(1000)->expiresAfter(10);
-	
+    $CachedString->set(1000)->expiresAfter(10);
+
     echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // INCREMENT // ";
     echo $CachedString->increment()->get();
 

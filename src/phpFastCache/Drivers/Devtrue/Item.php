@@ -52,13 +52,11 @@ class Item implements ExtendedCacheItemInterface
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver)
     {
-        if($driver instanceof DevtrueDriver)
-        {
+        if ($driver instanceof DevtrueDriver) {
             $this->driver = $driver;
+
             return $this;
-        }
-        else
-        {
+        } else {
             throw new \InvalidArgumentException('Invalid driver instance');
         }
     }

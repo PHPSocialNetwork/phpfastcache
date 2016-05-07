@@ -97,7 +97,7 @@ trait ItemBaseTrait
     {
         if ($expiration instanceof \DateTimeInterface) {
             $this->expirationDate = $expiration;
-        }else{
+        } else {
             throw new \InvalidArgumentException('$expiration must be an object implementing the DateTimeInterface');
         }
 
@@ -255,7 +255,7 @@ trait ItemBaseTrait
      */
     public function __sleep()
     {
-        $vars = (array)array_keys(get_object_vars($this));
+        $vars = (array) array_keys(get_object_vars($this));
         // Remove unneeded vars
         //unset($vars[array_search('driver', $vars)]);
         return $vars;

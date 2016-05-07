@@ -105,10 +105,10 @@ class Driver extends DriverAbstract
         if ($x == false) {
             return null;
         } else {
-            if(!is_scalar($this->driverUnwrapData($x)) && !is_null($this->driverUnwrapData($x)))
-            {
+            if (!is_scalar($this->driverUnwrapData($x)) && !is_null($this->driverUnwrapData($x))) {
                 throw new phpFastCacheDriverException('Hacking attempt: The decoding returned a non-scalar value, Cookie driver does not allow this.');
             }
+
             return $x;
         }
     }
@@ -158,11 +158,12 @@ class Driver extends DriverAbstract
             if (strpos($keyword, self::PREFIX) !== false) {
                 $_COOKIE[ $keyword ] = null;
                 $result = @setcookie($keyword, null, -10);
-                if($return !== false){
+                if ($return !== false) {
                     $return = $result;
                 }
             }
         }
+
         return $return;
     }
 
@@ -202,7 +203,7 @@ class Driver extends DriverAbstract
          * Only count PFC Cookie
          */
         foreach ($_COOKIE as $key => $value) {
-            if(strpos($key, self::PREFIX) === 0){
+            if (strpos($key, self::PREFIX) === 0) {
                 $size += strlen($value);
             }
         }

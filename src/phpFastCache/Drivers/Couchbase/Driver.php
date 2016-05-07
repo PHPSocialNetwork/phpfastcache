@@ -208,6 +208,6 @@ class Driver extends DriverAbstract
      */
     public function getStats()
     {
-        return (new driverStatistic())->setInfo(implode('<br />', (array)$this->instance->info()));
+        return (new driverStatistic())->setInfo(implode('<br />', (array) $this->instance->info()));
     }
 }

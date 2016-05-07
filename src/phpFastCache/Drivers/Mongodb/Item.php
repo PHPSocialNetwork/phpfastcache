@@ -52,13 +52,11 @@ class Item implements ExtendedCacheItemInterface
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver)
     {
-        if($driver instanceof MongodbDriver)
-        {
+        if ($driver instanceof MongodbDriver) {
             $this->driver = $driver;
+
             return $this;
-        }
-        else
-        {
+        } else {
             throw new \InvalidArgumentException('Invalid driver instance');
         }
     }

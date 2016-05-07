@@ -19,8 +19,7 @@ echo "Testing new cache instance\n";
  */
 $driverInstance = CacheManager::getInstance('memcached');
 
-if(!is_object($driverInstance) || !($driverInstance instanceof ExtendedCacheItemPoolInterface))
-{
+if (!is_object($driverInstance) || !($driverInstance instanceof ExtendedCacheItemPoolInterface)) {
     echo '[FAIL] CacheManager::getInstance() returned wrong data:' . gettype($driverInstance) . "\n";
     $status = 1;
 }

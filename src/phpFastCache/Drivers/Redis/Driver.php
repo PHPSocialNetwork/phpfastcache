@@ -117,28 +117,25 @@ class Driver extends DriverAbstract
      */
     public function driverConnect()
     {
-        if($this->instance instanceof RedisClient)
-        {
+        if ($this->instance instanceof RedisClient) {
             throw new \LogicException('Already connected to Redis server');
-        }
-        else
-        {
+        } else {
             $this->instance = $this->instance ?: new RedisClient();
 
             $host = isset($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1';
-            $port = isset($this->config[ 'port' ]) ? (int)$this->config[ 'port' ] : '6379';
+            $port = isset($this->config[ 'port' ]) ? (int) $this->config[ 'port' ] : '6379';
             $password = isset($this->config[ 'password' ]) ? $this->config[ 'password' ] : '';
             $database = isset($this->config[ 'database' ]) ? $this->config[ 'database' ] : '';
             $timeout = isset($this->config[ 'timeout' ]) ? $this->config[ 'timeout' ] : '';
 
-            if (!$this->instance->connect($host, (int)$port, (int)$timeout)) {
+            if (!$this->instance->connect($host, (int) $port, (int) $timeout)) {
                 return false;
             } else {
                 if ($password && !$this->instance->auth($password)) {
                     return false;
                 }
                 if ($database) {
-                    $this->instance->select((int)$database);
+                    $this->instance->select((int) $database);
                 }
 
                 return true;

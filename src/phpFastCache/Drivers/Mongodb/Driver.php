@@ -77,7 +77,7 @@ class Driver extends DriverAbstract
          */
         if ($item instanceof Item) {
             try {
-                $result = (array)$this->getCollection()->update(
+                $result = (array) $this->getCollection()->update(
                   ['_id' => $item->getKey()],
                   [
                     '$set' => [
@@ -125,9 +125,9 @@ class Driver extends DriverAbstract
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            $deletionResult = (array)$this->getCollection()->remove(['_id' => $item->getKey()], ["w" => 1]);
+            $deletionResult = (array) $this->getCollection()->remove(['_id' => $item->getKey()], ["w" => 1]);
 
-            return (int)$deletionResult[ 'ok' ] === 1 && !$deletionResult[ 'err' ];
+            return (int) $deletionResult[ 'ok' ] === 1 && !$deletionResult[ 'err' ];
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -218,7 +218,7 @@ class Driver extends DriverAbstract
 
         $stats = (new driverStatistic())
           ->setInfo('MongoDB version ' . $serverStatus[ 'version' ] . ', Uptime (in days): ' . round($serverStatus[ 'uptime' ] / 86400, 1))
-          ->setSize((int)$collStats[ 'size' ])
+          ->setSize((int) $collStats[ 'size' ])
           ->setRawData([
             'serverStatus' => $serverStatus,
             'collStats' => $collStats,

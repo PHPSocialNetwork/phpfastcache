@@ -25,9 +25,10 @@ spl_autoload_register(function ($entity) {
          * then we return here.
          */
         return;
-    }else if(strpos($entity, 'Psr\Cache') === 0){
+    } else if (strpos($entity, 'Psr\Cache') === 0) {
         trigger_error('If you cannot use <b>composer</b>, you have to include manually the Psr\\Cache interfaces.<br />See: https://github.com/php-fig/cache/tree/master/src<br /> Called ' . $entity,
           E_USER_ERROR);
+
         return;
     }
 

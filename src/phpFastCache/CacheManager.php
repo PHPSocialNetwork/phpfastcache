@@ -105,7 +105,22 @@ class CacheManager
     public static function getAutoClass($config)
     {
         static $autoDriver;
-        $systemDrivers = ['Sqlite', 'Files', 'Apc', 'Memcache', 'Memcached', 'Couchbase', 'Mongodb', 'Predis', 'Redis', 'Ssdb', 'Wincache', 'Xcache', 'Devnull'];
+        $systemDrivers = [
+          'Sqlite',
+          'Files',
+          'Apc',
+          'Apcu',
+          'Memcache',
+          'Memcached',
+          'Couchbase',
+          'Mongodb',
+          'Predis',
+          'Redis',
+          'Ssdb',
+          'Wincache',
+          'Xcache',
+          'Devnull',
+        ];
 
         if ($autoDriver === null) {
             foreach ($systemDrivers as $driver) {

@@ -179,7 +179,7 @@ class Driver extends DriverAbstract
             }
         }
 
-        return (bool)$return;
+        return (bool) $return;
     }
 
     /**
@@ -267,11 +267,11 @@ class Driver extends DriverAbstract
         }
 
         $stat->setData($content)
-            ->setSize($total - $removed)
-            ->setInfo('Total [bytes]: ' . $total . ', '
-              . 'Expired and removed [bytes]: ' . $removed . ', '
-              . 'Current [bytes], ' .  $total - $removed
-            );
+          ->setSize($total - $removed)
+          ->setInfo('Total [bytes]: ' . $total . ', '
+            . 'Expired and removed [bytes]: ' . $removed . ', '
+            . 'Current [bytes], ' . $total - $removed
+          );
 
         return $stat;
     }

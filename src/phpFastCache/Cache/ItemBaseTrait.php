@@ -97,6 +97,8 @@ trait ItemBaseTrait
     {
         if ($expiration instanceof \DateTimeInterface) {
             $this->expirationDate = $expiration;
+        }else{
+            throw new \InvalidArgumentException('$expiration must be an object implementing the DateTimeInterface');
         }
 
         return $this;
@@ -132,6 +134,9 @@ trait ItemBaseTrait
     public function expiresAfter($time)
     {
         if (is_numeric($time) && $time > 0) {
+            if ($time > 30 * 24 * 3600) {
+                $time = time() + $time;
+            }
             $this->expirationDate = $this->expirationDate->add(new \DateInterval(sprintf('PT%dS', $time)));
         } else if ($time instanceof \DateInterval) {
             $this->expirationDate = $this->expirationDate->add($time);

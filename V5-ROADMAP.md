@@ -10,11 +10,11 @@
 - [ ] Rewrite Wiki 
 - [x] Rewrite tests
 - [x] Rewrite stats method to be implemented in a driverStatistic() object, not a breaking change due to ArrayAccess use, but array use is deprecated
-- [ ] Re-implement searchByValue(), searchByTag() and searchByKey() methods in ExtendedCacheItemPoolInterface 
+- [ ] Re-implement tags features (will be the replacement of global search)
 - [x] Re-implement [in|de]crement methods in ExtendedCacheItemInterface 
 - [x] Implement [a|pre]pend methods in ExtendedCacheItemInterface 
 - [x] Re-implement touch method in ExtendedCacheItemInterface: deprecated in profit CacheItemInterface::expiresAfter()
-- [ ] Implement MongoDb Driver
+- [x] Implement MongoDb Driver
 - [x] Implement CouchBase Driver
 - [x] Implement Dev Driver (return null/bool everywhere for development purpose)
 - [ ] Check Wincache driver in real Windows env (and not in VM)

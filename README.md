@@ -139,7 +139,7 @@ echo implode('<br />', $CachedString->get());// Will echo your product list
 
 ```
 
-#### :floppy_disk: Legacy / Lazy Method (Without Composer)
+##### :floppy_disk: Legacy / Lazy Method (Without Composer)
 See the file examples/legacy.php for more information.
 
 #### :zap: Step 3: Enjoy ! Your website is now faster than flash !

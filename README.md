@@ -35,24 +35,35 @@ With phpFastCache, your page only send 1 query to DB, and use the cache to serve
 Rich Development API
 ---------------------------
 
-phpFastCache offers you a lot of usefull APIS:
+phpFastCache offers you a lot of useful APIs:
 
 ### Item API
+- getKey() // Return the item identifier (key)
 - get() // The getter, obviously, return your cache object
-- set($something_your_want_to_cache, $time_as_second = 0) // The setter, for those who missed it, put 0 meant cache it forever
-- touch($time_you_want_to_extend) // Allow you to extends the lifetime of an entry without altering the value
+- set($value) // The setter, for those who missed it, put 0 meant cache it forever
+- expiresAfter($ttl) // Allow you to extends the lifetime of an entry without altering the value (formerly know as touch())
+- expiresAt($expiration) // Sets the expiration time for this cache item (as a DateTimeInterface object)
 - increment($step = 1) // For integer that we can count on
 - decrement($step = 1) // Redundant joke...
+- append($data) // Append data to a string or an array (push)
+- prepend($data) // Prepend data to a string or an array (unshift)
 - isHit() // Check if your cache entry exists and is still valid, it is the equivalent of isset()
+- isExpired() // Check if your cache entry is expired
+- getTtl() // Get the remaining Time To Live as an integer
+- getExpirationDate() // Get the expiration date as a Datetime object
 
 ### ItemPool API
-- delete() // For removing a cached thing
-- clean() // Allow you to completely empty the cache and restart from the beginning
-- search($string_or_regex, $search_in_value = false | true) // Allow you to perform some search on the cache index
+- getItem($key) // Retrieve an item and returns an empty item if not found
+- getItems(array $keys) // Retrieve one or more item and returns an array of items
+- hasItem($key) // Tests if an item exists
+- deleteItem($key) // Delete an item
+- deleteItems(array $keys) // Delete one or more items
+- save(CacheItemInterface $item) // Persists a cache item immediately
+- saveDeferred(CacheItemInterface $item); // Sets a cache item to be persisted later
+- commit(); // Persists any deferred cache items
+- clear() // Allow you to completely empty the cache and restart from the beginning
 - stats() // Return the cache statistics as an object, useful for checking disk space used by the cache etc.
-- searchByTag() // For searching by tag 
-- searchByKey() // For searching by key 
-- searchByValue() // For searching by value (slow) 
+- Tags methods to come later...
 
 Also support Multiple calls, Tagging, Setup Folder for caching. Look at our examples folders.
 
@@ -74,12 +85,11 @@ use phpFastCache\CacheManager;
 
 // Setup File Path on your config files
 CacheManager::setup(array(
-    "path" => '/var/www/phpfastcache.dev.geolim4.com/geolim4/tmp', // or in windows "C:/tmp/"
+    "path" => '/var/www/phpfastcache.com/dev/tmp', // or in windows "C:/tmp/"
 ));
 
 // In your class, function, you can call the Cache
 $InstanceCache = CacheManager::getInstance('files');
-// OR $InstanceCache = CacheManager::getInstance() <-- open examples/global.setup.php to see more
 
 /**
  * Try to get $products from Caching First

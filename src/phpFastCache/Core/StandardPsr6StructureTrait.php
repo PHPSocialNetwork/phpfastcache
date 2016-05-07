@@ -56,6 +56,15 @@ trait StandardPsr6StructureTrait
                 {
                     $item->set($this->driverUnwrapData($driverArray));
                     $item->expiresAt($this->driverUnwrapTime($driverArray));
+                    if($item->isExpired())
+                    {
+                        /**
+                         * Using driverDelete() instead of delete()
+                         * to avoid infinite loop caused by
+                         * getItem() call in delete() method
+                         */
+                        $this->driverDelete($item);
+                    }
                 }
 
             }

@@ -12,10 +12,9 @@ One Class uses for All Cache. You don't need to rewrite your code many times aga
 |-----------------|---------------------------|--------------------|
 | `APC`           | `CouchBase`               | `Devnull`          |
 | `Cookie`        | `Mongodb`                 | `Devfalse`         |
-| `Devnull`       | `Predis`                  | `Devtrue`          |
-| `Files`         | `Redis`                   |                    |
-| `Memcache`      | `Ssdb`                    |                    |
-| `Memcached`     |                           |                    |
+| `Files`         | `Predis`                  | `Devtrue`          |
+| `Memcache`      | `Redis`                   |                    |
+| `Memcached`     | `Ssdb`                    |                    |
 | `Sqlite`        |                           |                    |
 | `Wincache`      |                           |                    |
 | `Xcache`        |                           |                    |

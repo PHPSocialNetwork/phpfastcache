@@ -140,8 +140,8 @@ class Driver extends DriverAbstract
     {
         $stat = new driverStatistic();
         $stat->setInfo('A void info string')
-             ->setSize(1337)
-             ->setData('A void data string');
+          ->setSize(1337)
+          ->setData('A void data string');
 
         return $stat;
     }

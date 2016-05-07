@@ -6,7 +6,7 @@
  */
 function read_dir($dir, $ext = null)
 {
-    $list = array();
+    $list = [];
     $dir .= '/';
     if (($res = opendir($dir)) === false) {
         exit(1);
@@ -35,9 +35,9 @@ $list += read_dir('.', 'tpl');
 $exit = 0;
 foreach ($list as $file) {
     $output = '';
-    if(strpos($file, '/vendor/composer') === false){
+    if (strpos($file, '/vendor/composer') === false) {
         exec('php -lf "' . $file . '"', $output, $status);
-    }else{
+    } else {
         echo '[SKIP] ' . $file;
         echo "\n";
         continue;
@@ -46,7 +46,7 @@ foreach ($list as $file) {
     if ($status != 0) {
         $exit = $status;
         echo '[FAIL]';
-    }else{
+    } else {
         echo '[PASS]';
     }
     echo ' ' . implode("\n", $output);

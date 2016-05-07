@@ -27,7 +27,7 @@ trait ClassNamespaceResolverTrait
     {
         static $namespace;
 
-        if(!$namespace){
+        if (!$namespace) {
             $namespace = (new \ReflectionObject($this))->getNamespaceName();
         }
 

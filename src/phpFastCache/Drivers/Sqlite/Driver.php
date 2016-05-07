@@ -494,7 +494,7 @@ class Driver extends DriverAbstract
         }
 
         $stat->setSize($optimized)
-            ->setInfo('Total before removing expired entries [bytes]: ' . $total . ', '
+          ->setInfo('Total before removing expired entries [bytes]: ' . $total . ', '
             . 'Optimized after removing expired entries [bytes]: ' . $optimized
           );
 

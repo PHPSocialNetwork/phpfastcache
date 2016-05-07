@@ -108,6 +108,7 @@ trait PathSeekerTrait
     public function isExpired()
     {
         trigger_error(__FUNCTION__ . '() is deprecated, use ExtendedCacheItemInterface::isExpired() instead.', E_USER_DEPRECATED);
+
         return true;
     }
 
@@ -123,24 +124,24 @@ trait PathSeekerTrait
 
         $filename = $this->encodeFilename($keyword);
         $folder = substr($filename, 0, 2);
-        $path = rtrim($path, '/').'/'.$folder;
+        $path = rtrim($path, '/') . '/' . $folder;
         /**
          * Skip Create Sub Folders;
          */
         if ($skip == false) {
             if (!file_exists($path)) {
                 if (@!mkdir($path, $this->setChmodAuto())) {
-                    throw new phpFastCacheDriverException('PLEASE CHMOD '.$this->getPath().' - ' . $this->setChmodAuto() . ' OR ANY WRITABLE PERMISSION!');
+                    throw new phpFastCacheDriverException('PLEASE CHMOD ' . $this->getPath() . ' - ' . $this->setChmodAuto() . ' OR ANY WRITABLE PERMISSION!');
                 }
             }
         }
 
-        return $path.'/'.$filename.'.txt';
+        return $path . '/' . $filename . '.txt';
     }
 
 
     /**
-     * @param $this->config
+     * @param $this ->config
      * @return int
      */
     public function setChmodAuto()

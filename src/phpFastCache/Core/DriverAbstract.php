@@ -59,7 +59,7 @@ abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
     public function __destruct()
     {
         // clean up the memory and don't want for PHP clean for caching method "phpfastcache"
-        if (isset($this->config[ 'instance' ]) && (int)$this->config[ 'cache_method' ] === 3) {
+        if (isset($this->config[ 'instance' ]) && (int) $this->config[ 'cache_method' ] === 3) {
             CacheManager::cleanCachingMethod($this->config[ 'instance' ]);
         }
     }
@@ -82,7 +82,7 @@ abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
      */
     public function getInfo($keyword, $option = [])
     {
-        if ((int)$this->config[ 'cache_method' ] > 1) {
+        if ((int) $this->config[ 'cache_method' ] > 1) {
             if (isset(CacheManager::$memory[ $this->config[ 'instance' ] ][ $keyword ])) {
                 $object = CacheManager::$memory[ $this->config[ 'instance' ] ][ $keyword ];
             }
@@ -113,7 +113,7 @@ abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
     public function clean(array $option = [])
     {
         // handle method
-        if ((int)$this->config[ 'cache_method' ] > 1) {
+        if ((int) $this->config[ 'cache_method' ] > 1) {
             // use memory
             CacheManager::$memory[ $this->config[ 'instance' ] ] = [];
         }

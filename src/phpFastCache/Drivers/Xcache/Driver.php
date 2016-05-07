@@ -62,13 +62,13 @@ class Driver extends DriverAbstract
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-/*            if (isset($option[ 'skipExisting' ]) && $option[ 'skipExisting' ] == true) {
-                if (!$this->isExisting($keyword)) {
-                    return xcache_set($keyword, serialize($value), $time);
-                }
-            } else {
-                return xcache_set($keyword, serialize($value), $time);
-            }*/
+            /*            if (isset($option[ 'skipExisting' ]) && $option[ 'skipExisting' ] == true) {
+                            if (!$this->isExisting($keyword)) {
+                                return xcache_set($keyword, serialize($value), $time);
+                            }
+                        } else {
+                            return xcache_set($keyword, serialize($value), $time);
+                        }*/
             return xcache_set($item->getKey(), $this->encode($this->driverPreWrap($item)), $item->getTtl());
 
         } else {

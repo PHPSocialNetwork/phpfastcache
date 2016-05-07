@@ -46,7 +46,7 @@ class Driver extends DriverAbstract
 
         if (!$this->driverCheck()) {
             throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
-        }else{
+        } else {
             $this->driverConnect();
         }
     }
@@ -56,9 +56,10 @@ class Driver extends DriverAbstract
      */
     public function driverCheck()
     {
-        if(extension_loaded('Redis')){
+        if (extension_loaded('Redis')) {
             trigger_error('The native Redis extension is installed, you should use Redis instead of Predis to increase performances', E_USER_NOTICE);
         }
+
         return class_exists('Predis\Client');
     }
 

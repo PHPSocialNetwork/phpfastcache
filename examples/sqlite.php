@@ -15,9 +15,9 @@ use phpFastCache\CacheManager;
 use phpFastCache\Core\phpFastCache;
 
 // Setup File Path on your config files
-CacheManager::setup(array(
-    "path" => '/var/www/phpfastcache.dev.geolim4.com/geolim4/tmp', // or in windows "C:/tmp/"
-));
+CacheManager::setup([
+  "path" => '/var/www/phpfastcache.dev.geolim4.com/geolim4/tmp', // or in windows "C:/tmp/"
+]);
 
 // In your class, function, you can call the Cache
 $InstanceCache = CacheManager::getInstance('sqlite');
@@ -34,14 +34,14 @@ if (is_null($CachedString->get())) {
     //$CachedString = "Files Cache --> Cache Enabled --> Well done !";
     // Write products to Cache in 10 minutes with same keyword
     $CachedString->set("Files Cache --> Cache Enabled --> Well done !")->expiresAfter(5);
-	$InstanceCache->save($CachedString);
+    $InstanceCache->save($CachedString);
 
     echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ";
     echo $CachedString->get();
 
 } else {
     echo "READ FROM CACHE // ";
-	echo $CachedString->getExpirationDate()->format(Datetime::W3C);
+    echo $CachedString->getExpirationDate()->format(Datetime::W3C);
     echo $CachedString->get();
 }
 

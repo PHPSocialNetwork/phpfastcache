@@ -74,6 +74,7 @@ class driverStatistic implements ArrayAccess
     public function setInfo($info)
     {
         $this->info = ($info ?: false);
+
         return $this;
     }
 
@@ -85,6 +86,7 @@ class driverStatistic implements ArrayAccess
     public function setSize($size)
     {
         $this->size = ($size ?: false);
+
         return $this;
     }
 
@@ -95,6 +97,7 @@ class driverStatistic implements ArrayAccess
     public function setData($data)
     {
         $this->data = ($data ?: false);
+
         return $this;
     }
 
@@ -113,6 +116,7 @@ class driverStatistic implements ArrayAccess
     public function setRawData($raw)
     {
         $this->rawData = $raw;
+
         return $this;
     }
 
@@ -126,14 +130,15 @@ class driverStatistic implements ArrayAccess
      * @throws InvalidArgumentException
      * @throws LogicException
      */
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value)
+    {
         trigger_error($this->getDeprecatedMsg(), E_USER_DEPRECATED);
         if (!is_string($offset)) {
             throw new InvalidArgumentException('$offset must be a string');
         } else {
-            if(property_exists($this, $offset)){
+            if (property_exists($this, $offset)) {
                 $this->{$offset} = $value;
-            }else{
+            } else {
                 throw new LogicException("Property {$offset} does not exists");
             }
         }
@@ -145,14 +150,15 @@ class driverStatistic implements ArrayAccess
      * @throws InvalidArgumentException
      * @throws LogicException
      */
-    public function offsetExists($offset) {
+    public function offsetExists($offset)
+    {
         trigger_error($this->getDeprecatedMsg(), E_USER_DEPRECATED);
         if (!is_string($offset)) {
             throw new InvalidArgumentException('$offset must be a string');
         } else {
-            if(property_exists($this, $offset)){
+            if (property_exists($this, $offset)) {
                 return isset($this->{$offset});
-            }else{
+            } else {
                 throw new LogicException("Property {$offset} does not exists");
             }
         }
@@ -163,14 +169,15 @@ class driverStatistic implements ArrayAccess
      * @throws InvalidArgumentException
      * @throws LogicException
      */
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset)
+    {
         trigger_error($this->getDeprecatedMsg(), E_USER_DEPRECATED);
         if (!is_string($offset)) {
             throw new InvalidArgumentException('$offset must be a string');
         } else {
-            if(property_exists($this, $offset)){
+            if (property_exists($this, $offset)) {
                 unset($this->{$offset});
-            }else{
+            } else {
                 throw new LogicException("Property {$offset} does not exists");
             }
         }
@@ -182,14 +189,15 @@ class driverStatistic implements ArrayAccess
      * @throws InvalidArgumentException
      * @throws LogicException
      */
-    public function offsetGet($offset) {
+    public function offsetGet($offset)
+    {
         trigger_error($this->getDeprecatedMsg(), E_USER_DEPRECATED);
         if (!is_string($offset)) {
             throw new InvalidArgumentException('$offset must be a string');
         } else {
-            if(property_exists($this, $offset)){
+            if (property_exists($this, $offset)) {
                 return isset($this->{$offset}) ? $this->{$offset} : null;
-            }else{
+            } else {
                 throw new LogicException("Property {$offset} does not exists");
             }
         }

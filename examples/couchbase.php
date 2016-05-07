@@ -20,8 +20,8 @@ $InstanceCache = CacheManager::getInstance('couchbase', [
     [
       'default' => 'Cache',// The bucket name, generally "default" by default
       'password' => ''// The bucket password if there is
-    ]
-  ]
+    ],
+  ],
 ]);
 
 /**

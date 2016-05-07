@@ -50,14 +50,12 @@ trait StandardPsr6StructureTrait
                  * @var $item ExtendedCacheItemInterface
                  */
                 $class = new \ReflectionClass((new \ReflectionObject($this))->getNamespaceName() . '\Item');
-                $item = $class->newInstanceArgs(array($this, $key));
+                $item = $class->newInstanceArgs([$this, $key]);
                 $driverArray = $this->driverRead($key);
-                if($driverArray)
-                {
+                if ($driverArray) {
                     $item->set($this->driverUnwrapData($driverArray));
                     $item->expiresAt($this->driverUnwrapTime($driverArray));
-                    if($item->isExpired())
-                    {
+                    if ($item->isExpired()) {
                         /**
                          * Using driverDelete() instead of delete()
                          * to avoid infinite loop caused by
@@ -153,7 +151,7 @@ trait StandardPsr6StructureTrait
             }
         }
 
-        return (bool)$return;
+        return (bool) $return;
     }
 
     /**
@@ -190,6 +188,6 @@ trait StandardPsr6StructureTrait
             }
         }
 
-        return (bool)$return;
+        return (bool) $return;
     }
 }

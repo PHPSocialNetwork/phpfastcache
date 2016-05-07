@@ -15,9 +15,8 @@ $InstanceCache = CacheManager::getInstance('mongodb', [
   'port' => '27017',
   'username' => '',
   'password' => '',
-  'timeout' => '1'
+  'timeout' => '1',
 ]);
-
 
 
 /**
@@ -31,7 +30,7 @@ exit; */
 if (is_null($CachedString->get())) {
     // Write products to Cache in 10 minutes with same keyword
     $CachedString->set("Mongodb Cache --> Cache Enabled --> Well done !")->expiresAfter(5);
-	$InstanceCache->save($CachedString);
+    $InstanceCache->save($CachedString);
 
     echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ";
     echo $CachedString->get();

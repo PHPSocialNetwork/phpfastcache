@@ -4,9 +4,9 @@ echo '<h2> Drivers available: </h2>';
 echo '<ul>';
 
 foreach (glob("*.php") as $filename) {
-	if(basename(__FILE__) !== $filename){
-		 echo "<li><a href=\"$filename\">" . ucfirst(basename($filename, '.php')) . "</a></li>";
-	}
+    if (basename(__FILE__) !== $filename) {
+        echo "<li><a href=\"$filename\">" . ucfirst(basename($filename, '.php')) . "</a></li>";
+    }
 }
 
 echo '</ul>';
@@ -22,7 +22,7 @@ $extensions = array_map('ucfirst', get_loaded_extensions());
 sort($extensions);
 
 foreach ($extensions as $extension) {
-        echo "<li>$extension</li>";
+    echo "<li>$extension</li>";
 }
 
 echo '</ul>';

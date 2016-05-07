@@ -271,7 +271,7 @@ class Driver extends DriverAbstract
             }
         }
 
-        return (bool)$return;
+        return (bool) $return;
     }
 
     /**

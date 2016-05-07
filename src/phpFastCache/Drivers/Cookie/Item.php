@@ -45,9 +45,8 @@ class Item implements ExtendedCacheItemInterface
               gettype($key)));
         }
     }
-    
-    
-    
+
+
     /**
      * @param ExtendedCacheItemPoolInterface $driver
      * @throws \InvalidArgumentException
@@ -55,13 +54,11 @@ class Item implements ExtendedCacheItemInterface
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver)
     {
-        if($driver instanceof CookieDriver)
-        {
+        if ($driver instanceof CookieDriver) {
             $this->driver = $driver;
+
             return $this;
-        }
-        else
-        {
+        } else {
             throw new \InvalidArgumentException('Invalid driver instance');
         }
     }

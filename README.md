@@ -10,14 +10,15 @@ One Class uses for All Cache. You don't need to rewrite your code many times aga
 
 | Regular drivers | High performances drivers | Development driver |
 |-----------------|---------------------------|--------------------|
-| `APC`           | `CouchBase`               | `Devnull`          |
-| `Cookie`        | `Mongodb`                 | `Devfalse`         |
-| `Files`         | `Predis`                  | `Devtrue`          |
-| `Memcache`      | `Redis`                   |                    |
-| `Memcached`     | `Ssdb`                    |                    |
-| `Sqlite`        |                           |                    |
-| `Wincache`      |                           |                    |
-| `Xcache`        |                           |                    |
+|  `Apc`          | `CouchBase`               | `Devnull`          |
+|  `Apcu`         | `Mongodb`                 | `Devfalse`         |
+|  `Cookie`       | `Predis`                  | `Devtrue`          |
+|  `Files`        | `Redis`                   |                    |
+|  `Memcache`     | `Ssdb`                    |                    |
+|  `Memcached`    |                           |                    |
+|  `Sqlite`       |                           |                    |
+|  `Wincache`     |                           |                    |
+|  `Xcache`       |                           |                    |
 
 \* Driver descriptions available in DOCS/DRIVERS.md
 

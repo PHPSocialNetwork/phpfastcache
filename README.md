@@ -8,17 +8,16 @@ One Class uses for All Cache. You don't need to rewrite your code many times aga
 
 ### Supported drivers at this day *
 
-| Regular drivers | High performances drivers | Development driver |
-|-----------------|---------------------------|--------------------|
-|  `Apc`          | `CouchBase`               | `Devnull`          |
-|  `Apcu`         | `Mongodb`                 | `Devfalse`         |
-|  `Cookie`       | `Predis`                  | `Devtrue`          |
-|  `Files`        | `Redis`                   |                    |
-|  `Memcache`     | `Ssdb`                    |                    |
-|  `Memcached`    |                           |                    |
-|  `Sqlite`       |                           |                    |
-|  `Wincache`     |                           |                    |
-|  `Xcache`       |                           |                    |
+| Regular drivers  | High performances drivers | Development driver |
+|------------------|---------------------------|--------------------|
+|  `Apc(u)`        | `CouchBase`               | `Devnull`          |
+|  `Cookie`        | `Mongodb`                 | `Devfalse`         |
+|  `Files`         | `Predis`                  | `Devtrue`          |
+|  `Memcache(d)`   | `Redis`                   |                    |
+|  `Memcached`     | `Ssdb`                    |                    |
+|  `Sqlite`        |                           |                    |
+|  `Wincache`      |                           |                    |
+|  `Xcache`        |                           |                    |
 
 \* Driver descriptions available in DOCS/DRIVERS.md
 

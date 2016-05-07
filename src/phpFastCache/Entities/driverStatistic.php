@@ -39,6 +39,11 @@ class driverStatistic implements ArrayAccess
     protected $data = '';
 
     /**
+     * @var mixed
+     */
+    protected $rawData;
+
+    /**
      * @return string or false if no information available
      */
     public function getInfo()
@@ -90,6 +95,24 @@ class driverStatistic implements ArrayAccess
     public function setData($data)
     {
         $this->data = ($data ?: false);
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRawData()
+    {
+        return $this->rawData;
+    }
+
+    /**
+     * @param mixed $raw
+     * @return $this
+     */
+    public function setRawData($raw)
+    {
+        $this->rawData = $raw;
         return $this;
     }
 

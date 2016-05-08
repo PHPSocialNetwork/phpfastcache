@@ -14,6 +14,7 @@
 
 namespace phpFastCache\Core;
 
+use InvalidArgumentException;
 use phpFastCache\Cache\ExtendedCacheItemInterface;
 use phpFastCache\Cache\ExtendedCacheItemPoolInterface;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
@@ -638,4 +639,29 @@ abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
      * @return bool
      */
     abstract public function driverIsHit(CacheItemInterface $item);
+
+
+    /**
+     * V5 methods to implement
+     */
+
+    public function getItemsByTag($tagName)
+    {
+        // TODO: Implement getItemsByTag() method.
+    }
+
+    public function getItemsByTags(array $tagNames)
+    {
+        // TODO: Implement getItemsByTags() method.
+    }
+
+    public function deleteItemsByTag($tagName)
+    {
+        // TODO: Implement deleteItemsByTag() method.
+    }
+
+    public function deleteItemsByTags(array $tagNames)
+    {
+        // TODO: Implement deleteItemsByTags() method.
+    }
 }

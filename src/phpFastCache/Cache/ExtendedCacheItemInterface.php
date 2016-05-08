@@ -88,4 +88,33 @@ interface ExtendedCacheItemInterface extends CacheItemInterface
      * @deprecated Use CacheItemInterface::expiresAfter() instead
      */
     public function touch($time);
+
+    /**
+     * @param string $tagName
+     * return $this
+     */
+    public function addTag($tagName);
+
+    /**
+     * @param array $tagNames
+     * return $this
+     */
+    public function addTags(array $tagNames);
+
+    /**
+     * return array
+     */
+    public function getTags();
+
+    /**
+     * @param array $tagName
+     * return $this
+     */
+    public function removeTag($tagName);
+
+    /**
+     * @param array $tagNames
+     * return $this
+     */
+    public function removeTags(array $tagNames);
 }

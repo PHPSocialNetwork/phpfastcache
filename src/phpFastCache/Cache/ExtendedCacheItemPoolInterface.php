@@ -54,4 +54,70 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return driverStatistic
      */
     public function getStats();
+
+    /**
+     * Returns a traversable set of cache items by a tag name.
+     *
+     * @param string $tagName
+     * An indexed array of keys of items to retrieve.
+     *
+     * @throws InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return array|\Traversable
+     *   A traversable collection of Cache Items keyed by the cache keys of
+     *   each item. A Cache item will be returned for each key, even if that
+     *   key is not found. However, if no keys are specified then an empty
+     *   traversable MUST be returned instead.
+     */
+    public function getItemsByTag($tagName);
+
+    /**
+     * Returns a traversable set of cache items by a tag name.
+     *
+     * @param array $tagNames
+     * An indexed array of keys of items to retrieve.
+     *
+     * @throws InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return array|\Traversable
+     *   A traversable collection of Cache Items keyed by the cache keys of
+     *   each item. A Cache item will be returned for each key, even if that
+     *   key is not found. However, if no keys are specified then an empty
+     *   traversable MUST be returned instead.
+     */
+    public function getItemsByTags(array $tagNames);
+
+    /**
+     * Removes the item from the pool by key.
+     *
+     * @param string $tagName
+     *   The key for which to delete
+     *
+     * @throws InvalidArgumentException
+     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return bool
+     *   True if the item was successfully removed. False if there was an error.
+     */
+    public function deleteItemsByTag($tagName);
+
+    /**
+     * Removes the item from the pool by key.
+     *
+     * @param array $tagNames
+     *   The key for which to delete
+     *
+     * @throws InvalidArgumentException
+     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return bool
+     *   True if the item was successfully removed. False if there was an error.
+     */
+    public function deleteItemsByTags(array $tagNames);
 }

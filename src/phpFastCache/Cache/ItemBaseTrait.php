@@ -260,4 +260,33 @@ trait ItemBaseTrait
         //unset($vars[array_search('driver', $vars)]);
         return $vars;
     }
+
+    /**
+     * V5 methods to implement
+     */
+    
+    public function addTag($tagName)
+    {
+        // TODO: Implement addTag() method.
+    }
+
+    public function addTags(array $tagNames)
+    {
+        // TODO: Implement addTags() method.
+    }
+
+    public function getTags()
+    {
+        // TODO: Implement getTags() method.
+    }
+
+    public function removeTag($tagName)
+    {
+        // TODO: Implement removeTag() method.
+    }
+
+    public function removeTags(array $tagNames)
+    {
+        // TODO: Implement removeTags() method.
+    }
 }

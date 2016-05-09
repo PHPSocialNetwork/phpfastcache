@@ -32,7 +32,7 @@ class memcache extends DriverAbstract
     /**
      * @var int
      */
-    private $flags = 0;
+    protected $memcacheFlags = 0;
 
     /**
      * phpFastCache_memcache constructor.
@@ -47,8 +47,8 @@ class memcache extends DriverAbstract
         if (class_exists('Memcache')) {
             $this->instant = new MemcacheSoftware();
 
-            if (isset($config[ 'compress_data' ]) &&  $config[ 'compress_data' ] === true) {
-                $this->flags = MEMCACHE_COMPRESSED;
+            if (array_key_exists('compress_data', $config) &&  $config[ 'compress_data' ] === true) {
+                $this->memcacheFlags = MEMCACHE_COMPRESSED;
             }
         } else {
             $this->fallback = true;
@@ -121,10 +121,10 @@ class memcache extends DriverAbstract
         }
 
         if (isset($option[ 'skipExisting' ]) && $option[ 'skipExisting' ] == true) {
-            return $this->instant->add($keyword, $value, $this->flags, $time);
+            return $this->instant->add($keyword, $value, $this->memcacheFlags, $time);
 
         } else {
-            return $this->instant->set($keyword, $value, $this->flags, $time);
+            return $this->instant->set($keyword, $value, $this->memcacheFlags, $time);
         }
     }
 

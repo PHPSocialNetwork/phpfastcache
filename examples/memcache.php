@@ -11,6 +11,8 @@ use phpFastCache\CacheManager;
 require __DIR__ . '/../vendor/autoload.php';
 
 $InstanceCache = CacheManager::getInstance('memcache');
+// Or with compress_data option
+// $InstanceCache = CacheManager::getInstance('memcache', ['compress_data' => true]);
 
 /**
  * Try to get $products from Caching First

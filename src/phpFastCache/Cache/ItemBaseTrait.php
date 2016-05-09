@@ -170,9 +170,16 @@ trait ItemBaseTrait
         return $this->expirationDate;
     }
 
+    /**
+     * @return int
+     */
     public function getTtl()
     {
-        return $this->expirationDate->getTimestamp() - time();
+        $ttl = $this->expirationDate->getTimestamp() - time();
+        if ($ttl > 2592000) {
+            $ttl = time() + $ttl;
+        }
+        return $ttl;
     }
 
     /**
@@ -264,7 +271,7 @@ trait ItemBaseTrait
     /**
      * V5 methods to implement
      */
-    
+
     public function addTag($tagName)
     {
         // TODO: Implement addTag() method.

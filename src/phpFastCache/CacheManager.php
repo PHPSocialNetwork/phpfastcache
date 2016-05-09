@@ -62,6 +62,7 @@ class CacheManager
       'extensions' => [],
       "cache_method" => 2, // 1 = normal, 2 = phpfastcache, 3 = memory
       "limited_memory_each_object" => 4000, // maximum size (bytes) of object store in memory
+      "compress_data" => false, // compress stored data, if the backend supports it
     ];
 
     /**

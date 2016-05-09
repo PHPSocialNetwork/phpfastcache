@@ -32,6 +32,11 @@ class Driver extends DriverAbstract
     use MemcacheDriverCollisionDetectorTrait, StandardPsr6StructureTrait;
 
     /**
+     * @var int
+     */
+    private $flags = 0;
+
+    /**
      * Driver constructor.
      * @param array $config
      * @throws phpFastCacheDriverException
@@ -46,6 +51,10 @@ class Driver extends DriverAbstract
         } else {
             $this->instance = new MemcacheSoftware();
             $this->driverConnect();
+
+            if (isset($config[ 'compress_data' ]) &&  $config[ 'compress_data' ] === true) {
+                $this->flags = MEMCACHE_COMPRESSED;
+            }
         }
     }
 
@@ -75,7 +84,7 @@ class Driver extends DriverAbstract
                 $ttl = time() + $ttl;
             }
 
-            return $this->instance->set($item->getKey(), $this->driverPreWrap($item), false, $ttl);
+            return $this->instance->set($item->getKey(), $this->driverPreWrap($item), $this->flags, $ttl);
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }

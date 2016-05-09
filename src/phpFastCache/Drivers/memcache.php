@@ -30,6 +30,11 @@ class memcache extends DriverAbstract
     public $instant;
 
     /**
+     * @var int
+     */
+    private $flags = 0;
+
+    /**
      * phpFastCache_memcache constructor.
      * @param array $config
      */
@@ -41,10 +46,13 @@ class memcache extends DriverAbstract
         }
         if (class_exists('Memcache')) {
             $this->instant = new MemcacheSoftware();
+
+            if (isset($config[ 'compress_data' ]) &&  $config[ 'compress_data' ] === true) {
+                $this->flags = MEMCACHE_COMPRESSED;
+            }
         } else {
             $this->fallback = true;
         }
-
     }
 
     /**
@@ -113,10 +121,10 @@ class memcache extends DriverAbstract
         }
 
         if (isset($option[ 'skipExisting' ]) && $option[ 'skipExisting' ] == true) {
-            return $this->instant->add($keyword, $value, false, $time);
+            return $this->instant->add($keyword, $value, $this->flags, $time);
 
         } else {
-            return $this->instant->set($keyword, $value, false, $time);
+            return $this->instant->set($keyword, $value, $this->flags, $time);
         }
     }
 
@@ -127,7 +135,6 @@ class memcache extends DriverAbstract
      */
     public function driver_get($keyword, $option = array())
     {
-
         $this->connectServer();
 
         // return null if no caching

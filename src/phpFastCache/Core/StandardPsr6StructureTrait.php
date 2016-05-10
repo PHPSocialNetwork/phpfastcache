@@ -55,6 +55,7 @@ trait StandardPsr6StructureTrait
                 if ($driverArray) {
                     $item->set($this->driverUnwrapData($driverArray));
                     $item->expiresAt($this->driverUnwrapTime($driverArray));
+                    $item->setTags($this->driverUnwrapTags($driverArray));
                     if ($item->isExpired()) {
                         /**
                          * Using driverDelete() instead of delete()
@@ -161,7 +162,7 @@ trait StandardPsr6StructureTrait
      */
     public function save(CacheItemInterface $item)
     {
-        return $this->driverWrite($item);
+        return $this->driverWrite($item) && $this->driverWriteTags($item);
     }
 
     /**
@@ -181,7 +182,7 @@ trait StandardPsr6StructureTrait
     {
         $return = null;
         foreach ($this->deferredList as $key => $item) {
-            $result = $this->driverWrite($item);
+            $result = $this->save($item);
             if ($return !== false) {
                 unset($this->deferredList[ $key ]);
                 $return = $result;

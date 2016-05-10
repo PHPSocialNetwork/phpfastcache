@@ -28,8 +28,10 @@ use Psr\Cache\CacheItemInterface;
 abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
 {
     const DRIVER_CHECK_FAILURE      = '%s is not installed or misconfigured, cannot continue.';
+    const DRIVER_TAGS_KEY_PREFIX    = '_TAG_';
     const DRIVER_DATA_WRAPPER_INDEX = 'd';
     const DRIVER_TIME_WRAPPER_INDEX = 't';
+    const DRIVER_TAGS_WRAPPER_INDEX = 'g';
 
     /**
      * @var array
@@ -567,6 +569,7 @@ abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
         return [
           self::DRIVER_DATA_WRAPPER_INDEX => $item->get(),
           self::DRIVER_TIME_WRAPPER_INDEX => $item->getExpirationDate(),
+          self::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
         ];
     }
 
@@ -578,6 +581,16 @@ abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
     {
         return $wrapper[ self::DRIVER_DATA_WRAPPER_INDEX ];
     }
+
+    /**
+     * @param array $wrapper
+     * @return mixed
+     */
+    public function driverUnwrapTags(array $wrapper)
+    {
+        return $wrapper[ self::DRIVER_TAGS_WRAPPER_INDEX ];
+    }
+
 
     /**
      * @param array $wrapper
@@ -599,14 +612,175 @@ abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * V5: Abstract Methods
+     * @param \phpFastCache\Cache\ExtendedCacheItemInterface $item
+     * @return bool
      */
+    public function driverWriteTags(ExtendedCacheItemInterface $item)
+    {
+        $tagsItems = $this->getItems($this->getTagKeys($item->getTags()));
+
+        foreach ($tagsItems as $tagsItem) {
+            $data = $tagsItem->get();
+            $expTimestamp = $item->getExpirationDate()->getTimestamp();
+
+            /**
+             * Using the key will
+             * avoid to use array_unique
+             * that has slow performances
+             */
+
+            $tagsItem->set(array_merge((array) $data, [$item->getKey() => $expTimestamp]));
+
+            /**
+             * Set the expiration date
+             * of the $tagsItem based
+             * on the older $item
+             * expiration date
+             */
+            if ($expTimestamp > $tagsItem->getExpirationDate()->getTimestamp()) {
+                $tagsItem->expiresAt($item->getExpirationDate());
+            }
+            $this->driverWrite($tagsItem);
+        }
+
+        /**
+         * Also update removed tags to
+         * keep the index up to date
+         */
+        $tagsItems = $this->getItems($this->getTagKeys($item->getRemovedTags()));
+
+        foreach ($tagsItems as $tagsItem) {
+            $data = (array) $tagsItem->get();
+
+            unset($data[ $item->getKey() ]);
+            $tagsItem->set($data);
+
+            /**
+             * Recalculate the expiration date
+             *
+             * If the $tagsItem does not have
+             * any cache item references left
+             * then remove it from tagsItems index
+             */
+            if (count($data)) {
+                $tagsItem->expiresAt(max($data));
+                $this->driverWrite($tagsItem);
+            } else {
+                $this->driverDelete($tagsItem);
+            }
+        }
+
+        return true;
+    }
 
     /**
      * @param $key
+     * @return string
+     */
+    public function getTagKey($key)
+    {
+        return self::DRIVER_TAGS_KEY_PREFIX . $key;
+    }
+
+    /**
+     * @param $key
+     * @return string
+     */
+    public function getTagKeys(array $keys)
+    {
+        foreach ($keys as &$key) {
+            $key = $this->getTagKey($key);
+        }
+
+        return $keys;
+    }
+
+    /**
+     * @param string $tagName
+     * @return \phpFastCache\Cache\ExtendedCacheItemInterface[]
+     * @throws InvalidArgumentException
+     */
+    public function getItemsByTag($tagName)
+    {
+        if (is_string($tagName)) {
+            $driverResponse = $this->driverRead($this->getTagKey($tagName));
+            if ($driverResponse) {
+                $items = (array) $this->driverUnwrapData($driverResponse);
+
+                return $this->getItems(array_unique(array_keys($items)));
+            } else {
+                return [];
+            }
+        } else {
+            throw new InvalidArgumentException('$tagName must be a string');
+        }
+    }
+
+    /**
+     * @param array $tagNames
+     * @return \phpFastCache\Cache\ExtendedCacheItemInterface[]
+     * @throws InvalidArgumentException
+     */
+    public function getItemsByTags(array $tagNames)
+    {
+        $items = [];
+        foreach (array_unique($tagNames) as $tagName) {
+            $items = array_merge($items, $this->getItemsByTag($tagName));
+        }
+
+        return $items;
+    }
+
+    /**
+     * @param string $tagName
+     * @return bool|null
+     * @throws InvalidArgumentException
+     */
+    public function deleteItemsByTag($tagName)
+    {
+        if (is_string($tagName)) {
+            $return = null;
+            foreach ($this->getItemsByTag($tagName) as $item) {
+                $result = $this->driverDelete($item);
+                if ($return !== false) {
+                    $return = $result;
+                }
+            }
+
+            return $return;
+        } else {
+            throw new InvalidArgumentException('$tagName must be a string');
+        }
+    }
+
+    /**
+     * @param array $tagNames
+     * @return bool|null
+     * @throws InvalidArgumentException
+     */
+    public function deleteItemsByTags(array $tagNames)
+    {
+        $return = null;
+        foreach ($tagNames as $tagName) {
+            $result = $this->deleteItemsByTag($tagName);
+            if ($return !== false) {
+                $return = $result;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * Abstract Drivers Methods
+     */
+
+    /**
+     * @param string $key
      * @return array [
      *      'd' => 'THE ITEM DATA'
      *      't' => 'THE ITEM DATE EXPIRATION'
+     *      'g' => 'THE ITEM TAGS'
      * ]
      *
      */
@@ -640,28 +814,4 @@ abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
      */
     abstract public function driverIsHit(CacheItemInterface $item);
 
-
-    /**
-     * V5 methods to implement
-     */
-
-    public function getItemsByTag($tagName)
-    {
-        // TODO: Implement getItemsByTag() method.
-    }
-
-    public function getItemsByTags(array $tagNames)
-    {
-        // TODO: Implement getItemsByTags() method.
-    }
-
-    public function deleteItemsByTag($tagName)
-    {
-        // TODO: Implement deleteItemsByTag() method.
-    }
-
-    public function deleteItemsByTags(array $tagNames)
-    {
-        // TODO: Implement deleteItemsByTags() method.
-    }
 }

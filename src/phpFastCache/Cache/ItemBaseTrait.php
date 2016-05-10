@@ -18,6 +18,9 @@ use phpFastCache\Core\DriverAbstract;
 
 trait ItemBaseTrait
 {
+    /**
+     * @var bool
+     */
     protected $fetched = false;
 
     /**
@@ -39,6 +42,16 @@ trait ItemBaseTrait
      * @var \DateTimeInterface
      */
     protected $expirationDate;
+
+    /**
+     * @var array
+     */
+    protected $tags = [];
+
+    /**
+     * @var array
+     */
+    protected $removedTags = [];
 
     /********************
      *
@@ -179,6 +192,7 @@ trait ItemBaseTrait
         if ($ttl > 2592000) {
             $ttl = time() + $ttl;
         }
+
         return $ttl;
     }
 
@@ -193,6 +207,7 @@ trait ItemBaseTrait
     /**
      * @param int $step
      * @return $this
+     * @throws \InvalidArgumentException
      */
     public function increment($step = 1)
     {
@@ -209,6 +224,7 @@ trait ItemBaseTrait
     /**
      * @param int $step
      * @return $this
+     * @throws \InvalidArgumentException
      */
     public function decrement($step = 1)
     {
@@ -225,6 +241,7 @@ trait ItemBaseTrait
     /**
      * @param array|string $data
      * @return $this
+     * @throws \InvalidArgumentException
      */
     public function append($data)
     {
@@ -243,6 +260,7 @@ trait ItemBaseTrait
     /**
      * @param array|string $data
      * @return $this
+     * @throws \InvalidArgumentException
      */
     public function prepend($data)
     {
@@ -258,42 +276,120 @@ trait ItemBaseTrait
     }
 
     /**
-     * @return array
+     * @param $tagName
+     * @return $this
+     * @throws \InvalidArgumentException
      */
-    public function __sleep()
+    public function addTag($tagName)
     {
-        $vars = (array) array_keys(get_object_vars($this));
-        // Remove unneeded vars
-        //unset($vars[array_search('driver', $vars)]);
-        return $vars;
+        if (is_string($tagName)) {
+            $this->tags = array_unique(array_merge($this->tags, [$tagName]));
+
+            return $this;
+        } else {
+            throw new \InvalidArgumentException('$tagName must be a string');
+        }
     }
 
     /**
-     * V5 methods to implement
+     * @param array $tagNames
+     * @return $this
      */
-
-    public function addTag($tagName)
-    {
-        // TODO: Implement addTag() method.
-    }
-
     public function addTags(array $tagNames)
     {
-        // TODO: Implement addTags() method.
+        foreach ($tagNames as $tagName) {
+            $this->addTag($tagName);
+        }
+
+        return $this;
     }
 
+    /**
+     * @param array $tags
+     * @return $this
+     * @throws \InvalidArgumentException
+     */
+    public function setTags(array $tags)
+    {
+        if (count($tags)) {
+            if (array_filter($tags, 'is_string')) {
+                $this->tags = $tags;
+            } else {
+                throw new \InvalidArgumentException('$tagName must be an array of string');
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
     public function getTags()
     {
-        // TODO: Implement getTags() method.
+        return $this->tags;
     }
 
+    /**
+     * @return string
+     */
+    public function getTagsAsString($separator = ', ')
+    {
+        return implode($separator, $this->tags);
+    }
+
+    /**
+     * @param $tagName
+     * @return $this
+     */
     public function removeTag($tagName)
     {
-        // TODO: Implement removeTag() method.
+        if (($key = array_search($tagName, $this->tags)) !== false) {
+            unset($this->tags[ $key ]);
+            $this->removedTags[] = $tagName;
+        }
+
+        return $this;
     }
 
+    /**
+     * @param array $tagNames
+     * @return $this
+     */
     public function removeTags(array $tagNames)
     {
-        // TODO: Implement removeTags() method.
+        foreach ($tagNames as $tagName) {
+            $this->removeTag($tagName);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRemovedTags()
+    {
+        return array_diff($this->removedTags, $this->tags);
+    }
+
+    /**
+     * @throws \RuntimeException
+     */
+    final public function __sleep()
+    {
+        throw new \RuntimeException('phpFastCache Item entities cannot be serialized. Use CacheItemPoolInterface::saved() instead.');
+    }
+
+    /**
+     * Prevent recursions for Debug (php 5.6+)
+     * @return array
+     */
+    final public function __debugInfo()
+    {
+        $info = get_object_vars($this);
+        $info[ 'driver' ] = 'object(' . get_class($info[ 'driver' ]) . ')';
+
+        return (array) $info;
     }
 }

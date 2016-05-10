@@ -7,10 +7,9 @@
 - [x] Re-implement standalone Autoload for non-composer user
 - [x] Rewrite examples for ssdb lib
 - [x] Rewrite Readme 
-- [ ] Rewrite Wiki 
 - [x] Rewrite tests
 - [x] Rewrite stats method to be implemented in a driverStatistic() object, not a breaking change due to ArrayAccess use, but array use is deprecated
-- [ ] Re-implement tags features (will be the replacement of global search)
+- [x] Re-implement tags features (will be the replacement of global search)
 - [x] Re-implement [in|de]crement methods in ExtendedCacheItemInterface 
 - [x] Implement [a|pre]pend methods in ExtendedCacheItemInterface 
 - [x] Re-implement touch method in ExtendedCacheItemInterface: deprecated in profit CacheItemInterface::expiresAfter()
@@ -19,3 +18,4 @@
 - [x] Implement Dev Driver (return null/bool everywhere for development purpose)
 - [ ] Check Wincache driver in real Windows env (and not in VM)
 - [ ] Final code review + psr2 checks + psr-6 null value as legitimates value.
+- [ ] Rewrite Wiki 

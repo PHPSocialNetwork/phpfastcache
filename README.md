@@ -65,6 +65,13 @@ phpFastCache offers you a lot of useful APIs:
 - isExpired() // Check if your cache entry is expired
 - getTtl() // Get the remaining Time To Live as an integer
 - getExpirationDate() // Get the expiration date as a Datetime object
+- addTag($tagName) // Add a tag
+- addTags(array $tagNames) // Add many tags
+- setTags(array $tags) // Set some tags
+- getTags() // Get the tags
+- getTagsAsString($separator = ', ') // Get the data a string separated by $separator
+- removeTag($tagName) // Remove a tag
+- removeTags(array $tagNames) // Remove some tags
 
 ### ItemPool API
 - getItem($key) // Retrieve an item and returns an empty item if not found
@@ -77,7 +84,10 @@ phpFastCache offers you a lot of useful APIs:
 - commit(); // Persists any deferred cache items
 - clear() // Allow you to completely empty the cache and restart from the beginning
 - stats() // Return the cache statistics as an object, useful for checking disk space used by the cache etc.
-- Tags methods to come later...
+- getItemsByTag($tagName) // Return items by a tag
+- getItemsByTags(array $tagNames) // Return items by some tags
+- deleteItemsByTag($tagName) // Delete items by a tag
+- deleteItemsByTags(array $tagNames) // Delete items by some tags
 
 Also support Multiple calls, Tagging, Setup Folder for caching. Look at our examples folders.
 

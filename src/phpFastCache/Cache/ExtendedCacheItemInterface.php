@@ -50,24 +50,28 @@ interface ExtendedCacheItemInterface extends CacheItemInterface
 
     /**
      * @return $this
+     * @throws \InvalidArgumentException
      */
     public function increment();
 
     /**
      * @param array|string $data
-     * return $this
+     * @return $this
+     * @throws \InvalidArgumentException
      */
     public function decrement($data);
 
     /**
      * @param array|string $data
-     * return $this
+     * @return $this
+     * @throws \InvalidArgumentException
      */
     public function append($data);
 
     /**
      * @param array|string $data
-     * return $this
+     * @return $this
+     * @throws \InvalidArgumentException
      */
     public function prepend($data);
 
@@ -91,30 +95,50 @@ interface ExtendedCacheItemInterface extends CacheItemInterface
 
     /**
      * @param string $tagName
-     * return $this
+     * @return $this
+     * @throws \InvalidArgumentException
      */
     public function addTag($tagName);
 
     /**
      * @param array $tagNames
-     * return $this
+     * @return $this
      */
     public function addTags(array $tagNames);
 
+
     /**
-     * return array
+     * @param array $tags
+     * @return $this
+     * @throws \InvalidArgumentException
+     */
+    public function setTags(array $tags);
+
+    /**
+     * @return array
      */
     public function getTags();
 
     /**
+     * @param string $separator
+     * @return mixed
+     */
+    public function getTagsAsString($separator = ', ');
+
+    /**
      * @param array $tagName
-     * return $this
+     * @return $this
      */
     public function removeTag($tagName);
 
     /**
      * @param array $tagNames
-     * return $this
+     * @return $this
      */
     public function removeTags(array $tagNames);
+
+    /**
+     * @return array
+     */
+    public function getRemovedTags();
 }

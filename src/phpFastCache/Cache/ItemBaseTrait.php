@@ -146,9 +146,13 @@ trait ItemBaseTrait
      */
     public function expiresAfter($time)
     {
-        if (is_numeric($time) && $time > 0) {
-            if ($time > 30 * 24 * 3600) {
-                $time = time() + $time;
+        if (is_numeric($time)) {
+            if ($time <= 0) {
+                /**
+                * 5 years, however memcached or memory cached will gone when u restart it
+                * just recommended for sqlite. files                
+                */
+                $time = 30 * 24 * 3600 * 5;
             }
             $this->expirationDate = $this->expirationDate->add(new \DateInterval(sprintf('PT%dS', $time)));
         } else if ($time instanceof \DateInterval) {

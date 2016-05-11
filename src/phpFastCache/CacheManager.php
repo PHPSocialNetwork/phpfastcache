@@ -82,7 +82,7 @@ class CacheManager
     {
         $driver = ucfirst(strtolower($driver));
         $config = array_merge(self::$config, $config);
-        if ($driver === 'auto') {
+        if ($driver === 'Auto') {
             $driver = self::getAutoClass($config);
         }
 

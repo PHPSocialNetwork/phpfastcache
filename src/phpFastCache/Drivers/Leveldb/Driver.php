@@ -124,13 +124,13 @@ class Driver extends DriverAbstract
      */
     public function driverClear()
     {
-        if($this->instance instanceof LeveldbClient)
-        {
+        if ($this->instance instanceof LeveldbClient) {
             $this->instance->close();
             unset($this->instance);
         }
         $result = LeveldbClient::destroy($this->getLeveldbFile());
         $this->driverConnect();
+
         return $result;
     }
 

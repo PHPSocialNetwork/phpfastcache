@@ -39,7 +39,7 @@ trait ItemBaseTrait
     protected $data;
 
     /**
-     * @var \DateTimeInterface
+     * @var \DateTime
      */
     protected $expirationDate;
 

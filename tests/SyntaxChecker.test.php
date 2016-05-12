@@ -35,7 +35,10 @@ $list += read_dir('.', 'tpl');
 $exit = 0;
 foreach ($list as $file) {
     $output = '';
-    if (strpos($file, '/vendor/composer') === false) {
+    /**
+     * @todo Make the exclusions much cleaner
+     */
+    if (strpos($file, '/vendor/composer') === false && strpos($file, '/bin/stubs') === false) {
         exec('php -lf "' . $file . '"', $output, $status);
     } else {
         echo '[SKIP] ' . $file;

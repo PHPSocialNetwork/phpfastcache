@@ -156,4 +156,4 @@ echo implode('<br />', $CachedString->get());// Will echo your product list
 For curious developpers, there is a lot of others available examples [here](https://github.com/khoaofgod/phpFastCache/tree/final/examples).
 
 #### :boom: phpFastCache support
-Found an issue or had an idea ? Come here [here](https://github.com/PHPSocialNetwork/phpfastcache/issues) and let you know !
+Found an issue or had an idea ? Come here [here](https://github.com/PHPSocialNetwork/phpfastcache/issues) and let us know !

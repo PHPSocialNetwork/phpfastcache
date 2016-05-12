@@ -13,8 +13,9 @@ One Class uses for All Cache. You don't need to rewrite your code many times aga
 |  `Apc(u)`        | `CouchBase`               | `Devnull`          |
 |  `Cookie`        | `Mongodb`                 | `Devfalse`         |
 |  `Files`         | `Predis`                  | `Devtrue`          |
-|  `Memcache(d)`   | `Redis`                   |                    |
-|  `Memcached`     | `Ssdb`                    |                    |
+|  `Leveldb`       | `Redis`                   |                    |
+|  `Memcache(d)`   | `Ssdb`                    |                    |
+|  `Memcached`     |                           |                    |
 |  `Sqlite`        |                           |                    |
 |  `Wincache`      |                           |                    |
 |  `Xcache`        |                           |                    |

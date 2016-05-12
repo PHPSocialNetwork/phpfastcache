@@ -118,6 +118,7 @@ class CacheManager
           'Predis',
           'Redis',
           'Ssdb',
+          'Leveldb',
           'Wincache',
           'Xcache',
           'Devnull',

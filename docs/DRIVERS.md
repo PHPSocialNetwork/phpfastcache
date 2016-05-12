@@ -15,6 +15,8 @@
    * A development driver that return true for everything including driverCheck()
 * Files
   * A file driver that use serialization for storing data for regular performances. A _$path_ config must be specified, else the system temporary directory will be used.
+* Leveldb
+  * A NoSQL driver using a key-value pair system. A _$path_ config must be specified, else the system temporary directory will be used.
 * Memcache
   * The Memcache driver. A memory cache for regular performances. Do not cross this driver with Memcached driver
 * Memcached

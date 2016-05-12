@@ -79,25 +79,6 @@ abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param $keyword
-     * @return bool
-     */
-    public function isExisting($keyword)
-    {
-        if (method_exists($this, 'driver_isExisting')) {
-            return $this->driver_isExisting($keyword);
-        }
-
-        $data = $this->get($keyword);
-        if ($data == null) {
-            return false;
-        } else {
-            return true;
-        }
-
-    }
-
-    /**
      * @param $config_name
      * @param string $value
      */

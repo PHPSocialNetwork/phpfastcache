@@ -66,7 +66,7 @@ trait PathSeekerTrait
 
             if (!@file_exists($full_path) || !@is_writable($full_path)) {
                 if (!@file_exists($full_path)) {
-                    @mkdir($full_path, $this->setChmodAuto($this->config));
+                    @mkdir($full_path, $this->setChmodAuto());
                 }
                 if (!@is_writable($full_path)) {
                     @chmod($full_path, $this->setChmodAuto());
@@ -78,7 +78,7 @@ trait PathSeekerTrait
                         @mkdir($full_path, $this->setChmodAuto());
                     }
                     if (!@is_writable($full_path)) {
-                        @chmod($full_path, $this->setChmodAuto($this->config));
+                        @chmod($full_path, $this->setChmodAuto());
                     }
                 }
                 if (!@file_exists($full_path) || !@is_writable($full_path)) {

@@ -21,6 +21,7 @@ use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpssdb\Core\SimpleSSDB;
 use phpssdb\Core\SSDB;
+use phpssdb\Core\SSDBException;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -140,29 +141,34 @@ class Driver extends DriverAbstract
 
     /**
      * @return bool
+     * @throws phpFastCacheDriverException
      */
     public function driverConnect()
     {
-        $server = isset($this->config[ 'ssdb' ]) ? $this->config[ 'ssdb' ] : [
-          'host' => "127.0.0.1",
-          'port' => 8888,
-          'password' => '',
-          'timeout' => 2000,
-        ];
+        try{
+            $server = isset($this->config[ 'ssdb' ]) ? $this->config[ 'ssdb' ] : [
+              'host' => "127.0.0.1",
+              'port' => 8888,
+              'password' => '',
+              'timeout' => 2000,
+            ];
 
-        $host = $server[ 'host' ];
-        $port = isset($server[ 'port' ]) ? (int) $server[ 'port' ] : 8888;
-        $password = isset($server[ 'password' ]) ? $server[ 'password' ] : '';
-        $timeout = !empty($server[ 'timeout' ]) ? (int) $server[ 'timeout' ] : 2000;
-        $this->instance = new SimpleSSDB($host, $port, $timeout);
-        if (!empty($password)) {
-            $this->instance->auth($password);
-        }
+            $host = $server[ 'host' ];
+            $port = isset($server[ 'port' ]) ? (int) $server[ 'port' ] : 8888;
+            $password = isset($server[ 'password' ]) ? $server[ 'password' ] : '';
+            $timeout = !empty($server[ 'timeout' ]) ? (int) $server[ 'timeout' ] : 2000;
+            $this->instance = new SimpleSSDB($host, $port, $timeout);
+            if (!empty($password)) {
+                $this->instance->auth($password);
+            }
 
-        if (!$this->instance) {
-            return false;
-        } else {
-            return true;
+            if (!$this->instance) {
+                return false;
+            } else {
+                return true;
+            }
+        }catch(SSDBException $e){
+            throw new phpFastCacheDriverException('Ssdb failed to connect with error: '. $e->getMessage(), 0 , $e);
         }
     }
 

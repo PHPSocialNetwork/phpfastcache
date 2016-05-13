@@ -17,7 +17,7 @@ echo "Testing new cache instance\n";
 /**
  * Testing memcached as it is declared in .travis.yml
  */
-$driverInstance = CacheManager::getInstance();
+$driverInstance = CacheManager::getInstance('Memcached');
 
 if (!is_object($driverInstance) || !($driverInstance instanceof ExtendedCacheItemPoolInterface)) {
     echo '[FAIL] CacheManager::getInstance() returned wrong data:' . gettype($driverInstance) . "\n";

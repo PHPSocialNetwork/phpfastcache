@@ -23,16 +23,11 @@ use phpFastCache\Exceptions\phpFastCacheDriverException;
 trait DriverBaseTrait
 {
     use ExtendedCacheItemPoolTrait;
-    
-    /**
-     * @var array
-     */
-    public $extension_dir = '_extensions';
 
     /**
      * @var array
      */
-    public $tmp = [];
+    public $extension_dir = '_extensions';
 
     /**
      * @var array default options, this will be merge to Driver's Options

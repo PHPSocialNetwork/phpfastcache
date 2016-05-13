@@ -24,7 +24,6 @@ use Psr\Cache\CacheItemInterface;
  */
 abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
 {
-    use ExtendedCacheItemPoolTrait;
     use DriverBaseTrait;
 
     const DRIVER_CHECK_FAILURE      = '%s is not installed or is misconfigured, cannot continue.';

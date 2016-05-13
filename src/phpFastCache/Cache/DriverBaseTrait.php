@@ -13,6 +13,7 @@
  */
 namespace phpFastCache\Cache;
 
+use phpFastCache\Core\ExtendedCacheItemPoolTrait;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 
 /**
@@ -21,6 +22,8 @@ use phpFastCache\Exceptions\phpFastCacheDriverException;
  */
 trait DriverBaseTrait
 {
+    use ExtendedCacheItemPoolTrait;
+    
     /**
      * @var array
      */
@@ -45,7 +48,7 @@ trait DriverBaseTrait
      * @var mixed Instance of driver service
      */
     public $instance;
-    
+
     /**
      * @param $keyword
      * @return string

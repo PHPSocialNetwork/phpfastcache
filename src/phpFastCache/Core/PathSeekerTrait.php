@@ -20,6 +20,11 @@ use phpFastCache\Exceptions\phpFastCacheDriverException;
 trait PathSeekerTrait
 {
     /**
+     * @var array
+     */
+    public $tmp = [];
+
+    /**
      * @param bool $skip_create_path
      * @param $config
      * @return string

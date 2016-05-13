@@ -48,11 +48,6 @@ class Driver extends DriverAbstract
     protected $maxSize = 10; // 10 mb
 
     /**
-     * @var array
-     */
-    protected $deferredList = [];
-
-    /**
      * @var int
      */
     protected $currentDB = 1;

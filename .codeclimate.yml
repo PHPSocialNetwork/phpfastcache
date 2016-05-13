@@ -29,6 +29,15 @@ engines:
     enabled: true
   phpmd:
     enabled: true
+    checks:
+      CleanCode/ElseExpression:
+        enabled: false
+      CleanCode/BooleanArgumentFlag:
+        enabled: false
+      Controversial/Superglobals:
+        enabled: false
+      Controversial/CamelCaseVariableName:
+        enabled: false
 ratings:
   paths:
   - "**.inc"

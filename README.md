@@ -89,6 +89,14 @@ phpFastCache offers you a lot of useful APIs:
 - getItemsByTags(array $tagNames) // Return items by some tags
 - deleteItemsByTag($tagName) // Delete items by a tag
 - deleteItemsByTags(array $tagNames) // Delete items by some tags
+- incrementItemsByTag($tagName, $step = 1) // Increment items by a tag
+- incrementItemsByTags(array $tagNames, $step = 1) // Increment items by some tags
+- decrementItemsByTag($tagName, $step = 1) // Decrement items by a tag
+- decrementItemsByTags(array $tagNames, $step = 1) // Decrement items by some tags
+- appendItemsByTag($tagName, $data) // Append items by a tag
+- appendItemsByTags(array $tagNames, $data) // Append items by some tags
+- prependItemsByTag($tagName, $data) // Prepend items by a tag
+- prependItemsByTags(array $tagNames, $data) // Prepend items by some tags
 
 Also support Multiple calls, Tagging, Setup Folder for caching. Look at our examples folders.
 

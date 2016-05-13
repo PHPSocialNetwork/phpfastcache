@@ -111,10 +111,10 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     public function getItemsByTags(array $tagNames);
 
     /**
-     * Removes the item from the pool by key.
+     * Removes the item from the pool by tag.
      *
      * @param string $tagName
-     *   The key for which to delete
+     *   The tag for which to delete
      *
      * @throws InvalidArgumentException
      *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
@@ -126,10 +126,10 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     public function deleteItemsByTag($tagName);
 
     /**
-     * Removes the item from the pool by key.
+     * Removes the item from the pool by tag.
      *
      * @param array $tagNames
-     *   The key for which to delete
+     *   The tag for which to delete
      *
      * @throws InvalidArgumentException
      *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
@@ -139,4 +139,137 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *   True if the item was successfully removed. False if there was an error.
      */
     public function deleteItemsByTags(array $tagNames);
+
+    /**
+     * Increment the items from the pool by tag.
+     *
+     * @param string $tagName
+     *   The tag for which to increment
+     * @param int $step
+     *
+     * @throws InvalidArgumentException
+     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return bool
+     *   True if the item was successfully incremented. False if there was an error.
+     */
+    public function incrementItemsByTag($tagName, $step = 1);
+
+    /**
+     * Increment the items from the pool by tag.
+     *
+     * @param array $tagNames
+     *   The tag for which to increment
+     * @param int $step
+     *
+     * @throws InvalidArgumentException
+     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return bool
+     *   True if the item was successfully incremented. False if there was an error.
+     */
+    public function incrementItemsByTags(array $tagNames, $step = 1);
+
+
+    /**
+     * Decrement the items from the pool by tag.
+     *
+     * @param string $tagName
+     *   The tag for which to decrement
+     * @param int $step
+     *
+     * @throws InvalidArgumentException
+     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return bool
+     *   True if the item was successfully decremented. False if there was an error.
+     */
+    public function decrementItemsByTag($tagName, $step = 1);
+
+    /**
+     * Decrement the items from the pool by tag.
+     *
+     * @param array $tagNames
+     *   The tag for which to decrement
+     * @param int $step
+     *
+     * @throws InvalidArgumentException
+     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return bool
+     *   True if the item was successfully decremented. False if there was an error.
+     */
+    public function decrementItemsByTags(array $tagNames, $step = 1);
+
+    /**
+     * Decrement the items from the pool by tag.
+     *
+     * @param string $tagName
+     *   The tag for which to append
+     *
+     * @param array|string $data
+     *
+     * @throws InvalidArgumentException
+     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return bool
+     *   True if the item was successfully appended. False if there was an error.
+     */
+    public function appendItemsByTag($tagName, $data);
+
+    /**
+     * Decrement the items from the pool by tag.
+     *
+     * @param array $tagNames
+     *   The tag for which to append
+     *
+     * @param array|string $data
+     *
+     * @throws InvalidArgumentException
+     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return bool
+     *   True if the item was successfully appended. False if there was an error.
+     */
+    public function appendItemsByTags(array $tagNames, $data);
+
+    /**
+     * Prepend the items from the pool by tag.
+     *
+     * @param string $tagName
+     *   The tag for which to prepend
+     *
+     * @param array|string $data
+     *
+     * @throws InvalidArgumentException
+     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return bool
+     *   True if the item was successfully prepended. False if there was an error.
+     */
+    public function prependItemsByTag($tagName, $data);
+
+    /**
+     * Prepend the items from the pool by tag.
+     *
+     * @param array $tagNames
+     *   The tag for which to prepend
+     *
+     * @param array|string $data
+     *
+     * @throws InvalidArgumentException
+     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return bool
+     *   True if the item was successfully prepended. False if there was an error.
+     */
+    public function prependItemsByTags(array $tagNames, $data);
 }

@@ -400,6 +400,138 @@ abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function incrementItemsByTag($tagName, $step = 1)
+    {
+        if (is_string($tagName) && is_int($step)) {
+            foreach ($this->getItemsByTag($tagName) as $item) {
+                $item->increment($step);
+                $this->saveDeferred($item);
+            }
+            return $this->commit();
+        } else {
+            throw new InvalidArgumentException('$tagName must be a string and $step an integer');
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function incrementItemsByTags(array $tagNames, $step = 1)
+    {
+        $return = null;
+        foreach ($tagNames as $tagName)
+        {
+            $result = $this->incrementItemsByTag($tagName, $step);
+            if ($return !== false) {
+                $return = $result;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function decrementItemsByTag($tagName, $step = 1)
+    {
+        if (is_string($tagName) && is_int($step)) {
+            foreach ($this->getItemsByTag($tagName) as $item) {
+                $item->decrement($step);
+                $this->saveDeferred($item);
+            }
+            return $this->commit();
+        } else {
+            throw new InvalidArgumentException('$tagName must be a string and $step an integer');
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function decrementItemsByTags(array $tagNames, $step = 1)
+    {
+        $return = null;
+        foreach ($tagNames as $tagName)
+        {
+            $result = $this->decrementItemsByTag($tagName, $step);
+            if ($return !== false) {
+                $return = $result;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function appendItemsByTag($tagName, $data)
+    {
+        if (is_string($tagName)) {
+            foreach ($this->getItemsByTag($tagName) as $item) {
+                $item->append($data);
+                $this->saveDeferred($item);
+            }
+            return $this->commit();
+        } else {
+            throw new InvalidArgumentException('$tagName must be a string');
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function appendItemsByTags(array $tagNames, $data)
+    {
+        $return = null;
+        foreach ($tagNames as $tagName)
+        {
+            $result = $this->decrementItemsByTag($tagName, $data);
+            if ($return !== false) {
+                $return = $result;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function prependItemsByTag($tagName, $data)
+    {
+        if (is_string($tagName)) {
+            foreach ($this->getItemsByTag($tagName) as $item) {
+                $item->prepend($data);
+                $this->saveDeferred($item);
+            }
+            return $this->commit();
+        } else {
+            throw new InvalidArgumentException('$tagName must be a string');
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function prependItemsByTags(array $tagNames, $data)
+    {
+        $return = null;
+        foreach ($tagNames as $tagName)
+        {
+            $result = $this->decrementItemsByTag($tagName, $data);
+            if ($return !== false) {
+                $return = $result;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
      * Abstract Drivers Methods
      */
 

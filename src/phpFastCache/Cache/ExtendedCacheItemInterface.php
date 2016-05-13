@@ -49,17 +49,18 @@ interface ExtendedCacheItemInterface extends CacheItemInterface
     public function setDriver(ExtendedCacheItemPoolInterface $driver);
 
     /**
+     * @param int $step
      * @return $this
      * @throws \InvalidArgumentException
      */
-    public function increment();
+    public function increment($step = 1);
 
     /**
-     * @param array|string $data
+     * @param int $step
      * @return $this
      * @throws \InvalidArgumentException
      */
-    public function decrement($data);
+    public function decrement($step = 1);
 
     /**
      * @param array|string $data

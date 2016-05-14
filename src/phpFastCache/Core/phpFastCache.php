@@ -199,7 +199,7 @@ class phpFastCache
 
             if (!@file_exists($full_path) || !@is_writable($full_path)) {
                 if (!@file_exists($full_path)) {
-                    @mkdir($full_path, self::__setChmodAuto($config));
+                    @mkdir($full_path, self::__setChmodAuto($config), true);
                 }
                 if (!@is_writable($full_path)) {
                     @chmod($full_path, self::__setChmodAuto($config));
@@ -208,7 +208,7 @@ class phpFastCache
                     // switch back to tmp dir again if the path is not writeable
                     $full_path = rtrim($tmp_dir,'/') . '/' . $securityKey;
                     if (!@file_exists($full_path)) {
-                        @mkdir($full_path, self::__setChmodAuto($config));
+                        @mkdir($full_path, self::__setChmodAuto($config), true);
                     }
                     if (!@is_writable($full_path)) {
                         @chmod($full_path, self::__setChmodAuto($config));

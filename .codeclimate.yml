@@ -40,6 +40,8 @@ engines:
         enabled: false
       Design/TooManyPublicMethods:
         enabled: false
+      Design/NpathComplexity:
+        enabled: false
 ratings:
   paths:
   - "**.inc"

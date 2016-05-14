@@ -79,12 +79,12 @@ class Driver extends DriverAbstract
      */
     public function driverRead($key)
     {
-        $x = wincache_ucache_get($key, $suc);
+        $val = wincache_ucache_get($key, $suc);
 
         if ($suc === false) {
             return null;
         } else {
-            return $x;
+            return $val;
         }
     }
 

@@ -74,9 +74,7 @@ class sqlite extends DriverAbstract
         }
 
         if (!file_exists($this->getPath() . '/' . self::SQLITE_DIR)) {
-            if (!mkdir($this->getPath() . '/' . self::SQLITE_DIR,
-              $this->__setChmodAuto())
-            ) {
+            if (!mkdir($this->getPath() . '/' . self::SQLITE_DIR, $this->__setChmodAuto(), true)) {
                 $this->fallback = true;
             }
         }

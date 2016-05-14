@@ -71,7 +71,7 @@ trait PathSeekerTrait
 
             if (!@file_exists($full_path) || !@is_writable($full_path)) {
                 if (!@file_exists($full_path)) {
-                    @mkdir($full_path, $this->setChmodAuto());
+                    @mkdir($full_path, $this->setChmodAuto(), true);
                 }
                 if (!@is_writable($full_path)) {
                     @chmod($full_path, $this->setChmodAuto());
@@ -80,7 +80,7 @@ trait PathSeekerTrait
                     // switch back to tmp dir again if the path is not writeable
                     $full_path = rtrim($tmp_dir, '/') . '/' . $securityKey;
                     if (!@file_exists($full_path)) {
-                        @mkdir($full_path, $this->setChmodAuto());
+                        @mkdir($full_path, $this->setChmodAuto(), true);
                     }
                     if (!@is_writable($full_path)) {
                         @chmod($full_path, $this->setChmodAuto());
@@ -135,7 +135,7 @@ trait PathSeekerTrait
          */
         if ($skip == false) {
             if (!file_exists($path)) {
-                if (@!mkdir($path, $this->setChmodAuto())) {
+                if (@!mkdir($path, $this->setChmodAuto(), true)) {
                     throw new phpFastCacheDriverException('PLEASE CHMOD ' . $this->getPath() . ' - ' . $this->setChmodAuto() . ' OR ANY WRITABLE PERMISSION!');
                 }
             }

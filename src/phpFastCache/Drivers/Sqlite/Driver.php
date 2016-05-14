@@ -74,7 +74,7 @@ class Driver extends DriverAbstract
         if (!$this->driverCheck()) {
             throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
         } else {
-            if (!file_exists($this->getSqliteDir()) && !@mkdir($this->getSqliteDir(), $this->setChmodAuto())) {
+            if (!file_exists($this->getSqliteDir()) && !@mkdir($this->getSqliteDir(), $this->setChmodAuto(), true)) {
                 throw new phpFastCacheDriverException(sprintf('Sqlite cannot write in "%s", aborting...', $this->getPath()));
             } else {
                 $this->driverConnect();
@@ -399,8 +399,7 @@ class Driver extends DriverAbstract
     public function driverConnect()
     {
         if (!file_exists($this->getPath() . '/' . self::SQLITE_DIR)) {
-            if (!mkdir($this->getPath() . '/' . self::SQLITE_DIR,
-              $this->setChmodAuto())
+            if (!mkdir($this->getPath() . '/' . self::SQLITE_DIR, $this->setChmodAuto(), true)
             ) {
                 $this->fallback = true;
             }

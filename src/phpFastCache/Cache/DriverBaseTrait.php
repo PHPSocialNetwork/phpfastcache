@@ -297,4 +297,35 @@ trait DriverBaseTrait
 
         return $keys;
     }
+
+    /**
+     * @param string $optionName
+     * @param mixed $optionValue
+     * @return bool
+     * @throws \InvalidArgumentException
+     */
+    public static function isValidOption($optionName, $optionValue)
+    {
+        if(!is_string($optionName))
+        {
+            throw new \InvalidArgumentException('$optionName must be a string');
+        }
+        return true;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getRequiredOptions()
+    {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getValidOptions()
+    {
+        return [];
+    }
 }

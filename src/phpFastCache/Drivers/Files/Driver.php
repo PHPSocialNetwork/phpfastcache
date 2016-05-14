@@ -208,6 +208,52 @@ class Driver extends DriverAbstract
         }
     }
 
+    /**
+     * @param string $optionName
+     * @param mixed $optionValue
+     * @return bool
+     * @throws \InvalidArgumentException
+     */
+    public static function isValidOption($optionName, $optionValue)
+    {
+        parent::isValidOption($optionName, $optionValue);
+        switch($optionName)
+        {
+            case 'path':
+                return is_string($optionValue);
+                break;
+
+            case 'default_chmod':
+                return is_numeric($optionValue);
+                break;
+
+            case 'securityKey':
+                return is_string($optionValue);
+                break;
+            case 'htaccess':
+                return is_bool($optionValue);
+                break;
+            default:
+                return false;
+            break;
+        }
+    }
+    /**
+     * @return array
+     */
+    public static function getValidOptions()
+    {
+        return ['path', 'default_chmod', 'securityKey', 'htaccess'];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getRequiredOptions()
+    {
+        return ['path'];
+    }
+
     /********************
      *
      * PSR-6 Extended Methods

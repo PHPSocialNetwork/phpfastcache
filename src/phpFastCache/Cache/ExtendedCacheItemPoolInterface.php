@@ -26,6 +26,11 @@ use \InvalidArgumentException;
 interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
 {
     /**
+     * @return array
+     */
+    public function getConfig();
+
+    /**
      * [phpFastCache phpDoc Override]
      * Returns a Cache Item representing the specified key.
      *

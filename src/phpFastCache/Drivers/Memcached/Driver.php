@@ -91,14 +91,12 @@ class Driver extends DriverAbstract
      */
     public function driverRead($key)
     {
-        // return null if no caching
-        // return value if in caching
-        $x = $this->instance->get($key);
+        $val = $this->instance->get($key);
 
-        if ($x === false) {
+        if ($val === false) {
             return null;
         } else {
-            return $x;
+            return $val;
         }
     }
 

@@ -38,6 +38,8 @@ engines:
         enabled: false
       Controversial/CamelCaseVariableName:
         enabled: false
+      Design/TooManyPublicMethods:
+        enabled: false
 ratings:
   paths:
   - "**.inc"

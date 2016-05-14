@@ -80,8 +80,8 @@ class Driver extends DriverAbstract
      */
     public function driverRead($key)
     {
-        $data = apc_fetch($key, $bo);
-        if ($bo === false) {
+        $data = apc_fetch($key, $success);
+        if ($success === false) {
             return null;
         }
 

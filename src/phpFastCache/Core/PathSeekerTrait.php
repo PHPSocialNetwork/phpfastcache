@@ -197,12 +197,12 @@ trait PathSeekerTrait
 deny from all \r\n
 allow from 127.0.0.1";
 
-                $f = @fopen($path . '/.htaccess', 'w+');
-                if (!$f) {
+                $file = @fopen($path . '/.htaccess', 'w+');
+                if (!$file) {
                     throw new phpFastCacheDriverException('PLEASE CHMOD ' . $path . ' - 0777 OR ANY WRITABLE PERMISSION!');
                 }
-                fwrite($f, $html);
-                fclose($f);
+                fwrite($file, $html);
+                fclose($file);
             }
         }
     }

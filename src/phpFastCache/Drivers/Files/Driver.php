@@ -167,9 +167,9 @@ class Driver extends DriverAbstract
                     throw new phpFastCacheDriverException("Can't read path:" . $path . '/' . $file);
                 }
 
-                while ($f = readdir($subdir)) {
-                    if ($f != '.' && $f != '..') {
-                        $file_path = $path . '/' . $file . '/' . $f;
+                while ($subdirFile = readdir($subdir)) {
+                    if ($subdirFile != '.' && $subdirFile != '..') {
+                        $file_path = $path . '/' . $file . '/' . $subdirFile;
                         $result = @unlink($file_path);
                         if ($return !== false) {
                             $return = $result;
@@ -239,18 +239,16 @@ class Driver extends DriverAbstract
                     throw new phpFastCacheDriverException("Can't read path:" . $path . '/' . $file);
                 }
 
-                while ($f = readdir($subdir)) {
-                    if ($f != '.' && $f != '..') {
-                        $file_path = $path . '/' . $file . '/' . $f;
+                while ($subdirFile = readdir($subdir)) {
+                    if ($subdirFile != '.' && $subdirFile != '..') {
+                        $file_path = $path . '/' . $file . '/' . $subdirFile;
                         $size = filesize($file_path);
                         $object = $this->decode($this->readfile($file_path));
 
-                        if (strpos($f, '.') === false) {
-                            $key = $f;
+                        if (strpos($subdirFile, '.') === false) {
+                            $key = $subdirFile;
                         } else {
-                            //Because PHP 5.3, this cannot be written in single line
-                            $key = explode('.', $f);
-                            $key = $key[ 0 ];
+                            $key = explode('.', $subdirFile)[ 0 ];
                         }
                         $content[ $key ] = [
                           'size' => $size,

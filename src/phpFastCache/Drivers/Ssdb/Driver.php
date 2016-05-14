@@ -98,11 +98,11 @@ class Driver extends DriverAbstract
      */
     public function driverRead($key)
     {
-        $x = $this->instance->get($key);
-        if ($x == false) {
+        $val = $this->instance->get($key);
+        if ($val == false) {
             return null;
         } else {
-            return $this->decode($x);
+            return $this->decode($val);
         }
     }
 

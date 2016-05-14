@@ -182,7 +182,6 @@ class Driver extends DriverAbstract
      */
     public function __destruct()
     {
-        parent::__destruct();
         $this->instance->close();
     }
 }

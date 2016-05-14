@@ -452,12 +452,6 @@ class Driver extends DriverAbstract
     public function getStats()
     {
         $stat = new driverStatistic();
-
-        $res = [
-          'info' => '',
-          'size' => '',
-          'data' => '',
-        ];
         $total = 0;
         $optimized = 0;
 

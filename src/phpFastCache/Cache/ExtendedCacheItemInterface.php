@@ -23,7 +23,7 @@ use Psr\Cache\CacheItemInterface;
 interface ExtendedCacheItemInterface extends CacheItemInterface
 {
     /**
-     * @return bool
+     * @return mixed
      */
     public function getUncommittedData();
 

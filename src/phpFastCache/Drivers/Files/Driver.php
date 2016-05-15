@@ -287,13 +287,11 @@ class Driver extends DriverAbstract
         
         if (!is_dir($path)) {
             throw new phpFastCacheDriverException("Can't read PATH:" . $path, 94);
-        }else{
-            $size = Directory::dirSize($path);
         }
-
+        
         $stat->setData(implode(', ', array_keys($this->itemInstances)))
           ->setRawData($this->itemInstances)
-          ->setSize($size)
+          ->setSize(Directory::dirSize($path))
           ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($path));
 
         return $stat;

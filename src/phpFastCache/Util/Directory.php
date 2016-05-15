@@ -19,13 +19,24 @@ class Directory
     /**
      * Get the directory size
      * @param string $directory
+     * @param bool $includeDirAllocSize
      * @return integer
      */
-    public static function dirSize($directory)
+    public static function dirSize($directory, $includeDirAllocSize = false)
     {
         $size = 0;
         foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory)) as $file) {
-            $size += $file->getSize();
+            /**
+             * @var \SplFileInfo $file
+             */
+            if($file->isFile())
+            {
+                $size += filesize($file->getRealPath());
+            }
+            else if($includeDirAllocSize)
+            {
+                $size += $file->getSize();
+            }
         }
 
         return $size;
@@ -39,7 +50,7 @@ class Directory
     {
         $count = 0;
         $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::SELF_FIRST);
-        foreach($objects as $name => $object){
+        foreach($objects as $object){
             /**
              * @var \SplFileInfo $object
              */

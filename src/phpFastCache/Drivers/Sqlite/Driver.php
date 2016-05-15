@@ -88,7 +88,7 @@ class Driver extends DriverAbstract
      */
     public function getSqliteDir()
     {
-        return $this->SqliteDir ?: $this->getPath() . '/' . self::SQLITE_DIR;
+        return $this->SqliteDir ?: $this->getPath() . DIRECTORY_SEPARATOR . self::SQLITE_DIR;
     }
 
     /**
@@ -96,7 +96,7 @@ class Driver extends DriverAbstract
      */
     public function driverCheck()
     {
-        return extension_loaded('pdo_sqlite');
+        return extension_loaded('pdo_sqlite') || @mkdir($this->getFilesDir(), $this->setChmodAuto(), true);
     }
 
     /**

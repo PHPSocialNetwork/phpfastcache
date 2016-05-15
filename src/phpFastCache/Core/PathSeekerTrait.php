@@ -63,7 +63,7 @@ trait PathSeekerTrait
 
         $securityKey = $this->cleanFileName($securityKey);
 
-        $full_path = rtrim($path, '/') . '/' . $securityKey;
+        $full_path = rtrim($path, '/') .'/' . $securityKey;
         $full_pathx = md5($full_path);
 
 
@@ -125,7 +125,7 @@ trait PathSeekerTrait
      */
     private function getFilePath($keyword, $skip = false)
     {
-        $path = $this->getPath() . '/files';
+        $path = $this->getFilesDir();
 
         if($keyword === false)
         {

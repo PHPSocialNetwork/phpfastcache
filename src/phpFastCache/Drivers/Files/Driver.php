@@ -31,6 +31,10 @@ use Psr\Cache\CacheItemInterface;
 class Driver extends DriverAbstract
 {
     use PathSeekerTrait, StandardPsr6StructureTrait;
+    /**
+     *
+     */
+    const FILES_DIR = 'files';
 
     /**
      * Driver constructor.
@@ -51,7 +55,7 @@ class Driver extends DriverAbstract
      */
     public function driverCheck()
     {
-        return is_writable($this->getPath());
+        return is_writable($this->getFilesDir()) || @mkdir($this->getFilesDir(), $this->setChmodAuto(), true);
     }
 
     /**
@@ -239,6 +243,16 @@ class Driver extends DriverAbstract
             break;
         }
     }
+
+    /**
+     * @return string
+     * @throws \phpFastCache\Exceptions\phpFastCacheCoreException
+     */
+    public function getFilesDir()
+    {
+        return $this->getPath() . DIRECTORY_SEPARATOR . self::FILES_DIR;
+    }
+
     /**
      * @return array
      */

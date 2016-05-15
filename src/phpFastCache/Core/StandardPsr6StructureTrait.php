@@ -120,7 +120,13 @@ trait StandardPsr6StructureTrait
      */
     public function clear()
     {
-        return $this->driverClear();
+        if ($this->driverClear()) {
+            $this->itemInstances = [];
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -130,8 +136,10 @@ trait StandardPsr6StructureTrait
      */
     public function deleteItem($key)
     {
-        if ($this->hasItem($key)) {
-            return $this->driverDelete($this->getItem($key));
+        if ($this->hasItem($key) && $this->driverDelete($this->getItem($key))) {
+            unset($this->itemInstances[ $key ]);
+
+            return true;
         }
 
         return false;
@@ -162,6 +170,10 @@ trait StandardPsr6StructureTrait
      */
     public function save(CacheItemInterface $item)
     {
+        if (!array_key_exists($item->getKey(), $this->itemInstances)) {
+            $this->itemInstances[ $item->getKey() ] = $item;
+        }
+
         return $this->driverWrite($item) && $this->driverWriteTags($item);
     }
 
@@ -171,6 +183,10 @@ trait StandardPsr6StructureTrait
      */
     public function saveDeferred(CacheItemInterface $item)
     {
+        if (!array_key_exists($item->getKey(), $this->itemInstances)) {
+            $this->itemInstances[ $item->getKey() ] = $item;
+        }
+
         return $this->deferredList[ $item->getKey() ] = $item;
     }
 

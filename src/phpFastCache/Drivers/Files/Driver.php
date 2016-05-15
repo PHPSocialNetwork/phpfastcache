@@ -98,7 +98,7 @@ class Driver extends DriverAbstract
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $key
+     * @param string $key
      * @return mixed
      * @throws \InvalidArgumentException
      */

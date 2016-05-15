@@ -90,7 +90,7 @@ class Driver extends DriverAbstract
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @return bool|mixed|null
      * @throws \phpFastCache\Exceptions\phpFastCacheDriverException
      */

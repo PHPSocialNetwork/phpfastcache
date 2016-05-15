@@ -62,11 +62,6 @@ class Driver extends DriverAbstract
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            /*            if (isset($option[ 'skipExisting' ]) && $option[ 'skipExisting' ] == true) {
-                            return wincache_ucache_add($keyword, $value, $time);
-                        } else {
-                            return wincache_ucache_set($keyword, $value, $time);
-                        }*/
             return wincache_ucache_set($item->getKey(), $this->driverPreWrap($item), $item->getTtl());
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
@@ -74,7 +69,7 @@ class Driver extends DriverAbstract
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @return mixed
      */
     public function driverRead($key)

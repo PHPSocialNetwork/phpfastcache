@@ -74,7 +74,7 @@ class Driver extends DriverAbstract
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @return mixed
      */
     public function driverRead($key)

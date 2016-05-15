@@ -277,6 +277,7 @@ class Driver extends DriverAbstract
 
         $total = 0;
         $removed = 0;
+        $content = [];
         while ($file = readdir($dir)) {
             if ($file != '.' && $file != '..' && is_dir($path . '/' . $file)) {
                 // read sub dir

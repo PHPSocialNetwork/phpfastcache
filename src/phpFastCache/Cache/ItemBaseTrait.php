@@ -380,13 +380,13 @@ trait ItemBaseTrait
     /**
      * @throws \RuntimeException
      */
-    final public function __sleep()
+/*    final public function __sleep()
     {
         $info = get_object_vars($this);
         $info[ 'driver' ] = 'object(' . get_class($info[ 'driver' ]) . ')';
 
         return (array) $info;
-    }
+    }*/
 
     /**
      * Prevent recursions for Debug (php 5.6+)

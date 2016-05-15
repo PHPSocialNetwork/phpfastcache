@@ -335,22 +335,22 @@ trait DriverBaseTrait
      * Serialization protection for frameworks
      * with profiler such as Symfony, etc.
      */
-    public function __sleep()
+/*    public function __sleep()
     {
         $this->itemInstances = array_keys($this->itemInstances);
         return (array) array_keys(get_object_vars($this));
-    }
+    }*/
 
     /**
      * Serialization protection for frameworks
      * with profiler such as Symfony, etc.
      */
-    public function __wakeup()
+/*    public function __wakeup()
     {
         $itemInstances = $this->itemInstances;
         $this->itemInstances = [];
         foreach ($itemInstances as $itemInstance) {
             $this->itemInstances[$itemInstance] = $this->getItem($itemInstance);
         }
-    }
+    }*/
 }

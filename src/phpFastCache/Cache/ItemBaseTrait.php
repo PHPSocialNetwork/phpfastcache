@@ -382,7 +382,10 @@ trait ItemBaseTrait
      */
     final public function __sleep()
     {
-        throw new \RuntimeException('phpFastCache Item entities cannot be serialized. Use CacheItemPoolInterface::saved() instead.');
+        $info = get_object_vars($this);
+        $info[ 'driver' ] = 'object(' . get_class($info[ 'driver' ]) . ')';
+
+        return (array) $info;
     }
 
     /**

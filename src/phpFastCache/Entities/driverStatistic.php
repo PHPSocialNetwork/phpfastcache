@@ -44,7 +44,7 @@ class driverStatistic implements ArrayAccess
     protected $rawData;
 
     /**
-     * @return string or false if no information available
+     * @return string|bool Return infos or false if no information available
      */
     public function getInfo()
     {
@@ -52,7 +52,7 @@ class driverStatistic implements ArrayAccess
     }
 
     /**
-     * @return string or false if no size available
+     * @return int|bool Return size in octet or false if no information available
      */
     public function getSize()
     {
@@ -60,7 +60,7 @@ class driverStatistic implements ArrayAccess
     }
 
     /**
-     * @return string or false if no data available
+     * @return mixed
      */
     public function getData()
     {
@@ -80,7 +80,7 @@ class driverStatistic implements ArrayAccess
 
 
     /**
-     * @param $size
+     * @param int $size
      * @return $this
      */
     public function setSize($size)
@@ -91,7 +91,7 @@ class driverStatistic implements ArrayAccess
     }
 
     /**
-     * @param $data
+     * @param mixed $data
      * @return $this
      */
     public function setData($data)

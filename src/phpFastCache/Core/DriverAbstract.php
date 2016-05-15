@@ -70,5 +70,4 @@ abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
      * @return bool
      */
     abstract public function driverIsHit(CacheItemInterface $item);
-
 }

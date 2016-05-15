@@ -291,7 +291,8 @@ class Driver extends DriverAbstract
             $size = Directory::dirSize($path);
         }
 
-        $stat->setData('')
+        $stat->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setRawData($this->itemInstances)
           ->setSize($size)
           ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($path));
 

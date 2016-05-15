@@ -21,6 +21,7 @@ use phpFastCache\Core\StandardPsr6StructureTrait;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
+use phpFastCache\Util\Directory;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -153,7 +154,7 @@ class Driver extends DriverAbstract
     public function driverClear()
     {
         $return = null;
-        $path = $this->getPath();
+        $path = $this->getFilePath(false);
         $dir = @opendir($path);
         if (!$dir) {
             throw new phpFastCacheDriverException("Can't read PATH:" . $path);
@@ -268,55 +269,17 @@ class Driver extends DriverAbstract
     public function getStats()
     {
         $stat = new driverStatistic();
-
-        $path = $this->getPath();
-        $dir = @opendir($path);
-        if (!$dir) {
+        $path = $this->getFilePath(false);
+        
+        if (!is_dir($path)) {
             throw new phpFastCacheDriverException("Can't read PATH:" . $path, 94);
+        }else{
+            $size = Directory::dirSize($path);
         }
 
-        $total = 0;
-        $removed = 0;
-        $content = [];
-        while ($file = readdir($dir)) {
-            if ($file != '.' && $file != '..' && is_dir($path . '/' . $file)) {
-                // read sub dir
-                $subdir = opendir($path . "/" . $file);
-                if (!$subdir) {
-                    throw new phpFastCacheDriverException("Can't read path:" . $path . '/' . $file);
-                }
-
-                while ($subdirFile = readdir($subdir)) {
-                    if ($subdirFile != '.' && $subdirFile != '..') {
-                        $file_path = $path . '/' . $file . '/' . $subdirFile;
-                        $size = filesize($file_path);
-                        $object = $this->decode($this->readfile($file_path));
-
-                        if (strpos($subdirFile, '.') === false) {
-                            $key = $subdirFile;
-                        } else {
-                            $key = explode('.', $subdirFile)[ 0 ];
-                        }
-                        $content[ $key ] = [
-                          'size' => $size,
-                          'write_time' => (isset($object[ 'write_time' ]) ? $object[ 'write_time' ] : null),
-                        ];
-                        if ($object->isExpired()) {
-                            @unlink($file_path);
-                            $removed += $size;
-                        }
-                        $total += $size;
-                    }
-                }
-            }
-        }
-
-        $stat->setData($content)
-          ->setSize($total - $removed)
-          ->setInfo('Total [bytes]: ' . $total . ', '
-            . 'Expired and removed [bytes]: ' . $removed . ', '
-            . 'Current [bytes], ' . $total - $removed
-          );
+        $stat->setData('')
+          ->setSize($size)
+          ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($path));
 
         return $stat;
     }

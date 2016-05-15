@@ -125,7 +125,12 @@ trait PathSeekerTrait
      */
     private function getFilePath($keyword, $skip = false)
     {
-        $path = $this->getPath();
+        $path = $this->getPath() . '/files';
+
+        if($keyword === false)
+        {
+            return $path;
+        }
 
         $filename = $this->encodeFilename($keyword);
         $folder = substr($filename, 0, 2);

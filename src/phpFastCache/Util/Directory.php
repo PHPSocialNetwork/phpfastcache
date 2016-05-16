@@ -86,7 +86,7 @@ class Directory
           new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS),
           RecursiveIteratorIterator::CHILD_FIRST
         );
-        
+
         foreach ($files as $fileinfo) {
             /**
              * @var SplFileInfo $fileinfo
@@ -95,10 +95,8 @@ class Directory
                 if (self::rrmdir($fileinfo->getRealPath()) === false) {
                     return false;
                 }
-            } else {
-                if (unlink($fileinfo->getRealPath()) === false) {
-                    return false;
-                }
+            } else if(unlink($fileinfo->getRealPath()) === false) {
+                return false;
             }
         }
 

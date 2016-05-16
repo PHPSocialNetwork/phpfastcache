@@ -15,6 +15,7 @@
 namespace phpFastCache\Core;
 
 use phpFastCache\Cache\ExtendedCacheItemInterface;
+use phpFastCache\CacheManager;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -45,13 +46,15 @@ trait StandardPsr6StructureTrait
         if (is_string($key)) {
             if (!array_key_exists($key, $this->itemInstances)) {
                 //(new \ReflectionObject($this))->getNamespaceName()
-
+                
                 /**
                  * @var $item ExtendedCacheItemInterface
                  */
+                CacheManager::$ReadHits++;
                 $class = new \ReflectionClass((new \ReflectionObject($this))->getNamespaceName() . '\Item');
                 $item = $class->newInstanceArgs([$this, $key]);
                 $driverArray = $this->driverRead($key);
+                //var_dump($driverArray);exit;
                 if ($driverArray) {
                     $item->set($this->driverUnwrapData($driverArray));
                     $item->expiresAt($this->driverUnwrapTime($driverArray));
@@ -112,6 +115,7 @@ trait StandardPsr6StructureTrait
      */
     public function hasItem($key)
     {
+        CacheManager::$ReadHits++;
         return $this->getItem($key)->isHit();
     }
 
@@ -121,6 +125,7 @@ trait StandardPsr6StructureTrait
     public function clear()
     {
         if ($this->driverClear()) {
+            CacheManager::$WriteHits++;
             $this->itemInstances = [];
 
             return true;
@@ -137,6 +142,7 @@ trait StandardPsr6StructureTrait
     public function deleteItem($key)
     {
         if ($this->hasItem($key) && $this->driverDelete($this->getItem($key))) {
+            CacheManager::$WriteHits++;
             unset($this->itemInstances[ $key ]);
 
             return true;
@@ -173,8 +179,13 @@ trait StandardPsr6StructureTrait
         if (!array_key_exists($item->getKey(), $this->itemInstances)) {
             $this->itemInstances[ $item->getKey() ] = $item;
         }
+        if($this->driverWrite($item) && $this->driverWriteTags($item))
+        {
+            CacheManager::$WriteHits++;
+            return true;
+        }
 
-        return $this->driverWrite($item) && $this->driverWriteTags($item);
+        return false;
     }
 
     /**

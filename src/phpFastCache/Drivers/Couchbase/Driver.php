@@ -124,7 +124,7 @@ class Driver extends DriverAbstract
      */
     public function driverClear()
     {
-        return $this->getBucket()->flush();
+        return $this->getBucket()->manager()->flush();
     }
 
     /**
@@ -149,7 +149,6 @@ class Driver extends DriverAbstract
             ];
 
             $this->instance = $this->instance ?: new CouchbaseClient("couchbase://{$host}", $username, $password);
-
 
             foreach ($buckets as $bucket) {
                 $this->bucketCurrent = $this->bucketCurrent ?: $bucket[ 'bucket' ];
@@ -208,6 +207,11 @@ class Driver extends DriverAbstract
      */
     public function getStats()
     {
-        return (new driverStatistic())->setInfo(implode('<br />', (array) $this->instance->info()));
+        $info = $this->getBucket()->manager()->info();
+        return (new driverStatistic())
+          ->setSize($info['basicStats']['diskUsed'])
+          ->setRawData($info)
+          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setInfo('CouchBase version ' . $info[ 'nodes' ][0]['version'] . ', Uptime (in days): ' . round($info[ 'nodes' ][0][ 'uptime' ] / 86400, 1). "\n For more information see RawData.");
     }
 }

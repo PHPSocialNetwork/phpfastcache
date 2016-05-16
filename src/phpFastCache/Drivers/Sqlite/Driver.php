@@ -23,6 +23,7 @@ use phpFastCache\Core\StandardPsr6StructureTrait;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
+use phpFastCache\Util\Directory;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -36,7 +37,7 @@ class Driver extends DriverAbstract
     /**
      *
      */
-    const SQLITE_DIR = 'sqlite';
+    const FILE_DIR = 'sqlite';
     /**
      *
      */
@@ -88,7 +89,7 @@ class Driver extends DriverAbstract
      */
     public function getSqliteDir()
     {
-        return $this->SqliteDir ?: $this->getPath() . DIRECTORY_SEPARATOR . self::SQLITE_DIR;
+        return $this->SqliteDir ?: $this->getPath() . DIRECTORY_SEPARATOR . self::FILE_DIR;
     }
 
     /**
@@ -398,13 +399,13 @@ class Driver extends DriverAbstract
      */
     public function driverConnect()
     {
-        if (!file_exists($this->getPath() . '/' . self::SQLITE_DIR)) {
-            if (!mkdir($this->getPath() . '/' . self::SQLITE_DIR, $this->setChmodAuto(), true)
+        if (!file_exists($this->getPath() . '/' . self::FILE_DIR)) {
+            if (!mkdir($this->getPath() . '/' . self::FILE_DIR, $this->setChmodAuto(), true)
             ) {
                 $this->fallback = true;
             }
         }
-        $this->SqliteDir = $this->getPath() . '/' . self::SQLITE_DIR;
+        $this->SqliteDir = $this->getPath() . '/' . self::FILE_DIR;
     }
 
     /**
@@ -451,41 +452,25 @@ class Driver extends DriverAbstract
     public function getStats()
     {
         $stat = new driverStatistic();
-        $total = 0;
-        $optimized = 0;
+        $path = $this->getFilePath(false);
 
-        $dir = opendir($this->getSqliteDir());
-        while ($file = readdir($dir)) {
-            if ($file != '.' && $file != '..') {
-                $file_path = $this->getSqliteDir() . "/" . $file;
-                $size = filesize($file_path);
-                $total = $total + $size;
-
-                try {
-                    $PDO = new PDO("sqlite:" . $file_path);
-                    $PDO->setAttribute(PDO::ATTR_ERRMODE,
-                      PDO::ERRMODE_EXCEPTION);
-
-                    $stm = $PDO->prepare("DELETE FROM `caching` WHERE `exp` <= :U");
-                    $stm->execute([
-                      ':U' => date('U'),
-                    ]);
-
-                    $PDO->exec('VACUUM;');
-                    $size = filesize($file_path);
-                    $optimized = $optimized + $size;
-                } catch (PDOException $e) {
-                    $size = 0;
-                    $optimized = 0;
-                }
-            }
+        if (!is_dir($path)) {
+            throw new phpFastCacheDriverException("Can't read PATH:" . $path, 94);
         }
 
-        $stat->setSize($optimized)
-          ->setInfo('Total before removing expired entries [bytes]: ' . $total . ', '
-            . 'Optimized after removing expired entries [bytes]: ' . $optimized
-          );
+        $stat->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setRawData([])
+          ->setSize(Directory::dirSize($path))
+          ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($path));
 
         return $stat;
+    }
+
+    /**
+     * @return array
+     */
+    public function __sleep()
+    {
+        return array_diff(array_keys(get_object_vars($this)), array('indexing', 'instance'));
     }
 }

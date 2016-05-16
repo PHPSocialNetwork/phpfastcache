@@ -195,6 +195,9 @@ class Driver extends DriverAbstract
      */
     public function getStats()
     {
-        return (new driverStatistic())->setInfo(implode('<br />', (array) $this->instance->info()));
+        return (new driverStatistic())
+          ->setRawData($this->instance->info())
+          ->setSize(0)
+          ->setInfo('');
     }
 }

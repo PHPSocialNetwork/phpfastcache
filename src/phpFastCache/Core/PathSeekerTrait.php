@@ -30,7 +30,7 @@ trait PathSeekerTrait
      * @return string
      * @throws \Exception
      */
-    public function getPath()
+    public function getPath($getBasePath = false)
     {
         $tmp_dir = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
 
@@ -48,6 +48,11 @@ trait PathSeekerTrait
 
         } else {
             $path = $this->config[ 'path' ];
+        }
+
+        if($getBasePath === true)
+        {
+            return $path;
         }
 
         $securityKey = array_key_exists('securityKey', $this->config) ? $this->config[ 'securityKey' ] : '';
@@ -117,6 +122,16 @@ trait PathSeekerTrait
         return true;
     }
 
+
+    /**
+     * @return string
+     * @throws \phpFastCache\Exceptions\phpFastCacheCoreException
+     */
+    public function getFileDir()
+    {
+        return $this->getPath() . DIRECTORY_SEPARATOR . self::FILE_DIR;
+    }
+
     /**
      * @param $keyword
      * @param bool $skip
@@ -125,7 +140,7 @@ trait PathSeekerTrait
      */
     private function getFilePath($keyword, $skip = false)
     {
-        $path = $this->getFilesDir();
+        $path = $this->getFileDir();
 
         if($keyword === false)
         {

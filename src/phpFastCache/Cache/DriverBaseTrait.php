@@ -120,12 +120,7 @@ trait DriverBaseTrait
      */
     protected function decode($value)
     {
-        $x = @unserialize($value);
-        if ($x == false) {
-            return $value;
-        } else {
-            return $x;
-        }
+        return @unserialize($value);
     }
 
     /**

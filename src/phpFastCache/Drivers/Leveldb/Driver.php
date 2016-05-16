@@ -20,6 +20,7 @@ use phpFastCache\Core\StandardPsr6StructureTrait;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
+use phpFastCache\Util\Directory;
 use Psr\Cache\CacheItemInterface;
 use LevelDB as LeveldbClient;
 
@@ -31,7 +32,7 @@ class Driver extends DriverAbstract
 {
     use PathSeekerTrait, StandardPsr6StructureTrait;
 
-    const LEVELDB_FILENAME = 'phpfastcache.db';
+    const LEVELDB_FILENAME = '.database';
 
     /**
      * @var LeveldbClient Instance of driver service
@@ -174,7 +175,10 @@ class Driver extends DriverAbstract
      */
     public function getStats()
     {
-        return (new driverStatistic())->setSize(filesize($this->getLeveldbFile()));
+        return (new driverStatistic())
+          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($this->getLeveldbFile()))
+          ->setSize(Directory::dirSize($this->getLeveldbFile()));
     }
 
     /**

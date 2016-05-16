@@ -175,6 +175,12 @@ class Driver extends DriverAbstract
      */
     public function getStats()
     {
-        return (new driverStatistic())->setInfo(implode('<br />', (array) $this->instance->getstats()));
+        $stats = (array) $this->instance->getstats();
+        $date = (new \DateTime())->setTimestamp(time() - $stats['uptime']);
+        return (new driverStatistic())
+          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setInfo(sprintf("The memcache daemon v%s is up since %s.\n For more information see RawData.", $stats['version'], $date->format(DATE_RFC2822)))
+          ->setRawData($stats)
+          ->setSize($stats['bytes']);
     }
 }

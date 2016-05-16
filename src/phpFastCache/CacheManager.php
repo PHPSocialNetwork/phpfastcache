@@ -39,36 +39,31 @@ use CouchbaseCluster;
 class CacheManager
 {
     /**
-     * @var bool
+     * @var int
      */
-    public static $disabled = false;
+    public static $ReadHits = 0;
+
+    /**
+     * @var int
+     */
+    public static $WriteHits = 0;
 
     /**
      * @var array
      */
     public static $config = [
-      'default_chmod' => 0777, // 0777 , 0666, 0644
-
-      'overwrite' => "", // files, sqlite, etc it will overwrite ur storage and all other caching for waiting u fix ur server
-      'allow_search' => false, // turn to true will allow $method search("/regex/")
-
+      'default_chmod' => 0777, // 0777 recommended
       'fallback' => 'files', //Fall back when old driver is not support
-
       'securityKey' => 'auto',
       'htaccess' => true,
-      'path' => '',
-
-
-      'extensions' => [],
-      "cache_method" => 2, // 1 = normal, 2 = phpfastcache, 3 = memory
-      "limited_memory_each_object" => 4000, // maximum size (bytes) of object store in memory
+      'path' => '',// if not set will be the value of sys_get_temp_dir()
+      "limited_memory_each_object" => 4096, // maximum size (bytes) of object store in memory
       "compress_data" => false, // compress stored data, if the backend supports it
     ];
 
     /**
      * @var array
      */
-    protected static $tmp = [];
 
     protected static $namespacePath;
     protected static $instances = [];
@@ -91,8 +86,8 @@ class CacheManager
             $class = self::getNamespacePath() . $driver . '\Driver';
             self::$instances[ $instance ] = new $class($config);
         } else {
-            trigger_error('Calling CacheManager::getInstance for already instanced drivers is a bad practice and have a significant impact on performances.
-            See https://github.com/PHPSocialNetwork/phpfastcache/wiki/[V5]-Why-calling-getInstance%28%29-each-time-is-a-bad-practice-%3F');
+           // trigger_error('[' . $driver . '] Calling CacheManager::getInstance for already instanced drivers is a bad practice and have a significant impact on performances.
+           // See https://github.com/PHPSocialNetwork/phpfastcache/wiki/[V5]-Why-calling-getInstance%28%29-each-time-is-a-bad-practice-%3F');
         }
 
         return self::$instances[ $instance ];
@@ -106,26 +101,9 @@ class CacheManager
     public static function getAutoClass($config)
     {
         static $autoDriver;
-        $systemDrivers = [
-          'Sqlite',
-          'Files',
-          'Apc',
-          'Apcu',
-          'Memcache',
-          'Memcached',
-          'Couchbase',
-          'Mongodb',
-          'Predis',
-          'Redis',
-          'Ssdb',
-          'Leveldb',
-          'Wincache',
-          'Xcache',
-          'Devnull',
-        ];
 
         if ($autoDriver === null) {
-            foreach ($systemDrivers as $driver) {
+            foreach (self::getStaticSystemDrivers() as $driver) {
                 try {
                     self::getInstance($driver, $config);
                     $autoDriver = $driver;
@@ -189,5 +167,41 @@ class CacheManager
         } else {
             self::$config[ $name ] = $value;
         }
+    }
+
+    /**
+     * @return array
+     */
+    public static function getStaticSystemDrivers()
+    {
+        return [
+          'Sqlite',
+          'Files',
+          'Apc',
+          'Apcu',
+          'Memcache',
+          'Memcached',
+          'Couchbase',
+          'Mongodb',
+          'Predis',
+          'Redis',
+          'Ssdb',
+          'Leveldb',
+          'Wincache',
+          'Xcache',
+          'Devnull',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getStaticAllDrivers()
+    {
+        return array_merge(self::getStaticSystemDrivers(), [
+            'Devtrue',
+            'Devfalse',
+            'Cookie',
+        ]);
     }
 }

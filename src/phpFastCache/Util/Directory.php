@@ -13,6 +13,9 @@
  */
 namespace phpFastCache\Util;
 
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use SplFileInfo;
 
 class Directory
 {
@@ -25,16 +28,13 @@ class Directory
     public static function dirSize($directory, $includeDirAllocSize = false)
     {
         $size = 0;
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory)) as $file) {
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)) as $file) {
             /**
              * @var \SplFileInfo $file
              */
-            if($file->isFile())
-            {
+            if ($file->isFile()) {
                 $size += filesize($file->getRealPath());
-            }
-            else if($includeDirAllocSize)
-            {
+            } else if ($includeDirAllocSize) {
                 $size += $file->getSize();
             }
         }
@@ -49,16 +49,63 @@ class Directory
     public static function getFileCount($path)
     {
         $count = 0;
-        $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::SELF_FIRST);
-        foreach($objects as $object){
+        $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($objects as $object) {
             /**
              * @var \SplFileInfo $object
              */
-            if($object->isFile())
-            {
+            if ($object->isFile()) {
                 $count++;
             }
         }
+
         return $count;
+    }
+
+    /**
+     * Recursively delete a directory and all of it's contents - e.g.the equivalent of `rm -r` on the command-line.
+     * Consistent with `rmdir()` and `unlink()`, an E_WARNING level error will be generated on failure.
+     *
+     * @param string $source absolute path to directory or file to delete.
+     * @param bool $removeOnlyChildren set to true will only remove content inside directory.
+     *
+     * @return bool true on success; false on failure
+     */
+    public static function rrmdir($source, $removeOnlyChildren = false)
+    {
+        if (empty($source) || file_exists($source) === false) {
+            return false;
+        }
+
+        if (is_file($source) || is_link($source)) {
+            return unlink($source);
+        }
+
+        $files = new RecursiveIteratorIterator
+        (
+          new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS),
+          RecursiveIteratorIterator::CHILD_FIRST
+        );
+        
+        foreach ($files as $fileinfo) {
+            /**
+             * @var SplFileInfo $fileinfo
+             */
+            if ($fileinfo->isDir()) {
+                if (self::rrmdir($fileinfo->getRealPath()) === false) {
+                    return false;
+                }
+            } else {
+                if (unlink($fileinfo->getRealPath()) === false) {
+                    return false;
+                }
+            }
+        }
+
+        if ($removeOnlyChildren === false) {
+            return rmdir($source);
+        }
+
+        return true;
     }
 }

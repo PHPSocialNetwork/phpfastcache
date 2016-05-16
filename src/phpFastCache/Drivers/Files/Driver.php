@@ -34,7 +34,7 @@ class Driver extends DriverAbstract
     /**
      *
      */
-    const FILES_DIR = 'files';
+    const FILE_DIR = 'files';
 
     /**
      * Driver constructor.
@@ -55,7 +55,7 @@ class Driver extends DriverAbstract
      */
     public function driverCheck()
     {
-        return is_writable($this->getFilesDir()) || @mkdir($this->getFilesDir(), $this->setChmodAuto(), true);
+        return is_writable($this->getFileDir()) || @mkdir($this->getFileDir(), $this->setChmodAuto(), true);
     }
 
     /**
@@ -157,34 +157,7 @@ class Driver extends DriverAbstract
      */
     public function driverClear()
     {
-        $return = null;
-        $path = $this->getFilePath(false);
-        $dir = @opendir($path);
-        if (!$dir) {
-            throw new phpFastCacheDriverException("Can't read PATH:" . $path);
-        }
-
-        while ($file = readdir($dir)) {
-            if ($file != '.' && $file != '..' && is_dir($path . '/' . $file)) {
-                // read sub dir
-                $subdir = @opendir($path . '/' . $file);
-                if (!$subdir) {
-                    throw new phpFastCacheDriverException("Can't read path:" . $path . '/' . $file);
-                }
-
-                while ($subdirFile = readdir($subdir)) {
-                    if ($subdirFile != '.' && $subdirFile != '..') {
-                        $file_path = $path . '/' . $file . '/' . $subdirFile;
-                        $result = @unlink($file_path);
-                        if ($return !== false) {
-                            $return = $result;
-                        }
-                    }
-                }
-            }
-        }
-
-        return (bool) $return;
+        return (bool) Directory::rrmdir($this->getPath(true));
     }
 
     /**
@@ -245,15 +218,6 @@ class Driver extends DriverAbstract
     }
 
     /**
-     * @return string
-     * @throws \phpFastCache\Exceptions\phpFastCacheCoreException
-     */
-    public function getFilesDir()
-    {
-        return $this->getPath() . DIRECTORY_SEPARATOR . self::FILES_DIR;
-    }
-
-    /**
      * @return array
      */
     public static function getValidOptions()
@@ -288,9 +252,9 @@ class Driver extends DriverAbstract
         if (!is_dir($path)) {
             throw new phpFastCacheDriverException("Can't read PATH:" . $path, 94);
         }
-        
+
         $stat->setData(implode(', ', array_keys($this->itemInstances)))
-          ->setRawData($this->itemInstances)
+          ->setRawData([])
           ->setSize(Directory::dirSize($path))
           ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($path));
 

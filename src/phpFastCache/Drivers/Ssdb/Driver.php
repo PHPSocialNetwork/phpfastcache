@@ -201,9 +201,16 @@ class Driver extends DriverAbstract
     public function getStats()
     {
         $stat = new driverStatistic();
+        $info = $this->instance->info();
 
-        $stat->setInfo($this->instance->info());
-        $stat->setSize($this->instance->dbsize());
+        /**
+         * Data returned by Ssdb are very poorly formatted
+         * using hardcoded offset of pair key-value :-(
+         */
+        $stat->setInfo(sprintf("Ssdb-server v%s with a total of %s call(s).\n For more information see RawData.", $info[2], $info[6]))
+            ->setRawData($info)
+            ->setData(implode(', ', array_keys($this->itemInstances)))
+            ->setSize($this->instance->dbsize());
 
         return $stat;
     }

@@ -81,8 +81,9 @@ class Driver extends DriverAbstract
                   ['_id' => $item->getKey()],
                   [
                     '$set' => [
-                      self::DRIVER_TIME_WRAPPER_INDEX => ($item->getTtl() > 0 ? new MongoDate(time() + $item->getTtl()) : null),
+                      self::DRIVER_TIME_WRAPPER_INDEX => ($item->getTtl() > 0 ? new MongoDate(time() + $item->getTtl()) : new MongoDate(time())),
                       self::DRIVER_DATA_WRAPPER_INDEX => new MongoBinData($this->encode($item->get()), MongoBinData::BYTE_ARRAY),
+                      self::DRIVER_TAGS_WRAPPER_INDEX => new MongoBinData($this->encode($item->getTags()), MongoBinData::BYTE_ARRAY),
                     ],
                   ],
                   ['upsert' => true, 'multiple' => false]
@@ -103,11 +104,13 @@ class Driver extends DriverAbstract
      */
     public function driverRead($key)
     {
-        $document = $this->getCollection()->findOne(['_id' => $key], [self::DRIVER_DATA_WRAPPER_INDEX, self::DRIVER_TIME_WRAPPER_INDEX  /*'d', 'e'*/]);
+        $document = $this->getCollection()->findOne(['_id' => $key], [self::DRIVER_DATA_WRAPPER_INDEX, self::DRIVER_TIME_WRAPPER_INDEX, self::DRIVER_TAGS_WRAPPER_INDEX  /*'d', 'e'*/]);
+
         if ($document) {
             return [
               self::DRIVER_DATA_WRAPPER_INDEX => $this->decode($document[ self::DRIVER_DATA_WRAPPER_INDEX ]->bin),
               self::DRIVER_TIME_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[ self::DRIVER_TIME_WRAPPER_INDEX ]->sec),
+              self::DRIVER_TAGS_WRAPPER_INDEX => $this->decode($document[ self::DRIVER_TAGS_WRAPPER_INDEX ]->bin),
             ];
         } else {
             return null;
@@ -165,8 +168,8 @@ class Driver extends DriverAbstract
               ($username ?: '') .
               ($password ? ":{$password}" : '') .
               ($username ? '@' : '') . "{$host}" .
-              ($port != '27017' ? ":{$port}" : ''), ['timeout' => $timeout * 1000]))->phpFastCache;
-            $this->instance->Cache->createIndex([self::DRIVER_TIME_WRAPPER_INDEX => 1], ['expireAfterSeconds' => 0]);
+              ($port != '27017' ? ":{$port}" : ''), ['connectTimeoutMS' => $timeout * 1000]))->phpFastCache;
+            // $this->instance->Cache->createIndex([self::DRIVER_TIME_WRAPPER_INDEX => 1], ['expireAfterSeconds' => 0]);
         }
     }
 
@@ -211,14 +214,16 @@ class Driver extends DriverAbstract
           'repl' => 0,
           'metrics' => 0,
         ]);
+
         $collStats = $this->getCollection()->db->command([
           'collStats' => 'Cache',
           'verbose' => true,
         ]);
 
         $stats = (new driverStatistic())
-          ->setInfo('MongoDB version ' . $serverStatus[ 'version' ] . ', Uptime (in days): ' . round($serverStatus[ 'uptime' ] / 86400, 1))
+          ->setInfo('MongoDB version ' . $serverStatus[ 'version' ] . ', Uptime (in days): ' . round($serverStatus[ 'uptime' ] / 86400, 1) . "\n For more information see RawData.")
           ->setSize((int) $collStats[ 'size' ])
+          ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setRawData([
             'serverStatus' => $serverStatus,
             'collStats' => $collStats,

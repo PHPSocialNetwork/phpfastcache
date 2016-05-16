@@ -62,10 +62,13 @@ class CacheManager
     ];
 
     /**
+     * @var string
+     */
+    protected static $namespacePath;
+
+    /**
      * @var array
      */
-
-    protected static $namespacePath;
     protected static $instances = [];
 
     /**

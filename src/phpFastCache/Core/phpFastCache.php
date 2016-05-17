@@ -182,7 +182,7 @@ class phpFastCache
             $securityKey = self::$config[ 'securityKey' ];
             if ($securityKey == 'auto' || $securityKey == '') {
                 $securityKey = isset($_SERVER[ 'HTTP_HOST' ]) ? preg_replace('/^www./',
-                  '', strtolower($_SERVER[ 'HTTP_HOST' ])) : "default";
+                  '', strtolower(str_replace(':', '_', $_SERVER[ 'HTTP_HOST' ]))) : "default";
             }
         }
         if ($securityKey != '') {

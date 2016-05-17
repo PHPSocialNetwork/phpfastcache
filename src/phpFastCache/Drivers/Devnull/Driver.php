@@ -139,9 +139,10 @@ class Driver extends DriverAbstract
     public function getStats()
     {
         $stat = new driverStatistic();
-        $stat->setInfo('A void info string')
-          ->setSize(1337)
-          ->setData('A void data string');
+        $stat->setInfo('[Devnull] A void info string')
+          ->setSize(0)
+          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setRawData(null);
 
         return $stat;
     }

@@ -149,8 +149,6 @@ class Driver extends DriverAbstract
      */
     public function getStats()
     {
-        $stat = new driverStatistic();
-
         $stats = (array) apc_cache_info('user');
         $date = (new \DateTime())->setTimestamp($stats['start_time']);
         return (new driverStatistic())

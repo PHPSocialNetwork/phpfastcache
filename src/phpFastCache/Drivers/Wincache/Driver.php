@@ -144,6 +144,10 @@ class Driver extends DriverAbstract
      */
     public function getStats()
     {
-        return (new driverStatistic())->setInfo(wincache_scache_info());
+        return (new driverStatistic())
+          ->setInfo('There is currently no info available for this driver :/')
+          ->setSize(0)
+          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setRawData(wincache_scache_info());
     }
 }

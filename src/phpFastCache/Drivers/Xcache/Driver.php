@@ -62,13 +62,6 @@ class Driver extends DriverAbstract
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            /*            if (isset($option[ 'skipExisting' ]) && $option[ 'skipExisting' ] == true) {
-                            if (!$this->isExisting($keyword)) {
-                                return xcache_set($keyword, serialize($value), $time);
-                            }
-                        } else {
-                            return xcache_set($keyword, serialize($value), $time);
-                        }*/
             return xcache_set($item->getKey(), $this->encode($this->driverPreWrap($item)), $item->getTtl());
 
         } else {
@@ -156,6 +149,22 @@ class Driver extends DriverAbstract
      */
     public function getStats()
     {
-        return (new driverStatistic())->setInfo(implode('<br />', (array) xcache_list(XC_TYPE_VAR, 100)));
+        if(!ini_get('xcache.admin.enable_auth'))
+        {
+            $info = xcache_info(XC_TYPE_VAR, 0);
+
+            return (new driverStatistic())
+              ->setSize(abs($info['size'] - $info['avail']))
+              ->setData(implode(', ', array_keys($this->itemInstances)))
+              ->setInfo(sprintf("Xcache v%s with following modules loaded:\n %s", XCACHE_VERSION, str_replace(' ', ', ', XCACHE_MODULES)))
+              ->setRawData($info);
+        }
+        else
+        {
+            throw new \RuntimeException("PhpFastCache is not able to read Xcache configuration. Please put this to your php.ini:\n
+            [xcache.admin]
+            xcache.admin.enable_auth = Off\n
+            Then reboot your webserver and make sure that the native Xcache ini configuration file does not override your setting.");
+        }
     }
 }

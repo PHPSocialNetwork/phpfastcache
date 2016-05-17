@@ -16,6 +16,7 @@ namespace phpFastCache\Drivers\Memcached;
 
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\MemcacheDriverCollisionDetectorTrait;
+use phpFastCache\Core\StandardPsr6StructureTrait;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
@@ -28,11 +29,7 @@ use Memcached as MemcachedSoftware;
  */
 class Driver extends DriverAbstract
 {
-    use MemcacheDriverCollisionDetectorTrait;
-    /**
-     * @var array
-     */
-    protected $deferredList = [];
+    use MemcacheDriverCollisionDetectorTrait, StandardPsr6StructureTrait;
 
     /**
      * Driver constructor.
@@ -167,150 +164,6 @@ class Driver extends DriverAbstract
 
     /********************
      *
-     * PSR-6 Methods
-     *
-     *******************/
-
-    /**
-     * @param string $key
-     * @return \phpFastCache\Cache\ExtendedCacheItemInterface
-     * @throws \InvalidArgumentException
-     */
-    public function getItem($key)
-    {
-        if (is_string($key)) {
-            if (!array_key_exists($key, $this->itemInstances)) {
-                new Item($this, $key);
-            }
-        } else {
-            throw new \InvalidArgumentException(sprintf('$key must be a string, got type "%s" instead.',
-              gettype($key)));
-        }
-
-        return $this->itemInstances[ $key ];
-    }
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return $this
-     * @throws \InvalidArgumentException
-     */
-    public function setItem(CacheItemInterface $item)
-    {
-        if (__NAMESPACE__ . '\\Item' === get_class($item)) {
-            $this->itemInstances[ $item->getKey() ] = $item;
-
-            return $this;
-        } else {
-            throw new \InvalidArgumentException(sprintf('Invalid Item Class "%s" for this driver.',
-              get_class($item)));
-        }
-    }
-
-    /**
-     * @param array $keys
-     * @return CacheItemInterface[]
-     * @throws \InvalidArgumentException
-     */
-    public function getItems(array $keys = [])
-    {
-        $collection = [];
-        foreach ($keys as $key) {
-            $collection[ $key ] = $this->getItem($key);
-        }
-
-        return $collection;
-    }
-
-    /**
-     * @param string $key
-     * @return bool
-     * @throws \InvalidArgumentException
-     */
-    public function hasItem($key)
-    {
-        return $this->getItem($key)->isHit();
-    }
-
-    /**
-     * @return bool
-     */
-    public function clear()
-    {
-        return $this->driverClear();
-    }
-
-    /**
-     * @param string $key
-     * @return bool
-     * @throws \InvalidArgumentException
-     */
-    public function deleteItem($key)
-    {
-        if ($this->hasItem($key)) {
-            return $this->driverDelete($this->getItem($key));
-        }
-
-        return false;
-    }
-
-    /**
-     * @param array $keys
-     * @return bool
-     * @throws \InvalidArgumentException
-     */
-    public function deleteItems(array $keys)
-    {
-        $return = null;
-        foreach ($keys as $key) {
-            $result = $this->deleteItem($key);
-            if ($result !== false) {
-                $return = $result;
-            }
-        }
-
-        return (bool) $return;
-    }
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
-     * @throws \InvalidArgumentException
-     */
-    public function save(CacheItemInterface $item)
-    {
-        return $this->driverWrite($item);
-    }
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return \Psr\Cache\CacheItemInterface
-     */
-    public function saveDeferred(CacheItemInterface $item)
-    {
-        return $this->deferredList[ $item->getKey() ] = $item;
-    }
-
-    /**
-     * @return mixed|null
-     * @throws \InvalidArgumentException
-     */
-    public function commit()
-    {
-        $return = null;
-        foreach ($this->deferredList as $key => $item) {
-            $result = $this->driverWrite($item);
-            if ($return !== false) {
-                unset($this->deferredList[ $key ]);
-                $return = $result;
-            }
-        }
-
-        return (bool) $return;
-    }
-
-    /********************
-     *
      * PSR-6 Extended Methods
      *
      *******************/
@@ -320,6 +173,12 @@ class Driver extends DriverAbstract
      */
     public function getStats()
     {
-        return (new driverStatistic())->setInfo(implode('<br />', (array) $this->instance->getStats()));
+        $stats = (array) $this->instance->getStats();
+        $date = (new \DateTime())->setTimestamp(time() - $stats['uptime']);
+        return (new driverStatistic())
+          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setInfo(sprintf("The memcache daemon v%s is up since %s.\n For more information see RawData.", $stats['version'], $date->format(DATE_RFC2822)))
+          ->setRawData($stats)
+          ->setSize($stats['bytes']);
     }
 }

@@ -50,25 +50,26 @@ trait PathSeekerTrait
             $path = $this->config[ 'path' ];
         }
 
-        if($getBasePath === true)
-        {
+        if ($getBasePath === true) {
             return $path;
         }
 
         $securityKey = array_key_exists('securityKey', $this->config) ? $this->config[ 'securityKey' ] : '';
-        if ($securityKey == "" || $securityKey == 'auto') {
-            $securityKey = $this->config[ 'securityKey' ];
-            if ($securityKey == 'auto' || $securityKey == '') {
-                $securityKey = isset($_SERVER[ 'HTTP_HOST' ]) ? preg_replace('/^www./', '', strtolower($_SERVER[ 'HTTP_HOST' ])) : "default";
+        if (!$securityKey || $securityKey === 'auto') {
+            if (isset($_SERVER[ 'HTTP_HOST' ])) {
+                $securityKey = preg_replace('/^www./', '', strtolower(str_replace(':', '_', $_SERVER[ 'HTTP_HOST' ])));
+            } else {
+                $securityKey = ($this->isPHPModule() ? 'web' : 'cli');
             }
         }
-        if ($securityKey != '') {
+
+        if ($securityKey !== '') {
             $securityKey .= '/';
         }
 
         $securityKey = $this->cleanFileName($securityKey);
 
-        $full_path = rtrim($path, '/') .'/' . $securityKey;
+        $full_path = rtrim($path, '/') . '/' . $securityKey;
         $full_pathx = md5($full_path);
 
 
@@ -142,8 +143,7 @@ trait PathSeekerTrait
     {
         $path = $this->getFileDir();
 
-        if($keyword === false)
-        {
+        if ($keyword === false) {
             return $path;
         }
 

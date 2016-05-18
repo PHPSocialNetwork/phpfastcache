@@ -70,7 +70,7 @@ class Driver extends DriverAbstract
      * @return mixed
      * @throws \InvalidArgumentException
      */
-    public function driverWrite(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item)
     {
         /**
          * Check for Cross-Driver type confusion
@@ -99,12 +99,12 @@ class Driver extends DriverAbstract
     }
 
     /**
-     * @param string $key
+     * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
      */
-    public function driverRead($key)
+    protected function driverRead(CacheItemInterface $item)
     {
-        $document = $this->getCollection()->findOne(['_id' => $key], [self::DRIVER_DATA_WRAPPER_INDEX, self::DRIVER_TIME_WRAPPER_INDEX, self::DRIVER_TAGS_WRAPPER_INDEX  /*'d', 'e'*/]);
+        $document = $this->getCollection()->findOne(['_id' => $item->getKey()], [self::DRIVER_DATA_WRAPPER_INDEX, self::DRIVER_TIME_WRAPPER_INDEX, self::DRIVER_TAGS_WRAPPER_INDEX  /*'d', 'e'*/]);
 
         if ($document) {
             return [
@@ -122,7 +122,7 @@ class Driver extends DriverAbstract
      * @return bool
      * @throws \InvalidArgumentException
      */
-    public function driverDelete(CacheItemInterface $item)
+    protected function driverDelete(CacheItemInterface $item)
     {
         /**
          * Check for Cross-Driver type confusion
@@ -139,7 +139,7 @@ class Driver extends DriverAbstract
     /**
      * @return bool
      */
-    public function driverClear()
+    protected function driverClear()
     {
         return $this->getCollection()->drop();
     }
@@ -149,7 +149,7 @@ class Driver extends DriverAbstract
      * @throws MongoConnectionException
      * @throws LogicException
      */
-    public function driverConnect()
+    protected function driverConnect()
     {
         if ($this->instance instanceof MongodbClient) {
             throw new LogicException('Already connected to Mongodb server');

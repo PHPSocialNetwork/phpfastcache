@@ -33,7 +33,7 @@ abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
     const DRIVER_TAGS_WRAPPER_INDEX = 'g';
 
     /**
-     * @param string $key
+     * @param \Psr\Cache\CacheItemInterface $item
      * @return array [
      *      'd' => 'THE ITEM DATA'
      *      't' => 'THE ITEM DATE EXPIRATION'
@@ -41,27 +41,27 @@ abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
      * ]
      *
      */
-    abstract public function driverRead($key);
+    abstract protected function driverRead(CacheItemInterface $item);
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
      */
-    abstract public function driverWrite(CacheItemInterface $item);
+    abstract protected function driverWrite(CacheItemInterface $item);
 
     /**
      * @return bool
      */
-    abstract public function driverClear();
+    abstract protected function driverClear();
 
     /**
      * @return bool
      */
-    abstract public function driverConnect();
+    abstract protected function driverConnect();
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
      */
-    abstract public function driverDelete(CacheItemInterface $item);
+    abstract protected function driverDelete(CacheItemInterface $item);
 }

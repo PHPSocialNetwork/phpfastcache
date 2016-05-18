@@ -56,7 +56,7 @@ class Driver extends DriverAbstract
      * @return mixed
      * @throws \InvalidArgumentException
      */
-    public function driverWrite(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item)
     {
         /**
          * Check for Cross-Driver type confusion
@@ -69,10 +69,10 @@ class Driver extends DriverAbstract
     }
 
     /**
-     * @param string $key
+     * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
      */
-    public function driverRead($key)
+    protected function driverRead(CacheItemInterface $item)
     {
         return false;
     }
@@ -82,7 +82,7 @@ class Driver extends DriverAbstract
      * @return bool
      * @throws \InvalidArgumentException
      */
-    public function driverDelete(CacheItemInterface $item)
+    protected function driverDelete(CacheItemInterface $item)
     {
         /**
          * Check for Cross-Driver type confusion
@@ -97,7 +97,7 @@ class Driver extends DriverAbstract
     /**
      * @return bool
      */
-    public function driverClear()
+    protected function driverClear()
     {
         return false;
     }
@@ -105,7 +105,7 @@ class Driver extends DriverAbstract
     /**
      * @return bool
      */
-    public function driverConnect()
+    protected function driverConnect()
     {
         return false;
     }

@@ -52,7 +52,7 @@ trait StandardPsr6StructureTrait
                 CacheManager::$ReadHits++;
                 $class = new \ReflectionClass((new \ReflectionObject($this))->getNamespaceName() . '\Item');
                 $item = $class->newInstanceArgs([$this, $key]);
-                $driverArray = $this->driverRead($key);
+                $driverArray = $this->driverRead($item);
 
                 if ($driverArray) {
                     $item->set($this->driverUnwrapData($driverArray));

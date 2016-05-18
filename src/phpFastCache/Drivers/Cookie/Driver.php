@@ -59,7 +59,7 @@ class Driver extends DriverAbstract
     /**
      * @return bool
      */
-    public function driverConnect()
+    protected function driverConnect()
     {
         return !(!array_key_exists('phpFastCache', $_COOKIE) && !@setcookie('phpFastCache', 1, 10));
     }
@@ -69,7 +69,7 @@ class Driver extends DriverAbstract
      * @return mixed
      * @throws \InvalidArgumentException
      */
-    public function driverWrite(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item)
     {
         /**
          * Check for Cross-Driver type confusion
@@ -90,16 +90,16 @@ class Driver extends DriverAbstract
     }
 
     /**
-     * @param string $key
-     * @return bool|mixed|null
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return mixed
      * @throws \phpFastCache\Exceptions\phpFastCacheDriverException
      */
-    public function driverRead($key)
+    protected function driverRead(CacheItemInterface $item)
     {
         $this->driverConnect();
         // return null if no caching
         // return value if in caching
-        $keyword = self::PREFIX . $key;
+        $keyword = self::PREFIX . $item->getKey();
         $x = isset($_COOKIE[ $keyword ]) ? $this->decode(json_decode($_COOKIE[ $keyword ], true)) : false;
 
         if ($x == false) {
@@ -117,7 +117,7 @@ class Driver extends DriverAbstract
      * @param $key
      * @return int
      */
-    public function driverReadExpirationDate($key)
+    protected function driverReadExpirationDate($key)
     {
         $this->driverConnect();
         $keyword = self::PREFIX . $key;
@@ -131,7 +131,7 @@ class Driver extends DriverAbstract
      * @return bool
      * @throws \InvalidArgumentException
      */
-    public function driverDelete(CacheItemInterface $item)
+    protected function driverDelete(CacheItemInterface $item)
     {
         /**
          * Check for Cross-Driver type confusion
@@ -150,7 +150,7 @@ class Driver extends DriverAbstract
     /**
      * @return bool
      */
-    public function driverClear()
+    protected function driverClear()
     {
         $return = null;
         $this->driverConnect();

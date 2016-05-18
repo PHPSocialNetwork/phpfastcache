@@ -247,7 +247,7 @@ class Driver extends DriverAbstract
      * @return mixed
      * @throws \InvalidArgumentException
      */
-    public function driverWrite(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item)
     {
         /**
          * Check for Cross-Driver type confusion
@@ -257,7 +257,7 @@ class Driver extends DriverAbstract
             $toWrite = true;
 
             // check in cache first
-            $in_cache = $this->driverRead($item->getKey(), $this->config);
+            $in_cache = $this->driverRead($item);
 
             if ($skipExisting == true) {
                 if ($in_cache == null) {
@@ -301,26 +301,26 @@ class Driver extends DriverAbstract
     }
 
     /**
-     * @param string $key
+     * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
      */
-    public function driverRead($key)
+    protected function driverRead(CacheItemInterface $item)
     {
         try {
-            $stm = $this->getDb($key)
+            $stm = $this->getDb($item->getKey())
               ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword AND (`exp` >= :U)  LIMIT 1");
             $stm->execute([
-              ':keyword' => $key,
+              ':keyword' => $item->getKey(),
               ':U' => time(),
             ]);
             $row = $stm->fetch(PDO::FETCH_ASSOC);
 
         } catch (PDOException $e) {
             try {
-                $stm = $this->getDb($key, true)
+                $stm = $this->getDb($item->getKey(), true)
                   ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword AND (`exp` >= :U)  LIMIT 1");
                 $stm->execute([
-                  ':keyword' => $key,
+                  ':keyword' => $item->getKey(),
                   ':U' => time(),
                 ]);
                 $row = $stm->fetch(PDO::FETCH_ASSOC);
@@ -351,7 +351,7 @@ class Driver extends DriverAbstract
      * @return bool
      * @throws \InvalidArgumentException
      */
-    public function driverDelete(CacheItemInterface $item)
+    protected function driverDelete(CacheItemInterface $item)
     {
         /**
          * Check for Cross-Driver type confusion
@@ -378,7 +378,7 @@ class Driver extends DriverAbstract
     /**
      * @return bool
      */
-    public function driverClear()
+    protected function driverClear()
     {
         $this->instance = [];
         $this->instance = null;
@@ -397,7 +397,7 @@ class Driver extends DriverAbstract
     /**
      * @return bool
      */
-    public function driverConnect()
+    protected function driverConnect()
     {
         if (!file_exists($this->getPath() . '/' . self::FILE_DIR)) {
             if (!mkdir($this->getPath() . '/' . self::FILE_DIR, $this->setChmodAuto(), true)

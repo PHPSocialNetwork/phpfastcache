@@ -89,8 +89,8 @@ class CacheManager
             $class = self::getNamespacePath() . $driver . '\Driver';
             self::$instances[ $instance ] = new $class($config);
         } else {
-           // trigger_error('[' . $driver . '] Calling CacheManager::getInstance for already instanced drivers is a bad practice and have a significant impact on performances.
-           // See https://github.com/PHPSocialNetwork/phpfastcache/wiki/[V5]-Why-calling-getInstance%28%29-each-time-is-a-bad-practice-%3F');
+           trigger_error('[' . $driver . '] Calling CacheManager::getInstance for already instanced drivers is a bad practice and have a significant impact on performances.
+           See https://github.com/PHPSocialNetwork/phpfastcache/wiki/[V5]-Why-calling-getInstance%28%29-each-time-is-a-bad-practice-%3F');
         }
 
         return self::$instances[ $instance ];

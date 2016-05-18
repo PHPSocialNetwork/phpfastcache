@@ -53,6 +53,11 @@ trait ItemBaseTrait
      */
     protected $removedTags = [];
 
+    /**
+     * @var bool
+     */
+    protected $isHit = false;
+
     /********************
      *
      * PSR-6 Methods
@@ -99,7 +104,22 @@ trait ItemBaseTrait
      */
     public function isHit()
     {
-        return $this->driver->driverIsHit($this);
+        return $this->isHit;
+    }
+
+    /**
+     * @param bool $isHit
+     * @return $this
+     * @throws \InvalidArgumentException
+     */
+    public function setHit($isHit)
+    {
+        if(is_bool($isHit)){
+            $this->isHit = $isHit;
+            return $this;
+        }else{
+            throw new \InvalidArgumentException('$isHit must be a boolean');
+        }
     }
 
     /**

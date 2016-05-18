@@ -169,24 +169,6 @@ class Driver extends DriverAbstract
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return bool
-     * @throws \InvalidArgumentException
-     */
-    public function driverIsHit(CacheItemInterface $item)
-    {
-        $file_path = $this->getFilePath($item->getKey(), true);
-        if (!file_exists($file_path)) {
-            return false;
-        } else {
-            // check expired or not
-            $value = $this->driverRead($item->getKey());
-
-            return !($value == null);
-        }
-    }
-
-    /**
      * @param string $optionName
      * @param mixed $optionValue
      * @return bool

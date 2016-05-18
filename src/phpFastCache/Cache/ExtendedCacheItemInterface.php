@@ -47,6 +47,13 @@ interface ExtendedCacheItemInterface extends CacheItemInterface
      * @return mixed
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver);
+    
+    /**
+     * @param bool $isHit
+     * @return $this
+     * @throws \InvalidArgumentException
+     */
+    public function setHit($isHit);
 
     /**
      * @param int $step

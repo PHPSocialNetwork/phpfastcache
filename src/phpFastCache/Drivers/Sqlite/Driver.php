@@ -408,37 +408,6 @@ class Driver extends DriverAbstract
         $this->SqliteDir = $this->getPath() . '/' . self::FILE_DIR;
     }
 
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return bool
-     * @throws \InvalidArgumentException
-     */
-    public function driverIsHit(CacheItemInterface $item)
-    {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            /**
-             * @todo: Check expiration time here
-             */
-            $stm = $this->getDb($item->getKey())
-              ->prepare("SELECT COUNT(`id`) as `total` FROM `caching` WHERE (`keyword`=:keyword) AND (`exp` <= :U) ");
-            $stm->execute([
-              ':keyword' => $item->getKey(),
-              ':U' => time(),
-            ]);
-            $data = $stm->fetch(PDO::FETCH_ASSOC);
-            if ($data[ 'total' ] >= 1) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
-        }
-    }
-
     /********************
      *
      * PSR-6 Extended Methods

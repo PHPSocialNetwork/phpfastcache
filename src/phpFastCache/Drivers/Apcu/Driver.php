@@ -120,24 +120,7 @@ class Driver extends DriverAbstract
     {
         return true;
     }
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return bool
-     * @throws \InvalidArgumentException
-     */
-    public function driverIsHit(CacheItemInterface $item)
-    {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return (bool) apc_exists($item->getKey());
-        } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
-        }
-    }
-
+    
     /********************
      *
      * PSR-6 Extended Methods

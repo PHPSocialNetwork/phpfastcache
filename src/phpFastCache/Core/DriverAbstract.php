@@ -64,10 +64,4 @@ abstract class DriverAbstract implements ExtendedCacheItemPoolInterface
      * @return bool
      */
     abstract public function driverDelete(CacheItemInterface $item);
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return bool
-     */
-    abstract public function driverIsHit(CacheItemInterface $item);
 }

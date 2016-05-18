@@ -181,22 +181,7 @@ class Driver extends DriverAbstract
     {
         return $this->instance->Cache;
     }
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return bool
-     * @throws \InvalidArgumentException
-     */
-    public function driverIsHit(CacheItemInterface $item)
-    {
-        $document = $this->getCollection()->findOne(['_id' => $item->getKey()], [self::DRIVER_TIME_WRAPPER_INDEX  /*'d', 'e'*/]);
-        if ($document) {
-            return $document[ self::DRIVER_TIME_WRAPPER_INDEX ]->sec >= time();
-        } else {
-            return null;
-        }
-    }
-
+    
     /********************
      *
      * PSR-6 Extended Methods

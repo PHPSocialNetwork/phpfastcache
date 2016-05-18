@@ -45,7 +45,6 @@ trait StandardPsr6StructureTrait
     {
         if (is_string($key)) {
             if (!array_key_exists($key, $this->itemInstances)) {
-                //(new \ReflectionObject($this))->getNamespaceName()
                 
                 /**
                  * @var $item ExtendedCacheItemInterface
@@ -54,7 +53,7 @@ trait StandardPsr6StructureTrait
                 $class = new \ReflectionClass((new \ReflectionObject($this))->getNamespaceName() . '\Item');
                 $item = $class->newInstanceArgs([$this, $key]);
                 $driverArray = $this->driverRead($key);
-                //var_dump($driverArray);exit;
+
                 if ($driverArray) {
                     $item->set($this->driverUnwrapData($driverArray));
                     $item->expiresAt($this->driverUnwrapTime($driverArray));
@@ -66,6 +65,8 @@ trait StandardPsr6StructureTrait
                          * getItem() call in delete() method
                          */
                         $this->driverDelete($item);
+                    }else{
+                        $item->setHit(true);
                     }
                 }
 
@@ -141,7 +142,9 @@ trait StandardPsr6StructureTrait
      */
     public function deleteItem($key)
     {
-        if ($this->hasItem($key) && $this->driverDelete($this->getItem($key))) {
+        $item = $this->getItem($key);
+        if ($this->hasItem($key) && $this->driverDelete($item)) {
+            $item->setHit(false);
             CacheManager::$WriteHits++;
             unset($this->itemInstances[ $key ]);
 
@@ -176,11 +179,15 @@ trait StandardPsr6StructureTrait
      */
     public function save(CacheItemInterface $item)
     {
+        /**
+         * @var ExtendedCacheItemInterface $item
+         */
         if (!array_key_exists($item->getKey(), $this->itemInstances)) {
             $this->itemInstances[ $item->getKey() ] = $item;
         }
         if($this->driverWrite($item) && $this->driverWriteTags($item))
         {
+            $item->setHit(true);
             CacheManager::$WriteHits++;
             return true;
         }

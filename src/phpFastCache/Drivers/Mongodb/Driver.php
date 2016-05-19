@@ -207,7 +207,7 @@ class Driver extends DriverAbstract
 
         $stats = (new driverStatistic())
           ->setInfo('MongoDB version ' . $serverStatus[ 'version' ] . ', Uptime (in days): ' . round($serverStatus[ 'uptime' ] / 86400, 1) . "\n For more information see RawData.")
-          ->setSize((int) $collStats[ 'size' ])
+          ->setSize((int) @$collStats[ 'size' ])
           ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setRawData([
             'serverStatus' => $serverStatus,

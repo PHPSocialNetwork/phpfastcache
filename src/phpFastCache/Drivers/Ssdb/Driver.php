@@ -128,15 +128,7 @@ class Driver extends DriverAbstract
      */
     protected function driverClear()
     {
-        $return = null;
-        foreach ($this->instance->keys('', '') as $key) {
-            $result = $this->instance->del($key);
-            if ($result !== false) {
-                $return = $result;
-            }
-        }
-
-        return $return;
+        return $this->instance->flushdb('kv');
     }
 
     /**

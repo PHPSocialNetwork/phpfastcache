@@ -125,14 +125,9 @@ trait StandardPsr6StructureTrait
      */
     public function clear()
     {
-        if ($this->driverClear()) {
-            CacheManager::$WriteHits++;
-            $this->itemInstances = [];
-
-            return true;
-        }
-
-        return false;
+        CacheManager::$WriteHits++;
+        $this->itemInstances = [];
+        return $this->driverClear();
     }
 
     /**

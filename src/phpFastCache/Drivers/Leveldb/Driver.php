@@ -127,7 +127,7 @@ class Driver extends DriverAbstract
     {
         if ($this->instance instanceof LeveldbClient) {
             $this->instance->close();
-            unset($this->instance);
+            $this->instance = null;
         }
         $result = LeveldbClient::destroy($this->getLeveldbFile());
         $this->driverConnect();
@@ -169,6 +169,9 @@ class Driver extends DriverAbstract
      */
     public function __destruct()
     {
-        $this->instance->close();
+        if ($this->instance instanceof LeveldbClient) {
+            $this->instance->close();
+            $this->instance = null;
+        }
     }
 }

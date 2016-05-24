@@ -127,10 +127,14 @@ class Driver extends DriverAbstract
      */
     public function getStats()
     {
+        $memInfo = wincache_ucache_meminfo();
+        $info = wincache_ucache_info();
+        $date = (new \DateTime())->setTimestamp(time() - $info['total_cache_uptime']);
+
         return (new driverStatistic())
-          ->setInfo('There is currently no info available for this driver :/')
-          ->setSize(0)
+          ->setInfo(sprintf("The Wincache daemon is up since %s.\n For more information see RawData.", $date->format(DATE_RFC2822)))
+          ->setSize($memInfo['memory_free'] - $memInfo['memory_total'])
           ->setData(implode(', ', array_keys($this->itemInstances)))
-          ->setRawData(wincache_scache_info());
+          ->setRawData($memInfo);
     }
 }

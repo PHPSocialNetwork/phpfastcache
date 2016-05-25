@@ -18,7 +18,7 @@ echo "Testing new cache instance\n";
 /**
  * Testing memcached as it is declared in .travis.yml
  */
-$driverInstance = CacheManager::getInstance();
+$driverInstance = CacheManager::getInstance('Memcached');
 
 if (!is_object($driverInstance)) {
     echo '[FAIL] CacheManager::getInstance() returned an invalid variable type:' . gettype($driverInstance) . "\n";

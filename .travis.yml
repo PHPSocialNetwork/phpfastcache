@@ -12,6 +12,7 @@
 language: php
 services:
   - memcached
+  # - redis-server
 before_script: phpenv config-add var/php/conf/phpfastcache.ini
 php:
   # - 5.3
@@ -27,3 +28,4 @@ script:
   - php -f tests/SyntaxChecker.test.php
   - php -f tests/Autoload.test.php
   - php -f tests/NewCacheInstance.test.php
+  - php -f tests/Psr6InterfaceImplements.test.php

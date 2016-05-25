@@ -14,7 +14,7 @@ echo "Testing autoload\n";
 
 if (!class_exists('phpFastCache\CacheManager')) {
     echo "[FAIL] Autoload failed to find the CacheManager\n";
-    $status = 1;
+    $status = 255;
 }
 echo "[PASS] Autoload successfully found the CacheManager\n";
 

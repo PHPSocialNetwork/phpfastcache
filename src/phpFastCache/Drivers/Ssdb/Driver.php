@@ -160,7 +160,7 @@ class Driver extends DriverAbstract
                 return true;
             }
         }catch(SSDBException $e){
-            throw new phpFastCacheDriverException('Ssdb failed to connect with error: '. $e->getMessage(), 0 , $e);
+            throw new phpFastCacheDriverCheckException('Ssdb failed to connect with error: '. $e->getMessage(), 0 , $e);
         }
     }
 

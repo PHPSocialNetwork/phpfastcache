@@ -29,8 +29,8 @@ function read_dir($dir, $ext = null)
     return $list;
 }
 
-$list = read_dir('.', 'php');
-$list += read_dir('.', 'tpl');
+$list = read_dir(__DIR__ . '/../', 'php');
+$list += read_dir(__DIR__ . '/../', 'tpl');
 
 $exit = 0;
 foreach ($list as $file) {

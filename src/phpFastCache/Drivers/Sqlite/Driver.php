@@ -97,7 +97,7 @@ class Driver extends DriverAbstract
      */
     public function driverCheck()
     {
-        return extension_loaded('pdo_sqlite') || @mkdir($this->getFilesDir(), $this->setChmodAuto(), true);
+        return extension_loaded('pdo_sqlite') && @mkdir($this->getSqliteDir(), $this->setChmodAuto(), true);
     }
 
     /**

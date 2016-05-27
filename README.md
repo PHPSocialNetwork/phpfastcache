@@ -21,6 +21,10 @@ One Class uses for All Cache. You don't need to rewrite your code many times aga
 
 \* Driver descriptions available in DOCS/DRIVERS.md
 
+### Symfony developers are not forgotten !
+Starting of the v5, phpFastCache comes with a [Symfony Bundle](https://github.com/PHPSocialNetwork/phpfastcache-bundle).
+He's fresh, so feel free to report any bug or contribute to the code using pull requests.
+
 ---------------------------
 Not a "Traditional" Caching
 ---------------------------

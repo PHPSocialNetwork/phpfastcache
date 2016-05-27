@@ -15,7 +15,6 @@ One Class uses for All Cache. You don't need to rewrite your code many times aga
 |  `Files`         | `Predis`                  | `Devtrue`          |
 |  `Leveldb`       | `Redis`                   |                    |
 |  `Memcache(d)`   | `Ssdb`                    |                    |
-|  `Memcached`     |                           |                    |
 |  `Sqlite`        |                           |                    |
 |  `Wincache`      |                           |                    |
 |  `Xcache`        |                           |                    |

@@ -45,7 +45,7 @@ trait StandardPsr6StructureTrait
     {
         if (is_string($key)) {
             if (!array_key_exists($key, $this->itemInstances)) {
-                
+
                 /**
                  * @var $item ExtendedCacheItemInterface
                  */
@@ -65,7 +65,7 @@ trait StandardPsr6StructureTrait
                          * getItem() call in delete() method
                          */
                         $this->driverDelete($item);
-                    }else{
+                    } else {
                         $item->setHit(true);
                     }
                 }
@@ -117,6 +117,7 @@ trait StandardPsr6StructureTrait
     public function hasItem($key)
     {
         CacheManager::$ReadHits++;
+
         return $this->getItem($key)->isHit();
     }
 
@@ -127,6 +128,7 @@ trait StandardPsr6StructureTrait
     {
         CacheManager::$WriteHits++;
         $this->itemInstances = [];
+
         return $this->driverClear();
     }
 
@@ -180,10 +182,10 @@ trait StandardPsr6StructureTrait
         if (!array_key_exists($item->getKey(), $this->itemInstances)) {
             $this->itemInstances[ $item->getKey() ] = $item;
         }
-        if($this->driverWrite($item) && $this->driverWriteTags($item))
-        {
+        if ($this->driverWrite($item) && $this->driverWriteTags($item)) {
             $item->setHit(true);
             CacheManager::$WriteHits++;
+
             return true;
         }
 

@@ -137,7 +137,7 @@ class Driver extends DriverAbstract
      */
     protected function driverConnect()
     {
-        try{
+        try {
             $server = isset($this->config[ 'ssdb' ]) ? $this->config[ 'ssdb' ] : [
               'host' => "127.0.0.1",
               'port' => 8888,
@@ -159,8 +159,8 @@ class Driver extends DriverAbstract
             } else {
                 return true;
             }
-        }catch(SSDBException $e){
-            throw new phpFastCacheDriverCheckException('Ssdb failed to connect with error: '. $e->getMessage(), 0 , $e);
+        } catch (SSDBException $e) {
+            throw new phpFastCacheDriverCheckException('Ssdb failed to connect with error: ' . $e->getMessage(), 0, $e);
         }
     }
 
@@ -182,10 +182,10 @@ class Driver extends DriverAbstract
          * Data returned by Ssdb are very poorly formatted
          * using hardcoded offset of pair key-value :-(
          */
-        $stat->setInfo(sprintf("Ssdb-server v%s with a total of %s call(s).\n For more information see RawData.", $info[2], $info[6]))
-            ->setRawData($info)
-            ->setData(implode(', ', array_keys($this->itemInstances)))
-            ->setSize($this->instance->dbsize());
+        $stat->setInfo(sprintf("Ssdb-server v%s with a total of %s call(s).\n For more information see RawData.", $info[ 2 ], $info[ 6 ]))
+          ->setRawData($info)
+          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setSize($this->instance->dbsize());
 
         return $stat;
     }

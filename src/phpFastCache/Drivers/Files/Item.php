@@ -16,8 +16,8 @@ namespace phpFastCache\Drivers\Files;
 
 use phpFastCache\Cache\ExtendedCacheItemInterface;
 use phpFastCache\Cache\ExtendedCacheItemPoolInterface;
-use phpFastCache\Drivers\Files\Driver as FilesDriver;
 use phpFastCache\Cache\ItemBaseTrait;
+use phpFastCache\Drivers\Files\Driver as FilesDriver;
 
 /**
  * Class Item

@@ -104,6 +104,7 @@ trait ExtendedCacheItemPoolTrait
                 $item->increment($step);
                 $this->saveDeferred($item);
             }
+
             return $this->commit();
         } else {
             throw new InvalidArgumentException('$tagName must be a string and $step an integer');
@@ -116,8 +117,7 @@ trait ExtendedCacheItemPoolTrait
     public function incrementItemsByTags(array $tagNames, $step = 1)
     {
         $return = null;
-        foreach ($tagNames as $tagName)
-        {
+        foreach ($tagNames as $tagName) {
             $result = $this->incrementItemsByTag($tagName, $step);
             if ($return !== false) {
                 $return = $result;
@@ -137,6 +137,7 @@ trait ExtendedCacheItemPoolTrait
                 $item->decrement($step);
                 $this->saveDeferred($item);
             }
+
             return $this->commit();
         } else {
             throw new InvalidArgumentException('$tagName must be a string and $step an integer');
@@ -149,8 +150,7 @@ trait ExtendedCacheItemPoolTrait
     public function decrementItemsByTags(array $tagNames, $step = 1)
     {
         $return = null;
-        foreach ($tagNames as $tagName)
-        {
+        foreach ($tagNames as $tagName) {
             $result = $this->decrementItemsByTag($tagName, $step);
             if ($return !== false) {
                 $return = $result;
@@ -170,6 +170,7 @@ trait ExtendedCacheItemPoolTrait
                 $item->append($data);
                 $this->saveDeferred($item);
             }
+
             return $this->commit();
         } else {
             throw new InvalidArgumentException('$tagName must be a string');
@@ -182,8 +183,7 @@ trait ExtendedCacheItemPoolTrait
     public function appendItemsByTags(array $tagNames, $data)
     {
         $return = null;
-        foreach ($tagNames as $tagName)
-        {
+        foreach ($tagNames as $tagName) {
             $result = $this->decrementItemsByTag($tagName, $data);
             if ($return !== false) {
                 $return = $result;
@@ -203,6 +203,7 @@ trait ExtendedCacheItemPoolTrait
                 $item->prepend($data);
                 $this->saveDeferred($item);
             }
+
             return $this->commit();
         } else {
             throw new InvalidArgumentException('$tagName must be a string');
@@ -215,8 +216,7 @@ trait ExtendedCacheItemPoolTrait
     public function prependItemsByTags(array $tagNames, $data)
     {
         $return = null;
-        foreach ($tagNames as $tagName)
-        {
+        foreach ($tagNames as $tagName) {
             $result = $this->decrementItemsByTag($tagName, $data);
             if ($return !== false) {
                 $return = $result;

@@ -14,8 +14,8 @@
 
 namespace phpFastCache\Drivers\Xcache;
 
-use phpFastCache\Core\StandardPsr6StructureTrait;
 use phpFastCache\Core\DriverAbstract;
+use phpFastCache\Core\StandardPsr6StructureTrait;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
@@ -132,18 +132,15 @@ class Driver extends DriverAbstract
      */
     public function getStats()
     {
-        if(!ini_get('xcache.admin.enable_auth'))
-        {
+        if (!ini_get('xcache.admin.enable_auth')) {
             $info = xcache_info(XC_TYPE_VAR, 0);
 
             return (new driverStatistic())
-              ->setSize(abs($info['size'] - $info['avail']))
+              ->setSize(abs($info[ 'size' ] - $info[ 'avail' ]))
               ->setData(implode(', ', array_keys($this->itemInstances)))
               ->setInfo(sprintf("Xcache v%s with following modules loaded:\n %s", XCACHE_VERSION, str_replace(' ', ', ', XCACHE_MODULES)))
               ->setRawData($info);
-        }
-        else
-        {
+        } else {
             throw new \RuntimeException("PhpFastCache is not able to read Xcache configuration. Please put this to your php.ini:\n
             [xcache.admin]
             xcache.admin.enable_auth = Off\n

@@ -14,6 +14,7 @@
 
 namespace phpFastCache\Drivers\Leveldb;
 
+use LevelDB as LeveldbClient;
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\PathSeekerTrait;
 use phpFastCache\Core\StandardPsr6StructureTrait;
@@ -22,7 +23,6 @@ use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Util\Directory;
 use Psr\Cache\CacheItemInterface;
-use LevelDB as LeveldbClient;
 
 /**
  * Class Driver

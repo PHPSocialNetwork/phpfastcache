@@ -14,7 +14,6 @@
 
 namespace phpFastCache\Drivers\Files;
 
-use phpFastCache\Cache\ExtendedCacheItemInterface;
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\PathSeekerTrait;
 use phpFastCache\Core\StandardPsr6StructureTrait;
@@ -176,8 +175,7 @@ class Driver extends DriverAbstract
     public static function isValidOption($optionName, $optionValue)
     {
         parent::isValidOption($optionName, $optionValue);
-        switch($optionName)
-        {
+        switch ($optionName) {
             case 'path':
                 return is_string($optionValue);
                 break;
@@ -194,7 +192,7 @@ class Driver extends DriverAbstract
                 break;
             default:
                 return false;
-            break;
+                break;
         }
     }
 
@@ -229,7 +227,7 @@ class Driver extends DriverAbstract
     {
         $stat = new driverStatistic();
         $path = $this->getFilePath(false);
-        
+
         if (!is_dir($path)) {
             throw new phpFastCacheDriverException("Can't read PATH:" . $path, 94);
         }

@@ -114,10 +114,11 @@ trait ItemBaseTrait
      */
     public function setHit($isHit)
     {
-        if(is_bool($isHit)){
+        if (is_bool($isHit)) {
             $this->isHit = $isHit;
+
             return $this;
-        }else{
+        } else {
             throw new \InvalidArgumentException('$isHit must be a boolean');
         }
     }
@@ -400,13 +401,13 @@ trait ItemBaseTrait
     /**
      * @throws \RuntimeException
      */
-/*    final public function __sleep()
-    {
-        $info = get_object_vars($this);
-        $info[ 'driver' ] = 'object(' . get_class($info[ 'driver' ]) . ')';
-
-        return (array) $info;
-    }*/
+    /*    final public function __sleep()
+        {
+            $info = get_object_vars($this);
+            $info[ 'driver' ] = 'object(' . get_class($info[ 'driver' ]) . ')';
+    
+            return (array) $info;
+        }*/
 
     /**
      * Prevent recursions for Debug (php 5.6+)

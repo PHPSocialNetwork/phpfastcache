@@ -14,6 +14,7 @@
 
 namespace phpFastCache\Drivers\Memcached;
 
+use Memcached as MemcachedSoftware;
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\MemcacheDriverCollisionDetectorTrait;
 use phpFastCache\Core\StandardPsr6StructureTrait;
@@ -21,7 +22,6 @@ use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
-use Memcached as MemcachedSoftware;
 
 /**
  * Class Driver
@@ -144,7 +144,7 @@ class Driver extends DriverAbstract
             }
         }
     }
-    
+
     /********************
      *
      * PSR-6 Extended Methods
@@ -157,11 +157,12 @@ class Driver extends DriverAbstract
     public function getStats()
     {
         $stats = (array) $this->instance->getStats();
-        $date = (new \DateTime())->setTimestamp(time() - $stats['uptime']);
+        $date = (new \DateTime())->setTimestamp(time() - $stats[ 'uptime' ]);
+
         return (new driverStatistic())
           ->setData(implode(', ', array_keys($this->itemInstances)))
-          ->setInfo(sprintf("The memcache daemon v%s is up since %s.\n For more information see RawData.", $stats['version'], $date->format(DATE_RFC2822)))
+          ->setInfo(sprintf("The memcache daemon v%s is up since %s.\n For more information see RawData.", $stats[ 'version' ], $date->format(DATE_RFC2822)))
           ->setRawData($stats)
-          ->setSize($stats['bytes']);
+          ->setSize($stats[ 'bytes' ]);
     }
 }

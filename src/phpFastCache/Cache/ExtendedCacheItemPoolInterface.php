@@ -14,10 +14,10 @@
 
 namespace phpFastCache\Cache;
 
+use InvalidArgumentException;
 use phpFastCache\Entities\driverStatistic;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use \InvalidArgumentException;
 
 /**
  * Interface ExtendedCacheItemPoolInterface
@@ -72,7 +72,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *   key is not found. However, if no keys are specified then an empty
      *   traversable MUST be returned instead.
      */
-    public function getItems(array $keys = array());
+    public function getItems(array $keys = []);
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item

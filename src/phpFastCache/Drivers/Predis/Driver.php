@@ -19,8 +19,8 @@ use phpFastCache\Core\StandardPsr6StructureTrait;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
-use Psr\Cache\CacheItemInterface;
 use Predis\Client as PredisClient;
+use Psr\Cache\CacheItemInterface;
 
 /**
  * Class Driver

@@ -17,6 +17,6 @@
 - [x] Implement CouchBase Driver
 - [x] Implement Dev Driver (return null/bool everywhere for development purpose)
 - [x] Implement advanced tags features: incrementByTag(s), decrementByTag(s), appendByTag(s), prependByTag(s), expiresAfterByTag(s)
+- [x] Final code review + psr2 checks + psr-6 null value as legitimates value.
 - [ ] Check Wincache driver in real Windows env (and not in VM)
-- [ ] Final code review + psr2 checks + psr-6 null value as legitimates value.
 - [ ] Rewrite Wiki 

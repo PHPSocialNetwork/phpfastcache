@@ -14,19 +14,19 @@
 
 namespace phpFastCache\Drivers\Mongodb;
 
+use LogicException;
+use MongoBinData;
+use MongoClient as MongodbClient;
+use MongoCollection;
+use MongoConnectionException;
+use MongoCursorException;
+use MongoDate;
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\StandardPsr6StructureTrait;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
-use MongoClient as MongodbClient;
-use MongoBinData;
-use MongoCollection;
-use MongoCursorException;
-use MongoDate;
-use MongoConnectionException;
-use LogicException;
 
 /**
  * Class Driver
@@ -104,7 +104,9 @@ class Driver extends DriverAbstract
      */
     protected function driverRead(CacheItemInterface $item)
     {
-        $document = $this->getCollection()->findOne(['_id' => $item->getKey()], [self::DRIVER_DATA_WRAPPER_INDEX, self::DRIVER_TIME_WRAPPER_INDEX, self::DRIVER_TAGS_WRAPPER_INDEX  /*'d', 'e'*/]);
+        $document = $this->getCollection()
+          ->findOne(['_id' => $item->getKey()],
+            [self::DRIVER_DATA_WRAPPER_INDEX, self::DRIVER_TIME_WRAPPER_INDEX, self::DRIVER_TAGS_WRAPPER_INDEX  /*'d', 'e'*/]);
 
         if ($document) {
             return [
@@ -181,7 +183,7 @@ class Driver extends DriverAbstract
     {
         return $this->instance->Cache;
     }
-    
+
     /********************
      *
      * PSR-6 Extended Methods

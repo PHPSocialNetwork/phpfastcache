@@ -27,6 +27,7 @@
     },
     "suggest": {
         "ext-apc": "*",
+        "ext-intl": "*",
         "ext-mbstring": "*",
         "ext-memcached": "*",
         "ext-memcache": "*",

@@ -2,8 +2,10 @@
 namespace MyCustom\Project;
 
 use phpFastCache\Drivers\Files\Driver as FilesDriver;
+use phpFastCache\Proxy\phpFastCacheAbstractProxy;
 
 /**
+ * Specific driver-based example
  * Class extendsPhpFastCache
  * @package MyCustom\Project
  */
@@ -13,6 +15,25 @@ class extendedPhpFastCache extends FilesDriver
     {
         $config[ 'path' ] = 'your/custom/path/where/files/will/be/written';
         parent::__construct($config);
+        /**
+         * That's all !! Your cache class is ready to use
+         */
+    }
+}
+
+
+/**
+ * Dynamic driver-based example
+ * Class myCustomCacheClass
+ * @package MyCustom\Project
+ */
+class myCustomCacheClass extends phpFastCacheAbstractProxy
+{
+    public function __construct($driver = '', array $config = [])
+    {
+        $config[ 'path' ] = 'your/custom/path/where/files/will/be/written';
+        $driver = 'files';
+        parent::__construct($driver, $config);
         /**
          * That's all !! Your cache class is ready to use
          */

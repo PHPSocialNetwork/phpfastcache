@@ -23,7 +23,7 @@ use Psr\Cache\CacheItemInterface;
  *
  * Handle methods using annotations for IDE
  * because they're handled by __call()
- * Check out DriverInterface to see all
+ * Check out ExtendedCacheItemInterface to see all
  * the drivers methods magically implemented
  *
  * @method ExtendedCacheItemInterface getItem($key) Retrieve an item and returns an empty item if not found

@@ -74,7 +74,6 @@ trait ItemBaseTrait
 
     /**
      * @return mixed
-     * @throws \InvalidArgumentException
      */
     public function get()
     {
@@ -396,6 +395,26 @@ trait ItemBaseTrait
     public function getRemovedTags()
     {
         return array_diff($this->removedTags, $this->tags);
+    }
+
+    /**
+     * Return the data as a well-formatted string.
+     * Any scalar value will be casted to an array
+     * @param int $option json_encode() options
+     * @param int $depth json_encode() depth
+     * @return string
+     */
+    public function getDataAsJsonString($option = 0, $depth = 512)
+    {
+        $data = $this->get();
+
+        if (is_object($data) || is_array($data)) {
+            $data = json_encode($data, $option, $depth);
+        } else {
+            $data = json_encode([$data], $option, $depth);
+        }
+
+        return json_encode($data, $option, $depth);
     }
 
     /**

@@ -59,7 +59,7 @@ phpFastCache offers you a lot of useful APIs:
 - getKey() // Return the item identifier (key)
 - get() // The getter, obviously, return your cache object
 - set($value) // The setter, for those who missed it, put 0 meant cache it forever
-- expiresAfter($ttl) // Allow you to extends the lifetime of an entry without altering the value (formerly know as touch())
+- expiresAfter($ttl) // Allow you to extends the lifetime of an entry without altering the value (formerly known as touch())
 - expiresAt($expiration) // Sets the expiration time for this cache item (as a DateTimeInterface object)
 - increment($step = 1) // For integer that we can count on
 - decrement($step = 1) // Redundant joke...
@@ -76,6 +76,7 @@ phpFastCache offers you a lot of useful APIs:
 - getTagsAsString($separator = ', ') // Get the data a string separated by $separator
 - removeTag($tagName) // Remove a tag
 - removeTags(array $tagNames) // Remove some tags
+- getDataAsJsonString($option = 0, $depth = 512)// Return the data as a well-formatted json string
 
 ### ItemPool API
 - getItem($key) // Retrieve an item and returns an empty item if not found

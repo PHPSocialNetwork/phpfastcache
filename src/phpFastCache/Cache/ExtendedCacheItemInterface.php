@@ -149,4 +149,13 @@ interface ExtendedCacheItemInterface extends CacheItemInterface
      * @return array
      */
     public function getRemovedTags();
+
+    /**
+     * Return the data as a well-formatted string.
+     * Any scalar value will be casted to an array
+     * @param int $option json_encode() options
+     * @param int $depth json_encode() depth
+     * @return string
+     */
+    public function getDataAsJsonString($option = 0, $depth = 512);
 }

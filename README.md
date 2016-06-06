@@ -76,12 +76,12 @@ phpFastCache offers you a lot of useful APIs:
 - getTagsAsString($separator = ', ') // Get the data a string separated by $separator
 - removeTag($tagName) // Remove a tag
 - removeTags(array $tagNames) // Remove some tags
-- getDataAsJsonString($option = 0, $depth = 512)// Return the data as a well-formatted json string
+- getDataAsJsonString()// Return the data as a well-formatted json string
 
 ### ItemPool API
 - getItem($key) // Retrieve an item and returns an empty item if not found
 - getItems(array $keys) // Retrieve one or more item and returns an array of items
-- getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512) // Returns A json string that represents an array of items
+- getItemsAsJsonString(array $keys) // Returns A json string that represents an array of items
 - hasItem($key) // Tests if an item exists
 - deleteItem($key) // Delete an item
 - deleteItems(array $keys) // Delete one or more items
@@ -92,7 +92,7 @@ phpFastCache offers you a lot of useful APIs:
 - stats() // Return the cache statistics as an object, useful for checking disk space used by the cache etc.
 - getItemsByTag($tagName) // Return items by a tag
 - getItemsByTags(array $tagNames) // Return items by some tags
-- getItemsByTagsAsJsonString(array $tagNames, $option = 0, $depth = 512) // Returns A json string that represents an array of items by tags-based
+- getItemsByTagsAsJsonString(array $tagNames) // Returns A json string that represents an array of items by tags-based
 - deleteItemsByTag($tagName) // Delete items by a tag
 - deleteItemsByTags(array $tagNames) // Delete items by some tags
 - incrementItemsByTag($tagName, $step = 1) // Increment items by a tag

@@ -15,6 +15,7 @@
 namespace phpFastCache\Core;
 
 use InvalidArgumentException;
+use Psr\Cache\CacheItemInterface;
 
 trait ExtendedCacheItemPoolTrait
 {
@@ -28,7 +29,10 @@ trait ExtendedCacheItemPoolTrait
      */
     public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512)
     {
-        return json_encode(array_values($this->getItems($keys)), $option, $depth);
+        $callback = function(CacheItemInterface $item){
+            return $item->get();
+        };
+        return json_encode(array_map($callback, array_values($this->getItems($keys))), $option, $depth);
     }
 
     /**
@@ -39,9 +43,9 @@ trait ExtendedCacheItemPoolTrait
     public function getItemsByTag($tagName)
     {
         if (is_string($tagName)) {
-            $driverResponse = $this->driverRead($this->getTagKey($tagName));
-            if ($driverResponse) {
-                $items = (array) $this->driverUnwrapData($driverResponse);
+            $driverResponse = $this->getItem($this->getTagKey($tagName));
+            if ($driverResponse->isHit()) {
+                $items = (array) $driverResponse->get();
 
                 return $this->getItems(array_unique(array_keys($items)));
             } else {
@@ -83,7 +87,11 @@ trait ExtendedCacheItemPoolTrait
      */
     public function getItemsByTagsAsJsonString(array $tagNames, $option = 0, $depth = 512)
     {
-        return json_encode(array_values($this->getItemsByTags($tagNames)), $option, $depth);
+        $callback = function(CacheItemInterface $item){
+            return $item->get();
+        };
+
+        return json_encode(array_map($callback, array_values($this->getItemsByTags($tagNames))), $option, $depth);
     }
 
     /**

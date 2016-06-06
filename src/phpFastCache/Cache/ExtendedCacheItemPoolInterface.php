@@ -75,6 +75,22 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     public function getItems(array $keys = []);
 
     /**
+     * Returns A json string that represents an array of items.
+     *
+     * @param array $keys
+     * An indexed array of keys of items to retrieve.
+     * @param int $option json_encode() options
+     * @param int $depth json_encode() depth
+     *
+     * @throws InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return string
+     */
+    public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512);
+
+    /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
      */
@@ -120,6 +136,22 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *   traversable MUST be returned instead.
      */
     public function getItemsByTags(array $tagNames);
+
+    /**
+     * Returns A json string that represents an array of items by tags-based.
+     *
+     * @param array $tagNames
+     * An indexed array of keys of items to retrieve.
+     * @param int $option json_encode() options
+     * @param int $depth json_encode() depth
+     *
+     * @throws InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return string
+     */
+    public function getItemsByTagsAsJsonString(array $tagNames, $option = 0, $depth = 512);
 
     /**
      * Removes the item from the pool by tag.

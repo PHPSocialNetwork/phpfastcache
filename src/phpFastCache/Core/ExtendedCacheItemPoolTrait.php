@@ -19,6 +19,19 @@ use InvalidArgumentException;
 trait ExtendedCacheItemPoolTrait
 {
     /**
+     * @param array $keys
+     * An indexed array of keys of items to retrieve.
+     * @param int $option json_encode() options
+     * @param int $depth json_encode() depth
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512)
+    {
+        return json_encode(array_values($this->getItems($keys)), $option, $depth);
+    }
+
+    /**
      * @param string $tagName
      * @return \phpFastCache\Cache\ExtendedCacheItemInterface[]
      * @throws InvalidArgumentException
@@ -52,6 +65,25 @@ trait ExtendedCacheItemPoolTrait
         }
 
         return $items;
+    }
+
+    /**
+     * Returns A json string that represents an array of items by tags-based.
+     *
+     * @param array $tagNames
+     * An indexed array of keys of items to retrieve.
+     * @param int $option json_encode() options
+     * @param int $depth json_encode() depth
+     *
+     * @throws InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return string
+     */
+    public function getItemsByTagsAsJsonString(array $tagNames, $option = 0, $depth = 512)
+    {
+        return json_encode(array_values($this->getItemsByTags($tagNames)), $option, $depth);
     }
 
     /**

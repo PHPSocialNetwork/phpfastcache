@@ -27,7 +27,6 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver extends DriverAbstract
 {
-    use StandardPsr6StructureTrait;
     const PREFIX = 'PFC_';
 
     /**

@@ -32,7 +32,7 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver extends DriverAbstract
 {
-    use PathSeekerTrait, StandardPsr6StructureTrait;
+    use PathSeekerTrait;
 
     /**
      *

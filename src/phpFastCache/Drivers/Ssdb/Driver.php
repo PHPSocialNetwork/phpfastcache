@@ -30,8 +30,6 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver extends DriverAbstract
 {
-    use StandardPsr6StructureTrait;
-
     /**
      * @var SimpleSSDB
      */

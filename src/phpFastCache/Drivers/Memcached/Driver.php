@@ -29,7 +29,7 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver extends DriverAbstract
 {
-    use MemcacheDriverCollisionDetectorTrait, StandardPsr6StructureTrait;
+    use MemcacheDriverCollisionDetectorTrait;
 
     /**
      * Driver constructor.

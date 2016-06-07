@@ -19,6 +19,8 @@ use Psr\Cache\CacheItemInterface;
 
 trait ExtendedCacheItemPoolTrait
 {
+    use StandardPsr6StructureTrait;
+
     /**
      * @param array $keys
      * An indexed array of keys of items to retrieve.

@@ -22,6 +22,20 @@ trait ExtendedCacheItemPoolTrait
     use StandardPsr6StructureTrait;
 
     /**
+     * Deletes all items in the pool.
+     * @deprecated Use clear() instead
+     * Will be removed in 5.1
+     *
+     * @return bool
+     *   True if the pool was successfully cleared. False if there was an error.
+     */
+    public function clean()
+    {
+        trigger_error('Cache clean() method is deprecated, use clear() method instead', E_USER_DEPRECATED);
+        $this->clear();
+    }
+
+    /**
      * @param array $keys
      * An indexed array of keys of items to retrieve.
      * @param int $option json_encode() options

@@ -32,7 +32,7 @@ trait ExtendedCacheItemPoolTrait
     public function clean()
     {
         trigger_error('Cache clean() method is deprecated, use clear() method instead', E_USER_DEPRECATED);
-        $this->clear();
+        return $this->clear();
     }
 
     /**

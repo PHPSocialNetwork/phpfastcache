@@ -52,11 +52,11 @@ class CacheManager
      * @var array
      */
     protected static $config = [
-      'default_chmod' => 0777, // 0777 recommended
-      'fallback' => false, //Fall back when old driver is not support
       'securityKey' => 'auto',// The securityKey that will be used to create sub-directory
       'htaccess' => true,// Auto-generate .htaccess if tit is missing
+      'default_chmod' => 0777, // 0777 recommended
       'path' => '',// if not set will be the value of sys_get_temp_dir()
+      'fallback' => false, //Fall back when old driver is not support
       "limited_memory_each_object" => 4096, // maximum size (bytes) of object store in memory
       "compress_data" => false, // compress stored data, if the backend supports it
     ];

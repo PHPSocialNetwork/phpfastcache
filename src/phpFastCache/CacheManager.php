@@ -51,11 +51,11 @@ class CacheManager
     /**
      * @var array
      */
-    public static $config = [
+    protected static $config = [
       'default_chmod' => 0777, // 0777 recommended
       'fallback' => 'files', //Fall back when old driver is not support
-      'securityKey' => 'auto',
-      'htaccess' => true,
+      'securityKey' => 'auto',// The securityKey that will be used to create sub-directory
+      'htaccess' => true,// Auto-generate .htaccess if tit is missing
       'path' => '',// if not set will be the value of sys_get_temp_dir()
       "limited_memory_each_object" => 4096, // maximum size (bytes) of object store in memory
       "compress_data" => false, // compress stored data, if the backend supports it
@@ -143,6 +143,7 @@ class CacheManager
             unset($instance);
         }
 
+        gc_collect_cycles();
         return !count(self::$instances);
     }
 
@@ -165,14 +166,35 @@ class CacheManager
     /**
      * @param $name
      * @param string $value
+     * @deprecated Method "setup" is deprecated and will be removed in 5.1. Use method "setDefaultConfig" instead.
      */
     public static function setup($name, $value = '')
     {
+        trigger_error('Method "setup" is deprecated and will be removed in 5.1. Use method "setDefaultConfig" instead.');
+        self::setDefaultConfig($name, $value);
+    }
+
+    /**
+     * @param $name string|array
+     * @param mixed $value
+     */
+    public static function setDefaultConfig($name, $value = null)
+    {
         if (is_array($name)) {
             self::$config = array_merge(self::$config, $name);
-        } else {
+        } else if (is_string($name)){
             self::$config[ $name ] = $value;
+        }else{
+            throw new \InvalidArgumentException('Invalid variable type: $name');
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultConfig()
+    {
+        return self::$config;
     }
 
     /**

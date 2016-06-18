@@ -133,4 +133,4 @@ $products = CacheManager::get($key);
 For curious developpers, there is a lot of others available examples [here](https://github.com/khoaofgod/phpFastCache/tree/final/examples).
 
 #### :boom: phpFastCache support
-Found an issue or had an idea ? Come here [here](https://github.com/PHPSocialNetwork/phpfastcache/issues) and let you know !
+Found an issue or had an idea ? Come [here](https://github.com/PHPSocialNetwork/phpfastcache/issues) and let you know !

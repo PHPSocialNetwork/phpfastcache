@@ -53,7 +53,7 @@ class CacheManager
      */
     protected static $config = [
       'default_chmod' => 0777, // 0777 recommended
-      'fallback' => 'files', //Fall back when old driver is not support
+      'fallback' => false, //Fall back when old driver is not support
       'securityKey' => 'auto',// The securityKey that will be used to create sub-directory
       'htaccess' => true,// Auto-generate .htaccess if tit is missing
       'path' => '',// if not set will be the value of sys_get_temp_dir()
@@ -80,7 +80,10 @@ class CacheManager
     {
         static $badPracticeOmeter = [];
 
-        $driver = ucfirst(strtolower($driver));
+        /**
+         * @todo: Standardize a method for driver name
+         */
+        $driver = self::standardizeDriverName($driver);
         $config = array_merge(self::$config, $config);
         if (!$driver || $driver === 'Auto') {
             $driver = self::getAutoClass($config);
@@ -90,7 +93,18 @@ class CacheManager
         if (!isset(self::$instances[ $instance ])) {
             $badPracticeOmeter[$driver] = 1;
             $class = self::getNamespacePath() . $driver . '\Driver';
-            self::$instances[ $instance ] = new $class($config);
+            try{
+                self::$instances[ $instance ] = new $class($config);
+            }catch(phpFastCacheDriverCheckException $e){
+                $fallback = self::standardizeDriverName($config['fallback']);
+                if($fallback && $fallback !== $driver){
+                    $class = self::getNamespacePath() . $fallback . '\Driver';
+                    self::$instances[ $instance ] = new $class($config);
+                    trigger_error(sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver, $fallback), E_USER_WARNING);
+                }else{
+                    throw new phpFastCacheDriverCheckException($e->getMessage(), $e->getCode(), $e);
+                }
+            }
         } else if(++$badPracticeOmeter[$driver] >= 5){
            trigger_error('[' . $driver . '] Calling many times CacheManager::getInstance() for already instanced drivers is a bad practice and have a significant impact on performances.
            See https://github.com/PHPSocialNetwork/phpfastcache/wiki/[V5]-Why-calling-getInstance%28%29-each-time-is-a-bad-practice-%3F');
@@ -192,7 +206,7 @@ class CacheManager
     /**
      * @return array
      */
-    public function getDefaultConfig()
+    public static function getDefaultConfig()
     {
         return self::$config;
     }
@@ -231,5 +245,14 @@ class CacheManager
             'Devfalse',
             'Cookie',
         ]);
+    }
+
+    /**
+     * @param string $driverName
+     * @return string
+     */
+    public static function standardizeDriverName($driverName)
+    {
+        return ucfirst(strtolower(trim($driverName)));
     }
 }

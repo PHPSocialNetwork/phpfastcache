@@ -18,6 +18,6 @@
 - [x] Implement Dev Driver (return null/bool everywhere for development purpose)
 - [x] Implement advanced tags features: incrementByTag(s), decrementByTag(s), appendByTag(s), prependByTag(s), expiresAfterByTag(s)
 - [x] Final code review + psr2 checks + psr-6 null value as legitimates value.
+- [x] Testing fallback option
+- [x] Rewrite Wiki 
 - [ ] Check Wincache driver in real Windows env (and not in VM)
-- [ ] Testing fallback option
-- [ ] Rewrite Wiki 

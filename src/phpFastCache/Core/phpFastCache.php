@@ -156,7 +156,7 @@ class phpFastCache
      */
     public static function getPath($skip_create_path = false, $config)
     {
-        $tmp_dir = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
+        $tmp_dir = rtrim(ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir(), '\\/') . DIRECTORY_SEPARATOR . 'phpfastcache';
 
         if (!isset($config[ 'path' ]) || $config[ 'path' ] == '') {
             if (self::isPHPModule()) {
@@ -191,7 +191,7 @@ class phpFastCache
 
         $securityKey = self::cleanFileName($securityKey);
 
-        $full_path = rtrim($path,'/') . '/' . $securityKey;
+        $full_path = rtrim($path, '\\/') . DIRECTORY_SEPARATOR . $securityKey;
         $full_pathx = md5($full_path);
 
 

@@ -32,7 +32,7 @@ trait PathSeekerTrait
      */
     public function getPath($getBasePath = false)
     {
-        $tmp_dir = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
+        $tmp_dir = rtrim(ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir(), '\\/') . DIRECTORY_SEPARATOR . 'phpfastcache';
 
         if (!isset($this->config[ 'path' ]) || $this->config[ 'path' ] == '') {
             if (self::isPHPModule()) {

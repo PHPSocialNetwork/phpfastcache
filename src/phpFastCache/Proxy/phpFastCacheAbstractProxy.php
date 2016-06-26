@@ -61,7 +61,7 @@ abstract class phpFastCacheAbstractProxy
      * @param string $driver
      * @param array $config
      */
-    public function __construct($driver = '', array $config = [])
+    public function __construct($driver = 'auto', array $config = [])
     {
         $this->instance = CacheManager::getInstance($driver, $config);
     }

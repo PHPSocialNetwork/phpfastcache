@@ -15,7 +15,7 @@
 namespace phpFastCache\Exceptions;
 
 /**
- * Class phpFastCacheDriverException
+ * Class phpFastCacheDriverCheckException
  * @package phpFastCache\Exceptions
  */
 class phpFastCacheDriverCheckException extends phpFastCacheDriverException

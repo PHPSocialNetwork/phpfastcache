@@ -31,7 +31,7 @@ class driverStatistic implements ArrayAccess
     /**
      * @var string
      */
-    protected $size = '';
+    protected $size = 0;
 
     /**
      * @var string
@@ -73,7 +73,7 @@ class driverStatistic implements ArrayAccess
      */
     public function setInfo($info)
     {
-        $this->info = ($info ?: false);
+        $this->info = ($info ?: '');
 
         return $this;
     }
@@ -85,7 +85,7 @@ class driverStatistic implements ArrayAccess
      */
     public function setSize($size)
     {
-        $this->size = ($size ?: false);
+        $this->size = ($size ?: 0);
 
         return $this;
     }
@@ -96,7 +96,7 @@ class driverStatistic implements ArrayAccess
      */
     public function setData($data)
     {
-        $this->data = ($data ?: false);
+        $this->data = ($data ?: '');
 
         return $this;
     }

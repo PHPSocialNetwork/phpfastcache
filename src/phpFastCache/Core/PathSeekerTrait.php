@@ -67,7 +67,7 @@ trait PathSeekerTrait
             $securityKey .= '/';
         }
 
-        $securityKey = $this->cleanFileName($securityKey);
+        $securityKey = static::cleanFileName($securityKey);
 
         $full_path = rtrim($path, '/') . '/' . $securityKey;
         $full_pathx = md5($full_path);
@@ -201,18 +201,18 @@ trait PathSeekerTrait
      */
     protected function htaccessGen($path, $create = true)
     {
-        if ($create == true) {
+        if ($create === true) {
             if (!is_writable($path)) {
                 try {
-                    chmod($path, 0777);
+                    if(!chmod($path, 0777)){
+                        throw new phpFastCacheDriverException('Chmod failed on : ' . $path);
+                    }
                 } catch (phpFastCacheDriverException $e) {
-                    throw new phpFastCacheDriverException('PLEASE CHMOD ' . $path . ' - 0777 OR ANY WRITABLE PERMISSION!',
-                      92);
+                    throw new phpFastCacheDriverException('PLEASE CHMOD ' . $path . ' - 0777 OR ANY WRITABLE PERMISSION!', 0, $e);
                 }
             }
 
             if (!file_exists($path . "/.htaccess")) {
-                //   echo "write me";
                 $html = "order deny, allow \r\n
 deny from all \r\n
 allow from 127.0.0.1";

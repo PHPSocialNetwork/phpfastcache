@@ -12,16 +12,20 @@
 language: php
 services:
   - memcached
+  # - redis-server
+before_script: phpenv config-add var/php/conf/phpfastcache.ini
 php:
-  - 5.3
-  - 5.4
+  # - 5.3
+  # - 5.4
   - 5.5
   - 5.6
   - 7.0
-  # - nightly
+  - nightly
   # - hhvm We may need to do review this check later
-
+install:
+  - ./bin/ci/install_dependencies.sh
 script:
   - php -f tests/SyntaxChecker.test.php
   - php -f tests/Autoload.test.php
   - php -f tests/NewCacheInstance.test.php
+  - php -f tests/Psr6InterfaceImplements.test.php

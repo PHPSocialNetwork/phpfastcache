@@ -12,26 +12,10 @@
  *
  */
 
-/**
- * Welcome to Learn Lesson
- * This is very Simple PHP Code of Caching
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
- */
-
 use phpFastCache\CacheManager;
 
 // Include composer autoloader
-require '../vendor/autoload.php';
-
-CacheManager::setup(array(
-    'redis' => array(
-        'host' => '127.0.0.1',
-        'port' => '',
-        'password' => '',
-        'database' => '',
-        'timeout' => '',
-    ),
-));
+require __DIR__ . '/../vendor/autoload.php';
 
 $InstanceCache = CacheManager::getInstance('predis');
 
@@ -40,22 +24,20 @@ $InstanceCache = CacheManager::getInstance('predis');
  * product_page is "identity keyword";
  */
 $key = "product_page";
-$CachedString = $InstanceCache->get($key);
+$CachedString = $InstanceCache->getItem($key);
 
-if (is_null($CachedString)) {
-    $CachedString = "Predis Cache --> Cache Enabled --> Well done !";
+if (is_null($CachedString->get())) {
+    //$CachedString = "APC Cache --> Cache Enabled --> Well done !";
     // Write products to Cache in 10 minutes with same keyword
-    $InstanceCache->set($key, $CachedString, 600);
+    $CachedString->set("Predis Cache --> Cache Enabled --> Well done !")->expiresAfter(5);
+    $InstanceCache->save($CachedString);
 
     echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ";
-    echo $CachedString;
+    echo $CachedString->get();
 
 } else {
     echo "READ FROM CACHE // ";
-    echo $CachedString;
+    echo $CachedString->get();
 }
 
-echo '<br /><br /><a href="/">Back to index</a>&nbsp;--&nbsp;<a href="/' . basename(__FILE__) . '">Reload</a>';
-
-// Testing Functions
-require_once __DIR__."/TestingFunctions.php";
+echo '<br /><br /><a href="/">Back to index</a>&nbsp;--&nbsp;<a href="./' . basename(__FILE__) . '">Reload</a>';

@@ -14,160 +14,246 @@
 
 namespace phpFastCache;
 
-use phpFastCache\Core\phpFastCache;
+use phpFastCache\Cache\ExtendedCacheItemPoolInterface;
 use phpFastCache\Core\DriverAbstract;
+use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 
 /**
  * Class CacheManager
  * @package phpFastCache
  *
- * @method static DriverAbstract Apc() Apc($config = array()) Return a driver "apc" instance
- * @method static DriverAbstract Cookie() Cookie($config = array()) Return a driver "cookie" instance
- * @method static DriverAbstract Files() Files($config = array()) Return a driver "files" instance
- * @method static DriverAbstract Memcache() Memcache($config = array()) Return a driver "memcache" instance
- * @method static DriverAbstract Memcached() Memcached($config = array()) Return a driver "memcached" instance
- * @method static DriverAbstract Predis() Predis($config = array()) Return a driver "predis" instance
- * @method static DriverAbstract Redis() Redis($config = array()) Return a driver "redis" instance
- * @method static DriverAbstract Sqlite() Sqlite($config = array()) Return a driver "sqlite" instance
- * @method static DriverAbstract Ssdb() Ssdb($config = array()) Return a driver "ssdb" instance
- * @method static DriverAbstract Wincache() Wincache($config = array()) Return a driver "wincache" instance
- * @method static DriverAbstract Xcache() Xcache($config = array()) Return a driver "xcache" instance
+ * @method static DriverAbstract Apc() Apc($config = []) Return a driver "apc" instance
+ * @method static DriverAbstract Cookie() Cookie($config = []) Return a driver "cookie" instance
+ * @method static DriverAbstract Files() Files($config = []) Return a driver "files" instance
+ * @method static DriverAbstract Memcache() Memcache($config = []) Return a driver "memcache" instance
+ * @method static DriverAbstract Memcached() Memcached($config = []) Return a driver "memcached" instance
+ * @method static DriverAbstract Predis() Predis($config = []) Return a driver "predis" instance
+ * @method static DriverAbstract Redis() Redis($config = []) Return a driver "redis" instance
+ * @method static DriverAbstract Sqlite() Sqlite($config = []) Return a driver "sqlite" instance
+ * @method static DriverAbstract Ssdb() Ssdb($config = []) Return a driver "ssdb" instance
+ * @method static DriverAbstract Wincache() Wincache($config = []) Return a driver "wincache" instance
+ * @method static DriverAbstract Xcache() Xcache($config = []) Return a driver "xcache" instance
  *
  */
 class CacheManager
 {
-    public static $instances = array();
-    public static $memory = array();
-    public static $hit = array();
+    /**
+     * @var int
+     */
+    public static $ReadHits = 0;
 
     /**
-     * @param string $storage
-     * @param array $config
-     * @return DriverAbstract
+     * @var int
      */
-    public static function getInstance($storage = 'auto', $config = array())
+    public static $WriteHits = 0;
+
+    /**
+     * @var array
+     */
+    protected static $config = [
+      'securityKey' => 'auto',// The securityKey that will be used to create sub-directory
+      'htaccess' => true,// Auto-generate .htaccess if tit is missing
+      'default_chmod' => 0777, // 0777 recommended
+      'path' => '',// if not set will be the value of sys_get_temp_dir()
+      'fallback' => false, //Fall back when old driver is not support
+      'limited_memory_each_object' => 4096, // maximum size (bytes) of object store in memory
+      'compress_data' => false, // compress stored data, if the backend supports it
+    ];
+
+    /**
+     * @var string
+     */
+    protected static $namespacePath;
+
+    /**
+     * @var array
+     */
+    protected static $instances = [];
+
+    /**
+     * @param string $driver
+     * @param array $config
+     * @return ExtendedCacheItemPoolInterface
+     */
+    public static function getInstance($driver = 'auto', $config = [])
     {
-        $storage = strtolower($storage);
-        if (empty($config)) {
-            $config = phpFastCache::$config;
-        }
-        if (!isset($config[ 'cache_method' ])) {
-            $config[ 'cache_method' ] = phpFastCache::$config[ 'cache_method' ];
-        }
-        if (!isset($config[ 'limited_memory_each_object' ])) {
-            $config[ 'limited_memory_each_object' ] = phpFastCache::$config[ 'limited_memory_each_object' ];
-        }
-        if (isset(phpFastCache::$config[ 'overwrite' ]) && !in_array(phpFastCache::$config[ 'overwrite' ], array('auto', ''), true)) {
-            phpFastCache::$config[ 'storage' ] = phpFastCache::$config[ 'overwrite' ];
-            $storage = phpFastCache::$config[ 'overwrite' ];
-        } else if (isset(phpFastCache::$config[ 'storage' ]) && !in_array(phpFastCache::$config[ 'storage' ], array('auto', ''), true)) {
-            $storage = phpFastCache::$config[ 'storage' ];
-        } else if (in_array($storage, array('auto', ''), true)) {
-            $storage = phpFastCache::getAutoClass($config);
+        static $badPracticeOmeter = [];
+
+        /**
+         * @todo: Standardize a method for driver name
+         */
+        $driver = self::standardizeDriverName($driver);
+        $config = array_merge(self::$config, $config);
+        if (!$driver || $driver === 'Auto') {
+            $driver = self::getAutoClass($config);
         }
 
-        //  echo $storage."<br>";
-        $instance = md5(serialize($config) . $storage);
-        if (!isset(self::$instances[ $instance ]) || is_null(self::$instances[ $instance ])) {
-            $class = '\phpFastCache\Drivers\\' . $storage;
-            $config[ 'storage' ] = $storage;
-            $config[ 'instance' ] = $instance;
-            $config[ 'class' ] = $class;
-            if (!isset(self::$memory[ $instance ])) {
-                self::$memory[ $instance ] = array();
-            }
-
-            if (!isset(self::$hit[ $instance ])) {
-                self::$hit[ $instance ] = array(
-                  "class" => $class,
-                  "storage" => $storage,
-                  "data" => array(),
-                );
-                if ($config[ 'cache_method' ] == 4) {
-                    register_shutdown_function('phpFastCache\CacheManager::cleanCachingMethod', null);
+        $instance = crc32($driver . serialize($config));
+        if (!isset(self::$instances[ $instance ])) {
+            $badPracticeOmeter[$driver] = 1;
+            $class = self::getNamespacePath() . $driver . '\Driver';
+            try{
+                self::$instances[ $instance ] = new $class($config);
+            }catch(phpFastCacheDriverCheckException $e){
+                $fallback = self::standardizeDriverName($config['fallback']);
+                if($fallback && $fallback !== $driver){
+                    $class = self::getNamespacePath() . $fallback . '\Driver';
+                    self::$instances[ $instance ] = new $class($config);
+                    trigger_error(sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver, $fallback), E_USER_WARNING);
+                }else{
+                    throw new phpFastCacheDriverCheckException($e->getMessage(), $e->getCode(), $e);
                 }
             }
-
-            self::$instances[ $instance ] = new $class($config);
+        } else if(++$badPracticeOmeter[$driver] >= 5){
+           trigger_error('[' . $driver . '] Calling many times CacheManager::getInstance() for already instanced drivers is a bad practice and have a significant impact on performances.
+           See https://github.com/PHPSocialNetwork/phpfastcache/wiki/[V5]-Why-calling-getInstance%28%29-each-time-is-a-bad-practice-%3F');
         }
 
         return self::$instances[ $instance ];
     }
 
     /**
-     * Setup Method
-     * @param string $string | traditional(normal), memory (fast), phpfastcache (fastest)
+     * @param $config
+     * @return string
+     * @throws phpFastCacheDriverCheckException
      */
-    public static function CachingMethod($string = "phpFastCache")
+    public static function getAutoClass($config = [])
     {
-        $string = strtolower($string);
-        if (in_array($string, array("normal", "traditional"))) {
-            phpFastCache::$config[ 'cache_method' ] = 1;
-        } else if (in_array($string, array("fast", "memory"))) {
-            phpFastCache::$config[ 'cache_method' ] = 2;
-        } else if (in_array($string, array("fastest", "phpfastcache"))) {
-            phpFastCache::$config[ 'cache_method' ] = 3;
-        } else if (in_array($string, array("superfast", "phpfastcachex"))) {
-            phpFastCache::$config[ 'cache_method' ] = 4;
+        static $autoDriver;
+
+        if ($autoDriver === null) {
+            foreach (self::getStaticSystemDrivers() as $driver) {
+                try {
+                    self::getInstance($driver, $config);
+                    $autoDriver = $driver;
+                } catch (phpFastCacheDriverCheckException $e) {
+                    continue;
+                }
+            }
         }
+
+        return $autoDriver;
     }
 
     /**
-     * CacheManager::Files();
-     * CacheManager::Memcached();
-     * CacheManager::get($keyword);
-     * CacheManager::set(), touch, other @method supported
+     * @param string $name
+     * @param array $arguments
+     * @return \Psr\Cache\CacheItemPoolInterface
      */
     public static function __callStatic($name, $arguments)
     {
-        $driver = strtolower($name);
-        if (!isset(self::$instances[ 'loaded' ][ $driver ]) && class_exists("\\phpFastCache\\Drivers\\{$driver}")) {
-            self::$instances[ 'loaded' ][ $driver ] = true;
-        }
-        if (isset(self::$instances[ 'loaded' ][ $driver ])) {
-            return self::getInstance($name, (isset($arguments[ 0 ]) ? $arguments[ 0 ] : array()));
-        } else {
-            return call_user_func_array(array(self::getInstance(), $name), $arguments);
-        }
+        $options = (array_key_exists(0, $arguments) && is_array($arguments) ? $arguments[ 0 ] : []);
 
+        return self::getInstance($name, $options);
     }
 
     /**
-     * Shortcut to phpFastCache::setup()
+     * @return bool
+     */
+    public static function clearInstances()
+    {
+        foreach (self::$instances as &$instance) {
+            unset($instance);
+        }
+
+        gc_collect_cycles();
+        return !count(self::$instances);
+    }
+
+    /**
+     * @return string
+     */
+    public static function getNamespacePath()
+    {
+        return self::$namespacePath ?: __NAMESPACE__ . '\Drivers\\';
+    }
+
+    /**
+     * @param string $path
+     */
+    public static function setNamespacePath($path)
+    {
+        self::$namespacePath = $path;
+    }
+
+    /**
+     * @param $name
+     * @param string $value
+     * @deprecated Method "setup" is deprecated and will be removed in 5.1. Use method "setDefaultConfig" instead.
+     * @throws \InvalidArgumentException
      */
     public static function setup($name, $value = '')
     {
-        phpFastCache::setup($name, $value);
+        trigger_error('Method "setup" is deprecated and will be removed in 5.1. Use method "setDefaultConfig" instead.');
+        self::setDefaultConfig($name, $value);
     }
 
     /**
-     * @param string $instance
+     * @param $name string|array
+     * @param mixed $value
+     * @throws \InvalidArgumentException
      */
-    public static function cleanCachingMethod($instance = null)
+    public static function setDefaultConfig($name, $value = null)
     {
-        if (is_null($instance)) {
-            foreach (self::$instances as $instance => $data) {
-                self::__CleanCachingMethod($instance);
-                unset($data);
-            }
-        } else {
-            self::__CleanCachingMethod($instance);
+        if (is_array($name)) {
+            self::$config = array_merge(self::$config, $name);
+        } else if (is_string($name)){
+            self::$config[ $name ] = $value;
+        }else{
+            throw new \InvalidArgumentException('Invalid variable type: $name');
         }
     }
 
     /**
-     * @param string $instance
+     * @return array
      */
-    protected static function __CleanCachingMethod($instance)
+    public static function getDefaultConfig()
     {
-        if(is_array(self::$memory[ $instance ]) && !empty(self::$memory[ $instance ])) {
-            $old = self::$instances[$instance]->config['cache_method'];
-            self::$instances[$instance]->config['cache_method'] = 1;
-            foreach (self::$memory[$instance] as $keyword => $object) {
-                self::$instances[$instance]->set($keyword, $object['value'], $object['expired_in']);
-            }
-            self::$instances[$instance]->config['cache_method'] = $old;
-            self::$memory[$instance] = array();
-        }
+        return self::$config;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getStaticSystemDrivers()
+    {
+        return [
+          'Sqlite',
+          'Files',
+          'Apc',
+          'Apcu',
+          'Memcache',
+          'Memcached',
+          'Couchbase',
+          'Mongodb',
+          'Predis',
+          'Redis',
+          'Ssdb',
+          'Leveldb',
+          'Wincache',
+          'Xcache',
+          'Devnull',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getStaticAllDrivers()
+    {
+        return array_merge(self::getStaticSystemDrivers(), [
+            'Devtrue',
+            'Devfalse',
+            'Cookie',
+        ]);
+    }
+
+    /**
+     * @param string $driverName
+     * @return string
+     */
+    public static function standardizeDriverName($driverName)
+    {
+        return ucfirst(strtolower(trim($driverName)));
     }
 }

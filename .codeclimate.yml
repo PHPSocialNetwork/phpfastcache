@@ -38,6 +38,10 @@ engines:
         enabled: false
       Controversial/CamelCaseVariableName:
         enabled: false
+      Design/TooManyPublicMethods:
+        enabled: false
+      Design/NpathComplexity:
+        enabled: false
 ratings:
   paths:
   - "**.inc"
@@ -48,4 +52,6 @@ ratings:
   - "**.py"
   - "**.rb"
 exclude_paths:
-- "src/phpFastCache/_extensions/**"
+- "bin/**"
+- "examples/**"
+- "tests/**"

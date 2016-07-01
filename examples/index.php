@@ -25,7 +25,7 @@ echo '</ul>';
 
 // Comment this "exit;" to display extensions 
 // informations about missing/misconfigured drivers
-exit;
+// exit;
 
 echo '<h2> PHP extensions loaded:  </h2>';
 echo '<ul>';

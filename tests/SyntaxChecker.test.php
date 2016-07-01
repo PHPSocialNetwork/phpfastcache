@@ -6,7 +6,7 @@
  */
 function read_dir($dir, $ext = null)
 {
-    $list = array();
+    $list = [];
     $dir .= '/';
     if (($res = opendir($dir)) === false) {
         exit(1);
@@ -29,19 +29,27 @@ function read_dir($dir, $ext = null)
     return $list;
 }
 
-$list = read_dir('.', 'php');
-$list += read_dir('.', 'tpl');
+$list = read_dir(__DIR__ . '/../', 'php');
+$list += read_dir(__DIR__ . '/../', 'tpl');
 
 $exit = 0;
 foreach ($list as $file) {
     $output = '';
-
-    exec('php -lf "' . $file . '"', $output, $status);
+    /**
+     * @todo Make the exclusions much cleaner
+     */
+    if (strpos($file, '/vendor/composer') === false && strpos($file, '/bin/stubs') === false) {
+        exec('php -lf "' . $file . '"', $output, $status);
+    } else {
+        echo '[SKIP] ' . $file;
+        echo "\n";
+        continue;
+    }
 
     if ($status != 0) {
         $exit = $status;
         echo '[FAIL]';
-    }else{
+    } else {
         echo '[PASS]';
     }
     echo ' ' . implode("\n", $output);

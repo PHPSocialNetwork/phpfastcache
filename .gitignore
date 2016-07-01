@@ -5,7 +5,6 @@
 *.pydevproject
 .project
 .metadata
-bin/
 tmp/
 *.tmp
 *.bak
@@ -51,7 +50,6 @@ local.properties
 [Rr]elease/
 x64/
 build/
-[Bb]in/
 [Oo]bj/
 
 # MSTest test Results
@@ -201,7 +199,7 @@ dist/
 build/
 eggs/
 parts/
-var/
+# var/
 sdist/
 develop-eggs/
 .installed.cfg
@@ -235,3 +233,4 @@ nbproject/
 #Composer
 vendor/
 composer.lock
+composer.phar

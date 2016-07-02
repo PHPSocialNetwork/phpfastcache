@@ -17,10 +17,6 @@ use phpFastCache\CacheManager;
 // Include phpFastCache autoloader
 require __DIR__ . '/../src/autoload.php';
 
-// Not provided by phpFastCache
-// you have to do it yourself
-require __DIR__ . 'YOUR_PROJECT/fig_cache_interfaces.php';
-
 $InstanceCache = CacheManager::getInstance('memcache');
 
 /**

@@ -13,6 +13,7 @@
  */
 
 define('PFC_PHP_EXT', 'php');
+define('PFC_BIN_DIR', __DIR__ . '../bin/legacy/');
 
 /**
  * Register Autoload
@@ -26,9 +27,17 @@ spl_autoload_register(function ($entity) {
          */
         return;
     } else if (strpos($entity, 'Psr\Cache') === 0) {
-        trigger_error('If you cannot use <b>composer</b>, you have to include manually the Psr\\Cache interfaces.<br />See: https://github.com/php-fig/cache/tree/master/src<br /> Called ' . $entity,
-          E_USER_ERROR);
+        $entity = str_replace('\\', '/', $entity);
+        $path = PFC_BIN_DIR . $entity . '.' . PFC_PHP_EXT;
 
+        if (is_readable($path)) {
+            require_once $path;
+        }else{
+            trigger_error('Cannot locate the Psr/Cache files', E_USER_ERROR);
+            return;
+        }
+    }else{
+        // Unsupported entity
         return;
     }
 

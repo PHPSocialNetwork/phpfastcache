@@ -13,7 +13,7 @@
  */
 
 define('PFC_PHP_EXT', 'php');
-define('PFC_BIN_DIR', __DIR__ . '../bin/legacy/');
+define('PFC_BIN_DIR', __DIR__ . '/../bin/');
 
 /**
  * Register Autoload
@@ -27,15 +27,14 @@ spl_autoload_register(function ($entity) {
          */
         return;
     } else if (strpos($entity, 'Psr\Cache') === 0) {
-        $entity = str_replace('\\', '/', $entity);
-        $path = PFC_BIN_DIR . $entity . '.' . PFC_PHP_EXT;
+        $path = PFC_BIN_DIR . 'legacy/Psr/Cache/src/' . substr(strrchr($entity, '\\'), 1) . '.' . PFC_PHP_EXT;
 
         if (is_readable($path)) {
             require_once $path;
         }else{
             trigger_error('Cannot locate the Psr/Cache files', E_USER_ERROR);
-            return;
         }
+        return;
     }
 
     $entity = str_replace('\\', '/', $entity);

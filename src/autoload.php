@@ -36,9 +36,6 @@ spl_autoload_register(function ($entity) {
             trigger_error('Cannot locate the Psr/Cache files', E_USER_ERROR);
             return;
         }
-    }else{
-        // Unsupported entity
-        return;
     }
 
     $entity = str_replace('\\', '/', $entity);

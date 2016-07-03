@@ -21,9 +21,9 @@
         ],
     "require": {
         "php": ">=5.5.0",
-        "psr/cache": "1.0.x",
-        "predis/predis": "1.0.x",
-        "phpfastcache/phpssdb": "0.0.x",
+        "psr/cache": "^1.0.0",
+        "predis/predis": "^1.0.0",
+        "phpfastcache/phpssdb": "^0.0.1",
         "ext-json": "*"
     },
     "suggest": {

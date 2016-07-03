@@ -128,7 +128,7 @@ trait ItemBaseTrait
      */
     public function expiresAt($expiration)
     {
-        if ($expiration instanceof \DateTimeInterface || is_a($expiration, 'DateTime')) {
+        if ($expiration instanceof \DateTimeInterface || $expiration instanceof \DateTime) {
             $this->expirationDate = $expiration;
         } else {
             throw new \InvalidArgumentException('$expiration must be an object implementing the DateTimeInterface');

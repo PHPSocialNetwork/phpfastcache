@@ -15,21 +15,21 @@
 namespace phpFastCache\Drivers\Memcache;
 
 use Memcache as MemcacheSoftware;
-use phpFastCache\Core\DriverAbstract;
-use phpFastCache\Core\MemcacheDriverCollisionDetectorTrait;
-use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Core\Pool\DriverBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
+use phpFastCache\Util\MemcacheDriverCollisionDetectorTrait;
 use Psr\Cache\CacheItemInterface;
 
 /**
  * Class Driver
  * @package phpFastCache\Drivers
  */
-class Driver extends DriverAbstract
+class Driver implements ExtendedCacheItemPoolInterface
 {
-    use MemcacheDriverCollisionDetectorTrait;
+    use DriverBaseTrait, MemcacheDriverCollisionDetectorTrait;
 
     /**
      * @var int

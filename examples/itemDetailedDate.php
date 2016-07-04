@@ -23,7 +23,7 @@ use phpFastCache\Core\phpFastCache;
 // Setup File Path on your config files
 CacheManager::setDefaultConfig([
   "path" => sys_get_temp_dir(),
-  "itemDetailedDate" => false
+  "itemDetailedDate" => true
 ]);
 
 // In your class, function, you can call the Cache
@@ -51,6 +51,8 @@ if (is_null($CachedString->get())) {
     $InstanceCache->save($CachedString);
 
     echo "READ FROM CACHE // ";
+    echo "\n CREATION DATE: " . $CachedString->getCreationDate()->format(DateTime::W3C);
+    echo "\n MODIFICATION DATE: " . $CachedString->getModificationDate()->format(DateTime::W3C);
     echo "\n EXPIRATION DATE: " . $CachedString->getExpirationDate()->format(DateTime::W3C);
     echo $CachedString->get();
 }

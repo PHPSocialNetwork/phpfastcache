@@ -12,7 +12,7 @@
  *
  */
 
-namespace phpFastCache\Core;
+namespace phpFastCache\Core\Pool\IO;
 
 use phpFastCache\Exceptions\phpFastCacheCoreException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
@@ -39,7 +39,7 @@ trait PathSeekerTrait
                 $path = $tmp_dir;
             } else {
                 $document_root_path = rtrim($_SERVER[ 'DOCUMENT_ROOT' ], '/') . '/../';
-                $path = isset($_SERVER[ 'DOCUMENT_ROOT' ]) && is_writable($document_root_path) ? $document_root_path : rtrim(__DIR__, '/') . '/';
+                $path = isset($_SERVER[ 'DOCUMENT_ROOT' ]) && is_writable($document_root_path) ? $document_root_path : rtrim(__DIR__, '/') . 'PathSeekerTrait.php/';
             }
 
             if ($this->config[ 'path' ] != '') {

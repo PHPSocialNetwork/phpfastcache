@@ -12,9 +12,10 @@
  *
  */
 
-namespace phpFastCache\Cache;
+namespace phpFastCache\Core\Item;
 
 use Psr\Cache\CacheItemInterface;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 
 /**
  * Interface ExtendedCacheItemInterface
@@ -28,9 +29,49 @@ interface ExtendedCacheItemInterface extends CacheItemInterface
     public function getUncommittedData();
 
     /**
-     * @return \DateTimeInterface
+     * @return \DateTimeInterface|null
      */
     public function getExpirationDate();
+
+    /**
+     * Alias of expireAt() with forced $expiration param
+     *
+     * @param \DateTimeInterface $expiration
+     *   The point in time after which the item MUST be considered expired.
+     *   If null is passed explicitly, a default value MAY be used. If none is set,
+     *   the value should be stored permanently or for as long as the
+     *   implementation allows.
+     *
+     * @return static
+     *   The called object.
+     */
+    public function setExpirationDate(\DateTimeInterface $expiration);
+
+    /**
+     * @return \DateTimeInterface
+     * @throws \LogicException
+     */
+    public function getCreationDate();
+    
+    /**
+     * @return \DateTimeInterface
+     * @throws \LogicException
+     */
+    public function getModificationDate();
+
+    /**
+     * @param $date \DateTimeInterface
+     * @return $this
+     * @throws \LogicException
+     */
+    public function setCreationDate(\DateTimeInterface $date);
+
+    /**
+     * @param $date \DateTimeInterface
+     * @return $this
+     * @throws \LogicException
+     */
+    public function setModificationDate(\DateTimeInterface $date);
 
     /**
      * @return int
@@ -43,7 +84,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface
     public function isExpired();
 
     /**
-     * @param \phpFastCache\Cache\ExtendedCacheItemPoolInterface $driver
+     * @param \phpFastCache\Cache\Pool\ExtendedCacheItemPoolInterface $driver
      * @return mixed
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver);

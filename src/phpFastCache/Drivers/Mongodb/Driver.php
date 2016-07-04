@@ -21,7 +21,8 @@ use MongoCollection;
 use MongoConnectionException;
 use MongoCursorException;
 use MongoDate;
-use phpFastCache\Core\DriverAbstract;
+use phpFastCache\Core\Pool\DriverBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
@@ -31,8 +32,10 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver
  * @package phpFastCache\Drivers
  */
-class Driver extends DriverAbstract
+class Driver implements ExtendedCacheItemPoolInterface
 {
+    use DriverBaseTrait;
+    
     /**
      * @var MongodbClient
      */
@@ -83,7 +86,7 @@ class Driver extends DriverAbstract
                   ['_id' => $item->getKey()],
                   [
                     '$set' => [
-                      self::DRIVER_TIME_WRAPPER_INDEX => ($item->getTtl() > 0 ? new MongoDate(time() + $item->getTtl()) : new MongoDate(time())),
+                      self::DRIVER_EDATE_WRAPPER_INDEX => ($item->getTtl() > 0 ? new MongoDate(time() + $item->getTtl()) : new MongoDate(time())),
                       self::DRIVER_DATA_WRAPPER_INDEX => new MongoBinData($this->encode($item->get()), MongoBinData::BYTE_ARRAY),
                       self::DRIVER_TAGS_WRAPPER_INDEX => new MongoBinData($this->encode($item->getTags()), MongoBinData::BYTE_ARRAY),
                     ],
@@ -108,12 +111,12 @@ class Driver extends DriverAbstract
     {
         $document = $this->getCollection()
           ->findOne(['_id' => $item->getKey()],
-            [self::DRIVER_DATA_WRAPPER_INDEX, self::DRIVER_TIME_WRAPPER_INDEX, self::DRIVER_TAGS_WRAPPER_INDEX  /*'d', 'e'*/]);
+            [self::DRIVER_DATA_WRAPPER_INDEX, self::DRIVER_EDATE_WRAPPER_INDEX, self::DRIVER_TAGS_WRAPPER_INDEX  /*'d', 'e'*/]);
 
         if ($document) {
             return [
               self::DRIVER_DATA_WRAPPER_INDEX => $this->decode($document[ self::DRIVER_DATA_WRAPPER_INDEX ]->bin),
-              self::DRIVER_TIME_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[ self::DRIVER_TIME_WRAPPER_INDEX ]->sec),
+              self::DRIVER_EDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[ self::DRIVER_EDATE_WRAPPER_INDEX ]->sec),
               self::DRIVER_TAGS_WRAPPER_INDEX => $this->decode($document[ self::DRIVER_TAGS_WRAPPER_INDEX ]->bin),
             ];
         } else {

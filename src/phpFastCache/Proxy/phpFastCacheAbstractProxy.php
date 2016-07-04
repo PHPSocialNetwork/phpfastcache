@@ -13,7 +13,7 @@
  */
 namespace phpFastCache\Proxy;
 
-use phpFastCache\Cache\ExtendedCacheItemInterface;
+use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\CacheManager;
 use phpFastCache\Entities\driverStatistic;
 use Psr\Cache\CacheItemInterface;
@@ -52,7 +52,7 @@ use Psr\Cache\CacheItemInterface;
 abstract class phpFastCacheAbstractProxy
 {
     /**
-     * @var \phpFastCache\Cache\ExtendedCacheItemPoolInterface
+     * @var \phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface
      */
     protected $instance;
 

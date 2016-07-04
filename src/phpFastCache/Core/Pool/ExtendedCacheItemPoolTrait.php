@@ -12,14 +12,15 @@
  *
  */
 
-namespace phpFastCache\Core;
+namespace phpFastCache\Core\Pool;
 
 use InvalidArgumentException;
 use Psr\Cache\CacheItemInterface;
 
+
 trait ExtendedCacheItemPoolTrait
 {
-    use StandardPsr6StructureTrait;
+    use CacheItemPoolTrait;
 
     /**
      * Deletes all items in the pool.
@@ -53,7 +54,7 @@ trait ExtendedCacheItemPoolTrait
 
     /**
      * @param string $tagName
-     * @return \phpFastCache\Cache\ExtendedCacheItemInterface[]
+     * @return \phpFastCache\Core\Item\ExtendedCacheItemInterface[]
      * @throws InvalidArgumentException
      */
     public function getItemsByTag($tagName)
@@ -74,7 +75,7 @@ trait ExtendedCacheItemPoolTrait
 
     /**
      * @param array $tagNames
-     * @return \phpFastCache\Cache\ExtendedCacheItemInterface[]
+     * @return \phpFastCache\Core\Item\ExtendedCacheItemInterface[]
      * @throws InvalidArgumentException
      */
     public function getItemsByTags(array $tagNames)
@@ -281,4 +282,41 @@ trait ExtendedCacheItemPoolTrait
 
         return $return;
     }
+
+    /**
+     * Driver-related methods
+     */
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return array [
+     *      'd' => 'THE ITEM DATA'
+     *      't' => 'THE ITEM DATE EXPIRATION'
+     *      'g' => 'THE ITEM TAGS'
+     * ]
+     *
+     */
+    abstract protected function driverRead(CacheItemInterface $item);
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return mixed
+     */
+    abstract protected function driverWrite(CacheItemInterface $item);
+
+    /**
+     * @return bool
+     */
+    abstract protected function driverClear();
+
+    /**
+     * @return bool
+     */
+    abstract protected function driverConnect();
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return bool
+     */
+    abstract protected function driverDelete(CacheItemInterface $item);
 }

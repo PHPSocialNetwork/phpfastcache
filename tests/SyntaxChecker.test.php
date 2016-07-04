@@ -4,7 +4,7 @@
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
-function read_dir($dir, $ext = null)
+function readDir($dir, $ext = null)
 {
     $list = [];
     $dir .= '/';
@@ -17,7 +17,7 @@ function read_dir($dir, $ext = null)
         }
         $name = $dir . $name;
         if (is_dir($name)) {
-            $list = array_merge($list, read_dir($name, $ext));
+            $list = array_merge($list, readDir($name, $ext));
         } elseif (is_file($name)) {
             if (!is_null($ext) && substr(strrchr($name, '.'), 1) != $ext) {
                 continue;
@@ -29,8 +29,8 @@ function read_dir($dir, $ext = null)
     return $list;
 }
 
-$list = read_dir(__DIR__ . '/../', 'php');
-$list += read_dir(__DIR__ . '/../', 'tpl');
+$list = readDir(__DIR__ . '/../', 'php');
+$list += readDir(__DIR__ . '/../', 'tpl');
 
 $exit = 0;
 foreach ($list as $file) {

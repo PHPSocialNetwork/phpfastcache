@@ -14,25 +14,24 @@
 
 namespace phpFastCache;
 
-use phpFastCache\Cache\ExtendedCacheItemPoolInterface;
-use phpFastCache\Core\DriverAbstract;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 
 /**
  * Class CacheManager
  * @package phpFastCache
  *
- * @method static DriverAbstract Apc() Apc($config = []) Return a driver "apc" instance
- * @method static DriverAbstract Cookie() Cookie($config = []) Return a driver "cookie" instance
- * @method static DriverAbstract Files() Files($config = []) Return a driver "files" instance
- * @method static DriverAbstract Memcache() Memcache($config = []) Return a driver "memcache" instance
- * @method static DriverAbstract Memcached() Memcached($config = []) Return a driver "memcached" instance
- * @method static DriverAbstract Predis() Predis($config = []) Return a driver "predis" instance
- * @method static DriverAbstract Redis() Redis($config = []) Return a driver "redis" instance
- * @method static DriverAbstract Sqlite() Sqlite($config = []) Return a driver "sqlite" instance
- * @method static DriverAbstract Ssdb() Ssdb($config = []) Return a driver "ssdb" instance
- * @method static DriverAbstract Wincache() Wincache($config = []) Return a driver "wincache" instance
- * @method static DriverAbstract Xcache() Xcache($config = []) Return a driver "xcache" instance
+ * @method static ExtendedCacheItemPoolInterface Apc() Apc($config = []) Return a driver "apc" instance
+ * @method static ExtendedCacheItemPoolInterface Cookie() Cookie($config = []) Return a driver "cookie" instance
+ * @method static ExtendedCacheItemPoolInterface Files() Files($config = []) Return a driver "files" instance
+ * @method static ExtendedCacheItemPoolInterface Memcache() Memcache($config = []) Return a driver "memcache" instance
+ * @method static ExtendedCacheItemPoolInterface Memcached() Memcached($config = []) Return a driver "memcached" instance
+ * @method static ExtendedCacheItemPoolInterface Predis() Predis($config = []) Return a driver "predis" instance
+ * @method static ExtendedCacheItemPoolInterface Redis() Redis($config = []) Return a driver "redis" instance
+ * @method static ExtendedCacheItemPoolInterface Sqlite() Sqlite($config = []) Return a driver "sqlite" instance
+ * @method static ExtendedCacheItemPoolInterface Ssdb() Ssdb($config = []) Return a driver "ssdb" instance
+ * @method static ExtendedCacheItemPoolInterface Wincache() Wincache($config = []) Return a driver "wincache" instance
+ * @method static ExtendedCacheItemPoolInterface Xcache() Xcache($config = []) Return a driver "xcache" instance
  *
  */
 class CacheManager
@@ -51,6 +50,7 @@ class CacheManager
      * @var array
      */
     protected static $config = [
+      'itemDetailedDate' => false,// Specify if the item must provide detailed creation/modification dates
       'securityKey' => 'auto',// The securityKey that will be used to create sub-directory
       'htaccess' => true,// Auto-generate .htaccess if tit is missing
       'default_chmod' => 0777, // 0777 recommended

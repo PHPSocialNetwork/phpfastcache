@@ -12,17 +12,19 @@
  *
  */
 
-namespace phpFastCache\Core;
+namespace phpFastCache\Core\Pool;
 
-use phpFastCache\Cache\ExtendedCacheItemInterface;
+use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\CacheManager;
 use Psr\Cache\CacheItemInterface;
+use phpFastCache\Util\ClassNamespaceResolverTrait;
 
 /**
  * Trait StandardPsr6StructureTrait
  * @package phpFastCache\Core
+ *
  */
-trait StandardPsr6StructureTrait
+trait CacheItemPoolTrait
 {
     use ClassNamespaceResolverTrait;
 
@@ -38,8 +40,9 @@ trait StandardPsr6StructureTrait
 
     /**
      * @param string $key
-     * @return \phpFastCache\Cache\ExtendedCacheItemInterface
+     * @return \phpFastCache\Core\Item\ExtendedCacheItemInterface
      * @throws \InvalidArgumentException
+     * @throws \LogicException
      */
     public function getItem($key)
     {
@@ -56,7 +59,19 @@ trait StandardPsr6StructureTrait
 
                 if ($driverArray) {
                     $item->set($this->driverUnwrapData($driverArray));
-                    $item->expiresAt($this->driverUnwrapTime($driverArray));
+                    $item->expiresAt($this->driverUnwrapEdate($driverArray));
+
+                    if($this->config['itemDetailedDate']){
+
+                        /**
+                         * If the itemDetailedDate has been
+                         * set after caching, we MUST inject
+                         * a new DateTime object on the fly
+                         */
+                        $item->setCreationDate($this->driverUnwrapCdate($driverArray) ?: new \DateTime());
+                        $item->setModificationDate($this->driverUnwrapMdate($driverArray) ?: new \DateTime());
+                    }
+
                     $item->setTags($this->driverUnwrapTags($driverArray));
                     if ($item->isExpired()) {
                         /**

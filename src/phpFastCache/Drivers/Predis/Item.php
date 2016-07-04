@@ -14,9 +14,9 @@
 
 namespace phpFastCache\Drivers\Predis;
 
-use phpFastCache\Cache\ExtendedCacheItemInterface;
-use phpFastCache\Cache\ExtendedCacheItemPoolInterface;
-use phpFastCache\Cache\ItemBaseTrait;
+use phpFastCache\Core\Item\ExtendedCacheItemInterface;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Core\Item\ItemBaseTrait;
 use phpFastCache\Drivers\Predis\Driver as PredisDriver;
 
 /**

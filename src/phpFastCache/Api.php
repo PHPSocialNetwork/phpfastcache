@@ -20,7 +20,7 @@ namespace phpFastCache;
  */
 class Api
 {
-    protected static $version = '1.1.0';
+    protected static $version = '1.2.0';
 
     /**
      * This method will returns the current
@@ -45,6 +45,15 @@ class Api
     public static function getChangelog()
     {
         return <<<CHANGELOG
+- 1.2.0
+-- Implemented Item advanced time methods such as:
+   ExtendedCacheItemInterface::setExpirationDate() (Alias of CacheItemInterface::ExpireAt() for more code logic)
+   ExtendedCacheItemInterface::getCreationDate() * 
+   ExtendedCacheItemInterface::getModificationDate() *
+   ExtendedCacheItemInterface::setCreationDate(\DateTimeInterface) *
+   ExtendedCacheItemInterface::setModificationDate() *
+   * Require configuration directive "itemDetailedDate" to be enabled
+
 - 1.1.0
 -- Implemented JSON methods such as:
    ExtendedCacheItemPoolInterface::getItemsAsJsonString()

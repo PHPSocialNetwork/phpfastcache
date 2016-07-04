@@ -222,6 +222,6 @@ class driverStatistic implements ArrayAccess
     private function getDeprecatedMsg()
     {
         return 'You should consider upgrading your code and treat the statistic array as an object. 
-        The arrayAccess compatibility will be removed in the next major release';
+        The arrayAccess compatibility will be removed in the next major release (>=V6)';
     }
 }

@@ -15,9 +15,9 @@
 namespace phpFastCache\Drivers\Leveldb;
 
 use LevelDB as LeveldbClient;
-use phpFastCache\Core\DriverAbstract;
-use phpFastCache\Core\PathSeekerTrait;
-use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Core\Pool\DriverBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Core\Pool\IO\PathSeekerTrait;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
@@ -28,9 +28,9 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver
  * @package phpFastCache\Drivers
  */
-class Driver extends DriverAbstract
+class Driver implements ExtendedCacheItemPoolInterface
 {
-    use PathSeekerTrait;
+    use DriverBaseTrait, PathSeekerTrait;
 
     const LEVELDB_FILENAME = '.database';
 

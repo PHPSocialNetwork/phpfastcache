@@ -12,7 +12,7 @@
  *
  */
 
-namespace phpFastCache\Core;
+namespace phpFastCache\Util;
 
 /**
  * Trait ClassNamespaceResolverTrait

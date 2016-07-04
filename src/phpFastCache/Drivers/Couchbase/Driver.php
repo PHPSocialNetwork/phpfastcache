@@ -15,8 +15,8 @@
 namespace phpFastCache\Drivers\Couchbase;
 
 use CouchbaseCluster as CouchbaseClient;
-use phpFastCache\Core\DriverAbstract;
-use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Core\Pool\DriverBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
@@ -26,8 +26,10 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver
  * @package phpFastCache\Drivers
  */
-class Driver extends DriverAbstract
+class Driver implements ExtendedCacheItemPoolInterface
 {
+    use DriverBaseTrait;
+
     /**
      * @var CouchbaseClient
      */

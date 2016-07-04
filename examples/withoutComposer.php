@@ -14,7 +14,11 @@
 
 use phpFastCache\CacheManager;
 
-// Include phpFastCache autoloader
+/**
+ * You don't use composer ?
+ * Fine! PhpFastCache provides
+ * his own autoloader.
+ */
 require __DIR__ . '/../src/autoload.php';
 
 $InstanceCache = CacheManager::getInstance('memcache');

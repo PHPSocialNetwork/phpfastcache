@@ -12,12 +12,13 @@
  *
  */
 
-namespace phpFastCache\Cache;
+namespace phpFastCache\Core\Pool;
 
 use InvalidArgumentException;
 use phpFastCache\Entities\driverStatistic;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 
 /**
  * Interface ExtendedCacheItemPoolInterface
@@ -25,6 +26,27 @@ use Psr\Cache\CacheItemPoolInterface;
  */
 interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
 {
+    const DRIVER_CHECK_FAILURE       = '%s is not installed or is misconfigured, cannot continue.';
+    const DRIVER_TAGS_KEY_PREFIX     = '_TAG_';
+    const DRIVER_TAGS_WRAPPER_INDEX  = 'g';
+    const DRIVER_DATA_WRAPPER_INDEX  = 'd';
+
+    /**
+     * Expiration date Index
+     */
+    const DRIVER_EDATE_WRAPPER_INDEX = 'e';
+
+    /**
+     * Creation date Index
+     */
+    const DRIVER_CDATE_WRAPPER_INDEX = 'c';
+
+    /**
+     * Modification date Index
+     */
+    const DRIVER_MDATE_WRAPPER_INDEX = 'm';
+
+
     /**
      * @return array
      */

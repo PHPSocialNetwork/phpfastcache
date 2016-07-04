@@ -16,10 +16,10 @@ namespace phpFastCache\Drivers\Sqlite;
 
 use PDO;
 use PDOException;
-use phpFastCache\Cache\ExtendedCacheItemInterface;
-use phpFastCache\Core\DriverAbstract;
-use phpFastCache\Core\PathSeekerTrait;
-use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Core\Item\ExtendedCacheItemInterface;
+use phpFastCache\Core\Pool\DriverBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Core\Pool\IO\PathSeekerTrait;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
@@ -30,9 +30,9 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver
  * @package phpFastCache\Drivers
  */
-class Driver extends DriverAbstract
+class Driver implements ExtendedCacheItemPoolInterface
 {
-    use PathSeekerTrait;
+    use DriverBaseTrait, PathSeekerTrait;
 
     /**
      *

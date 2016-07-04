@@ -11,10 +11,11 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
-namespace phpFastCache\Cache;
+namespace phpFastCache\Core\Pool;
 
-use phpFastCache\Core\ExtendedCacheItemPoolTrait;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
+use phpFastCache\Core\Item\ExtendedCacheItemInterface;
+
 
 /**
  * Class DriverBaseTrait
@@ -38,16 +39,7 @@ trait DriverBaseTrait
      * @var mixed Instance of driver service
      */
     protected $instance;
-
-    /**
-     * @param $keyword
-     * @return string
-     */
-    protected function encodeFilename($keyword)
-    {
-        return md5($keyword);
-    }
-
+    
     /**
      * @param $config_name
      * @param string $value
@@ -161,16 +153,30 @@ trait DriverBaseTrait
     }
 
     /**
-     * @param \phpFastCache\Cache\ExtendedCacheItemInterface $item
+     * @param \phpFastCache\Core\Item\ExtendedCacheItemInterface $item
      * @return array
      */
     public function driverPreWrap(ExtendedCacheItemInterface $item)
     {
-        return [
+        $wrap = [
           self::DRIVER_DATA_WRAPPER_INDEX => $item->get(),
-          self::DRIVER_TIME_WRAPPER_INDEX => $item->getExpirationDate(),
           self::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
+          self::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),
         ];
+
+        if($this->config['itemDetailedDate']){
+            $wrap[ self::DRIVER_MDATE_WRAPPER_INDEX ] = new \DateTime();
+            /**
+             * If the creation date exists
+             * reuse it else set a new Date
+             */
+            $wrap[ self::DRIVER_CDATE_WRAPPER_INDEX ] = $item->getCreationDate() ?: new \DateTime();
+        }else{
+            $wrap[ self::DRIVER_MDATE_WRAPPER_INDEX ] = null;
+            $wrap[ self::DRIVER_CDATE_WRAPPER_INDEX ] = null;
+        }
+
+        return $wrap;
     }
 
     /**
@@ -196,9 +202,28 @@ trait DriverBaseTrait
      * @param array $wrapper
      * @return \DateTime
      */
-    public function driverUnwrapTime(array $wrapper)
+    public function driverUnwrapEdate(array $wrapper)
     {
-        return $wrapper[ self::DRIVER_TIME_WRAPPER_INDEX ];
+        return $wrapper[ self::DRIVER_EDATE_WRAPPER_INDEX ];
+    }
+
+    /**
+     * @param array $wrapper
+     * @return \DateTime
+     */
+    public function driverUnwrapCdate(array $wrapper)
+    {
+        return $wrapper[ self::DRIVER_CDATE_WRAPPER_INDEX ];
+    }
+
+
+    /**
+     * @param array $wrapper
+     * @return \DateTime
+     */
+    public function driverUnwrapMdate(array $wrapper)
+    {
+        return $wrapper[ self::DRIVER_MDATE_WRAPPER_INDEX ];
     }
 
     /**
@@ -212,7 +237,7 @@ trait DriverBaseTrait
     }
 
     /**
-     * @param \phpFastCache\Cache\ExtendedCacheItemInterface $item
+     * @param \phpFastCache\Core\Item\ExtendedCacheItemInterface $item
      * @return bool
      */
     public function driverWriteTags(ExtendedCacheItemInterface $item)

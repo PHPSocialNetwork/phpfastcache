@@ -14,9 +14,9 @@
 
 namespace phpFastCache\Drivers\Files;
 
-use phpFastCache\Core\DriverAbstract;
-use phpFastCache\Core\PathSeekerTrait;
-use phpFastCache\Core\StandardPsr6StructureTrait;
+use phpFastCache\Core\Pool\DriverBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Core\Pool\IO\PathSeekerTrait;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
@@ -27,9 +27,9 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver
  * @package phpFastCache\Drivers
  */
-class Driver extends DriverAbstract
+class Driver implements ExtendedCacheItemPoolInterface
 {
-    use PathSeekerTrait;
+    use DriverBaseTrait, PathSeekerTrait;
 
     /**
      *
@@ -119,7 +119,7 @@ class Driver extends DriverAbstract
         $content = $this->readfile($file_path);
         $object = $this->decode($content);
 
-        if ($this->driverUnwrapTime($object)->getTimestamp() < time()) {
+        if ($this->driverUnwrapEdate($object)->getTimestamp() < time()) {
             @unlink($file_path);
 
             return null;

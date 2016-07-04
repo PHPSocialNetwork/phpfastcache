@@ -35,7 +35,7 @@ use Psr\Cache\CacheItemInterface;
  * @method bool saveDeferred(CacheItemInterface $item) Sets a cache item to be persisted later
  * @method bool commit() Persists any deferred cache items
  * @method bool clear() Allow you to completely empty the cache and restart from the beginning
- * @method driverStatistic stats() Allow you to completely empty the cache and restart from the beginning
+ * @method driverStatistic stats() Returns a driverStatistic object
  * @method ExtendedCacheItemInterface getItemsByTag($tagName) Return items by a tag
  * @method ExtendedCacheItemInterface[] getItemsByTags(array $tagNames) Return items by some tags
  * @method bool deleteItemsByTag($tagName) Delete items by a tag

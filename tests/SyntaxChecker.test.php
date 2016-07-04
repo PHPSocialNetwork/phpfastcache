@@ -4,20 +4,20 @@
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
-function scanDirectoryRecursively($dir, $ext = null)
+function read_dir($dir, $ext = null)
 {
     $list = [];
     $dir .= '/';
     if (($res = opendir($dir)) === false) {
         exit(1);
     }
-    while (($name = scanDirectoryRecursively($res)) !== false) {
+    while (($name = readdir($res)) !== false) {
         if ($name == '.' || $name == '..') {
             continue;
         }
         $name = $dir . $name;
         if (is_dir($name)) {
-            $list = array_merge($list, scanDirectoryRecursively($name, $ext));
+            $list = array_merge($list, read_dir($name, $ext));
         } elseif (is_file($name)) {
             if (!is_null($ext) && substr(strrchr($name, '.'), 1) != $ext) {
                 continue;
@@ -29,8 +29,8 @@ function scanDirectoryRecursively($dir, $ext = null)
     return $list;
 }
 
-$list = scanDirectoryRecursively(__DIR__ . '/../', 'php');
-$list += scanDirectoryRecursively(__DIR__ . '/../', 'tpl');
+$list = read_dir(__DIR__ . '/../', 'php');
+$list += read_dir(__DIR__ . '/../', 'tpl');
 
 $exit = 0;
 foreach ($list as $file) {

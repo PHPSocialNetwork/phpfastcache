@@ -11,7 +11,6 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
-
 // Include composer autoloader
 require __DIR__ . '/../vendor/autoload.php';
 // OR require_once("../src/phpFastCache/phpFastCache.php");
@@ -27,7 +26,7 @@ CacheManager::setDefaultConfig([
 ]);
 
 // In your class, function, you can call the Cache
-$InstanceCache = CacheManager::getInstance('sqlite');
+$InstanceCache = CacheManager::getInstance('leveldb');
 // OR $InstanceCache = CacheManager::getInstance() <-- open examples/global.setup.php to see more
 
 /**

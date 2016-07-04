@@ -22,7 +22,8 @@ use phpFastCache\Core\phpFastCache;
 
 // Setup File Path on your config files
 CacheManager::setDefaultConfig([
-  "path" => '/var/www/phpfastcache.dev.geolim4.com/geolim4/tmp', // or in windows "C:/tmp/"
+  "path" => sys_get_temp_dir(),
+  "itemDetailedDate" => false
 ]);
 
 // In your class, function, you can call the Cache
@@ -39,15 +40,20 @@ $CachedString = $InstanceCache->getItem($key);
 if (is_null($CachedString->get())) {
     //$CachedString = "Files Cache --> Cache Enabled --> Well done !";
     // Write products to Cache in 10 minutes with same keyword
-    $CachedString->set("Files Cache --> Cache Enabled --> Well done !")->expiresAfter(5);
+    $CachedString->set("Files Cache --> Cache Enabled --> Well done !")->expiresAfter(60);
     $InstanceCache->save($CachedString);
 
     echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ";
     echo $CachedString->get();
 
 } else {
+    $CachedString->set("Files Cache --> Cache Enabled --> Well done !");
+    $InstanceCache->save($CachedString);
+
     echo "READ FROM CACHE // ";
-    echo $CachedString->getExpirationDate()->format(Datetime::W3C);
+   // echo "\n CREATION DATE: " . $CachedString->getCreationDate()->format(DateTime::W3C);
+   // echo "\n MODIFICATION DATE: " . $CachedString->getModificationDate()->format(DateTime::W3C);
+    echo "\n EXPIRATION DATE: " . $CachedString->getExpirationDate()->format(DateTime::W3C);
     echo $CachedString->get();
 }
 

@@ -51,6 +51,7 @@ class CacheManager
      */
     protected static $config = [
       'itemDetailedDate' => false,// Specify if the item must provide detailed creation/modification dates
+      'defaultTtl' => 900,// Default time-to-live in second
       'securityKey' => 'auto',// The securityKey that will be used to create sub-directory
       'htaccess' => true,// Auto-generate .htaccess if tit is missing
       'default_chmod' => 0777, // 0777 recommended

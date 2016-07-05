@@ -83,6 +83,8 @@ trait CacheItemPoolTrait
                     } else {
                         $item->setHit(true);
                     }
+                }else{
+                    $item->expiresAfter(abs((int) $this->getConfig()[ 'defaultTtl' ]));
                 }
 
             }

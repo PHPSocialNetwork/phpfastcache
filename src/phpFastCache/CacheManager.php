@@ -52,6 +52,7 @@ class CacheManager
      */
     protected static $config = [
       'securityKey' => 'auto',// The securityKey that will be used to create sub-directory
+      'defaultTtl' => 900,// Default time-to-live in second
       'htaccess' => true,// Auto-generate .htaccess if tit is missing
       'default_chmod' => 0777, // 0777 recommended
       'path' => '',// if not set will be the value of sys_get_temp_dir()

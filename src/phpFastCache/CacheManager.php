@@ -22,10 +22,14 @@ use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
  * @package phpFastCache
  *
  * @method static ExtendedCacheItemPoolInterface Apc() Apc($config = []) Return a driver "apc" instance
+ * @method static ExtendedCacheItemPoolInterface Apcu() Apcu($config = []) Return a driver "apcu" instance
  * @method static ExtendedCacheItemPoolInterface Cookie() Cookie($config = []) Return a driver "cookie" instance
+ * @method static ExtendedCacheItemPoolInterface Couchbase() Couchbase($config = []) Return a driver "couchbase" instance
  * @method static ExtendedCacheItemPoolInterface Files() Files($config = []) Return a driver "files" instance
+ * @method static ExtendedCacheItemPoolInterface Leveldb() Leveldb($config = []) Return a driver "leveldb" instance
  * @method static ExtendedCacheItemPoolInterface Memcache() Memcache($config = []) Return a driver "memcache" instance
  * @method static ExtendedCacheItemPoolInterface Memcached() Memcached($config = []) Return a driver "memcached" instance
+ * @method static ExtendedCacheItemPoolInterface Mongodb() Mongodb($config = []) Return a driver "mongodb" instance
  * @method static ExtendedCacheItemPoolInterface Predis() Predis($config = []) Return a driver "predis" instance
  * @method static ExtendedCacheItemPoolInterface Redis() Redis($config = []) Return a driver "redis" instance
  * @method static ExtendedCacheItemPoolInterface Sqlite() Sqlite($config = []) Return a driver "sqlite" instance
@@ -180,12 +184,12 @@ class CacheManager
     /**
      * @param $name
      * @param string $value
-     * @deprecated Method "setup" is deprecated and will be removed in 5.1. Use method "setDefaultConfig" instead.
+     * @deprecated Method "setup" is deprecated and will be removed in V6. Use method "setDefaultConfig" instead.
      * @throws \InvalidArgumentException
      */
     public static function setup($name, $value = '')
     {
-        trigger_error('Method "setup" is deprecated and will be removed in 5.1. Use method "setDefaultConfig" instead.');
+        trigger_error('Method "setup" is deprecated and will be removed in V6 Use method "setDefaultConfig" instead.');
         self::setDefaultConfig($name, $value);
     }
 

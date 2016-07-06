@@ -79,11 +79,11 @@ phpFastCache offers you a lot of useful APIs:
 - removeTag($tagName) // Remove a tag
 - removeTags(array $tagNames) // Remove some tags
 - getDataAsJsonString()// Return the data as a well-formatted json string
-- ExtendedCacheItemInterface::setExpirationDate() (Alias of CacheItemInterface::ExpireAt() for more code logic)
-- ExtendedCacheItemInterface::getCreationDate() * 
-- ExtendedCacheItemInterface::getModificationDate() *
-- ExtendedCacheItemInterface::setCreationDate(\DateTimeInterface) *
-- ExtendedCacheItemInterface::setModificationDate() *
+- setExpirationDate() // Alias of expireAt() (for more code logic)
+- getCreationDate() // Get the creation date for this cache item (as a DateTimeInterface object)  * 
+- getModificationDate() // Get the modification date for this cache item (as a DateTimeInterface object) *
+- setCreationDate($expiration) // Set the creation date for this cache item (as a DateTimeInterface object) *
+- setModificationDate($expiration) // Set the modification date for this cache item (as a DateTimeInterface object) *
 
 \* Require configuration directive "itemDetailedDate" to be enabled
 

@@ -79,6 +79,13 @@ phpFastCache offers you a lot of useful APIs:
 - removeTag($tagName) // Remove a tag
 - removeTags(array $tagNames) // Remove some tags
 - getDataAsJsonString()// Return the data as a well-formatted json string
+- ExtendedCacheItemInterface::setExpirationDate() (Alias of CacheItemInterface::ExpireAt() for more code logic)
+- ExtendedCacheItemInterface::getCreationDate() * 
+- ExtendedCacheItemInterface::getModificationDate() *
+- ExtendedCacheItemInterface::setCreationDate(\DateTimeInterface) *
+- ExtendedCacheItemInterface::setModificationDate() *
+
+\* Require configuration directive "itemDetailedDate" to be enabled
 
 ### ItemPool API
 - getItem($key) // Retrieve an item and returns an empty item if not found

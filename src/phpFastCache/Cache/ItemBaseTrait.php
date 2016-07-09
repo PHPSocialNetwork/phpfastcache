@@ -174,9 +174,9 @@ trait ItemBaseTrait
                  */
                 $time = 30 * 24 * 3600 * 5;
             }
-            $this->expirationDate = $this->expirationDate->add(new \DateInterval(sprintf('PT%dS', $time)));
+            $this->expirationDate = (new \DateTime())->add(new \DateInterval(sprintf('PT%dS', $time)));
         } else if ($time instanceof \DateInterval) {
-            $this->expirationDate = $this->expirationDate->add($time);
+            $this->expirationDate = (new \DateTime())->add($time);
         } else {
             throw new \InvalidArgumentException('Invalid date format');
         }

@@ -227,6 +227,9 @@ trait DriverBaseTrait
             throw new \LogicException('Trying to set tag(s) to an Tag item index: ' . $item->getKey());
         }
 
+        /**
+         * @var $tagsItems ExtendedCacheItemInterface[]
+         */
         $tagsItems = $this->getItems($this->getTagKeys($item->getTags()));
 
         foreach ($tagsItems as $tagsItem) {

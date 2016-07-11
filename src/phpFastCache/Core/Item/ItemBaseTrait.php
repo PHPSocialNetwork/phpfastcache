@@ -14,7 +14,7 @@
 
 namespace phpFastCache\Core\Item;
 
-use phpFastCache\Core\Pool\DriverAbstract;
+use phpFastCache\Proxy\phpFastCacheAbstractProxy;
 
 trait ItemBaseTrait
 {
@@ -26,7 +26,7 @@ trait ItemBaseTrait
     protected $fetched = false;
 
     /**
-     * @var DriverAbstract
+     * @var phpFastCacheAbstractProxy
      */
     protected $driver;
 

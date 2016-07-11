@@ -5,6 +5,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
+use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\Drivers\Memcached\Driver as MemcachedDriver;
 use phpFastCache\Proxy\phpFastCacheAbstractProxy;
 
@@ -38,14 +39,14 @@ class CustomMemcachedCacheClass extends phpFastCacheAbstractProxy
  */
 $driverInstance = new CustomMemcachedCacheClass();
 
-if (!is_object($driverInstance)) {
-    echo '[FAIL] $driverInstance returned an invalid variable type:' . gettype($driverInstance) . "\n";
+if (!is_object($driverInstance->getItem('test'))) {
+    echo '[FAIL] $driverInstance->getItem() returned an invalid var type:' . gettype($driverInstance) . "\n";
     $status = 1;
-}else if(!($driverInstance instanceof MemcachedDriver)){
-    echo '[FAIL] $driverInstance returned an invalid class:' . get_class($driverInstance) . "\n";
+}else if(!($driverInstance->getItem('test') instanceof ExtendedCacheItemInterface)){
+    echo '[FAIL] $driverInstance->getItem() returned an invalid class that does not implements ExtendedCacheItemInterface: ' . get_class($driverInstance) . "\n";
     $status = 1;
 }else{
-    echo '[PASS] $driverInstance returned a valid MemcachedDriver (as a class alias) object: ' . get_class($driverInstance) . "\n";
+    echo '[PASS] $driverInstance->getItem() returned a valid class that implements ExtendedCacheItemInterface: ' . get_class($driverInstance) . "\n";
 }
 
 exit($status);

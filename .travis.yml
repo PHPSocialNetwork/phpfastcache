@@ -29,3 +29,4 @@ script:
   - php -f tests/Autoload.test.php
   - php -f tests/NewCacheInstance.test.php
   - php -f tests/Psr6InterfaceImplements.test.php
+  - php -f tests/AbstractProxy.test.php

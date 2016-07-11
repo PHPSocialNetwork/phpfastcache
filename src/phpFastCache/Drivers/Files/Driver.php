@@ -117,15 +117,8 @@ class Driver implements ExtendedCacheItemPoolInterface
         }
 
         $content = $this->readfile($file_path);
-        $object = $this->decode($content);
 
-        if ($this->driverUnwrapEdate($object)->getTimestamp() < time()) {
-            @unlink($file_path);
-
-            return null;
-        }
-
-        return $object;
+        return $this->decode($content);
 
     }
 

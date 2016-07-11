@@ -329,17 +329,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             }
         }
 
-        if (isset($row[ 'id' ])) {
-            /**
-             * @var $item ExtendedCacheItemInterface
-             */
-            $item = $this->decode($row[ 'object' ]);
-            if ($item instanceof ExtendedCacheItemInterface && $item->isExpired()) {
-                $this->driverDelete($item);
-
-                return null;
-            }
-
+        if (isset($row[ 'object' ])) {
             return $this->decode($row[ 'object' ]);
         }
 

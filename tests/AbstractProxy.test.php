@@ -5,8 +5,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Drivers\Memcached\Driver as MemcachedDriver;
+use phpFastCache\Cache\ExtendedCacheItemInterface;
 use phpFastCache\Proxy\phpFastCacheAbstractProxy;
 
 

@@ -15,6 +15,7 @@
 namespace phpFastCache\Core\Pool;
 
 use InvalidArgumentException;
+use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use Psr\Cache\CacheItemInterface;
 
 
@@ -64,7 +65,19 @@ trait ExtendedCacheItemPoolTrait
             if ($driverResponse->isHit()) {
                 $items = (array) $driverResponse->get();
 
-                return $this->getItems(array_unique(array_keys($items)));
+                /**
+                 * getItems() may provides expired item(s)
+                 * themselves provided by a cache of item
+                 * keys based stored the tag item.
+                 * Therefore we pass a filter callback
+                 * to remove the expired Item(s) provided by
+                 * the item keys passed through getItems()
+                 *
+                 * #headache
+                 */
+                return array_filter($this->getItems(array_unique(array_keys($items))), function(ExtendedCacheItemInterface $item){
+                    return $item->isHit();
+                });
             } else {
                 return [];
             }
@@ -121,7 +134,7 @@ trait ExtendedCacheItemPoolTrait
         if (is_string($tagName)) {
             $return = null;
             foreach ($this->getItemsByTag($tagName) as $item) {
-                $result = $this->driverDelete($item);
+                $result = $this->deleteItem($item->getKey());
                 if ($return !== false) {
                     $return = $result;
                 }
@@ -281,6 +294,25 @@ trait ExtendedCacheItemPoolTrait
         }
 
         return $return;
+    }
+
+    /**
+     * @param CacheItemInterface|string $item
+     * @throws \InvalidArgumentException
+     */
+    protected function deregisterItem($item)
+    {
+        if($item instanceof CacheItemInterface){
+            unset($this->itemInstances[ $item->getKey() ]);
+
+        }else if(is_string($item)){
+            unset($this->itemInstances[ $item ]);
+        }else{
+            throw new \InvalidArgumentException('Invalid type for $item variable');
+        }
+        if(gc_enabled()){
+            gc_collect_cycles();
+        }
     }
 
     /**

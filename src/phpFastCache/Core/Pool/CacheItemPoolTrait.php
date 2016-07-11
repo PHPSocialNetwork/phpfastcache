@@ -78,6 +78,8 @@ trait CacheItemPoolTrait
                          * Using driverDelete() instead of delete()
                          * to avoid infinite loop caused by
                          * getItem() call in delete() method
+                         * As we MUST return an item in any
+                         * way, we do not de-register here
                          */
                         $this->driverDelete($item);
                     } else {
@@ -160,7 +162,11 @@ trait CacheItemPoolTrait
         if ($this->hasItem($key) && $this->driverDelete($item)) {
             $item->setHit(false);
             CacheManager::$WriteHits++;
-            unset($this->itemInstances[ $key ]);
+            /**
+             * De-register the item instance
+             * then collect gc cycles
+             */
+            $this->deregisterItem($key);
 
             return true;
         }

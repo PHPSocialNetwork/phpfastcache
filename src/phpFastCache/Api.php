@@ -20,7 +20,7 @@ namespace phpFastCache;
  */
 class Api
 {
-    protected static $version = '1.1.0';
+    protected static $version = '1.1.1';
 
     /**
      * This method will returns the current
@@ -45,6 +45,9 @@ class Api
     public static function getChangelog()
     {
         return <<<CHANGELOG
+- 1.1.1
+-- Implemented JsonSerializable interface to ExtendedCacheItemInterface
+
 - 1.1.0
 -- Implemented JSON methods such as:
    ExtendedCacheItemPoolInterface::getItemsAsJsonString()

@@ -418,15 +418,13 @@ trait ItemBaseTrait
     }
 
     /**
-     * @throws \RuntimeException
+     * Implements \JsonSerializable interface
+     * @return mixed
      */
-    /*    final public function __sleep()
-        {
-            $info = get_object_vars($this);
-            $info[ 'driver' ] = 'object(' . get_class($info[ 'driver' ]) . ')';
-    
-            return (array) $info;
-        }*/
+    public function jsonSerialize()
+    {
+        return $this->get();
+    }
 
     /**
      * Prevent recursions for Debug (php 5.6+)

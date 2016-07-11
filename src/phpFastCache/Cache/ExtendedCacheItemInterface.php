@@ -20,7 +20,7 @@ use Psr\Cache\CacheItemInterface;
  * Interface ExtendedCacheItemInterface
  * @package phpFastCache\Cache
  */
-interface ExtendedCacheItemInterface extends CacheItemInterface
+interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializable
 {
     /**
      * @return mixed

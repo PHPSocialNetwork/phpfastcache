@@ -157,9 +157,7 @@ class CacheManager
      */
     public static function clearInstances()
     {
-        foreach (self::$instances as &$instance) {
-            unset($instance);
-        }
+        self::$instances = [];
 
         gc_collect_cycles();
         return !count(self::$instances);

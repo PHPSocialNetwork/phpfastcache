@@ -17,7 +17,7 @@ namespace phpFastCache\Drivers\Mongo;
 use phpFastCache\Cache\ExtendedCacheItemInterface;
 use phpFastCache\Cache\ExtendedCacheItemPoolInterface;
 use phpFastCache\Cache\ItemBaseTrait;
-use phpFastCache\Drivers\Mongodb\Driver as MongodbDriver;
+use phpFastCache\Drivers\Mongo\Driver as MongoDriver;
 
 /**
  * Class Item
@@ -29,11 +29,11 @@ class Item implements ExtendedCacheItemInterface
 
     /**
      * Item constructor.
-     * @param \phpFastCache\Drivers\Mongodb\Driver $driver
+     * @param \phpFastCache\Drivers\Mongo\Driver $driver
      * @param $key
      * @throws \InvalidArgumentException
      */
-    public function __construct(MongodbDriver $driver, $key)
+    public function __construct(MongoDriver $driver, $key)
     {
         if (is_string($key)) {
             $this->key = $key;
@@ -52,7 +52,7 @@ class Item implements ExtendedCacheItemInterface
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver)
     {
-        if ($driver instanceof MongodbDriver) {
+        if ($driver instanceof MongoDriver) {
             $this->driver = $driver;
 
             return $this;

@@ -12,17 +12,20 @@
  *
  */
 
-namespace phpFastCache\Drivers\Mongodb;
+namespace phpFastCache\Drivers\Mongo;
 
-use MongoDB\Driver\Manager;
 use LogicException;
-use MongoDB\Collection;
+use MongoBinData;
+use MongoClient as MongodbClient;
+use MongoCollection;
+use MongoConnectionException;
+use MongoCursorException;
+use MongoDate;
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
+use phpFastCache\Exceptions\phpFastCacheDriverException;
 use Psr\Cache\CacheItemInterface;
-use MongoDB\BSON\UTCDateTime;
-use MongoDB\BSON\Binary;
 
 /**
  * Class Driver
@@ -31,14 +34,9 @@ use MongoDB\BSON\Binary;
 class Driver extends DriverAbstract
 {
     /**
-     * @var MongodbManager
+     * @var MongodbClient
      */
     public $instance;
-    
-    /**
-     * @var Collection
-     */
-    public $collection;
 
     /**
      * Driver constructor.
@@ -61,16 +59,11 @@ class Driver extends DriverAbstract
      */
     public function driverCheck()
     {
-        if(!class_exists('MongoDB\Driver\Manager')){
-            trigger_error('This driver is used to support the pecl MongoDb extension with mongo-php-library.<br />
-            For MongoDb with Mongo PECL support use Mongo Driver.', E_USER_ERROR);
+        if(class_exists('MongoDB\Driver\Manager')){
+            trigger_error('This driver is used to support the pecl Mongo extension.<br />
+            For MongoDb support use MongoDb Driver.', E_USER_ERROR);
         }
-        
-      /*  if(!class_exists('MongoDB\Driver\Collection')){
-        	trigger_error('The library mongo-php-library not found.<br />
-            This driver do not support MonboDb low-level driver alone. Please install this driver to continue: https://github.com/mongodb/mongo-php-library', E_USER_ERROR);
-        } */
- 
+
         return extension_loaded('Mongodb');
     }
 
@@ -86,13 +79,13 @@ class Driver extends DriverAbstract
          */
         if ($item instanceof Item) {
             try {
-                $result = (array) $this->getCollection()->updateMany(
+                $result = (array) $this->getCollection()->update(
                   ['_id' => $item->getKey()],
                   [
                     '$set' => [
-                      self::DRIVER_TIME_WRAPPER_INDEX => ($item->getTtl() > 0 ? new UTCDateTime((time() + $item->getTtl()) * 1000) : new UTCDateTime(time()*1000)),
-                      self::DRIVER_DATA_WRAPPER_INDEX => new Binary($this->encode($item->get()), Binary::TYPE_GENERIC),
-                      self::DRIVER_TAGS_WRAPPER_INDEX => new Binary($this->encode($item->getTags()), Binary::TYPE_GENERIC),
+                      self::DRIVER_TIME_WRAPPER_INDEX => ($item->getTtl() > 0 ? new MongoDate(time() + $item->getTtl()) : new MongoDate(time())),
+                      self::DRIVER_DATA_WRAPPER_INDEX => new MongoBinData($this->encode($item->get()), MongoBinData::BYTE_ARRAY),
+                      self::DRIVER_TAGS_WRAPPER_INDEX => new MongoBinData($this->encode($item->getTags()), MongoBinData::BYTE_ARRAY),
                     ],
                   ],
                   ['upsert' => true, 'multiple' => false]
@@ -119,9 +112,9 @@ class Driver extends DriverAbstract
 
         if ($document) {
             return [
-              self::DRIVER_DATA_WRAPPER_INDEX => $this->decode($document[ self::DRIVER_DATA_WRAPPER_INDEX ]->getData()),
-              self::DRIVER_TIME_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[ self::DRIVER_TIME_WRAPPER_INDEX ]->toDateTime()->getTimestamp()),
-              self::DRIVER_TAGS_WRAPPER_INDEX => $this->decode($document[ self::DRIVER_TAGS_WRAPPER_INDEX ]->getData()),
+              self::DRIVER_DATA_WRAPPER_INDEX => $this->decode($document[ self::DRIVER_DATA_WRAPPER_INDEX ]->bin),
+              self::DRIVER_TIME_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[ self::DRIVER_TIME_WRAPPER_INDEX ]->sec),
+              self::DRIVER_TAGS_WRAPPER_INDEX => $this->decode($document[ self::DRIVER_TAGS_WRAPPER_INDEX ]->bin),
             ];
         } else {
             return null;
@@ -139,9 +132,9 @@ class Driver extends DriverAbstract
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            $deletionResult = (array) $this->getCollection()->deleteMany(['_id' => $item->getKey()], ["w" => 1]);
-			// new driver has no results for deleteMany or deleteOne
-            return true;
+            $deletionResult = (array) $this->getCollection()->remove(['_id' => $item->getKey()], ["w" => 1]);
+
+            return (int) $deletionResult[ 'ok' ] === 1 && !$deletionResult[ 'err' ];
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -175,22 +168,22 @@ class Driver extends DriverAbstract
             /**
              * @todo make an url builder
              */
-            $this->instance = $this->instance ?: (new \MongoDB\Driver\Manager('mongodb://' .
+            $this->instance = $this->instance ?: (new MongodbClient('mongodb://' .
               ($username ?: '') .
               ($password ? ":{$password}" : '') .
               ($username ? '@' : '') . "{$host}" .
-              ($port != '27017' ? ":{$port}" : ''), ['connectTimeoutMS' => $timeout * 1000]));
-              $this->collection = $this->collection ?: new Collection($this->instance,'phpFastCache','Cache'); 
-         }
+              ($port != '27017' ? ":{$port}" : ''), ['connectTimeoutMS' => $timeout * 1000]))->phpFastCache;
+            // $this->instance->Cache->createIndex([self::DRIVER_TIME_WRAPPER_INDEX => 1], ['expireAfterSeconds' => 0]);
+        }
     }
 
 
     /**
-     * @return \Collection
+     * @return \MongoCollection
      */
     protected function getCollection()
     {
-        return $this->collection;
+        return $this->instance->Cache;
     }
 
     /********************
@@ -204,17 +197,17 @@ class Driver extends DriverAbstract
      */
     public function getStats()
     {
-        $serverStatus = $this->instance->executeCommand(new Command([
+        $serverStatus = $this->getCollection()->db->command([
           'serverStatus' => 1,
           'recordStats' => 0,
           'repl' => 0,
           'metrics' => 0,
-        ]));
+        ]);
 
-        $collStats = $this->instance->executeCommand(new Command([
+        $collStats = $this->getCollection()->db->command([
           'collStats' => 'Cache',
           'verbose' => true,
-        ]));
+        ]);
 
         $stats = (new driverStatistic())
           ->setInfo('MongoDB version ' . $serverStatus[ 'version' ] . ', Uptime (in days): ' . round($serverStatus[ 'uptime' ] / 86400, 1) . "\n For more information see RawData.")

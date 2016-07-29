@@ -105,6 +105,10 @@ phpFastCache offers you a lot of useful APIs:
 - appendItemsByTags(array $tagNames, $data) // Append items by some tags
 - prependItemsByTag($tagName, $data) // Prepend items by a tag
 - prependItemsByTags(array $tagNames, $data) // Prepend items by some tags
+- detachItem($item) // Detach an item from the pool
+- detachAllItems($item) // Detach all items from the pool
+- attachItem($item) // (Re-)attach an item to the pool
+- isAttached($item) // Verify if an item is (still) attached
 
 Also support Multiple calls, Tagging, Setup Folder for caching. Look at our examples folders.
 

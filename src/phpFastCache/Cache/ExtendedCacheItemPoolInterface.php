@@ -105,7 +105,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *   True if the pool was successfully cleared. False if there was an error.
      */
     public function clean();
-    
+
     /**
      * @return driverStatistic
      */
@@ -325,4 +325,33 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *   True if the item was successfully prepended. False if there was an error.
      */
     public function prependItemsByTags(array $tagNames, $data);
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return void
+     */
+    public function detachItem(CacheItemInterface $item);
+
+    /**
+     * @return void
+     */
+    public function detachAllItems();
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return void
+     * @throws \LogicException
+     */
+    public function attachItem(CacheItemInterface $item);
+
+    /**
+     * Returns true if the item exists, is attached and the Spl Hash matches
+     * Returns false if the item exists, is attached and the Spl Hash mismatches
+     * Returns null if the item does not exists
+     *
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return bool|null
+     * @throws \LogicException
+     */
+    public function isAttached(CacheItemInterface $item);
 }

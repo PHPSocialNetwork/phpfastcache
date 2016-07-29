@@ -182,6 +182,7 @@ trait StandardPsr6StructureTrait
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
      * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      */
     public function save(CacheItemInterface $item)
     {
@@ -190,7 +191,11 @@ trait StandardPsr6StructureTrait
          */
         if (!array_key_exists($item->getKey(), $this->itemInstances)) {
             $this->itemInstances[ $item->getKey() ] = $item;
+        } else if(spl_object_hash($item) !== spl_object_hash($this->itemInstances[ $item->getKey() ])){
+            throw new \RuntimeException('Spl object hash mismatches ! You probably tried to save a detached item which has been already retrieved from cache.');
         }
+
+
         if ($this->driverWrite($item) && $this->driverWriteTags($item)) {
             $item->setHit(true);
             CacheManager::$WriteHits++;
@@ -204,11 +209,14 @@ trait StandardPsr6StructureTrait
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return \Psr\Cache\CacheItemInterface
+     * @throws \RuntimeException
      */
     public function saveDeferred(CacheItemInterface $item)
     {
         if (!array_key_exists($item->getKey(), $this->itemInstances)) {
             $this->itemInstances[ $item->getKey() ] = $item;
+        }else if(spl_object_hash($item) !== spl_object_hash($this->itemInstances[ $item->getKey() ])){
+            throw new \RuntimeException('Spl object hash mismatches ! You probably tried to save a detached item which has been already retrieved from cache.');
         }
 
         return $this->deferredList[ $item->getKey() ] = $item;

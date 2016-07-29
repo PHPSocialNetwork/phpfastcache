@@ -139,6 +139,9 @@ class Driver extends DriverAbstract
                 if (!$this->instance->addServer($server[ 0 ], $server[ 1 ])) {
                     $this->fallback = true;
                 }
+                if(!empty($server[ 'sasl_user' ]) && !empty($server[ 'sasl_password'])){
+                    $this->instance->setSaslAuthData($server[ 'sasl_user' ], $server[ 'sasl_password']);
+                }
             } catch (\Exception $e) {
                 $this->fallback = true;
             }

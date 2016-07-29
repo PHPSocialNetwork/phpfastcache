@@ -30,3 +30,4 @@ script:
   - php -f tests/NewCacheInstance.test.php
   - php -f tests/Psr6InterfaceImplements.test.php
   - php -f tests/AbstractProxy.test.php
+  - php -f tests/AttachingDetachingMethods.test.php

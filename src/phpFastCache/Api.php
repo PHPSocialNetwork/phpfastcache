@@ -20,7 +20,7 @@ namespace phpFastCache;
  */
 class Api
 {
-    protected static $version = '1.2.1';
+    protected static $version = '1.2.0';
 
     /**
      * This method will returns the current
@@ -53,6 +53,13 @@ class Api
    ExtendedCacheItemInterface::setCreationDate(\DateTimeInterface) *
    ExtendedCacheItemInterface::setModificationDate() *
    * Require configuration directive "itemDetailedDate" to be enabled
+
+- 1.1.2
+-- Implemented [de|a]ttaching methods to improve memory management
+   ExtendedCacheItemPoolInterface::detachItem()
+   ExtendedCacheItemPoolInterface::detachAllItems()
+   ExtendedCacheItemPoolInterface::attachItem()
+   ExtendedCacheItemPoolInterface::isAttached()
 
 - 1.1.1
 -- Implemented JsonSerializable interface to ExtendedCacheItemInterface

@@ -176,9 +176,15 @@ class Driver extends DriverAbstract
      */
     public function getStats()
     {
+        $info = $this->instance->info();
+        $size = (isset($info['Memory']['used_memory']) ? $info['Memory']['used_memory'] : 0);
+        $version = (isset($info['Server']['redis_version']) ? $info['Server']['redis_version'] : 0);
+        $date = (isset($info['Server'][ 'uptime_in_seconds' ]) ? (new \DateTime())->setTimestamp(time() - $info['Server'][ 'uptime_in_seconds' ]) : 'unknown date');
+
         return (new driverStatistic())
+          ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setRawData($this->instance->info())
-          ->setSize(0)
-          ->setInfo('');
+          ->setSize($size)
+          ->setInfo(sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.", $version, $date->format(DATE_RFC2822)));
     }
 }

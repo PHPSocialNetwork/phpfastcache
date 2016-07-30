@@ -173,7 +173,7 @@ echo implode('<br />', $CachedString->get());// Will echo your product list
 * See the file examples/legacy.php for more information.
 
 #### :zap: Step 3: Enjoy ! Your website is now faster than flash !
-For curious developpers, there is a lot of others available examples [here](https://github.com/khoaofgod/phpFastCache/tree/final/examples).
+For curious developpers, there is a lot of others available examples [here](https://github.com/PHPSocialNetwork/phpfastcache/tree/final/examples).
 
 #### :boom: phpFastCache support
 Found an issue or had an idea ? Come [here](https://github.com/PHPSocialNetwork/phpfastcache/issues) and let us know !

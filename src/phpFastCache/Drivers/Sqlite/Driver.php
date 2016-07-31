@@ -59,7 +59,7 @@ class Driver extends DriverAbstract
     protected $SqliteDir = '';
 
     /**
-     * @var null
+     * @var \PDO
      */
     protected $indexing;
 

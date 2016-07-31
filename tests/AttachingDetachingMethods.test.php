@@ -34,7 +34,7 @@ if (!is_object($driverInstance)) {
     $driverInstance->detachItem($itemDetached);
     $itemAttached = $driverInstance->getItem($key);
 
-    if(!$driverInstance->isAttached($itemDetached))
+    if($driverInstance->isAttached($itemDetached) !== true)
     {
         echo '[PASS] ExtendedCacheItemPoolInterface::isAttached() identified $itemDetached as being detached.' . "\n";
     }

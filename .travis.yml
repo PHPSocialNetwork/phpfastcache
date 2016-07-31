@@ -8,12 +8,15 @@
 # @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
 # @author Georges.L (Geolim4)  <contact@geolim4.com>
 #
+sudo: false
 
 language: php
+
 services:
   - memcached
   # - redis-server
 before_script: phpenv config-add var/php/conf/phpfastcache.ini
+
 php:
   # - 5.3
   # - 5.4
@@ -21,9 +24,17 @@ php:
   - 5.6
   - 7.0
   - nightly
-  # - hhvm We may need to do review this check later
+  - hhvm
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - php: nightly
+    - php: hhvm
+
 install:
   - ./bin/ci/install_dependencies.sh
+
 script:
   - php -f tests/SyntaxChecker.test.php
   - php -f tests/Autoload.test.php

@@ -30,6 +30,7 @@ use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
  * @method static ExtendedCacheItemPoolInterface Leveldb() Leveldb($config = []) Return a driver "leveldb" instance
  * @method static ExtendedCacheItemPoolInterface Memcache() Memcache($config = []) Return a driver "memcache" instance
  * @method static ExtendedCacheItemPoolInterface Memcached() Memcached($config = []) Return a driver "memcached" instance
+ * @method static ExtendedCacheItemPoolInterface Mongo() Mongo($config = []) Return a driver "mongo" instance
  * @method static ExtendedCacheItemPoolInterface Mongodb() Mongodb($config = []) Return a driver "mongodb" instance
  * @method static ExtendedCacheItemPoolInterface Predis() Predis($config = []) Return a driver "predis" instance
  * @method static ExtendedCacheItemPoolInterface Redis() Redis($config = []) Return a driver "redis" instance
@@ -228,6 +229,7 @@ class CacheManager
           'Memcache',
           'Memcached',
           'Couchbase',
+		  'Mongo',
           'Mongodb',
           'Predis',
           'Redis',

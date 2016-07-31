@@ -15,7 +15,13 @@ language: php
 services:
   - memcached
   # - redis-server
-before_script: phpenv config-add var/php/conf/phpfastcache.ini
+before_script:
+  - |
+    if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
+      cat var/php/conf/phpfastcache.ini >> /etc/hhvm/php.ini
+    else
+      phpenv config-add var/php/conf/phpfastcache.ini
+    fi
 
 php:
   # - 5.3

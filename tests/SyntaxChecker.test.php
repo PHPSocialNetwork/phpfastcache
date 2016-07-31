@@ -39,7 +39,7 @@ foreach ($list as $file) {
      * @todo Make the exclusions much cleaner
      */
     if (strpos($file, '/vendor/composer') === false && strpos($file, '/bin/stubs') === false) {
-        exec('php -lf "' . $file . '"', $output, $status);
+        exec('php -l "' . $file . '"', $output, $status);
     } else {
         echo '[SKIP] ' . $file;
         echo "\n";

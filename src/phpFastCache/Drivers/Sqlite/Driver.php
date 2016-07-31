@@ -59,7 +59,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected $SqliteDir = '';
 
     /**
-     * @var null
+     * @var \PDO
      */
     protected $indexing;
 

@@ -46,7 +46,7 @@ foreach ($list as $file) {
         continue;
     }
 
-    if ($status != 0) {
+    if ($status !== 0) {
         $exit = $status;
         echo '[FAIL]';
     } else {

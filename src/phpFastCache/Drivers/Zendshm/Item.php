@@ -11,7 +11,7 @@
  *
  */
 
-namespace phpFastCache\Drivers\Zendhm;
+namespace phpFastCache\Drivers\Zendshm;
 
 use phpFastCache\Cache\ExtendedCacheItemInterface;
 use phpFastCache\Cache\ExtendedCacheItemPoolInterface;

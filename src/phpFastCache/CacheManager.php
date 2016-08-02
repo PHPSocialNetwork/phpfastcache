@@ -237,6 +237,8 @@ class CacheManager
           'Leveldb',
           'Wincache',
           'Xcache',
+          'Zenddisk',
+          'Zendshm',
           'Devnull',
         ];
     }

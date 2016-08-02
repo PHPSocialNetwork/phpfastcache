@@ -37,5 +37,5 @@
   * The Xcache driver. A memory cache for regular performances.
 * Zend Disk Cache
   * The Zend Data Cache is a by ZendServer supported file cache. The cache is for regular performance.
-* Zend Disk Cache
+* Zend Memory Cache
   * The Zend Memory Cache is a by ZendServer supported memory cache. The cache is for high-performance applications.

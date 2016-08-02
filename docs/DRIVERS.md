@@ -35,7 +35,7 @@
   * The Wincache driver. A memory cache for regular performances on Windows platforms.
 * Xcache
   * The Xcache driver. A memory cache for regular performances.
-* Zend Disk Cache
+* Zend Disk Cache ( * Requires ZendServer Version 4 or higher * )
   * The Zend Data Cache is a by ZendServer supported file cache. The cache is for regular performance.
-* Zend Memory Cache
+* Zend Memory Cache ( * Requires ZendServer Version 4 or higher * )
   * The Zend Memory Cache is a by ZendServer supported memory cache. The cache is for high-performance applications.

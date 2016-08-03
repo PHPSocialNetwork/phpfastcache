@@ -26,10 +26,16 @@ phpFastCache Lead Developer:    Georges.L (Geolim4)
 
 phpFastCache Contributors:      https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
 
+Specials thanks:
+
+- Scrutinizer-CI for providing us a free Security Analysis
+- Lucas (hammermaps) for the "Zend Data Cache" driver implementation
+
+
+Software licenses:
 
 PHP License, version 3.0:
 Pear (c) 2001-2004 PHP Group, http://pear.php.net
-
 
 MIT licenced:
 Predis (c) 2009-2015 Daniele Alessandri, http://clorophilla.net

@@ -11,16 +11,17 @@ One Class uses for All Cache. You don't need to rewrite your code many times aga
 
 ### Supported drivers at this day *
 
-| Regular drivers  | High performances drivers | Development driver |
-|------------------|---------------------------|--------------------|
-|  `Apc(u)`        | `CouchBase`               | `Devnull`          |
-|  `Cookie`        | `Mongodb`                 | `Devfalse`         |
-|  `Files`         | `Predis`                  | `Devtrue`          |
-|  `Leveldb`       | `Redis`                   |                    |
-|  `Memcache(d)`   | `Ssdb`                    |                    |
-|  `Sqlite`        |                           |                    |
-|  `Wincache`      |                           |                    |
-|  `Xcache`        |                           |                    |
+|   Regular drivers  | High performances drivers | Development driver |
+|--------------------|---------------------------|--------------------|
+|  `Apc(u)`          | `CouchBase`               | `Devnull`          |
+|  `Cookie`          | `Mongodb`                 | `Devfalse`         |
+|  `Files`           | `Predis`                  | `Devtrue`          |
+|  `Leveldb`         | `Redis`                   |                    |
+|  `Memcache(d)`     | `Ssdb`                    |                    |
+|  `Sqlite`          | `Zend Memory Cache`       |                    |
+|  `Wincache`        |                           |                    |
+|  `Xcache`          |                           |                    |
+|  `Zend Disk Cache` |                           |                    |
 
 \* Driver descriptions available in DOCS/DRIVERS.md
 

@@ -37,6 +37,8 @@ use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
  * @method static ExtendedCacheItemPoolInterface Ssdb() Ssdb($config = []) Return a driver "ssdb" instance
  * @method static ExtendedCacheItemPoolInterface Wincache() Wincache($config = []) Return a driver "wincache" instance
  * @method static ExtendedCacheItemPoolInterface Xcache() Xcache($config = []) Return a driver "xcache" instance
+ * @method static ExtendedCacheItemPoolInterface Zenddisk() Zenddisk($config = []) Return a driver "zend disk cache" instance
+ * @method static ExtendedCacheItemPoolInterface Zendshm() Zendshm($config = []) Return a driver "zend memory cache" instance
  *
  */
 class CacheManager
@@ -235,6 +237,8 @@ class CacheManager
           'Leveldb',
           'Wincache',
           'Xcache',
+          'Zenddisk',
+          'Zendshm',
           'Devnull',
         ];
     }

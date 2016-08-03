@@ -10,6 +10,7 @@ One Class uses for All Cache. You don't need to rewrite your code many times aga
 
 
 ### Supported drivers at this day *
+:bulb: Feel free to propose a driver by making a new **Pull Request**, they are welcome !
 
 |   Regular drivers  | High performances drivers | Development driver |
 |--------------------|---------------------------|--------------------|

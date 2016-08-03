@@ -1,8 +1,8 @@
 {
     "name": "phpfastcache/phpfastcache",
     "type" : "library",
-    "description": "PHP Cache Class - Reduce your database call using cache system. PhpFastCache handle a lot of drivers such as Apc(u), CouchBase, Mongodb, Files, (P)redis, Leveldb, Memcache(d), Ssdb, Sqlite, Wincache, Xcache.",
-    "keywords": ["cache","caching","php cache","mysql cache","apc","apcu","memcache","memcached","wincache","files cache","pdo cache","cache class","redis","predis","cookie", "mongodb", "couchbase", "LevelDb", "Ssdb", "Wincache", "xcache"],
+    "description": "PHP Cache Class - Reduce your database call using cache system. PhpFastCache handles a lot of drivers such as Apc(u), CouchBase, Mongodb, Files, (P)redis, Leveldb, Memcache(d), Ssdb, Sqlite, Wincache, Xcache, Zend Data Cache.",
+    "keywords": ["cache","caching","php cache","mysql cache","apc","apcu","memcache","memcached","wincache","files cache","pdo cache","cache class","redis","predis","cookie", "mongodb", "couchbase", "LevelDb", "Ssdb", "Wincache", "xcache","zend","zend disk cache","zend memory cache","zend data cache","zend server"],
     "homepage": "http://www.phpfastcache.com",
     "license": "MIT",
     "authors": [

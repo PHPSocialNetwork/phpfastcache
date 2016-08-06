@@ -16,6 +16,7 @@ namespace phpFastCache\Core\Pool;
 
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\CacheManager;
+use phpFastCache\Exceptions\phpFastCacheCoreException;
 use Psr\Cache\CacheItemInterface;
 use phpFastCache\Util\ClassNamespaceResolverTrait;
 
@@ -43,6 +44,7 @@ trait CacheItemPoolTrait
      * @return \phpFastCache\Core\Item\ExtendedCacheItemInterface
      * @throws \InvalidArgumentException
      * @throws \LogicException
+     * @throws phpFastCacheCoreException
      */
     public function getItem($key)
     {
@@ -58,6 +60,9 @@ trait CacheItemPoolTrait
                 $driverArray = $this->driverRead($item);
 
                 if ($driverArray) {
+                    if(!is_array($driverArray)){
+                        throw new phpFastCacheCoreException(sprintf('The driverRead method returned an unexpected variable type: %s', gettype($driverArray)));
+                    }
                     $item->set($this->driverUnwrapData($driverArray));
                     $item->expiresAt($this->driverUnwrapEdate($driverArray));
 

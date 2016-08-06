@@ -16,6 +16,7 @@ namespace phpFastCache\Core;
 
 use phpFastCache\Cache\ExtendedCacheItemInterface;
 use phpFastCache\CacheManager;
+use phpFastCache\Exceptions\phpFastCacheCoreException;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -40,6 +41,7 @@ trait StandardPsr6StructureTrait
      * @param string $key
      * @return \phpFastCache\Cache\ExtendedCacheItemInterface
      * @throws \InvalidArgumentException
+     * @throws phpFastCacheCoreException
      */
     public function getItem($key)
     {
@@ -55,6 +57,9 @@ trait StandardPsr6StructureTrait
                 $driverArray = $this->driverRead($item);
 
                 if ($driverArray) {
+                    if(!is_array($driverArray)){
+                        throw new phpFastCacheCoreException(sprintf('The driverRead method returned an unexpected variable type: %s', gettype($driverArray)));
+                    }
                     $item->set($this->driverUnwrapData($driverArray));
                     $item->expiresAt($this->driverUnwrapTime($driverArray));
                     $item->setTags($this->driverUnwrapTags($driverArray));

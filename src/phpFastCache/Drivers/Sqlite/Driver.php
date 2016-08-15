@@ -349,11 +349,9 @@ class Driver extends DriverAbstract
         if ($item instanceof Item) {
             try {
                 $stm = $this->getDb($item->getKey())
-                  //->prepare("DELETE FROM `caching` WHERE (`id`=:id) OR (`exp` <= :U) ");
                   ->prepare("DELETE FROM `caching` WHERE (`exp` <= :U) OR (`keyword`=:keyword) ");
 
                 return $stm->execute([
-                    // ':id' => $row[ 'id' ],
                   ':keyword' => $item->getKey(),
                   ':U' => time(),
                 ]);

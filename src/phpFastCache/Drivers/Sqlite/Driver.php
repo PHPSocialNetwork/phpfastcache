@@ -308,20 +308,18 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         try {
             $stm = $this->getDb($item->getKey())
-              ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword AND (`exp` >= :U)  LIMIT 1");
+              ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
             $stm->execute([
               ':keyword' => $item->getKey(),
-              ':U' => time(),
             ]);
             $row = $stm->fetch(PDO::FETCH_ASSOC);
 
         } catch (PDOException $e) {
             try {
                 $stm = $this->getDb($item->getKey(), true)
-                  ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword AND (`exp` >= :U)  LIMIT 1");
+                  ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
                 $stm->execute([
                   ':keyword' => $item->getKey(),
-                  ':U' => time(),
                 ]);
                 $row = $stm->fetch(PDO::FETCH_ASSOC);
             } catch (PDOException $e) {

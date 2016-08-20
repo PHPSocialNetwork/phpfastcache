@@ -371,7 +371,7 @@ class Driver extends DriverAbstract
     protected function driverClear()
     {
         $this->instance = [];
-        $this->instance = null;
+        $this->indexing = null;
 
         // delete everything before reset indexing
         $dir = opendir($this->getSqliteDir());

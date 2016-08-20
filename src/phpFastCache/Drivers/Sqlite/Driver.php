@@ -308,20 +308,18 @@ class Driver extends DriverAbstract
     {
         try {
             $stm = $this->getDb($item->getKey())
-              ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword AND (`exp` >= :U)  LIMIT 1");
+              ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
             $stm->execute([
               ':keyword' => $item->getKey(),
-              ':U' => time(),
             ]);
             $row = $stm->fetch(PDO::FETCH_ASSOC);
 
         } catch (PDOException $e) {
             try {
                 $stm = $this->getDb($item->getKey(), true)
-                  ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword AND (`exp` >= :U)  LIMIT 1");
+                  ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
                 $stm->execute([
                   ':keyword' => $item->getKey(),
-                  ':U' => time(),
                 ]);
                 $row = $stm->fetch(PDO::FETCH_ASSOC);
             } catch (PDOException $e) {
@@ -349,11 +347,9 @@ class Driver extends DriverAbstract
         if ($item instanceof Item) {
             try {
                 $stm = $this->getDb($item->getKey())
-                  //->prepare("DELETE FROM `caching` WHERE (`id`=:id) OR (`exp` <= :U) ");
                   ->prepare("DELETE FROM `caching` WHERE (`exp` <= :U) OR (`keyword`=:keyword) ");
 
                 return $stm->execute([
-                    // ':id' => $row[ 'id' ],
                   ':keyword' => $item->getKey(),
                   ':U' => time(),
                 ]);

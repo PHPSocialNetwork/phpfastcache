@@ -44,7 +44,7 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
                     $return[ $instance->getDriverName() ] = $reflectionMethod->invokeArgs($instance, $args);
                 }else{
                     $result = $reflectionMethod->invokeArgs($instance, $args);
-                    if($return !== false){
+                    if($result !== false){
                         $return = $result;
                     }
                 }

@@ -14,7 +14,7 @@ language: php
 
 services:
   - memcached
-  # - redis-server
+  - redis-server
 before_script:
   - |
     if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
@@ -27,7 +27,7 @@ php:
   # - 5.3
   # - 5.4
   # - 5.5
-  # - 5.6
+  - 5.6
   - 7.0
   - nightly
   - hhvm
@@ -48,3 +48,4 @@ script:
   - php -f tests/Psr6InterfaceImplements.test.php
   - php -f tests/AbstractProxy.test.php
   - php -f tests/AttachingDetachingMethods.test.php
+  - php -f tests/ActOnAll.test.php

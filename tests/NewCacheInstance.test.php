@@ -22,7 +22,8 @@ $driverInstance = CacheManager::getInstance('Memcached');
 if (!is_object($driverInstance) || !($driverInstance instanceof ExtendedCacheItemPoolInterface)) {
     echo '[FAIL] CacheManager::getInstance() returned wrong data:' . gettype($driverInstance) . "\n";
     $status = 1;
+}else{
+    echo "[PASS] CacheManager::getInstance() returned expected object that implements ExtendedCacheItemPoolInterface\n";
 }
-echo "[PASS] CacheManager::getInstance() returned expected object that implements ExtendedCacheItemPoolInterface\n";
 
 exit($status);

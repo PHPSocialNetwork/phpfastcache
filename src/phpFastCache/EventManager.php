@@ -18,13 +18,14 @@ namespace phpFastCache;
  * Class CacheManager
  * @package phpFastCache
  *
+ * == ItemPool Events ==
  * @method Void onCacheGetItem() onCacheGetItem(Callable $callable)
  * @method Void onCacheSaveItem() onCacheSaveItem(Callable $callable)
  * @method Void onCacheSaveDeferredItem() onCacheSaveDeferredItem(Callable $callable)
  * @method Void onCacheCommitItem() onCacheCommitItem(Callable $callable)
  * @method Void onCacheClearItem() onCacheClearItem(Callable $callable)
  *
- *
+ * == Item Events ==
  * @method Void onCacheItemSet() onCacheItemSet(Callable $callable)
  * @method Void onCacheItemExpireAt() onCacheItemExpireAt(Callable $callable)
  * @method Void onCacheItemExpireAfter() onCacheItemExpireAfter(Callable $callable)
@@ -48,7 +49,7 @@ class EventManager
      */
     public static function getInstance()
     {
-        return (self::$instance ?: self::$instance  = new self);
+        return (self::$instance ?: self::$instance = new self);
     }
 
     /**

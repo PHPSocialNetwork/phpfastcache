@@ -3,6 +3,7 @@ namespace phpFastCache\Helper;
 
 use phpFastCache\CacheManager;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\EventManager;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -69,7 +70,8 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
      */
     public function clear()
     {
-        return $this->getGenericCallback()(__FUNCTION__, func_get_args());
+        $callback = $this->getGenericCallback();
+        return $callback(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -373,6 +375,15 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
      * @return mixed
      */
     public function isAttached(CacheItemInterface $item)
+    {
+        $callback = $this->getGenericCallback();
+        return $callback(__FUNCTION__, func_get_args());
+    }
+
+    /**
+     * @param \phpFastCache\EventManager $em
+     */
+    public function setEventManager(EventManager $em)
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());

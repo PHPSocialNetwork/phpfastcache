@@ -73,7 +73,7 @@ class CacheManager
     protected static $namespacePath;
 
     /**
-     * @var array
+     * @var ExtendedCacheItemPoolInterface[]
      */
     protected static $instances = [];
 
@@ -102,11 +102,13 @@ class CacheManager
             $class = self::getNamespacePath() . $driver . '\Driver';
             try{
                 self::$instances[ $instance ] = new $class($config);
+                self::$instances[ $instance ]->setEventManager(EventManager::getInstance());
             }catch(phpFastCacheDriverCheckException $e){
                 $fallback = self::standardizeDriverName($config['fallback']);
                 if($fallback && $fallback !== $driver){
                     $class = self::getNamespacePath() . $fallback . '\Driver';
                     self::$instances[ $instance ] = new $class($config);
+                    self::$instances[ $instance ]->setEventManager(EventManager::getInstance());
                     trigger_error(sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver, $fallback), E_USER_WARNING);
                 }else{
                     throw new phpFastCacheDriverCheckException($e->getMessage(), $e->getCode(), $e);

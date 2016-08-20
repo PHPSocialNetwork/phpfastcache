@@ -20,7 +20,7 @@ namespace phpFastCache;
  */
 class Api
 {
-    protected static $version = '1.2.0';
+    protected static $version = '1.2.1';
 
     /**
      * This method will returns the current
@@ -45,6 +45,11 @@ class Api
     public static function getChangelog()
     {
         return <<<CHANGELOG
+- 1.2.1
+-- Implemented Event manager methods such as:
+   ExtendedCacheItemInterface::setEventManager()
+   ExtendedCacheItemPoolInterface::setEventManager()
+
 - 1.2.0
 -- Implemented Item advanced time methods such as:
    ExtendedCacheItemInterface::setExpirationDate() (Alias of CacheItemInterface::ExpireAt() for more code logic)

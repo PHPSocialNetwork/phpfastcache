@@ -14,6 +14,8 @@
 
 namespace phpFastCache\Core\Item;
 
+use phpFastCache\EventManager;
+
 /**
  * Class ItemExtendedTrait
  * @package phpFastCache\Core\Item
@@ -26,6 +28,10 @@ trait ItemExtendedTrait
      *
      *******************/
 
+    /**
+     * @var EventManager
+     */
+    protected $eventManager;
 
     /**
      * @return mixed
@@ -335,6 +341,18 @@ trait ItemExtendedTrait
     {
         return $this->get();
     }
+
+
+    /**
+     * Set the EventManager instance
+     *
+     * @param EventManager $em
+     */
+    public function setEventManager(EventManager $em)
+    {
+        $this->eventManager = $em;
+    }
+
 
     /**
      * Prevent recursions for Debug (php 5.6+)

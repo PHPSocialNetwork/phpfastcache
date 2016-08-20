@@ -16,6 +16,7 @@ namespace phpFastCache\Core\Pool;
 
 use InvalidArgumentException;
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
+use phpFastCache\EventManager;
 use Psr\Cache\CacheItemInterface;
 
 
@@ -368,6 +369,17 @@ trait ExtendedCacheItemPoolTrait
         }
         return null;
     }
+
+    /**
+     * Set the EventManager instance
+     *
+     * @param EventManager $em
+     */
+    public function setEventManager(EventManager $em)
+    {
+        $this->eventManager = $em;
+    }
+
 
     /**
      * Driver-related methods

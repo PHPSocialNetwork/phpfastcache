@@ -16,6 +16,7 @@ namespace phpFastCache\Core\Pool;
 
 use InvalidArgumentException;
 use phpFastCache\Entities\driverStatistic;
+use phpFastCache\EventManager;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
@@ -376,4 +377,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @throws \LogicException
      */
     public function isAttached(CacheItemInterface $item);
+
+
+    /**
+     * Set the EventManager instance
+     *
+     * @param EventManager $em
+     */
+    public function setEventManager(EventManager $em);
 }

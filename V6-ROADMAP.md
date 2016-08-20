@@ -4,5 +4,6 @@
 - [x] Re-order core structure and separate the Item/Pool code into separate directory
 - [ ] Add the MongoDB Driver, and rename the current one as MongoPecl, see #310
 - [ ] Update readme & Wiki to add new APIs methods
-- [ ] Add an event manager on most used pool/item methods
-- [ ] Add an "ActOnAll" class
+- [x] Add an event manager on most used pool/item methods
+- [ ] Setup all basic events to the pool/items
+- [x] Add an "ActOnAll" helper

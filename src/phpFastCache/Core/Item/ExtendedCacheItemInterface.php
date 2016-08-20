@@ -14,6 +14,7 @@
 
 namespace phpFastCache\Core\Item;
 
+use phpFastCache\EventManager;
 use Psr\Cache\CacheItemInterface;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 
@@ -199,4 +200,11 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
      * @return string
      */
     public function getDataAsJsonString($option = 0, $depth = 512);
+
+    /**
+     * Set the EventManager instance
+     *
+     * @param EventManager $em
+     */
+    public function setEventManager(EventManager $em);
 }

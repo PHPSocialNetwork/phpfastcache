@@ -69,8 +69,7 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
      */
     public function clear()
     {
-        $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $this->getGenericCallback()(__FUNCTION__, func_get_args());
     }
 
     /**

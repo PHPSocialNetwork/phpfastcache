@@ -106,6 +106,14 @@ trait ItemBaseTrait
         $this->fetched = true;
         $this->data = $value;
 
+        /**
+         * @eventName CacheSaveDeferredItem
+         * @param ExtendedCacheItemInterface $this
+         * @param mixed $value
+         *
+         */
+        $this->eventManager->dispatch('CacheItemSet', $this, $value);
+
         return $this;
     }
 
@@ -137,10 +145,17 @@ trait ItemBaseTrait
     /**
      * @param \DateTimeInterface $expiration
      * @return $this
+     * @throws \InvalidArgumentException
      */
     public function expiresAt($expiration)
     {
         if ($expiration instanceof \DateTimeInterface) {
+            /**
+             * @eventName CacheItemExpireAt
+             * @param ExtendedCacheItemInterface $this
+             * @param \DateTimeInterface $expiration
+             */
+            $this->eventManager->dispatch('CacheItemExpireAt', $this, $expiration);
             $this->expirationDate = $expiration;
         } else {
             throw new \InvalidArgumentException('$expiration must be an object implementing the DateTimeInterface');
@@ -186,8 +201,23 @@ trait ItemBaseTrait
                  */
                 $time = 30 * 24 * 3600 * 5;
             }
+
+            /**
+             * @eventName CacheItemExpireAt
+             * @param ExtendedCacheItemInterface $this
+             * @param \DateTimeInterface $expiration
+             */
+            $this->eventManager->dispatch('CacheItemExpireAfter', $this, $time);
+
             $this->expirationDate = (new \DateTime())->add(new \DateInterval(sprintf('PT%dS', $time)));
         } else if ($time instanceof \DateInterval) {
+            /**
+             * @eventName CacheItemExpireAt
+             * @param ExtendedCacheItemInterface $this
+             * @param \DateTimeInterface $expiration
+             */
+            $this->eventManager->dispatch('CacheItemExpireAfter', $this, $time);
+
             $this->expirationDate = (new \DateTime())->add($time);
         } else {
             throw new \InvalidArgumentException('Invalid date format');

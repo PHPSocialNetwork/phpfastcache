@@ -171,7 +171,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public static function isValidOption($optionName, $optionValue)
     {
-        parent::isValidOption($optionName, $optionValue);
+        DriverBaseTrait::isValidOption($optionName, $optionValue);
         switch ($optionName) {
             case 'path':
                 return is_string($optionValue);

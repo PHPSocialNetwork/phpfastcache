@@ -53,7 +53,7 @@ class CacheManager
     public static $WriteHits = 0;
 
     /**
-     * @var array
+     * @var ExtendedCacheItemPoolInterface[]
      */
     protected static $config = [
       'itemDetailedDate' => false,// Specify if the item must provide detailed creation/modification dates
@@ -81,6 +81,7 @@ class CacheManager
      * @param string $driver
      * @param array $config
      * @return ExtendedCacheItemPoolInterface
+     * @throws phpFastCacheDriverCheckException
      */
     public static function getInstance($driver = 'auto', $config = [])
     {
@@ -117,6 +118,34 @@ class CacheManager
         }
 
         return self::$instances[ $instance ];
+    }
+
+    /**
+     * This method is intended for internal
+     * use only and should not be used for
+     * any external development use the
+     * getInstances() method instead
+     *
+     * @internal
+     * @return ExtendedCacheItemPoolInterface[]
+     */
+    public static function getInstances()
+    {
+        return self::$instances;
+    }
+
+    /**
+     * This method is intended for internal
+     * use only and should not be used for
+     * any external development use the
+     * getInstances() method instead
+     *
+     * @internal
+     * @return ExtendedCacheItemPoolInterface[]
+     */
+    public static function &getInternalInstances()
+    {
+        return self::$instances;
     }
 
     /**

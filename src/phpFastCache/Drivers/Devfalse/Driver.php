@@ -12,10 +12,9 @@
  *
  */
 
-namespace phpFastCache\Drivers\Devnull;
+namespace phpFastCache\Drivers\Devfalse;
 
 use phpFastCache\Core\DriverAbstract;
-use phpFastCache\Core\StandardPsr6StructureTrait;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;

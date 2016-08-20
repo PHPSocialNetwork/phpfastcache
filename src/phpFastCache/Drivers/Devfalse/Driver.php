@@ -12,7 +12,7 @@
  *
  */
 
-namespace phpFastCache\Drivers\Devnull;
+namespace phpFastCache\Drivers\Devfalse;
 
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;

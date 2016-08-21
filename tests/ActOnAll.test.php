@@ -13,7 +13,7 @@ chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $status = 0;
-echo "Testing new cache instance\n";
+echo "Testing ActOnAll helper\n";
 
 /**
  * Testing memcached as it is declared in .travis.yml

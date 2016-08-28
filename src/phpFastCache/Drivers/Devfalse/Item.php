@@ -12,7 +12,7 @@
  *
  */
 
-namespace phpFastCache\Drivers\Devnull;
+namespace phpFastCache\Drivers\Devfalse;
 
 use phpFastCache\Cache\ExtendedCacheItemInterface;
 use phpFastCache\Cache\ExtendedCacheItemPoolInterface;

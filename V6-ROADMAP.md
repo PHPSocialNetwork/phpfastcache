@@ -6,6 +6,6 @@
 - [ ] Update readme & Wiki to add new APIs methods
 - [x] Add an event manager on most used pool/item methods
 - [ ] Setup all basic events to the pool/items
-- [ ] Add tests for EventManegr
+- [ ] Add tests for EventManager
 - [x] Add an "ActOnAll" helper
 - [x] Add tests for "ActOnAll" helper

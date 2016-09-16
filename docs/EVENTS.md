@@ -2,6 +2,8 @@
 
 * onCacheGetItem
   * Allow you to manipulate an item just before it gets returned by the getItem() method.
+ onCacheDeleteItem
+  * Allow you to manipulate an item just before it gets returned by the getItem() method.
 * onCacheSaveItem
   * Allow you to manipulate an item just before it gets saved by the driver.
 * onCacheSaveDeferredItem

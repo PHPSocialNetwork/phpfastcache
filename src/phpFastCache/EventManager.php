@@ -20,6 +20,7 @@ namespace phpFastCache;
  *
  * == ItemPool Events ==
  * @method Void onCacheGetItem() onCacheGetItem(Callable $callable)
+ * @method Void onCacheDeleteItem() onCacheDeleteItem(Callable $callable)
  * @method Void onCacheSaveItem() onCacheSaveItem(Callable $callable)
  * @method Void onCacheSaveDeferredItem() onCacheSaveDeferredItem(Callable $callable)
  * @method Void onCacheCommitItem() onCacheCommitItem(Callable $callable)

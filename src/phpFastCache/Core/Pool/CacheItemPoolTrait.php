@@ -188,6 +188,14 @@ trait CacheItemPoolTrait
         if ($this->hasItem($key) && $this->driverDelete($item)) {
             $item->setHit(false);
             CacheManager::$WriteHits++;
+
+            /**
+             * @eventName CacheCommitItem
+             * @param $this ExtendedCacheItemPoolInterface
+             * @param $item ExtendedCacheItemInterface
+             */
+            $this->eventManager->dispatch('CacheDeleteItem', $this, $item);
+
             /**
              * De-register the item instance
              * then collect gc cycles

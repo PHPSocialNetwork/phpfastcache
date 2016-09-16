@@ -86,6 +86,7 @@ phpFastCache offers you a lot of useful APIs:
 - getModificationDate() // Get the modification date for this cache item (as a DateTimeInterface object) *
 - setCreationDate($expiration) // Set the creation date for this cache item (as a DateTimeInterface object) *
 - setModificationDate($expiration) // Set the modification date for this cache item (as a DateTimeInterface object) *
+- setEventManager($evtMngr) // Set the event manager
 
 \* Require configuration directive "itemDetailedDate" to be enabled
 
@@ -118,6 +119,7 @@ phpFastCache offers you a lot of useful APIs:
 - detachAllItems($item) // Detach all items from the pool
 - attachItem($item) // (Re-)attach an item to the pool
 - isAttached($item) // Verify if an item is (still) attached
+- setEventManager($evtMngr) // Set the event manager
 
 Also support Multiple calls, Tagging, Setup Folder for caching. Look at our examples folders.
 

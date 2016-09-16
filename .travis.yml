@@ -49,3 +49,4 @@ script:
   - php -f tests/AbstractProxy.test.php
   - php -f tests/AttachingDetachingMethods.test.php
   - php -f tests/ActOnAll.test.php
+  - php -f tests/EventManager.test.php

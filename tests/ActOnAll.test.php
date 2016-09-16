@@ -28,20 +28,20 @@ $statsAry = $actOnAll->getStats();
 if(is_array($statsAry)){
     if(count($statsAry) !== 3){
         $status = 1;
-        echo 'Wrong count of driverStatistics objects: Got ' . count($statsAry) . " element(s), expected 3\n";
+        echo '[FAIL] Wrong count of driverStatistics objects: Got ' . count($statsAry) . " element(s), expected 3\n";
         goto endOfTest;
     }
 
     foreach ($statsAry as $stat) {
         if(!is_object($stat) || !($stat instanceof driverStatistic)){
-            echo "\$statsAry contains one element that is not an driverStatistic object\n";
+            echo "[FAIL] \$statsAry contains one element that is not an driverStatistic object\n";
             goto endOfTest;
         }
     }
     echo "[PASS] ActOnAll helper passed all tests\n";
 }else{
     $status = 1;
-    echo "\$statsAry is not an array\n";
+    echo "[FAIL] \$statsAry is not an array\n";
 }
 
 endOfTest:

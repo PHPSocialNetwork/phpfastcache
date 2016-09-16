@@ -125,24 +125,6 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
      */
     public function prepend($data);
 
-
-    /**
-     * Sets the expiration time for this cache item.
-     *
-     * @param int|\DateInterval $time
-     *   The period of time from the present after which the item MUST be considered
-     *   expired. An integer parameter is understood to be the time in seconds until
-     *   expiration. If null is passed explicitly, a default value MAY be used.
-     *   If none is set, the value should be stored permanently or for as long as the
-     *   implementation allows.
-     *
-     * @return static
-     *   The called object.
-     *
-     * @deprecated Use CacheItemInterface::expiresAfter() instead
-     */
-    public function touch($time);
-
     /**
      * @param string $tagName
      * @return $this

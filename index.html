@@ -4,20 +4,20 @@
 <head>
     <title>Simple PHP Cache Class | Fast PHP Caching Class</title>
 
-    <meta name="description" content="PHP cache is free, open source that speed up your website. Php caching class is a simple way to reduce mysql, cpu load, high io. Support Files, APC, Memcached, WinCache, XCache, Redis, Predis, MongoDB, SSDB" />
-    <meta name="keywords" content="php cache, php caching, php cache class, php caching class, simple php cache" />
+    <meta name="description" content="PHP cache is free, open source that speed up your website. Php caching class is a simple way to reduce mysql, cpu load, high io. Support Files, APC, Memcached, WinCache, XCache, Redis, Predis, MongoDB, SSDB"/>
+    <meta name="keywords" content="php cache, php caching, php cache class, php caching class, simple php cache"/>
 
-    <meta name="google-site-verification" content="2bpKxpBV7IuqGhzgx5jBzl4dZDoIR2XP6ia5ROP5ElA" />
+    <meta name="google-site-verification" content="2bpKxpBV7IuqGhzgx5jBzl4dZDoIR2XP6ia5ROP5ElA"/>
 
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" type="text/css" href="stylesheets/base.css" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/dark.css" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/media.queries.css" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/tipsy.css" />
-    <link rel="stylesheet" type="text/css" href="javascripts/fancybox/jquery.fancybox-1.3.4.css" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/base.css"/>
+    <link rel="stylesheet" type="text/css" href="stylesheets/dark.css"/>
+    <link rel="stylesheet" type="text/css" href="stylesheets/media.queries.css"/>
+    <link rel="stylesheet" type="text/css" href="stylesheets/tipsy.css"/>
+    <link rel="stylesheet" type="text/css" href="javascripts/fancybox/jquery.fancybox-1.3.4.css"/>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nothing+You+Could+Do|Quicksand:400,700,300">
 
     <!-- Javascripts -->
@@ -33,1051 +33,673 @@
     <script type="text/javascript" src="javascripts/fluidapp.js"></script>
 
     <!-- Favicons -->
-    <link rel="shortcut icon" href="images/favicon.png" />
+    <link rel="shortcut icon" href="images/favicon.png"/>
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
     <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
     <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
 
-    <link href="javascripts/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <link href="javascripts/google-code-prettify/prettify.css" type="text/css" rel="stylesheet"/>
 
+    <!--
     <script type="text/javascript" src="javascripts/google-code-prettify/prettify.js"></script>
     <script type="text/javascript" src="javascripts/google-code-prettify/run_prettify.js"></script>
+    -->
 
-    <link href="stylesheets/rain.css" type="text/css" rel="stylesheet" />
+    <link href="stylesheets/rain.css" type="text/css" rel="stylesheet"/>
 
     <meta name="robots" content="noodp,noydir"/>
-    <link rel="canonical" href="http://www.phpfastcache.com/" />
+    <link rel="canonical" href="http://www.phpfastcache.com/"/>
 
+    <style type="text/css">
+        .fb_like
+        {
+            margin-left: 5px;
+            margin-top: 3px;
+        }
 
+        .google_like
+        {
+            margin-top: 3px;
+            margin-left: 5px;
+        }
+
+        .comment_boxx
+        {
+            color: #A6A6A6;
+        }
+    </style>
 </head>
 <body>
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=165927826915789";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
-<!-- Place this tag after the last +1 button tag. -->
-<script type="text/javascript">
-    (function() {
-        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-        po.src = 'https://apis.google.com/js/plusone.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-    })();
-
-
-</script>
-<style>
-    .fb_like {
-        margin-left:5px;
-        margin-top:3px;
-    }
-    .google_like {
-        margin-top:3px;
-        margin-left:5px;
-    }
-    .comment_boxx {
-
-        color:#a6a6a6;
-
-    }
-</style>
-
-
-
 
 <!-- Start Wrapper -->
 <div id="page_wrapper">
 
-<!-- Start Header -->
-<header>
-    <div class="container">
-        <!-- Start Social Icons -->
-        <aside>
-            <ul class="social">
-                <li class="facebook"><a href="http://www.facebook.com/khoadev" target=_blank  rel="nofollow"   >Facebook</a></li>
-                <li class="twitter"><a href="http://www.facebook.com/khoadev" target=_blank  rel="nofollow"   >Twitter</a></li>
-                <li class="email"><a href="mailto:khoaofgod@gmail.com" title="khoaofgod@gmail.com"   rel="nofollow"  >Email</a></li>
-                <li class="rss"><a href="https://github.com/PHPSocialNetwork/phpfastcache/releases"  rel="nofollow"   target=_blank title="App Updates">RSS</a></li>
-                <!-- More Social Icons:
-                <li class="dribbble"><a href="">Dribbble</a></li>
-                <li class="google"><a href="">Google</a></li>
-                <li class="flickr"><a href="">Flickr</a></li>
+    <!-- Start Header -->
+    <header>
+        <div class="container">
+            <!-- Start Social Icons -->
+            <aside>
+                <ul class="social">
+                    <li class="facebook">
+                        <a href="http://www.facebook.com/khoadev" target=_blank rel="nofollow">Facebook</a></li>
+                    <li class="twitter">
+                        <a href="http://www.facebook.com/khoadev" target=_blank rel="nofollow">Twitter</a></li>
+                    <li class="email"><a href="mailto:khoaofgod@gmail.com" title="khoaofgod@gmail.com" rel="nofollow">Email</a>
+                    </li>
+                    <li class="rss">
+                        <a href="https://github.com/PHPSocialNetwork/phpfastcache/releases" rel="nofollow" target=_blank title="App Updates">RSS</a>
+                    </li>
+                    <!-- More Social Icons:
+                    <li class="dribbble"><a href="">Dribbble</a></li>
+                    <li class="google"><a href="">Google</a></li>
+                    <li class="flickr"><a href="">Flickr</a></li>
 
-                -->
-                <li>
+                    -->
+                    <li>
 
                         <div class="fb_like">
                             <div class="fb-like" data-href="https://www.facebook.com/FastCacheProjects" data-send="false" data-layout="button_count" data-width="60" data-show-faces="false" data-colorscheme="dark"></div>
                         </div>
-                </li>
-                <li>
+                    </li>
+                    <li>
                         <div class="google_like">
 
                             <div class="g-plusone" data-size="medium" data-href="http://www.phpfastcache.com"></div>
                         </div>
-                </li>
-                <li>
+                    </li>
+                    <li>
 
-                </li>
+                    </li>
 
-            </ul>
-        </aside>
-        <!-- End Social Icons -->
+                </ul>
+            </aside>
+            <!-- End Social Icons -->
 
-        <!-- Start Navigation -->
-        <nav>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#example" >Example</a></li>
-                <li><a href="#document">Document</a></li>
-                <li><a href="https://github.com/PHPSocialNetwork/phpfastcache/releases"  rel="nofollow"  target="_blank" >Updates</a></li>
-                <li><a href="https://github.com/PHPSocialNetwork/phpFastCache/issues"   rel="nofollow" title="You can submit your question here!" target="_blank">Issues / Help</a></li>
-                <li><a href="https://github.com/PHPSocialNetwork/phpFastCache/wiki"  rel="nofollow" target="_blank">Wiki</a></li>
-                <li><a href="/contact/"   rel="nofollow" target=_blank >Contact</a></li>
-            </ul>
-            <span class="arrow"></span>
-        </nav>
-        <!-- End Navigation -->
-    </div>
-</header>
-<!-- End Header -->
-
-<section class="container">
-
-<!-- Start App Info -->
-<div id="app_info">
-    <!-- Start Logo -->
-    <a href="#home" class="logo" title="What's up bro? Can you help me like and +1? I have just added them today, I need your donation ^_^ Love you!">
-        <img src="images/logo.png" alt="php caching class" />
-    </a>
-    <!-- End Logo -->
-    <span class="tagline">The PHP high-performance object caching system ever.</span>
-    <p>
-        phpFastCache is a high-performance, distributed object caching system, generic in nature, but intended for use in speeding up dynamic web applications by alleviating database load.<br>
-        <br>
-
-        phpFastCache dropped the database load to almost nothing, yielding faster page load times for users, better resource utilization. <b>It is simple yet powerful</b>
-
-
-
-
-    </p>
-
-    <div class="buttons">
-        <a href="https://github.com/PHPSocialNetwork/phpfastcache"  target="_blank" class="large_button" id="apple"  
-           
-           title="Php Caching Class"
-                >
-            <img src="images/github_icon.png" height=30 align=left style="margin-right:10px;">
-            <em>Github is already</em> Download
-        </a>
-        <a href="#example"  class="large_button" id="android">
-            <img src="images/php.png" height=30 align=left style="margin-right:10px;">
-            <em>Want to see</em> Example
-        </a>
-    </div>
-
-    <div class="price centered"> <!-- Alignments options: right_align, left_align, centered -->
-        <p>Just try it and your website will faster like 1,000 times</p>
-    </div>
-</div>
-<!-- End App Info -->
-
-<!-- Start Pages -->
-<div id="pages">
-<div class="top_shadow"></div>
-
-<!-- Start Home -->
-<div id="home" class="page">
-
-    <div class="full" id="rainme" style="width:575px;height:550;overflow: hidden;" >
-
-
-        <div class="flavor-wrapper" style="vertical-align: top;">
-            <div class="flavor">
-                <div class="h1">Heavy Visitor Rain</div>
-                <p class="inline">Your PHP is sending 10,000 queries extractly the same to Database. Let phpFastCache reduce it to 1 query and serve your 10,000 visitors. You need A </p> <h1>PHP Cache Class</h1>
-                <p class="drop-counter" style="visibility: hidden;">(<span>80</span> Visitors)</p>
-
-                <div class="one_half">
-                    <p class="inline"> Supported</p> <h3>Redis</h3>
-                    <p class="inline">,</p> <h3>APC</h3>
-                    <p class="inline">,</p> <h3>XCache</h3>
-                    <p class="inline">,</p> <h3>MemCache</h3>
-                    <p class="inline">,</p> <h3>MemCached</h3>
-                    <p class="inline">,</p> <h3>WinCache</h3>
-                    <p class="inline">,</p> <h3>Cookie</h3>
-                    <p class="inline">,</p> <h3>Redis</h3>
-                    <p class="inline">,</p> <h3>Predis</h3>
-                    <p class="inline">,</p> <h3>SSDB</h3>
-                    <p class="inline">,</p> <h3>MongoDB</h3>
-                    <p class="inline">, Files<br><br>
-                        You will never have to rewrite your</p> <h2>PHP caching class</h2><p  class="inline"> again when you change your servers. Faster than traditional Cache 10 times.<br><br>
-                </p>
-                </div>
-                <div class="one_half column_last">
-                    <blockquote>
-                        <p>Dude, It's awesome! My websites are running smooth with any shared hosting, No VPS upgrade needed!</p>
-                        <cite>P. Tran, Alilang Fashion</cite>
-                    </blockquote>
-                </div>
-                <div style="clear: both;"></div>
-            </div>
+            <!-- Start Navigation -->
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#example">Example</a></li>
+                    <li><a href="#document">Document</a></li>
+                    <li>
+                        <a href="https://github.com/PHPSocialNetwork/phpfastcache/releases" rel="nofollow" target="_blank">Updates</a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/PHPSocialNetwork/phpFastCache/issues" rel="nofollow" title="You can submit your question here!" target="_blank">Issues
+                            / Help</a></li>
+                    <li><a href="https://github.com/PHPSocialNetwork/phpFastCache/wiki" rel="nofollow" target="_blank">Wiki</a>
+                    <li><a href="https://github.com/PHPSocialNetwork/phpFastCache/projects" rel="nofollow" target="_blank">Roadmap</a>
+                    </li>
+                    <li><a href="/contact/" rel="nofollow" target=_blank>Contact</a></li>
+                </ul>
+                <span class="arrow"></span>
+            </nav>
+            <!-- End Navigation -->
         </div>
-
-        <div id="rain">
-
-        </div>
-
-
-
-        <div id="cloud"></div>
-
-
-        <div class="controls" style="visibility: hidden;" >
-            <input name="gravity" type="hidden" step="0.01" min="0.25" max="2" value="1"/>
-            <input name="drops" type="hidden" step="0.01" min="0.25" max="4" value="1"/>
-            <input name="font-size" type="hidden" step="0.01" min="0.5" max="1.5" value="1"/>
-
-        </div>
-    </div>
-    <script src="javascripts/rainminimal.js" type="text/javascript" charset="utf-8"></script>
-    <script src="javascripts/rain.js" type="text/javascript" charset="utf-8"></script>
-</div>
-<!-- End Home -->
-
-<!-- Start Team -->
-<div id="document" class="page">
-
-<div class="h1">Document & API</div>
-<div>
-    <div style="clear:both;font-weight: bold;">
-        <h2>A Simple PHP Caching Class</h2>
-    </div>
-    <div class="one_half">
-        <p>From Apr 28 2013, phpFastCache is available in GitHub, and it  also support more objects type caching.<br><br>
-            API Functions are available below.<br><br>
-        </p>
-    </div>
-    <div class="one_half column_last">
-        <blockquote>
-            <p>I don't need to upgrade to Dedicated, phpFastCache saved my little VPS</p>
-            <cite>J. Nguyen, EDM Inc</cite>
-        </blockquote>
-    </div>
-</div>
-<div class="full" style="clear:both;">
-<div class="toggle_list">
-<ul>
-<li class="opened"> <!-- Use class "opened" to expand a toggle on page load -->
-    <div class="title">
-        <div class="h3"><span>Q.</span> What are the requirements for using phpFastCache?</div>
-        <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
-    </div>
-    <div class="content" style="display: none;">
-        <p>All you need are PHP 5.3+</p>
-
-        <p>It works with All Operating System, all database, and all Web Server that support PHP 5.3+</p>
-        <p>phpFastCache is Open Source, feel FREE to edit and join our GitHub Community.</p>
-        <p>For PHP Version < 5.3, please download version 3.x and version 2.0</p>
-    </div>
-</li>
-<li>
-    <div class="title">
-        <div class="h3"><span>Q.</span> How to Install it?</div>
-        <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
-    </div>
-    <div class="content" style="display: none;">
-        <p>Composer require phpFastCache/phpFastCache - OR Just 2 steps:<br>
-            1. Click Download & Unzip<br>
-            2. Include("phpFastCache/phpFastCache.php");</p>
-        <p>You are Ready to speed up your slowly website!</p>
-    </div>
-</li>
-
-<li class="opened">
-    <div class="title">
-        <div class="h3"><span>X.</span> API Methods</div>
-        <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
-    </div>
-    <div class="content" style="display: none;">
-        <p>
-<pre class="prettyprint php">
-&lt;?php
-    use phpFastCache\CacheManager;
-    // auto, redis, cookie, files, sqlite, xcache, memcache, apc, memcached, wincache
-
-    $config = array(
-        "storage"   => "files",
-        "path"      =>  "/path/dir/to/your/cache",
-    );
-    CacheManager::setup($config);
-    CacheManager::CachingMethod("phpfastcache");
-
-    $cache = CacheManager::getInstance();
-
-    // The getter, obviously, return your cache object
-    $cache->get($keyword);
-
-    // The setter, for those who missed it, put 0 meant cache it forever
-    $cache->set($keyword, $something_your_want_to_cache, $time_as_second = 0);
-
-    $cache->delete($keyword); // For removing a cached thing
-    // Allow you to completely empty the cache and restart from the beginning
-    $cache->clean();
-
-    // Allow you to extends the lifetime of an entry without altering the value
-    $cache->touch($keyword, $time_you_want_to_extend);
-    $cache->increment($keyword, $step = 1); // For integer that we can count on
-    $cache->decrement($keyword, $step = 1); // Redundant joke...
-    // Allow you to perform some search on the cache index
-    $cache->search($string_or_regex, $search_in_value = false | true);
-    // Check if your cache entry exists, it is the equivalent of isset()
-    $cache->isExisting($keyword);
-    // Return the cache statistics, useful for checking disk space used by the cache etc.
-    $cache->stats();
-
-    // for Multi Call, Support Tags, Look at Folder Examples
-
-</pre>
-
-        </p>
-    </div>
-</li>
-
-<li>
-    <div class="title">
-        <div class="h3"><span>X.</span> Learn Basic</div>
-        <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
-    </div>
-    <div class="content" style="display: none;">
-        <p>
-        <pre class="prettyprint php">
-&lt;?php
-
-/*
- * Welcome to Learn Lesson
- * This is very Simple PHP Code of Caching
- */
-
-// Require Library
-use phpFastCache\CacheManager;
-require_once("src/phpFastCache/phpFastCache.php");
-
-// simple Caching with:
-// $cache = phpFastCache();
-// $cache = CacheManager::getInstance();
-
-$cache = CacheManager::Files();
-
-// Try to get $products from Caching First
-// product_page is "identity keyword";
-$products = $cache->get("product_page");
-
-if(is_null($products)) {
-    $products = "DB QUERIES | FUNCTION_GET_PRODUCTS | ARRAY | STRING | OBJECTS";
-    // Write products to Cache in 10 minutes with same keyword
-    $cache->set("product_page",$products , 600);
-}
-
-// use your products here or return it;
-echo $products;
-
-        </pre>
-        </p>
-    </div>
-</li>
-
-<li>
-    <div class="title">
-        <div class="h3"><span>X.</span> Setup & Configuration</div>
-        <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
-    </div>
-    <div class="content" style="display: none;">
-        <p>
-        <pre class="prettyprint php">
-&lt;?php
-/*
- * Learn how to setup phpFastCache ?
- */
-
-/*
- * Now this is Optional Config setup for default phpFastCache
- */
-
-$config = array(
-        /*
-         * Default storage
-         * if you set this storage => "files", then $cache = phpFastCache(); <-- will be files cache
-         */
-        "storage"   =>  "auto", // ssdb, predis, redis, mongodb , files, sqlite, auto, apc, wincache, xcache, memcache, memcached,
-
-        /*
-         * Default Path for Cache on HDD
-         * Use full PATH like /home/username/cache
-         * Keep it blank "", it will automatic setup for you
-         */
-        "path"      =>  "" , // default path for files
-        "securityKey"   =>  "", // default will good. It will create a path by PATH/securityKey
-
-        /*
-         * FallBack Driver
-         * Example, in your code, you use memcached, apc..etc, but when you moved your web hosting
-         * Until you setup your new server caching, use "overwrite" => "files"
-         */
-        "overwrite"  =>  "files", // whatever caching will change to "files" and you don't need to change ur code
-
-        /*
-         * .htaccess protect
-         * default will be  true
-         */
-        "htaccess"  =>  true,
-
-        /*
-         * Default Memcache Server for all $cache = phpFastCache("memcache");
-         */
-        "server"        =>  array(
-                array("127.0.0.1",11211,1),
-            //  array("new.host.ip",11211,1),
-        ),
-
-
-        'memcache' => array(
-                array('127.0.0.1', 11211, 1),
-                  //  array("new.host.ip",11211,1),
-        ),
-        'redis' => array(
-                'host' => '127.0.0.1',
-                'port' => '',
-                'password' => '',
-                'database' => '',
-                'timeout' => '',
-        ),
-        'ssdb' => array(
-                'host' => '127.0.0.1',
-                'port' => 8888,
-                'password' => '',
-                'timeout' => '',
-        ),
-        // use 1 as normal traditional, 2 = phpfastcache fastest as default, 3 = phpfastcache memory stable
-        "caching_method" => 2,
-);
-
-CacheManager::setup($config);
-// If any error, try "memory" first before swich to "normal" as traditional caching
-CacheManager::CachingMethod("phpfastcache");
-
-
-/*
- * End Optional Config
- */
-
-$cache = phpFastCache(); // this will be $config['storage'] up there;
-$cache = CacheManager::getInstance(); // this will be $config['storage'] up there;
-$cache = phpFastCache("memcache"); // this will use memcache
-$cache = CacheManager::Files() // this will use Files
-$cache = CacheManager::Predis() // this will use Predis
-
-$products = $cache->my_products;
-if(is_null($products)) {
-    $products = "object | array | function_get_products";
-    // write to cache
-    $cache->my_products = array($products, 600);
-}
-
-echo $products;
-        </pre>
-        </p>
-    </div>
-</li>
-
-
-<li>
-    <div class="title">
-        <div class="h3"><span>X.</span> All Functions</div>
-        <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
-    </div>
-    <div class="content" style="display: none;">
-        <p>
-        <pre class="prettyprint php">
-&lt;?php
-
-    /*
-     * List of functions and examples
-     */
-    use phpFastCache\CacheManager;
-
-    $cache = phpFastCache();
-    $cache = CacheManager::Files();
-
-    // Write into cache
-    $cache->set("keyword", "data | array | object", 300);
-
-    // Read from Cache | return null or data
-    $data = $cache->get("keyword");
-    echo $data;
-
-    // Read object information | value | time from cache
-    $object = $cache->getInfo("keyword");
-    print_r($object);
-
-    // Delete from cache
-    $cache->delete("keyword");
-
-    // Clean up all cache
-    $cache->clean();
-
-    // Stats
-    $array = $cache->stats();
-    print_r($array);
-
-    // Increase and Decrease Cache value - Return  true | false
-    $cache->increment("keyword", 1);
-    $cache->decrement("keyword", 1);
-
-    // Extend expiring time - Return true | false;
-    $cache->touch("keyword", 1000);
-
-    // Check Existing or not - Return true | false;
-    $cache->isExisting("keyword");
-
-    // Get & Set Multiple Items
-    // Same as above, but input is array();
-
-    $list = $cache->getMulti(array("key1","key2","key3"));
-
-    $list = $cache->getInfoMulti(array("key1","key2","key3"));
-
-    $cache->setMulti(array("key1","value1", 300),
-        array("key2","value2", 600),
-        array("key3","value3", 1800));
-
-    $cache->deleteMulti(array("key1","key2","key3"));
-
-    $cache->isExistingMulti(array("key1","key2","key3"));
-
-    $cache->touchMulti(array(
-                        array("key", 300),
-                        array("key2", 400),
-                       ));
-
-    $cache->incrementMulti(array(
-                            array("key", 1),
-                            array("key2", 2),
-                        ));
-
-    $cache->decrementMulti(array(
-                            array("key", 1),
-                            array("key2", 2),
-                        ));
-
-    // Tagging
-    $cache->set($keyword, $value, $time, array("tags" => array("tag1","tag2","tag3"));
-    $cache->setTags($keyword, $value, $time, array("tag1","tag2","tag3"));
-    $list = $cache->getTags(array("tag1"));
-    $cache->deleteTags(array("tag1"));
-    $cache->incrementTags(array("tag1"));
-    $cache->decrementTags(array("tag1"));
-    $cache->touchTags(array("tag1"));
-
-    // Searching
-    $list = $cache->search("string_or_regex", $search_in_value = false | true);
-
-
-
-        </pre>
-        </p>
-    </div>
-</li>
-
-<li>
-    <div class="title">
-        <div class="h3"><span>X.</span> Shortcut</div>
-        <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
-    </div>
-    <div class="content" style="display: none;">
-        <p>
-        <pre class="prettyprint php">
-&lt;?php
-
-/*
- * shortcut! to make it faster!
- * phpFastCache can use 2 functions:
- * __c() and phpFastCache() at any where without limit
- * Or lazy with CacheManager::set && CacheManager::get
- */
-
-    use phpFastCache\CacheManager;
-
-    $data = CacheManager::get("products_list");
-    // write ?
-    CacheManager::set("products_list", $my_array, 3600*24,
-                  array("tags" =>  array("computer","laptop"));
-
-
-        </pre>
-        </p>
-    </div>
-</li>
-
-
-
-
-
-<li>
-    <div class="title">
-        <div class="h3"><span>Q.</span> Why use phpFastCache as Your Caching Method?</div>
-        <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
-    </div>
-    <div class="content" style="display: none;">
-        <p>phpFastCache is Lightweight, Fastest & Security, supported many caching class (APC, MemCached, MemCache, Files, PDO, WinCache). PhpFastCache is faster than traditional caching method at least 7-10 times.
-        </p>
-        <p>It is more simple by Set, Get, and automatic clean up cache. It is also save more CPU usage than using other file cache.</p>
-        <p>phpFastCache can run as Memory Caching. Memory is always faster than file system.<br><br>
-            phpFastCache supported: Redis, Predis, SSDB, MongoDB, Files, APC, PDO, MemCached, MemCache, XCache and WinCache; It is more easier than all other caching on integrated into your code. You won't need root permission, you don't need to edit php.ini,
-            and will never worry about your server memory by caching again.<br><br>
-            Are you thinking about DSO, CGI, FastCgi, suPHP? phpFastCache can run on all of them.
-            If you want to change your cache $storage when your move your web server, just set it from $storage = "apc" to "memcached" , "wincache" , "files" , or simple with "auto" detect.
-        </p>
-        <p>phpFastCache can run on shared hosting, VPS, Dedicated Server, and help you save lot of cost from upgrading your Web Server. phpFastCache help thousand of website already.</p>
-
-
-        <p>And It's open Source as MIT License<br>
-            Try it and you will love phpFastCache<br><br>
-            Hey hey! Are you lazy to learn new thing?<br>
-            Dude, phpFastCache only uses 2 simple methods: SET & GET =.=!<br>
-        </p>
-
-    </div>
-</li>
-
-
-</ul>
-</div>
-</div>
-
-
-
-</div>
-<!-- End Team -->
-
-
-
-<!-- Start Screenshots -->
-<div id="example" class="page">
-    <div class="h1">Not a Normal / Traditional Cache</div>
-    <p class="inline">
-        phpFastCache is also a unique caching method, it's not only help reduce Database & API call, but it's
-    </p><h2>PHP Caching Class Reduce CPU High Load & I/O</h2>
-    <p class="inline">
-        . Yes, it faster than traditional / normal caching method these shared everywhere on internet like 7-10 times. Using phpFastCache with Files, you can almost get the same speed like Memcached.
-        Using phpFastCache with Memcached, Redis, SQlite ..etc, you can reduce the missing hit rates, connections number, and CPU Load.
-        This is a unique fastest caching lib.
-    </p>
-    <br>
-    <br>
-    <div class="h1">Reduce Database Calls </div>
-    <h2>PHP Caching Class For Database</h2>
-    <p class="inline">: Your website have 10,000 visitors who are online, and your dynamic page have to send 10,000 same queries to database on every page load.
-        With phpFastCache, your page only send 1 query to DB, and use the cache to serve 9,999 other visitors.
-    </p>
-
-    <br>
-    <p>
-<pre class="prettyprint php">
-&lt;?php
-    // In your config file
-    // include("phpFastCache/phpFastCache.php"); or use "Composer" / Autoload
-    use phpFastCache\CacheManager;
-
-    $config = array(
-        "storage"   =>  "files", // memcached, redis, ssdb, ..etc
-        "path"      =>  "/your_cache_path/dir/",
-    );
-    CacheManager::setup($config); // look at folder "Examples" for more setup & config
-
-    // In your Class, Functions, PHP Pages
-    // First try to get from Cache first with an Identity Keyword
-    $cache_keyword = "product page, item sku, md5(url), API url...";
-    $products = CacheManager::get($cache_keyword);
-
-    if(is_null($products)) {
-        $products = "YOUR DB QUERIES RESULT AS OBJECT || ARRAY || HTML || GET_PRODUCTS_FUNCTION";
-        // Cache your $products 600 seconds, phpFastCache will take care your heavy traffic.
-        CacheManager::set($cache_keyword, $products,600);  // 0 = never expired
-    }
-
-    // LOOP | Output Your $products
-</pre>
-    </p>
-    <br><br>
-
-<div class="h1">Improve cURL & API Calls </div>
-
-    <h2>Powerful PHP Caching Class</h2><p class="inline">: You are using Bing API, Google API or cURL and your API transactions are limited? phpFastCache can save your Server CPU & API Transactions.
-    You can use phpFastCache to do it easily.
-</p>
-    <br>
-    <p>
-<pre class="prettyprint php">
-&lt;?php
-    use phpFastCache\CacheManager;
-
-    $cache = CacheManager::Memcached();
-    // Yo? Look at examples Folder.
-    // $cache = CacheManager::getInstance();
-    // $cache = CacheManager::getInstance("redis", $setup);
-    // $cache = CacheManager::Files($setup);
-    // $cache = CacheManager::Redis();
-
-    // try to get from Cache first.
-    $results = $cache->get("identity_keyword")
-
-    if($results == null) {
-        $results = cURL->get("http://www.youtube.com/api/json/url/keyword/page");
-        // Write to Cache Save API Calls next time
-        $cache->set("identity_keyword", $results, 3600*24);
-    }
-
-    foreach($results as $video) {
-        // Output Your Contents HERE
-    }
-?&gt;
-</pre>
-    </p>
-    <br><br>
-    <div class="h1">Rendering Widget & Page </div>
-
-<h2>Simple PHP Files Caching Class</h2><p class="inline">: phpFastCache help you speed up your website thounsand times by caching your page and widget rendering.
-</p>
-    <br>
-    <p>
-<pre class="prettyprint php">
-&lt;?php
-    use phpFastCache\CacheManager;
-
-    // use Files Cache for Whole Page / Widget
-    $cache = CacheManager::Files();
-
-    $html = $cache->widget_1;
-
-    if($html == null) {
-        $html = Render Your Page || Widget || "Hello World";
-        // Save to Cache 30 minutes
-        $cache->widget_1 = array($html, 1800);
-    }
-
-    echo or return your $html;
-?&gt;
-</pre>
-    </p>
-<br><br>
-    <div class="h1">Caching Whole Webpage </div>
-    <h2>PHP Cache whole web page</h2><p class="inline">: You can use phpFastCache to cache the whole webpage easy too. This is simple example, but in real code, you should split it to 2 files: cache_start.php and cache_end.php.
-    The cache_start.php will store the beginning code until ob_start(); and the cache_end.php will start from GET HTML WEBPAGE. Then, your index.php will include cache_start.php on beginning and cache_end.php at the end of file.
-</p>
-    <br>
-    <p>
-<pre class="prettyprint php">
-&lt;?php
-    use phpFastCache\CacheManager;
-
-    // use Files Cache for Whole Page / Widget
-
-    // keyword = Webpage_URL
-    $keyword_webpage = md5($_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']);
-    $html = __c("files")->get($keyword_webpage);
-
-    if($html == null) {
-        ob_start();
-        /*
-            ALL OF YOUR CODE GO HERE
-            RENDER YOUR PAGE, DB QUERY, WHATEVER
-        */
-
-        // GET HTML WEBPAGE
-        $html = ob_get_contents();
-        // Save to Cache 30 minutes
-        __c("files")->set($keyword_webpage,$html, 1800);
-    }
-
-    echo $html;
-?&gt;
-</pre>
-    </p>
-
-    <br><br>
-    <div class="h1">Enable Multi Caching Method </div>
-
-    <h3>Example with Files, PDO, APC, WinCache, XCache, MemCache and MemCached Caching</h3><p class="inline">: phpFastCache will set up multiple caching files, maximum 50MB per file, and you can SET/Get from APC, MemCache .. etc.
-    It's good for caching cURL Data and API call results. You can mix multiple methods with phpFastCache. For example, mix files caches with APC, or PDO and memcached.</p>
-    <br>
-    <p>
-<pre class="prettyprint php">
-&lt;?php
-    // in your config files
-    // include("phpFastCache/phpFastCache.php");
-    // Use "Composer" / Vendor / Autoload
-
-    // auto | memcache | files ...etc. Will be default for $cache = __c();
-    use phpFastCache\CacheManager;
-
-    $cache = CacheManager::getInstance("memcached");
-    $cache = CacheManager::getInstance("redis");
-    $cache = CacheManager::Files();
-    // Legacy: $cache = phpFastCache();
-
-    // How to Write?
-    $cache->set("keyword1", "string|number|array|object", 300);
-    // Write with tags
-    $cache->set("keyword2",  "string|number|array|object", 3600,
-                array("tags"   =>  array("computer", "apple","laptop"));
-    $cache->set("keyword3",  "string|number|array|object", 3600*24,
-                array("tags"   =>  array("apple","laptop"));
-
-    // How to Read?
-    $data = $cache->get("keyword1");
-    $data = $cache->getTags(array("laptop"));
-    $data = $cache->search("string|regrex", $search_value = false | true);
-
-    // Multiple ? No Problem
-
-    $list = $cache->getMulti(array("key1","key2","key3"));
-    $cache->setMulti(array("key1","value1", 300),
-                      array("key2","value2", 600),
-                      array("key3","value3", 1800),
-                      );
-
-    // want more? Check out document in source code
-
-
-?&gt;
-</pre>
-    </p>
-
-    <br><br>
-    <div class="h1">Want more? Check our Document!</div>
-    <p>phpFastCache is simple yet powerful. Its simple design promotes quick deployment, ease of development, and solves many problems facing large data caches.
-        <a href="https://github.com/PHPSocialNetwork/phpFastCache/wiki" rel="nofollow" target="_blank">Github phpFastCache Wiki</a>
-    </p>
-
-
-</div>
-<!-- End Screenshots -->
-
-<!-- Start Updates -->
-<div id="updates" class="page">
-
-    <div class="h1">Updates</div>
-
-    <div class="releases">
-
-        <article class="release">
-            <div class="h2">Version 2.4</div>
-            <span class="date">Released on Feb 01, 2014</span>
-            <ul>
-                <li class="new"><span><b>New</b></span> Redis Supported</li>
-                <li class="new"><span><b>New</b></span> Cookie Supported</li>
-                <li class="new"><span><b>New</b></span> Tempory Disabled Caching</li>
-                <li class="new"><span><b>New</b></span> Run Method</li>
-                <li class="fix"><span><b>Fix</b></span> Improved Files Cache</li>
-                <li class="fix"><span><b>Fix</b></span> Fallback Driver</li>
-            </ul>
-        </article>
-
-        <article class="release">
-            <div class="h2">Version 2.0 & Revision 621</div>
-            <span class="date">Released on Aug 4th, 2013</span>
-            <ul>
-                <li class="new"><span><b>New</b></span> New Methods</li>
-                <li class="new"><span><b>New</b></span> New Classes & Improved Everything</li>
-            </ul>
-        </article>
-
-        <article class="release">
-            <div class="h2">Revision 618</div>
-            <span class="date">Released on Jun 26th, 2013</span>
-            <ul>
-                <li class="new"><span><b>New</b></span> .htaccess Security for Cache Folder</li>
-                <li class="new"><span><b>New</b></span> Mod-PHP / Apache2Handler will use TMP Dir as default</li>
-            </ul>
-        </article>
-
-        <article class="release">
-            <div class="h2">Version 1.3.0.1</div>
-            <span class="date">Released on May 11th, 2013</span>
-            <ul>
-                <li class="new"><span><b>New</b></span> X-Cache Supported</li>
-                <li class="fix"><span><b>Fix</b></span> phpFastCache::$files_cleanup_after = 1; // hour</li>
-            </ul>
-        </article>
-
-        <article class="release">
-            <div class="h2">Version 1.3</div>
-            <span class="date">Released on May 6th, 2013</span>
-            <ul>
-                <li class="new"><span><b>New</b></span> APC, MemCache, MemCached, WinCache, Files Supported</li>
-                <li class="new"><span><b>New</b></span> Added $storage = "auto"</li>
-                <li class="new"><span><b>New</b></span> Added exists, setMulti, getMulti, deleteMulti</li>
-                <li class="fix"><span><b>Fix</b></span> Removed Cache.0777 files</li>
-                <li class="fix"><span><b>Fix</b></span> Improve Security with $securityKey = "keyword"</li>
-                <li class="fix"><span><b>Fix</b></span> Removed PDO Required</li>
-            </ul>
-        </article>
-
-        <article class="release">
-            <div class="h2">Version 1.2</div>
-            <span class="date">Released on April 30th, 2013</span>
-            <ul>
-                <li class="new"><span><b>New</b></span> cURL Supported</li>
-                <li class="fix"><span><b>Fix</b></span> resetAll() &amp; fixes</li>
-                <li class="new"><span><b>New</b></span> Added auto vacuum for every 48 hours</li>
-                <li class="fix"><span><b>fix</b></span> More objects supported</li>
-            </ul>
-        </article>
-
-        <article class="release">
-            <div class="h2">Version 1.1</div>
-            <span class="date">Released on November 10th, 2011</span>
-            <ul>
-                <li class="new"><span><b>New</b></span> Full PHP5 compatibility</li>
-                <li class="fix"><span><b>Fix</b></span> Skip items &amp; fixes</li>
-                <li class="new"><span><b>New</b></span> Added In Memory Caching (Beta)</li>
-                <li class="fix"><span><b>fix</b></span> $PATH</li>
-            </ul>
-        </article>
-
-        <article class="release">
-            <div class="h2">Version 1.0</div>
-            <span class="date">Released on January 1st, 2011</span>
-            <ul>
-                <li class="new"><span><b>New</b></span> Initial release for phpFastCache</li>
-            </ul>
-        </article>
-    </div>
-
-</div>
-<!-- End Updates -->
-
-
-
-<!-- Start Start Contact -->
-<div id="contact" class="page">
-
-    <div class="h1">Contact</div>
-
-    <div class="clear:both">
-        <p class="inline">If you are looking for</p> <h3>Simple PHP Files Cache</h3> <p class="inline">, </p>
-        <h2>Fastest PHP Caching Class</h2> <p class="inline">, and</p>
-        <h3>Easiest Integrating Multiple Caching Methods</h3>
-        <p class="inline">, then You should pick </p> <h2>PHP Fast Cache</h2>
-    </div>
-
-    <p><br>For general questions, bug reports or press inquires please fill out the form below.</p>
-
-    <div id="contact_form">
-
-        <div class="validation">
-            <p>Oops! Please correct the highlighted fields...</p>
-        </div>
-
-        <div class="success">
-            <p>Thanks! I'll get back to you shortly.</p>
-        </div>
-
-        <form action="javascript:;" method="post">
-            <div class="row">
-                <p class="left">
-                    <label for="name">Name*</label>
-                    <input type="text" name="name"
-                           onclick="Javascript:alert('This form is a troll, dude! Please send me an email to khoaofgod@yahoo.com ^_^ Thank you!');"
-                           id="name" value="" />
-                </p>
-                <p class="right">
-                    <label for="email">Email*</label>
-                    <input type="text" name="email" id="email" value=""
-                           onclick="Javascript:alert('This form is a troll, dude! Please send me an email to khoaofgod@yahoo.com ^_^ Thank you!');"
-                            />
-                </p>
-            </div>
-
-            <div class="row">
-                <p class="left">
-                    <label for="website">Website</label>
-                    <input type="text" name="website" id="website" value="" />
-                </p>
-                <p class="right">
-                    <label for="subject">Subject</label>
-                    <input type="text" name="subject" id="subject" value="" />
-                </p>
-            </div>
-
+    </header>
+    <!-- End Header -->
+
+    <section class="container">
+
+        <!-- Start App Info -->
+        <div id="app_info">
+            <!-- Start Logo -->
+            <a href="#home" class="logo" title="What's up bro? Can you help me like and +1? I have just added them today, I need your donation ^_^ Love you!">
+                <img src="images/logo.png" alt="php caching class"/>
+            </a>
+            <!-- End Logo -->
+            <span class="tagline">The PHP high-performance object caching system ever.</span>
             <p>
-                <label for="message" class="textarea">Message</label>
-                <textarea class="text" name="message" id="message"></textarea>
+                phpFastCache is a high-performance, distributed object caching system, generic in nature, but intended
+                for use in speeding up dynamic web applications by alleviating database load.<br>
+                <br>
+
+                phpFastCache dropped the database load to almost nothing, yielding faster page load times for users,
+                better resource utilization. <b>It is simple yet powerful</b>
+
+
             </p>
 
-            <input type="submit" class="button white" value="Send &#x2192;" />
-        </form>
+            <div class="buttons">
+                <a href="https://github.com/PHPSocialNetwork/phpfastcache" target="_blank" class="large_button" id="apple"
 
-    </div>
+                   title="Php Caching Class"
+                >
+                    <img src="images/github_icon.png" height=30 align=left style="margin-right:10px;">
+                    <em>Github is already</em> Download
+                </a>
+                <a href="#example" class="large_button" id="android">
+                    <img src="images/php.png" height=30 align=left style="margin-right:10px;">
+                    <em>Want to see</em> Example
+                </a>
+            </div>
 
-</div>
-<!-- End Start Contact -->
+            <div class="price centered"> <!-- Alignments options: right_align, left_align, centered -->
+                <p>Just try it and your website will faster like 1,000 times</p>
+            </div>
+        </div>
+        <!-- End App Info -->
+
+        <!-- Start Pages -->
+        <div id="pages">
+            <div class="top_shadow"></div>
+
+            <!-- Start Home -->
+            <div id="home" class="page">
+
+                <div class="full" id="rainme" style="width:575px;height:550;overflow: hidden;">
 
 
+                    <div class="flavor-wrapper" style="vertical-align: top;">
+                        <div class="flavor">
+                            <div class="h1">Heavy Visitor Rain</div>
+                            <p class="inline">Your PHP is sending 10,000 queries extractly the same to Database. Let
+                                phpFastCache reduce it to 1 query and serve your 10,000 visitors. You need A </p>
+                            <h1>PHP Cache Class</h1>
+                            <p class="drop-counter" style="visibility: hidden;">(<span>80</span> Visitors)</p>
+
+                            <div class="one_half">
+                                <p class="inline"> Supported</p>
+                                <h3>Redis</h3>
+                                <p class="inline">,</p>
+                                <h3>APC</h3>
+                                <p class="inline">,</p>
+                                <h3>XCache</h3>
+                                <p class="inline">,</p>
+                                <h3>MemCache</h3>
+                                <p class="inline">,</p>
+                                <h3>MemCached</h3>
+                                <p class="inline">,</p>
+                                <h3>WinCache</h3>
+                                <p class="inline">,</p>
+                                <h3>Cookie</h3>
+                                <p class="inline">,</p>
+                                <h3>Redis</h3>
+                                <p class="inline">,</p>
+                                <h3>Predis</h3>
+                                <p class="inline">,</p>
+                                <h3>SSDB</h3>
+                                <p class="inline">,</p>
+                                <h3>MongoDB</h3>
+                                <p class="inline">, Files<br><br>
+                                    You will never have to rewrite your</p>
+                                <h2>PHP caching class</h2>
+                                <p class="inline"> again when you change your servers. Faster than traditional Cache 10
+                                    times.<br><br>
+                                </p>
+                            </div>
+                            <div class="one_half column_last">
+                                <blockquote>
+                                    <p>Dude, It's awesome! My websites are running smooth with any shared hosting, No
+                                        VPS upgrade needed!</p>
+                                    <cite>P. Tran, Alilang Fashion</cite>
+                                </blockquote>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
+
+                    <div id="rain">
+
+                    </div>
 
 
-<div class="bottom_shadow"></div>
-</div>
-<!-- End Pages -->
-
-<div class="clear"></div>
-</section>
+                    <div id="cloud"></div>
 
 
-<!-- Start Footer -->
-<footer class="container">
-    <p>phpFastCache &copy; 2011 - 2016 - A PHP Caching Class - Simple Yet Powerful</p>
-    <br><br>
-    <a href="https://codeclimate.com/github/PHPSocialNetwork/phpfastcache"  rel="nofollow" target="_blank"><img src="//codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg"></a>
-    <a href="https://codeclimate.com/github/PHPSocialNetwork/phpfastcache"  rel="nofollow" target="_blank"><img src="//travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=final"></a>
-    <a href="https://packagist.org/packages/phpfastcache/phpfastcache"  rel="nofollow" target="_blank"><img src="//img.shields.io/packagist/v/phpfastcache/phpfastcache.svg"></a>
-    <a href="https://packagist.org/packages/phpfastcache/phpfastcache"  rel="nofollow" target="_blank"><img src="//img.shields.io/packagist/dt/phpfastcache/phpfastcache.svg"></a>
-    <a href="https://packagist.org/packages/phpfastcache/phpfastcache"  rel="nofollow" target="_blank"><img src="//img.shields.io/packagist/l/phpfastcache/phpfastcache.svg"></a>
+                    <div class="controls" style="visibility: hidden;">
+                        <input name="gravity" type="hidden" step="0.01" min="0.25" max="2" value="1"/>
+                        <input name="drops" type="hidden" step="0.01" min="0.25" max="4" value="1"/>
+                        <input name="font-size" type="hidden" step="0.01" min="0.5" max="1.5" value="1"/>
 
-</footer>
+                    </div>
+                </div>
+                <script src="javascripts/rainminimal.js" type="text/javascript" charset="utf-8"></script>
+                <script src="javascripts/rain.js" type="text/javascript" charset="utf-8"></script>
+            </div>
+            <!-- End Home -->
 
-<!-- End Footer -->
+            <!-- Start Team -->
+            <div id="document" class="page">
+
+                <div class="h1">Document & API</div>
+                <div>
+                    <div style="clear:both;font-weight: bold;">
+                        <h2>A Simple PHP Caching Class</h2>
+                    </div>
+                    <div class="one_half">
+                        <p>From Apr 28 2013, phpFastCache is available in GitHub, and it also support more objects type
+                            caching.<br><br>
+                            API Functions are available below.<br><br>
+                        </p>
+                    </div>
+                    <div class="one_half column_last">
+                        <blockquote>
+                            <p>I don't need to upgrade to Dedicated, phpFastCache saved my little VPS</p>
+                            <cite>J. Nguyen, EDM Inc</cite>
+                        </blockquote>
+                    </div>
+                </div>
+                <div class="full" style="clear:both;">
+                    <div class="toggle_list">
+                        <ul>
+                            <li class="opened"> <!-- Use class "opened" to expand a toggle on page load -->
+                                <div class="title">
+                                    <div class="h3"><span>Q.</span> What are the requirements for using phpFastCache?
+                                    </div>
+                                    <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
+                                </div>
+                                <div class="content" style="display: none;">
+                                    <p>All you need are PHP 5.5+</p>
+
+                                    <p>It works with All Operating System, all database, and all Web Server that support
+                                        PHP 5.5+</p>
+                                    <p>phpFastCache is Open Source, feel FREE to edit and join our GitHub Community.</p>
+                                    <p>For PHP Version < 5.5, please download version 4.x and lower</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="title">
+                                    <div class="h3"><span>Q.</span> How to Install it?</div>
+                                    <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
+                                </div>
+                                <div class="content" style="display: none;">
+                                    <ul>
+                                        <li><strong>Via Composer:</strong> <span>composer require phpFastCache/phpFastCache</span></li>
+                                        <li><strong>Manually:</strong> <span>See the file examples/legacy.php for more information.</span></li>
+                                    </ul>
+                                    <p>You are now ready to really improve your website speed!</p>
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="title">
+                                    <div class="h3"><span>X.</span>Simple GET-SET methods</div>
+                                    <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
+                                </div>
+                                <div class="content" style="display: none;">
+                                    <script src="https://gist.github.com/Geolim4/a13bf1f76d3fabafcbe14b045e315c38.js"></script>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="title">
+                                    <div class="h3"><span>X.</span> Setup & Configuration</div>
+                                    <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
+                                </div>
+                                <div class="content" style="display: none;">
+                                    <script src="https://gist.github.com/Geolim4/69471ccd398f2a919f109063ecc0c971.js"></script>
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="title">
+                                    <div class="h3"><span>Q.</span> Why use phpFastCache as Your Caching Method?</div>
+                                    <a href="javascript:;" class="toggle_link" data-open_text="+" data-close_text="-">+</a>
+                                </div>
+                                <div class="content" style="display: none;">
+                                    <p>phpFastCache is Lightweight, Fastest & Security, supported many caching class
+                                        (APC, MemCached, MemCache, Files, PDO, Redis, Ssdb, WinCache, etc). PhpFastCache is faster than
+                                        traditional caching method at least 7-10 times.
+                                    </p>
+
+                                    <p>It is more simple by Set, Get, and automatic clean up cache. It is also save more
+                                        CPU usage than using other file cache.</p>
+                                    <p>phpFastCache can run as Memory Caching. Memory is always faster than file system.<br><br>
+                                        phpFastCache supported: Redis, Predis, SSDB, MongoDB, Files, APC, PDO,
+                                        MemCached, MemCache, XCache and WinCache; It is more easier than all other
+                                        caching on integrated into your code. You won't need root permission, you don't
+                                        need to edit php.ini,
+                                        and will never worry about your server memory by caching again.<br><br>
+                                        Are you thinking about DSO, CGI, FastCgi, suPHP? phpFastCache can run on all of
+                                        them.
+                                        If you want to change your cache $storage when your move your web server, just
+                                        set it from $storage = "apc" to "memcached" , "wincache" , "files" , or simple
+                                        with "auto" detect.
+                                    </p>
+                                    <p>phpFastCache can run on shared hosting, VPS, Dedicated Server, and help you save
+                                        lot of cost from upgrading your Web Server. phpFastCache help thousand of
+                                        website already.</p>
+
+                                    <p>And It's open Source as MIT License</p>
+                                    <p>Try it and you will love phpFastCache</p>
+                                    <p> Hey hey! Are you lazy to learn new thing?</p>
+                                    <p>  Dude, phpFastCache only uses 2 simple methods: SET & GET =.=! </p>
+                                </div>
+                            </li>
+
+
+                        </ul>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- End Team -->
+
+
+            <!-- Start Screenshots -->
+            <div id="example" class="page">
+                <div class="h1">Not a Normal / Traditional Cache</div>
+                <p class="inline">
+                    phpFastCache is also a unique caching method, it's not only help reduce Database & API call, but
+                    it's
+                </p>
+                <h2>PHP Caching Class Reduce CPU High Load & I/O</h2>
+                <p class="inline">
+                    . Yes, it faster than traditional / normal caching method these shared everywhere on internet like
+                    7-10 times. Using phpFastCache with Files, you can almost get the same speed like Memcached.
+                    Using phpFastCache with Memcached, Redis, SQlite ..etc, you can reduce the missing hit rates,
+                    connections number, and CPU Load.
+                    This is a unique fastest caching lib.
+                </p>
+                <br>
+                <br>
+                <div class="h1">Reduce Database Calls</div>
+                <h2>PHP Caching Class For Database</h2>
+                <p class="inline">: Your website have 10,000 visitors who are online, and your dynamic page have to send
+                    10,000 same queries to database on every page load.
+                    With phpFastCache, your page only send 1 query to DB, and use the cache to serve 9,999 other
+                    visitors.
+                </p>
+                <br>
+                <div>
+                    <script src="https://gist.github.com/Geolim4/a13bf1f76d3fabafcbe14b045e315c38.js"></script>
+                </div>
+                <br><br>
+                <div class="h1">Improve cURL & API Calls</div>
+
+                <h2>Powerful PHP Caching Class</h2>
+                <p class="inline">: You are using Bing API, Google API or cURL and your API transactions are limited?
+                    phpFastCache can save your Server CPU & API Transactions.
+                    You can use phpFastCache to do it easily.
+                </p>
+                <br>
+                <div>
+                    <script src="https://gist.github.com/Geolim4/993ce81d41d5fb2c2d52801d75de3142.js"></script>
+                </div>
+                <br><br>
+                <div class="h1">Caching Whole Webpage</div>
+                <h2>PHP Cache whole web page</h2>
+                <p class="inline">: You can use phpFastCache to cache the whole webpage easy too. This is simple
+                    example, but in real code, you should split it to 2 files: cache_start.php and cache_end.php.
+                    The cache_start.php will store the beginning code until ob_start(); and the cache_end.php will start
+                    from GET HTML WEBPAGE. Then, your index.php will include cache_start.php on beginning and
+                    cache_end.php at the end of file.
+                </p>
+                <br>
+                <div>
+                    <script src="https://gist.github.com/Geolim4/bdccc41690c48605cff1c6cb37497f9e.js"></script>
+                </div>
+
+                <br><br>
+                <div class="h1">Enable Multi Caching Method</div>
+
+                <h3>Example with Files, PDO, APC, WinCache, XCache, MemCache and MemCached Caching</h3>
+                <p class="inline">: phpFastCache will set up multiple caching files, maximum 50MB per file, and you can
+                    SET/Get from APC, MemCache .. etc.
+                    It's good for caching cURL Data and API call results. You can mix multiple methods with
+                    phpFastCache. For example, mix files caches with APC, or PDO and memcached.</p>
+                <br>
+                <div>
+                    <script src="https://gist.github.com/Geolim4/ae47518963b3253e6358c2599c009c6f.js"></script>
+                </div>
+
+                <br><br>
+                <div class="h1">Want more? Check our Document!</div>
+                <p>phpFastCache is simple yet powerful. Its simple design promotes quick deployment, ease of
+                    development, and solves many problems facing large data caches.
+                    <a href="https://github.com/PHPSocialNetwork/phpFastCache/wiki" rel="nofollow" target="_blank">Github
+                        phpFastCache Wiki</a>
+                </p>
+
+
+            </div>
+            <!-- End Screenshots -->
+
+            <!-- Start Updates -->
+            <div id="updates" class="page">
+
+                <div class="h1">Updates</div>
+
+                <div class="releases">
+
+                    <article class="release">
+                        <div class="h2">Version 2.4</div>
+                        <span class="date">Released on Feb 01, 2014</span>
+                        <ul>
+                            <li class="new"><span><b>New</b></span> Redis Supported</li>
+                            <li class="new"><span><b>New</b></span> Cookie Supported</li>
+                            <li class="new"><span><b>New</b></span> Tempory Disabled Caching</li>
+                            <li class="new"><span><b>New</b></span> Run Method</li>
+                            <li class="fix"><span><b>Fix</b></span> Improved Files Cache</li>
+                            <li class="fix"><span><b>Fix</b></span> Fallback Driver</li>
+                        </ul>
+                    </article>
+
+                    <article class="release">
+                        <div class="h2">Version 2.0 & Revision 621</div>
+                        <span class="date">Released on Aug 4th, 2013</span>
+                        <ul>
+                            <li class="new"><span><b>New</b></span> New Methods</li>
+                            <li class="new"><span><b>New</b></span> New Classes & Improved Everything</li>
+                        </ul>
+                    </article>
+
+                    <article class="release">
+                        <div class="h2">Revision 618</div>
+                        <span class="date">Released on Jun 26th, 2013</span>
+                        <ul>
+                            <li class="new"><span><b>New</b></span> .htaccess Security for Cache Folder</li>
+                            <li class="new"><span><b>New</b></span> Mod-PHP / Apache2Handler will use TMP Dir as default
+                            </li>
+                        </ul>
+                    </article>
+
+                    <article class="release">
+                        <div class="h2">Version 1.3.0.1</div>
+                        <span class="date">Released on May 11th, 2013</span>
+                        <ul>
+                            <li class="new"><span><b>New</b></span> X-Cache Supported</li>
+                            <li class="fix"><span><b>Fix</b></span> phpFastCache::$files_cleanup_after = 1; // hour</li>
+                        </ul>
+                    </article>
+
+                    <article class="release">
+                        <div class="h2">Version 1.3</div>
+                        <span class="date">Released on May 6th, 2013</span>
+                        <ul>
+                            <li class="new"><span><b>New</b></span> APC, MemCache, MemCached, WinCache, Files Supported
+                            </li>
+                            <li class="new"><span><b>New</b></span> Added $storage = "auto"</li>
+                            <li class="new"><span><b>New</b></span> Added exists, setMulti, getMulti, deleteMulti</li>
+                            <li class="fix"><span><b>Fix</b></span> Removed Cache.0777 files</li>
+                            <li class="fix"><span><b>Fix</b></span> Improve Security with $securityKey = "keyword"</li>
+                            <li class="fix"><span><b>Fix</b></span> Removed PDO Required</li>
+                        </ul>
+                    </article>
+
+                    <article class="release">
+                        <div class="h2">Version 1.2</div>
+                        <span class="date">Released on April 30th, 2013</span>
+                        <ul>
+                            <li class="new"><span><b>New</b></span> cURL Supported</li>
+                            <li class="fix"><span><b>Fix</b></span> resetAll() &amp; fixes</li>
+                            <li class="new"><span><b>New</b></span> Added auto vacuum for every 48 hours</li>
+                            <li class="fix"><span><b>fix</b></span> More objects supported</li>
+                        </ul>
+                    </article>
+
+                    <article class="release">
+                        <div class="h2">Version 1.1</div>
+                        <span class="date">Released on November 10th, 2011</span>
+                        <ul>
+                            <li class="new"><span><b>New</b></span> Full PHP5 compatibility</li>
+                            <li class="fix"><span><b>Fix</b></span> Skip items &amp; fixes</li>
+                            <li class="new"><span><b>New</b></span> Added In Memory Caching (Beta)</li>
+                            <li class="fix"><span><b>fix</b></span> $PATH</li>
+                        </ul>
+                    </article>
+
+                    <article class="release">
+                        <div class="h2">Version 1.0</div>
+                        <span class="date">Released on January 1st, 2011</span>
+                        <ul>
+                            <li class="new"><span><b>New</b></span> Initial release for phpFastCache</li>
+                        </ul>
+                    </article>
+                </div>
+
+            </div>
+            <!-- End Updates -->
+
+
+            <!-- Start Start Contact -->
+            <div id="contact" class="page">
+
+                <div class="h1">Contact</div>
+
+                <div class="clear:both">
+                    <p class="inline">If you are looking for</p>
+                    <h3>Simple PHP Files Cache</h3>
+                    <p class="inline">, </p>
+                    <h2>Fastest PHP Caching Class</h2>
+                    <p class="inline">, and</p>
+                    <h3>Easiest Integrating Multiple Caching Methods</h3>
+                    <p class="inline">, then You should pick </p>
+                    <h2>PHP Fast Cache</h2>
+                </div>
+
+                <p><br>For general questions, bug reports or press inquires please fill out the form below.</p>
+
+                <div id="contact_form">
+
+                    <div class="validation">
+                        <p>Oops! Please correct the highlighted fields...</p>
+                    </div>
+
+                    <div class="success">
+                        <p>Thanks! I'll get back to you shortly.</p>
+                    </div>
+
+                    <form action="javascript:;" method="post">
+                        <div class="row">
+                            <p class="left">
+                                <label for="name">Name*</label>
+                                <input type="text" name="name"
+                                       onclick="Javascript:alert('This form is a troll, dude! Please send me an email to khoaofgod@yahoo.com ^_^ Thank you!');"
+                                       id="name" value=""/>
+                            </p>
+                            <p class="right">
+                                <label for="email">Email*</label>
+                                <input type="text" name="email" id="email" value=""
+                                       onclick="Javascript:alert('This form is a troll, dude! Please send me an email to khoaofgod@yahoo.com ^_^ Thank you!');"
+                                />
+                            </p>
+                        </div>
+
+                        <div class="row">
+                            <p class="left">
+                                <label for="website">Website</label>
+                                <input type="text" name="website" id="website" value=""/>
+                            </p>
+                            <p class="right">
+                                <label for="subject">Subject</label>
+                                <input type="text" name="subject" id="subject" value=""/>
+                            </p>
+                        </div>
+
+                        <p>
+                            <label for="message" class="textarea">Message</label>
+                            <textarea class="text" name="message" id="message"></textarea>
+                        </p>
+
+                        <input type="submit" class="button white" value="Send &#x2192;"/>
+                    </form>
+
+                </div>
+
+            </div>
+            <!-- End Start Contact -->
+
+
+            <div class="bottom_shadow"></div>
+        </div>
+        <!-- End Pages -->
+
+        <div class="clear"></div>
+    </section>
+
+
+    <!-- Start Footer -->
+    <footer class="container">
+        <p>phpFastCache &copy; 2011 - 2016 - A PHP Caching Class - Simple Yet Powerful</p>
+        <br><br>
+        <a href="https://codeclimate.com/github/PHPSocialNetwork/phpfastcache" rel="nofollow" target="_blank"><img src="//codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg"></a>
+        <a href="https://codeclimate.com/github/PHPSocialNetwork/phpfastcache" rel="nofollow" target="_blank"><img src="//travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=final"></a>
+        <a href="https://packagist.org/packages/phpfastcache/phpfastcache" rel="nofollow" target="_blank"><img src="//img.shields.io/packagist/v/phpfastcache/phpfastcache.svg"></a>
+        <a href="https://packagist.org/packages/phpfastcache/phpfastcache" rel="nofollow" target="_blank"><img src="//img.shields.io/packagist/dt/phpfastcache/phpfastcache.svg"></a>
+        <a href="https://packagist.org/packages/phpfastcache/phpfastcache" rel="nofollow" target="_blank"><img src="//img.shields.io/packagist/l/phpfastcache/phpfastcache.svg"></a>
+
+    </footer>
+
+    <!-- End Footer -->
 
 </div>
 <!-- End Wrapper -->
+
 <!-- Start of StatCounter Code for Default Guide -->
 <script type="text/javascript">
-    var sc_project=8905774;
-    var sc_invisible=1;
-    var sc_security="ff1be527";
+    var sc_project = 8905774;
+    var sc_invisible = 1;
+    var sc_security = "ff1be527";
     var scJsHost = (("https:" == document.location.protocol) ?
             "https://secure." : "http://www.");
-    document.write("<sc"+"ript type='text/javascript' src='" +
-            scJsHost+
-            "statcounter.com/counter/counter.js'></"+"script>");
+    document.write("<sc" + "ript type='text/javascript' src='" +
+            scJsHost +
+            "statcounter.com/counter/counter.js'></" + "script>");
 </script>
-<noscript><div class="statcounter"><a title="free hit
-counter" href="http://statcounter.com/"  rel="nofollow" target="_blank"><img
-        class="statcounter"
-        src="http://c.statcounter.com/8905774/0/ff1be527/1/"
-        alt="free hit counter"></a></div></noscript>
+<noscript>
+    <div class="statcounter"><a title="free hit
+counter" href="http://statcounter.com/" rel="nofollow" target="_blank"><img
+            class="statcounter"
+            src="http://c.statcounter.com/8905774/0/ff1be527/1/"
+            alt="free hit counter"></a></div>
+</noscript>
 <!-- End of StatCounter Code for Default Guide -->
+
 <div id="cursor"></div>
 
+<!--
+-- Social networks scripts
+-->
+<div id="fb-root"></div>
+<script>(function (d, s, id)
+{
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id))
+    {
+        return;
+    }
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=165927826915789";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
 
 
+<!-- Place this tag after the last +1 button tag. -->
+<script type="text/javascript">
+    (function ()
+    {
+        var po = document.createElement('script');
+        po.type = 'text/javascript';
+        po.async = true;
+        po.src = 'https://apis.google.com/js/plusone.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(po, s);
+    })();
+</script>
 
 </body>
 </html>

@@ -57,6 +57,7 @@ class CacheManager
      */
     protected static $config = [
       'itemDetailedDate' => false,// Specify if the item must provide detailed creation/modification dates
+      'ignoreSymfonyNotice' => false,// Ignore Symfony notice for Symfony project which do not makes use of PhpFastCache's Symfony Bundle
       'defaultTtl' => 900,// Default time-to-live in second
       'securityKey' => 'auto',// The securityKey that will be used to create sub-directory
       'htaccess' => true,// Auto-generate .htaccess if tit is missing
@@ -99,6 +100,9 @@ class CacheManager
         $instance = crc32($driver . serialize($config));
         if (!isset(self::$instances[ $instance ])) {
             $badPracticeOmeter[$driver] = 1;
+            if(!$config['ignoreSymfonyNotice'] && interface_exists('Symfony\Component\HttpKernel\KernelInterface') && !class_exists('phpFastCache\Bundle\phpFastCacheBundle')){
+                trigger_error('A Symfony Bundle to make the PhpFastCache integration more easier is now available here: https://github.com/PHPSocialNetwork/phpfastcache-bundle', E_USER_NOTICE);
+            }
             $class = self::getNamespacePath() . $driver . '\Driver';
             try{
                 self::$instances[ $instance ] = new $class($config);

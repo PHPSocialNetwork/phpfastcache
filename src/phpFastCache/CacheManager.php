@@ -57,6 +57,7 @@ class CacheManager
      */
     protected static $config = [
       'itemDetailedDate' => false,// Specify if the item must provide detailed creation/modification dates
+      'secureFileManipulation' => false,// Provide a secure file manipulation mechanism, on intensive usage the performance can be affected.
       'ignoreSymfonyNotice' => false,// Ignore Symfony notice for Symfony project which do not makes use of PhpFastCache's Symfony Bundle
       'defaultTtl' => 900,// Default time-to-live in second
       'securityKey' => 'auto',// The securityKey that will be used to create sub-directory

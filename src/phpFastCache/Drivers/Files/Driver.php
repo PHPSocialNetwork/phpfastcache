@@ -77,7 +77,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             /**
              * Skip if Existing Caching in Options
              */
-            if (isset($this->config[ 'skipExisting' ]) && $this->config[ 'skipExisting' ] == true && file_exists($file_path)) {
+            if ((bool) $this->config[ 'skipExisting' ] === true && file_exists($file_path)) {
                 $content = $this->readfile($file_path);
                 $old = $this->decode($content);
                 $toWrite = false;
@@ -91,11 +91,7 @@ class Driver implements ExtendedCacheItemPoolInterface
              */
             try {
                 if ($toWrite == true) {
-                    $f = fopen($file_path, 'w+');
-                    fwrite($f, $data);
-                    fclose($f);
-
-                    return true;
+                    return $this->writefile($file_path, $data, $this->config['secureFileManipulation']);
                 }
             } catch (\Exception $e) {
                 return false;

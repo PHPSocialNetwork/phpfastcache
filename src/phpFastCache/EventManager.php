@@ -25,6 +25,7 @@ namespace phpFastCache;
  * @method Void onCacheSaveDeferredItem() onCacheSaveDeferredItem(Callable $callable)
  * @method Void onCacheCommitItem() onCacheCommitItem(Callable $callable)
  * @method Void onCacheClearItem() onCacheClearItem(Callable $callable)
+ * @method Void onCacheWriteFileOnDisk() onCacheWriteFileOnDisk(Callable $callable)
  *
  * == Item Events ==
  * @method Void onCacheItemSet() onCacheItemSet(Callable $callable)

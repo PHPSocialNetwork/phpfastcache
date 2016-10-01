@@ -67,7 +67,7 @@ trait DriverBaseTrait
     /**
      * @param $file
      * @return string
-     * @throws \Exception
+     * @throws phpFastCacheDriverException
      */
     protected function readfile($file)
     {
@@ -78,8 +78,7 @@ trait DriverBaseTrait
 
             $file_handle = @fopen($file, 'r');
             if (!$file_handle) {
-                throw new phpFastCacheDriverException("Can't Read File", 96);
-
+                throw new phpFastCacheDriverException("Cannot read file located at: {$file}");
             }
             while (!feof($file_handle)) {
                 $line = fgets($file_handle);
@@ -89,6 +88,44 @@ trait DriverBaseTrait
 
             return $string;
         }
+    }
+
+    /**
+     * @param string $file
+     * @param string $data
+     * @param bool $secureFileManipulation
+     * @return bool
+     */
+    protected function writefile($file, $data, $secureFileManipulation = false)
+    {
+        /**
+         * @eventName CacheWriteFileOnDisk
+         * @param ExtendedCacheItemPoolInterface $this
+         * @param string $file
+         * @param bool $secureFileManipulation
+         *
+         */
+        $this->eventManager->dispatch('CacheWriteFileOnDisk', $this, $file, $secureFileManipulation);
+
+        if($secureFileManipulation){
+            $tmpFilename = realpath(dirname($file) . '/tmp_' . md5(
+                str_shuffle(uniqid($this->getDriverName(), false))
+                . str_shuffle(uniqid($this->getDriverName(), false))
+              ));
+
+            $f = fopen($tmpFilename, 'w+');
+            flock($f, LOCK_EX);
+            $octetWritten = fwrite($f, $data);
+            flock($f, LOCK_UN);
+            fclose($f);
+            rename($tmpFilename, $file);
+        }else{
+            $f = fopen($file, 'w+');
+            $octetWritten = fwrite($f, $data);
+            fclose($f);
+        }
+
+        return $octetWritten !== false;
     }
 
     /**

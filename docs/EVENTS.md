@@ -18,6 +18,8 @@
   * Allow you to get/set the expiration date of an item.
 * onCacheItemExpireAfter
   * Allow you to get the "expire after" time of an item. If `$time` is a DateInterval you also set it.
+* onCacheWriteFileOnDisk
+  * Allow you to get notified when a file is written on disk.
 
 This is an exhaustive list and it will be updated as soon as new events will be added to the Core.
 More details on the 

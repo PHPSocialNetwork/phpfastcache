@@ -72,27 +72,11 @@ class Driver implements ExtendedCacheItemPoolInterface
             $file_path = $this->getFilePath($item->getKey());
             $data = $this->encode($this->driverPreWrap($item));
 
-            $toWrite = true;
-
-            /**
-             * Skip if Existing Caching in Options
-             */
-            if ((bool) $this->config[ 'skipExisting' ] === true && file_exists($file_path)) {
-                $content = $this->readfile($file_path);
-                $old = $this->decode($content);
-                $toWrite = false;
-                if ($old->isExpired()) {
-                    $toWrite = true;
-                }
-            }
-
             /**
              * Force write
              */
             try {
-                if ($toWrite == true) {
-                    return $this->writefile($file_path, $data, $this->config['secureFileManipulation']);
-                }
+                return $this->writefile($file_path, $data, $this->config['secureFileManipulation']);
             } catch (\Exception $e) {
                 return false;
             }

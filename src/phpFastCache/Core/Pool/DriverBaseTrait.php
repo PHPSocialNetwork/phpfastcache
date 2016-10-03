@@ -15,6 +15,7 @@ namespace phpFastCache\Core\Pool;
 
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
+use phpFastCache\Util\Directory;
 
 
 /**
@@ -39,7 +40,7 @@ trait DriverBaseTrait
      * @var mixed Instance of driver service
      */
     protected $instance;
-    
+
     /**
      * @param $config_name
      * @param string $value
@@ -108,7 +109,7 @@ trait DriverBaseTrait
         $this->eventManager->dispatch('CacheWriteFileOnDisk', $this, $file, $secureFileManipulation);
 
         if($secureFileManipulation){
-            $tmpFilename = realpath(dirname($file) . '/tmp_' . md5(
+            $tmpFilename = Directory::getAbsolutePath(dirname($file) . '/tmp_' . md5(
                 str_shuffle(uniqid($this->getDriverName(), false))
                 . str_shuffle(uniqid($this->getDriverName(), false))
               ));
@@ -118,6 +119,7 @@ trait DriverBaseTrait
             $octetWritten = fwrite($f, $data);
             flock($f, LOCK_UN);
             fclose($f);
+
             rename($tmpFilename, $file);
         }else{
             $f = fopen($file, 'w+');

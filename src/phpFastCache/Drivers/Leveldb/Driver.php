@@ -17,7 +17,7 @@ namespace phpFastCache\Drivers\Leveldb;
 use LevelDB as LeveldbClient;
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Core\Pool\IO\PathSeekerTrait;
+use phpFastCache\Core\Pool\IO\IOHelperTrait;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
@@ -30,7 +30,7 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
-    use DriverBaseTrait, PathSeekerTrait;
+    use DriverBaseTrait, IOHelperTrait;
 
     const LEVELDB_FILENAME = '.database';
 

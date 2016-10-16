@@ -14,10 +14,11 @@
 
 namespace phpFastCache\Core\Pool\IO;
 
-use phpFastCache\Exceptions\phpFastCacheCoreException;
-use phpFastCache\Exceptions\phpFastCacheDriverException;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Exceptions\phpFastCacheIOException;
+use phpFastCache\Util\Directory;
 
-trait PathSeekerTrait
+trait IOHelperTrait
 {
     /**
      * @var array
@@ -28,7 +29,7 @@ trait PathSeekerTrait
      * @param bool $skip_create_path
      * @param $config
      * @return string
-     * @throws \Exception
+     * @throws phpFastCacheIOException
      */
     public function getPath($getBasePath = false)
     {
@@ -93,7 +94,7 @@ trait PathSeekerTrait
                     }
                 }
                 if (!@file_exists($full_path) || !@is_writable($full_path)) {
-                    throw new phpFastCacheCoreException('PLEASE CREATE OR CHMOD ' . $full_path . ' - 0777 OR ANY WRITABLE PERMISSION!', 92);
+                    throw new phpFastCacheIOException('PLEASE CREATE OR CHMOD ' . $full_path . ' - 0777 OR ANY WRITABLE PERMISSION!', 92);
                 }
             }
 
@@ -137,7 +138,7 @@ trait PathSeekerTrait
      * @param $keyword
      * @param bool $skip
      * @return string
-     * @throws phpFastCacheDriverException
+     * @throws phpFastCacheIOException
      */
     private function getFilePath($keyword, $skip = false)
     {
@@ -156,7 +157,7 @@ trait PathSeekerTrait
         if ($skip == false) {
             if (!file_exists($path)) {
                 if (@!mkdir($path, $this->setChmodAuto(), true)) {
-                    throw new phpFastCacheDriverException('PLEASE CHMOD ' . $this->getPath() . ' - ' . $this->setChmodAuto() . ' OR ANY WRITABLE PERMISSION!');
+                    throw new phpFastCacheIOException('PLEASE CHMOD ' . $this->getPath() . ' - ' . $this->setChmodAuto() . ' OR ANY WRITABLE PERMISSION!');
                 }
             }
         }
@@ -197,7 +198,7 @@ trait PathSeekerTrait
     /**
      * @param $path
      * @param bool $create
-     * @throws \Exception
+     * @throws phpFastCacheIOException
      */
     protected function htaccessGen($path, $create = true)
     {
@@ -205,10 +206,10 @@ trait PathSeekerTrait
             if (!is_writable($path)) {
                 try {
                     if(!chmod($path, 0777)){
-                        throw new phpFastCacheDriverException('Chmod failed on : ' . $path);
+                        throw new phpFastCacheIOException('Chmod failed on : ' . $path);
                     }
-                } catch (phpFastCacheDriverException $e) {
-                    throw new phpFastCacheDriverException('PLEASE CHMOD ' . $path . ' - 0777 OR ANY WRITABLE PERMISSION!', 0, $e);
+                } catch (phpFastCacheIOException $e) {
+                    throw new phpFastCacheIOException('PLEASE CHMOD ' . $path . ' - 0777 OR ANY WRITABLE PERMISSION!', 0, $e);
                 }
             }
 
@@ -219,11 +220,80 @@ allow from 127.0.0.1";
 
                 $file = @fopen($path . '/.htaccess', 'w+');
                 if (!$file) {
-                    throw new phpFastCacheDriverException('PLEASE CHMOD ' . $path . ' - 0777 OR ANY WRITABLE PERMISSION!');
+                    throw new phpFastCacheIOException('PLEASE CHMOD ' . $path . ' - 0777 OR ANY WRITABLE PERMISSION!');
                 }
                 fwrite($file, $html);
                 fclose($file);
             }
         }
+    }
+
+
+    /**
+     * @param $file
+     * @return string
+     * @throws phpFastCacheIOException
+     */
+    protected function readfile($file)
+    {
+        if (function_exists('file_get_contents')) {
+            return file_get_contents($file);
+        } else {
+            $string = '';
+
+            $file_handle = @fopen($file, 'r');
+            if (!$file_handle) {
+                throw new phpFastCacheIOException("Cannot read file located at: {$file}");
+            }
+            while (!feof($file_handle)) {
+                $line = fgets($file_handle);
+                $string .= $line;
+            }
+            fclose($file_handle);
+
+            return $string;
+        }
+    }
+
+    /**
+     * @param string $file
+     * @param string $data
+     * @param bool $secureFileManipulation
+     * @return bool
+     * @throws phpFastCacheIOException
+     */
+    protected function writefile($file, $data, $secureFileManipulation = false)
+    {
+        /**
+         * @eventName CacheWriteFileOnDisk
+         * @param ExtendedCacheItemPoolInterface $this
+         * @param string $file
+         * @param bool $secureFileManipulation
+         *
+         */
+        $this->eventManager->dispatch('CacheWriteFileOnDisk', $this, $file, $secureFileManipulation);
+
+        if($secureFileManipulation){
+            $tmpFilename = Directory::getAbsolutePath(dirname($file) . '/tmp_' . md5(
+                str_shuffle(uniqid($this->getDriverName(), false))
+                . str_shuffle(uniqid($this->getDriverName(), false))
+              ));
+
+            $f = fopen($tmpFilename, 'w+');
+            flock($f, LOCK_EX);
+            $octetWritten = fwrite($f, $data);
+            flock($f, LOCK_UN);
+            fclose($f);
+
+            if(!rename($tmpFilename, $file)){
+                throw new phpFastCacheIOException(sprintf('Failed to rename %s to %s', $tmpFilename, $file));
+            }
+        }else{
+            $f = fopen($file, 'w+');
+            $octetWritten = fwrite($f, $data);
+            fclose($f);
+        }
+
+        return $octetWritten !== false;
     }
 }

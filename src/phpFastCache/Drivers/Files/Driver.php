@@ -16,10 +16,11 @@ namespace phpFastCache\Drivers\Files;
 
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Core\Pool\IO\PathSeekerTrait;
+use phpFastCache\Core\Pool\IO\IOHelperTrait;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
+use phpFastCache\Exceptions\phpFastCacheIOException;
 use phpFastCache\Util\Directory;
 use Psr\Cache\CacheItemInterface;
 
@@ -29,7 +30,7 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
-    use DriverBaseTrait, PathSeekerTrait;
+    use DriverBaseTrait, IOHelperTrait;
 
     /**
      *
@@ -197,8 +198,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @return driverStatistic
-     * @throws \phpFastCache\Exceptions\phpFastCacheCoreException
-     * @throws \phpFastCache\Exceptions\phpFastCacheDriverException
+     * @throws \phpFastCache\Exceptions\phpFastCacheIOException
      */
     public function getStats()
     {
@@ -206,7 +206,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $path = $this->getFilePath(false);
 
         if (!is_dir($path)) {
-            throw new phpFastCacheDriverException("Can't read PATH:" . $path, 94);
+            throw new phpFastCacheIOException("Can't read PATH:" . $path, 94);
         }
 
         $stat->setData(implode(', ', array_keys($this->itemInstances)))

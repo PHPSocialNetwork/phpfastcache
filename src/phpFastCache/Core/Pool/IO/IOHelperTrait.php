@@ -74,28 +74,25 @@ trait IOHelperTrait
         $full_pathx = md5($full_path);
 
 
-        if (!isset($this->tmp[ $full_pathx ])) {
-
-            if (!@file_exists($full_path) || !@is_writable($full_path)) {
+        if (!isset($this->tmp[ $full_pathx ]) || (!@file_exists($full_path) || !@is_writable($full_path))) {
+            if (!@file_exists($full_path)) {
+                @mkdir($full_path, $this->setChmodAuto(), true);
+            }
+            if (!@is_writable($full_path)) {
+                @chmod($full_path, $this->setChmodAuto());
+            }
+            if (!@is_writable($full_path)) {
+                // switch back to tmp dir again if the path is not writeable
+                $full_path = rtrim($tmp_dir, '/') . '/' . $securityKey;
                 if (!@file_exists($full_path)) {
                     @mkdir($full_path, $this->setChmodAuto(), true);
                 }
                 if (!@is_writable($full_path)) {
                     @chmod($full_path, $this->setChmodAuto());
                 }
-                if (!@is_writable($full_path)) {
-                    // switch back to tmp dir again if the path is not writeable
-                    $full_path = rtrim($tmp_dir, '/') . '/' . $securityKey;
-                    if (!@file_exists($full_path)) {
-                        @mkdir($full_path, $this->setChmodAuto(), true);
-                    }
-                    if (!@is_writable($full_path)) {
-                        @chmod($full_path, $this->setChmodAuto());
-                    }
-                }
-                if (!@file_exists($full_path) || !@is_writable($full_path)) {
-                    throw new phpFastCacheIOException('PLEASE CREATE OR CHMOD ' . $full_path . ' - 0777 OR ANY WRITABLE PERMISSION!', 92);
-                }
+            }
+            if (!@file_exists($full_path) || !@is_writable($full_path)) {
+                throw new phpFastCacheIOException('PLEASE CREATE OR CHMOD ' . $full_path . ' - 0777 OR ANY WRITABLE PERMISSION!', 92);
             }
 
             $this->tmp[ $full_pathx ] = true;

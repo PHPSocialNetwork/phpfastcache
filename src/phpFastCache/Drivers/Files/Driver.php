@@ -133,11 +133,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverClear()
     {
-        if(Directory::rrmdir($this->getPath(true))){
-            $this->tmp = [];
-            return true;
-        }
-        return false;
+        return (bool) Directory::rrmdir($this->getPath(true));
     }
 
     /**

@@ -25,15 +25,11 @@ use Psr\Cache\CacheItemInterface;
 /**
  * Class Driver
  * @package phpFastCache\Drivers
+ * @property PredisClient $instance Instance of driver service
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
     use DriverBaseTrait;
-
-    /**
-     * @var PredisClient Instance of driver service
-     */
-    public $instance;
 
     /**
      * Driver constructor.

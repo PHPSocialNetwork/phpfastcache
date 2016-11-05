@@ -25,6 +25,7 @@ use Redis as RedisClient;
 /**
  * Class Driver
  * @package phpFastCache\Drivers
+ * @property RedisClient $instance Instance of driver service
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {

@@ -56,7 +56,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck()
     {
-        return is_writable($this->getFileDir()) || @mkdir($this->getFileDir(), $this->setChmodAuto(), true);
+        return is_writable($this->getPath()) || @mkdir($this->getPath(), $this->setChmodAuto(), true);
     }
 
     /**
@@ -168,6 +168,11 @@ class Driver implements ExtendedCacheItemPoolInterface
             case 'htaccess':
                 return is_bool($optionValue);
                 break;
+
+            case 'secureFileManipulation':
+                return is_bool($optionValue);
+                break;
+
             default:
                 return false;
                 break;
@@ -179,7 +184,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public static function getValidOptions()
     {
-        return ['path', 'default_chmod', 'securityKey', 'htaccess'];
+        return ['path', 'default_chmod', 'securityKey', 'htaccess', 'secureFileManipulation'];
     }
 
     /**
@@ -206,11 +211,13 @@ class Driver implements ExtendedCacheItemPoolInterface
         $path = $this->getFilePath(false);
 
         if (!is_dir($path)) {
-            throw new phpFastCacheIOException("Can't read PATH:" . $path, 94);
+            throw new phpFastCacheIOException("Can't read PATH:" . $path);
         }
 
         $stat->setData(implode(', ', array_keys($this->itemInstances)))
-          ->setRawData([])
+          ->setRawData([
+            'tmp' => $this->tmp
+          ])
           ->setSize(Directory::dirSize($path))
           ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($path));
 

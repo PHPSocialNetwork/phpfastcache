@@ -32,14 +32,43 @@ trait IOHelperTrait
      */
     public function getPath($readonly = false)
     {
-        $tmp_dir = rtrim(ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir(), '\\/') . DIRECTORY_SEPARATOR . 'phpfastcache';
+        /**
+         * Get the base system temporary directory
+         */
+        $tmp_dir = rtrim(ini_get('upload_tmp_dir') ?: sys_get_temp_dir(), '\\/') . DIRECTORY_SEPARATOR . 'phpfastcache';
 
-        if (!isset($this->config[ 'path' ]) || $this->config[ 'path' ] == '') {
+        /**
+         * Calculate the security key
+         */
+        {
+            $securityKey = array_key_exists('securityKey', $this->config) ? $this->config[ 'securityKey' ] : '';
+            if (!$securityKey || $securityKey === 'auto') {
+                if (isset($_SERVER[ 'HTTP_HOST' ])) {
+                    $securityKey = preg_replace('/^www./', '', strtolower(str_replace(':', '_', $_SERVER[ 'HTTP_HOST' ])));
+                } else {
+                    $securityKey = ($this->isPHPModule() ? 'web' : 'cli');
+                }
+            }
+
+            if ($securityKey !== '') {
+                $securityKey .= '/';
+            }
+
+            $securityKey = static::cleanFileName($securityKey);
+        }
+
+        /**
+         * Extends the temporary directory
+         * with the security key and the driver name
+         */
+        $tmp_dir = rtrim($tmp_dir, '/') . DIRECTORY_SEPARATOR;
+
+        if (empty($this->config[ 'path' ]) || !is_string($this->config[ 'path' ])) {
             if (self::isPHPModule()) {
                 $path = $tmp_dir;
             } else {
                 $document_root_path = rtrim($_SERVER[ 'DOCUMENT_ROOT' ], '/') . '/../';
-                $path = isset($_SERVER[ 'DOCUMENT_ROOT' ]) && is_writable($document_root_path) ? $document_root_path : rtrim(__DIR__, '/') . 'PathSeekerTrait.php/';
+                $path = isset($_SERVER[ 'DOCUMENT_ROOT' ]) && is_writable($document_root_path) ? $document_root_path : rtrim(__DIR__, '/') . DIRECTORY_SEPARATOR;
             }
 
             if ($this->config[ 'path' ] != '') {
@@ -50,55 +79,94 @@ trait IOHelperTrait
             $path = $this->config[ 'path' ];
         }
 
-        $securityKey = array_key_exists('securityKey', $this->config) ? $this->config[ 'securityKey' ] : '';
-        if (!$securityKey || $securityKey === 'auto') {
-            if (isset($_SERVER[ 'HTTP_HOST' ])) {
-                $securityKey = preg_replace('/^www./', '', strtolower(str_replace(':', '_', $_SERVER[ 'HTTP_HOST' ])));
-            } else {
-                $securityKey = ($this->isPHPModule() ? 'web' : 'cli');
-            }
-        }
+        $full_path = rtrim($path, '/')
+          . DIRECTORY_SEPARATOR
+          . $securityKey
+          . DIRECTORY_SEPARATOR
+          . $this->getDriverName();
+        $full_path_hash = md5($full_path);
 
-        if ($securityKey !== '') {
-            $securityKey .= '/';
-        }
-
-        $securityKey = static::cleanFileName($securityKey);
-
-        $full_path = rtrim($path, '/') . '/' . $securityKey;
-        $full_pathx = $full_path;
-
+        /**
+         * In readonly mode we only attempt
+         * to verify if the directory exists
+         * or not, if it does not then we
+         * return the temp dir
+         */
         if ($readonly === true) {
-            return $full_path;
-        }
-
-        if (!isset($this->tmp[ $full_pathx ]) || (!@file_exists($full_path) || !@is_writable($full_path))) {
-            if (!@file_exists($full_path)) {
-                @mkdir($full_path, $this->setChmodAuto(), true);
-            }else if (!@is_writable($full_path)) {
-                @chmod($full_path, $this->setChmodAuto());
+            if($this->config[ 'autoTmpFallback' ] && (@file_exists($full_path) || !@is_writable($full_path))){
+                return $tmp_dir;
             }
-
-            if ($this->config[ 'autoTmpFallback' ] && !@is_writable($full_path)) {
-                /**
-                 * Switch back to tmp dir
-                 * again if the path is not writable
-                 */
-                $full_path = rtrim($tmp_dir, '/') . '/' . $securityKey;
+            return $full_path;
+        }else{
+            if (!isset($this->tmp[ $full_path_hash ]) || (!@file_exists($full_path) || !@is_writable($full_path))) {
                 if (!@file_exists($full_path)) {
                     @mkdir($full_path, $this->setChmodAuto(), true);
+                }else if (!@is_writable($full_path)) {
+                    @chmod($full_path, $this->setChmodAuto());
                 }
-            }
-            if (!@file_exists($full_path) || !@is_writable($full_path)) {
-                throw new phpFastCacheIOException('PLEASE CREATE OR CHMOD ' . $full_path . ' - 0777 OR ANY WRITABLE PERMISSION!');
-            }
 
-            $this->tmp[ $full_pathx ] = true;
-            $this->htaccessGen($full_path, array_key_exists('htaccess', $this->config) ? $this->config[ 'htaccess' ] : false);
+                if ($this->config[ 'autoTmpFallback' ] && !@is_writable($full_path)) {
+                    /**
+                     * Switch back to tmp dir
+                     * again if the path is not writable
+                     */
+                    $full_path = $tmp_dir;
+                    if (!@file_exists($full_path)) {
+                        @mkdir($full_path, $this->setChmodAuto(), true);
+                    }
+                }
+
+                /**
+                 * In case there is no directory
+                 * writable including tye temporary
+                 * one, we must throw an exception
+                 */
+                if (!@file_exists($full_path) || !@is_writable($full_path)) {
+                    throw new phpFastCacheIOException('PLEASE CREATE OR CHMOD ' . $full_path . ' - 0777 OR ANY WRITABLE PERMISSION!');
+                }
+
+                $this->tmp[ $full_path_hash ] = $full_path;
+                $this->htaccessGen($full_path, array_key_exists('htaccess', $this->config) ? $this->config[ 'htaccess' ] : false);
+            }
         }
 
         return realpath($full_path);
     }
+
+
+    /**
+     * @param $keyword
+     * @param bool $skip
+     * @return string
+     * @throws phpFastCacheIOException
+     */
+    private function getFilePath($keyword, $skip = false)
+    {
+        $path = $this->getPath();
+
+        if ($keyword === false) {
+            return $path;
+        }
+
+        $filename = $this->encodeFilename($keyword);
+        $folder = substr($filename, 0, 2) . DIRECTORY_SEPARATOR . substr($filename, 2, 2);
+        $path = rtrim($path, '/\\') . DIRECTORY_SEPARATOR . $folder;
+
+        /**
+         * Skip Create Sub Folders;
+         */
+        if ($skip == false) {
+            if (!file_exists($path)) {
+                if (@!mkdir($path, $this->setChmodAuto(), true)) {
+                    throw new phpFastCacheIOException('PLEASE CHMOD ' . $path . ' - ' . $this->setChmodAuto() . ' OR ANY WRITABLE PERMISSION!');
+                }
+            }
+        }
+
+        return $path . '/' . $filename . '.txt';
+    }
+
+
 
     /**
      * @param $keyword
@@ -118,48 +186,6 @@ trait IOHelperTrait
 
         return true;
     }
-
-
-    /**
-     * @return string
-     * @throws \phpFastCache\Exceptions\phpFastCacheCoreException
-     */
-    public function getFileDir()
-    {
-        return $this->getPath() . DIRECTORY_SEPARATOR . self::FILE_DIR;
-    }
-
-    /**
-     * @param $keyword
-     * @param bool $skip
-     * @return string
-     * @throws phpFastCacheIOException
-     */
-    private function getFilePath($keyword, $skip = false)
-    {
-        $path = $this->getFileDir();
-
-        if ($keyword === false) {
-            return $path;
-        }
-
-        $filename = $this->encodeFilename($keyword);
-        $folder = substr($filename, 0, 2);
-        $path = rtrim($path, '/') . '/' . $folder;
-        /**
-         * Skip Create Sub Folders;
-         */
-        if ($skip == false) {
-            if (!file_exists($path)) {
-                if (@!mkdir($path, $this->setChmodAuto(), true)) {
-                    throw new phpFastCacheIOException('PLEASE CHMOD ' . $this->getPath() . ' - ' . $this->setChmodAuto() . ' OR ANY WRITABLE PERMISSION!');
-                }
-            }
-        }
-
-        return $path . '/' . $filename . '.txt';
-    }
-
 
     /**
      * @param $this ->config
@@ -209,15 +235,18 @@ trait IOHelperTrait
             }
 
             if (!file_exists($path . "/.htaccess")) {
-                $html = "order deny, allow \r\n
-deny from all \r\n
-allow from 127.0.0.1";
+                $content = <<<HTACCESS
+### This .htaccess is auto-generated by PhpFastCache ###
+order deny, allow
+deny from all
+allow from 127.0.0.1
+HTACCESS;
 
                 $file = @fopen($path . '/.htaccess', 'w+');
                 if (!$file) {
                     throw new phpFastCacheIOException('PLEASE CHMOD ' . $path . ' - 0777 OR ANY WRITABLE PERMISSION!');
                 }
-                fwrite($file, $html);
+                fwrite($file, $content);
                 fclose($file);
             }
         }

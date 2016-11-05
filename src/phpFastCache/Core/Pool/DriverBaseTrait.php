@@ -95,15 +95,7 @@ trait DriverBaseTrait
      */
     protected function isPHPModule()
     {
-        if (PHP_SAPI === 'apache2handler') {
-            return true;
-        } else {
-            if (strpos(PHP_SAPI, 'handler') !== false) {
-                return true;
-            }
-        }
-
-        return false;
+        return (PHP_SAPI === 'apache2handler' || strpos(PHP_SAPI, 'handler') !== false);
     }
 
 

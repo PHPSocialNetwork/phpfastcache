@@ -420,7 +420,9 @@ class Driver implements ExtendedCacheItemPoolInterface
         }
 
         $stat->setData(implode(', ', array_keys($this->itemInstances)))
-          ->setRawData([])
+          ->setRawData([
+            'tmp' => $this->tmp
+          ])
           ->setSize(Directory::dirSize($path))
           ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($path));
 

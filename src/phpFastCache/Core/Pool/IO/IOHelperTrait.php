@@ -93,7 +93,7 @@ trait IOHelperTrait
          * return the temp dir
          */
         if ($readonly === true) {
-            if($this->config[ 'autoTmpFallback' ] && (@file_exists($full_path) || !@is_writable($full_path))){
+            if($this->config[ 'autoTmpFallback' ] && (!@file_exists($full_path) || !@is_writable($full_path))){
                 return $tmp_dir;
             }
             return $full_path;

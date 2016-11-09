@@ -64,26 +64,14 @@ trait IOHelperTrait
         $tmp_dir = rtrim($tmp_dir, '/') . DIRECTORY_SEPARATOR;
 
         if (empty($this->config[ 'path' ]) || !is_string($this->config[ 'path' ])) {
-            if (self::isPHPModule()) {
-                $path = $tmp_dir;
-            } else {
-                $document_root_path = rtrim($_SERVER[ 'DOCUMENT_ROOT' ], '/') . '/../';
-                $path = isset($_SERVER[ 'DOCUMENT_ROOT' ]) && is_writable($document_root_path) ? $document_root_path : rtrim(__DIR__, '/') . DIRECTORY_SEPARATOR;
-            }
-
-            if ($this->config[ 'path' ] != '') {
-                $path = $this->config[ 'path' ];
-            }
-
+            $path = $tmp_dir;
         } else {
-            $path = $this->config[ 'path' ];
+            $path = rtrim($this->config[ 'path' ], '/') . DIRECTORY_SEPARATOR;
         }
 
-        $full_path = rtrim($path, '/')
-          . DIRECTORY_SEPARATOR
-          . $securityKey
-          . DIRECTORY_SEPARATOR
-          . $this->getDriverName();
+        $path_suffix = $securityKey . DIRECTORY_SEPARATOR . $this->getDriverName();
+        $full_path = $path . $path_suffix;
+        $full_path_tmp = $tmp_dir . $path_suffix;
         $full_path_hash = md5($full_path);
 
         /**
@@ -94,7 +82,7 @@ trait IOHelperTrait
          */
         if ($readonly === true) {
             if($this->config[ 'autoTmpFallback' ] && (!@file_exists($full_path) || !@is_writable($full_path))){
-                return $tmp_dir;
+                return $full_path_tmp;
             }
             return $full_path;
         }else{
@@ -110,7 +98,7 @@ trait IOHelperTrait
                      * Switch back to tmp dir
                      * again if the path is not writable
                      */
-                    $full_path = $tmp_dir;
+                    $full_path = $full_path_tmp;
                     if (!@file_exists($full_path)) {
                         @mkdir($full_path, $this->setChmodAuto(), true);
                     }

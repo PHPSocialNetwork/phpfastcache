@@ -13,13 +13,14 @@ use Psr\Cache\CacheItemPoolInterface;
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 
+$defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 $status = 0;
 echo "Testing [a|de]ttaching methods\n";
 
 /**
  * Testing memcached as it is declared in .travis.yml
  */
-$driverInstance = CacheManager::getInstance('Files');
+$driverInstance = CacheManager::getInstance($defaultDriver);
 
 if (!is_object($driverInstance)) {
     echo '[FAIL] CacheManager::getInstance() returned an invalid variable type:' . gettype($driverInstance) . "\n";

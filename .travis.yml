@@ -42,9 +42,4 @@ install:
   - ./bin/ci/install_dependencies.sh
 
 script:
-  - php -f tests/SyntaxChecker.test.php
-  - php -f tests/Autoload.test.php
-  - php -f tests/NewCacheInstance.test.php
-  - php -f tests/Psr6InterfaceImplements.test.php
-  - php -f tests/AbstractProxy.test.php
-  - php -f tests/AttachingDetachingMethods.test.php
+  - php -f bin/ci/run_tests.php

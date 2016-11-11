@@ -70,8 +70,8 @@ trait IOHelperTrait
         }
 
         $path_suffix = $securityKey . DIRECTORY_SEPARATOR . $this->getDriverName();
-        $full_path = $path . $path_suffix;
-        $full_path_tmp = $tmp_dir . $path_suffix;
+        $full_path = Directory::getAbsolutePath($path . $path_suffix);
+        $full_path_tmp = Directory::getAbsolutePath($tmp_dir . $path_suffix);
         $full_path_hash = md5($full_path);
 
         /**

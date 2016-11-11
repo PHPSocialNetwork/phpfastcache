@@ -13,6 +13,7 @@ use phpFastCache\Proxy\phpFastCacheAbstractProxy;
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 
+$defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 $status = 0;
 echo "Testing phpFastCacheAbstractProxy class\n";
 
@@ -25,7 +26,8 @@ class CustomMemcachedCacheClass extends phpFastCacheAbstractProxy
 {
     public function __construct($driver = '', array $config = [])
     {
-        $driver = 'Memcached';
+        global $defaultDriver;
+        $driver = $defaultDriver;
         parent::__construct($driver, $config);
         /**
          * That's all !! Your cache class is ready to use

@@ -13,6 +13,7 @@ use phpFastCache\EventManager;
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 
+$defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 $status = 0;
 echo "Testing EventManager\n";
 
@@ -22,7 +23,7 @@ EventManager::getInstance()->onCacheSaveItem(function(ExtendedCacheItemPoolInter
     }
 });
 
-$cacheInstance = CacheManager::getInstance('Files');
+$cacheInstance = CacheManager::getInstance($defaultDriver);
 $cacheKey = 'testItem';
 
 $item = $cacheInstance->getItem($cacheKey);

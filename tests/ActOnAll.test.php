@@ -12,14 +12,15 @@ use phpFastCache\Helper\ActOnAll;
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 
+$defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 $status = 0;
 echo "Testing ActOnAll helper\n";
 
 /**
  * Testing memcached as it is declared in .travis.yml
  */
-$RedisInstance = CacheManager::getInstance('Redis');
 $filesInstance = CacheManager::getInstance('Files');
+$RedisInstance = CacheManager::getInstance('Redis');
 $MemcacheInstance = CacheManager::getInstance('Memcached');
 
 $actOnAll = new ActOnAll();

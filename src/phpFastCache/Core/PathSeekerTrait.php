@@ -16,6 +16,7 @@ namespace phpFastCache\Core;
 
 use phpFastCache\Exceptions\phpFastCacheCoreException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
+use phpFastCache\Util\Directory;
 
 trait PathSeekerTrait
 {
@@ -25,84 +26,90 @@ trait PathSeekerTrait
     public $tmp = [];
 
     /**
-     * @param bool $skip_create_path
-     * @param $config
+     * @param bool $readonly
      * @return string
-     * @throws \Exception
+     * @throws phpFastCacheDriverException
      */
-    public function getPath($getBasePath = false)
+    public function getPath($readonly = false)
     {
-        $tmp_dir = rtrim(ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir(), '\\/') . DIRECTORY_SEPARATOR . 'phpfastcache';
-
-        if (!isset($this->config[ 'path' ]) || $this->config[ 'path' ] == '') {
-            if (self::isPHPModule()) {
-                $path = $tmp_dir;
-            } else {
-                $document_root_path = rtrim($_SERVER[ 'DOCUMENT_ROOT' ], '/') . '/../';
-                $path = isset($_SERVER[ 'DOCUMENT_ROOT' ]) && is_writable($document_root_path) ? $document_root_path : rtrim(__DIR__, '/') . '/';
+        /**
+         * Get the base system temporary directory
+         */
+        $tmp_dir = rtrim(ini_get('upload_tmp_dir') ?: sys_get_temp_dir(), '\\/') . DIRECTORY_SEPARATOR . 'phpfastcache';
+        /**
+         * Calculate the security key
+         */
+        {
+            $securityKey = array_key_exists('securityKey', $this->config) ? $this->config[ 'securityKey' ] : '';
+            if (!$securityKey || $securityKey === 'auto') {
+                if (isset($_SERVER[ 'HTTP_HOST' ])) {
+                    $securityKey = preg_replace('/^www./', '', strtolower(str_replace(':', '_', $_SERVER[ 'HTTP_HOST' ])));
+                } else {
+                    $securityKey = ($this->isPHPModule() ? 'web' : 'cli');
+                }
             }
-
-            if ($this->config[ 'path' ] != '') {
-                $path = $this->config[ 'path' ];
+            if ($securityKey !== '') {
+                $securityKey .= '/';
             }
-
+            $securityKey = static::cleanFileName($securityKey);
+        }
+        /**
+         * Extends the temporary directory
+         * with the security key and the driver name
+         */
+        $tmp_dir = rtrim($tmp_dir, '/') . DIRECTORY_SEPARATOR;
+        if (empty($this->config[ 'path' ]) || !is_string($this->config[ 'path' ])) {
+            $path = $tmp_dir;
         } else {
-            $path = $this->config[ 'path' ];
+            $path = rtrim($this->config[ 'path' ], '/') . DIRECTORY_SEPARATOR;
         }
-
-        if ($getBasePath === true) {
-            return $path;
-        }
-
-        $securityKey = array_key_exists('securityKey', $this->config) ? $this->config[ 'securityKey' ] : '';
-        if (!$securityKey || $securityKey === 'auto') {
-            if (isset($_SERVER[ 'HTTP_HOST' ])) {
-                $securityKey = preg_replace('/^www./', '', strtolower(str_replace(':', '_', $_SERVER[ 'HTTP_HOST' ])));
-            } else {
-                $securityKey = ($this->isPHPModule() ? 'web' : 'cli');
+        $path_suffix = $securityKey . DIRECTORY_SEPARATOR . $this->getDriverName();
+        $full_path = Directory::getAbsolutePath($path . $path_suffix);
+        $full_path_tmp = Directory::getAbsolutePath($tmp_dir . $path_suffix);
+        $full_path_hash = md5($full_path);
+        /**
+         * In readonly mode we only attempt
+         * to verify if the directory exists
+         * or not, if it does not then we
+         * return the temp dir
+         */
+        if ($readonly === true) {
+            if(!@file_exists($full_path) || !@is_writable($full_path)){
+                return $full_path_tmp;
             }
-        }
-
-        if ($securityKey !== '') {
-            $securityKey .= '/';
-        }
-
-        $securityKey = static::cleanFileName($securityKey);
-
-        $full_path = rtrim($path, '/') . '/' . $securityKey;
-        $full_pathx = md5($full_path);
-
-
-        if (!isset($this->tmp[ $full_pathx ])) {
-
-            if (!@file_exists($full_path) || !@is_writable($full_path)) {
+            return $full_path;
+        }else{
+            if (!isset($this->tmp[ $full_path_hash ]) || (!@file_exists($full_path) || !@is_writable($full_path))) {
                 if (!@file_exists($full_path)) {
                     @mkdir($full_path, $this->setChmodAuto(), true);
-                }
-                if (!@is_writable($full_path)) {
+                }else if (!@is_writable($full_path)) {
                     @chmod($full_path, $this->setChmodAuto());
                 }
                 if (!@is_writable($full_path)) {
-                    // switch back to tmp dir again if the path is not writeable
-                    $full_path = rtrim($tmp_dir, '/') . '/' . $securityKey;
+                    /**
+                     * Switch back to tmp dir
+                     * again if the path is not writable
+                     */
+                    $full_path = $full_path_tmp;
                     if (!@file_exists($full_path)) {
                         @mkdir($full_path, $this->setChmodAuto(), true);
                     }
-                    if (!@is_writable($full_path)) {
-                        @chmod($full_path, $this->setChmodAuto());
-                    }
                 }
+                /**
+                 * In case there is no directory
+                 * writable including tye temporary
+                 * one, we must throw an exception
+                 */
                 if (!@file_exists($full_path) || !@is_writable($full_path)) {
-                    throw new phpFastCacheCoreException('PLEASE CREATE OR CHMOD ' . $full_path . ' - 0777 OR ANY WRITABLE PERMISSION!', 92);
+                    throw new phpFastCacheDriverException('PLEASE CREATE OR CHMOD ' . $full_path . ' - 0777 OR ANY WRITABLE PERMISSION!');
                 }
+                $this->tmp[ $full_path_hash ] = $full_path;
+                $this->htaccessGen($full_path, array_key_exists('htaccess', $this->config) ? $this->config[ 'htaccess' ] : false);
             }
-
-            $this->tmp[ $full_pathx ] = true;
-            $this->htaccessGen($full_path, array_key_exists('htaccess', $this->config) ? $this->config[ 'htaccess' ] : false);
         }
-
         return realpath($full_path);
     }
+
 
     /**
      * @param $keyword

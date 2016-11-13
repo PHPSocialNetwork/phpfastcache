@@ -124,6 +124,47 @@ phpFastCache offers you a lot of useful APIs:
 Also support Multiple calls, Tagging, Setup Folder for caching. Look at our examples folders.
 
 ---------------------------
+Introducing to events
+---------------------------
+
+:mega: As of the V6, PhpFastCache provides an event mechanism.
+You can subscribe to an event by passing a Closure to an active event:
+
+```php
+use phpFastCache\EventManager;
+
+/**
+* Bind the event callback
+*/
+EventManager::getInstance()->onCacheGetItem(function(ExtendedCacheItemPoolInterface $itemPool, ExtendedCacheItemInterface $item){
+    $item->set('[HACKED BY EVENT] ' . $item->get());
+});
+
+```
+
+An event callback can get unbind but you MUST provide a name to the callback previously:
+
+```php
+use phpFastCache\EventManager;
+
+/**
+* Bind the event callback
+*/
+EventManager::getInstance()->onCacheGetItem(function(ExtendedCacheItemPoolInterface $itemPool, ExtendedCacheItemInterface $item){
+    $item->set('[HACKED BY EVENT] ' . $item->get());
+}, 'myCallbackName');
+
+
+/**
+* Unbind the event callback
+*/
+EventManager::getInstance()->unbindEventCallback('onCacheGetItem', 'myCallbackName');
+
+```
+
+More informations about the implementation and the events on the [Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Introducing-to-events)
+
+---------------------------
 As Fast To Implement As Opening a Beer
 ---------------------------
 

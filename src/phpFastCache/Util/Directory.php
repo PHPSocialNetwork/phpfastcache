@@ -133,6 +133,7 @@ class Directory
                 $absolutes[] = $part;
             }
         }
-        return implode(DIRECTORY_SEPARATOR, $absolutes);
+        $prefix = substr(__FILE__, 0, 1) == '/' ? '/' : '';
+        return $prefix . implode(DIRECTORY_SEPARATOR, $absolutes);
     }
 }

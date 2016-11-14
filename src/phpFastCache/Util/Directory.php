@@ -132,6 +132,8 @@ class Directory
                 $absolutes[] = $part;
             }
         }
-        return implode(DIRECTORY_SEPARATOR, $absolutes);
+        $__FILE__ = __FILE__; // allows to dereference char
+        $prefix = $__FILE__[0] === DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
+        return $prefix . implode(DIRECTORY_SEPARATOR, $absolutes);
     }
 }

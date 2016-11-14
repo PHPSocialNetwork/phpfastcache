@@ -120,8 +120,7 @@ class Directory
      */
     public static function getAbsolutePath($path)
     {
-        $path = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
-        $parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
+        $parts = preg_split('~[/\\\\]+~', $path, 0, PREG_SPLIT_NO_EMPTY);
         $absolutes = [];
         foreach ($parts as $part) {
             if ('.' === $part) {

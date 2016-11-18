@@ -82,7 +82,7 @@ trait PathSeekerTrait
             if (!isset($this->tmp[ $full_path_hash ]) || (!@file_exists($full_path) || !@is_writable($full_path))) {
                 if (!@file_exists($full_path)) {
                     @mkdir($full_path, $this->setChmodAuto(), true);
-                } elseif (!@is_writable($full_path)) {
+                }elseif (!@is_writable($full_path)) {
                     if (!@chmod($full_path, $this->setChmodAuto()))
                     {
                         /**
@@ -91,14 +91,19 @@ trait PathSeekerTrait
                          */
                         $full_path = $full_path_tmp;
                         if (!@file_exists($full_path)) {
-                            if (!@mkdir($full_path, $this->setChmodAuto(), true))
-                            {
-                                throw new phpFastCacheDriverException('PLEASE CREATE OR CHMOD ' . $full_path . ' - 0777 OR ANY WRITABLE PERMISSION!');
-                            }
+                            @mkdir($full_path, $this->setChmodAuto(), true);
                         }
                     }
                 }
 
+                /**
+                 * In case there is no directory
+                 * writable including tye temporary
+                 * one, we must throw an exception
+                 */
+                if (!@file_exists($full_path) || !@is_writable($full_path)) {
+                    throw new phpFastCacheDriverException('PLEASE CREATE OR CHMOD ' . $full_path . ' - 0777 OR ANY WRITABLE PERMISSION!');
+                }
                 $this->tmp[ $full_path_hash ] = $full_path;
                 $this->htaccessGen($full_path, array_key_exists('htaccess', $this->config) ? $this->config[ 'htaccess' ] : false);
             }

@@ -90,17 +90,16 @@ trait IOHelperTrait
                 if (!@file_exists($full_path)) {
                     @mkdir($full_path, $this->setChmodAuto(), true);
                 }else if (!@is_writable($full_path)) {
-                    @chmod($full_path, $this->setChmodAuto());
-                }
-
-                if ($this->config[ 'autoTmpFallback' ] && !@is_writable($full_path)) {
-                    /**
-                     * Switch back to tmp dir
-                     * again if the path is not writable
-                     */
-                    $full_path = $full_path_tmp;
-                    if (!@file_exists($full_path)) {
-                        @mkdir($full_path, $this->setChmodAuto(), true);
+                    if (!@chmod($full_path, $this->setChmodAuto()) && $this->config[ 'autoTmpFallback' ])
+                    {
+                        /**
+                         * Switch back to tmp dir
+                         * again if the path is not writable
+                         */
+                        $full_path = $full_path_tmp;
+                        if (!@file_exists($full_path)) {
+                            @mkdir($full_path, $this->setChmodAuto(), true);
+                        }
                     }
                 }
 

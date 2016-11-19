@@ -12,7 +12,7 @@ require_once __DIR__ . '/../../src/autoload.php';
 $status = 0;
 echo "Testing Github issue #373 - Files driver issue after clearing cache\n";
 
-CacheManager::setDefaultConfig(array('path' => __DIR__ . '/../../cache'));
+CacheManager::setDefaultConfig(['path' => __DIR__ . '/../../cache']);
 $cacheInstance = CacheManager::getInstance('Files');
 
 $key = 'test';

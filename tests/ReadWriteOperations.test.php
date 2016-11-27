@@ -5,7 +5,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 use phpFastCache\CacheManager;
-use phpFastCache\Core\Item\ExtendedCacheItemInterface;
+use phpFastCache\Cache\ExtendedCacheItemInterface;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../src/autoload.php';

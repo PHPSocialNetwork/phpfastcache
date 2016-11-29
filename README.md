@@ -33,7 +33,7 @@ He's fresh, so feel free to report any bug or contribute to the code using pull 
 ---------------------------
 Not a "Traditional" Caching
 ---------------------------
-phpFastCache is not a traditional caching method which is keep read and write to files, sqlite or mass connections to memcache, redis, mongodb... Also, when you use Memcache / Memcached, your miss hits will be reduce.
+phpFastCache is not a traditional caching method which keep read and write to files, sqlite or mass connections to memcache, redis, mongodb... Also, when you use Memcache / Memcached, your miss hits will be reduce.
 Different with normal caching methods which shared everywhere on internet, phpFastCache Lib reduce the high I/O load, and faster than traditional caching method at least x7 ~+ times.
 However, some time you still want to use traditional caching, we support them too.
 

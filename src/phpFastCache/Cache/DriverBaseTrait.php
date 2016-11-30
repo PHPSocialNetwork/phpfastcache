@@ -281,7 +281,7 @@ trait DriverBaseTrait
                 $this->driverWrite($tagsItem);
                 $tagsItem->setHit(true);
             } else {
-                $this->deleteItem($tagsItem);
+                $this->deleteItem($tagsItem->getKey());
             }
         }
 

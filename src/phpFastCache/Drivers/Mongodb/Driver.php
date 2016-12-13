@@ -64,7 +64,7 @@ class Driver extends DriverAbstract
             The Support for the MongoDB extension will be added coming soon.', E_USER_ERROR);
         }
 
-        return extension_loaded('Mongodb');
+        return extension_loaded('Mongodb') && class_exists('MongoClient');
     }
 
     /**

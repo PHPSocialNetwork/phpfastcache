@@ -40,5 +40,13 @@
         "psr-4": {
             "phpFastCache\\": "src/phpFastCache/"
         }
+    },
+    "provide" : {
+        "ext-apc": "*",
+        "ext-memcache": "*",
+        "ext-memcached": "*",
+        "ext-redis": "*",
+        "ext-predis": "*",
+        "ext-sqlite": "*"
     }
 }

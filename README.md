@@ -1,4 +1,4 @@
-[![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/badges/quality-score.png?b=final)](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/?branch=final) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=final)](https://travis-ci.org/PHPSocialNetwork/phpfastcache) [![Latest Stable Version](http://img.shields.io/packagist/v/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Total Downloads](http://img.shields.io/packagist/dt/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Dependency Status](https://www.versioneye.com/php/phpfastcache:phpfastcache/badge.svg)](https://www.versioneye.com/php/phpfastcache:phpfastcache) [![License](https://img.shields.io/packagist/l/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Coding Standards](https://img.shields.io/badge/CI-PSR6-orange.svg)](https://github.com/php-fig/cache) 
+[![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/badges/quality-score.png?b=final)](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/?branch=final) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=final)](https://travis-ci.org/PHPSocialNetwork/phpfastcache) [![Latest Stable Version](http://img.shields.io/packagist/v/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Total Downloads](http://img.shields.io/packagist/dt/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Dependency Status](https://www.versioneye.com/php/phpfastcache:phpfastcache/badge.svg)](https://www.versioneye.com/php/phpfastcache:phpfastcache) [![License](https://img.shields.io/packagist/l/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Coding Standards](https://img.shields.io/badge/CI-PSR6-orange.svg)](https://github.com/php-fig/cache)
 
 :exclamation: V4 USERS, PLEASE SEE THE README !! THE V5 IS OFFICIALY OUT !! YOUR CODE NEEDS TO BE REWRITTEN :exclamation:
 
@@ -27,15 +27,15 @@ One Class uses for All Cache. You don't need to rewrite your code many times aga
 \* Driver descriptions available in DOCS/DRIVERS.md
 
 ### Symfony developers are not forgotten !
-Starting of the v5, phpFastCache comes with a [Symfony Bundle](https://github.com/PHPSocialNetwork/phpfastcache-bundle).
-He's fresh, so feel free to report any bug or contribute to the code using pull requests.
+Starting with v5, phpFastCache comes with a [Symfony Bundle](https://github.com/PHPSocialNetwork/phpfastcache-bundle).
+It's fresh, so feel free to report any bug or contribute to the project using pull requests.
 
 ---------------------------
 Not a "Traditional" Caching
 ---------------------------
-phpFastCache is not a traditional caching method which is keep read and write to files, sqlite or mass connections to memcache, redis, mongodb... Also, when you use Memcache / Memcached, your miss hits will be reduce.
-Different with normal caching methods which shared everywhere on internet, phpFastCache Lib reduce the high I/O load, and faster than traditional caching method at least x7 ~+ times.
-However, some time you still want to use traditional caching, we support them too.
+phpFastCache is not like the traditional caching methods which keep reading and writing to files, sqlite or keeping open massive amounts of connections to memcache, redis, mongodb... Also, when you use Memcache / Memcached, your miss hits will be reduced.
+Different from the usual caching methods you'll find everywhere on the internet, the phpFastCache library reduces high I/O load, and is faster than the traditional caching methods by at least ~7 times.
+However, when you still want to use traditional caching methods, we support them too.
 
 ```php
 use phpFastCache\CacheManager;
@@ -50,8 +50,8 @@ CacheManager::Files($config);
 Reduce Database Calls
 ---------------------------
 
-Your website have 10,000 visitors who are online, and your dynamic page have to send 10,000 same queries to database on every page load.
-With phpFastCache, your page only send 1 query to DB, and use the cache to serve 9,999 other visitors.
+Your website has 10,000 visitors who are online, and your dynamic page has to send 10,000 times the same queries to database on every page load.
+With phpFastCache, your page only sends 1 query to your DB, and uses the cache to serve the 9,999 other visitors.
 
 ---------------------------
 Rich Development API
@@ -60,59 +60,59 @@ Rich Development API
 phpFastCache offers you a lot of useful APIs:
 
 ### Item API
-- getKey() // Return the item identifier (key)
-- get() // The getter, obviously, return your cache object
-- set($value) // The setter, for those who missed it, put 0 meant cache it forever
-- expiresAfter($ttl) // Allow you to extends the lifetime of an entry without altering the value (formerly known as touch())
+- getKey() // Returns the item identifier (key)
+- get() // The getter, obviously, returns your cache object
+- set($value) // The setter, for those who missed it, putting 0 means cache it forever
+- expiresAfter($ttl) // Allow you to extend the lifetime of an entry without altering its value (formerly known as touch())
 - expiresAt($expiration) // Sets the expiration time for this cache item (as a DateTimeInterface object)
-- increment($step = 1) // For integer that we can count on
+- increment($step = 1) // To allow us to count on an integer item
 - decrement($step = 1) // Redundant joke...
-- append($data) // Append data to a string or an array (push)
-- prepend($data) // Prepend data to a string or an array (unshift)
-- isHit() // Check if your cache entry exists and is still valid, it is the equivalent of isset()
-- isExpired() // Check if your cache entry is expired
-- getTtl() // Get the remaining Time To Live as an integer
-- getExpirationDate() // Get the expiration date as a Datetime object
-- addTag($tagName) // Add a tag
-- addTags(array $tagNames) // Add many tags
-- setTags(array $tags) // Set some tags
-- getTags() // Get the tags
-- getTagsAsString($separator = ', ') // Get the data a string separated by $separator
-- removeTag($tagName) // Remove a tag
-- removeTags(array $tagNames) // Remove some tags
-- getDataAsJsonString()// Return the data as a well-formatted json string
+- append($data) // Appends data to a string or an array (push)
+- prepend($data) // Prepends data to a string or an array (unshift)
+- isHit() // Checks if your cache entry exists and is still valid, it's the equivalent of isset()
+- isExpired() // Checks if your cache entry is expired
+- getTtl() // Gets the remaining Time To Live as an integer
+- getExpirationDate() // Gets the expiration date as a Datetime object
+- addTag($tagName) // Adds a tag
+- addTags(array $tagNames) // Adds multiple tags
+- setTags(array $tags) // Sets multiple tags
+- getTags() // Gets the tags
+- getTagsAsString($separator = ', ') // Gets the data as a string separated by $separator
+- removeTag($tagName) // Removes a tag
+- removeTags(array $tagNames) // Removes some tags
+- getDataAsJsonString()// Returns the data as a well-formatted json string
 
 ### ItemPool API
-- getItem($key) // Retrieve an item and returns an empty item if not found
-- getItems(array $keys) // Retrieve one or more item and returns an array of items
-- getItemsAsJsonString(array $keys) // Returns A json string that represents an array of items
+- getItem($key) // Retrieves an item and returns an empty item if not found
+- getItems(array $keys) // Retrieves one or more items and returns an array of items
+- getItemsAsJsonString(array $keys) // Returns a json string that represents an array of items
 - hasItem($key) // Tests if an item exists
-- deleteItem($key) // Delete an item
-- deleteItems(array $keys) // Delete one or more items
+- deleteItem($key) // Deletes an item
+- deleteItems(array $keys) // Deletes one or more items
 - save(CacheItemInterface $item) // Persists a cache item immediately
 - saveDeferred(CacheItemInterface $item); // Sets a cache item to be persisted later
 - commit(); // Persists any deferred cache items
-- clear() // Allow you to completely empty the cache and restart from the beginning
-- getStats() // Return the cache statistics as an object, useful for checking disk space used by the cache etc.
-- getItemsByTag($tagName) // Return items by a tag
-- getItemsByTags(array $tagNames) // Return items by some tags
-- getItemsByTagsAsJsonString(array $tagNames) // Returns A json string that represents an array of items by tags-based
-- deleteItemsByTag($tagName) // Delete items by a tag
-- deleteItemsByTags(array $tagNames) // Delete items by some tags
-- incrementItemsByTag($tagName, $step = 1) // Increment items by a tag
-- incrementItemsByTags(array $tagNames, $step = 1) // Increment items by some tags
-- decrementItemsByTag($tagName, $step = 1) // Decrement items by a tag
-- decrementItemsByTags(array $tagNames, $step = 1) // Decrement items by some tags
-- appendItemsByTag($tagName, $data) // Append items by a tag
-- appendItemsByTags(array $tagNames, $data) // Append items by some tags
-- prependItemsByTag($tagName, $data) // Prepend items by a tag
-- prependItemsByTags(array $tagNames, $data) // Prepend items by some tags
-- detachItem($item) // Detach an item from the pool
-- detachAllItems($item) // Detach all items from the pool
-- attachItem($item) // (Re-)attach an item to the pool
-- isAttached($item) // Verify if an item is (still) attached
+- clear() // Allows you to completely empty the cache
+- getStats() // Returns the cache statistics as an object, useful for checking disk space used by the cache etc.
+- getItemsByTag($tagName) // Returns items by a tag
+- getItemsByTags(array $tagNames) // Returns items by multiple tags
+- getItemsByTagsAsJsonString(array $tagNames) // Returns a json string that represents an array of items corresponding to given tags
+- deleteItemsByTag($tagName) // Deletes items by a tag
+- deleteItemsByTags(array $tagNames) // Deletes items by multiple tags
+- incrementItemsByTag($tagName, $step = 1) // Increments items by a tag
+- incrementItemsByTags(array $tagNames, $step = 1) // Increments items by multiple tags
+- decrementItemsByTag($tagName, $step = 1) // Decrements items by a tag
+- decrementItemsByTags(array $tagNames, $step = 1) // Decrements items by multiple tags
+- appendItemsByTag($tagName, $data) // Appends items by a tag
+- appendItemsByTags(array $tagNames, $data) // Appends items by multiple tags
+- prependItemsByTag($tagName, $data) // Prepends items by a tag
+- prependItemsByTags(array $tagNames, $data) // Prepends items by multiple tags
+- detachItem($item) // Detaches an item from the pool
+- detachAllItems($item) // Detaches all items from the pool
+- attachItem($item) // (Re-)attaches an item to the pool
+- isAttached($item) // Verifies if an item is (still) attached
 
-Also support Multiple calls, Tagging, Setup Folder for caching. Look at our examples folders.
+It also supports Multiple calls, Tagging, Setup Folder for caching. Look at our examples folders for more information.
 
 ---------------------------
 As Fast To Implement As Opening a Beer
@@ -126,7 +126,7 @@ As Fast To Implement As Opening a Beer
 composer require phpFastCache/phpFastCache
 ```
 
-#### :construction: Step 2: Setup your website code to implements phpFastCache bits (With Composer)
+#### :construction: Step 2: Setup your website code to implement the phpFastCache calls (with Composer)
 ```php
 use phpFastCache\CacheManager;
 
@@ -161,11 +161,11 @@ if (is_null($CachedString->get())) {
 
 } else {
     echo "READ FROM CACHE // ";
-    echo $CachedString->get()[0];// Will prints 'First product'
+    echo $CachedString->get()[0];// Will print 'First product'
 }
 
 /**
- * use your products here or return it;
+ * use your products here or return them;
  */
 echo implode('<br />', $CachedString->get());// Will echo your product list
 
@@ -174,8 +174,8 @@ echo implode('<br />', $CachedString->get());// Will echo your product list
 ##### :floppy_disk: Legacy / Lazy Method (Without Composer)
 * See the file examples/legacy.php for more information.
 
-#### :zap: Step 3: Enjoy ! Your website is now faster than flash !
-For curious developpers, there is a lot of others available examples [here](https://github.com/PHPSocialNetwork/phpfastcache/tree/final/examples).
+#### :zap: Step 3: Enjoy ! Your website is now faster than lightning !
+For curious developpers, there is a lot of other examples available  [here](https://github.com/PHPSocialNetwork/phpfastcache/tree/final/examples).
 
 #### :boom: phpFastCache support
-Found an issue or had an idea ? Come [here](https://github.com/PHPSocialNetwork/phpfastcache/issues) and let us know !
+Found an issue or have an idea ? Come [here](https://github.com/PHPSocialNetwork/phpfastcache/issues) and let us know !

@@ -260,21 +260,22 @@ class CacheManager
     public static function getStaticSystemDrivers()
     {
         return [
-          'Sqlite',
-          'Files',
           'Apc',
           'Apcu',
+          'Couchbase',
+          'Devnull',
+          'Files',
+          'Leveldb',
           'Memcache',
           'Memcached',
-          'Couchbase',
+          'Memstatic',
           'Mongodb',
           'Predis',
           'Redis',
           'Ssdb',
-          'Leveldb',
+          'Sqlite',
           'Wincache',
           'Xcache',
-          'Devnull',
         ];
     }
 

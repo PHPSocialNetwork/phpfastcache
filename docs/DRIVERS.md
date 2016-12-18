@@ -21,6 +21,8 @@
   * The Memcache driver. A memory cache for regular performances. Do not cross this driver with Memcached driver
 * Memcached
   * The Memcached driver. A memory cache for regular performances. Do not cross this driver with Memcache driver
+* Memstatic
+  * The Memstatic driver is a memory static driver that expires when the script execution ends
 * Mongodb
   * A very high-performance NoSQL driver using a key-value pair system
 * Predis

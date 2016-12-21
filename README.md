@@ -26,9 +26,11 @@ One Class uses for All Cache. You don't need to rewrite your code many times aga
 
 \* Driver descriptions available in DOCS/DRIVERS.md
 
-### Symfony developers are not forgotten !
+### Symfony/Drupal developers are not forgotten !
 Starting with v5, phpFastCache comes with a [Symfony Bundle](https://github.com/PHPSocialNetwork/phpfastcache-bundle).
 It's fresh, so feel free to report any bug or contribute to the project using pull requests.
+
+Also a [Drupal 8 Module](https://github.com/PHPSocialNetwork/phpfastcache-drupal) is currently in development, add it to your starred projects to get notified of the first public release. 
 
 ---------------------------
 Not a "Traditional" Caching

@@ -66,7 +66,7 @@ class Driver extends DriverAbstract
         if ($item instanceof Item) {
             $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
-            return apc_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
+            return apcu_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -78,7 +78,7 @@ class Driver extends DriverAbstract
      */
     protected function driverRead(CacheItemInterface $item)
     {
-        $data = apc_fetch($item->getKey(), $success);
+        $data = apcu_fetch($item->getKey(), $success);
         if ($success === false) {
             return null;
         }
@@ -97,7 +97,7 @@ class Driver extends DriverAbstract
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return apc_delete($item->getKey());
+            return apcu_delete($item->getKey());
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -108,7 +108,7 @@ class Driver extends DriverAbstract
      */
     protected function driverClear()
     {
-        return @apc_clear_cache() && @apc_clear_cache('user');
+        return @apcu_clear_cache() && @apcu_clear_cache('user');
     }
 
     /**
@@ -130,7 +130,7 @@ class Driver extends DriverAbstract
      */
     public function getStats()
     {
-        $stats = (array) apc_cache_info('user');
+        $stats = (array) apcu_cache_info('user');
         $date = (new \DateTime())->setTimestamp($stats[ 'start_time' ]);
 
         return (new driverStatistic())

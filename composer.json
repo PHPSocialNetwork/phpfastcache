@@ -24,12 +24,12 @@
         "psr/cache": "~1.0.0",
         "predis/predis": "~1.1.0",
         "phpfastcache/phpssdb": "~1.0.0",
+        "ext-mbstring": "*",
         "ext-json": "*"
     },
     "suggest": {
         "ext-apc": "*",
         "ext-intl": "*",
-        "ext-mbstring": "*",
         "ext-memcached": "*",
         "ext-memcache": "*",
         "ext-redis": "*",

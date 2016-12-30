@@ -18,6 +18,11 @@ use phpFastCache\Exceptions\phpFastCacheCoreException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Util\Directory;
 
+/**
+ * Trait IOHelperTrait
+ * @package phpFastCache\Core\Pool\IO
+ * @property array $config The configuration array passed via DriverBaseTrait
+ */
 trait PathSeekerTrait
 {
     /**

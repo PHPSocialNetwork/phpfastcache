@@ -16,15 +16,11 @@ namespace phpFastCache\Drivers\Sqlite;
 
 use PDO;
 use PDOException;
-use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Core\Pool\IO\IOHelperTrait;
-use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
-use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheIOException;
-use phpFastCache\Util\Directory;
 use Psr\Cache\CacheItemInterface;
 
 /**

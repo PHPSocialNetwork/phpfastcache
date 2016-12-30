@@ -18,10 +18,8 @@ use LevelDB as LeveldbClient;
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Core\Pool\IO\IOHelperTrait;
-use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
-use phpFastCache\Util\Directory;
 use Psr\Cache\CacheItemInterface;
 
 /**

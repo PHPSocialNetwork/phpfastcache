@@ -272,7 +272,7 @@ else
  * Item tag test // Step 7
  */
 itemTagTest7:
-echo "\n#7 Testing deleter: appendItemsByTagsAll() // Expecting items value to get an appended part of string\n";
+echo "\n#7 Testing appender: appendItemsByTagsAll() // Expecting items value to get an appended part of string\n";
 $driverInstance->deleteItems(['item-test_1', 'item-test_2', 'item-test_3']);
 $createItemsCallback();
 $appendStr = '$*#*$';
@@ -295,7 +295,7 @@ foreach($driverInstance->getItems(['tag-test1', 'tag-test2', 'tag-test3']) as $i
  * Item tag test // Step 7
  */
 itemTagTest8:
-echo "\n#8 Testing deleter: prependItemsByTagsAll() // Expecting items value to get a prepended part of string\n";
+echo "\n#8 Testing prepender: prependItemsByTagsAll() // Expecting items value to get a prepended part of string\n";
 $driverInstance->deleteItems(['item-test_1', 'item-test_2', 'item-test_3']);
 $createItemsCallback();
 $prependStr = '&+_+&';

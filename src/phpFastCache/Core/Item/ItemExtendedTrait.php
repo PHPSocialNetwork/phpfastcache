@@ -119,7 +119,7 @@ trait ItemExtendedTrait
             $this->modificationDate = $date;
             return $this;
         }else{
-            throw new \LogicException('Cannot access to the creation date when the "itemDetailedDate" configuration is disabled.');
+            throw new \LogicException('Cannot access to the modification date when the "itemDetailedDate" configuration is disabled.');
         }
     }
 

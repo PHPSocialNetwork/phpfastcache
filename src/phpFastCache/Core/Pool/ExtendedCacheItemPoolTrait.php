@@ -353,7 +353,7 @@ trait ExtendedCacheItemPoolTrait
     {
         $return = null;
         foreach ($tagNames as $tagName) {
-            $result = $this->decrementItemsByTag($tagName, $data);
+            $result = $this->prependItemsByTag($tagName, $data);
             if ($return !== false) {
                 $return = $result;
             }

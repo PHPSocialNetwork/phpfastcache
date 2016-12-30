@@ -65,6 +65,7 @@ $createItemsCallback = function() use ($driverInstance)
  * Item tag test // Step 1
  */
 echo "\n#1 Testing getter: getItemsByTag() // Expecting 3 results\n";
+$createItemsCallback();
 
 $tagsItems = $driverInstance->getItemsByTag('tag-test_all');
 if(is_array($tagsItems))

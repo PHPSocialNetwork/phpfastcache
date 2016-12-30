@@ -4,10 +4,11 @@
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
-use phpFastCache\CacheManager;
+use phpFastCache\Api;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../src/autoload.php';
+echo '[PhpFastCache API v' . Api::getVersion() . "]\n\n";
 
 $status = 0;
 echo "Testing autoload\n";

@@ -20,7 +20,7 @@ namespace phpFastCache;
  */
 class Api
 {
-    protected static $version = '1.2.1';
+    protected static $version = '1.2.3';
 
     /**
      * This method will returns the current
@@ -45,6 +45,19 @@ class Api
     public static function getChangelog()
     {
         return <<<CHANGELOG
+- 1.2.3
+-- Implemented additional saving method form multiple items:
+   ExtendedCacheItemPoolInterface::saveMultiple()
+
+- 1.2.2
+-- Implemented additional tags methods such as:
+   ExtendedCacheItemPoolInterface::getItemsByTagsAll()
+   ExtendedCacheItemPoolInterface::incrementItemsByTagsAll()
+   ExtendedCacheItemPoolInterface::decrementItemsByTagsAll()
+   ExtendedCacheItemPoolInterface::deleteItemsByTagsAll()
+   ExtendedCacheItemPoolInterface::appendItemsByTagsAll()
+   ExtendedCacheItemPoolInterface::prependItemsByTagsAll()
+
 - 1.2.1
 -- Implemented Event manager methods such as:
    ExtendedCacheItemInterface::setEventManager()

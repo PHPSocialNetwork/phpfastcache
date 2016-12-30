@@ -5,13 +5,14 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
+use phpFastCache\Api;
 use phpFastCache\CacheManager;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Psr\Cache\CacheItemPoolInterface;
 
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
+echo '[PhpFastCache API v' . Api::getVersion() . "]\n\n";
 
 $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 $status = 0;

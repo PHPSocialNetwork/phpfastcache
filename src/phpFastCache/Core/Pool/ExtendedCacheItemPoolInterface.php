@@ -15,11 +15,11 @@
 namespace phpFastCache\Core\Pool;
 
 use InvalidArgumentException;
+use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\EventManager;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 
 /**
  * Interface ExtendedCacheItemPoolInterface
@@ -27,10 +27,10 @@ use phpFastCache\Core\Item\ExtendedCacheItemInterface;
  */
 interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
 {
-    const DRIVER_CHECK_FAILURE       = '%s is not installed or is misconfigured, cannot continue.';
-    const DRIVER_TAGS_KEY_PREFIX     = '_TAG_';
-    const DRIVER_TAGS_WRAPPER_INDEX  = 'g';
-    const DRIVER_DATA_WRAPPER_INDEX  = 'd';
+    const DRIVER_CHECK_FAILURE      = '%s is not installed or is misconfigured, cannot continue.';
+    const DRIVER_TAGS_KEY_PREFIX    = '_TAG_';
+    const DRIVER_TAGS_WRAPPER_INDEX = 'g';
+    const DRIVER_DATA_WRAPPER_INDEX = 'd';
 
     /**
      * Expiration date Index
@@ -128,7 +128,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *   True if the pool was successfully cleared. False if there was an error.
      */
     public function clean();
-    
+
     /**
      * @return driverStatistic
      */
@@ -153,9 +153,9 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     public function getItemsByTag($tagName);
 
     /**
-     * Returns a traversable set of cache items by a tag name.
+     * Returns a traversable set of cache items by one of multiple tag names.
      *
-     * @param array $tagNames
+     * @param string[] $tagNames
      * An indexed array of keys of items to retrieve.
      *
      * @throws InvalidArgumentException
@@ -171,9 +171,27 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     public function getItemsByTags(array $tagNames);
 
     /**
+     * Returns a traversable set of cache items by all of multiple tag names.
+     *
+     * @param string[] $tagNames
+     * An indexed array of keys of items to retrieve.
+     *
+     * @throws InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return ExtendedCacheItemInterface[]
+     *   A traversable collection of Cache Items keyed by the cache keys of
+     *   each item. A Cache item will be returned for each key, even if that
+     *   key is not found. However, if no keys are specified then an empty
+     *   traversable MUST be returned instead.
+     */
+    public function getItemsByTagsAll(array $tagNames);
+
+    /**
      * Returns A json string that represents an array of items by tags-based.
      *
-     * @param array $tagNames
+     * @param string[] $tagNames
      * An indexed array of keys of items to retrieve.
      * @param int $option json_encode() options
      * @param int $depth json_encode() depth
@@ -202,9 +220,9 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     public function deleteItemsByTag($tagName);
 
     /**
-     * Removes the item from the pool by tag.
+     * Removes the item from the pool by one of multiple tag names.
      *
-     * @param array $tagNames
+     * @param string[] $tagNames
      *   The tag for which to delete
      *
      * @throws InvalidArgumentException
@@ -212,15 +230,31 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *   MUST be thrown.
      *
      * @return bool
-     *   True if the item was successfully removed. False if there was an error.
+     *   True if the items were successfully removed. False if there was an error.
      */
     public function deleteItemsByTags(array $tagNames);
+
+    /**
+     * Removes the item from the pool by all of multiple tag names.
+     *
+     * @param string[] $tagNames
+     * An indexed array of keys of items to retrieve.
+     *
+     * @throws InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return bool
+     *   True if the items were successfully removed. False if there was an error.
+     */
+    public function deleteItemsByTagsAll(array $tagNames);
 
     /**
      * Increment the items from the pool by tag.
      *
      * @param string $tagName
      *   The tag for which to increment
+     *
      * @param int $step
      *
      * @throws InvalidArgumentException
@@ -233,10 +267,11 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     public function incrementItemsByTag($tagName, $step = 1);
 
     /**
-     * Increment the items from the pool by tag.
+     * Increment the items from the pool by one of multiple tag names.
      *
-     * @param array $tagNames
+     * @param string[] $tagNames
      *   The tag for which to increment
+     *
      * @param int $step
      *
      * @throws InvalidArgumentException
@@ -244,16 +279,33 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *   MUST be thrown.
      *
      * @return bool
-     *   True if the item was successfully incremented. False if there was an error.
+     *   True if the items were successfully incremented. False if there was an error.
      */
     public function incrementItemsByTags(array $tagNames, $step = 1);
 
+    /**
+     * Increment the items from the pool by all of multiple tag names.
+     *
+     * @param string[] $tagNames
+     *   The tag for which to increment
+     *
+     * @param int $step
+     *
+     * @throws InvalidArgumentException
+     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return bool
+     *   True if the items were successfully incremented. False if there was an error.
+     */
+    public function incrementItemsByTagsAll(array $tagNames, $step = 1);
 
     /**
      * Decrement the items from the pool by tag.
      *
      * @param string $tagName
      *   The tag for which to decrement
+     *
      * @param int $step
      *
      * @throws InvalidArgumentException
@@ -266,10 +318,11 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     public function decrementItemsByTag($tagName, $step = 1);
 
     /**
-     * Decrement the items from the pool by tag.
+     * Decrement the items from the pool by one of multiple tag names.
      *
-     * @param array $tagNames
+     * @param string[] $tagNames
      *   The tag for which to decrement
+     *
      * @param int $step
      *
      * @throws InvalidArgumentException
@@ -280,6 +333,23 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *   True if the item was successfully decremented. False if there was an error.
      */
     public function decrementItemsByTags(array $tagNames, $step = 1);
+
+    /**
+     * Decrement the items from the pool by all of multiple tag names.
+     *
+     * @param string[] $tagNames
+     *   The tag for which to decrement
+     *
+     * @param int $step
+     *
+     * @throws InvalidArgumentException
+     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return bool
+     *   True if the items were successfully decremented. False if there was an error.
+     */
+    public function decrementItemsByTagsAll(array $tagNames, $step = 1);
 
     /**
      * Decrement the items from the pool by tag.
@@ -299,9 +369,9 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     public function appendItemsByTag($tagName, $data);
 
     /**
-     * Decrement the items from the pool by tag.
+     * Append the items from the pool by one of multiple tag names.
      *
-     * @param array $tagNames
+     * @param string[] $tagNames
      *   The tag for which to append
      *
      * @param array|string $data
@@ -311,9 +381,26 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *   MUST be thrown.
      *
      * @return bool
-     *   True if the item was successfully appended. False if there was an error.
+     *   True if the items were successfully appended. False if there was an error.
      */
     public function appendItemsByTags(array $tagNames, $data);
+
+    /**
+     * Append the items from the pool by all of multiple tag names.
+     *
+     * @param string[] $tagNames
+     *   The tag for which to append
+     *
+     * @param array|string $data
+     *
+     * @throws InvalidArgumentException
+     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return bool
+     *   True if the items were successfully appended. False if there was an error.
+     */
+    public function appendItemsByTagsAll(array $tagNames, $data);
 
     /**
      * Prepend the items from the pool by tag.
@@ -333,9 +420,9 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     public function prependItemsByTag($tagName, $data);
 
     /**
-     * Prepend the items from the pool by tag.
+     * Prepend the items from the pool by one of multiple tag names.
      *
-     * @param array $tagNames
+     * @param string[] $tagNames
      *   The tag for which to prepend
      *
      * @param array|string $data
@@ -348,6 +435,23 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *   True if the item was successfully prepended. False if there was an error.
      */
     public function prependItemsByTags(array $tagNames, $data);
+
+    /**
+     * Prepend the items from the pool by all of multiple tag names.
+     *
+     * @param string[] $tagNames
+     *   The tag for which to prepend
+     *
+     * @param array|string $data
+     *
+     * @throws InvalidArgumentException
+     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return bool
+     *   True if the items were successfully prepended. False if there was an error.
+     */
+    public function prependItemsByTagsAll(array $tagNames, $data);
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
@@ -385,4 +489,14 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param EventManager $em
      */
     public function setEventManager(EventManager $em);
+
+    /**
+     * Save multiple items, possible uses:
+     *  saveMultiple([$item1, $item2, $item3]);
+     *  saveMultiple($item1, $item2, $item3);
+     *
+     * @param ExtendedCacheItemInterface[] $items
+     * @return bool
+     */
+    public function saveMultiple(...$items);
 }

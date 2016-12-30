@@ -100,28 +100,35 @@ phpFastCache offers you a lot of useful APIs:
 - deleteItem($key) // Deletes an item
 - deleteItems(array $keys) // Deletes one or more items
 - save(CacheItemInterface $item) // Persists a cache item immediately
+- saveMultiple(...$items) // Persists multiple cache items immediately
 - saveDeferred(CacheItemInterface $item); // Sets a cache item to be persisted later
 - commit(); // Persists any deferred cache items
 - clear() // Allows you to completely empty the cache and restart from the beginning
 - getStats() // Returns the cache statistics as an object, useful for checking disk space used by the cache etc.
 - getItemsByTag($tagName) // Returns items by a tag
-- getItemsByTags(array $tagNames) // Returns items by multiple tags
+- getItemsByTags(array $tagNames) // Returns items by one of multiple tag names
+- getItemsByTagsAll(array $tagNames) // Returns items by all of multiple tag names
 - getItemsByTagsAsJsonString(array $tagNames) // Returns A json string that represents an array of items corresponding to given tags
 - deleteItemsByTag($tagName) // Deletes items by a tag
-- deleteItemsByTags(array $tagNames) // Deletes items by multiple tags
+- deleteItemsByTags(array $tagNames) // Deletes items  by one of multiple tag names
+- deleteItemsByTagsAll(array $tagNames) // Deletes items by all of multiple tag names
 - incrementItemsByTag($tagName, $step = 1) // Increments items by a tag
-- incrementItemsByTags(array $tagNames, $step = 1) // Increments items by multiple tags
+- incrementItemsByTags(array $tagNames, $step = 1) // Increments items by one of multiple tag names
+- incrementItemsByTagsAll(array $tagNames, $step = 1) // Increments items by all of multiple tag names
 - decrementItemsByTag($tagName, $step = 1) // Decrements items by a tag
-- decrementItemsByTags(array $tagNames, $step = 1) // Decrements items by multiple tags
+- decrementItemsByTags(array $tagNames, $step = 1) // Decrements items by one of multiple tag names
+- decrementItemsByTagsAll(array $tagNames, $step = 1) // Decrements items by all of multiple tag names
 - appendItemsByTag($tagName, $data) // Appends items by a tag
-- appendItemsByTags(array $tagNames, $data) // Appends items by multiple tags
+- appendItemsByTags(array $tagNames, $data) // Appends items by one of multiple tag names
+- appendItemsByTagsAll(array $tagNames, $data) // Appends items by all of multiple tag names
 - prependItemsByTag($tagName, $data) // Prepends items by a tag
-- prependItemsByTags(array $tagNames, $data) // Prepends items by multiple tags
+- prependItemsByTags(array $tagNames, $data) // Prepends items by one of multiple tag names
+- prependItemsByTagsAll(array $tagNames, $data) // Prepends items by all of multiple tag names
 - detachItem($item) // Detaches an item from the pool
 - detachAllItems($item) // Detaches all items from the pool
 - attachItem($item) // (Re-)attaches an item to the pool
 - isAttached($item) // Verify if an item is (still) attached
-- setEventManager($evtMngr) // Sets the event manager
+- setEventManager(EventManager $evtMngr) // Sets the event manager
 
 It also supports multiple calls, Tagging, Setup Folder for caching. Look at our examples folders for more information.
 

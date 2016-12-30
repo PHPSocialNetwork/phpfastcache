@@ -17,6 +17,7 @@ namespace phpFastCache\Core\Pool\IO;
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Entities\driverStatistic;
+use phpFastCache\EventManager;
 use phpFastCache\Exceptions\phpFastCacheIOException;
 use phpFastCache\Util\Directory;
 
@@ -25,6 +26,7 @@ use phpFastCache\Util\Directory;
  * @package phpFastCache\Core\Pool\IO
  * @property array $config The configuration array passed via DriverBaseTrait
  * @property ExtendedCacheItemInterface[] $itemInstances The item instance passed via CacheItemPoolTrait
+ * @property EventManager $eventManager The event manager passed via CacheItemPoolTrait
  */
 trait IOHelperTrait
 {

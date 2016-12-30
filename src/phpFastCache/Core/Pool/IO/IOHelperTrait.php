@@ -150,7 +150,7 @@ trait IOHelperTrait
         /**
          * Skip Create Sub Folders;
          */
-        if ($skip == false) {
+        if (!$skip) {
             if (!file_exists($path)) {
                 if (@!mkdir($path, $this->setChmodAuto(), true)) {
                     throw new phpFastCacheIOException('PLEASE CHMOD ' . $path . ' - ' . $this->setChmodAuto() . ' OR ANY WRITABLE PERMISSION!');

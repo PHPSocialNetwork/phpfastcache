@@ -14,7 +14,9 @@
 
 namespace phpFastCache\Core\Pool\IO;
 
+use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheIOException;
 use phpFastCache\Util\Directory;
 
@@ -22,6 +24,7 @@ use phpFastCache\Util\Directory;
  * Trait IOHelperTrait
  * @package phpFastCache\Core\Pool\IO
  * @property array $config The configuration array passed via DriverBaseTrait
+ * @property ExtendedCacheItemInterface[] $itemInstances The item instance passed via CacheItemPoolTrait
  */
 trait IOHelperTrait
 {
@@ -311,5 +314,36 @@ HTACCESS;
         }
 
         return $octetWritten !== false;
+    }
+
+    /********************
+     *
+     * PSR-6 Extended Methods
+     *
+     *******************/
+
+    /**
+     * Provide a generic getStats() method
+     * for files-based drivers
+     * @return driverStatistic
+     * @throws \phpFastCache\Exceptions\phpFastCacheIOException
+     */
+    public function getStats()
+    {
+        $stat = new driverStatistic();
+        $path = $this->getFilePath(false);
+
+        if (!is_dir($path)) {
+            throw new phpFastCacheIOException("Can't read PATH:" . $path);
+        }
+
+        $stat->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setRawData([
+            'tmp' => $this->tmp
+          ])
+          ->setSize(Directory::dirSize($path))
+          ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($path));
+
+        return $stat;
     }
 }

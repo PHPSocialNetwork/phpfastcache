@@ -398,35 +398,8 @@ class Driver implements ExtendedCacheItemPoolInterface
             }
         }
         $this->SqliteDir = $this->getPath() . '/' . self::FILE_DIR;
-    }
 
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
-
-    /**
-     * @return driverStatistic
-     * @throws phpFastCacheIOException
-     */
-    public function getStats()
-    {
-        $stat = new driverStatistic();
-        $path = $this->getFilePath(false);
-
-        if (!is_dir($path)) {
-            throw new phpFastCacheIOException("Can't read PATH:" . $path);
-        }
-
-        $stat->setData(implode(', ', array_keys($this->itemInstances)))
-          ->setRawData([
-            'tmp' => $this->tmp
-          ])
-          ->setSize(Directory::dirSize($path))
-          ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($path));
-
-        return $stat;
+        return true;
     }
 
     /**

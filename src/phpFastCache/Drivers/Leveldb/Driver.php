@@ -145,23 +145,8 @@ class Driver implements ExtendedCacheItemPoolInterface
         } else {
             $this->instance = $this->instance ?: new LeveldbClient($this->getLeveldbFile());
         }
-    }
 
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
-
-    /**
-     * @return driverStatistic
-     */
-    public function getStats()
-    {
-        return (new driverStatistic())
-          ->setData(implode(', ', array_keys($this->itemInstances)))
-          ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($this->getLeveldbFile()))
-          ->setSize(Directory::dirSize($this->getLeveldbFile()));
+        return true;
     }
 
     /**

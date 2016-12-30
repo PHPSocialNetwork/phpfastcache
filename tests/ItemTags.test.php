@@ -61,8 +61,6 @@ $createItemsCallback = function() use ($driverInstance)
     ];
 };
 
-extract($createItemsCallback(), EXTR_OVERWRITE);
-
 /**
  * Item tag test // Step 1
  */

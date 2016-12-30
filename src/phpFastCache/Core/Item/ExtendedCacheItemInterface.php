@@ -30,7 +30,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
     public function getUncommittedData();
 
     /**
-     * @return \DateTimeInterface|null
+     * @return \DateTimeInterface
      */
     public function getExpirationDate();
 
@@ -85,7 +85,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
     public function isExpired();
 
     /**
-     * @param \phpFastCache\Cache\Pool\ExtendedCacheItemPoolInterface $driver
+     * @param \phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface $driver
      * @return mixed
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver);

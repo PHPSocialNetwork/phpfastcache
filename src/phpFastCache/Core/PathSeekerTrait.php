@@ -19,7 +19,7 @@ use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Util\Directory;
 
 /**
- * Trait IOHelperTrait
+ * Trait PathSeekerTrait
  * @package phpFastCache\Core\Pool\IO
  * @property array $config The configuration array passed via DriverBaseTrait
  */

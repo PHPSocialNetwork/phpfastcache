@@ -122,43 +122,14 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverConnect()
     {
-        $server = isset($this->config[ 'redis' ]) ? $this->config[ 'redis' ] : [
+        $config = isset($this->config[ 'redis' ]) ? $this->config[ 'redis' ] : [];
+
+        $this->instance = new PredisClient(array_merge([
           'host' => '127.0.0.1',
           'port' => '6379',
           'password' => '',
           'database' => '',
-        ];
-
-        $config = [
-          'host' => $server[ 'host' ],
-        ];
-
-        $port = isset($server[ 'port' ]) ? $server[ 'port' ] : '';
-        if ($port != '') {
-            $config[ 'port' ] = $port;
-        }
-
-        $password = isset($server[ 'password' ]) ? $server[ 'password' ] : '';
-        if ($password != '') {
-            $config[ 'password' ] = $password;
-        }
-
-        $database = isset($server[ 'database' ]) ? $server[ 'database' ] : '';
-        if ($database != '') {
-            $config[ 'database' ] = $database;
-        }
-
-        $timeout = isset($server[ 'timeout' ]) ? $server[ 'timeout' ] : '';
-        if ($timeout != '') {
-            $config[ 'timeout' ] = $timeout;
-        }
-
-        $read_write_timeout = isset($server[ 'read_write_timeout' ]) ? $server[ 'read_write_timeout' ] : '';
-        if ($read_write_timeout != '') {
-            $config[ 'read_write_timeout' ] = $read_write_timeout;
-        }
-
-        $this->instance = new PredisClient($config);
+        ], $config));
 
         return true;
     }

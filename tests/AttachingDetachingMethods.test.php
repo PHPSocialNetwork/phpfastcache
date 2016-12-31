@@ -5,18 +5,15 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use phpFastCache\Api;
 use phpFastCache\CacheManager;
+use phpFastCache\Helper\TestHelper;
 use Psr\Cache\CacheItemPoolInterface;
 
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
-echo '[PhpFastCache API v' . Api::getVersion() . "]\n\n";
-
+$testHelper = new TestHelper('[A|De]ttaching methods');
 $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
-$status = 0;
-echo "Testing [a|de]ttaching methods\n";
 
 /**
  * Testing memcached as it is declared in .travis.yml
@@ -24,11 +21,9 @@ echo "Testing [a|de]ttaching methods\n";
 $driverInstance = CacheManager::getInstance($defaultDriver);
 
 if (!is_object($driverInstance)) {
-    echo '[FAIL] CacheManager::getInstance() returned an invalid variable type:' . gettype($driverInstance) . "\n";
-    $status = 1;
+    $testHelper->printFailText('CacheManager::getInstance() returned an invalid variable type:' . gettype($driverInstance));
 }else if(!($driverInstance instanceof CacheItemPoolInterface)){
-    echo '[FAIL] CacheManager::getInstance() returned an invalid class:' . get_class($driverInstance) . "\n";
-    $status = 1;
+    $testHelper->printFailText('CacheManager::getInstance() returned an invalid class:' . get_class($driverInstance));
 }else{
     $key = 'test_attaching_detaching';
 
@@ -38,22 +33,19 @@ if (!is_object($driverInstance)) {
 
     if($driverInstance->isAttached($itemDetached) !== true)
     {
-        echo '[PASS] ExtendedCacheItemPoolInterface::isAttached() identified $itemDetached as being detached.' . "\n";
+        $testHelper->printPassText('ExtendedCacheItemPoolInterface::isAttached() identified $itemDetached as being detached.');
     }
     else
     {
-        echo '[FAIL] ExtendedCacheItemPoolInterface::isAttached() failed to identify $itemDetached as to be detached.' . "\n";
-        $status = 1;
+        $testHelper->printFailText('ExtendedCacheItemPoolInterface::isAttached() failed to identify $itemDetached as to be detached.');
     }
 
     try{
         $driverInstance->attachItem($itemDetached);
-        echo '[FAIL] ExtendedCacheItemPoolInterface::attachItem() attached $itemDetached without trowing an error.' . "\n";
-        $status = 1;
+        $testHelper->printFailText('ExtendedCacheItemPoolInterface::attachItem() attached $itemDetached without trowing an error.');
     }catch(\LogicException $e){
-        echo '[PASS] ExtendedCacheItemPoolInterface::attachItem() failed to attach $itemDetached by trowing a LogicException exception.' . "\n";
+        $testHelper->printPassText('ExtendedCacheItemPoolInterface::attachItem() failed to attach $itemDetached by trowing a LogicException exception.');
     }
-
 }
 
-exit($status);
+$testHelper->terminateTest();

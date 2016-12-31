@@ -4,33 +4,29 @@
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
-use phpFastCache\Api;
+
+use phpFastCache\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../src/autoload.php';
-echo '[PhpFastCache API v' . Api::getVersion() . "]\n\n";
-
-$status = 0;
-echo "Testing autoload\n";
+$testHelper = new TestHelper('Autoload');
 
 /**
  * Testing PhpFastCache autoload
  */
 if (!class_exists('phpFastCache\CacheManager')) {
-    echo "[FAIL] Autoload failed to find the CacheManager\n";
-    $status = 255;
+    $testHelper->printFailText('Autoload failed to find the CacheManager');
 }else{
-    echo "[PASS] Autoload successfully found the CacheManager\n";
+    $testHelper->printPassText('Autoload successfully found the CacheManager');
 }
 
 /**
  * Testing Psr autoload
  */
 if (!interface_exists('Psr\Cache\CacheItemInterface')) {
-    echo "[FAIL] Autoload failed to find the Psr CacheItemInterface\n";
-    $status = 255;
+    $testHelper->printFailText('Autoload failed to find the Psr CacheItemInterface');
 }else{
-    echo "[PASS] Autoload successfully found the Psr CacheItemInterface\n";
+    $testHelper->printPassText('Autoload successfully found the Psr CacheItemInterface');
 }
 
-exit($status);
+$testHelper->terminateTest();

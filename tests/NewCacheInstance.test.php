@@ -4,18 +4,15 @@
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
-use phpFastCache\Api;
+
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\CacheManager;
-
+use phpFastCache\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
-echo '[PhpFastCache API v' . Api::getVersion() . "]\n\n";
-
+$testHelper = new TestHelper('New cache instance');
 $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
-$status = 0;
-echo "Testing new cache instance\n";
 
 /**
  * Testing memcached as it is declared in .travis.yml
@@ -23,10 +20,9 @@ echo "Testing new cache instance\n";
 $driverInstance = CacheManager::getInstance($defaultDriver);
 
 if (!is_object($driverInstance) || !($driverInstance instanceof ExtendedCacheItemPoolInterface)) {
-    echo '[FAIL] CacheManager::getInstance() returned wrong data:' . gettype($driverInstance) . "\n";
-    $status = 1;
+    $testHelper->printFailText('CacheManager::getInstance() returned wrong data hint:' . gettype($driverInstance));
 }else{
-    echo "[PASS] CacheManager::getInstance() returned expected object that implements ExtendedCacheItemPoolInterface\n";
+    $testHelper->printPassText('CacheManager::getInstance() returned an expected object that implements ExtendedCacheItemPoolInterface');
 }
 
-exit($status);
+$testHelper->terminateTest();

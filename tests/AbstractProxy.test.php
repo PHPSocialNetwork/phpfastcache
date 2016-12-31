@@ -5,18 +5,15 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use phpFastCache\Api;
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
+use phpFastCache\Helper\TestHelper;
 use phpFastCache\Proxy\phpFastCacheAbstractProxy;
 
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
-echo '[PhpFastCache API v' . Api::getVersion() . "]\n\n";
-
+$testHelper = new TestHelper('phpFastCacheAbstractProxy class');
 $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
-$status = 0;
-echo "Testing phpFastCacheAbstractProxy class\n";
 
 /**
  * Dynamic driver-based example
@@ -43,13 +40,11 @@ class CustomMemcachedCacheClass extends phpFastCacheAbstractProxy
 $driverInstance = new CustomMemcachedCacheClass();
 
 if (!is_object($driverInstance->getItem('test'))) {
-    echo '[FAIL] $driverInstance->getItem() returned an invalid var type:' . gettype($driverInstance) . "\n";
-    $status = 1;
+    $testHelper->printFailText('$driverInstance->getItem() returned an invalid var type:' . gettype($driverInstance));
 }else if(!($driverInstance->getItem('test') instanceof ExtendedCacheItemInterface)){
-    echo '[FAIL] $driverInstance->getItem() returned an invalid class that does not implements ExtendedCacheItemInterface: ' . get_class($driverInstance) . "\n";
-    $status = 1;
+    $testHelper->printFailText('$driverInstance->getItem() returned an invalid class that does not implements ExtendedCacheItemInterface: ' . get_class($driverInstance));
 }else{
-    echo '[PASS] $driverInstance->getItem() returned a valid class that implements ExtendedCacheItemInterface: ' . get_class($driverInstance) . "\n";
+    $testHelper->printPassText('$driverInstance->getItem() returned a valid class that implements ExtendedCacheItemInterface: ' . get_class($driverInstance));
 }
 
-exit($status);
+$testHelper->terminateTest();

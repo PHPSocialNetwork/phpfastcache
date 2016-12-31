@@ -4,16 +4,13 @@
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
-use phpFastCache\Api;
+
 use phpFastCache\CacheManager;
+use phpFastCache\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../src/autoload.php';
-echo '[PhpFastCache API v' . Api::getVersion() . "]\n\n";
-
-$status = 0;
-echo "Testing Github issue #373 - Files driver issue after clearing cache\n";
-
+$testHelper = new TestHelper('Github issue #373 - Files driver issue after clearing cache');
 CacheManager::setDefaultConfig(['path' => __DIR__ . '/../../cache']);
 $cacheInstance = CacheManager::getInstance('Files');
 
@@ -27,10 +24,9 @@ $cacheInstance->clear();
 
 try {
     $has = $cacheInstance->hasItem($key);
-    echo "[PASS] No error thrown while trying to test if an item exists after clearing\n";
+    $testHelper->printPassText('No error thrown while trying to test if an item exists after clearing');
 } catch (Exception $e) {
-    $status = 255;
-    echo "[FAIL] An error has been thrown while trying to test if an item exists after clearing\n";
+    $testHelper->printFailText('An error has been thrown while trying to test if an item exists after clearing');
 }
 
-exit($status);
+$testHelper->terminateTest();

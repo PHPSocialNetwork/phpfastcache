@@ -4,21 +4,17 @@
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
-use phpFastCache\Api;
+
 use phpFastCache\CacheManager;
+use phpFastCache\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
-echo '[PhpFastCache API v' . Api::getVersion() . "]\n\n";
-
-$status = 0;
-echo "Testing Memstatic driver\n";
-
+$testHelper = new TestHelper('Memstatic driver');
 $cacheInstance = CacheManager::getInstance('Memstatic');
 $cacheKey = 'testItem';
 $randomStr = str_shuffle(sha1(uniqid('pfc', true) . mt_rand(100, 10000)));
-echo "Random-generated cache value for key '{$cacheKey}': {$randomStr}\n";
-
+$testHelper->printText("Random-generated cache value for key '{$cacheKey}': {$randomStr}");
 
 $item = $cacheInstance->getItem($cacheKey);
 $item->set($randomStr)->expiresAfter(60);
@@ -30,21 +26,19 @@ $item = $cacheInstance->getItem($cacheKey);
 
 $cacheResult = $cacheInstance->getItem($cacheKey)->get();
 
-if($cacheResult === $randomStr){
-  echo "[PASS] The cache key value match, got expected value '{$cacheResult}'\n";
-}else{
-  echo "[FAIL] The cache key value match expected value '{$randomStr}', got '{$cacheResult}'\n";
-  $status = 1;
+if ($cacheResult === $randomStr) {
+    $testHelper->printPassText("The cache key value match, got expected value '{$cacheResult}'");
+} else {
+    $testHelper->printFailText("The cache key value match expected value '{$randomStr}', got '{$cacheResult}'");
 }
-echo "Clearing the whole cache to test item cleaning...\n";
+$testHelper->printText('Clearing the whole cache to test item cleaning...');
 $cacheInstance->clear();
 $cacheResult = ($cacheInstance->getItem($cacheKey)->isHit() === false && $cacheInstance->getItem($cacheKey)->get() === null);
 
-if($cacheResult === true){
-  echo "[PASS] The cache item is null as expected\n";
-}else{
-  echo "[FAIL] The cache is not null'\n";
-  $status = 1;
+if ($cacheResult === true) {
+    $testHelper->printPassText('The cache item is null as expected');
+} else {
+    $testHelper->printFailText('The cache is not null');
 }
 
-exit($status);
+$testHelper->terminateTest();

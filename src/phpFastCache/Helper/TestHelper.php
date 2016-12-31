@@ -14,6 +14,10 @@ class TestHelper
      */
     protected $exitCode = 0;
 
+    /**
+     * TestHelper constructor.
+     * @param $testName
+     */
     public function __construct($testName)
     {
         $this->printText('[PhpFastCache API v' . Api::getVersion() . ']', true);

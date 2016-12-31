@@ -1,9 +1,7 @@
 <?php
 namespace phpFastCache\Helper;
 
-use InvalidArgumentException;
 use phpFastCache\CacheManager;
-use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\EventManager;
 use Psr\Cache\CacheItemInterface;
@@ -16,7 +14,7 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 {
 
     /**
-     * @var array|\phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface[]
+     * @var ExtendedCacheItemPoolInterface[]
      */
     protected $instances = [];
 

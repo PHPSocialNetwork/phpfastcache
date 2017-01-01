@@ -219,18 +219,6 @@ class CacheManager
     }
 
     /**
-     * @param $name
-     * @param string $value
-     * @deprecated Method "setup" is deprecated and will be removed in V6. Use method "setDefaultConfig" instead.
-     * @throws \InvalidArgumentException
-     */
-    public static function setup($name, $value = '')
-    {
-        trigger_error('Method "setup" is deprecated and will be removed in V6 Use method "setDefaultConfig" instead.');
-        self::setDefaultConfig($name, $value);
-    }
-
-    /**
      * @param $name string|array
      * @param mixed $value
      * @throws \InvalidArgumentException

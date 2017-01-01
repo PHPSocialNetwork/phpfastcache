@@ -193,7 +193,7 @@ class CacheManager
      */
     public static function setup($name, $value = '')
     {
-        trigger_error('Method "setup" is deprecated and will be removed in V6 Use method "setDefaultConfig" instead.');
+        trigger_error('Method "setup" is deprecated and will be removed in V6 Use method "setDefaultConfig" instead.', E_USER_DEPRECATED);
         self::setDefaultConfig($name, $value);
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-chdir(__DIR__ . '../../../src');
+chdir(__DIR__ . '/../../../src');
 
 /**
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com

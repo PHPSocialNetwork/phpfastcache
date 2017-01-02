@@ -31,7 +31,6 @@ function read_dir($dir, $ext = null)
 }
 
 $list = read_dir(__DIR__ . '/phpfastcache/', 'php');
-$list += read_dir(__DIR__ . '/phpfastcache/', 'tpl');
 
 $exit = 0;
 foreach ($list as $file) {

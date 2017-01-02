@@ -1,5 +1,7 @@
 <?php
 
+chdir(__DIR__ . '../../../../phpfastcache');
+
 /**
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
@@ -30,7 +32,7 @@ function read_dir($dir, $ext = null)
     return $list;
 }
 
-$list = read_dir(__DIR__ . '/phpfastcache/', 'php');
+$list = read_dir('.', 'php');
 
 $exit = 0;
 foreach ($list as $file) {
@@ -39,7 +41,7 @@ foreach ($list as $file) {
      * @todo Make the exclusions much cleaner
      */
     if (strpos($file, '/vendor/composer') === false && strpos($file, '/bin/stubs') === false) {
-        exec('php -l "' . $file . '"', $output, $status);
+        exec('php -l "' . realpath($file) . '"', $output, $status);
     } else {
         echo '[SKIP] ' . $file;
         echo "\n";

@@ -30,8 +30,8 @@ function read_dir($dir, $ext = null)
     return $list;
 }
 
-$list = read_dir(__DIR__ . '/../', 'php');
-$list += read_dir(__DIR__ . '/../', 'tpl');
+$list = read_dir(__DIR__ . '/phpfastcache/', 'php');
+$list += read_dir(__DIR__ . '/phpfastcache/', 'tpl');
 
 $exit = 0;
 foreach ($list as $file) {

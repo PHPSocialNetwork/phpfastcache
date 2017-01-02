@@ -1,6 +1,6 @@
 <?php
 
-chdir(__DIR__ . '/../../../src');
+chdir(__DIR__ . '/../../');
 
 /**
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
@@ -32,7 +32,7 @@ function read_dir($dir, $ext = null)
     return $list;
 }
 
-$list = read_dir('.', 'php');
+$list = read_dir('./src', 'php');
 
 $exit = 0;
 foreach ($list as $file) {

@@ -75,16 +75,7 @@ class Driver extends DriverAbstract
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            /*            if (isset($this->config[ 'skipExisting' ]) && $this->config[ 'skipExisting' ] == true) {
-                            $x = $this->instance->get($item->getKey());
-                            if ($x === false) {
-                                return false;
-                            } elseif (!is_null($x)) {
-                                return true;
-                            }
-                        }*/
-
-            return $this->instance->setx($item->getKey(), $this->encode($this->driverPreWrap($item)), $item->getTtl());
+            return $this->instance->setx($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), $item->getTtl());
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -96,7 +87,7 @@ class Driver extends DriverAbstract
      */
     protected function driverRead(CacheItemInterface $item)
     {
-        $val = $this->instance->get($item->getKey());
+        $val = $this->instance->get($item->getEncodedKey());
         if ($val == false) {
             return null;
         } else {
@@ -115,7 +106,7 @@ class Driver extends DriverAbstract
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->instance->del($item->get());
+            return $this->instance->del($item->getEncodedKey());
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }

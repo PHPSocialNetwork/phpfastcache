@@ -34,6 +34,14 @@ trait ItemExtendedTrait
     protected $eventManager;
 
     /**
+     * @return string
+     */
+    public function getEncodedKey()
+    {
+        return md5($this->getKey());
+    }
+
+    /**
      * @return mixed
      */
     public function getUncommittedData()

@@ -25,6 +25,15 @@ use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializable
 {
     /**
+     * Returns the encoded key for the current cache item.
+     * Usually as a MD5 hash
+     *
+     * @return string
+     *   The encoded key string for this cache item.
+     */
+    public function getEncodedKey();
+
+    /**
      * @return mixed
      */
     public function getUncommittedData();

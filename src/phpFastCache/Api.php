@@ -72,6 +72,10 @@ class Api
    ExtendedCacheItemInterface::setModificationDate() *
    * Require configuration directive "itemDetailedDate" to be enabled
 
+- 1.1.3
+-- Added an additional CacheItemInterface method:
+   ExtendedCacheItemInterface::getEncodedKey()
+
 - 1.1.2
 -- Implemented [de|a]ttaching methods to improve memory management
    ExtendedCacheItemPoolInterface::detachItem()

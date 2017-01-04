@@ -40,15 +40,6 @@ trait DriverBaseTrait
     protected $instance;
 
     /**
-     * @param $keyword
-     * @return string
-     */
-    protected function encodeFilename($keyword)
-    {
-        return md5($keyword);
-    }
-
-    /**
      * @param $config_name
      * @param string $value
      */

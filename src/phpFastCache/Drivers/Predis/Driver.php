@@ -128,9 +128,9 @@ class Driver extends DriverAbstract
 
         $this->instance = new PredisClient(array_merge([
           'host' => '127.0.0.1',
-          'port' => '6379',
-          'password' => '',
-          'database' => '',
+          'port' => 6379,
+          'password' => null,
+          'database' => null,
         ], $config));
 
         return true;

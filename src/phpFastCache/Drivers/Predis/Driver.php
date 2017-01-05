@@ -124,7 +124,7 @@ class Driver extends DriverAbstract
      */
     protected function driverConnect()
     {
-        $config = isset($this->config[ 'redis' ]) ? $this->config[ 'redis' ] : [];
+        $config = isset($this->config[ 'predis' ]) ? $this->config[ 'predis' ] : [];
 
         $this->instance = new PredisClient(array_merge([
           'host' => '127.0.0.1',

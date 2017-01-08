@@ -114,7 +114,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverClear()
     {
-        return $this->instance->flushDB();
+        return $this->instance->flushdb();
     }
 
     /**
@@ -152,7 +152,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
         return (new driverStatistic())
           ->setData(implode(', ', array_keys($this->itemInstances)))
-          ->setRawData($this->instance->info())
+          ->setRawData($info)
           ->setSize($size)
           ->setInfo(sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.", $version, $date->format(DATE_RFC2822)));
     }

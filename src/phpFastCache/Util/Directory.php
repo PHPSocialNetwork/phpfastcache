@@ -132,7 +132,11 @@ class Directory
                 $absolutes[] = $part;
             }
         }
-        $__FILE__ = __FILE__; // allows to dereference char
+
+        /**
+         * Allows to dereference char
+         */
+        $__FILE__ = preg_replace('~^(([a-z0-9\-]+)://)~', '', __FILE__);// remove file protocols such as "phar://" etc.
         $prefix = $__FILE__[0] === DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
         return $prefix . implode(DIRECTORY_SEPARATOR, $absolutes);
     }

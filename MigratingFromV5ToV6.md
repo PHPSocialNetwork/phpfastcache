@@ -107,3 +107,10 @@ try{
 
 ```
 :warning: Please note that `\phpFastCache\Exceptions\phpFastCacheInvalidArgumentException` implements `\Psr\Cache\InvalidArgumentException` as per PSR-6.
+
+### Allowed characters in key identifier
+:warning: As of the V6, the following characters can not longer being a part of the key identifier: `{}()/\@:`
+
+If you try to do so, an `\phpFastCache\Exceptions\phpFastCacheInvalidArgumentException` will be raised.
+
+You must replace them with a safe delimiter such as `.|-_`

@@ -32,6 +32,11 @@ trait CacheItemPoolTrait
     use ClassNamespaceResolverTrait;
 
     /**
+     * @var string
+     */
+    protected static $unsupportedKeyChars = '{}()/\@:';
+
+    /**
      * @var array
      */
     protected $deferredList = [];
@@ -56,6 +61,9 @@ trait CacheItemPoolTrait
     public function getItem($key)
     {
         if (is_string($key)) {
+            if (preg_match('~([' . preg_quote(self::$unsupportedKeyChars, '~') . ']+)~', $key, $matches)){
+                throw new phpFastCacheInvalidArgumentException('Unsupported key character detected: "' . $matches[1] . '". Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers');
+            }
             if (!array_key_exists($key, $this->itemInstances)) {
 
                 /**

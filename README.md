@@ -1,6 +1,7 @@
-[![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/badges/quality-score.png?b=final)](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/?branch=final) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=final)](https://travis-ci.org/PHPSocialNetwork/phpfastcache) [![Latest Stable Version](http://img.shields.io/packagist/v/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Total Downloads](http://img.shields.io/packagist/dt/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Dependency Status](https://www.versioneye.com/php/phpfastcache:phpfastcache/badge.svg)](https://www.versioneye.com/php/phpfastcache:phpfastcache) [![License](https://img.shields.io/packagist/l/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Coding Standards](https://img.shields.io/badge/CI-PSR6-orange.svg)](https://github.com/php-fig/cache) 
+[![Total Downloads](http://img.shields.io/packagist/dt/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Dependency Status](https://www.versioneye.com/php/phpfastcache:phpfastcache/badge.svg)](https://www.versioneye.com/php/phpfastcache:phpfastcache) [![Latest Stable Version](http://img.shields.io/packagist/v/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![License](https://img.shields.io/packagist/l/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Coding Standards](https://img.shields.io/badge/CI-PSR6-orange.svg)](https://github.com/php-fig/cache)  [![Coding Standards](https://img.shields.io/badge/CS-PSR16-orange.svg)](https://github.com/php-fig/simple-cache)    
+[![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/badges/quality-score.png?b=final)](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/?branch=final) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=final)](https://travis-ci.org/PHPSocialNetwork/phpfastcache)
 
-:exclamation: V6 USERS, PLEASE NOTE THAT THE V5 REQUIRES PHP 5.6 AT LEAST :exclamation:
+:exclamation: V6 USERS, PLEASE NOTE THAT THE V6 REQUIRES PHP 5.6 AT LEAST :exclamation:
 
 ---------------------------
 Simple Yet Powerful PHP Caching Class
@@ -131,6 +132,43 @@ phpFastCache offers you a lot of useful APIs:
 - setEventManager(EventManager $evtMngr) // Sets the event manager
 
 It also supports multiple calls, Tagging, Setup Folder for caching. Look at our examples folders for more information.
+
+---------------------------
+Want to keep it simple ?
+---------------------------
+:sweat_smile: Good news, as of the V6, a Psr16 adapter is provided to keep the cache simplest using very basic getters/setters:
+
+- get($key, $default = null);
+- set($key, $value, $ttl = null);
+- delete($key);
+- clear();
+- getMultiple($keys, $default = null);
+- setMultiple($values, $ttl = null
+- deleteMultiple($keys);
+- has($key);
+
+Basic usage:
+```php
+use phpFastCache\Helper\Psr16Adapter;
+
+$Psr16Adapter = new Psr16Adapter($defaultDriver);
+
+if(!$Psr16Adapter->has('test-key')){
+    // Setter action
+    $data = 'lorem ipsum';
+    $Psr16Adapter->set('lorem ipsum', 300);// 5 minutes
+}else{
+    // Getter action
+    $data = $Psr16Adapter->get('test-key');
+}
+
+
+/**
+* Do your stuff with $data
+*/
+```
+
+Internally, the Psr16 adapter calls the PhpFastCache Api via the cache manager. 
 
 ---------------------------
 Introducing to events

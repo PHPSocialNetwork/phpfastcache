@@ -33,7 +33,7 @@ if($Psr16Adapter->get('test-key') === $value){
 }
 
 $testHelper->printNewLine()->printText('Deleting key "test-key"...')->printNewLine();
-$Psr16Adapter->delete('test-key', $value);
+$Psr16Adapter->delete('test-key');
 
 if(!$Psr16Adapter->has('test-key')){
     $testHelper->printPassText('3/6 Psr16 hasser returned expected boolean (false)');

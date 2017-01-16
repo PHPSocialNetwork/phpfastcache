@@ -14,13 +14,13 @@
 
 namespace phpFastCache\Exceptions;
 
-use Psr\Cache\CacheException;
+use Psr\Cache\InvalidArgumentException;
 
 /**
- * Class phpFastCacheRootException
+ * Class phpFastCacheCoreException
  * @package phpFastCache\Exceptions
  */
-class phpFastCacheRootException extends \Exception implements CacheException
+class phpFastCacheInvalidArgumentException extends phpFastCacheRootException implements InvalidArgumentException
 {
 
 }

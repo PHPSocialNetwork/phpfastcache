@@ -20,6 +20,7 @@ use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
+use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpFastCache\Util\MemcacheDriverCollisionDetectorTrait;
 use Psr\Cache\CacheItemInterface;
 
@@ -69,7 +70,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item)
     {
@@ -79,7 +80,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         if ($item instanceof Item) {
             return $this->instance->set($item->getKey(), $this->driverPreWrap($item), $this->memcacheFlags, $item->getTtl());
         } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
@@ -101,7 +102,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item)
     {
@@ -111,7 +112,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         if ($item instanceof Item) {
             return $this->instance->delete($item->getKey());
         } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 

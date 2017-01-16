@@ -16,6 +16,7 @@ namespace phpFastCache;
 
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
+use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 
 /**
  * Class CacheManager
@@ -221,7 +222,7 @@ class CacheManager
     /**
      * @param $name string|array
      * @param mixed $value
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     public static function setDefaultConfig($name, $value = null)
     {
@@ -230,7 +231,7 @@ class CacheManager
         } else if (is_string($name)){
             self::$config[ $name ] = $value;
         }else{
-            throw new \InvalidArgumentException('Invalid variable type: $name');
+            throw new phpFastCacheInvalidArgumentException('Invalid variable type: $name');
         }
     }
 

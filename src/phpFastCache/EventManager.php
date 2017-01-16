@@ -14,6 +14,8 @@
 
 namespace phpFastCache;
 
+use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+
 /**
  * Class CacheManager
  * @package phpFastCache
@@ -78,7 +80,7 @@ class EventManager
     /**
      * @param string $name
      * @param array $arguments
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      * @throws \BadMethodCallException
      */
     public function __call($name, $arguments)
@@ -91,7 +93,7 @@ class EventManager
                     $this->events[$name][] = $arguments[0];
                 }
             }else{
-                throw new \InvalidArgumentException(sprintf('Expected Callable, got "%s"', gettype($arguments[0])));
+                throw new phpFastCacheInvalidArgumentException(sprintf('Expected Callable, got "%s"', gettype($arguments[0])));
             }
         }else{
             throw new \BadMethodCallException('An event must start with "on" such as "onCacheGetItem"');

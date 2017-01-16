@@ -17,6 +17,7 @@ namespace phpFastCache\Core\Pool;
 use InvalidArgumentException;
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\EventManager;
+use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use Psr\Cache\CacheItemInterface;
 
 
@@ -417,7 +418,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @internal This method de-register an item from $this->itemInstances
      * @param CacheItemInterface|string $item
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     protected function deregisterItem($item)
     {
@@ -427,7 +428,7 @@ trait ExtendedCacheItemPoolTrait
         } else if (is_string($item)) {
             unset($this->itemInstances[ $item ]);
         } else {
-            throw new \InvalidArgumentException('Invalid type for $item variable');
+            throw new phpFastCacheInvalidArgumentException('Invalid type for $item variable');
         }
         if (gc_enabled()) {
             gc_collect_cycles();

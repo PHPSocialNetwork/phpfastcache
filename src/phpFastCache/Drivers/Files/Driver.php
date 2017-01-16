@@ -19,6 +19,7 @@ use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Core\Pool\IO\IOHelperTrait;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
+use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpFastCache\Util\Directory;
 use Psr\Cache\CacheItemInterface;
 
@@ -60,7 +61,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item)
     {
@@ -80,7 +81,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                 return false;
             }
         } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
@@ -107,7 +108,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item)
     {
@@ -122,7 +123,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                 return false;
             }
         } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
@@ -146,7 +147,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @param string $optionName
      * @param mixed $optionValue
      * @return bool
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     public static function isValidOption($optionName, $optionValue)
     {

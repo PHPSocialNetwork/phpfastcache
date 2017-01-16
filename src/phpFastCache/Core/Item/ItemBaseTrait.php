@@ -14,6 +14,7 @@
 
 namespace phpFastCache\Core\Item;
 
+use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpFastCache\Proxy\phpFastCacheAbstractProxy;
 
 trait ItemBaseTrait
@@ -119,7 +120,6 @@ trait ItemBaseTrait
 
     /**
      * @return bool
-     * @throws \InvalidArgumentException
      */
     public function isHit()
     {
@@ -129,7 +129,7 @@ trait ItemBaseTrait
     /**
      * @param bool $isHit
      * @return $this
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     public function setHit($isHit)
     {
@@ -138,14 +138,14 @@ trait ItemBaseTrait
 
             return $this;
         } else {
-            throw new \InvalidArgumentException('$isHit must be a boolean');
+            throw new phpFastCacheInvalidArgumentException('$isHit must be a boolean');
         }
     }
 
     /**
      * @param \DateTimeInterface $expiration
      * @return $this
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     public function expiresAt($expiration)
     {
@@ -158,7 +158,7 @@ trait ItemBaseTrait
             $this->eventManager->dispatch('CacheItemExpireAt', $this, $expiration);
             $this->expirationDate = $expiration;
         } else {
-            throw new \InvalidArgumentException('$expiration must be an object implementing the DateTimeInterface');
+            throw new phpFastCacheInvalidArgumentException('$expiration must be an object implementing the DateTimeInterface');
         }
 
         return $this;
@@ -167,7 +167,7 @@ trait ItemBaseTrait
     /**
      * @param \DateInterval|int $time
      * @return $this
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     public function expiresAfter($time)
     {
@@ -198,7 +198,7 @@ trait ItemBaseTrait
 
             $this->expirationDate = (new \DateTime())->add($time);
         } else {
-            throw new \InvalidArgumentException('Invalid date format');
+            throw new phpFastCacheInvalidArgumentException('Invalid date format');
         }
 
         return $this;

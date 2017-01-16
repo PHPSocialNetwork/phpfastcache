@@ -15,6 +15,7 @@
 namespace phpFastCache\Core\Item;
 
 use phpFastCache\EventManager;
+use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use Psr\Cache\CacheItemInterface;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 
@@ -102,42 +103,42 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
     /**
      * @param bool $isHit
      * @return $this
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     public function setHit($isHit);
 
     /**
      * @param int $step
      * @return $this
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     public function increment($step = 1);
 
     /**
      * @param int $step
      * @return $this
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     public function decrement($step = 1);
 
     /**
      * @param array|string $data
      * @return $this
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     public function append($data);
 
     /**
      * @param array|string $data
      * @return $this
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     public function prepend($data);
 
     /**
      * @param string $tagName
      * @return $this
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     public function addTag($tagName);
 
@@ -151,7 +152,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
     /**
      * @param array $tags
      * @return $this
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     public function setTags(array $tags);
 

@@ -1,4 +1,4 @@
-Because the V6 is not backward compatible with the V5 we will help you to migrate your code:
+Because the V6 is not backward compatible with the V5, here's a guide to help you to migrate your code:
 
 
 ### Type hint of Driver instances
@@ -72,3 +72,38 @@ if($item instanceof \phpFastCache\Core\Item\ExtendedCacheItemInterface)
 }
 
 ```
+
+### Catching \InvalidArgumentException
+
+#### :clock1: Then:
+Code used to catch a `\InvalidArgumentException` interface. 
+
+```php
+namespace My\Custom\Project;
+
+$instance = CacheManager::getInstance('Files');
+
+try{
+    $item = $instance->getItem(array());
+}catch(\InvalidArgumentException $e){
+    //Catched exception code
+}
+
+```
+
+#### :alarm_clock: Now:
+This has been changed you now MUST catch `\phpFastCache\Exceptions\phpFastCacheInvalidArgumentException` interface
+
+```php
+namespace My\Custom\Project;
+
+$instance = CacheManager::getInstance('Files');
+
+try{
+    $item = $instance->getItem(array());
+}catch(\phpFastCache\Exceptions\phpFastCacheInvalidArgumentException $e){
+    //Catched exception code
+}
+
+```
+:warning: Please note that `\phpFastCache\Exceptions\phpFastCacheInvalidArgumentException` implements `\Psr\Cache\InvalidArgumentException` as per PSR-6.

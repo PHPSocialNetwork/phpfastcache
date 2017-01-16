@@ -59,7 +59,7 @@ if(count(array_filter($values)) === 3){
 $testHelper->printNewLine()->printText('Clearing whole cache ...')->printNewLine();
 $Psr16Adapter->clear();
 
-$testHelper->printNewLine()->printText('Setting up value to "test-key, test-key2, test-key3"...')->printNewLine();
+$testHelper->printText('Setting up value to "test-key, test-key2, test-key3"...')->printNewLine();
 $Psr16Adapter->setMultiple([
   'test-key' => $value,
   'test-key2' => $value,

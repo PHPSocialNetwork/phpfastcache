@@ -143,7 +143,7 @@ Want to keep it simple ?
 - delete($key);
 - clear();
 - getMultiple($keys, $default = null);
-- setMultiple($values, $ttl = null
+- setMultiple($values, $ttl = null);
 - deleteMultiple($keys);
 - has($key);
 
@@ -156,7 +156,7 @@ $Psr16Adapter = new Psr16Adapter($defaultDriver);
 if(!$Psr16Adapter->has('test-key')){
     // Setter action
     $data = 'lorem ipsum';
-    $Psr16Adapter->set('lorem ipsum', 300);// 5 minutes
+    $Psr16Adapter->set('test-key', 'lorem ipsum', 300);// 5 minutes
 }else{
     // Getter action
     $data = $Psr16Adapter->get('test-key');

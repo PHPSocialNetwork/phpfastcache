@@ -17,7 +17,6 @@ namespace phpFastCache\Drivers\Mongodb;
 use LogicException;
 use MongoBinData;
 use MongoClient as MongodbClient;
-use MongoCollection;
 use MongoConnectionException;
 use MongoCursorException;
 use MongoDate;

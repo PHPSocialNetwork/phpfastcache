@@ -21,7 +21,6 @@ use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpssdb\Core\SimpleSSDB;
-use phpssdb\Core\SSDB;
 use phpssdb\Core\SSDBException;
 use Psr\Cache\CacheItemInterface;
 

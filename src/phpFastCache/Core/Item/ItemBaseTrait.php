@@ -14,8 +14,8 @@
 
 namespace phpFastCache\Core\Item;
 
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
-use phpFastCache\Proxy\phpFastCacheAbstractProxy;
 
 trait ItemBaseTrait
 {
@@ -27,7 +27,7 @@ trait ItemBaseTrait
     protected $fetched = false;
 
     /**
-     * @var phpFastCacheAbstractProxy
+     * @var ExtendedCacheItemPoolInterface
      */
     protected $driver;
 

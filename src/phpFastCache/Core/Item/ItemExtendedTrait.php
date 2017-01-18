@@ -75,7 +75,6 @@ trait ItemExtendedTrait
         return $this->expiresAt($expiration);
     }
 
-
     /**
      * @return \DateTimeInterface
      * @throws \LogicException

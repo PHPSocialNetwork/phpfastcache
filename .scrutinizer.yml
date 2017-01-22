@@ -2,7 +2,7 @@ before_commands:
     - "composer install --no-dev --prefer-source"
 
 filter:
-    excluded_paths: ["bin/*", "docs/*", "examples/*", "var/*", "vendor/*"]
+    excluded_paths: ["bin/*", "docs/*", "examples/*", "var/*", "vendor/*", "tests/*"]
 checks:
     php: true
 coding_style:

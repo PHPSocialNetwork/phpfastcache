@@ -58,7 +58,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck()
     {
-        return class_exists('Cassandra') && method_exists('Cassandra', 'cluster');
+        return extension_loaded('Cassandra') && class_exists('Cassandra');
     }
 
     /**

@@ -250,6 +250,7 @@ class CacheManager
         return [
           'Apc',
           'Apcu',
+          'Cassandra',
           'Couchbase',
           'Devnull',
           'Files',

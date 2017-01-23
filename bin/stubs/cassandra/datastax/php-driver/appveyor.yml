@@ -1,0 +1,292 @@
+version: 1.x.{build}-{branch}
+branches:
+  except:
+    - gh-pages
+cache:
+  - C:\projects\dependencies\libs -> appveyor.yml
+  - C:/projects/dependencies/composer -> appveyor.yml
+os: Visual Studio 2015
+platform:
+  - x86
+  - x64
+configuration:
+#  - Debug
+  - Release
+environment:
+  LIBUV_VERSION: 1.8.0
+  OPENSSL_VERSION: 1.0.2h
+  CPP_DRIVER_DEPENDENCIES_DOWNLOAD_URL_PREFIX: https://raw.githubusercontent.com/mikefero/cpp-driver-msvc-libs/master
+  PHP_BINARY_TOOLS_ARCHIVE: php-sdk-binary-tools-20110915.zip
+  PHP_BINARY_TOOLS_DIR: C:/projects
+  PHP_DOWNLOAD_URL_PREFIX: https://github.com/php/php-src/archive
+  PHP_SDK_DEPENDENCIES_DOWNLOAD_URL_PREFIX: http://windows.php.net/downloads/php-sdk
+  PHP_SDK_LOCATION_PREFIX: C:/projects/dependencies/php-sdk
+  DEPENDENCIES_LOCATION_PREFIX: C:/projects/dependencies/libs
+  COMPOSER_CACHE_DIR: C:/projects/dependencies/composer
+  CONFIGURATION_COMPLETE: False
+  matrix:
+    - PHP: 7.0
+      PHP_VERSION: 7.0.7
+      THREAD_SAFE: True
+      CMAKE_GENERATOR: Visual Studio 14 2015
+      VISUAL_STUDIO_INTERNAL_VERSION: 140
+      VISUAL_STUDIO_SHORTHAND_VERSION: 14
+    - PHP: 7.0
+      PHP_VERSION: 7.0.7
+      THREAD_SAFE: False
+      CMAKE_GENERATOR: Visual Studio 14 2015
+      VISUAL_STUDIO_INTERNAL_VERSION: 140
+      VISUAL_STUDIO_SHORTHAND_VERSION: 14
+    - PHP: 5.6
+      PHP_VERSION: 5.6.22
+      THREAD_SAFE: True
+      CMAKE_GENERATOR: Visual Studio 11 2012
+      VISUAL_STUDIO_INTERNAL_VERSION: 110
+      VISUAL_STUDIO_SHORTHAND_VERSION: 11
+    - PHP: 5.6
+      PHP_VERSION: 5.6.22
+      THREAD_SAFE: False
+      CMAKE_GENERATOR: Visual Studio 11 2012
+      VISUAL_STUDIO_INTERNAL_VERSION: 110
+      VISUAL_STUDIO_SHORTHAND_VERSION: 11
+    - PHP: 5.5
+      PHP_VERSION: 5.5.36
+      THREAD_SAFE: True
+      CMAKE_GENERATOR: Visual Studio 11 2012
+      VISUAL_STUDIO_INTERNAL_VERSION: 110
+      VISUAL_STUDIO_SHORTHAND_VERSION: 11
+    - PHP: 5.5
+      PHP_VERSION: 5.5.36
+      THREAD_SAFE: False
+      CMAKE_GENERATOR: Visual Studio 11 2012
+      VISUAL_STUDIO_INTERNAL_VERSION: 110
+      VISUAL_STUDIO_SHORTHAND_VERSION: 11
+
+init:
+  - ps: |
+      # Get the Visual Studio common tools directory
+      $env:VISUAL_STUDIO_COMMON_TOOLS_DIR=(Get-Item "env:VS$($env:VISUAL_STUDIO_INTERNAL_VERSION)COMNTOOLS").Value
+
+      # Determine the platform and create associate environment variables
+      If ($env:PLATFORM -Match "x86") {
+        $env:ARCHITECTURE="32"
+
+        # Construct the development environment batch script location
+        $env:VISUAL_STUDIO_DEVENV_BATCH_SCRIPT="$($env:VISUAL_STUDIO_COMMON_TOOLS_DIR)/vsvars32.bat"
+      } Else {
+        $env:ARCHITECTURE="64"
+        $env:CMAKE_GENERATOR_SUFFIX=" Win64"
+
+        # Construct the development environment batch script location
+        $env:VISUAL_STUDIO_DEVENV_BATCH_SCRIPT="$($env:VISUAL_STUDIO_COMMON_TOOLS_DIR)/../../VC/bin/x86_amd64/vcvarsx86_amd64.bat"
+      }
+
+      # Determine thread safety and debug command arguments for PHP configuration
+      If ($env:THREAD_SAFE -Match "True") {
+        $env:ENABLE_DISABLE_THREAD_SAFETY="--enable-zts"
+        $env:TS_OR_NTS="ts"
+      } Else {
+        $env:ENABLE_DISABLE_THREAD_SAFETY="--disable-zts"
+        $env:TS_OR_NTS="nts"
+      }
+      If ($env:CONFIGURATION -Match "Debug") {
+        $env:ENABLE_DEBUG="--enable-debug"
+      }
+
+      # Assign common use environment variables
+      $env:LIB_ARCHITECTURE="lib$($env:ARCHITECTURE)"
+      $env:WINDOWS_ARCHITECTURE="win$($env:ARCHITECTURE)"
+      $env:CPP_DRIVER_SOURCE_LOCATION="$($env:APPVEYOR_BUILD_FOLDER)/lib/cpp-driver"
+
+      # Generate the PHP environment variable
+      $env:PHP_DEPENDENCIES_ARCHIVE="deps-$($env:PHP)-vc$($env:VISUAL_STUDIO_SHORTHAND_VERSION)-$($env:PLATFORM).7z"
+      $env:PHP_ARCHIVE="php-$($env:PHP_VERSION).zip"
+
+      # Generate the environment for the dependencies root directory
+      $env:DEPENDENCIES_LOCATION="$($env:DEPENDENCIES_LOCATION_PREFIX)/$($env:Platform)/$($env:VISUAL_STUDIO_INTERNAL_VERSION)"
+
+      # Generate the libuv environment variables
+      $env:LIBUV_ARCHIVE="libuv-$($env:LIBUV_VERSION)-$($env:WINDOWS_ARCHITECTURE)-msvc$($env:VISUAL_STUDIO_INTERNAL_VERSION).zip"
+      $env:LIBUV_ROOT_DIR="$($env:DEPENDENCIES_LOCATION)/libuv-$($env:LIBUV_VERSION)"
+
+      # Generate the OpenSSL environment variables
+      $env:OPENSSL_ARCHIVE="openssl-$($env:OPENSSL_VERSION)-$($env:WINDOWS_ARCHITECTURE)-msvc$($env:VISUAL_STUDIO_INTERNAL_VERSION).zip"
+      $env:OPENSSL_ROOT_DIR="$($env:DEPENDENCIES_LOCATION)/openssl-$($env:OPENSSL_VERSION)"
+
+      # Generate the archive name for the driver artifact
+      $env:DRIVER_ARTIFACT_ARCHIVE="cassandra-php-driver-ci-artifact-$($env:APPVEYOR_BUILD_VERSION)-$($env:PHP)-$($env:TS_OR_NTS)-vc$($env:VISUAL_STUDIO_SHORTHAND_VERSION)-$($env:PLATFORM).zip"
+  # Setup the Visual Studio command line development environment
+  - cmd: CALL "%VISUAL_STUDIO_DEVENV_BATCH_SCRIPT%"
+
+install:
+  - ps: |
+      # Install the dependencies (if needed)
+      New-Item -ItemType Directory -Force -Path "$($env:DEPENDENCIES_LOCATION)"
+      Push-Location "$($env:DEPENDENCIES_LOCATION)"
+
+      # Determine if PHP archive should be downloaded (cached)
+      If (!(Test-Path -Path "$($env:DEPENDENCIES_LOCATION_PREFIX)/$($env:PHP_ARCHIVE)")) {
+        # Download the PHP archive
+        Start-FileDownload "$($env:PHP_DOWNLOAD_URL_PREFIX)/$($env:PHP_ARCHIVE)" -FileName "$($env:DEPENDENCIES_LOCATION_PREFIX)/$($env:PHP_ARCHIVE)"
+      }
+
+      # Determine if PHP binary tools archive should be downloaded (cached)
+      If (!(Test-Path -Path "$($env:DEPENDENCIES_LOCATION_PREFIX)/$($env:PHP_BINARY_TOOLS_ARCHIVE)")) {
+        # Download the PHP binary tools archive
+        Start-FileDownload "$($env:PHP_SDK_DEPENDENCIES_DOWNLOAD_URL_PREFIX)/$($env:PHP_BINARY_TOOLS_ARCHIVE)" -FileName "$($env:DEPENDENCIES_LOCATION_PREFIX)/$($env:PHP_BINARY_TOOLS_ARCHIVE)"
+      }
+
+      # Determine if PHP libraries archive should be downloaded (cached)
+      If (!(Test-Path -Path "$($env:PHP_DEPENDENCIES_ARCHIVE)")) {
+        # Download the PHP dependencies archive
+        Start-FileDownload "$($env:PHP_SDK_DEPENDENCIES_DOWNLOAD_URL_PREFIX)/$($env:PHP_DEPENDENCIES_ARCHIVE)" -FileName $env:PHP_DEPENDENCIES_ARCHIVE
+      }
+
+      # Determine if libuv should be installed (cached)
+      If (!(Test-Path -Path "libuv-$($env:LIBUV_VERSION)")) {
+        # Download and extract the dependency
+        Start-FileDownload "$($env:CPP_DRIVER_DEPENDENCIES_DOWNLOAD_URL_PREFIX)/libuv/$($env:LIBUV_VERSION)/$($env:LIBUV_ARCHIVE)" -FileName $env:LIBUV_ARCHIVE
+        7z -o"libuv-$($env:LIBUV_VERSION)" x $env:LIBUV_ARCHIVE
+
+        # Only keep the static libraries
+        Move-Item "libuv-$($env:LIBUV_VERSION)/static/lib" "libuv-$($env:LIBUV_VERSION)/lib"
+        Remove-Item "libuv-$($env:LIBUV_VERSION)/static" -Force -Recurse
+        Remove-Item "libuv-$($env:LIBUV_VERSION)/shared" -Force -Recurse
+
+        # Delete the binary archive
+        Remove-Item $env:LIBUV_ARCHIVE
+      }
+
+      # Determine if OpenSSL should be installed (cached)
+      If (!(Test-Path -Path "openssl-$($env:OPENSSL_VERSION)")) {
+        # Download and extract the dependency
+        Start-FileDownload "$($env:CPP_DRIVER_DEPENDENCIES_DOWNLOAD_URL_PREFIX)/openssl/$($env:OPENSSL_VERSION)/$($env:OPENSSL_ARCHIVE)" -FileName $env:OPENSSL_ARCHIVE
+        7z -o"openssl-$($env:OPENSSL_VERSION)" x $env:OPENSSL_ARCHIVE
+
+        # Only keep the static libaries
+        Move-Item "openssl-$($env:OPENSSL_VERSION)/static/lib" "openssl-$($env:OPENSSL_VERSION)/lib"
+        Remove-Item "openssl-$($env:OPENSSL_VERSION)/static" -Force -Recurse
+        Remove-Item "openssl-$($env:OPENSSL_VERSION)/shared" -Force -Recurse
+
+        # Delete the binary archive
+        Remove-Item $env:OPENSSL_ARCHIVE
+      }
+
+      # Remove pre-installed OpenSSL (resolve conflicts)
+      Remove-Item "C:/OpenSSL-*" -Force -Recurse
+
+      # Setup the build tree for PHP (Update the PATH for the binary tools)
+      New-Item -ItemType Directory -Force -Path "$($env:PHP_SDK_LOCATION_PREFIX)"
+      7z -o"$($env:PHP_SDK_LOCATION_PREFIX)" x "$($env:DEPENDENCIES_LOCATION_PREFIX)/$($env:PHP_BINARY_TOOLS_ARCHIVE)"
+      7z -o"$($env:PHP_SDK_LOCATION_PREFIX)" x "$($env:DEPENDENCIES_LOCATION_PREFIX)/$($env:PHP_ARCHIVE)"
+      7z -o"$($env:PHP_SDK_LOCATION_PREFIX)" x $env:PHP_DEPENDENCIES_ARCHIVE
+      $env:PHP_SOURCE_DIR="$($env:PHP_SDK_LOCATION_PREFIX)/php-src-php-$($env:PHP_VERSION)"
+      $env:PHP_DEPENDENCIES_DIR="$($env:PHP_SDK_LOCATION_PREFIX)/deps"
+      $env:PATH+=";$($env:PHP_SDK_LOCATION_PREFIX)/bin"
+      Copy-Item "libuv-$($env:LIBUV_VERSION)/*" "$($env:PHP_DEPENDENCIES_DIR)" -Force -Recurse
+      Copy-Item "openssl-$($env:OPENSSL_VERSION)/*" "$($env:PHP_DEPENDENCIES_DIR)" -Force -Recurse
+
+      # Move back to original directory
+      Pop-Location
+
+before_build:
+  - cmd: git submodule update --init --recursive
+  - ps: |
+      # Navigate to the C/C++ driver dependency
+      Push-Location "$($env:CPP_DRIVER_SOURCE_LOCATION)"
+
+      # Determine the version number for the C/C++ driver dependency
+      $env:CPP_DRIVER_VERSION_MAJOR=(grep CASS_VERSION_MAJOR include/cassandra.h | sed 's/[^0-9]*//g').trim()
+      $env:CPP_DRIVER_VERSION_MINOR=(grep CASS_VERSION_MINOR include/cassandra.h | sed 's/[^0-9]*//g').trim()
+      $env:CPP_DRIVER_VERSION_PATCH=(grep CASS_VERSION_PATCH include/cassandra.h | sed 's/[^0-9]*//g').trim()
+      $env:CPP_DRIVER_VERSION="$($env:CPP_DRIVER_VERSION_MAJOR).$($env:CPP_DRIVER_VERSION_MINOR).$($env:CPP_DRIVER_VERSION_PATCH)"
+      $env:CPP_DRIVER_VERSION_SHA=(git rev-parse --short HEAD).trim()
+
+      # Determine if C/C++ driver should be built and installed (cached)
+      if (!(Test-Path -Path "$($env:DEPENDENCIES_LOCATION)/$($env:CPP_DRIVER_VERSION)/$($env:CPP_DRIVER_VERSION_SHA)")) {
+        # Create and navigate to the build directory (build outside tree)
+        New-Item -ItemType Directory -Force -Path build
+        Push-Location build
+
+        # Configure the build via CMake
+        cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)" -DCMAKE_INSTALL_PREFIX="$($env:DEPENDENCIES_LOCATION)/$($env:CPP_DRIVER_VERSION)/$($env:CPP_DRIVER_VERSION_SHA)" -DCASS_MULTICORE_COMPILATION=ON -DCMAKE_BUILD_TYPE=$env:CONFIGURATION -DCASS_BUILD_STATIC=ON -DCASS_USE_STATIC_LIBS=ON ..
+
+        # Move back to C/C++ directory
+        Pop-Location
+
+        # Build and install the C/C++ driver
+        cmake --build build --config "$($env:CONFIGURATION)" --target install
+      }
+
+      # Move back to working directory
+      Pop-Location
+
+      # Add C/C++ driver to the PHP dependencies
+      Copy-Item "$($env:DEPENDENCIES_LOCATION)/$($env:CPP_DRIVER_VERSION)/$($env:CPP_DRIVER_VERSION_SHA)/*" "$($env:PHP_DEPENDENCIES_DIR)" -Force -Recurse
+
+      # Navigate to the PHP source directory
+      Push-Location "$($env:PHP_SOURCE_DIR)"
+  # Configure PHP and the PHP driver extension
+  - cmd: buildconf.bat --force --add-modules-dir="%APPVEYOR_BUILD_FOLDER%"
+  - cmd: configure.bat --with-prefix="%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%" --disable-all --enable-cli --enable-com-dotnet --enable-session --enable-zlib --with-gmp --with-openssl --enable-cassandra=shared --enable-phar --enable-json --enable-filter --enable-hash --enable-ctype --enable-mbstring --enable-mbregex --enable-mbregex-backtrack --enable-tokenizer --enable-zip --with-libxml --with-dom --with-iconv %ENABLE_DISABLE_THREAD_SAFETY% %ENABLE_DEBUG%
+  - ps: $env:CONFIGURATION_COMPLETE=$TRUE
+
+build_script:
+  # Build and install PHP and the driver extension
+  - cmd: NMAKE all
+  - cmd: NMAKE install
+  - ps: |
+      # Add PHP artifacts directory to the environment (PHP executable)
+      $env:PATH+=";$($env:APPVEYOR_BUILD_FOLDER)/$($env:CONFIGURATION)"
+
+      # Move back to working directory
+      Pop-Location
+
+      # Configure PHP to use the PHP driver extension
+      If (Test-Path -Path $env:CONFIGURATION/ext) {
+        Add-Content "$($env:CONFIGURATION)/php.ini" "extension=ext\php_cassandra.dll"
+      } Else {
+        Add-Content "$($env:CONFIGURATION)/php.ini" "extension=.\php_cassandra.dll"
+      }
+
+after_build:
+  - ps: |
+      # Create the artifact structure for the driver
+      New-Item -ItemType Directory -Force -Path $env:TEMP/php-driver-artifact
+      Copy-Item $env:CONFIGURATION/php*.* $env:TEMP/php-driver-artifact
+      If (Test-Path -Path $env:CONFIGURATION/ext) {
+        Copy-Item $env:CONFIGURATION/ext $env:TEMP/php-driver-artifact -Recurse
+      }
+      Copy-Item ext/doc $env:TEMP/php-driver-artifact -Recurse
+
+      # Create the driver archive artifact
+      7z a -tzip $env:DRIVER_ARTIFACT_ARCHIVE -r $env:TEMP/php-driver-artifact/*
+
+      # Publish/Upload the artifacts to AppVeyor (Artifacts tab in UI)
+      Push-AppveyorArtifact $env:DRIVER_ARTIFACT_ARCHIVE -DeploymentName "DataStax PHP Driver Extension (w/ PHP v$env:PHP_VERSION Executable and DLL)"
+  # Install composer
+  - cmd: php -r "readfile('https://getcomposer.org/installer');" | php
+  - cmd: php composer.phar install
+  # Run the unit tests
+  - cmd: bin/phpunit --testsuite unit --log-junit junit-results.xml
+  # Upload/Publish the results
+  - ps: |
+      $wc=New-Object 'System.Net.WebClient'
+      $wc.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\junit-results.xml))
+
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+on_failure:
+  - ps: |
+      # Write the CMake output and error logs to the console
+      If ($env:CONFIGURATION_COMPLETE -eq "False") {
+        If (Test-Path "$($env:CPP_DRIVER_SOURCE_LOCATION)/build/CMakeFiles/CMakeOutput.log") {
+          Write-Output "C/C++ Driver CMakeOutput.log"
+          cat "$($env:CPP_DRIVER_SOURCE_LOCATION)/build/CMakeFiles/CMakeOutput.log"
+        }
+        If (Test-Path "$($env:CPP_DRIVER_SOURCE_LOCATION)/build/CMakeFiles/CMakeError.log") {
+          Write-Output "C/C++ Driver CMakeError.log"
+          cat "$($env:CPP_DRIVER_SOURCE_LOCATION)/build/CMakeFiles/CMakeError.log"
+        }
+      }

@@ -15,13 +15,13 @@ One Class uses for All Cache. You don't need to rewrite your code many times aga
 
 |   Regular drivers  | High performances drivers | Development drivers |
 |--------------------|---------------------------|---------------------|
-|  `Apc(u)`          | `CouchBase`               | `Devnull`           |
-|  `Cookie`          | `Mongodb`                 | `Devfalse`          |
-|  `Files`           | `Predis`                  | `Devtrue`           |
-|  `Leveldb`         | `Redis`                   | `Memstatic`         |
-|  `Memcache(d)`     | `Ssdb`                    |                     |
-|  `Sqlite`          | `Zend Memory Cache`       |                     |
-|  `Wincache`        |                           |                     |
+|  `Apc(u)`          | `Cassandra`               | `Devnull`           |
+|  `Cookie`          | `CouchBase`               | `Devfalse`          |
+|  `Files`           | `Mongodb`                 | `Devtrue`           |
+|  `Leveldb`         | `Predis`                  | `Memstatic`         |
+|  `Memcache(d)`     | `Redis`                   |                     |
+|  `Sqlite`          | `Ssdb`                    |                     |
+|  `Wincache`        | `Zend Memory Cache`       |                     |
 |  `Xcache`          |                           |                     |
 |  `Zend Disk Cache` |                           |                     |
 

@@ -23,6 +23,7 @@ use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
  *
  * @method static ExtendedCacheItemPoolInterface Apc() Apc($config = []) Return a driver "apc" instance
  * @method static ExtendedCacheItemPoolInterface Apcu() Apcu($config = []) Return a driver "apcu" instance
+ * @method static ExtendedCacheItemPoolInterface Cassandra() Cassandra($config = []) Return a driver "Cassandra" instance
  * @method static ExtendedCacheItemPoolInterface Cookie() Cookie($config = []) Return a driver "cookie" instance
  * @method static ExtendedCacheItemPoolInterface Couchbase() Couchbase($config = []) Return a driver "couchbase" instance
  * @method static ExtendedCacheItemPoolInterface Files() Files($config = []) Return a driver "files" instance

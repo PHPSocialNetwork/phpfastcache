@@ -75,18 +75,18 @@ class Driver implements ExtendedCacheItemPoolInterface
             $cacheData = $this->encode($this->driverPreWrap($item));
             $options = new Cassandra\ExecutionOptions([
               'arguments' => [
-                  'cache_uuid' => new Cassandra\Uuid(),
-                  'cache_id' => $item->getKey(),
-                  'cache_data' => $this->encode($this->driverPreWrap($item)),
-                  'cache_creation_date' => new Cassandra\Timestamp((new \DateTime())->getTimestamp()),
-                  'cache_expiration_date' => new Cassandra\Timestamp($item->getExpirationDate()->getTimestamp()),
-                  'cache_length' => strlen($cacheData)
-                ],
+                'cache_uuid' => new Cassandra\Uuid(),
+                'cache_id' => $item->getKey(),
+                'cache_data' => $this->encode($this->driverPreWrap($item)),
+                'cache_creation_date' => new Cassandra\Timestamp((new \DateTime())->getTimestamp()),
+                'cache_expiration_date' => new Cassandra\Timestamp($item->getExpirationDate()->getTimestamp()),
+                'cache_length' => strlen($cacheData)
+              ],
               'consistency' => Cassandra::CONSISTENCY_ALL,
               'serial_consistency' => Cassandra::CONSISTENCY_SERIAL
             ]);
 
-            $query = sprintf("INSERT INTO %s.%s
+            $query = sprintf('INSERT INTO %s.%s
                     (
                       cache_uuid, 
                       cache_id, 
@@ -96,7 +96,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                       cache_length
                     )
                   VALUES (:cache_uuid, :cache_id, :cache_data, :cache_creation_date, :cache_expiration_date, :cache_length);
-            ", self::CASSANDRA_KEY_SPACE, self::CASSANDRA_TABLE);
+            ', self::CASSANDRA_KEY_SPACE, self::CASSANDRA_TABLE);
 
             $result = $this->instance->execute(new Cassandra\SimpleStatement($query), $options);
             /**
@@ -122,7 +122,7 @@ class Driver implements ExtendedCacheItemPoolInterface
               'page_size' => 1
             ]);
             $query = sprintf(
-              "SELECT cache_data FROM %s.%s WHERE cache_id = :cache_id;",
+              'SELECT cache_data FROM %s.%s WHERE cache_id = :cache_id;',
               self::CASSANDRA_KEY_SPACE,
               self::CASSANDRA_TABLE
             );
@@ -156,7 +156,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                   ],
                 ]);
                 $result = $this->instance->execute(new Cassandra\SimpleStatement(sprintf(
-                  "DELETE FROM %s.%s WHERE cache_id = :cache_id;",
+                  'DELETE FROM %s.%s WHERE cache_id = :cache_id;',
                   self::CASSANDRA_KEY_SPACE,
                   self::CASSANDRA_TABLE
                 )), $options);
@@ -182,7 +182,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         try {
             $result = $this->instance->execute(new Cassandra\SimpleStatement(sprintf(
-              "TRUNCATE %s.%s;",
+              'TRUNCATE %s.%s;',
               self::CASSANDRA_KEY_SPACE, self::CASSANDRA_TABLE
             )));
             /**
@@ -243,8 +243,8 @@ class Driver implements ExtendedCacheItemPoolInterface
               "CREATE KEYSPACE IF NOT EXISTS %s WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };",
               self::CASSANDRA_KEY_SPACE
             )));
-            $this->instance->execute(new Cassandra\SimpleStatement(sprintf("USE %s;", self::CASSANDRA_KEY_SPACE)));
-            $this->instance->execute(new Cassandra\SimpleStatement(sprintf("
+            $this->instance->execute(new Cassandra\SimpleStatement(sprintf('USE %s;', self::CASSANDRA_KEY_SPACE)));
+            $this->instance->execute(new Cassandra\SimpleStatement(sprintf('
                 CREATE TABLE IF NOT EXISTS %s (
                     cache_uuid uuid,
                     cache_id varchar,
@@ -253,7 +253,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                     cache_expiration_date timestamp,
                     cache_length int,
                     PRIMARY KEY (cache_id)
-                );", self::CASSANDRA_TABLE
+                );', self::CASSANDRA_TABLE
             )));
         }
 

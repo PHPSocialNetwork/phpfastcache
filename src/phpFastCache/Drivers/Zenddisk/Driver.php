@@ -128,6 +128,18 @@ class Driver implements ExtendedCacheItemPoolInterface
      *******************/
 
     /**
+     * @return string
+     */
+    public static function getHelp()
+    {
+        return <<<HELP
+<p>
+This driver rely on Zend Server 8.5+, see: http://www.zend.com/en/products/zend_server
+</p>
+HELP;
+    }
+
+    /**
      * @return driverStatistic
      */
     public function getStats()

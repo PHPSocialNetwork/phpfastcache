@@ -482,6 +482,14 @@ trait ExtendedCacheItemPoolTrait
     }
 
     /**
+     * @return string
+     */
+    public static function getHelp()
+    {
+        return '';
+    }
+
+    /**
      * Driver-related methods
      */
 

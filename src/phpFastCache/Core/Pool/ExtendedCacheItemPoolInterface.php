@@ -134,6 +134,15 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      */
     public function getStats();
 
+
+    /**
+     * Get a quick help guide
+     * about the current driver
+     *
+     * @return string
+     */
+    public static function getHelp();
+
     /**
      * Returns a traversable set of cache items by a tag name.
      *

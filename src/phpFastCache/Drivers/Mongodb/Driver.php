@@ -196,6 +196,18 @@ class Driver implements ExtendedCacheItemPoolInterface
      *******************/
 
     /**
+     * @return string
+     */
+    public static function getHelp()
+    {
+        return <<<HELP
+<p>
+This driver rely on php's Mongo (http://php.net/manual/fr/class.mongo.php) extension, not php's MongoDb (http://php.net/manual/fr/class.mongodb.php) extension.
+</p>
+HELP;
+    }
+
+    /**
      * @return driverStatistic
      */
     public function getStats()

@@ -14,7 +14,6 @@
 
 namespace phpFastCache\Drivers\Cassandra;
 
-use CouchbaseCluster as CouchbaseClient;
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Entities\driverStatistic;
@@ -77,7 +76,7 @@ class Driver implements ExtendedCacheItemPoolInterface
               'arguments' => [
                 'cache_uuid' => new Cassandra\Uuid(),
                 'cache_id' => $item->getKey(),
-                'cache_data' => $this->encode($this->driverPreWrap($item)),
+                'cache_data' => $cacheData,
                 'cache_creation_date' => new Cassandra\Timestamp((new \DateTime())->getTimestamp()),
                 'cache_expiration_date' => new Cassandra\Timestamp($item->getExpirationDate()->getTimestamp()),
                 'cache_length' => strlen($cacheData)
@@ -201,7 +200,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverConnect()
     {
-        if ($this->instance instanceof CouchbaseClient) {
+        if ($this->instance instanceof CassandraSession) {
             throw new \LogicException('Already connected to Couchbase server');
         } else {
             $host = isset($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1';

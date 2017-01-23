@@ -272,7 +272,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     public function getStats()
     {
         $result = $this->instance->execute(new Cassandra\SimpleStatement(sprintf(
-          "SELECT SUM(cache_length) as cache_size FROM %s.%s",
+          'SELECT SUM(cache_length) as cache_size FROM %s.%s',
           self::CASSANDRA_KEY_SPACE,
           self::CASSANDRA_TABLE
         )));

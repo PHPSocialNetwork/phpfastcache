@@ -105,6 +105,7 @@ phpFastCache offers you a lot of useful APIs:
 - saveDeferred(CacheItemInterface $item); // Sets a cache item to be persisted later
 - commit(); // Persists any deferred cache items
 - clear() // Allows you to completely empty the cache and restart from the beginning
+- getHelp() // Provides a very basic help for a specific driver
 - getStats() // Returns the cache statistics as an object, useful for checking disk space used by the cache etc.
 - getItemsByTag($tagName) // Returns items by a tag
 - getItemsByTags(array $tagNames) // Returns items by one of multiple tag names

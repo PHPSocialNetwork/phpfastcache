@@ -72,7 +72,7 @@ class cookie extends DriverAbstract
     {
         $this->connectServer();
         $keyword = 'phpFastCache_' . $keyword;
-        $v = $this->encode($value);
+        $v = json_encode($value);
         if(isset($this->config['limited_memory_each_object'])
             && strlen($v) > $this->config['limited_memory_each_object']) {
             return false;
@@ -92,7 +92,7 @@ class cookie extends DriverAbstract
         // return null if no caching
         // return value if in caching
         $keyword = 'phpFastCache_' . $keyword;
-        $x = isset($_COOKIE[ $keyword ]) ? $this->decode($_COOKIE[ $keyword ]) : false;
+        $x = isset($_COOKIE[ $keyword ]) ? json_decode($_COOKIE[ $keyword ]) : false;
         if ($x == false) {
             return null;
         } else {

@@ -141,7 +141,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *
      * @return string
      */
-    public static function getHelp();
+    public function getHelp();
 
     /**
      * Returns a traversable set of cache items by a tag name.

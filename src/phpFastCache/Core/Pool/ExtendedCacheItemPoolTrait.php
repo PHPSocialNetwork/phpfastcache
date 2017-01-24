@@ -484,7 +484,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @return string
      */
-    public static function getHelp()
+    public function getHelp()
     {
         return '';
     }

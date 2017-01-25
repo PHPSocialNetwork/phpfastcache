@@ -175,16 +175,6 @@ trait IOHelperTrait
     }
 
     /**
-     * @return bool
-     */
-    public function isExpired()
-    {
-        trigger_error(__FUNCTION__ . '() is deprecated, use ExtendedCacheItemInterface::isExpired() instead.', E_USER_DEPRECATED);
-
-        return true;
-    }
-
-    /**
      * @param $this ->config
      * @return int
      */

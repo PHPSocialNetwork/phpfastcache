@@ -114,3 +114,39 @@ try{
 If you try to do so, an `\phpFastCache\Exceptions\phpFastCacheInvalidArgumentException` will be raised.
 
 You must replace them with a safe delimiter such as `.|-_`
+
+### Cache clear method
+The deprecated method `phpFastCache\Cache\ExtendedCacheItemPoolInterface::clear()` is now definitely removed.
+
+
+#### :clock1: Then:
+In the V5 the method `phpFastCache\Cache\ExtendedCacheItemPoolInterface::clear()` was deprecated.
+
+```php
+namespace My\Custom\Project;
+
+
+$instance = CacheManager::getInstance('Files');
+
+if($instance instanceof \phpFastCache\Cache\ExtendedCacheItemPoolInterface)
+{
+    $instance->clear();
+}
+
+```
+
+#### :alarm_clock: Now:
+In the V6 we removed it. Use `phpFastCache\Cache\ExtendedCacheItemPoolInterface::clean()` instead.
+
+```php
+namespace My\Custom\Project;
+
+
+$instance = CacheManager::getInstance('Files');
+
+if($instance instanceof \phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface)
+{
+    $instance->clean();
+}
+
+```

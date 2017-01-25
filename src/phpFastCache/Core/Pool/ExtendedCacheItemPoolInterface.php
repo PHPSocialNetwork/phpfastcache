@@ -120,16 +120,6 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     public function setItem(CacheItemInterface $item);
 
     /**
-     * Deletes all items in the pool.
-     * @deprecated Use clear() instead
-     * Will be removed in 5.1
-     *
-     * @return bool
-     *   True if the pool was successfully cleared. False if there was an error.
-     */
-    public function clean();
-
-    /**
      * @return driverStatistic
      */
     public function getStats();

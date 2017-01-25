@@ -28,15 +28,6 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
-    public function clean()
-    {
-        trigger_error('Cache clean() method is deprecated, use clear() method instead', E_USER_DEPRECATED);
-        return $this->clear();
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512)
     {
         $callback = function (CacheItemInterface $item) {

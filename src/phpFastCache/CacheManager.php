@@ -57,15 +57,15 @@ class CacheManager
      * @var array
      */
     protected static $config = [
-      'securityKey' => 'auto',// The securityKey that will be used to create sub-directory
-      'ignoreSymfonyNotice' => false,// Ignore Symfony notice for Symfony project which do not makes use of PhpFastCache's Symfony Bundle
-      'defaultTtl' => 900,// Default time-to-live in second
-      'htaccess' => true,// Auto-generate .htaccess if tit is missing
-      'default_chmod' => 0777, // 0777 recommended
-      'path' => '',// if not set will be the value of sys_get_temp_dir()
-      'fallback' => false, //Fall back when old driver is not support
-      'limited_memory_each_object' => 4096, // maximum size (bytes) of object store in memory
-      'compress_data' => false, // compress stored data, if the backend supports it
+      'securityKey' => 'auto', // The securityKey that will be used to create the sub-directory
+      'ignoreSymfonyNotice' => false, // Ignore Symfony notices for Symfony projects that do not makes use of PhpFastCache's Symfony Bundle
+      'defaultTtl' => 900, // Default time-to-live in seconds
+      'htaccess' => true, // Auto-generate .htaccess if it is missing
+      'default_chmod' => 0777, // 0777 is recommended
+      'path' => '', // If not set will be the value of sys_get_temp_dir()
+      'fallback' => false, // Fall back when old driver is not supported
+      'limited_memory_each_object' => 4096, // Maximum size (bytes) of object store in memory
+      'compress_data' => false, // Compress stored data if the backend supports it
     ];
 
     /**

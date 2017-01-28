@@ -137,7 +137,7 @@ trait IOHelperTrait
      * @return string
      * @throws phpFastCacheIOException
      */
-    private function getFilePath($keyword, $skip = false)
+    protected function getFilePath($keyword, $skip = false)
     {
         $path = $this->getPath();
 

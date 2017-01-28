@@ -55,7 +55,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck()
     {
-        return is_writable($this->getPath()) || @mkdir($this->getPath(), $this->setChmodAuto(), true);
+        return is_writable($this->getPath()) || @mkdir($this->getPath(), $this->getDefaultChmod(), true);
     }
 
     /**

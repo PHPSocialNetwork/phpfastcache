@@ -98,9 +98,9 @@ trait IOHelperTrait
         }else{
             if (!isset($this->tmp[ $full_path_hash ]) || (!@file_exists($full_path) || !@is_writable($full_path))) {
                 if (!@file_exists($full_path)) {
-                    @mkdir($full_path, $this->setChmodAuto(), true);
+                    @mkdir($full_path, $this->getDefaultChmod(), true);
                 }else if (!@is_writable($full_path)) {
-                    if (!@chmod($full_path, $this->setChmodAuto()) && $this->config[ 'autoTmpFallback' ])
+                    if (!@chmod($full_path, $this->getDefaultChmod()) && $this->config[ 'autoTmpFallback' ])
                     {
                         /**
                          * Switch back to tmp dir
@@ -108,7 +108,7 @@ trait IOHelperTrait
                          */
                         $full_path = $full_path_tmp;
                         if (!@file_exists($full_path)) {
-                            @mkdir($full_path, $this->setChmodAuto(), true);
+                            @mkdir($full_path, $this->getDefaultChmod(), true);
                         }
                     }
                 }
@@ -154,8 +154,8 @@ trait IOHelperTrait
          */
         if (!$skip) {
             if (!file_exists($path)) {
-                if (@!mkdir($path, $this->setChmodAuto(), true)) {
-                    throw new phpFastCacheIOException('PLEASE CHMOD ' . $path . ' - ' . $this->setChmodAuto() . ' OR ANY WRITABLE PERMISSION!');
+                if (@!mkdir($path, $this->getDefaultChmod(), true)) {
+                    throw new phpFastCacheIOException('PLEASE CHMOD ' . $path . ' - ' . $this->getDefaultChmod() . ' OR ANY WRITABLE PERMISSION!');
                 }
             }
         }
@@ -178,7 +178,7 @@ trait IOHelperTrait
      * @param $this ->config
      * @return int
      */
-    public function setChmodAuto()
+    protected function getDefaultChmod()
     {
         if (!isset($this->config[ 'default_chmod' ]) || $this->config[ 'default_chmod' ] == '' || is_null($this->config[ 'default_chmod' ])) {
             return 0777;

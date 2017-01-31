@@ -82,7 +82,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         return [
           self::DRIVER_DATA_WRAPPER_INDEX => false,
           self::DRIVER_TAGS_WRAPPER_INDEX => [],
-          self::DRIVER_TIME_WRAPPER_INDEX => new \DateTime(),
+          self::DRIVER_EDATE_WRAPPER_INDEX => new \DateTime(),
         ];
     }
     /**

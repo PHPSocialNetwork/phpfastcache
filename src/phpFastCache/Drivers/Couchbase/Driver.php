@@ -78,7 +78,7 @@ class Driver extends DriverAbstract
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->getBucket()->upsert($item->getKey(), $this->encode($this->driverPreWrap($item)), ['expiry' => $item->getTtl()]);
+            return $this->getBucket()->upsert(md5($item->getKey()), $this->encode($this->driverPreWrap($item)), ['expiry' => $item->getTtl()]);
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -94,7 +94,7 @@ class Driver extends DriverAbstract
             /**
              * CouchbaseBucket::get() returns a CouchbaseMetaDoc object
              */
-            return $this->decode($this->getBucket()->get($item->getKey())->value);
+            return $this->decode($this->getBucket()->get(md5($item->getKey()))->value);
         } catch (\CouchbaseException $e) {
             return null;
         }
@@ -111,7 +111,7 @@ class Driver extends DriverAbstract
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->getBucket()->remove($item->getKey());
+            return $this->getBucket()->remove(md5($item->getKey()));
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }

@@ -54,6 +54,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     public function getConfig();
 
     /**
+     * @param string $optionName
+     * @return mixed
+     */
+    public function getConfigOption($optionName);
+
+    /**
      * @return string
      */
     public function getDriverName();

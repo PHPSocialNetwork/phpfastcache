@@ -15,6 +15,7 @@
 namespace phpFastCache\Core\Item;
 
 use phpFastCache\EventManager;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 
 /**
@@ -34,12 +35,24 @@ trait ItemExtendedTrait
      */
     protected $eventManager;
 
+
+    /**
+     * @var ExtendedCacheItemPoolInterface
+     */
+    protected $driver;
+
     /**
      * @return string
      */
     public function getEncodedKey()
     {
-        return md5($this->getKey());
+        $keyHashFunction = $this->driver->getConfigOption('defaultKeyHashFunction');
+
+        if($keyHashFunction){
+            return $keyHashFunction($this->getKey());
+        }else{
+            return md5($this->getKey());
+        }
     }
 
     /**

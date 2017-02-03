@@ -395,8 +395,8 @@ class CacheManager
                     }
                     break;
                 case 'defaultKeyHashFunction':
-                    if(!is_string($configValue) && !is_callable($configValue)){
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a valid function name/closure");
+                    if(!is_string($configValue) && !function_exists($configValue)){
+                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a valid function name string");
                     }
                     break;
                 case 'securityKey':

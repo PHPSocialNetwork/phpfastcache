@@ -64,6 +64,19 @@ trait DriverBaseTrait
         return $this->config;
     }
 
+
+    /**
+     * @return mixed
+     */
+    public function getConfigOption($optionName)
+    {
+        if(isset($this->config[$optionName])){
+            return $this->config[$optionName];
+        }else{
+            return null;
+        }
+    }
+
     /**
      * Encode data types such as object/array
      * for driver that does not support

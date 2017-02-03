@@ -19,7 +19,7 @@ namespace phpFastCache;
  */
 class Api
 {
-    protected static $version = '1.2.4';
+    protected static $version = '1.2.5';
 
     /**
      * This method will returns the current
@@ -44,6 +44,10 @@ class Api
     public static function getChangelog()
     {
         return <<<CHANGELOG
+- 1.2.5
+-- Implemented additional simple helper method to direct access to a config option:
+   ExtendedCacheItemPoolInterface::getConfigOption()
+
 - 1.2.4
 -- Implemented additional simple helper method to provide basic information about the driver:
    ExtendedCacheItemPoolInterface::getHelp()

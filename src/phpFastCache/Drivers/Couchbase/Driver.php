@@ -81,7 +81,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->getBucket()->upsert($item->getKey(), $this->encode($this->driverPreWrap($item)), ['expiry' => $item->getTtl()]);
+            return $this->getBucket()->upsert($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), ['expiry' => $item->getTtl()]);
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -97,7 +97,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             /**
              * CouchbaseBucket::get() returns a CouchbaseMetaDoc object
              */
-            return $this->decode($this->getBucket()->get($item->getKey())->value);
+            return $this->decode($this->getBucket()->get($item->getEncodedKey())->value);
         } catch (\CouchbaseException $e) {
             return null;
         }
@@ -114,7 +114,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->getBucket()->remove($item->getKey());
+            return $this->getBucket()->remove($item->getEncodedKey());
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }

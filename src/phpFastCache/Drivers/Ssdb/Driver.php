@@ -27,15 +27,11 @@ use Psr\Cache\CacheItemInterface;
 /**
  * Class Driver
  * @package phpFastCache\Drivers
+ * @property SimpleSSDB $instance Instance of driver service
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
     use DriverBaseTrait;
-    
-    /**
-     * @var SimpleSSDB
-     */
-    public $instance;
 
     /**
      * Driver constructor.

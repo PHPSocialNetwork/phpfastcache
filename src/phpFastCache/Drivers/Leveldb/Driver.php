@@ -26,17 +26,13 @@ use Psr\Cache\CacheItemInterface;
 /**
  * Class Driver
  * @package phpFastCache\Drivers
+ * @property LeveldbClient $instance Instance of driver service
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
     use DriverBaseTrait, IOHelperTrait;
 
     const LEVELDB_FILENAME = '.database';
-
-    /**
-     * @var LeveldbClient Instance of driver service
-     */
-    public $instance;
 
     /**
      * Driver constructor.

@@ -26,15 +26,11 @@ use Psr\Cache\CacheItemInterface;
 /**
  * Class Driver
  * @package phpFastCache\Drivers
+ * @property CouchbaseClient $instance Instance of driver service
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
     use DriverBaseTrait;
-
-    /**
-     * @var CouchbaseClient
-     */
-    public $instance;
 
     /**
      * @var \CouchbaseBucket[]

@@ -23,6 +23,13 @@ $InstanceCache = CacheManager::getInstance('mongodb', [
   'username' => '',
   'password' => '',
   'timeout' => '1',
+    /**
+     * These ones are
+     * totally optional
+     */
+  // 'collectionName' => 'Cache',
+  // 'databaseName' => 'phpFastCache'
+
 ]);
 
 

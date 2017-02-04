@@ -150,3 +150,13 @@ if($instance instanceof \phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface)
 }
 
 ```
+
+### Mongodb driver has changed
+:warning: As of the V6, the Mongodb driver has been updated
+
+#### :clock1: Then:
+In the V5 the driver was making use of of the [deprecated class Mongo](http://php.net/manual/fr/class.mongo.php).
+
+#### :alarm_clock: Now:
+In the V6 we made an important change: We now make use of [Mongodb Driver](http://php.net/manual/fr/set.mongodb.php)
+Only your code configuration will have to be updated, PhpFastCache manages all the abstract couch by itself.

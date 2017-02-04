@@ -103,6 +103,24 @@ trait CacheItemPoolTrait
                          * way, we do not de-register here
                          */
                         $this->driverDelete($item);
+                        
+                        /**
+                         * Reset the Item
+                         */
+                        $item->set(null)
+                          ->expiresAfter(abs((int) $this->getConfig()[ 'defaultTtl' ]))
+                          ->setHit(false)
+                          ->setTags([]);
+                        if($this->config['itemDetailedDate']){
+
+                            /**
+                             * If the itemDetailedDate has been
+                             * set after caching, we MUST inject
+                             * a new DateTime object on the fly
+                             */
+                            $item->setCreationDate(new \DateTime());
+                            $item->setModificationDate(new \DateTime());
+                        }
                     } else {
                         $item->setHit(true);
                     }

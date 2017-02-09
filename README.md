@@ -17,12 +17,12 @@ One Class uses for All Cache. You don't need to rewrite your code many times aga
 |--------------------|---------------------------|---------------------|
 |  `Apc(u)`          | `Cassandra`               | `Devnull`           |
 |  `Cookie`          | `CouchBase`               | `Devfalse`          |
-|  `Files`           | `Mongodb`                 | `Devtrue`           |
-|  `Leveldb`         | `Predis`                  | `Memstatic`         |
-|  `Memcache(d)`     | `Redis`                   |                     |
-|  `Sqlite`          | `Ssdb`                    |                     |
-|  `Wincache`        | `Zend Memory Cache`       |                     |
-|  `Xcache`          |                           |                     |
+|  `Files`           | `Couchdb`                 | `Devtrue`           |
+|  `Leveldb`         | `Mongodb`                 | `Memstatic`         |
+|  `Memcache(d)`     | `Predis`                  |                     |
+|  `Sqlite`          | `Redis`                   |                     |
+|  `Wincache`        | `Ssdb`                    |                     |
+|  `Xcache`          | `Zend Memory Cache`       |                     |
 |  `Zend Disk Cache` |                           |                     |
 
 \* Driver descriptions available in DOCS/DRIVERS.md

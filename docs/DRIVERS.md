@@ -9,6 +9,8 @@
   * A cookie driver to store non-sensitive scalar (only) data. Limited storage up to 4Ko.
 * Couchbase
   * A very high-performance NoSQL driver using a key-value pair system
+* Couchdb
+  * A very high-performance NoSQL driver using a key-value pair system
 * Devfalse
    * A development driver that return false for everything except driverCheck()
 * Devnull

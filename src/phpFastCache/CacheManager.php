@@ -24,8 +24,10 @@ use phpFastCache\Exceptions\phpFastCacheInvalidConfigurationException;
  *
  * @method static ExtendedCacheItemPoolInterface Apc() Apc($config = []) Return a driver "apc" instance
  * @method static ExtendedCacheItemPoolInterface Apcu() Apcu($config = []) Return a driver "apcu" instance
+ * @method static ExtendedCacheItemPoolInterface Cassandra() Cassandra($config = []) Return a driver "Cassandra" instance
  * @method static ExtendedCacheItemPoolInterface Cookie() Cookie($config = []) Return a driver "cookie" instance
  * @method static ExtendedCacheItemPoolInterface Couchbase() Couchbase($config = []) Return a driver "couchbase" instance
+ * @method static ExtendedCacheItemPoolInterface Couchdb() Couchdb($config = []) Return a driver "Couchdb" instance
  * @method static ExtendedCacheItemPoolInterface Files() Files($config = []) Return a driver "files" instance
  * @method static ExtendedCacheItemPoolInterface Leveldb() Leveldb($config = []) Return a driver "leveldb" instance
  * @method static ExtendedCacheItemPoolInterface Memcache() Memcache($config = []) Return a driver "memcache" instance
@@ -321,6 +323,7 @@ class CacheManager
           'Apcu',
           'Cassandra',
           'Couchbase',
+          'Couchdb',
           'Devnull',
           'Files',
           'Leveldb',

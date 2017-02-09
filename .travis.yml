@@ -15,6 +15,7 @@ language: php
 services:
   - memcached
   - redis-server
+  - couchdb
 before_script:
   - |
     if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then

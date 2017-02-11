@@ -23,6 +23,15 @@ if (!class_exists('phpFastCache\CacheManager')) {
 /**
  * Testing Psr autoload
  */
+if (!class_exists('phpFastCache\Drivers\Files\Driver')) {
+    $testHelper->printFailText('Autoload failed to find the "files" driver');
+}else{
+    $testHelper->printPassText('Autoload successfully found the "files" driver');
+}
+
+/**
+ * Testing Psr autoload
+ */
 if (!interface_exists('Psr\Cache\CacheItemInterface')) {
     $testHelper->printFailText('Autoload failed to find the Psr CacheItemInterface');
 }else{

@@ -16,17 +16,20 @@ define('PFC_PHP_EXT', 'php');
 define('PFC_BIN_DIR', __DIR__ . '/../bin/');
 
 /**
- * Register Autoload
+ * Register PhpFastCache Autoload
+ */
+set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . DIRECTORY_SEPARATOR);
+spl_autoload_register();
+
+/**
+ * Register PhpFastCache
+ * embedded-libraries Autoload
  */
 spl_autoload_register(function ($entity) {
-    $module = explode('\\', $entity, 2);
-    if (!in_array($module[ 0 ], ['phpFastCache', 'Psr'])) {
-        /**
-         * Not a part of phpFastCache file
-         * then we return here.
-         */
-        return;
-    } else if (strpos($entity, 'Psr\Cache') === 0) {
+    /**
+     * Attempting to load Psr\Cache
+     */
+    if (strpos($entity, 'Psr\Cache') === 0) {
         $path = PFC_BIN_DIR . 'legacy/Psr/Cache/src/' . substr(strrchr($entity, '\\'), 1) . '.' . PFC_PHP_EXT;
 
         if (is_readable($path)) {
@@ -35,7 +38,12 @@ spl_autoload_register(function ($entity) {
             trigger_error('Cannot locate the Psr/Cache files', E_USER_ERROR);
         }
         return;
-    } else if (strpos($entity, 'Psr\SimpleCache') === 0) {
+    }
+
+    /**
+     * Attempting to load Psr\SimpleCache
+     */
+    if (strpos($entity, 'Psr\SimpleCache') === 0) {
         $path = PFC_BIN_DIR . 'legacy/Psr/SimpleCache/src/' . substr(strrchr($entity, '\\'), 1) . '.' . PFC_PHP_EXT;
 
         if (is_readable($path)) {
@@ -44,13 +52,6 @@ spl_autoload_register(function ($entity) {
             trigger_error('Cannot locate the Psr/SimpleCache files', E_USER_ERROR);
         }
         return;
-    }
-
-    $entity = str_replace('\\', '/', $entity);
-    $path = __DIR__ . '/' . $entity . '.' . PFC_PHP_EXT;
-
-    if (is_readable($path)) {
-        require_once $path;
     }
 });
 

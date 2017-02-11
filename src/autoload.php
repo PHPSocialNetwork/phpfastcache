@@ -18,7 +18,7 @@ define('PFC_BIN_DIR', __DIR__ . '/../bin/');
 /**
  * Register PhpFastCache Autoload
  */
-set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . DIRECTORY_SEPARATOR);
+set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__);
 spl_autoload_register();
 
 /**

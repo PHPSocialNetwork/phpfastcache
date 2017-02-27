@@ -16,6 +16,7 @@ namespace phpFastCache\Core\Pool;
 
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\CacheManager;
+use phpFastCache\Entities\ItemBatch;
 use phpFastCache\EventManager;
 use phpFastCache\Exceptions\phpFastCacheCoreException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
@@ -70,47 +71,55 @@ trait CacheItemPoolTrait
                  * @var $item ExtendedCacheItemInterface
                  */
                 CacheManager::$ReadHits++;
+                $cacheSlamsSpendSeconds = 0;
                 $class = new \ReflectionClass((new \ReflectionObject($this))->getNamespaceName() . '\Item');
                 $item = $class->newInstanceArgs([$this, $key]);
                 $item->setEventManager($this->eventManager);
-                $driverArray = $this->driverRead($item);
 
-                if ($driverArray) {
-                    if(!is_array($driverArray)){
-                        throw new phpFastCacheCoreException(sprintf('The driverRead method returned an unexpected variable type: %s', gettype($driverArray)));
-                    }
-                    $item->set($this->driverUnwrapData($driverArray));
-                    $item->expiresAt($this->driverUnwrapEdate($driverArray));
+                getItemDriverRead:
+                {
+                    $driverArray = $this->driverRead($item);
 
-                    if($this->config['itemDetailedDate']){
+                    if ($driverArray) {
+                        if(!is_array($driverArray)){
+                            throw new phpFastCacheCoreException(sprintf('The driverRead method returned an unexpected variable type: %s', gettype($driverArray)));
+                        }
+                        $driverData = $this->driverUnwrapData($driverArray);
 
-                        /**
-                         * If the itemDetailedDate has been
-                         * set after caching, we MUST inject
-                         * a new DateTime object on the fly
-                         */
-                        $item->setCreationDate($this->driverUnwrapCdate($driverArray) ?: new \DateTime());
-                        $item->setModificationDate($this->driverUnwrapMdate($driverArray) ?: new \DateTime());
-                    }
+                        if($this->getConfig()[ 'preventCacheSlams' ]){
+                            while($driverData instanceof ItemBatch) {
+                                if($driverData->getItemDate()->getTimestamp() + $this->getConfig()[ 'cacheSlamsTimeout' ] < time()){
+                                    /**
+                                     * The timeout has been reached
+                                     * Consider that the batch has
+                                     * failed and serve an empty item
+                                     * to avoid to get stuck with a
+                                     * batch item stored in driver
+                                     */
+                                    goto getItemDriverExpired;
+                                }
+                                /**
+                                 * @eventName CacheGetItem
+                                 * @param $this ExtendedCacheItemPoolInterface
+                                 * @param $driverData ItemBatch
+                                 * @param $cacheSlamsSpendSeconds int
+                                 */
+                                $this->eventManager->dispatch('CacheGetItemInSlamBatch', $this, $driverData, $cacheSlamsSpendSeconds);
 
-                    $item->setTags($this->driverUnwrapTags($driverArray));
-                    if ($item->isExpired()) {
-                        /**
-                         * Using driverDelete() instead of delete()
-                         * to avoid infinite loop caused by
-                         * getItem() call in delete() method
-                         * As we MUST return an item in any
-                         * way, we do not de-register here
-                         */
-                        $this->driverDelete($item);
-                        
-                        /**
-                         * Reset the Item
-                         */
-                        $item->set(null)
-                          ->expiresAfter(abs((int) $this->getConfig()[ 'defaultTtl' ]))
-                          ->setHit(false)
-                          ->setTags([]);
+                                /**
+                                 * Wait for a second before
+                                 * attempting to get exit
+                                 * the current batch process
+                                 */
+                                sleep(1);
+                                $cacheSlamsSpendSeconds++;
+                                goto getItemDriverRead;
+                            }
+                        }
+
+                        $item->set($driverData);
+                        $item->expiresAt($this->driverUnwrapEdate($driverArray));
+
                         if($this->config['itemDetailedDate']){
 
                             /**
@@ -118,16 +127,47 @@ trait CacheItemPoolTrait
                              * set after caching, we MUST inject
                              * a new DateTime object on the fly
                              */
-                            $item->setCreationDate(new \DateTime());
-                            $item->setModificationDate(new \DateTime());
+                            $item->setCreationDate($this->driverUnwrapCdate($driverArray) ?: new \DateTime());
+                            $item->setModificationDate($this->driverUnwrapMdate($driverArray) ?: new \DateTime());
                         }
-                    } else {
-                        $item->setHit(true);
-                    }
-                }else{
-                    $item->expiresAfter(abs((int) $this->getConfig()[ 'defaultTtl' ]));
-                }
 
+                        $item->setTags($this->driverUnwrapTags($driverArray));
+
+                        getItemDriverExpired:
+                        if ($item->isExpired()) {
+                            /**
+                             * Using driverDelete() instead of delete()
+                             * to avoid infinite loop caused by
+                             * getItem() call in delete() method
+                             * As we MUST return an item in any
+                             * way, we do not de-register here
+                             */
+                            $this->driverDelete($item);
+
+                            /**
+                             * Reset the Item
+                             */
+                            $item->set(null)
+                              ->expiresAfter(abs((int) $this->getConfig()[ 'defaultTtl' ]))
+                              ->setHit(false)
+                              ->setTags([]);
+                            if($this->config['itemDetailedDate']){
+
+                                /**
+                                 * If the itemDetailedDate has been
+                                 * set after caching, we MUST inject
+                                 * a new DateTime object on the fly
+                                 */
+                                $item->setCreationDate(new \DateTime());
+                                $item->setModificationDate(new \DateTime());
+                            }
+                        } else {
+                            $item->setHit(true);
+                        }
+                    }else{
+                        $item->expiresAfter(abs((int) $this->getConfig()[ 'defaultTtl' ]));
+                    }
+                }
             }
         } else {
             throw new phpFastCacheInvalidArgumentException(sprintf('$key must be a string, got type "%s" instead.', gettype($key)));
@@ -276,6 +316,28 @@ trait CacheItemPoolTrait
          * @param $this ExtendedCacheItemInterface
          */
         $this->eventManager->dispatch('CacheSaveItem', $this, $item);
+
+
+        if($this->getConfig()[ 'preventCacheSlams' ]){
+            /**
+             * @var $itemBatch ExtendedCacheItemInterface
+             */
+            $class = new \ReflectionClass((new \ReflectionObject($this))->getNamespaceName() . '\Item');
+            $itemBatch = $class->newInstanceArgs([$this, $item->getKey()]);
+            $itemBatch->setEventManager($this->eventManager)
+                        ->set(new ItemBatch($item->getKey(), new \DateTime()))
+                        ->expiresAfter($this->getConfig()[ 'cacheSlamsTimeout' ]);
+
+            /**
+             * To avoid SPL mismatches
+             * we have to re-attach the
+             * original item to the pool
+             */
+            $this->driverWrite($itemBatch);
+            $this->detachItem($itemBatch);
+            $this->attachItem($item);
+        }
+
 
         if ($this->driverWrite($item) && $this->driverWriteTags($item)) {
             $item->setHit(true);

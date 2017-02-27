@@ -138,6 +138,20 @@ class CacheManager
          * (Memcache(d) drivers only)
          */
       'compress_data' => false,
+
+        /**
+         * Prevent cache slams when
+         * making use of heavy cache
+         * items
+         */
+      'preventCacheSlams' => false,
+
+        /**
+         * Cache slams timeout
+         * in seconds
+         */
+      'cacheSlamsTimeout' => 15,
+
     ];
 
     /**

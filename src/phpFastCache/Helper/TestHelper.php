@@ -119,6 +119,28 @@ class TestHelper
     }
 
     /**
+     * @param string $cmd
+     */
+    public function runAsyncProcess($cmd)
+    {
+        if (substr(php_uname(), 0, 7) === 'Windows'){
+            pclose(popen('start /B '. $cmd, 'r'));
+        }
+        else {
+            exec($cmd . ' > /dev/null &');
+        }
+    }
+
+    /**
+     * @param string $file
+     * @param string $ext
+     */
+    public function runSubProcess($file, $ext = '.php')
+    {
+        $this->runAsyncProcess('php ' . getcwd() . DIRECTORY_SEPARATOR . 'subprocess' . DIRECTORY_SEPARATOR . $file . '.subprocess' . $ext);
+    }
+
+    /**
      * @return void
      */
     public function terminateTest()

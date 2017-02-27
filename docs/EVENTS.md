@@ -20,7 +20,9 @@
   * Allow you to get the "expire after" time of an item. If `$time` is a DateInterval you also set it.
 * onCacheWriteFileOnDisk
   * Allow you to get notified when a file is written on disk.
+* onCacheGetItemInSlamBatch
+  * Allow you to get notified each time a batch loop is looping
 
 This is an exhaustive list and it will be updated as soon as new events will be added to the Core.
 More details on the 
-[WIKI](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Introducing-to-events).
+[WIKI](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Introducing-to-events).

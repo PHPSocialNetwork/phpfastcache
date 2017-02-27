@@ -27,6 +27,7 @@ use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
  * @method Void onCacheCommitItem() onCacheCommitItem(Callable $callable)
  * @method Void onCacheClearItem() onCacheClearItem(Callable $callable)
  * @method Void onCacheWriteFileOnDisk() onCacheWriteFileOnDisk(Callable $callable)
+ * @method Void onCacheGetItemInSlamBatch() onCacheGetItemInSlamBatch(Callable $callable)
  *
  * == Item Events ==
  * @method Void onCacheItemSet() onCacheItemSet(Callable $callable)

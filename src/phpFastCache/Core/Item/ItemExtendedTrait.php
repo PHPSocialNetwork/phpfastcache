@@ -368,10 +368,13 @@ trait ItemExtendedTrait
      * Set the EventManager instance
      *
      * @param EventManager $em
+     * @return $this
      */
     public function setEventManager(EventManager $em)
     {
         $this->eventManager = $em;
+
+        return $this;
     }
 
 

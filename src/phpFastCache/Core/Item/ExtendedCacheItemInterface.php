@@ -197,6 +197,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
      * Set the EventManager instance
      *
      * @param EventManager $em
+     * @return static
      */
     public function setEventManager(EventManager $em);
 }

@@ -64,7 +64,7 @@ trait ExtendedCacheItemPoolTrait
                 return [];
             }
         } else {
-            throw new InvalidArgumentException('$tagName must be a string');
+            throw new phpFastCacheInvalidArgumentException('$tagName must be a string');
         }
     }
 
@@ -78,7 +78,7 @@ trait ExtendedCacheItemPoolTrait
             if(is_string($tagName)){
                 $items = array_merge($items, $this->getItemsByTag($tagName));
             }else{
-                throw new InvalidArgumentException('$tagName must be a a string');
+                throw new phpFastCacheInvalidArgumentException('$tagName must be a a string');
             }
         }
 
@@ -131,7 +131,7 @@ trait ExtendedCacheItemPoolTrait
 
             return $return;
         } else {
-            throw new InvalidArgumentException('$tagName must be a string');
+            throw new phpFastCacheInvalidArgumentException('$tagName must be a string');
         }
     }
 
@@ -182,7 +182,7 @@ trait ExtendedCacheItemPoolTrait
 
             return $this->commit();
         } else {
-            throw new InvalidArgumentException('$tagName must be a string and $step an integer');
+            throw new phpFastCacheInvalidArgumentException('$tagName must be a string and $step an integer');
         }
     }
 
@@ -216,7 +216,7 @@ trait ExtendedCacheItemPoolTrait
             }
             return $this->commit();
         } else {
-            throw new InvalidArgumentException('$step must be an integer');
+            throw new phpFastCacheInvalidArgumentException('$step must be an integer');
         }
     }
 
@@ -233,7 +233,7 @@ trait ExtendedCacheItemPoolTrait
 
             return $this->commit();
         } else {
-            throw new InvalidArgumentException('$tagName must be a string and $step an integer');
+            throw new phpFastCacheInvalidArgumentException('$tagName must be a string and $step an integer');
         }
     }
 
@@ -267,7 +267,7 @@ trait ExtendedCacheItemPoolTrait
             }
             return $this->commit();
         } else {
-            throw new InvalidArgumentException('$step must be an integer');
+            throw new phpFastCacheInvalidArgumentException('$step must be an integer');
         }
     }
 
@@ -284,7 +284,7 @@ trait ExtendedCacheItemPoolTrait
 
             return $this->commit();
         } else {
-            throw new InvalidArgumentException('$tagName must be a string');
+            throw new phpFastCacheInvalidArgumentException('$tagName must be a string');
         }
     }
 
@@ -318,7 +318,7 @@ trait ExtendedCacheItemPoolTrait
             }
             return $this->commit();
         } else {
-            throw new InvalidArgumentException('$data must be scalar');
+            throw new phpFastCacheInvalidArgumentException('$data must be scalar');
         }
     }
 
@@ -335,7 +335,7 @@ trait ExtendedCacheItemPoolTrait
 
             return $this->commit();
         } else {
-            throw new InvalidArgumentException('$tagName must be a string');
+            throw new phpFastCacheInvalidArgumentException('$tagName must be a string');
         }
     }
 
@@ -369,7 +369,7 @@ trait ExtendedCacheItemPoolTrait
             }
             return $this->commit();
         } else {
-            throw new InvalidArgumentException('$data must be scalar');
+            throw new phpFastCacheInvalidArgumentException('$data must be scalar');
         }
     }
 

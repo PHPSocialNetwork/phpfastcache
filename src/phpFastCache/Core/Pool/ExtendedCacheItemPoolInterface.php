@@ -21,6 +21,7 @@ use phpFastCache\EventManager;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use phpFastCache\Exceptions\phpFastCacheLogicException;
+use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 
 /**
  * Interface ExtendedCacheItemPoolInterface
@@ -76,8 +77,8 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param string $key
      *   The key for which to return the corresponding Cache Item.
      *
-     * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
+     *   If the $key string is not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return ExtendedCacheItemInterface
@@ -93,7 +94,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * An indexed array of keys of items to retrieve.
      *
      * @throws InvalidArgumentException
-     *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return ExtendedCacheItemInterface[]
@@ -113,7 +114,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param int $depth json_encode() depth
      *
      * @throws InvalidArgumentException
-     *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return string
@@ -147,7 +148,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * An indexed array of keys of items to retrieve.
      *
      * @throws InvalidArgumentException
-     *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return ExtendedCacheItemInterface[]
@@ -165,7 +166,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * An indexed array of keys of items to retrieve.
      *
      * @throws InvalidArgumentException
-     *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return ExtendedCacheItemInterface[]
@@ -183,7 +184,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * An indexed array of keys of items to retrieve.
      *
      * @throws InvalidArgumentException
-     *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return ExtendedCacheItemInterface[]
@@ -203,7 +204,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param int $depth json_encode() depth
      *
      * @throws InvalidArgumentException
-     *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return string
@@ -217,7 +218,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *   The tag for which to delete
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If the $key string is not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return bool
@@ -232,7 +233,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *   The tag for which to delete
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If the $key string is not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return bool
@@ -247,7 +248,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * An indexed array of keys of items to retrieve.
      *
      * @throws InvalidArgumentException
-     *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return bool
@@ -264,7 +265,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param int $step
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If the $key string is not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return bool
@@ -281,7 +282,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param int $step
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If the $key string is not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return bool
@@ -298,7 +299,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param int $step
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If the $key string is not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return bool
@@ -315,7 +316,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param int $step
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If the $key string is not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return bool
@@ -332,7 +333,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param int $step
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If the $key string is not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return bool
@@ -349,7 +350,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param int $step
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If the $key string is not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return bool
@@ -366,7 +367,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param array|string $data
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If the $key string is not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return bool
@@ -383,7 +384,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param array|string $data
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If the $key string is not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return bool
@@ -400,7 +401,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param array|string $data
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If the $key string is not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return bool
@@ -417,7 +418,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param array|string $data
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If the $key string is not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return bool
@@ -434,7 +435,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param array|string $data
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If the $key string is not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return bool
@@ -451,7 +452,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param array|string $data
      *
      * @throws InvalidArgumentException
-     *   If the $key string is not a legal value a \Psr\Cache\InvalidArgumentException
+     *   If the $key string is not a legal value a phpFastCacheInvalidArgumentException
      *   MUST be thrown.
      *
      * @return bool

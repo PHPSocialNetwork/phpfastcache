@@ -20,6 +20,7 @@ use phpFastCache\Entities\driverStatistic;
 use phpFastCache\EventManager;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use phpFastCache\Exceptions\phpFastCacheLogicException;
 
 /**
  * Interface ExtendedCacheItemPoolInterface
@@ -472,7 +473,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return void
-     * @throws \LogicException
+     * @throws phpFastCacheLogicException
      */
     public function attachItem(CacheItemInterface $item);
 
@@ -483,7 +484,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool|null
-     * @throws \LogicException
+     * @throws phpFastCacheLogicException
      */
     public function isAttached(CacheItemInterface $item);
 

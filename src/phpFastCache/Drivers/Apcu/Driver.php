@@ -111,7 +111,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverClear()
     {
-        return @apcu_clear_cache() && @apcu_clear_cache('user');
+        return @apcu_clear_cache() && @apcu_clear_cache();
     }
 
     /**
@@ -133,7 +133,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function getStats()
     {
-        $stats = (array) apcu_cache_info('user');
+        $stats = (array) apcu_cache_info();
         $date = (new \DateTime())->setTimestamp($stats[ 'start_time' ]);
 
         return (new driverStatistic())

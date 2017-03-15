@@ -92,7 +92,7 @@ try{
 ```
 
 #### :alarm_clock: Now:
-This has been changed you now MUST catch `\phpFastCache\Exceptions\phpFastCacheInvalidArgumentException` interface
+This has been changed you now MUST catch `\phpFastCache\Exceptions\phpFastCacheInvalidArgumentException` class
 
 ```php
 namespace My\Custom\Project;
@@ -107,6 +107,40 @@ try{
 
 ```
 :warning: Please note that `\phpFastCache\Exceptions\phpFastCacheInvalidArgumentException` implements `\Psr\Cache\InvalidArgumentException` as per PSR-6.
+
+### Catching \LogicException
+
+#### :clock1: Then:
+Code used to catch a `\LogicException`. 
+
+```php
+namespace My\Custom\Project;
+
+$instance = CacheManager::getInstance('Files');
+
+try{
+    $item = $instance->getItem(array());
+}catch(\LogicException $e){
+    //Catched exception code
+}
+
+```
+
+#### :alarm_clock: Now:
+This has been changed you now MUST catch `\phpFastCache\Exceptions\phpFastCacheLogicException` interface
+
+```php
+namespace My\Custom\Project;
+
+$instance = CacheManager::getInstance('Files');
+
+try{
+    $item = $instance->getItem(array());
+}catch(\phpFastCache\Exceptions\phpFastCacheLogicException $e){
+    //Catched exception code
+}
+
+```
 
 ### Allowed characters in key identifier
 :warning: As of the V6, the following characters can not longer being a part of the key identifier: `{}()/\@:`

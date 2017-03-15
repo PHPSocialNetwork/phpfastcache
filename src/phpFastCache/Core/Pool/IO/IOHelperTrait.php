@@ -175,7 +175,6 @@ trait IOHelperTrait
     }
 
     /**
-     * @param $this ->config
      * @return int
      */
     protected function getDefaultChmod()

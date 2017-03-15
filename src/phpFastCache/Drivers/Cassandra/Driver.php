@@ -20,6 +20,7 @@ use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Exceptions\phpFastCacheLogicException;
 use Psr\Cache\CacheItemInterface;
 use Cassandra;
 use Cassandra\Session as CassandraSession;
@@ -57,13 +58,14 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck()
     {
-        return extension_loaded('Cassandra') && class_exists('Cassandra');
+        return extension_loaded('Cassandra') && class_exists(\Cassandra::class);
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
      * @throws phpFastCacheInvalidArgumentException
+     * @throws \Cassandra\Exception\InvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item)
     {
@@ -180,16 +182,12 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected function driverClear()
     {
         try {
-            $result = $this->instance->execute(new Cassandra\SimpleStatement(sprintf(
+            $this->instance->execute(new Cassandra\SimpleStatement(sprintf(
               'TRUNCATE %s.%s;',
               self::CASSANDRA_KEY_SPACE, self::CASSANDRA_TABLE
             )));
-            /**
-             * There's no real way atm
-             * to know if the item has
-             * been really deleted
-             */
-            return $result instanceof Cassandra\Rows;
+
+            return true;
         } catch (Cassandra\Exception $e) {
             return false;
         }
@@ -197,11 +195,13 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @return bool
+     * @throws phpFastCacheLogicException
+     * @throws \Cassandra\Exception
      */
     protected function driverConnect()
     {
         if ($this->instance instanceof CassandraSession) {
-            throw new \LogicException('Already connected to Couchbase server');
+            throw new phpFastCacheLogicException('Already connected to Couchbase server');
         } else {
             $host = isset($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1';
             $port = isset($this->config[ 'port' ]) ? $this->config[ 'port' ] : 9042;
@@ -282,6 +282,7 @@ HELP;
 
     /**
      * @return driverStatistic
+     * @throws \Cassandra\Exception
      */
     public function getStats()
     {

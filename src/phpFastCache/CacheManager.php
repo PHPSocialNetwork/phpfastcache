@@ -22,25 +22,27 @@ use phpFastCache\Exceptions\phpFastCacheInvalidConfigurationException;
  * Class CacheManager
  * @package phpFastCache
  *
- * @method static ExtendedCacheItemPoolInterface Apc() Apc($config = []) Return a driver "apc" instance
- * @method static ExtendedCacheItemPoolInterface Apcu() Apcu($config = []) Return a driver "apcu" instance
+ * @method static ExtendedCacheItemPoolInterface Apc() Apc($config = []) Return a driver "Apc" instance
+ * @method static ExtendedCacheItemPoolInterface Apcu() Apcu($config = []) Return a driver "Apcu" instance
  * @method static ExtendedCacheItemPoolInterface Cassandra() Cassandra($config = []) Return a driver "Cassandra" instance
- * @method static ExtendedCacheItemPoolInterface Cookie() Cookie($config = []) Return a driver "cookie" instance
- * @method static ExtendedCacheItemPoolInterface Couchbase() Couchbase($config = []) Return a driver "couchbase" instance
+ * @method static ExtendedCacheItemPoolInterface Cookie() Cookie($config = []) Return a driver "Cookie" instance
+ * @method static ExtendedCacheItemPoolInterface Couchbase() Couchbase($config = []) Return a driver "Couchbase" instance
  * @method static ExtendedCacheItemPoolInterface Couchdb() Couchdb($config = []) Return a driver "Couchdb" instance
+ * @method static ExtendedCacheItemPoolInterface Devnull() Devnull($config = []) Return a driver "Devnull" instance
  * @method static ExtendedCacheItemPoolInterface Files() Files($config = []) Return a driver "files" instance
- * @method static ExtendedCacheItemPoolInterface Leveldb() Leveldb($config = []) Return a driver "leveldb" instance
- * @method static ExtendedCacheItemPoolInterface Memcache() Memcache($config = []) Return a driver "memcache" instance
- * @method static ExtendedCacheItemPoolInterface Memcached() Memcached($config = []) Return a driver "memcached" instance
- * @method static ExtendedCacheItemPoolInterface Mongodb() Mongodb($config = []) Return a driver "mongodb" instance
- * @method static ExtendedCacheItemPoolInterface Predis() Predis($config = []) Return a driver "predis" instance
- * @method static ExtendedCacheItemPoolInterface Redis() Redis($config = []) Return a driver "redis" instance
- * @method static ExtendedCacheItemPoolInterface Sqlite() Sqlite($config = []) Return a driver "sqlite" instance
- * @method static ExtendedCacheItemPoolInterface Ssdb() Ssdb($config = []) Return a driver "ssdb" instance
- * @method static ExtendedCacheItemPoolInterface Wincache() Wincache($config = []) Return a driver "wincache" instance
- * @method static ExtendedCacheItemPoolInterface Xcache() Xcache($config = []) Return a driver "xcache" instance
- * @method static ExtendedCacheItemPoolInterface Zenddisk() Zenddisk($config = []) Return a driver "zend disk cache" instance
- * @method static ExtendedCacheItemPoolInterface Zendshm() Zendshm($config = []) Return a driver "zend memory cache" instance
+ * @method static ExtendedCacheItemPoolInterface Leveldb() Leveldb($config = []) Return a driver "Leveldb" instance
+ * @method static ExtendedCacheItemPoolInterface Memcache() Memcache($config = []) Return a driver "Memcache" instance
+ * @method static ExtendedCacheItemPoolInterface Memcached() Memcached($config = []) Return a driver "Memcached" instance
+ * @method static ExtendedCacheItemPoolInterface Memstatic() Memstatic($config = []) Return a driver "Memstatic" instance
+ * @method static ExtendedCacheItemPoolInterface Mongodb() Mongodb($config = []) Return a driver "Mongodb" instance
+ * @method static ExtendedCacheItemPoolInterface Predis() Predis($config = []) Return a driver "Predis" instance
+ * @method static ExtendedCacheItemPoolInterface Redis() Redis($config = []) Return a driver "Pedis" instance
+ * @method static ExtendedCacheItemPoolInterface Sqlite() Sqlite($config = []) Return a driver "Sqlite" instance
+ * @method static ExtendedCacheItemPoolInterface Ssdb() Ssdb($config = []) Return a driver "Ssdb" instance
+ * @method static ExtendedCacheItemPoolInterface Wincache() Wincache($config = []) Return a driver "Wincache" instance
+ * @method static ExtendedCacheItemPoolInterface Xcache() Xcache($config = []) Return a driver "Xcache" instance
+ * @method static ExtendedCacheItemPoolInterface Zenddisk() Zenddisk($config = []) Return a driver "Zend disk cache" instance
+ * @method static ExtendedCacheItemPoolInterface Zendshm() Zendshm($config = []) Return a driver "Zend memory cache" instance
  *
  */
 class CacheManager
@@ -71,7 +73,7 @@ class CacheManager
       'autoTmpFallback' => false,
 
         /**
-         * Provide a secure file manipulation mechanism
+         * Provide a secure file manipulation mechanism,
          * on intensive usage the performance can be affected.
          */
       'secureFileManipulation' => false,

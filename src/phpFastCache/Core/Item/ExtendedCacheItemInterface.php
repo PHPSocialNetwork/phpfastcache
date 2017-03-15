@@ -18,6 +18,7 @@ use phpFastCache\EventManager;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use Psr\Cache\CacheItemInterface;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Exceptions\phpFastCacheLogicException;
 
 /**
  * Interface ExtendedCacheItemInterface
@@ -60,27 +61,27 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
 
     /**
      * @return \DateTimeInterface
-     * @throws \LogicException
+     * @throws phpFastCacheLogicException
      */
     public function getCreationDate();
     
     /**
      * @return \DateTimeInterface
-     * @throws \LogicException
+     * @throws phpFastCacheLogicException
      */
     public function getModificationDate();
 
     /**
      * @param $date \DateTimeInterface
      * @return $this
-     * @throws \LogicException
+     * @throws phpFastCacheLogicException
      */
     public function setCreationDate(\DateTimeInterface $date);
 
     /**
      * @param $date \DateTimeInterface
      * @return $this
-     * @throws \LogicException
+     * @throws phpFastCacheLogicException
      */
     public function setModificationDate(\DateTimeInterface $date);
 

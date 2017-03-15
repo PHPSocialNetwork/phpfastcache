@@ -22,6 +22,7 @@ use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Exceptions\phpFastCacheLogicException;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -144,11 +145,12 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @return bool
+     * @throws phpFastCacheLogicException
      */
     protected function driverConnect()
     {
         if ($this->instance instanceof CouchdbClient) {
-            throw new \LogicException('Already connected to Couchdb server');
+            throw new phpFastCacheLogicException('Already connected to Couchdb server');
         } else {
             $host = isset($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1';
             $ssl = isset($this->config[ 'ssl' ]) ? $this->config[ 'ssl' ] : false;

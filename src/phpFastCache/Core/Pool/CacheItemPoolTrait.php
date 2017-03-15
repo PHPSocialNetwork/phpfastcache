@@ -20,6 +20,7 @@ use phpFastCache\Entities\ItemBatch;
 use phpFastCache\EventManager;
 use phpFastCache\Exceptions\phpFastCacheCoreException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Exceptions\phpFastCacheLogicException;
 use Psr\Cache\CacheItemInterface;
 use phpFastCache\Util\ClassNamespaceResolverTrait;
 
@@ -56,7 +57,7 @@ trait CacheItemPoolTrait
      * @param string $key
      * @return \phpFastCache\Core\Item\ExtendedCacheItemInterface
      * @throws phpFastCacheInvalidArgumentException
-     * @throws \LogicException
+     * @throws phpFastCacheLogicException
      * @throws phpFastCacheCoreException
      */
     public function getItem($key)

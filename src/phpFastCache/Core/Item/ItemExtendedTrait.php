@@ -17,10 +17,12 @@ namespace phpFastCache\Core\Item;
 use phpFastCache\EventManager;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Exceptions\phpFastCacheLogicException;
 
 /**
  * Class ItemExtendedTrait
  * @package phpFastCache\Core\Item
+ * @property \Datetime $expirationDate Expiration date of the item
  */
 trait ItemExtendedTrait
 {
@@ -90,21 +92,21 @@ trait ItemExtendedTrait
 
     /**
      * @return \DateTimeInterface
-     * @throws \LogicException
+     * @throws phpFastCacheLogicException
      */
     public function getCreationDate()
     {
         if($this->driver->getConfig()['itemDetailedDate']){
             return $this->creationDate;
         }else{
-            throw new \LogicException('Cannot access to the creation date when the "itemDetailedDate" configuration is disabled.');
+            throw new phpFastCacheLogicException('Cannot access to the creation date when the "itemDetailedDate" configuration is disabled.');
         }
     }
 
     /**
      * @param \DateTimeInterface $date
      * @return $this
-     * @throws \LogicException
+     * @throws phpFastCacheLogicException
      */
     public function setCreationDate(\DateTimeInterface $date)
     {
@@ -112,27 +114,27 @@ trait ItemExtendedTrait
             $this->creationDate = $date;
             return $this;
         }else{
-            throw new \LogicException('Cannot access to the creation date when the "itemDetailedDate" configuration is disabled.');
+            throw new phpFastCacheLogicException('Cannot access to the creation date when the "itemDetailedDate" configuration is disabled.');
         }
     }
 
     /**
      * @return \DateTimeInterface
-     * @throws \LogicException
+     * @throws phpFastCacheLogicException
      */
     public function getModificationDate()
     {
         if($this->driver->getConfig()['itemDetailedDate']){
             return $this->modificationDate;
         }else{
-            throw new \LogicException('Cannot access to the modification date when the "itemDetailedDate" configuration is disabled.');
+            throw new phpFastCacheLogicException('Cannot access to the modification date when the "itemDetailedDate" configuration is disabled.');
         }
     }
 
     /**
      * @param \DateTimeInterface $date
      * @return $this
-     * @throws \LogicException
+     * @throws phpFastCacheLogicException
      */
     public function setModificationDate(\DateTimeInterface $date)
     {
@@ -140,7 +142,7 @@ trait ItemExtendedTrait
             $this->modificationDate = $date;
             return $this;
         }else{
-            throw new \LogicException('Cannot access to the modification date when the "itemDetailedDate" configuration is disabled.');
+            throw new phpFastCacheLogicException('Cannot access to the modification date when the "itemDetailedDate" configuration is disabled.');
         }
     }
 
@@ -207,7 +209,7 @@ trait ItemExtendedTrait
     public function append($data)
     {
         if (is_array($this->data)) {
-            array_push($this->data, $data);
+            $this->data[] = $data;
         } else if (is_string($data)) {
             $this->data .= (string) $data;
         } else {
@@ -292,6 +294,7 @@ trait ItemExtendedTrait
     }
 
     /**
+     * @param string $separator
      * @return string
      */
     public function getTagsAsString($separator = ', ')

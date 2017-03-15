@@ -11,11 +11,14 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
-
 namespace phpFastCache\Core\Item;
 
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 
+/**
+ * Trait ItemBaseTrait
+ * @package phpFastCache\Core\Item
+ */
 trait ItemBaseTrait
 {
     use ItemExtendedTrait;

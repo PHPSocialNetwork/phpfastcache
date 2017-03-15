@@ -21,6 +21,7 @@ use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Exceptions\phpFastCacheLogicException;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -126,11 +127,12 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @return bool
+     * @throws phpFastCacheLogicException
      */
     protected function driverConnect()
     {
         if ($this->instance instanceof CouchbaseClient) {
-            throw new \LogicException('Already connected to Couchbase server');
+            throw new phpFastCacheLogicException('Already connected to Couchbase server');
         } else {
 
 
@@ -166,14 +168,14 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param $bucketName
      * @param \CouchbaseBucket $CouchbaseBucket
-     * @throws \LogicException
+     * @throws phpFastCacheLogicException
      */
     protected function setBucket($bucketName, \CouchbaseBucket $CouchbaseBucket)
     {
         if (!array_key_exists($bucketName, $this->bucketInstances)) {
             $this->bucketInstances[ $bucketName ] = $CouchbaseBucket;
         } else {
-            throw new \LogicException('A bucket instance with this name already exists.');
+            throw new phpFastCacheLogicException('A bucket instance with this name already exists.');
         }
     }
 

@@ -21,6 +21,7 @@ use phpFastCache\Core\Pool\IO\IOHelperTrait;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Exceptions\phpFastCacheLogicException;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -132,11 +133,12 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @return bool
+     * @throws phpFastCacheLogicException
      */
     protected function driverConnect()
     {
         if ($this->instance instanceof LeveldbClient) {
-            throw new \LogicException('Already connected to Leveldb database');
+            throw new phpFastCacheLogicException('Already connected to Leveldb database');
         } else {
             $this->instance = $this->instance ?: new LeveldbClient($this->getLeveldbFile());
         }

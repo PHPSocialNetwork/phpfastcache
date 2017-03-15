@@ -18,6 +18,7 @@ use InvalidArgumentException;
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\EventManager;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Exceptions\phpFastCacheLogicException;
 use Psr\Cache\CacheItemInterface;
 
 
@@ -399,7 +400,7 @@ trait ExtendedCacheItemPoolTrait
     public function attachItem(CacheItemInterface $item)
     {
         if (isset($this->itemInstances[ $item->getKey() ]) && spl_object_hash($item) !== spl_object_hash($this->itemInstances[ $item->getKey() ])) {
-            throw new \LogicException('The item already exists and cannot be overwritten because the Spl object hash mismatches ! You probably tried to re-attach a detached item which has been already retrieved from cache.');
+            throw new phpFastCacheLogicException('The item already exists and cannot be overwritten because the Spl object hash mismatches ! You probably tried to re-attach a detached item which has been already retrieved from cache.');
         } else {
             $this->itemInstances[ $item->getKey() ] = $item;
         }
@@ -433,7 +434,6 @@ trait ExtendedCacheItemPoolTrait
      *
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool|null
-     * @throws \LogicException
      */
     public function isAttached(CacheItemInterface $item)
     {

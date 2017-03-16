@@ -119,7 +119,7 @@ trait IOHelperTrait
                  * one, we must throw an exception
                  */
                 if (!@file_exists($full_path) || !@is_writable($full_path)) {
-                    throw new phpFastCacheIOException('PLEASE CREATE OR CHMOD ' . $full_path . ' - 0777 OR ANY WRITABLE PERMISSION!');
+                    throw new phpFastCacheIOException('Path "' . $full_path . '" is not writable, please set a chmod 0777 or any writable permission and make sure to make use of an absolute path !');
                 }
 
                 $this->tmp[ $full_path_hash ] = $full_path;

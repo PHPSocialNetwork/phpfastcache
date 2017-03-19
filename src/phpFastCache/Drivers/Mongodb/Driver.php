@@ -30,6 +30,7 @@ use Psr\Cache\CacheItemInterface;
 /**
  * Class Driver
  * @package phpFastCache\Drivers
+ * @property MongodbClient $instance Instance of driver service
  */
 class Driver extends DriverAbstract
 {

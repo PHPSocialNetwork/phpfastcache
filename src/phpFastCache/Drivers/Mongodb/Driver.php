@@ -34,11 +34,6 @@ use Psr\Cache\CacheItemInterface;
 class Driver extends DriverAbstract
 {
     /**
-     * @var MongodbClient
-     */
-    public $instance;
-
-    /**
      * Driver constructor.
      * @param array $config
      * @throws phpFastCacheDriverException

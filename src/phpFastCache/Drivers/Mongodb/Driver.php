@@ -54,12 +54,7 @@ class Driver extends DriverAbstract
      */
     public function driverCheck()
     {
-        if(class_exists('MongoDB\Driver\Manager')){
-            trigger_error('PhpFastCache currently only support the pecl Mongo extension.<br />
-            The Support for the MongoDB extension will be added coming soon.', E_USER_ERROR);
-        }
-
-        return extension_loaded('Mongodb') && class_exists('MongoClient');
+        return class_exists('MongoClient');
     }
 
     /**

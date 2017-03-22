@@ -17,7 +17,6 @@ namespace phpFastCache\Drivers\Memcached;
 use Memcached as MemcachedSoftware;
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\MemcacheDriverCollisionDetectorTrait;
-use phpFastCache\Core\StandardPsr6StructureTrait;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
@@ -26,6 +25,7 @@ use Psr\Cache\CacheItemInterface;
 /**
  * Class Driver
  * @package phpFastCache\Drivers
+ * @property MemcachedSoftware $instance
  */
 class Driver extends DriverAbstract
 {
@@ -44,7 +44,6 @@ class Driver extends DriverAbstract
         if (!$this->driverCheck()) {
             throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
         } else {
-            $this->instance = new MemcachedSoftware();
             $this->driverConnect();
         }
     }
@@ -127,16 +126,23 @@ class Driver extends DriverAbstract
      */
     protected function driverConnect()
     {
-        $servers = (!empty($this->config[ 'memcache' ]) && is_array($this->config[ 'memcache' ]) ? $this->config[ 'memcache' ] : []);
+        $this->instance = new MemcachedSoftware();
+
+        $servers = (!empty($this->config[ 'servers' ]) && is_array($this->config[ 'servers' ]) ? $this->config[ 'servers' ] : []);
         if (count($servers) < 1) {
             $servers = [
-              ['127.0.0.1', 11211],
+              [
+                'host' =>'127.0.0.1',
+                'port' => 11211,
+                'sasl_user' => false,
+                'sasl_password' => false
+              ],
             ];
         }
 
         foreach ($servers as $server) {
             try {
-                if (!$this->instance->addServer($server[ 0 ], $server[ 1 ])) {
+                if (!$this->instance->addServer($server['host'], $server['port'])) {
                     $this->fallback = true;
                 }
                 if(!empty($server[ 'sasl_user' ]) && !empty($server[ 'sasl_password'])){

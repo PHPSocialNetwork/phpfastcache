@@ -17,14 +17,21 @@ use phpFastCache\CacheManager;
 // Include composer autoloader
 require __DIR__ . '/../vendor/autoload.php';
 
-$InstanceCache = CacheManager::getInstance('memcache');
+$InstanceCache = CacheManager::getInstance('memcache', ['servers' => [
+  [
+    'host' =>'127.0.0.1',
+    'port' => 11211,
+    // 'sasl_user' => false, // optional
+    // 'sasl_password' => false // optional
+  ],
+]]);
+
 /**
  * In case you need to enable compress_data option:
  * $InstanceCache = CacheManager::getInstance('memcache', ['compress_data' => true]);
  *
  * In case you need SASL authentication:
- * $InstanceCache = CacheManager::getInstance('memcache', ['sasl_user' => 'hackerman', 'sasl_password' => '12345']);
- * Warning: Memcache needs to be compiled with a specific option (--enable-memcached-sasl) to use sasl authentication, see:
+ * Memcache needs to be compiled with a specific option (--enable-memcached-sasl) to use sasl authentication, see:
  * http://php.net/manual/fr/memcached.installation.php
  */
 

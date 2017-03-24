@@ -17,7 +17,15 @@ use phpFastCache\CacheManager;
 // Include composer autoloader
 require __DIR__ . '/../vendor/autoload.php';
 
-$InstanceCache = CacheManager::getInstance('memcache');
+$InstanceCache = CacheManager::getInstance('memcache', ['servers' => [
+  [
+    'host' =>'127.0.0.1',
+    'port' => 11211,
+      // 'sasl_user' => false, // optional
+      // 'sasl_password' => false // optional
+  ],
+]]);
+
 /**
  * In case you need to enable compress_data option:
  * $InstanceCache = CacheManager::getInstance('memcache', ['compress_data' => true]);

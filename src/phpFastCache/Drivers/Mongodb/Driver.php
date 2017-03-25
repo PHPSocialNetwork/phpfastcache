@@ -179,8 +179,8 @@ class Driver implements ExtendedCacheItemPoolInterface
             throw new LogicException('Already connected to Mongodb server');
         } else {
             $host = isset($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1';
-            $port = isset($server[ 'port' ]) ? $server[ 'port' ] : '27017';
-            $timeout = isset($server[ 'timeout' ]) ? $server[ 'timeout' ] : 3;
+            $port = isset($this->config[ 'port' ]) ? $this->config[ 'port' ] : '27017';
+            $timeout = isset($this->config[ 'timeout' ]) ? $this->config[ 'timeout' ] : 3;
             $password = isset($this->config[ 'password' ]) ? $this->config[ 'password' ] : '';
             $username = isset($this->config[ 'username' ]) ? $this->config[ 'username' ] : '';
             $collectionName = isset($this->config[ 'collectionName' ]) ? $this->config[ 'collectionName' ] : 'Cache';

@@ -213,6 +213,17 @@ EventManager::getInstance()->unbindEventCallback('onCacheGetItem', 'myCallbackNa
 More information about the implementation and the events available on the [Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Introducing-to-events)
 
 ---------------------------
+Introducing new helpers
+---------------------------
+:books: As of the V6, PhpFastCache provides some helpers to make your code easier.
+
+- The [ActOnAll Helper](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Act-on-all-instances) to help you to act on multiple instance at once.
+- The [CacheConditional Helper](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Cache-Conditional) to help you to make the basic conditional statement more easier.
+- The [Psr16 adapter](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Psr16-adapter) to keep it simple as explained above.
+
+May more will come in the future, feel free to contribute !
+
+---------------------------
 As Fast To Implement As Opening a Beer
 ---------------------------
 

@@ -16,7 +16,7 @@ namespace phpFastCache\Drivers\Cookie;
 
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
@@ -176,12 +176,12 @@ class Driver implements ExtendedCacheItemPoolInterface
      *******************/
 
     /**
-     * @return driverStatistic
+     * @return DriverStatistic
      */
     public function getStats()
     {
         $size = 0;
-        $stat = new driverStatistic();
+        $stat = new DriverStatistic();
         $stat->setData($_COOKIE);
 
         /**

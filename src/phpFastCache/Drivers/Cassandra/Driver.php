@@ -16,7 +16,7 @@ namespace phpFastCache\Drivers\Cassandra;
 
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
@@ -284,7 +284,7 @@ HELP;
     }
 
     /**
-     * @return driverStatistic
+     * @return DriverStatistic
      * @throws \Cassandra\Exception
      */
     public function getStats()
@@ -295,7 +295,7 @@ HELP;
           self::CASSANDRA_TABLE
         )));
 
-        return (new driverStatistic())
+        return (new DriverStatistic())
           ->setSize($result->first()[ 'cache_size' ])
           ->setRawData([])
           ->setData(implode(', ', array_keys($this->itemInstances)))

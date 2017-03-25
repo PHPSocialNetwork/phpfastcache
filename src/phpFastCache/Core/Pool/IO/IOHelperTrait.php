@@ -16,7 +16,7 @@ namespace phpFastCache\Core\Pool\IO;
 
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\EventManager;
 use phpFastCache\Exceptions\phpFastCacheIOException;
 use phpFastCache\Util\Directory;
@@ -316,12 +316,12 @@ HTACCESS;
     /**
      * Provide a generic getStats() method
      * for files-based drivers
-     * @return driverStatistic
+     * @return DriverStatistic
      * @throws \phpFastCache\Exceptions\phpFastCacheIOException
      */
     public function getStats()
     {
-        $stat = new driverStatistic();
+        $stat = new DriverStatistic();
         $path = $this->getFilePath(false);
 
         if (!is_dir($path)) {

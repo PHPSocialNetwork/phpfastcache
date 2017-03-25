@@ -23,7 +23,7 @@ use MongoDB\DeleteResult;
 use MongoDB\Driver\Manager as MongodbManager;
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
@@ -217,7 +217,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      *******************/
 
     /**
-     * @return driverStatistic
+     * @return DriverStatistic
      */
     public function getStats()
     {
@@ -259,7 +259,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $serverStats = $array_filter_recursive($serverStats, $callback);
         $collectionStats = $array_filter_recursive($collectionStats, $callback);
 
-        $stats = (new driverStatistic())
+        $stats = (new DriverStatistic())
           ->setInfo('MongoDB version ' . $serverStats->version . ', Uptime (in days): ' . round($serverStats->uptime / 86400, 1) . "\n For more information see RawData.")
           ->setSize($collectionStats->size)
           ->setData(implode(', ', array_keys($this->itemInstances)))

@@ -15,7 +15,7 @@ namespace phpFastCache\Drivers\Zendshm;
 
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
@@ -140,12 +140,12 @@ HELP;
     }
 
     /**
-     * @return driverStatistic
+     * @return DriverStatistic
      */
     public function getStats()
     {
         $stats = (array) zend_shm_cache_info();
-        return (new driverStatistic())
+        return (new DriverStatistic())
             ->setData(implode(', ', array_keys($this->namespaces)))
             ->setInfo(sprintf("The Zend memory have %d item(s) in cache.\n For more information see RawData.",$stats[ 'items_total' ]))
             ->setRawData($stats)

@@ -16,7 +16,7 @@ namespace phpFastCache\Drivers\Apcu;
 
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
@@ -129,14 +129,14 @@ class Driver implements ExtendedCacheItemPoolInterface
      *******************/
 
     /**
-     * @return driverStatistic
+     * @return DriverStatistic
      */
     public function getStats()
     {
         $stats = (array) apcu_cache_info();
         $date = (new \DateTime())->setTimestamp($stats[ 'start_time' ]);
 
-        return (new driverStatistic())
+        return (new DriverStatistic())
           ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setInfo(sprintf("The APCU cache is up since %s, and have %d item(s) in cache.\n For more information see RawData.", $date->format(DATE_RFC2822), $stats[ 'num_entries' ]))
           ->setRawData($stats)

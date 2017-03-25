@@ -194,3 +194,12 @@ In the V5 the driver was making use of of the [deprecated class Mongo](http://ph
 #### :alarm_clock: Now:
 In the V6 we made an important change: We now make use of [Mongodb Driver](http://php.net/manual/fr/set.mongodb.php)
 Only your code configuration will have to be updated, PhpFastCache manages all the abstract couch by itself.
+
+### DriverStatistic class name has changed
+:warning: As of the V6, DriverStatistic class name has changed for a better classes name normalization
+
+#### :clock1: Then:
+In the V5 the class was named `phpFastCache\Entities\driverStatistic`
+
+#### :alarm_clock: Now:
+In the V6 it has changed and is now `phpFastCache\Entities\DriverStatistic` (with a **D** uppercase)

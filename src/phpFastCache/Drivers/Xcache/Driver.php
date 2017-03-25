@@ -16,7 +16,7 @@ namespace phpFastCache\Drivers\Xcache;
 
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
@@ -129,14 +129,14 @@ class Driver implements ExtendedCacheItemPoolInterface
      *******************/
 
     /**
-     * @return driverStatistic
+     * @return DriverStatistic
      */
     public function getStats()
     {
         if (!ini_get('xcache.admin.enable_auth')) {
             $info = xcache_info(XC_TYPE_VAR, 0);
 
-            return (new driverStatistic())
+            return (new DriverStatistic())
               ->setSize(abs($info[ 'size' ] - $info[ 'avail' ]))
               ->setData(implode(', ', array_keys($this->itemInstances)))
               ->setInfo(sprintf("Xcache v%s with following modules loaded:\n %s", XCACHE_VERSION, str_replace(' ', ', ', XCACHE_MODULES)))

@@ -18,7 +18,7 @@ use Doctrine\CouchDB\CouchDBClient as CouchdbClient;
 use Doctrine\CouchDB\CouchDBException;
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
@@ -231,13 +231,13 @@ class Driver implements ExtendedCacheItemPoolInterface
      *******************/
 
     /**
-     * @return driverStatistic
+     * @return DriverStatistic
      */
     public function getStats()
     {
         $info = $this->instance->getDatabaseInfo();
 
-        return (new driverStatistic())
+        return (new DriverStatistic())
           ->setSize($info['sizes']['active'])
           ->setRawData($info)
           ->setData(implode(', ', array_keys($this->itemInstances)))

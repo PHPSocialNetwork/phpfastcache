@@ -16,7 +16,7 @@ namespace phpFastCache\Drivers\Redis;
 
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
@@ -154,7 +154,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      *******************/
 
     /**
-     * @return driverStatistic
+     * @return DriverStatistic
      */
     public function getStats()
     {
@@ -162,7 +162,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $info = $this->instance->info();
         $date = (new \DateTime())->setTimestamp(time() - $info[ 'uptime_in_seconds' ]);
 
-        return (new driverStatistic())
+        return (new DriverStatistic())
           ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setRawData($info)
           ->setSize($info[ 'used_memory' ])

@@ -17,7 +17,7 @@ namespace phpFastCache\Drivers\Memcache;
 use Memcache as MemcacheSoftware;
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
@@ -162,7 +162,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      *******************/
 
     /**
-     * @return driverStatistic
+     * @return DriverStatistic
      */
     public function getStats()
     {
@@ -173,7 +173,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         
         $date = (new \DateTime())->setTimestamp(time() - $stats[ 'uptime' ]);
 
-        return (new driverStatistic())
+        return (new DriverStatistic())
           ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setInfo(sprintf("The memcache daemon v%s is up since %s.\n For more information see RawData.", $stats[ 'version' ], $date->format(DATE_RFC2822)))
           ->setRawData($stats)

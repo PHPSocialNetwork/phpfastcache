@@ -17,7 +17,7 @@ namespace phpFastCache\Drivers\Couchbase;
 use CouchbaseCluster as CouchbaseClient;
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
@@ -186,13 +186,13 @@ class Driver implements ExtendedCacheItemPoolInterface
      *******************/
 
     /**
-     * @return driverStatistic
+     * @return DriverStatistic
      */
     public function getStats()
     {
         $info = $this->getBucket()->manager()->info();
 
-        return (new driverStatistic())
+        return (new DriverStatistic())
           ->setSize($info[ 'basicStats' ][ 'diskUsed' ])
           ->setRawData($info)
           ->setData(implode(', ', array_keys($this->itemInstances)))

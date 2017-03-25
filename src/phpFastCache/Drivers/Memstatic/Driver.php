@@ -16,7 +16,7 @@ namespace phpFastCache\Drivers\Memstatic;
 
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
@@ -138,11 +138,11 @@ class Driver implements ExtendedCacheItemPoolInterface
      *******************/
 
     /**
-     * @return driverStatistic
+     * @return DriverStatistic
      */
     public function getStats()
     {
-        $stat = new driverStatistic();
+        $stat = new DriverStatistic();
         $stat->setInfo('[Memstatic] A memory static driver')
           ->setSize(mb_strlen(serialize($this->staticStack)))
           ->setData(implode(', ', array_keys($this->itemInstances)))

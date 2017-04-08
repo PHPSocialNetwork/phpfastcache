@@ -23,12 +23,11 @@
         "php": "^5.6 || ^7.0",
         "psr/cache": "~1.0.0",
         "psr/simple-cache": "~1.0.0",
-        "predis/predis": "~1.1.0",
         "phpfastcache/phpssdb": "~1.0.0",
         "mongodb/mongodb": "^1.1",
         "ext-mbstring": "*",
-        "ext-json": "*",
-        "doctrine/couchdb": "@dev"
+        "ext-json": "*"
+
     },
     "suggest": {
         "ext-apc": "*",
@@ -37,7 +36,9 @@
         "ext-memcache": "*",
         "ext-redis": "*",
         "ext-predis": "*",
-        "ext-sqlite": "*"
+        "ext-sqlite": "*",
+        "predis/predis": "~1.1.0",
+        "doctrine/couchdb": "@dev"
     },
     "autoload": {
         "psr-4": {

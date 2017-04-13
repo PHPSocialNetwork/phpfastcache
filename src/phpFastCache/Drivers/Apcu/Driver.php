@@ -108,7 +108,7 @@ class Driver extends DriverAbstract
      */
     protected function driverClear()
     {
-        return @apcu_clear_cache() && @apcu_clear_cache('user');
+        return @apcu_clear_cache() && @apcu_clear_cache();
     }
 
     /**

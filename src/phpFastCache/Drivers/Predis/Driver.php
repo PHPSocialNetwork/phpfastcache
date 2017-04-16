@@ -141,6 +141,20 @@ class Driver implements ExtendedCacheItemPoolInterface
      *
      *******************/
 
+
+    /**
+     * @return string
+     */
+    public function getHelp()
+    {
+        return <<<HELP
+<p>
+To install the Predis library via Composer:
+<code>composer require "predis/predis" "~1.1.0"</code>
+</p>
+HELP;
+    }
+
     /**
      * @return DriverStatistic
      */

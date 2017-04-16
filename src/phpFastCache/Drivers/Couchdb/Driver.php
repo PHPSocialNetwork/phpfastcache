@@ -231,6 +231,19 @@ class Driver implements ExtendedCacheItemPoolInterface
      *******************/
 
     /**
+     * @return string
+     */
+    public function getHelp()
+    {
+        return <<<HELP
+<p>
+To install the Couchdb HTTP client library via Composer:
+<code>composer require "doctrine/couchdb" "@dev"</code>
+</p>
+HELP;
+    }
+
+    /**
      * @return DriverStatistic
      */
     public function getStats()

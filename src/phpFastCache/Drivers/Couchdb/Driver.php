@@ -194,16 +194,16 @@ class Driver implements ExtendedCacheItemPoolInterface
         $path = '/' . $this->getDatabaseName() . '/' . urlencode($docId);
 
         $response = $this->instance->getHttpClient()->request(
-          'GET',// At this moment HEAD requests are not working: https://github.com/doctrine/couchdb-client/issues/72
+          'HEAD',
           $path,
           null,
           false
         );
         if(!empty($response->headers['etag'])){
             return trim($response->headers['etag'], " '\"\t\n\r\0\x0B");
-        }else{
-            return null;
         }
+
+        return null;
     }
 
     /**

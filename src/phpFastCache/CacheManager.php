@@ -369,11 +369,15 @@ class CacheManager
     }
 
     /**
-     * @param string $driverName
+     * @param $driverName
      * @return string
+     * @throws \phpFastCache\Exceptions\phpFastCacheInvalidArgumentException
      */
     public static function standardizeDriverName($driverName)
     {
+        if(!is_string($driverName)){
+            throw new phpFastCacheInvalidArgumentException(sprintf('Expected $driverName to be a string got "%s" instead', gettype($driverName)));
+        }
         return ucfirst(strtolower(trim($driverName)));
     }
 

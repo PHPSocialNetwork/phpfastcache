@@ -35,7 +35,7 @@ class Psr16Adapter implements CacheInterface
 
     /**
      * Psr16Adapter constructor.
-     * @param $driver
+     * @param string $driver
      * @param array $config
      * @throws phpFastCacheDriverCheckException
      */

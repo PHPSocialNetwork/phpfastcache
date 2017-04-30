@@ -129,6 +129,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverConnect()
     {
+        $this->instance = new MemcacheSoftware();
         $servers = (!empty($this->config[ 'servers' ]) && is_array($this->config[ 'servers' ]) ? $this->config[ 'servers' ] : []);
         if (count($servers) < 1) {
             $servers = [

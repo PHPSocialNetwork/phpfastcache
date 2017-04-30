@@ -45,7 +45,6 @@ class Driver implements ExtendedCacheItemPoolInterface
         if (!$this->driverCheck()) {
             throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
         } else {
-            $this->instance = new MemcachedSoftware();
             $this->driverConnect();
         }
     }
@@ -128,6 +127,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverConnect()
     {
+        $this->instance = new MemcachedSoftware();
         $servers = (!empty($this->config[ 'servers' ]) && is_array($this->config[ 'servers' ]) ? $this->config[ 'servers' ] : []);
         if (count($servers) < 1) {
             $servers = [

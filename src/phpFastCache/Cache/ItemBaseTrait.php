@@ -128,11 +128,24 @@ trait ItemBaseTrait
      */
     public function expiresAt($expiration)
     {
-        if ($expiration instanceof \DateTimeInterface) {
-            $this->expirationDate = $expiration;
-        } else {
+        $_php_ver = (float) PHP_VERSION;
+		if ($_php_ver >= 5.5) {
+		    
+            if ($expiration instanceof \DateTimeInterface) {
+                     $this->expirationDate = $expiration;
+             } else {
             throw new \InvalidArgumentException('$expiration must be an object implementing the DateTimeInterface');
-        }
+             }
+            
+		} else if ($_php_ver <= 5.4) {
+			if ($expiration instanceof \DateTime) {
+                     $this->expirationDate = $expiration;
+             } else {
+            throw new \InvalidArgumentException('$expiration must be an object implementing the DateTime');
+             }
+		} 
+        
+        
 
         return $this;
     }

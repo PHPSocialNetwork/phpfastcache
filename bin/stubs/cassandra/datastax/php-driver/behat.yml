@@ -1,0 +1,54 @@
+default:
+    formatters:
+        pretty: true
+    suites:
+        default:
+            filters:
+              tags: "~@cassandra-version-less-2.1&&~@cassandra-version-only-2.0&&~@broken"
+            contexts:
+                - FeatureContext:
+                    cassandra_version: 3.0.8
+
+cassandra-version-2.2:
+    formatters:
+        pretty: true
+    suites:
+        default:
+            filters:
+              tags: "~@cassandra-version-3.0&&~@cassandra-version-less-2.1&&~@cassandra-version-only-2.0&&~@broken"
+            contexts:
+                - FeatureContext:
+                    cassandra_version: 2.2.7
+
+cassandra-version-2.1:
+    formatters:
+        pretty: true
+    suites:
+        default:
+            filters:
+              tags: "~@cassandra-version-3.0&&~@cassandra-version-2.2&&~@cassandra-version-less-2.1&&~@cassandra-version-only-2.0&&~@broken"
+            contexts:
+                - FeatureContext:
+                    cassandra_version: 2.1.15
+
+cassandra-version-2.0:
+    formatters:
+        pretty: true
+    suites:
+        default:
+            filters:
+              tags: "~@cassandra-version-3.0&&~@cassandra-version-2.2&&~@cassandra-version-2.1&&~@broken"
+            contexts:
+                - FeatureContext:
+                    cassandra_version: 2.0.17
+
+cassandra-version-1.2:
+    formatters:
+        pretty: true
+    suites:
+        default:
+            filters:
+              tags: "~@cassandra-version-3.0&&~@cassandra-version-2.2&&~@cassandra-version-2.0&&~@cassandra-version-2.1&&~@cassandra-version-only-2.0&&~broken"
+            contexts:
+                - FeatureContext:
+                    cassandra_version: 1.2.19

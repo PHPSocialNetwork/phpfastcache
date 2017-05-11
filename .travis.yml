@@ -14,19 +14,20 @@ language: php
 
 services:
   - memcached
-  # - redis-server
+  - redis-server
+  - couchdb
 before_script:
   - |
     if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
-      cat var/php/conf/phpfastcache.ini >> /etc/hhvm/php.ini
+      cat bin/ci/php-phpfastcache.ini >> /etc/hhvm/php.ini
     else
-      phpenv config-add var/php/conf/phpfastcache.ini
+      phpenv config-add bin/ci/php-phpfastcache.ini
     fi
 
 php:
   # - 5.3
   # - 5.4
-  - 5.5
+  # - 5.5
   - 5.6
   - 7.0
   - nightly

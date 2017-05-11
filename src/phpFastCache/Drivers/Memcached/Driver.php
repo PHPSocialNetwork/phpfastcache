@@ -15,11 +15,13 @@
 namespace phpFastCache\Drivers\Memcached;
 
 use Memcached as MemcachedSoftware;
-use phpFastCache\Core\DriverAbstract;
-use phpFastCache\Core\MemcacheDriverCollisionDetectorTrait;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Core\Pool\DriverBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
+use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Util\MemcacheDriverCollisionDetectorTrait;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -27,9 +29,9 @@ use Psr\Cache\CacheItemInterface;
  * @package phpFastCache\Drivers
  * @property MemcachedSoftware $instance
  */
-class Driver extends DriverAbstract
+class Driver implements ExtendedCacheItemPoolInterface
 {
-    use MemcacheDriverCollisionDetectorTrait;
+    use DriverBaseTrait, MemcacheDriverCollisionDetectorTrait;
 
     /**
      * Driver constructor.
@@ -59,7 +61,7 @@ class Driver extends DriverAbstract
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item)
     {
@@ -77,7 +79,7 @@ class Driver extends DriverAbstract
 
             return $this->instance->set($item->getKey(), $this->driverPreWrap($item), $ttl);
         } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
@@ -99,7 +101,7 @@ class Driver extends DriverAbstract
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item)
     {
@@ -109,7 +111,7 @@ class Driver extends DriverAbstract
         if ($item instanceof Item) {
             return $this->instance->delete($item->getKey());
         } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
@@ -127,15 +129,14 @@ class Driver extends DriverAbstract
     protected function driverConnect()
     {
         $this->instance = new MemcachedSoftware();
-
         $servers = (!empty($this->config[ 'servers' ]) && is_array($this->config[ 'servers' ]) ? $this->config[ 'servers' ] : []);
         if (count($servers) < 1) {
             $servers = [
               [
-                'host' => !empty($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1',
-                'port' => !empty($this->config[ 'port' ]) ? $this->config[ 'port' ] : 11211,
-                'sasl_user' => !empty($this->config[ 'sasl_user' ]) ? $this->config[ 'sasl_user' ] : false,
-                'sasl_password' => !empty($this->config[ 'sasl_password' ]) ? $this->config[ 'sasl_password' ] : false,
+                'host' =>'127.0.0.1',
+                'port' => 11211,
+                'sasl_user' => false,
+                'sasl_password' => false
               ],
             ];
         }
@@ -161,7 +162,7 @@ class Driver extends DriverAbstract
      *******************/
 
     /**
-     * @return driverStatistic
+     * @return DriverStatistic
      */
     public function getStats()
     {
@@ -172,7 +173,7 @@ class Driver extends DriverAbstract
 
         $date = (new \DateTime())->setTimestamp(time() - $stats[ 'uptime' ]);
 
-        return (new driverStatistic())
+        return (new DriverStatistic())
           ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setInfo(sprintf("The memcache daemon v%s is up since %s.\n For more information see RawData.", $stats[ 'version' ], $date->format(DATE_RFC2822)))
           ->setRawData($stats)

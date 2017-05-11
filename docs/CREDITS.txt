@@ -29,6 +29,7 @@ phpFastCache Contributors:      https://github.com/PHPSocialNetwork/phpfastcache
 Specials thanks:
 
 - Scrutinizer-CI for providing us a free Security Analysis
+- Sabine van Lommen from Zend.com for providing us a free developer licence of Zend Server
 - Lucas (hammermaps) for the "Zend Data Cache" driver implementation
 
 

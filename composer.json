@@ -1,8 +1,8 @@
 {
     "name": "phpfastcache/phpfastcache",
     "type" : "library",
-    "description": "PHP Cache Class - Reduce your database call using cache system. PhpFastCache handles a lot of drivers such as Apc(u), CouchBase, Mongodb, Files, (P)redis, Leveldb, Memcache(d), Ssdb, Sqlite, Wincache, Xcache, Zend Data Cache.",
-    "keywords": ["cache","caching","php cache","mysql cache","apc","apcu","memcache","memcached","wincache","files cache","pdo cache","cache class","redis","predis","cookie", "mongodb", "couchbase", "LevelDb", "Ssdb", "Wincache", "xcache","zend","zend disk cache","zend memory cache","zend data cache","zend server"],
+    "description": "PHP Cache Class - Reduce your database call using cache system. PhpFastCache handles a lot of drivers such as Apc(u), Cassandra, CouchBase, Couchdb, Mongodb, Files, (P)redis, Leveldb, Memcache(d), Ssdb, Sqlite, Wincache, Xcache, Zend Data Cache.",
+    "keywords": ["cache","caching","php cache","mysql cache","apc","apcu","memcache","memcached","wincache","files cache","pdo cache","cache class","redis","predis","cookie", "mongodb", "cassandra", "couchdb", "couchbase", "LevelDb", "Ssdb", "Wincache", "xcache","zend","zend disk cache","zend memory cache","zend data cache","zend server"],
     "homepage": "http://www.phpfastcache.com",
     "license": "MIT",
     "authors": [
@@ -20,21 +20,29 @@
             }
         ],
     "require": {
-        "php": ">=5.5.0",
+        "php": "^5.6 || ^7.0",
         "psr/cache": "~1.0.0",
-        "predis/predis": "~1.1.0",
-        "phpfastcache/phpssdb": "~1.0.0",
+        "psr/simple-cache": "~1.0.0",
+        "ext-mbstring": "*",
         "ext-json": "*"
     },
     "suggest": {
         "ext-apc": "*",
         "ext-intl": "*",
-        "ext-mbstring": "*",
         "ext-memcached": "*",
         "ext-memcache": "*",
         "ext-redis": "*",
-        "ext-predis": "*",
-        "ext-sqlite": "*"
+        "ext-xcache": "*",
+        "ext-sqlite": "*",
+        "ext-wincache": "*",
+        "ext-leveldb": "*",
+        "predis/predis": "~1.1.0",
+        "mongodb/mongodb": "^1.1",
+        "phpfastcache/phpssdb": "~1.0.0",
+        "phpfastcache/couchdb": "~1.0.0"
+    },
+    "conflict": {
+        "doctrine/couchdb": "*"
     },
     "autoload": {
         "psr-4": {

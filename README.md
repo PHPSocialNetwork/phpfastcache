@@ -182,3 +182,7 @@ For curious developpers, there is a lot of other examples available  [here](http
 
 #### :boom: phpFastCache support
 Found an issue or have an idea ? Come [here](https://github.com/PHPSocialNetwork/phpfastcache/issues) and let us know !
+
+#### :fire: May 2017
+The V6 is officially out !
+[Migrate your code from v5 to v6](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV5%CB%96%5D-Migrating-your-code-to-the-V6) | [Full changelog since v5](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Changelog) | [Global Support Timeline](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV4%CB%96%5D-Global-support-timeline)

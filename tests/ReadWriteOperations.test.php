@@ -4,15 +4,14 @@
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
+
 use phpFastCache\CacheManager;
-use phpFastCache\Cache\ExtendedCacheItemInterface;
+use phpFastCache\Core\Item\ExtendedCacheItemInterface;
+use phpFastCache\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../src/autoload.php';
-
-$status = 0;
-echo "Testing read/write operations\n";
-
+$testHelper = new TestHelper('Read/Write operations (I/O)');
 CacheManager::setDefaultConfig(array('path' => __DIR__ . '/../../cache'));
 
 /**
@@ -30,12 +29,12 @@ $dirs = [
 
 
 foreach ($dirs as $dirIndex => $dir) {
-    for ($i = 1; $i <= 10; $i++)
+    for ($i = 1; $i <= 20; $i++)
     {
         $keys[$dirIndex][] = 'test' . $i;
     }
 
-    for ($i = 1; $i <= 10; $i++)
+    for ($i = 1; $i <= 20; $i++)
     {
         $cacheInstanceName = 'cacheInstance' . $i;
 
@@ -57,16 +56,15 @@ foreach ($dirs as $dirIndex => $dir) {
         {
             if($instances[$dirIndex][$cacheInstanceName]->getItem($key)->get() === "test-$dirIndex-$index")
             {
-                echo "[PASS] Item #{$key} of instance #{$cacheInstanceName} of dir #{$dirIndex} has returned the expected value (" . gettype("test-$dirIndex-$index") . ":'" . "test-$dirIndex-$index" . "')\n";
+                $testHelper->printPassText("Item #{$key} of instance #{$cacheInstanceName} of dir #{$dirIndex} has returned the expected value (" . gettype("test-$dirIndex-$index") . ":'" . "test-$dirIndex-$index" . "')");
             }
             else
             {
-                echo "[FAIL] Item #{$key} of instance #{$cacheInstanceName} of dir #{$dirIndex} returned an unexpected value (" . gettype($instances[$dirIndex][$cacheInstanceName]->getItem($key)->get()) . ":'" . $instances[$dirIndex][$cacheInstanceName]->getItem($key)->get() . "') expected (" . gettype("test-$dirIndex-$index") . ":'" . "test-$dirIndex-$index" . "') \n";
-                $status = 255;
+                $testHelper->printFailText("Item #{$key} of instance #{$cacheInstanceName} of dir #{$dirIndex} returned an unexpected value (" . gettype($instances[$dirIndex][$cacheInstanceName]->getItem($key)->get()) . ":'" . $instances[$dirIndex][$cacheInstanceName]->getItem($key)->get() . "') expected (" . gettype("test-$dirIndex-$index") . ":'" . "test-$dirIndex-$index" . "') \n");
             }
         }
         $instances[$dirIndex][$cacheInstanceName]->detachAllItems();
     }
 }
 
-exit($status);
+$testHelper->terminateTest();

@@ -35,6 +35,15 @@ spl_autoload_register(function ($entity) {
             trigger_error('Cannot locate the Psr/Cache files', E_USER_ERROR);
         }
         return;
+    } else if (strpos($entity, 'Psr\SimpleCache') === 0) {
+        $path = PFC_BIN_DIR . 'legacy/Psr/SimpleCache/src/' . substr(strrchr($entity, '\\'), 1) . '.' . PFC_PHP_EXT;
+
+        if (is_readable($path)) {
+            require_once $path;
+        }else{
+            trigger_error('Cannot locate the Psr/SimpleCache files', E_USER_ERROR);
+        }
+        return;
     }
 
     $entity = str_replace('\\', '/', $entity);

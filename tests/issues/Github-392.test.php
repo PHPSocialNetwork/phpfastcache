@@ -4,13 +4,13 @@
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
+
 use phpFastCache\CacheManager;
+use phpFastCache\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../src/autoload.php';
-
-$status = 0;
-echo "Testing Github issue #392 - Issue after calling removeTag\n";
+$testHelper = new TestHelper('Github issue #392 - Issue after calling removeTag');
 
 $InstanceCache = CacheManager::getInstance('Files');
 
@@ -37,10 +37,9 @@ $CachedElement1->removeTag('tag_12');
  */
 try {
     $InstanceCache->save($CachedElement1);
-    echo "[PASS] Save after removing a non existing tag: works as expected \n";
+    $testHelper->printPassText('Save after removing a non existing tag: works as expected');
 } catch (Exception $e) {
-    $status = 255;
-    echo '[FAIL] Save after removing a non existing tag failed with message: ' . $e->getMessage() . ' in ' . $e->getFile() . ' at line ' . $e->getLine() . "\n";
+    $testHelper->printFailText('Save after removing a non existing tag failed with message: ' . $e->getMessage() . ' in ' . $e->getFile() . ' at line ' . $e->getLine());
 }
 /**
  * var_dump($CachedElement1->getTags()); Outputs: tag_34
@@ -54,13 +53,12 @@ $CachedElement1->removeTags(array('tag_34'));
  */
 try {
     $InstanceCache->save($CachedElement1);
-    echo "[PASS] Save after removing an existing tag \n";
+    $testHelper->printPassText('Save after removing an existing tag');
 } catch (Exception $e) {
-    $status = 255;
-    echo '[FAIL] Save after removing an existing tag failed with message: ' . $e->getMessage() . ' in ' . $e->getFile() . ' at line ' . $e->getLine() . "\n";
+    $testHelper->printFailText('Save after removing an existing tag failed with message: ' . $e->getMessage() . ' in ' . $e->getFile() . ' at line ' . $e->getLine());
 }
 /**
  * var_dump($CachedElement1->getTags()); Outputs: empty
  */
 
-exit($status);
+$testHelper->terminateTest();

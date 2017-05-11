@@ -1,0 +1,107 @@
+language: php
+sudo: false
+addons:
+  apt:
+    packages:
+      - libssl-dev
+      - oracle-java8-installer
+cache:
+  ccache: true
+  directories:
+    - ${HOME}/dependencies
+php:
+  - 5.5
+  - 5.6
+  - 7.0
+
+env:
+  global:
+    # Configure the .phpt tests to be Travis friendly
+    - REPORT_EXIT_STATUS=1
+    - TEST_PHP_ARGS="-q -s output.txt -g XFAIL,FAIL,BORK,WARN,LEAK,SKIP -x --show-diff"
+    # Add the pip installation folder to the PATH, until https://github.com/travis-ci/travis-ci/issues/3563 is fixed
+    - PATH=${HOME}/.local/bin:${PATH}
+    # Indicate the cached dependencies directory
+    - CACHED_DEPENDENCIES_DIRECTORY=${HOME}/dependencies
+    # Add libuv source build for container based TravisCI
+    - LIBUV_VERSION=1.8.0
+    - LIBUV_ROOT_DIR=${CACHED_DEPENDENCIES_DIRECTORY}/libuv/${LIBUV_VERSION}
+    - PHP_DRIVER_BUILD_DIRECTORY=/tmp/php-driver/build
+    - CPP_DRIVER_SOURCE_DIRECTORY=${TRAVIS_BUILD_DIR}/lib/cpp-driver
+    - CPP_DRIVER_BUILD_DIRECTORY=${PHP_DRIVER_BUILD_DIRECTORY}/cpp-driver
+    - CPP_DRIVER_INSTALL_DIRECTORY=${CACHED_DEPENDENCIES_DIRECTORY}/cpp-driver
+
+before_install:
+  # Configure, build, install (or used cached libuv)
+  - if [ ! -d "${LIBUV_ROOT_DIR}" ]; then
+      pushd /tmp;
+      wget -q http://dist.libuv.org/dist/v${LIBUV_VERSION}/libuv-v${LIBUV_VERSION}.tar.gz;
+      tar xzf libuv-v${LIBUV_VERSION}.tar.gz;
+      pushd /tmp/libuv-v${LIBUV_VERSION};
+      sh autogen.sh;
+      ./configure --prefix=${LIBUV_ROOT_DIR};
+      make -j$(nproc) install;
+      popd;
+      popd;
+    else echo "Using Cached libuv v${LIBUV_VERSION}. Dependency does not need to be re-compiled";
+    fi
+  ### Build and configure the PHP driver extension ###
+  - mkdir -p ${PHP_DRIVER_BUILD_DIRECTORY}
+  # Determine the version number for the C/C++ driver dependency
+  - export CPP_DRIVER_VERSION_MAJOR=$(grep CASS_VERSION_MAJOR ${CPP_DRIVER_SOURCE_DIRECTORY}/include/cassandra.h | sed 's/[^0-9]*//g')
+  - export CPP_DRIVER_VERSION_MINOR=$(grep CASS_VERSION_MINOR ${CPP_DRIVER_SOURCE_DIRECTORY}/include/cassandra.h | sed 's/[^0-9]*//g')
+  - export CPP_DRIVER_VERSION_PATCH=$(grep CASS_VERSION_PATCH ${CPP_DRIVER_SOURCE_DIRECTORY}/include/cassandra.h | sed 's/[^0-9]*//g')
+  - export CPP_DRIVER_VERSION=${CPP_DRIVER_VERSION_MAJOR}.${CPP_DRIVER_VERSION_MINOR}.${CPP_DRIVER_VERSION_PATCH}
+  - pushd lib/cpp-driver; export CPP_DRIVER_VERSION_SHA=$(git rev-parse --short HEAD); popd
+  # Build the C/C++ driver dependency (or used cached C/C++ driver)
+  - if [ ! -d "${CPP_DRIVER_INSTALL_DIRECTORY}/${CPP_DRIVER_VERSION}/${CPP_DRIVER_VERSION_SHA}" ]; then
+      mkdir -p ${CPP_DRIVER_BUILD_DIRECTORY};
+      pushd ${CPP_DRIVER_BUILD_DIRECTORY};
+      cmake -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_INSTALL_PREFIX:PATH=${CPP_DRIVER_INSTALL_DIRECTORY}/${CPP_DRIVER_VERSION}/${CPP_DRIVER_VERSION_SHA} -DCASS_BUILD_STATIC=ON -DCASS_BUILD_SHARED=OFF -DCMAKE_BUILD_TYPE=RELEASE -DCASS_USE_ZLIB=ON ${CPP_DRIVER_SOURCE_DIRECTORY};
+      make -j$(nproc) install;
+      pushd ${CPP_DRIVER_INSTALL_DIRECTORY}/${CPP_DRIVER_VERSION}/${CPP_DRIVER_VERSION_SHA}/lib;
+      rm -f libcassandra.{dylib,so};
+      mv libcassandra_static.a libcassandra.a;
+      popd;
+      popd;
+    else echo "Using Cached C/C++ driver v${CPP_DRIVER_VERSION}-${CPP_DRIVER_VERSION_SHA}. Dependency does not need to be re-compiled";
+    fi
+  # PHPize the extension for configuration and building
+  - pushd ${TRAVIS_BUILD_DIR}/ext && phpize && popd
+  # Configure, build, and install the extension
+  - pushd ${PHP_DRIVER_BUILD_DIRECTORY}
+  - LIBS="-lssl -lz -luv -lm -lstdc++" LDFLAGS="-L${CPP_DRIVER_INSTALL_DIRECTORY}/${CPP_DRIVER_VERSION}/${CPP_DRIVER_VERSION_SHA}/lib -L${LIBUV_ROOT_DIR}/lib" ${TRAVIS_BUILD_DIR}/ext/configure --with-cassandra=${CPP_DRIVER_INSTALL_DIRECTORY}/${CPP_DRIVER_VERSION}/${CPP_DRIVER_VERSION_SHA} --with-uv=${LIBUV_ROOT_DIR}
+  - make -j$(nproc) install
+  - popd
+  # Enable the extension
+  - echo "extension=cassandra.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+  ### Install CCM for Behat testing ###
+  - pip install --user ccm
+
+before_script:
+  # Install composer dependencies
+  - composer self-update
+  - composer install -n
+  # Use the BEHAT_EXTRA_OPTIONS to supply options to Behat runs
+  - BEHAT_EXTRA_OPTIONS=--profile=cassandra-version-2.2
+  # Use the BEHAT_SKIP_TAGS to skip tests on TravisCI
+  - BEHAT_SKIP_TAGS=~@skip-ci
+  - export BEHAT_EXTRA_OPTIONS BEHAT_SKIP_TAGS
+  # Switch to Java 8 for non-java projects
+  - if [ $(uname -a | grep x86_64 >/dev/null) ]; then
+      ARCH_SUFFIX=amd64;
+    else ARCH_SUFFIX=i386;
+    fi
+  - if [ -d "/usr/lib/jvm/java-8-oracle-$ARCH_SUFFIX" ]; then
+      export JAVA_HOME="/usr/lib/jvm/java-8-oracle-$ARCH_SUFFIX";
+    else export JAVA_HOME="/usr/lib/jvm/java-8-oracle";
+    fi
+  - export PATH=${JAVA_HOME}/bin:${PATH}
+
+script:
+  # Execute .phpt tests
+  - pushd ${PHP_DRIVER_BUILD_DIRECTORY} && make test && popd
+  # Execute the unit tests
+  - ./bin/phpunit --testsuite unit
+  # Execute the Behat tests
+  - ./bin/behat --tags="${BEHAT_SKIP_TAGS}" ${BEHAT_EXTRA_OPTIONS}

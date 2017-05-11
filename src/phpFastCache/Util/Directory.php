@@ -99,7 +99,7 @@ class Directory
                 if (self::rrmdir($fileinfo->getRealPath()) === false) {
                     return false;
                 }
-            } else if(unlink($fileinfo->getRealPath()) === false) {
+            } else if (unlink($fileinfo->getRealPath()) === false) {
                 return false;
             }
         }

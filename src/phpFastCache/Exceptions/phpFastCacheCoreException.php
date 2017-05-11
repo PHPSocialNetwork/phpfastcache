@@ -14,13 +14,11 @@
 
 namespace phpFastCache\Exceptions;
 
-use \Exception;
-
 /**
  * Class phpFastCacheCoreException
  * @package phpFastCache\Exceptions
  */
-class phpFastCacheCoreException extends Exception
+class phpFastCacheCoreException extends phpFastCacheRootException
 {
 
 }

@@ -1,0 +1,14 @@
+datatypes
+consistency_level
+client_side_timestamps
+simple_statements
+prepared_statements
+batch_statements
+logging
+result_paging
+retry_polcies
+schema_metadata
+sessions
+ssl_encryption
+user_defined_types
+tuples

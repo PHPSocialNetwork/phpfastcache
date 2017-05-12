@@ -171,6 +171,7 @@ class CacheManager
      * @param array $config
      * @return ExtendedCacheItemPoolInterface
      * @throws phpFastCacheDriverCheckException
+     * @throws phpFastCacheInvalidConfigurationException
      */
     public static function getInstance($driver = 'auto', array $config = [])
     {
@@ -197,20 +198,30 @@ class CacheManager
                 self::$instances[ $instance ] = new $class($config);
                 self::$instances[ $instance ]->setEventManager(EventManager::getInstance());
             }catch(phpFastCacheDriverCheckException $e){
-                $fallback = self::standardizeDriverName($config['fallback']);
-                if($fallback && $fallback !== $driver){
-                    $class = self::getNamespacePath() . $fallback . '\Driver';
-                    self::$instances[ $instance ] = new $class($config);
-                    self::$instances[ $instance ]->setEventManager(EventManager::getInstance());
-                    trigger_error(sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver, $fallback), E_USER_WARNING);
+                if($config['fallback']){
+                    try{
+                        $fallback = self::standardizeDriverName($config['fallback']);
+                        if($fallback !== $driver){
+                            $class = self::getNamespacePath() . $fallback . '\Driver';
+                            self::$instances[ $instance ] = new $class($config);
+                            self::$instances[ $instance ]->setEventManager(EventManager::getInstance());
+                            trigger_error(sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver, $fallback), E_USER_WARNING);
+                        }else{
+                            throw new phpFastCacheInvalidConfigurationException('The fallback driver cannot be the same than the default driver', 0, $e);
+                        }
+                    }catch (phpFastCacheInvalidArgumentException $e){
+                        throw new phpFastCacheInvalidConfigurationException('Invalid fallback driver configuration', 0, $e);
+                    }
                 }else{
                     throw new phpFastCacheDriverCheckException($e->getMessage(), $e->getCode(), $e);
                 }
             }
-        } else if(++$badPracticeOmeter[$driver] >= 5){
+        } else if($badPracticeOmeter[$driver] >= 5){
             trigger_error('[' . $driver . '] Calling many times CacheManager::getInstance() for already instanced drivers is a bad practice and have a significant impact on performances.
            See https://github.com/PHPSocialNetwork/phpfastcache/wiki/[V5]-Why-calling-getInstance%28%29-each-time-is-a-bad-practice-%3F');
         }
+
+        $badPracticeOmeter[$driver]++;
 
         return self::$instances[ $instance ];
     }

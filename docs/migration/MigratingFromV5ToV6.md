@@ -1,5 +1,12 @@
 Because the V6 is not backward compatible with the V5, here's a guide to help you to migrate your code:
 
+### Existing data in cache during migration
+:anger: :exclamation: If you update PhpFastCache from v5 to v6 you need to clear up the whole cache otherwise you may get this kind of error:
+```
+Notice: Undefined index: e in /phpfastcache/src/phpFastCache/Core/Pool/DriverBaseTrait.php on line ...
+
+Fatal error: Uncaught phpFastCache\Exceptions\phpFastCacheInvalidArgumentException: $expiration must be an object implementing the DateTimeInterface in ...
+```
 
 ### Type hint of Driver instances
 

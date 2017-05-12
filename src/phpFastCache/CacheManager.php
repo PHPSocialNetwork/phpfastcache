@@ -216,10 +216,12 @@ class CacheManager
                     throw new phpFastCacheDriverCheckException($e->getMessage(), $e->getCode(), $e);
                 }
             }
-        } else if(++$badPracticeOmeter[$driver] >= 5){
+        } else if($badPracticeOmeter[$driver] >= 5){
             trigger_error('[' . $driver . '] Calling many times CacheManager::getInstance() for already instanced drivers is a bad practice and have a significant impact on performances.
            See https://github.com/PHPSocialNetwork/phpfastcache/wiki/[V5]-Why-calling-getInstance%28%29-each-time-is-a-bad-practice-%3F');
         }
+
+        $badPracticeOmeter[$driver]++;
 
         return self::$instances[ $instance ];
     }

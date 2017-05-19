@@ -333,6 +333,18 @@ class CacheManager
     }
 
     /**
+     * @param $name string|array
+     * @param mixed $value
+     * @throws phpFastCacheInvalidConfigurationException
+     * @deprecated Method "setup" is deprecated, please use "setDefaultConfig" method instead
+     */
+    public static function setup($name, $value = null)
+    {
+        throw new phpFastCacheInvalidConfigurationException(sprintf('Method "%s" is deprecated, please use "setDefaultConfig" method instead.', __FUNCTION__));
+    }
+
+
+    /**
      * @return array
      */
     public static function getDefaultConfig()

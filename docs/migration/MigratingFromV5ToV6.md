@@ -8,6 +8,37 @@ Notice: Undefined index: e in /phpfastcache/src/phpFastCache/Core/Pool/DriverBas
 Fatal error: Uncaught phpFastCache\Exceptions\phpFastCacheInvalidArgumentException: $expiration must be an object implementing the DateTimeInterface in ...
 ```
 
+### Setting up a default config
+
+#### :clock1: Then:
+PhpFastCache used to set a default global config using the `CacheManager::setup()` method
+
+```php
+namespace My\Custom\Project;
+
+
+$instance = CacheManager::setup([
+    'path' => 'somewhere'
+]);
+$instance = CacheManager::getInstance('Files');
+
+```
+
+#### :alarm_clock: Now:
+This method has been changed is now replaced by the `CacheManager::setDefaultConfig()` method.
+Using the old `CacheManager::setup()` method will trigger a `phpFastCacheInvalidConfigurationException`
+
+```php
+namespace My\Custom\Project;
+
+
+$instance = CacheManager::setDefaultConfig([
+    'path' => 'somewhere'
+]);
+$instance = CacheManager::getInstance('Files');
+
+```
+
 ### Type hint of Driver instances
 
 #### :clock1: Then:

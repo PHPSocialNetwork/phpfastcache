@@ -100,7 +100,7 @@ class CacheManager
          * to create sub-directory
          * (Files-based drivers only)
          */
-      'securityKey' => 'auto',
+      'securityKey' => 'Auto',
 
         /**
          * Auto-generate .htaccess if it's missing

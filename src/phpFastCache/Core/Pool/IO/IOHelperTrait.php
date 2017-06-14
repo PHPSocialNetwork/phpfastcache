@@ -160,7 +160,7 @@ trait IOHelperTrait
             }
         }
 
-        return $path . '/' . $filename . '.txt';
+        return $path . '/' . $filename . '.' . $this->config[ 'cacheFileExtension' ];
     }
 
 

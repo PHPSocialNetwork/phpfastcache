@@ -154,6 +154,21 @@ class CacheManager
          */
       'cacheSlamsTimeout' => 15,
 
+        /**
+         * Cache slams timeout
+         * in seconds
+         */
+      'cacheFileExtension' => 'txt',
+
+    ];
+
+    /**
+     * Feel free to propose your own one
+     * by opening a pull request :)
+     * @var array
+     */
+    protected static $safeFileExtensions = [
+      'txt', 'cache', 'db', 'pfc'
     ];
 
     /**
@@ -478,6 +493,19 @@ class CacheManager
                 case 'compress_data':
                     if(!is_bool($configValue)){
                         throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean");
+                    }
+                    break;
+                case 'cacheFileExtension':
+                    if(!is_string($configValue)){
+                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean");
+                    }
+                    if(strpos($configValue, '.') !== false){
+                        throw new phpFastCacheInvalidConfigurationException("{$configName} cannot contain a dot \".\"");
+                    }
+                    if(!in_array($configValue, self::$safeFileExtensions)){
+                        throw new phpFastCacheInvalidConfigurationException(
+                          "{$configName} is not a safe extension, currently allowed extension: " . implode(', ', self::$safeFileExtensions)
+                        );
                     }
                     break;
             }

@@ -29,7 +29,9 @@ use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
  */
 interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
 {
-    const DRIVER_CHECK_FAILURE      = '%s is not installed or is misconfigured, cannot continue.';
+    const DRIVER_CHECK_FAILURE      = '%s is not installed or is misconfigured, cannot continue. 
+    Also, please verify the suggested dependencies in composer because as of the V6, 3rd party libraries are no longer required.';
+
     const DRIVER_TAGS_KEY_PREFIX    = '_TAG_';
     const DRIVER_TAGS_WRAPPER_INDEX = 'g';
     const DRIVER_DATA_WRAPPER_INDEX = 'd';

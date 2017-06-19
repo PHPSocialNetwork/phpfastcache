@@ -20,8 +20,9 @@ use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
-use Predis\Client as PredisClient;
 use Psr\Cache\CacheItemInterface;
+use Predis\Client as PredisClient;
+use Predis\Connection\ConnectionException as PredisConnectionException;
 
 /**
  * Class Driver
@@ -120,6 +121,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @return bool
+     * @throws phpFastCacheDriverException
      */
     protected function driverConnect()
     {
@@ -131,6 +133,12 @@ class Driver implements ExtendedCacheItemPoolInterface
           'password' => null,
           'database' => null,
         ], $config));
+
+        try{
+            $this->instance->connect();
+        }catch(PredisConnectionException $e){
+            throw new phpFastCacheDriverException('Failed to connect to predis server', 0, $e);
+        }
 
         return true;
     }

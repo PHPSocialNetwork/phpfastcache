@@ -481,8 +481,8 @@ class CacheManager
                     }
                     break;
                 case 'fallback':
-                    if(!is_bool($configValue)){
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean");
+                    if(!is_bool($configValue) && !is_string($configValue)){
+                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean or string");
                     }
                     break;
                 case 'limited_memory_each_object':

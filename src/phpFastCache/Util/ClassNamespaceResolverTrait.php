@@ -21,16 +21,19 @@ namespace phpFastCache\Util;
 trait ClassNamespaceResolverTrait
 {
     /**
+     * @var string
+     */
+    protected $namespace;
+
+    /**
      * @return string
      */
     protected function getClassNamespace()
     {
-        static $namespace;
-
-        if (!$namespace) {
-            $namespace = (new \ReflectionObject($this))->getNamespaceName();
+        if (!$this->namespace) {
+            $this->namespace = substr(static::class, 0, strrpos( static::class, '\\'));
         }
 
-        return $namespace;
+        return $this->namespace;
     }
 }

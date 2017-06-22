@@ -63,18 +63,23 @@ trait CacheItemPoolTrait
     public function getItem($key)
     {
         if (is_string($key)) {
-            if (preg_match('~([' . preg_quote(self::$unsupportedKeyChars, '~') . ']+)~', $key, $matches)){
-                throw new phpFastCacheInvalidArgumentException('Unsupported key character detected: "' . $matches[1] . '". Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers');
-            }
-            if (!array_key_exists($key, $this->itemInstances)) {
+            /**
+             * Replace array_key_exists by isset
+             * due to performance issue on huge
+             * loop dispatching operations
+             */
+            if (!isset($this->itemInstances[$key])) {
+                if (preg_match('~([' . preg_quote(self::$unsupportedKeyChars, '~') . ']+)~', $key, $matches)){
+                    throw new phpFastCacheInvalidArgumentException('Unsupported key character detected: "' . $matches[1] . '". Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers');
+                }
 
                 /**
                  * @var $item ExtendedCacheItemInterface
                  */
                 CacheManager::$ReadHits++;
                 $cacheSlamsSpendSeconds = 0;
-                $class = new \ReflectionClass((new \ReflectionObject($this))->getNamespaceName() . '\Item');
-                $item = $class->newInstanceArgs([$this, $key]);
+                $class = $this->getClassNamespace() . '\Item';
+                $item = new $class($this, $key);
                 $item->setEventManager($this->eventManager);
 
                 getItemDriverRead:
@@ -304,8 +309,12 @@ trait CacheItemPoolTrait
     {
         /**
          * @var ExtendedCacheItemInterface $item
+         *
+         * Replace array_key_exists by isset
+         * due to performance issue on huge
+         * loop dispatching operations
          */
-        if (!array_key_exists($item->getKey(), $this->itemInstances)) {
+        if (!isset($this->itemInstances[$item->getKey()])) {
             $this->itemInstances[ $item->getKey() ] = $item;
         } else if(spl_object_hash($item) !== spl_object_hash($this->itemInstances[ $item->getKey() ])){
             throw new \RuntimeException('Spl object hash mismatches ! You probably tried to save a detached item which has been already retrieved from cache.');

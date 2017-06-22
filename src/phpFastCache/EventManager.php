@@ -69,8 +69,12 @@ class EventManager
      */
     public function dispatch($eventName, ...$args)
     {
-        $eventName = 'on' . ucfirst($eventName);
-        if(array_key_exists($eventName, $this->events)){
+        /**
+         * Replace array_key_exists by isset
+         * due to performance issue on huge
+         * loop dispatching operations
+         */
+        if(isset($this->events[$eventName])){
             foreach ($this->events[ $eventName ] as $event) {
                 call_user_func_array($event, $args);
             }
@@ -86,6 +90,7 @@ class EventManager
     public function __call($name, $arguments)
     {
         if(strpos($name, 'on') === 0){
+            $name = substr($name, 2);
             if(is_callable($arguments[0])){
                 if(isset($arguments[1]) && is_string($arguments[0])){
                     $this->events[$name][$arguments[1]] = $arguments[0];

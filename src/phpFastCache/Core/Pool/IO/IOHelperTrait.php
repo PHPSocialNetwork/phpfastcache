@@ -285,7 +285,7 @@ HTACCESS;
          * @param bool $secureFileManipulation
          *
          */
-        $this->eventManager->dispatch('CacheWriteFileOnDisk', $this, $file, $secureFileManipulation);
+        //$this->eventManager->dispatch('CacheWriteFileOnDisk', $this, $file, $secureFileManipulation);
 
         if($secureFileManipulation){
             $tmpFilename = Directory::getAbsolutePath(dirname($file) . '/tmp_' . md5(

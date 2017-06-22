@@ -44,17 +44,26 @@ trait ItemExtendedTrait
     protected $driver;
 
     /**
+     * @var string
+     */
+    protected $encodedKey;
+
+    /**
      * @return string
      */
     public function getEncodedKey()
     {
-        $keyHashFunction = $this->driver->getConfigOption('defaultKeyHashFunction');
+        if(!$this->encodedKey){
+            $keyHashFunction = $this->driver->getConfigOption('defaultKeyHashFunction');
 
-        if($keyHashFunction){
-            return $keyHashFunction($this->getKey());
-        }else{
-            return md5($this->getKey());
+            if($keyHashFunction){
+                $this->encodedKey =  $keyHashFunction($this->getKey());
+            }else{
+                $this->encodedKey =  md5($this->getKey());
+            }
         }
+
+        return $this->encodedKey;
     }
 
     /**

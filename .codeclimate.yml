@@ -54,4 +54,5 @@ ratings:
 exclude_paths:
 - "bin/**"
 - "examples/**"
+- "docs/**"
 - "tests/**"

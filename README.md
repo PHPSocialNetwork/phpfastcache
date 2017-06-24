@@ -210,7 +210,7 @@ EventManager::getInstance()->unbindEventCallback('onCacheGetItem', 'myCallbackNa
 
 ```
 
-More information about the implementation and the events available on the [Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Introducing-to-events)
+More information about the implementation and the events are available on the [Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Introducing-to-events)
 
 ---------------------------
 Introducing new helpers

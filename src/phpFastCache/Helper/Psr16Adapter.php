@@ -117,7 +117,7 @@ class Psr16Adapter implements CacheInterface
     /**
      * @param string[] $keys
      * @param null $default
-     * @return array
+     * @return \iterable
      * @throws \phpFastCache\Exceptions\phpFastCacheSimpleCacheException
      */
     public function getMultiple($keys, $default = null)

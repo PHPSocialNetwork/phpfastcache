@@ -59,7 +59,7 @@ class CacheManager
     public static $WriteHits = 0;
 
     /**
-     * @var ExtendedCacheItemPoolInterface[]
+     * @var array
      */
     protected static $config = [
         /**

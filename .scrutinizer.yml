@@ -7,8 +7,7 @@ before_commands:
   - "composer require phpfastcache/couchdb \"~1.0.0\""
 build: 
   dependencies: 
-    before: 
-      - "pecl install cassandra"
+    before: []
   environment: 
     php: 
       version: 5.6

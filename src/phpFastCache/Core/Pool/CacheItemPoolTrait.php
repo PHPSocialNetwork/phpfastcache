@@ -27,7 +27,7 @@ use Psr\Cache\CacheItemInterface;
 /**
  * Trait StandardPsr6StructureTrait
  * @package phpFastCache\Core
- *
+ * @property array $config The config array
  */
 trait CacheItemPoolTrait
 {

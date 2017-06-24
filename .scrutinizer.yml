@@ -1,45 +1,44 @@
-#
-# This file is part of phpFastCache.
-#
-# @license MIT License (MIT)
-#
-# For full copyright and license information, please see the docs/CREDITS.txt file.
-#
-# @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
-# @author Georges.L (Geolim4)  <contact@geolim4.com>
-#
-before_commands:
-    - "composer install --no-dev --prefer-source"
-    - "composer require predis/predis \"~1.1.0\""
-    - "composer require mongodb/mongodb \"^1.1\""
-    - "composer require phpfastcache/phpssdb ~1.0.0\""
-    - "composer require phpfastcache/couchdb \"~1.0.0\""
-filter:
-    excluded_paths: ["bin/*", "docs/*", "examples/*", "var/*", "vendor/*", "tests/*"]
-checks:
-    php: true
-coding_style:
-    php:
-        spaces:
-            around_operators:
-                concatenation: true
-tools:
-    external_code_coverage: false
-    php_code_coverage: true
-    php_code_sniffer:
-        enabled: true
-        config:
-            standard: PSR2
-        filter:
-            paths: ["src/*"]
-    php_mess_detector:
-        enabled: true
-        filter:
-            paths: ["src/*"]
-build:
-    environment:
-        php:
-            version: 5.6
-    dependencies:
-        before:
-            - pecl install cassandra
+--- 
+before_commands: 
+  - "composer install --no-dev --prefer-source"
+  - "composer require predis/predis \"~1.1.0\""
+  - "composer require mongodb/mongodb \"^1.1\""
+  - "composer require phpfastcache/phpssdb ~1.0.0\""
+  - "composer require phpfastcache/couchdb \"~1.0.0\""
+build: 
+  dependencies: 
+    before: 
+      - "pecl install cassandra"
+  environment: 
+    php: 
+      version: 5.6
+checks: 
+  php: true
+coding_style: 
+  php: 
+    spaces: 
+      around_operators: 
+        concatenation: true
+filter: 
+  excluded_paths: 
+    - bin/*
+    - docs/*
+    - examples/*
+    - var/*
+    - vendor/*
+    - tests/*
+tools: 
+  external_code_coverage: false
+  php_code_coverage: true
+  php_code_sniffer: 
+    config: 
+      standard: PSR2
+    enabled: true
+    filter: 
+      paths: 
+        - src/*
+  php_mess_detector: 
+    enabled: true
+    filter: 
+      paths: 
+        - src/*

@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+
 namespace phpFastCache\Core\Pool;
 
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
@@ -71,9 +72,9 @@ trait DriverBaseTrait
      */
     public function getConfigOption($optionName)
     {
-        if(isset($this->config[$optionName])){
-            return $this->config[$optionName];
-        }else{
+        if (isset($this->config[ $optionName ])) {
+            return $this->config[ $optionName ];
+        } else {
             return null;
         }
     }
@@ -143,14 +144,14 @@ trait DriverBaseTrait
           self::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),
         ];
 
-        if($this->config['itemDetailedDate']){
+        if ($this->config[ 'itemDetailedDate' ]) {
             $wrap[ self::DRIVER_MDATE_WRAPPER_INDEX ] = new \DateTime();
             /**
              * If the creation date exists
              * reuse it else set a new Date
              */
             $wrap[ self::DRIVER_CDATE_WRAPPER_INDEX ] = $item->getCreationDate() ?: new \DateTime();
-        }else{
+        } else {
             $wrap[ self::DRIVER_MDATE_WRAPPER_INDEX ] = null;
             $wrap[ self::DRIVER_CDATE_WRAPPER_INDEX ] = null;
         }
@@ -227,7 +228,7 @@ trait DriverBaseTrait
          * on tags item, it can leads
          * to an infinite recursive calls
          */
-        if(strpos($item->getKey(), self::DRIVER_TAGS_KEY_PREFIX ) === 0){
+        if (strpos($item->getKey(), self::DRIVER_TAGS_KEY_PREFIX) === 0) {
             throw new phpFastCacheLogicException('Trying to set tag(s) to an Tag item index: ' . $item->getKey());
         }
 
@@ -246,7 +247,7 @@ trait DriverBaseTrait
              * that has slow performances
              */
 
-            $tagsItem->set(array_merge((array) $data, [$item->getKey() => $expTimestamp]));
+            $tagsItem->set(array_merge((array)$data, [$item->getKey() => $expTimestamp]));
 
             /**
              * Set the expiration date
@@ -268,7 +269,7 @@ trait DriverBaseTrait
         $tagsItems = $this->getItems($this->getTagKeys($item->getRemovedTags()));
 
         foreach ($tagsItems as $tagsItem) {
-            $data = (array) $tagsItem->get();
+            $data = (array)$tagsItem->get();
 
             unset($data[ $item->getKey() ]);
             $tagsItem->set($data);

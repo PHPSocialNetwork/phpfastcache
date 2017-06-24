@@ -18,10 +18,10 @@ use InvalidArgumentException;
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\EventManager;
+use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Exceptions\phpFastCacheLogicException;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use phpFastCache\Exceptions\phpFastCacheLogicException;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 
 /**
  * Interface ExtendedCacheItemPoolInterface
@@ -29,7 +29,7 @@ use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
  */
 interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
 {
-    const DRIVER_CHECK_FAILURE      = '%s is not installed or is misconfigured, cannot continue. 
+    const DRIVER_CHECK_FAILURE = '%s is not installed or is misconfigured, cannot continue. 
     Also, please verify the suggested dependencies in composer because as of the V6, 3rd party libraries are no longer required.';
 
     const DRIVER_TAGS_KEY_PREFIX    = '_TAG_';

@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+
 namespace phpFastCache\Helper;
 
 use phpFastCache\CacheManager;
@@ -43,22 +44,21 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
      */
     protected function getGenericCallback()
     {
-        return function($method, $args){
+        return function ($method, $args) {
             $getterMethod = (strpos($method, 'get') === 0);
             $return = false;
 
-            if($getterMethod){
+            if ($getterMethod) {
                 $return = [];
             }
 
-            foreach ($this->instances as $instance)
-            {
+            foreach ($this->instances as $instance) {
                 $reflectionMethod = new \ReflectionMethod(get_class($instance), $method);
-                if($getterMethod){
+                if ($getterMethod) {
                     $return[ $instance->getDriverName() ] = $reflectionMethod->invokeArgs($instance, $args);
-                }else{
+                } else {
                     $result = $reflectionMethod->invokeArgs($instance, $args);
-                    if($result !== false){
+                    if ($result !== false) {
                         $return = $result;
                     }
                 }

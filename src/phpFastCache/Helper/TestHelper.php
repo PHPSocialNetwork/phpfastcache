@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+
 namespace phpFastCache\Helper;
 
 use phpFastCache\Api;
@@ -95,7 +96,7 @@ class TestHelper
      */
     public function printNewLine($count = 1)
     {
-        for($i = 0; $i < $count; $i++){
+        for ($i = 0; $i < $count; $i++) {
             print PHP_EOL;
         }
 
@@ -109,9 +110,9 @@ class TestHelper
      */
     public function printText($string, $strtoupper = false)
     {
-        if(!$strtoupper){
+        if (!$strtoupper) {
             print trim($string) . PHP_EOL;
-        }else{
+        } else {
             print strtoupper(trim($string) . PHP_EOL);
         }
 
@@ -123,10 +124,9 @@ class TestHelper
      */
     public function runAsyncProcess($cmd)
     {
-        if (substr(php_uname(), 0, 7) === 'Windows'){
-            pclose(popen('start /B '. $cmd, 'r'));
-        }
-        else {
+        if (substr(php_uname(), 0, 7) === 'Windows') {
+            pclose(popen('start /B ' . $cmd, 'r'));
+        } else {
             exec($cmd . ' > /dev/null &');
         }
     }

@@ -29,6 +29,7 @@ use Psr\Cache\CacheItemInterface;
 class Driver implements ExtendedCacheItemPoolInterface
 {
     use DriverBaseTrait;
+
     /**
      * Driver constructor.
      * @param array $config

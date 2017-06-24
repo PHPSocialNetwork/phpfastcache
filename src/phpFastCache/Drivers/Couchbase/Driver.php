@@ -196,6 +196,7 @@ class Driver implements ExtendedCacheItemPoolInterface
           ->setSize($info[ 'basicStats' ][ 'diskUsed' ])
           ->setRawData($info)
           ->setData(implode(', ', array_keys($this->itemInstances)))
-          ->setInfo('CouchBase version ' . $info[ 'nodes' ][ 0 ][ 'version' ] . ', Uptime (in days): ' . round($info[ 'nodes' ][ 0 ][ 'uptime' ] / 86400, 1) . "\n For more information see RawData.");
+          ->setInfo('CouchBase version ' . $info[ 'nodes' ][ 0 ][ 'version' ] . ', Uptime (in days): ' . round($info[ 'nodes' ][ 0 ][ 'uptime' ] / 86400,
+              1) . "\n For more information see RawData.");
     }
 }

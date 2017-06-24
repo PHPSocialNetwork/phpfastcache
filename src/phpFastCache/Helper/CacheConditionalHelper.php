@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+
 namespace phpFastCache\Helper;
 
 use Psr\Cache\CacheItemPoolInterface;
@@ -43,8 +44,7 @@ class CacheConditionalHelper
     {
         $cacheItem = $this->cacheInstance->getItem($cacheKey);
 
-        if(!$cacheItem->isHit())
-        {
+        if (!$cacheItem->isHit()) {
             $cacheItem->set($callback());
             $this->cacheInstance->save($cacheItem);
         }

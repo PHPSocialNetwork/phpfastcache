@@ -70,9 +70,10 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            try{
-                $this->instance->putDocument(['data' => $this->encode($this->driverPreWrap($item))], $item->getEncodedKey(), $this->getLatestDocumentRevision($item->getEncodedKey()));
-            }catch (CouchDBException $e){
+            try {
+                $this->instance->putDocument(['data' => $this->encode($this->driverPreWrap($item))], $item->getEncodedKey(),
+                  $this->getLatestDocumentRevision($item->getEncodedKey()));
+            } catch (CouchDBException $e) {
                 throw new phpFastCacheDriverException('Got error while trying to upsert a document: ' . $e->getMessage(), null, $e);
             }
             return true;
@@ -88,17 +89,17 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverRead(CacheItemInterface $item)
     {
-        try{
+        try {
             $response = $this->instance->findDocument($item->getEncodedKey());
-        }catch (CouchDBException $e){
+        } catch (CouchDBException $e) {
             throw new phpFastCacheDriverException('Got error while trying to get a document: ' . $e->getMessage(), null, $e);
         }
 
-        if($response->status === 404 || empty($response->body['data'])){
+        if ($response->status === 404 || empty($response->body[ 'data' ])) {
             return null;
-        }else if($response->status === 200){
-            return $this->decode($response->body['data']);
-        }else{
+        } else if ($response->status === 200) {
+            return $this->decode($response->body[ 'data' ]);
+        } else {
             throw new phpFastCacheDriverException('Got unexpected HTTP status: ' . $response->status);
         }
     }
@@ -115,9 +116,9 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            try{
+            try {
                 $this->instance->deleteDocument($item->getEncodedKey(), $this->getLatestDocumentRevision($item->getEncodedKey()));
-            }catch (CouchDBException $e){
+            } catch (CouchDBException $e) {
                 throw new phpFastCacheDriverException('Got error while trying to delete a document: ' . $e->getMessage(), null, $e);
             }
             return true;
@@ -132,10 +133,10 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverClear()
     {
-        try{
+        try {
             $this->instance->deleteDatabase($this->getDatabaseName());
             $this->createDatabase();
-        }catch (CouchDBException $e){
+        } catch (CouchDBException $e) {
             throw new phpFastCacheDriverException('Got error while trying to delete and recreate the database: ' . $e->getMessage(), null, $e);
         }
 
@@ -161,11 +162,9 @@ class Driver implements ExtendedCacheItemPoolInterface
             $timeout = isset($this->config[ 'timeout' ]) ? $this->config[ 'timeout' ] : 10;
 
             $url = ($ssl ? 'https://' : 'http://');
-            if($username)
-            {
+            if ($username) {
                 $url .= "{$username}";
-                if($password)
-                {
+                if ($password) {
                     $url .= ":{$password}";
                 }
                 $url .= '@';
@@ -177,7 +176,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             $this->instance = CouchDBClient::create([
               'dbname' => $this->getDatabaseName(),
               'url' => $url,
-              'timeout' => $timeout
+              'timeout' => $timeout,
             ]);
 
             $this->createDatabase();
@@ -199,8 +198,8 @@ class Driver implements ExtendedCacheItemPoolInterface
           null,
           false
         );
-        if(!empty($response->headers['etag'])){
-            return trim($response->headers['etag'], " '\"\t\n\r\0\x0B");
+        if (!empty($response->headers[ 'etag' ])) {
+            return trim($response->headers[ 'etag' ], " '\"\t\n\r\0\x0B");
         }
 
         return null;
@@ -219,7 +218,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function createDatabase()
     {
-        if(!in_array($this->instance->getDatabase(), $this->instance->getAllDatabases(), true)){
+        if (!in_array($this->instance->getDatabase(), $this->instance->getAllDatabases(), true)) {
             $this->instance->createDatabase($this->instance->getDatabase());
         }
     }
@@ -251,7 +250,7 @@ HELP;
         $info = $this->instance->getDatabaseInfo();
 
         return (new DriverStatistic())
-          ->setSize($info['sizes']['active'])
+          ->setSize($info[ 'sizes' ][ 'active' ])
           ->setRawData($info)
           ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setInfo('Couchdb version ' . $this->instance->getVersion() . "\n For more information see RawData.");

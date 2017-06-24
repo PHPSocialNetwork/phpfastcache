@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+
 namespace phpFastCache\Entities;
 
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
@@ -39,10 +40,10 @@ class ItemBatch
      */
     public function __construct($itemKey, \DateTime $itemDate)
     {
-        if(is_string($itemKey)){
+        if (is_string($itemKey)) {
             $this->itemKey = $itemKey;
             $this->itemDate = $itemDate;
-        }else{
+        } else {
             throw new phpFastCacheInvalidArgumentException(sprintf('$itemKey must be a string, got "%s" instead', gettype($itemKey)));
         }
     }

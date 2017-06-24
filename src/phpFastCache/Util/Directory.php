@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+
 namespace phpFastCache\Util;
 
 use RecursiveDirectoryIterator;
@@ -137,7 +138,7 @@ class Directory
          * Allows to dereference char
          */
         $__FILE__ = preg_replace('~^(([a-z0-9\-]+)://)~', '', __FILE__);// remove file protocols such as "phar://" etc.
-        $prefix = $__FILE__[0] === DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
+        $prefix = $__FILE__[ 0 ] === DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
         return $prefix . implode(DIRECTORY_SEPARATOR, $absolutes);
     }
 }

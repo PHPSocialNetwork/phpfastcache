@@ -32,7 +32,7 @@ use Redis as RedisClient;
 class Driver implements ExtendedCacheItemPoolInterface
 {
     use DriverBaseTrait;
-    
+
     /**
      * Driver constructor.
      * @param array $config
@@ -127,19 +127,19 @@ class Driver implements ExtendedCacheItemPoolInterface
             $this->instance = $this->instance ?: new RedisClient();
 
             $host = isset($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1';
-            $port = isset($this->config[ 'port' ]) ? (int) $this->config[ 'port' ] : '6379';
+            $port = isset($this->config[ 'port' ]) ? (int)$this->config[ 'port' ] : '6379';
             $password = isset($this->config[ 'password' ]) ? $this->config[ 'password' ] : '';
             $database = isset($this->config[ 'database' ]) ? $this->config[ 'database' ] : '';
             $timeout = isset($this->config[ 'timeout' ]) ? $this->config[ 'timeout' ] : '';
 
-            if (!$this->instance->connect($host, (int) $port, (int) $timeout)) {
+            if (!$this->instance->connect($host, (int)$port, (int)$timeout)) {
                 return false;
             } else {
                 if ($password && !$this->instance->auth($password)) {
                     return false;
                 }
                 if ($database) {
-                    $this->instance->select((int) $database);
+                    $this->instance->select((int)$database);
                 }
 
                 return true;
@@ -166,6 +166,7 @@ class Driver implements ExtendedCacheItemPoolInterface
           ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setRawData($info)
           ->setSize($info[ 'used_memory' ])
-          ->setInfo(sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.", $info[ 'redis_version' ], $date->format(DATE_RFC2822)));
+          ->setInfo(sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
+            $info[ 'redis_version' ], $date->format(DATE_RFC2822)));
     }
 }

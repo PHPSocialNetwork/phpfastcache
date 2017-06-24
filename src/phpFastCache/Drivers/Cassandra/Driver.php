@@ -14,6 +14,8 @@
 
 namespace phpFastCache\Drivers\Cassandra;
 
+use Cassandra;
+use Cassandra\Session as CassandraSession;
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Entities\DriverStatistic;
@@ -22,8 +24,6 @@ use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpFastCache\Exceptions\phpFastCacheLogicException;
 use Psr\Cache\CacheItemInterface;
-use Cassandra;
-use Cassandra\Session as CassandraSession;
 
 /**
  * Class Driver
@@ -33,7 +33,7 @@ use Cassandra\Session as CassandraSession;
 class Driver implements ExtendedCacheItemPoolInterface
 {
     const CASSANDRA_KEY_SPACE = 'phpfastcache';
-    const CASSANDRA_TABLE = 'cacheItems';
+    const CASSANDRA_TABLE     = 'cacheItems';
 
     use DriverBaseTrait;
 
@@ -72,7 +72,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            try{
+            try {
                 $cacheData = $this->encode($this->driverPreWrap($item));
                 $options = new Cassandra\ExecutionOptions([
                   'arguments' => [
@@ -81,10 +81,10 @@ class Driver implements ExtendedCacheItemPoolInterface
                     'cache_data' => $cacheData,
                     'cache_creation_date' => new Cassandra\Timestamp((new \DateTime())->getTimestamp()),
                     'cache_expiration_date' => new Cassandra\Timestamp($item->getExpirationDate()->getTimestamp()),
-                    'cache_length' => strlen($cacheData)
+                    'cache_length' => strlen($cacheData),
                   ],
                   'consistency' => Cassandra::CONSISTENCY_ALL,
-                  'serial_consistency' => Cassandra::CONSISTENCY_SERIAL
+                  'serial_consistency' => Cassandra::CONSISTENCY_SERIAL,
                 ]);
 
                 $query = sprintf('INSERT INTO %s.%s
@@ -106,7 +106,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                  * been really upserted
                  */
                 return $result instanceof Cassandra\Rows;
-            }catch(\Cassandra\Exception\InvalidArgumentException $e){
+            } catch (\Cassandra\Exception\InvalidArgumentException $e) {
                 throw new phpFastCacheInvalidArgumentException($e, 0, $e);
             }
         } else {
@@ -123,7 +123,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         try {
             $options = new Cassandra\ExecutionOptions([
               'arguments' => ['cache_id' => $item->getKey()],
-              'page_size' => 1
+              'page_size' => 1,
             ]);
             $query = sprintf(
               'SELECT cache_data FROM %s.%s WHERE cache_id = :cache_id;',
@@ -132,9 +132,9 @@ class Driver implements ExtendedCacheItemPoolInterface
             );
             $results = $this->instance->execute(new Cassandra\SimpleStatement($query), $options);
 
-            if($results instanceof Cassandra\Rows && $results->count() === 1){
-                return $this->decode($results->first()['cache_data']);
-            }else{
+            if ($results instanceof Cassandra\Rows && $results->count() === 1) {
+                return $this->decode($results->first()[ 'cache_data' ]);
+            } else {
                 return null;
             }
         } catch (Cassandra\Exception $e) {
@@ -216,10 +216,10 @@ class Driver implements ExtendedCacheItemPoolInterface
               ->withContactPoints($host)
               ->withPort($port);
 
-            if(!empty($this->config['ssl']['enabled'])){
-                if(!empty($this->config['ssl']['verify'])){
+            if (!empty($this->config[ 'ssl' ][ 'enabled' ])) {
+                if (!empty($this->config[ 'ssl' ][ 'verify' ])) {
                     $sslBuilder = Cassandra::ssl()->withVerifyFlags(Cassandra::VERIFY_PEER_CERT);
-                }else{
+                } else {
                     $sslBuilder = Cassandra::ssl()->withVerifyFlags(Cassandra::VERIFY_NONE);
                 }
 
@@ -228,7 +228,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
             $clusterBuilder->withConnectTimeout($timeout);
 
-            if($username){
+            if ($username) {
                 $clusterBuilder->withCredentials($username, $password);
             }
 

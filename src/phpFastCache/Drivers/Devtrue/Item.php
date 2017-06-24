@@ -15,8 +15,8 @@
 namespace phpFastCache\Drivers\Devtrue;
 
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Core\Item\ItemBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Drivers\Devtrue\Driver as DevtrueDriver;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 

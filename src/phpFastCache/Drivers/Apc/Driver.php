@@ -29,7 +29,7 @@ use Psr\Cache\CacheItemInterface;
 class Driver implements ExtendedCacheItemPoolInterface
 {
     use DriverBaseTrait;
-    
+
     /**
      * Driver constructor.
      * @param array $config
@@ -133,7 +133,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function getStats()
     {
-        $stats = (array) apc_cache_info('user');
+        $stats = (array)apc_cache_info('user');
         $date = (new \DateTime())->setTimestamp($stats[ 'start_time' ]);
 
         return (new DriverStatistic())

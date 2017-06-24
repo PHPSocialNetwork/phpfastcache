@@ -134,21 +134,21 @@ class Driver implements ExtendedCacheItemPoolInterface
         if (count($servers) < 1) {
             $servers = [
               [
-                'host' =>'127.0.0.1',
+                'host' => '127.0.0.1',
                 'port' => 11211,
                 'sasl_user' => false,
-                'sasl_password' => false
+                'sasl_password' => false,
               ],
             ];
         }
 
         foreach ($servers as $server) {
             try {
-                if (!$this->instance->addServer($server['host'], $server['port'])) {
+                if (!$this->instance->addServer($server[ 'host' ], $server[ 'port' ])) {
                     $this->fallback = true;
                 }
-                if(!empty($server[ 'sasl_user' ]) && !empty($server[ 'sasl_password'])){
-                    $this->instance->setSaslAuthData($server[ 'sasl_user' ], $server[ 'sasl_password']);
+                if (!empty($server[ 'sasl_user' ]) && !empty($server[ 'sasl_password' ])) {
+                    $this->instance->setSaslAuthData($server[ 'sasl_user' ], $server[ 'sasl_password' ]);
                 }
             } catch (\Exception $e) {
                 $this->fallback = true;
@@ -167,11 +167,11 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function getStats()
     {
-        $stats = (array) $this->instance->getstats();
+        $stats = (array)$this->instance->getstats();
         $stats[ 'uptime' ] = (isset($stats[ 'uptime' ]) ? $stats[ 'uptime' ] : 0);
         $stats[ 'version' ] = (isset($stats[ 'version' ]) ? $stats[ 'version' ] : 'UnknownVersion');
         $stats[ 'bytes' ] = (isset($stats[ 'bytes' ]) ? $stats[ 'version' ] : 0);
-        
+
         $date = (new \DateTime())->setTimestamp(time() - $stats[ 'uptime' ]);
 
         return (new DriverStatistic())

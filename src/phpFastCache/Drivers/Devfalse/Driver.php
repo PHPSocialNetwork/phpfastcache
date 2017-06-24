@@ -85,6 +85,7 @@ class Driver implements ExtendedCacheItemPoolInterface
           self::DRIVER_EDATE_WRAPPER_INDEX => new \DateTime(),
         ];
     }
+
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool

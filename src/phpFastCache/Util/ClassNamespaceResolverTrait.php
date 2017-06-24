@@ -31,7 +31,7 @@ trait ClassNamespaceResolverTrait
     protected function getClassNamespace()
     {
         if (!$this->namespace) {
-            $this->namespace = substr(static::class, 0, strrpos( static::class, '\\'));
+            $this->namespace = substr(static::class, 0, strrpos(static::class, '\\'));
         }
 
         return $this->namespace;

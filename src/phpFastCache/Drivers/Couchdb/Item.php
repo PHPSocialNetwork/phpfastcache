@@ -15,8 +15,8 @@
 namespace phpFastCache\Drivers\Couchdb;
 
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Core\Item\ItemBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Drivers\Couchdb\Driver as CouchdbDriver;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 

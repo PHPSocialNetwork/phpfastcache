@@ -20,9 +20,9 @@ use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
-use Psr\Cache\CacheItemInterface;
 use Predis\Client as PredisClient;
 use Predis\Connection\ConnectionException as PredisConnectionException;
+use Psr\Cache\CacheItemInterface;
 
 /**
  * Class Driver
@@ -134,9 +134,9 @@ class Driver implements ExtendedCacheItemPoolInterface
           'database' => null,
         ], $config));
 
-        try{
+        try {
             $this->instance->connect();
-        }catch(PredisConnectionException $e){
+        } catch (PredisConnectionException $e) {
             throw new phpFastCacheDriverException('Failed to connect to predis server', 0, $e);
         }
 
@@ -169,14 +169,15 @@ HELP;
     public function getStats()
     {
         $info = $this->instance->info();
-        $size = (isset($info['Memory']['used_memory']) ? $info['Memory']['used_memory'] : 0);
-        $version = (isset($info['Server']['redis_version']) ? $info['Server']['redis_version'] : 0);
-        $date = (isset($info['Server'][ 'uptime_in_seconds' ]) ? (new \DateTime())->setTimestamp(time() - $info['Server'][ 'uptime_in_seconds' ]) : 'unknown date');
+        $size = (isset($info[ 'Memory' ][ 'used_memory' ]) ? $info[ 'Memory' ][ 'used_memory' ] : 0);
+        $version = (isset($info[ 'Server' ][ 'redis_version' ]) ? $info[ 'Server' ][ 'redis_version' ] : 0);
+        $date = (isset($info[ 'Server' ][ 'uptime_in_seconds' ]) ? (new \DateTime())->setTimestamp(time() - $info[ 'Server' ][ 'uptime_in_seconds' ]) : 'unknown date');
 
         return (new DriverStatistic())
           ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setRawData($info)
           ->setSize($size)
-          ->setInfo(sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.", $version, $date->format(DATE_RFC2822)));
+          ->setInfo(sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
+            $version, $date->format(DATE_RFC2822)));
     }
 }

@@ -91,17 +91,16 @@ trait IOHelperTrait
          * return the temp dir
          */
         if ($readonly === true) {
-            if($this->config[ 'autoTmpFallback' ] && (!@file_exists($full_path) || !@is_writable($full_path))){
+            if ($this->config[ 'autoTmpFallback' ] && (!@file_exists($full_path) || !@is_writable($full_path))) {
                 return $full_path_tmp;
             }
             return $full_path;
-        }else{
+        } else {
             if (!isset($this->tmp[ $full_path_hash ]) || (!@file_exists($full_path) || !@is_writable($full_path))) {
                 if (!@file_exists($full_path)) {
                     @mkdir($full_path, $this->getDefaultChmod(), true);
-                }else if (!@is_writable($full_path)) {
-                    if (!@chmod($full_path, $this->getDefaultChmod()) && $this->config[ 'autoTmpFallback' ])
-                    {
+                } else if (!@is_writable($full_path)) {
+                    if (!@chmod($full_path, $this->getDefaultChmod()) && $this->config[ 'autoTmpFallback' ]) {
                         /**
                          * Switch back to tmp dir
                          * again if the path is not writable
@@ -164,7 +163,6 @@ trait IOHelperTrait
     }
 
 
-
     /**
      * @param $keyword
      * @return string
@@ -212,7 +210,7 @@ trait IOHelperTrait
         if ($create === true) {
             if (!is_writable($path)) {
                 try {
-                    if(!chmod($path, 0777)){
+                    if (!chmod($path, 0777)) {
                         throw new phpFastCacheIOException('Chmod failed on : ' . $path);
                     }
                 } catch (phpFastCacheIOException $e) {
@@ -287,7 +285,7 @@ HTACCESS;
          */
         $this->eventManager->dispatch('CacheWriteFileOnDisk', $this, $file, $secureFileManipulation);
 
-        if($secureFileManipulation){
+        if ($secureFileManipulation) {
             $tmpFilename = Directory::getAbsolutePath(dirname($file) . '/tmp_' . md5(
                 str_shuffle(uniqid($this->getDriverName(), false))
                 . str_shuffle(uniqid($this->getDriverName(), false))
@@ -299,10 +297,10 @@ HTACCESS;
             flock($f, LOCK_UN);
             fclose($f);
 
-            if(!rename($tmpFilename, $file)){
+            if (!rename($tmpFilename, $file)) {
                 throw new phpFastCacheIOException(sprintf('Failed to rename %s to %s', $tmpFilename, $file));
             }
-        }else{
+        } else {
             $f = fopen($file, 'w+');
             $octetWritten = fwrite($f, $data);
             fclose($f);
@@ -334,7 +332,7 @@ HTACCESS;
 
         $stat->setData(implode(', ', array_keys($this->itemInstances)))
           ->setRawData([
-            'tmp' => $this->tmp
+            'tmp' => $this->tmp,
           ])
           ->setSize(Directory::dirSize($path))
           ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($path));

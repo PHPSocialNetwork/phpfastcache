@@ -210,7 +210,7 @@ EventManager::getInstance()->unbindEventCallback('onCacheGetItem', 'myCallbackNa
 
 ```
 
-More information about the implementation and the events available on the [Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Introducing-to-events)
+More information about the implementation and the events are available on the [Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Introducing-to-events)
 
 ---------------------------
 Introducing new helpers
@@ -284,7 +284,7 @@ echo implode('<br />', $CachedString->get());// Will echo your product list
 * See the file examples/withoutComposer.php for more information.
 
 #### :zap: Step 3: Enjoy ! Your website is now faster than lightning !
-For curious developpers, there is a lot of other examples available  [here](https://github.com/PHPSocialNetwork/phpfastcache/tree/final/docs/examples).
+For curious developers, there is a lot of other examples available  [here](https://github.com/PHPSocialNetwork/phpfastcache/tree/final/docs/examples).
 
 #### :boom: phpFastCache support
 Found an issue or have an idea ? Come [here](https://github.com/PHPSocialNetwork/phpfastcache/issues) and let us know !

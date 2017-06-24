@@ -1,4 +1,4 @@
-### Driver descriptions
+### Drivers descriptions
 * Apc
   * The Alternative Php Cache (APC) driver. A memory cache for regular performances.
 * Apcu

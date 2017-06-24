@@ -15,8 +15,8 @@
 namespace phpFastCache\Drivers\Cassandra;
 
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Core\Item\ItemBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Drivers\Cassandra\Driver as CassandraDriver;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 

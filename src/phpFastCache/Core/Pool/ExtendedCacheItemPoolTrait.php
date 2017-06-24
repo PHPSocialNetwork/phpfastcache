@@ -14,7 +14,6 @@
 
 namespace phpFastCache\Core\Pool;
 
-use InvalidArgumentException;
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\EventManager;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
@@ -75,9 +74,9 @@ trait ExtendedCacheItemPoolTrait
     {
         $items = [];
         foreach (array_unique($tagNames) as $tagName) {
-            if(is_string($tagName)){
+            if (is_string($tagName)) {
                 $items = array_merge($items, $this->getItemsByTag($tagName));
-            }else{
+            } else {
                 throw new phpFastCacheInvalidArgumentException('$tagName must be a a string');
             }
         }
@@ -486,7 +485,7 @@ trait ExtendedCacheItemPoolTrait
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return array [
+     * @return null|array [
      *      'd' => 'THE ITEM DATA'
      *      't' => 'THE ITEM DATE EXPIRATION'
      *      'g' => 'THE ITEM TAGS'

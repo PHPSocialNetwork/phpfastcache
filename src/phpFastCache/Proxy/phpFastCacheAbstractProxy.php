@@ -11,10 +11,11 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+
 namespace phpFastCache\Proxy;
 
-use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\CacheManager;
+use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\Entities\DriverStatistic;
 use Psr\Cache\CacheItemInterface;
 
@@ -74,9 +75,9 @@ abstract class phpFastCacheAbstractProxy
      */
     public function __call($name, $args)
     {
-        if(method_exists($this->instance, $name)){
+        if (method_exists($this->instance, $name)) {
             return call_user_func_array([$this->instance, $name], $args);
-        }else{
+        } else {
             throw new \BadMethodCallException(sprintf('Method %s does not exists', $name));
         }
     }

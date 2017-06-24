@@ -14,8 +14,8 @@
 
 namespace phpFastCache\Core\Item;
 
-use phpFastCache\EventManager;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\EventManager;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpFastCache\Exceptions\phpFastCacheLogicException;
 
@@ -23,6 +23,12 @@ use phpFastCache\Exceptions\phpFastCacheLogicException;
  * Class ItemExtendedTrait
  * @package phpFastCache\Core\Item
  * @property \Datetime $expirationDate Expiration date of the item
+ * @property \Datetime $creationDate Creation date of the item
+ * @property \Datetime $modificationDate Modification date of the item
+ * @property mixed $data Data of the item
+ * @property bool $fetched Fetch flag status
+ * @property array $tags The tags array
+ * @property array $removedTags The removed tags array
  */
 trait ItemExtendedTrait
 {
@@ -53,13 +59,13 @@ trait ItemExtendedTrait
      */
     public function getEncodedKey()
     {
-        if(!$this->encodedKey){
+        if (!$this->encodedKey) {
             $keyHashFunction = $this->driver->getConfigOption('defaultKeyHashFunction');
 
-            if($keyHashFunction){
-                $this->encodedKey =  $keyHashFunction($this->getKey());
-            }else{
-                $this->encodedKey =  md5($this->getKey());
+            if ($keyHashFunction) {
+                $this->encodedKey = $keyHashFunction($this->getKey());
+            } else {
+                $this->encodedKey = md5($this->getKey());
             }
         }
 
@@ -105,9 +111,9 @@ trait ItemExtendedTrait
      */
     public function getCreationDate()
     {
-        if($this->driver->getConfig()['itemDetailedDate']){
+        if ($this->driver->getConfig()[ 'itemDetailedDate' ]) {
             return $this->creationDate;
-        }else{
+        } else {
             throw new phpFastCacheLogicException('Cannot access to the creation date when the "itemDetailedDate" configuration is disabled.');
         }
     }
@@ -119,10 +125,10 @@ trait ItemExtendedTrait
      */
     public function setCreationDate(\DateTimeInterface $date)
     {
-        if($this->driver->getConfig()['itemDetailedDate']){
+        if ($this->driver->getConfig()[ 'itemDetailedDate' ]) {
             $this->creationDate = $date;
             return $this;
-        }else{
+        } else {
             throw new phpFastCacheLogicException('Cannot access to the creation date when the "itemDetailedDate" configuration is disabled.');
         }
     }
@@ -133,9 +139,9 @@ trait ItemExtendedTrait
      */
     public function getModificationDate()
     {
-        if($this->driver->getConfig()['itemDetailedDate']){
+        if ($this->driver->getConfig()[ 'itemDetailedDate' ]) {
             return $this->modificationDate;
-        }else{
+        } else {
             throw new phpFastCacheLogicException('Cannot access to the modification date when the "itemDetailedDate" configuration is disabled.');
         }
     }
@@ -147,10 +153,10 @@ trait ItemExtendedTrait
      */
     public function setModificationDate(\DateTimeInterface $date)
     {
-        if($this->driver->getConfig()['itemDetailedDate']){
+        if ($this->driver->getConfig()[ 'itemDetailedDate' ]) {
             $this->modificationDate = $date;
             return $this;
-        }else{
+        } else {
             throw new phpFastCacheLogicException('Cannot access to the modification date when the "itemDetailedDate" configuration is disabled.');
         }
     }
@@ -220,7 +226,7 @@ trait ItemExtendedTrait
         if (is_array($this->data)) {
             $this->data[] = $data;
         } else if (is_string($data)) {
-            $this->data .= (string) $data;
+            $this->data .= (string)$data;
         } else {
             throw new phpFastCacheInvalidArgumentException('$data must be either array nor string.');
         }
@@ -239,7 +245,7 @@ trait ItemExtendedTrait
         if (is_array($this->data)) {
             array_unshift($this->data, $data);
         } else if (is_string($data)) {
-            $this->data = (string) $data . $this->data;
+            $this->data = (string)$data . $this->data;
         } else {
             throw new phpFastCacheInvalidArgumentException('$data must be either array nor string.');
         }
@@ -399,6 +405,6 @@ trait ItemExtendedTrait
         $info = get_object_vars($this);
         $info[ 'driver' ] = 'object(' . get_class($info[ 'driver' ]) . ')';
 
-        return (array) $info;
+        return (array)$info;
     }
 }

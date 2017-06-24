@@ -15,11 +15,13 @@
 
 namespace phpFastCache\Drivers\Mongodb;
 
-use MongoDB\Driver\Command;
-use MongoDB\Driver\Exception\Exception as MongoDBException;
 use LogicException;
+use MongoDB\BSON\Binary;
+use MongoDB\BSON\UTCDateTime;
 use MongoDB\Collection;
 use MongoDB\DeleteResult;
+use MongoDB\Driver\Command;
+use MongoDB\Driver\Exception\Exception as MongoDBException;
 use MongoDB\Driver\Manager as MongodbManager;
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
@@ -28,8 +30,6 @@ use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use Psr\Cache\CacheItemInterface;
-use MongoDB\BSON\UTCDateTime;
-use MongoDB\BSON\Binary;
 
 /**
  * Class Driver
@@ -66,7 +66,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck()
     {
-        if(!class_exists('MongoDB\Driver\Manager') && class_exists('MongoClient')){
+        if (!class_exists('MongoDB\Driver\Manager') && class_exists('MongoClient')) {
             trigger_error('This driver is used to support the pecl MongoDb extension with mongo-php-library.
             For MongoDb with Mongo PECL support use Mongo Driver.', E_USER_ERROR);
         }
@@ -87,13 +87,13 @@ class Driver implements ExtendedCacheItemPoolInterface
          */
         if ($item instanceof Item) {
             try {
-                $result = (array) $this->getCollection()->updateOne(
+                $result = (array)$this->getCollection()->updateOne(
                   ['_id' => $item->getEncodedKey()],
                   [
                     '$set' => [
                       self::DRIVER_DATA_WRAPPER_INDEX => new Binary($this->encode($item->get()), Binary::TYPE_GENERIC),
                       self::DRIVER_TAGS_WRAPPER_INDEX => new Binary($this->encode($item->getTags()), Binary::TYPE_GENERIC),
-                      self::DRIVER_EDATE_WRAPPER_INDEX => ($item->getTtl() > 0 ? new UTCDateTime((time() + $item->getTtl()) * 1000) : new UTCDateTime(time()*1000)),
+                      self::DRIVER_EDATE_WRAPPER_INDEX => ($item->getTtl() > 0 ? new UTCDateTime((time() + $item->getTtl()) * 1000) : new UTCDateTime(time() * 1000)),
                     ],
                   ],
                   ['upsert' => true, 'multiple' => false]
@@ -110,7 +110,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
     {
@@ -158,14 +158,14 @@ class Driver implements ExtendedCacheItemPoolInterface
          * @var \MongoDB\Model\BSONDocument $result
          */
         $result = $this->getCollection()->drop()->getArrayCopy();
-        $this->collection = new Collection($this->instance,'phpFastCache','Cache');
+        $this->collection = new Collection($this->instance, 'phpFastCache', 'Cache');
 
         /**
          * This will rebuild automatically the Collection indexes
          */
         $this->save($this->getItem('__PFC_CACHE_CLEARED__')->set(true));
 
-        return !empty($result['ok']);
+        return !empty($result[ 'ok' ]);
     }
 
     /**
@@ -195,7 +195,7 @@ class Driver implements ExtendedCacheItemPoolInterface
               ($password ? ":{$password}" : '') .
               ($username ? '@' : '') . "{$host}" .
               ($port != '27017' ? ":{$port}" : ''), ['connectTimeoutMS' => $timeout * 1000]));
-            $this->collection = $this->collection ?: new Collection($this->instance,$databaseName, $collectionName);
+            $this->collection = $this->collection ?: new Collection($this->instance, $databaseName, $collectionName);
 
             return true;
         }
@@ -226,32 +226,31 @@ class Driver implements ExtendedCacheItemPoolInterface
           'recordStats' => 0,
           'repl' => 0,
           'metrics' => 0,
-        ]))->toArray()[0];
+        ]))->toArray()[ 0 ];
 
         $collectionStats = $this->instance->executeCommand('phpFastCache', new Command([
           'collStats' => (isset($this->config[ 'collectionName' ]) ? $this->config[ 'collectionName' ] : 'Cache'),
           'verbose' => true,
-        ]))->toArray()[0];
+        ]))->toArray()[ 0 ];
 
-        $array_filter_recursive = function( $array, callable $callback = null ) use(&$array_filter_recursive) {
+        $array_filter_recursive = function ($array, callable $callback = null) use (&$array_filter_recursive) {
             $array = $callback($array);
 
-            if(is_object($array) ||is_array($array)){
-                foreach ( $array as &$value ) {
-                    $value = call_user_func( $array_filter_recursive, $value, $callback );
+            if (is_object($array) || is_array($array)) {
+                foreach ($array as &$value) {
+                    $value = call_user_func($array_filter_recursive, $value, $callback);
                 }
             }
 
             return $array;
         };
 
-        $callback = function($item)
-        {
+        $callback = function ($item) {
             /**
              * Remove unserializable properties
              */
-            if($item instanceof \MongoDB\BSON\UTCDateTime){
-                return (string) $item;
+            if ($item instanceof \MongoDB\BSON\UTCDateTime) {
+                return (string)$item;
             }
             return $item;
         };
@@ -260,7 +259,8 @@ class Driver implements ExtendedCacheItemPoolInterface
         $collectionStats = $array_filter_recursive($collectionStats, $callback);
 
         $stats = (new DriverStatistic())
-          ->setInfo('MongoDB version ' . $serverStats->version . ', Uptime (in days): ' . round($serverStats->uptime / 86400, 1) . "\n For more information see RawData.")
+          ->setInfo('MongoDB version ' . $serverStats->version . ', Uptime (in days): ' . round($serverStats->uptime / 86400,
+              1) . "\n For more information see RawData.")
           ->setSize($collectionStats->size)
           ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setRawData([

@@ -15,8 +15,8 @@
 namespace phpFastCache\Drivers\Memcached;
 
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Core\Item\ItemBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Drivers\Memcached\Driver as MemcachedDriver;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 

@@ -87,7 +87,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
     {
@@ -125,7 +125,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             $this->instance->close();
             $this->instance = null;
         }
-        $result = (bool) LeveldbClient::destroy($this->getLeveldbFile());
+        $result = (bool)LeveldbClient::destroy($this->getLeveldbFile());
         $this->driverConnect();
 
         return $result;

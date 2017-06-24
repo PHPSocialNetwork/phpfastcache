@@ -15,8 +15,8 @@
 namespace phpFastCache\Drivers\Leveldb;
 
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Core\Item\ItemBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Drivers\Leveldb\Driver as LeveldbDriver;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 

@@ -15,8 +15,8 @@
 namespace phpFastCache\Drivers\Mongodb;
 
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Core\Item\ItemBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Drivers\Mongodb\Driver as MongodbDriver;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 

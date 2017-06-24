@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+
 namespace phpFastCache\Entities;
 
 /**
@@ -121,11 +122,11 @@ class DriverStatistic
      */
     public function getPublicDesc()
     {
-        return[
-            'Info' => 'Cache Information',
-            'Size' => 'Cache Size',
-            'Data' => 'Cache items keys',
-            'RawData' => 'Cache raw data',
+        return [
+          'Info' => 'Cache Information',
+          'Size' => 'Cache Size',
+          'Data' => 'Cache items keys',
+          'RawData' => 'Cache raw data',
         ];
     }
 }

@@ -76,7 +76,7 @@ class Driver implements ExtendedCacheItemPoolInterface
              * Force write
              */
             try {
-                return $this->writefile($file_path, $data, $this->config['secureFileManipulation']);
+                return $this->writefile($file_path, $data, $this->config[ 'secureFileManipulation' ]);
             } catch (\Exception $e) {
                 return false;
             }
@@ -87,7 +87,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
     {
@@ -136,7 +136,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverClear()
     {
-        return (bool) Directory::rrmdir($this->getPath(true));
+        return (bool)Directory::rrmdir($this->getPath(true));
     }
 
     /**

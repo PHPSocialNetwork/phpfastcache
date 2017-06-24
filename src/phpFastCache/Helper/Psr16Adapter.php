@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+
 namespace phpFastCache\Helper;
 
 use phpFastCache\CacheManager;
@@ -116,7 +117,7 @@ class Psr16Adapter implements CacheInterface
     /**
      * @param string[] $keys
      * @param null $default
-     * @return array
+     * @return \iterable
      * @throws \phpFastCache\Exceptions\phpFastCacheSimpleCacheException
      */
     public function getMultiple($keys, $default = null)

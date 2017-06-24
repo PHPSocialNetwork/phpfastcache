@@ -14,11 +14,11 @@
 
 namespace phpFastCache\Core\Item;
 
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\EventManager;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
-use Psr\Cache\CacheItemInterface;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Exceptions\phpFastCacheLogicException;
+use Psr\Cache\CacheItemInterface;
 
 /**
  * Interface ExtendedCacheItemInterface
@@ -64,7 +64,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
      * @throws phpFastCacheLogicException
      */
     public function getCreationDate();
-    
+
     /**
      * @return \DateTimeInterface
      * @throws phpFastCacheLogicException

@@ -15,8 +15,8 @@
 namespace phpFastCache\Drivers\Sqlite;
 
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Core\Item\ItemBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Drivers\Sqlite\Driver as SqliteDriver;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 

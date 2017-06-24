@@ -15,8 +15,8 @@
 namespace phpFastCache\Drivers\Ssdb;
 
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Core\Item\ItemBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Drivers\Ssdb\Driver as SsdbDriver;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 

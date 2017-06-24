@@ -29,6 +29,7 @@ use Psr\Cache\CacheItemInterface;
 class Driver implements ExtendedCacheItemPoolInterface
 {
     use DriverBaseTrait;
+
     /**
      * Driver constructor.
      * @param array $config
@@ -76,7 +77,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
     {
@@ -144,11 +145,11 @@ HELP;
      */
     public function getStats()
     {
-        $stats = (array) zend_shm_cache_info();
+        $stats = (array)zend_shm_cache_info();
         return (new DriverStatistic())
-            ->setData(implode(', ', array_keys($this->namespaces)))
-            ->setInfo(sprintf("The Zend memory have %d item(s) in cache.\n For more information see RawData.",$stats[ 'items_total' ]))
-            ->setRawData($stats)
-            ->setSize($stats[ 'memory_total' ]);
+          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setInfo(sprintf("The Zend memory have %d item(s) in cache.\n For more information see RawData.", $stats[ 'items_total' ]))
+          ->setRawData($stats)
+          ->setSize($stats[ 'memory_total' ]);
     }
 }

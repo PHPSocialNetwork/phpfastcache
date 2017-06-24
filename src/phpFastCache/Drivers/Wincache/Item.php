@@ -15,8 +15,8 @@
 namespace phpFastCache\Drivers\Wincache;
 
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Core\Item\ItemBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Drivers\Wincache\Driver as WincacheDriver;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 

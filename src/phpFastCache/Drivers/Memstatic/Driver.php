@@ -30,9 +30,9 @@ class Driver implements ExtendedCacheItemPoolInterface
 {
     use DriverBaseTrait;
 
-  /**
-   * @var array
-   */
+    /**
+     * @var array
+     */
     protected $staticStack = [];
 
     /**
@@ -68,7 +68,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->staticStack[md5($item->getKey())] = $this->driverPreWrap($item);
+            return $this->staticStack[ md5($item->getKey()) ] = $this->driverPreWrap($item);
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -76,17 +76,13 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return array [
-     *      'd' => 'THE ITEM DATA'
-     *      't' => 'THE ITEM DATE EXPIRATION'
-     *      'g' => 'THE ITEM TAGS'
-     * ]
+     * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
     {
         $key = md5($item->getKey());
-        if(isset($this->staticStack[$key])){
-          return $this->staticStack[$key];
+        if (isset($this->staticStack[ $key ])) {
+            return $this->staticStack[ $key ];
         }
         return null;
     }
@@ -102,12 +98,12 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-          $key = md5($item->getKey());
-          if(isset($this->staticStack[$key])){
-              unset($this->staticStack[$key]);
-              return true;
-          }
-          return false;
+            $key = md5($item->getKey());
+            if (isset($this->staticStack[ $key ])) {
+                unset($this->staticStack[ $key ]);
+                return true;
+            }
+            return false;
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -118,9 +114,9 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverClear()
     {
-      unset($this->staticStack);
-      $this->staticStack = [];
-      return true;
+        unset($this->staticStack);
+        $this->staticStack = [];
+        return true;
     }
 
     /**

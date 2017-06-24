@@ -81,7 +81,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
     {
@@ -133,9 +133,9 @@ class Driver implements ExtendedCacheItemPoolInterface
             ];
 
             $host = $server[ 'host' ];
-            $port = isset($server[ 'port' ]) ? (int) $server[ 'port' ] : 8888;
+            $port = isset($server[ 'port' ]) ? (int)$server[ 'port' ] : 8888;
             $password = isset($server[ 'password' ]) ? $server[ 'password' ] : '';
-            $timeout = !empty($server[ 'timeout' ]) ? (int) $server[ 'timeout' ] : 2000;
+            $timeout = !empty($server[ 'timeout' ]) ? (int)$server[ 'timeout' ] : 2000;
             $this->instance = new SimpleSSDB($host, $port, $timeout);
             if (!empty($password)) {
                 $this->instance->auth($password);

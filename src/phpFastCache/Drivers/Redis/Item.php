@@ -15,8 +15,8 @@
 namespace phpFastCache\Drivers\Redis;
 
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Core\Item\ItemBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Drivers\Redis\Driver as RedisDriver;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 

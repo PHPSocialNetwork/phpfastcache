@@ -29,6 +29,7 @@ use Psr\Cache\CacheItemInterface;
 class Driver implements ExtendedCacheItemPoolInterface
 {
     use DriverBaseTrait;
+
     /**
      * Driver constructor.
      * @param array $config
@@ -76,7 +77,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
     {
@@ -146,9 +147,9 @@ HELP;
     {
         $stat = new DriverStatistic();
         $stat->setInfo('[ZendDisk] A void info string')
-            ->setSize(0)
-            ->setData(implode(', ', array_keys($this->itemInstances)))
-            ->setRawData(false);
+          ->setSize(0)
+          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setRawData(false);
 
         return $stat;
     }

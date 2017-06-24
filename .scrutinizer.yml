@@ -15,7 +15,7 @@ before_commands:
   - "composer require mongodb/mongodb \"^1.1\""
   - "composer require phpfastcache/phpssdb ~1.0.0\""
   - "composer require phpfastcache/couchdb \"~1.0.0\""
-build: 
+build:
   environment: 
     php: 
       version: 5.6
@@ -34,7 +34,6 @@ filter:
     - var/*
     - vendor/*
     - tests/*
-    - /home/*
 tools:
   external_code_coverage: false
   php_code_coverage: true

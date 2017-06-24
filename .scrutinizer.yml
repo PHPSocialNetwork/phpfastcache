@@ -1,6 +1,9 @@
 before_commands:
     - "composer install --no-dev --prefer-source"
-
+    - "composer require predis/predis \"~1.1.0\""
+    - "composer require mongodb/mongodb \"^1.1\""
+    - "composer require phpfastcache/phpssdb ~1.0.0\""
+    - "composer require phpfastcache/couchdb \"~1.0.0\""
 filter:
     excluded_paths: ["bin/*", "docs/*", "examples/*", "var/*", "vendor/*", "tests/*"]
 checks:
@@ -23,3 +26,10 @@ tools:
         enabled: true
         filter:
             paths: ["src/*"]
+build:
+    environment:
+        php:
+            version: 5.6
+    dependencies:
+        before:
+            - pecl install cassandra

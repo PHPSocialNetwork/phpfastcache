@@ -16,8 +16,6 @@ before_commands:
   - "composer require phpfastcache/phpssdb ~1.0.0\""
   - "composer require phpfastcache/couchdb \"~1.0.0\""
 build: 
-  dependencies: 
-    before: []
   environment: 
     php: 
       version: 5.6

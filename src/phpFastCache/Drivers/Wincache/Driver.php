@@ -71,7 +71,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
     {

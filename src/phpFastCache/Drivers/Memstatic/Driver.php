@@ -76,11 +76,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return array [
-     *      'd' => 'THE ITEM DATA'
-     *      't' => 'THE ITEM DATE EXPIRATION'
-     *      'g' => 'THE ITEM TAGS'
-     * ]
+     * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
     {

@@ -485,7 +485,7 @@ trait ExtendedCacheItemPoolTrait
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return array [
+     * @return null|array [
      *      'd' => 'THE ITEM DATA'
      *      't' => 'THE ITEM DATE EXPIRATION'
      *      'g' => 'THE ITEM TAGS'

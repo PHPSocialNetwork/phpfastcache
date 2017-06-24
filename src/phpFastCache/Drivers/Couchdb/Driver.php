@@ -84,7 +84,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return null|array
      * @throws phpFastCacheDriverException
      */
     protected function driverRead(CacheItemInterface $item)

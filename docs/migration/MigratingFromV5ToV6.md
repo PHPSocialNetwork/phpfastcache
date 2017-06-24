@@ -240,4 +240,5 @@ Only your code configuration will have to be updated, PhpFastCache manages all t
 In the V5 the class was named `phpFastCache\Entities\driverStatistic`
 
 #### :alarm_clock: Now:
-In the V6 it has changed and is now `phpFastCache\Entities\DriverStatistic` (with a **D** uppercase)
+In the V6 it has changed and is now `phpFastCache\Entities\DriverStatistic` (with a **D** uppercase), you may need to re-fetch your
+git repository completely on some operating systems (especially Windows, meh).

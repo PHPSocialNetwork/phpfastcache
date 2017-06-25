@@ -478,6 +478,7 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \phpFastCache\EventManager $em
+     * @return mixed
      */
     public function setEventManager(EventManager $em)
     {

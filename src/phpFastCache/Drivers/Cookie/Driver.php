@@ -116,7 +116,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @return int
      */
     protected function driverReadExpirationDate($key)

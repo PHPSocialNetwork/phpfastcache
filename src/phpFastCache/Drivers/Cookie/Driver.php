@@ -99,8 +99,6 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected function driverRead(CacheItemInterface $item)
     {
         $this->driverConnect();
-        // return null if no caching
-        // return value if in caching
         $keyword = self::PREFIX . $item->getKey();
         $x = isset($_COOKIE[ $keyword ]) ? json_decode($_COOKIE[ $keyword ], true) : false;
 

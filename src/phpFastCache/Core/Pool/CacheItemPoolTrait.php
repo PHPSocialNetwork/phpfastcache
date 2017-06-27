@@ -228,8 +228,6 @@ trait CacheItemPoolTrait
      */
     public function hasItem($key)
     {
-        CacheManager::$ReadHits++;
-
         return $this->getItem($key)->isHit();
     }
 

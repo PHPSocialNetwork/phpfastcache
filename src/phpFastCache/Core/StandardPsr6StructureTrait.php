@@ -155,7 +155,7 @@ trait StandardPsr6StructureTrait
     public function deleteItem($key)
     {
         $item = $this->getItem($key);
-        if ($this->hasItem($key) && $this->driverDelete($item)) {
+        if ($item->isHit() && $this->driverDelete($item)) {
             $item->setHit(false);
             CacheManager::$WriteHits++;
             /**

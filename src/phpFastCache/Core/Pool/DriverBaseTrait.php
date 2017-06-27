@@ -304,7 +304,7 @@ trait DriverBaseTrait
 
     /**
      * @param $key
-     * @return string
+     * @return array
      */
     public function getTagKeys(array $keys)
     {

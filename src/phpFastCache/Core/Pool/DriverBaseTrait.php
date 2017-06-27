@@ -43,6 +43,11 @@ trait DriverBaseTrait
     protected $instance;
 
     /**
+     * @var string
+     */
+    protected $driverName;
+
+    /**
      * @param $config_name
      * @param string $value
      */
@@ -211,9 +216,10 @@ trait DriverBaseTrait
      */
     public function getDriverName()
     {
-        static $driverName;
-
-        return ($driverName ?: $driverName = ucfirst(substr(strrchr((new \ReflectionObject($this))->getNamespaceName(), '\\'), 1)));
+        if(!$this->driverName){
+            $this->driverName = ucfirst(substr(strrchr((new \ReflectionObject($this))->getNamespaceName(), '\\'), 1));
+        }
+        return $this->driverName;
     }
 
     /**

@@ -238,6 +238,11 @@ trait DriverBaseTrait
             throw new phpFastCacheLogicException('Trying to set tag(s) to an Tag item index: ' . $item->getKey());
         }
 
+        if(!$item->getTags() && !$item->getRemovedTags())
+        {
+            return true;
+        }
+
         /**
          * @var $tagsItems ExtendedCacheItemInterface[]
          */

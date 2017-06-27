@@ -94,7 +94,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         /**
          * Check for Cross-Driver type confusion
          */
-        $file_path = $this->getFilePath($item->getKey());
+        $file_path = $this->getFilePath($item->getKey(), true);
         if (!file_exists($file_path)) {
             return null;
         }

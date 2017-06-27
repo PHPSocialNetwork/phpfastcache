@@ -67,4 +67,14 @@ foreach ($dirs as $dirIndex => $dir) {
     }
 }
 
+foreach ($dirs as $dirIndex => $dir){
+    for ($i = 1; $i <= 20; $i++)
+    {
+        $cacheInstanceName = 'cacheInstance' . $i;
+
+        $testHelper->printText(sprintf('Clearing cache instance %s#%s data', $dir, $cacheInstanceName));
+        $instances[$dirIndex][$cacheInstanceName]->clear();
+    }
+}
+
 $testHelper->terminateTest();

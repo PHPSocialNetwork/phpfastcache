@@ -228,8 +228,6 @@ trait CacheItemPoolTrait
      */
     public function hasItem($key)
     {
-        CacheManager::$ReadHits++;
-
         return $this->getItem($key)->isHit();
     }
 
@@ -259,7 +257,7 @@ trait CacheItemPoolTrait
     public function deleteItem($key)
     {
         $item = $this->getItem($key);
-        if ($this->hasItem($key) && $this->driverDelete($item)) {
+        if ($item->isHit() && $this->driverDelete($item)) {
             $item->setHit(false);
             CacheManager::$WriteHits++;
 

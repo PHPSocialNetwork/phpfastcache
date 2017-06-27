@@ -43,6 +43,11 @@ trait DriverBaseTrait
     protected $instance;
 
     /**
+     * @var string
+     */
+    protected $driverName;
+
+    /**
      * @param $config_name
      * @param string $value
      */
@@ -211,9 +216,10 @@ trait DriverBaseTrait
      */
     public function getDriverName()
     {
-        static $driverName;
-
-        return ($driverName ?: $driverName = ucfirst(substr(strrchr((new \ReflectionObject($this))->getNamespaceName(), '\\'), 1)));
+        if(!$this->driverName){
+            $this->driverName = ucfirst(substr(strrchr((new \ReflectionObject($this))->getNamespaceName(), '\\'), 1));
+        }
+        return $this->driverName;
     }
 
     /**
@@ -230,6 +236,11 @@ trait DriverBaseTrait
          */
         if (strpos($item->getKey(), self::DRIVER_TAGS_KEY_PREFIX) === 0) {
             throw new phpFastCacheLogicException('Trying to set tag(s) to an Tag item index: ' . $item->getKey());
+        }
+
+        if(!$item->getTags() && !$item->getRemovedTags())
+        {
+            return true;
         }
 
         /**

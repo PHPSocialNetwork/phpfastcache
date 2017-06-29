@@ -88,14 +88,31 @@ ITEM_CLASS_STRING;
 /**
  * Write the files
  */
-file_put_contents("{$testDir}Driver.php", $driverClassString);
-file_put_contents("{$testDir}Item.php", $itemClassString);
+
+
+if(!file_put_contents("{$testDir}Driver.php", $driverClassString)
+  || !file_put_contents("{$testDir}Item.php", $itemClassString)
+){
+    $testHelper->printFailText('The php files of driver "Files2" were not written');
+    $testHelper->terminateTest();
+}else{
+    $testHelper->printPassText('The php files of driver "Files2" were written');
+}
 
 /**
  * Then adjust the Chmod
  */
 chmod("{$testDir}Driver.php", 0644);
 chmod("{$testDir}Item.php", 0644);
+
+if(!class_exists(phpFastCache\CustomDriversPath\Files2\Item::class)
+  || !class_exists(phpFastCache\CustomDriversPath\Files2\Driver::class)
+){
+    $testHelper->printFailText('The php classes of driver "Files2" does not exists');
+    $testHelper->terminateTest();
+}else{
+    $testHelper->printPassText('The php classes of driver "Files2" were found');
+}
 
 CacheManager::setNamespacePath(phpFastCache\CustomDriversPath::class . '\\');
 $cacheInstance = CacheManager::getInstance('Files2', []);

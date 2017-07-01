@@ -114,7 +114,7 @@ if(!class_exists(phpFastCache\CustomDriversPath\Files2\Item::class)
     $testHelper->printPassText('The php classes of driver "Files2" were found');
 }
 
-CacheManager::setNamespacePath(phpFastCache\CustomDriversPath::class . '\\');
+CacheManager::setNamespacePath(phpFastCache\CustomDriversPath::class);
 $cacheInstance = CacheManager::getInstance('Files2', []);
 $cacheKey = 'cacheKey';
 $RandomCacheValue = str_shuffle(uniqid('pfc', true));

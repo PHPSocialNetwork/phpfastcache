@@ -334,7 +334,7 @@ class CacheManager
      */
     public static function setNamespacePath($path)
     {
-        self::$namespacePath = $path;
+        self::$namespacePath = trim($path, "\\") . '\\';
     }
 
     /**

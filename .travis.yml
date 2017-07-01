@@ -21,9 +21,9 @@ services:
 before_script:
   - |
     if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
-      cat bin/ci/php-phpfastcache.ini >> /etc/hhvm/php.ini
+      cat bin/ci/php_phpfastcache.ini >> /etc/hhvm/php.ini
     else
-      phpenv config-add bin/ci/php-phpfastcache.ini
+      phpenv config-add bin/ci/php_phpfastcache.ini
     fi
 
 php:

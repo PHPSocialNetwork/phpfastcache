@@ -15,7 +15,7 @@
 use phpFastCache\CacheManager;
 
 // Include composer autoloader
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 // OR without composer:
 // require __DIR__ . '/../src/autoload.php';

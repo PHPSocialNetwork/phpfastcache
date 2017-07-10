@@ -14,7 +14,7 @@
 use phpFastCache\CacheManager;
 
 // Include composer autoloader
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 $InstanceCache = CacheManager::getInstance('apc');
 

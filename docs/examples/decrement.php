@@ -13,7 +13,7 @@
  */
 
 // Include composer autoloader
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 // OR require_once("../src/phpFastCache/phpFastCache.php");
 date_default_timezone_set("Europe/Paris");
 

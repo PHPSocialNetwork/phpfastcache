@@ -14,10 +14,11 @@
 
 namespace phpFastCache\Drivers\Cookie;
 
-use phpFastCache\Cache\ExtendedCacheItemInterface;
-use phpFastCache\Cache\ExtendedCacheItemPoolInterface;
-use phpFastCache\Cache\ItemBaseTrait;
+use phpFastCache\Core\Item\ExtendedCacheItemInterface;
+use phpFastCache\Core\Item\ItemBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Drivers\Cookie\Driver as CookieDriver;
+use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 
 /**
  * Class Item
@@ -31,7 +32,7 @@ class Item implements ExtendedCacheItemInterface
      * Item constructor.
      * @param \phpFastCache\Drivers\Cookie\Driver $driver
      * @param $key
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     public function __construct(CookieDriver $driver, $key)
     {
@@ -41,7 +42,7 @@ class Item implements ExtendedCacheItemInterface
             $this->driver = $driver;
             $this->driver->setItem($this);
         } else {
-            throw new \InvalidArgumentException(sprintf('$key must be a string, got type "%s" instead.',
+            throw new phpFastCacheInvalidArgumentException(sprintf('$key must be a string, got type "%s" instead.',
               gettype($key)));
         }
     }
@@ -49,7 +50,7 @@ class Item implements ExtendedCacheItemInterface
 
     /**
      * @param ExtendedCacheItemPoolInterface $driver
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      * @return static
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver)
@@ -59,7 +60,7 @@ class Item implements ExtendedCacheItemInterface
 
             return $this;
         } else {
-            throw new \InvalidArgumentException('Invalid driver instance');
+            throw new phpFastCacheInvalidArgumentException('Invalid driver instance');
         }
     }
 }

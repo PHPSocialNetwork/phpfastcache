@@ -14,19 +14,22 @@
 
 namespace phpFastCache\Drivers\Apcu;
 
-use phpFastCache\Core\DriverAbstract;
-use phpFastCache\Core\StandardPsr6StructureTrait;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Core\Pool\DriverBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
+use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use Psr\Cache\CacheItemInterface;
 
 /**
  * Class Driver
  * @package phpFastCache\Drivers
  */
-class Driver extends DriverAbstract
+class Driver implements ExtendedCacheItemPoolInterface
 {
+    use DriverBaseTrait;
+
     /**
      * Driver constructor.
      * @param array $config
@@ -56,7 +59,7 @@ class Driver extends DriverAbstract
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item)
     {
@@ -66,19 +69,19 @@ class Driver extends DriverAbstract
         if ($item instanceof Item) {
             $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
-            return apc_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
+            return apcu_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
         } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
     {
-        $data = apc_fetch($item->getKey(), $success);
+        $data = apcu_fetch($item->getKey(), $success);
         if ($success === false) {
             return null;
         }
@@ -89,7 +92,7 @@ class Driver extends DriverAbstract
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item)
     {
@@ -97,9 +100,9 @@ class Driver extends DriverAbstract
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return apc_delete($item->getKey());
+            return apcu_delete($item->getKey());
         } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
@@ -108,7 +111,7 @@ class Driver extends DriverAbstract
      */
     protected function driverClear()
     {
-        return @apc_clear_cache() && @apc_clear_cache('user');
+        return @apcu_clear_cache() && @apcu_clear_cache();
     }
 
     /**
@@ -126,16 +129,17 @@ class Driver extends DriverAbstract
      *******************/
 
     /**
-     * @return driverStatistic
+     * @return DriverStatistic
      */
     public function getStats()
     {
-        $stats = (array) apc_cache_info('user');
+        $stats = (array)apcu_cache_info();
         $date = (new \DateTime())->setTimestamp($stats[ 'start_time' ]);
 
-        return (new driverStatistic())
+        return (new DriverStatistic())
           ->setData(implode(', ', array_keys($this->itemInstances)))
-          ->setInfo(sprintf("The APCU cache is up since %s, and have %d item(s) in cache.\n For more information see RawData.", $date->format(DATE_RFC2822), $stats[ 'num_entries' ]))
+          ->setInfo(sprintf("The APCU cache is up since %s, and have %d item(s) in cache.\n For more information see RawData.", $date->format(DATE_RFC2822),
+            $stats[ 'num_entries' ]))
           ->setRawData($stats)
           ->setSize($stats[ 'mem_size' ]);
     }

@@ -14,19 +14,22 @@
 
 namespace phpFastCache\Drivers\Apc;
 
-use phpFastCache\Core\DriverAbstract;
-use phpFastCache\Core\StandardPsr6StructureTrait;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Core\Pool\DriverBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
+use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use Psr\Cache\CacheItemInterface;
 
 /**
  * Class Driver
  * @package phpFastCache\Drivers
  */
-class Driver extends DriverAbstract
+class Driver implements ExtendedCacheItemPoolInterface
 {
+    use DriverBaseTrait;
+
     /**
      * Driver constructor.
      * @param array $config
@@ -56,7 +59,7 @@ class Driver extends DriverAbstract
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item)
     {
@@ -68,13 +71,13 @@ class Driver extends DriverAbstract
 
             return apc_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
         } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
     {
@@ -89,7 +92,7 @@ class Driver extends DriverAbstract
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item)
     {
@@ -99,7 +102,7 @@ class Driver extends DriverAbstract
         if ($item instanceof Item) {
             return apc_delete($item->getKey());
         } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
@@ -126,14 +129,14 @@ class Driver extends DriverAbstract
      *******************/
 
     /**
-     * @return driverStatistic
+     * @return DriverStatistic
      */
     public function getStats()
     {
-        $stats = (array) apc_cache_info('user');
+        $stats = (array)apc_cache_info('user');
         $date = (new \DateTime())->setTimestamp($stats[ 'start_time' ]);
 
-        return (new driverStatistic())
+        return (new DriverStatistic())
           ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setInfo(sprintf("The APC cache is up since %s, and have %d item(s) in cache.\n For more information see RawData.", $date->format(DATE_RFC2822),
             $stats[ 'num_entries' ]))

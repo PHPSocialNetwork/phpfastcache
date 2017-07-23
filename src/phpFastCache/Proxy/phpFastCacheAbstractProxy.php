@@ -11,11 +11,12 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+
 namespace phpFastCache\Proxy;
 
-use phpFastCache\Cache\ExtendedCacheItemInterface;
 use phpFastCache\CacheManager;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Core\Item\ExtendedCacheItemInterface;
+use phpFastCache\Entities\DriverStatistic;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -35,7 +36,7 @@ use Psr\Cache\CacheItemInterface;
  * @method bool saveDeferred(CacheItemInterface $item) Sets a cache item to be persisted later
  * @method bool commit() Persists any deferred cache items
  * @method bool clear() Allow you to completely empty the cache and restart from the beginning
- * @method driverStatistic stats() Returns a driverStatistic object
+ * @method DriverStatistic stats() Returns a DriverStatistic object
  * @method ExtendedCacheItemInterface getItemsByTag($tagName) Return items by a tag
  * @method ExtendedCacheItemInterface[] getItemsByTags(array $tagNames) Return items by some tags
  * @method bool deleteItemsByTag($tagName) Delete items by a tag
@@ -52,7 +53,7 @@ use Psr\Cache\CacheItemInterface;
 abstract class phpFastCacheAbstractProxy
 {
     /**
-     * @var \phpFastCache\Cache\ExtendedCacheItemPoolInterface
+     * @var \phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface
      */
     protected $instance;
 
@@ -74,9 +75,9 @@ abstract class phpFastCacheAbstractProxy
      */
     public function __call($name, $args)
     {
-        if(method_exists($this->instance, $name)){
+        if (method_exists($this->instance, $name)) {
             return call_user_func_array([$this->instance, $name], $args);
-        }else{
+        } else {
             throw new \BadMethodCallException(sprintf('Method %s does not exists', $name));
         }
     }

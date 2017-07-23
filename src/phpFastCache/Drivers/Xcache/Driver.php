@@ -14,19 +14,22 @@
 
 namespace phpFastCache\Drivers\Xcache;
 
-use phpFastCache\Core\DriverAbstract;
-use phpFastCache\Core\StandardPsr6StructureTrait;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Core\Pool\DriverBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
+use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use Psr\Cache\CacheItemInterface;
 
 /**
  * Class Driver
  * @package phpFastCache\Drivers
  */
-class Driver extends DriverAbstract
+class Driver implements ExtendedCacheItemPoolInterface
 {
+    use DriverBaseTrait;
+
     /**
      * Driver constructor.
      * @param array $config
@@ -52,7 +55,7 @@ class Driver extends DriverAbstract
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item)
     {
@@ -63,13 +66,13 @@ class Driver extends DriverAbstract
             return xcache_set($item->getKey(), $this->encode($this->driverPreWrap($item)), $item->getTtl());
 
         } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
     {
@@ -84,7 +87,7 @@ class Driver extends DriverAbstract
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item)
     {
@@ -94,7 +97,7 @@ class Driver extends DriverAbstract
         if ($item instanceof Item) {
             return xcache_unset($item->getKey());
         } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
@@ -126,14 +129,14 @@ class Driver extends DriverAbstract
      *******************/
 
     /**
-     * @return driverStatistic
+     * @return DriverStatistic
      */
     public function getStats()
     {
         if (!ini_get('xcache.admin.enable_auth')) {
             $info = xcache_info(XC_TYPE_VAR, 0);
 
-            return (new driverStatistic())
+            return (new DriverStatistic())
               ->setSize(abs($info[ 'size' ] - $info[ 'avail' ]))
               ->setData(implode(', ', array_keys($this->itemInstances)))
               ->setInfo(sprintf("Xcache v%s with following modules loaded:\n %s", XCACHE_VERSION, str_replace(' ', ', ', XCACHE_MODULES)))

@@ -14,12 +14,12 @@
 
 namespace phpFastCache\Drivers\Files;
 
-use phpFastCache\Core\DriverAbstract;
-use phpFastCache\Core\PathSeekerTrait;
-use phpFastCache\Core\StandardPsr6StructureTrait;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Core\Pool\DriverBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Core\Pool\IO\IOHelperTrait;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
+use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpFastCache\Util\Directory;
 use Psr\Cache\CacheItemInterface;
 
@@ -27,9 +27,9 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver
  * @package phpFastCache\Drivers
  */
-class Driver extends DriverAbstract
+class Driver implements ExtendedCacheItemPoolInterface
 {
-    use PathSeekerTrait;
+    use DriverBaseTrait, IOHelperTrait;
 
     /**
      *
@@ -55,13 +55,13 @@ class Driver extends DriverAbstract
      */
     public function driverCheck()
     {
-        return is_writable($this->getFileDir()) || @mkdir($this->getFileDir(), $this->setChmodAuto(), true);
+        return is_writable($this->getPath()) || @mkdir($this->getPath(), $this->getDefaultChmod(), true);
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item)
     {
@@ -72,49 +72,29 @@ class Driver extends DriverAbstract
             $file_path = $this->getFilePath($item->getKey());
             $data = $this->encode($this->driverPreWrap($item));
 
-            $toWrite = true;
-
-            /**
-             * Skip if Existing Caching in Options
-             */
-            if (isset($this->config[ 'skipExisting' ]) && $this->config[ 'skipExisting' ] == true && file_exists($file_path)) {
-                $content = $this->readfile($file_path);
-                $old = $this->decode($content);
-                $toWrite = false;
-                if ($old->isExpired()) {
-                    $toWrite = true;
-                }
-            }
-
             /**
              * Force write
              */
             try {
-                if ($toWrite == true) {
-                    $f = fopen($file_path, 'w+');
-                    fwrite($f, $data);
-                    fclose($f);
-
-                    return true;
-                }
+                return $this->writefile($file_path, $data, $this->config[ 'secureFileManipulation' ]);
             } catch (\Exception $e) {
                 return false;
             }
         } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
     {
         /**
          * Check for Cross-Driver type confusion
          */
-        $file_path = $this->getFilePath($item->getKey());
+        $file_path = $this->getFilePath($item->getKey(), true);
         if (!file_exists($file_path)) {
             return null;
         }
@@ -128,7 +108,7 @@ class Driver extends DriverAbstract
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item)
     {
@@ -138,12 +118,16 @@ class Driver extends DriverAbstract
         if ($item instanceof Item) {
             $file_path = $this->getFilePath($item->getKey(), true);
             if (file_exists($file_path) && @unlink($file_path)) {
+                $dir = dirname($file_path);
+                if (!(new \FilesystemIterator($dir))->valid()) {
+                    rmdir($dir);
+                }
                 return true;
             } else {
                 return false;
             }
         } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
@@ -152,7 +136,7 @@ class Driver extends DriverAbstract
      */
     protected function driverClear()
     {
-        return (bool) Directory::rrmdir($this->getPath(true));
+        return (bool)Directory::rrmdir($this->getPath(true));
     }
 
     /**
@@ -167,11 +151,11 @@ class Driver extends DriverAbstract
      * @param string $optionName
      * @param mixed $optionValue
      * @return bool
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     public static function isValidOption($optionName, $optionValue)
     {
-        parent::isValidOption($optionName, $optionValue);
+        DriverBaseTrait::isValidOption($optionName, $optionValue);
         switch ($optionName) {
             case 'path':
                 return is_string($optionValue);
@@ -187,6 +171,11 @@ class Driver extends DriverAbstract
             case 'htaccess':
                 return is_bool($optionValue);
                 break;
+
+            case 'secureFileManipulation':
+                return is_bool($optionValue);
+                break;
+
             default:
                 return false;
                 break;
@@ -198,7 +187,7 @@ class Driver extends DriverAbstract
      */
     public static function getValidOptions()
     {
-        return ['path', 'default_chmod', 'securityKey', 'htaccess'];
+        return ['path', 'default_chmod', 'securityKey', 'htaccess', 'secureFileManipulation'];
     }
 
     /**
@@ -207,33 +196,5 @@ class Driver extends DriverAbstract
     public static function getRequiredOptions()
     {
         return ['path'];
-    }
-
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
-
-    /**
-     * @return driverStatistic
-     * @throws \phpFastCache\Exceptions\phpFastCacheCoreException
-     * @throws \phpFastCache\Exceptions\phpFastCacheDriverException
-     */
-    public function getStats()
-    {
-        $stat = new driverStatistic();
-        $path = $this->getFilePath(false);
-
-        if (!is_dir($path)) {
-            throw new phpFastCacheDriverException("Can't read PATH:" . $path, 94);
-        }
-
-        $stat->setData(implode(', ', array_keys($this->itemInstances)))
-          ->setRawData([])
-          ->setSize(Directory::dirSize($path))
-          ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($path));
-
-        return $stat;
     }
 }

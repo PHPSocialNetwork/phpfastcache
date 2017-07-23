@@ -1,11 +1,15 @@
-### Driver descriptions
+### Drivers descriptions
 * Apc
   * The Alternative Php Cache (APC) driver. A memory cache for regular performances.
 * Apcu
   * The Alternative Php User Cache (APCU) driver. A memory cache for regular performances.
+* Cassandra
+  * A very high-performance NoSQL driver using a key-value pair system. Please note that the Driver rely on php's Datastax extension: https://github.com/datastax/php-driver
 * Cookie
   * A cookie driver to store non-sensitive scalar (only) data. Limited storage up to 4Ko.
 * Couchbase
+  * A very high-performance NoSQL driver using a key-value pair system
+* Couchdb
   * A very high-performance NoSQL driver using a key-value pair system
 * Devfalse
    * A development driver that return false for everything except driverCheck()
@@ -21,6 +25,8 @@
   * The Memcache driver. A memory cache for regular performances. Do not cross this driver with Memcached driver
 * Memcached
   * The Memcached driver. A memory cache for regular performances. Do not cross this driver with Memcache driver
+* Memstatic
+  * The Memstatic driver is a memory static driver that expires when the script execution ends
 * Mongodb
   * A very high-performance NoSQL driver using a key-value pair system
 * Predis

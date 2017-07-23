@@ -15,29 +15,25 @@
 namespace phpFastCache\Drivers\Leveldb;
 
 use LevelDB as LeveldbClient;
-use phpFastCache\Core\DriverAbstract;
-use phpFastCache\Core\PathSeekerTrait;
-use phpFastCache\Core\StandardPsr6StructureTrait;
-use phpFastCache\Entities\driverStatistic;
+use phpFastCache\Core\Pool\DriverBaseTrait;
+use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Core\Pool\IO\IOHelperTrait;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
-use phpFastCache\Util\Directory;
+use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Exceptions\phpFastCacheLogicException;
 use Psr\Cache\CacheItemInterface;
 
 /**
  * Class Driver
  * @package phpFastCache\Drivers
+ * @property LeveldbClient $instance Instance of driver service
  */
-class Driver extends DriverAbstract
+class Driver implements ExtendedCacheItemPoolInterface
 {
-    use PathSeekerTrait;
+    use DriverBaseTrait, IOHelperTrait;
 
     const LEVELDB_FILENAME = '.database';
-
-    /**
-     * @var LeveldbClient Instance of driver service
-     */
-    public $instance;
 
     /**
      * Driver constructor.
@@ -75,7 +71,7 @@ class Driver extends DriverAbstract
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item)
     {
@@ -85,13 +81,13 @@ class Driver extends DriverAbstract
         if ($item instanceof Item) {
             return $this->instance->set($item->getKey(), $this->encode($this->driverPreWrap($item)));
         } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
     {
@@ -106,7 +102,7 @@ class Driver extends DriverAbstract
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws \InvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item)
     {
@@ -116,7 +112,7 @@ class Driver extends DriverAbstract
         if ($item instanceof Item) {
             return $this->instance->delete($item->getKey());
         } else {
-            throw new \InvalidArgumentException('Cross-Driver type confusion detected');
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
@@ -129,7 +125,7 @@ class Driver extends DriverAbstract
             $this->instance->close();
             $this->instance = null;
         }
-        $result = LeveldbClient::destroy($this->getLeveldbFile());
+        $result = (bool)LeveldbClient::destroy($this->getLeveldbFile());
         $this->driverConnect();
 
         return $result;
@@ -137,31 +133,17 @@ class Driver extends DriverAbstract
 
     /**
      * @return bool
+     * @throws phpFastCacheLogicException
      */
     protected function driverConnect()
     {
         if ($this->instance instanceof LeveldbClient) {
-            throw new \LogicException('Already connected to Leveldb database');
+            throw new phpFastCacheLogicException('Already connected to Leveldb database');
         } else {
             $this->instance = $this->instance ?: new LeveldbClient($this->getLeveldbFile());
         }
-    }
 
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
-
-    /**
-     * @return driverStatistic
-     */
-    public function getStats()
-    {
-        return (new driverStatistic())
-          ->setData(implode(', ', array_keys($this->itemInstances)))
-          ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($this->getLeveldbFile()))
-          ->setSize(Directory::dirSize($this->getLeveldbFile()));
+        return true;
     }
 
     /**

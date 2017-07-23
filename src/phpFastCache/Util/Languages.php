@@ -16,7 +16,6 @@ namespace phpFastCache\Util;
 
 use phpFastCache\Exceptions\phpFastCacheCoreException;
 
-
 /**
  * Class Languages
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com

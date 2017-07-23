@@ -381,6 +381,8 @@ class CacheManager
         return [
           'Apc',
           'Apcu',
+          'Zendshm',
+          'Zenddisk',
           'Cassandra',
           'Couchbase',
           'Couchdb',

@@ -397,6 +397,8 @@ class CacheManager
           'Sqlite',
           'Wincache',
           'Xcache',
+          'Zenddisk',
+          'Zendshm',
         ];
     }
 

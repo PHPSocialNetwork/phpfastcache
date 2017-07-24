@@ -381,8 +381,6 @@ class CacheManager
         return [
           'Apc',
           'Apcu',
-          'Zendshm',
-          'Zenddisk',
           'Cassandra',
           'Couchbase',
           'Couchdb',
@@ -399,6 +397,8 @@ class CacheManager
           'Sqlite',
           'Wincache',
           'Xcache',
+          'Zenddisk',
+          'Zendshm',
         ];
     }
 

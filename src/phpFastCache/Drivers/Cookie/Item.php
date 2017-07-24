@@ -22,7 +22,7 @@ use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 
 /**
  * Class Item
- * @package phpFastCache\Drivers\Apc
+ * @package phpFastCache\Drivers\Cookie
  */
 class Item implements ExtendedCacheItemInterface
 {

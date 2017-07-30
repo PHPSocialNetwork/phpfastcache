@@ -74,7 +74,15 @@ class Driver extends DriverAbstract
         if ($item instanceof Item) {
             $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
-            return $this->instance->setex($item->getKey(), $ttl, $this->encode($this->driverPreWrap($item)));
+            /**
+             * @see https://redis.io/commands/setex
+             * @see https://redis.io/commands/expire
+             */
+            if($ttl <= 0){
+                return $this->instance->expire($item->getKey(), 0);
+            }else{
+                return $this->instance->setex($item->getKey(), $ttl, $this->encode($this->driverPreWrap($item)));
+            }
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }

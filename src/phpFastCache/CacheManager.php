@@ -438,21 +438,11 @@ class CacheManager
         foreach ($config as $configName => $configValue) {
             switch ($configName) {
                 case 'itemDetailedDate':
-                    if (!is_bool($configValue)) {
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean");
-                    }
-                    break;
                 case 'autoTmpFallback':
-                    if (!is_bool($configValue)) {
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean");
-                    }
-                    break;
                 case 'secureFileManipulation':
-                    if (!is_bool($configValue)) {
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean");
-                    }
-                    break;
                 case 'ignoreSymfonyNotice':
+                case 'htaccess':
+                case 'compress_data':
                     if (!is_bool($configValue)) {
                         throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean");
                     }
@@ -468,38 +458,20 @@ class CacheManager
                     }
                     break;
                 case 'securityKey':
-                    if (!is_string($configValue)) {
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a string");
-                    }
-                    break;
-                case 'htaccess':
-                    if (!is_bool($configValue)) {
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean");
-                    }
-                    break;
-                case 'default_chmod':
-                    if (!is_int($configValue)) {
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be an integer");
-                    }
-                    break;
                 case 'path':
                     if (!is_string($configValue)) {
                         throw new phpFastCacheInvalidConfigurationException("{$configName} must be a string");
                     }
                     break;
-                case 'fallback':
-                    if (!is_bool($configValue) && !is_string($configValue)) {
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean or string");
-                    }
-                    break;
+                case 'default_chmod':
                 case 'limited_memory_each_object':
                     if (!is_int($configValue)) {
                         throw new phpFastCacheInvalidConfigurationException("{$configName} must be an integer");
                     }
                     break;
-                case 'compress_data':
-                    if (!is_bool($configValue)) {
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean");
+                case 'fallback':
+                    if (!is_bool($configValue) && !is_string($configValue)) {
+                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean or string");
                     }
                     break;
                 case 'cacheFileExtension':
@@ -511,7 +483,7 @@ class CacheManager
                     }
                     if (!in_array($configValue, self::$safeFileExtensions)) {
                         throw new phpFastCacheInvalidConfigurationException(
-                          "{$configName} is not a safe extension, currently allowed extension: " . implode(', ', self::$safeFileExtensions)
+                            "{$configName} is not a safe extension, currently allowed extension: " . implode(', ', self::$safeFileExtensions)
                         );
                     }
                     break;

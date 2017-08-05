@@ -137,6 +137,7 @@ class CacheManager
                 try {
                     self::getInstance($driver, $config);
                     $autoDriver = $driver;
+                    break;
                 } catch (phpFastCacheDriverCheckException $e) {
                     continue;
                 }

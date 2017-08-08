@@ -78,7 +78,9 @@ class Psr16Adapter implements CacheInterface
             $cacheItem = $this->internalCacheInstance
               ->getItem($key)
               ->set($value);
-            if (is_int($ttl) || $ttl instanceof \DateInterval) {
+            if (is_int($ttl) && $ttl <= 0) {
+                $cacheItem->expiresAt((new \DateTime('@0')));
+            } elseif (is_int($ttl) || $ttl instanceof \DateInterval) {
                 $cacheItem->expiresAfter($ttl);
             }
             return $this->internalCacheInstance->save($cacheItem);
@@ -142,7 +144,10 @@ class Psr16Adapter implements CacheInterface
         try {
             foreach ($values as $key => $value) {
                 $cacheItem = $this->internalCacheInstance->getItem($key)->set($value);
-                if ($ttl) {
+
+                if (is_int($ttl) && $ttl <= 0) {
+                    $cacheItem->expiresAt((new \DateTime('@0')));
+                } elseif (is_int($ttl) || $ttl instanceof \DateInterval) {
                     $cacheItem->expiresAfter($ttl);
                 }
                 $this->internalCacheInstance->saveDeferred($cacheItem);

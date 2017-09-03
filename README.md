@@ -65,7 +65,7 @@ phpFastCache offers you a lot of useful APIs:
 ### Item API
 - getKey() // Returns the item identifier (key)
 - get() // The getter, obviously, returns your cache object
-- set($value) // The setter, for those who missed it, putting 0 means cache it forever
+- set($value) // The setter, for those who missed it, can be anything except resources or non-serializer object (ex: PDO objects, file pointers, etc).
 - expiresAfter($ttl) // Allows you to extends the lifetime of an entry without altering its value (formerly known as touch())
 - expiresAt($expiration) // Sets the expiration time for this cache item (as a DateTimeInterface object)
 - increment($step = 1) // To allow us to count on an integer item

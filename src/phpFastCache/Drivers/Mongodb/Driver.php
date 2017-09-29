@@ -71,7 +71,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             For MongoDb with Mongo PECL support use Mongo Driver.', E_USER_ERROR);
         }
 
-        return extension_loaded('Mongodb');
+        return class_exists('MongoDB\Collection');
     }
 
     /**

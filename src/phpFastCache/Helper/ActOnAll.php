@@ -17,6 +17,7 @@ namespace phpFastCache\Helper;
 use phpFastCache\CacheManager;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\EventManager;
+use phpFastCache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -25,7 +26,6 @@ use Psr\Cache\CacheItemInterface;
  */
 class ActOnAll implements ExtendedCacheItemPoolInterface
 {
-
     /**
      * @var ExtendedCacheItemPoolInterface[]
      */
@@ -481,6 +481,15 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
      * @return mixed
      */
     public function setEventManager(EventManager $em)
+    {
+        $callback = $this->getGenericCallback();
+        return $callback(__FUNCTION__, func_get_args());
+    }
+
+    /**
+     * @return ArrayObject
+     */
+    public function getDefaultConfig()
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());

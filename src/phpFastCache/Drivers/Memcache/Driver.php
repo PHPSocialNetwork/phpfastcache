@@ -180,11 +180,13 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         $defaultConfig = new ArrayObject();
 
-        $defaultConfig['servers'] = [
-          'host' => '127.0.0.1',
-          'port' => 11211,
-          'sasl_user' => false,
-          'sasl_password' => false,
+        $defaultConfig[ 'servers' ] = [
+          [
+            'host' => '127.0.0.1',
+            'port' => 11211,
+            'sasl_user' => false,
+            'sasl_password' => false,
+          ],
         ];
 
         return $defaultConfig;

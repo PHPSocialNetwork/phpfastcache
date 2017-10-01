@@ -15,9 +15,12 @@ dist: trusty
 language: php
 
 services:
+  - cassandra
   - memcached
   - redis-server
   - couchdb
+  - riak
+
 before_script:
   - |
     if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then

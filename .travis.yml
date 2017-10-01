@@ -21,7 +21,6 @@ services:
   - riak
 
 before_script:
-  - pecl install cassandra
   - |
     if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
       cat bin/ci/php_phpfastcache.ini >> /etc/hhvm/php.ini

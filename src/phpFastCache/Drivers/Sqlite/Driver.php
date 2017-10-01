@@ -100,6 +100,160 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
+     * @return bool
+     */
+    protected function driverConnect()
+    {
+        if (!file_exists($this->getPath() . '/' . self::FILE_DIR)) {
+            if (!mkdir($this->getPath() . '/' . self::FILE_DIR, $this->getDefaultChmod(), true)
+            ) {
+                $this->fallback = true;
+            }
+        }
+        $this->SqliteDir = $this->getPath() . '/' . self::FILE_DIR;
+
+        return true;
+    }
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return null|array
+     */
+    protected function driverRead(CacheItemInterface $item)
+    {
+        try {
+            $stm = $this->getDb($item->getKey())
+              ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
+            $stm->execute([
+              ':keyword' => $item->getKey(),
+            ]);
+            $row = $stm->fetch(PDO::FETCH_ASSOC);
+
+        } catch (PDOException $e) {
+            try {
+                $stm = $this->getDb($item->getKey(), true)
+                  ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
+                $stm->execute([
+                  ':keyword' => $item->getKey(),
+                ]);
+                $row = $stm->fetch(PDO::FETCH_ASSOC);
+            } catch (PDOException $e) {
+                return null;
+            }
+        }
+
+        if (isset($row[ 'object' ])) {
+            return $this->decode($row[ 'object' ]);
+        }
+
+        return null;
+    }
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return mixed
+     * @throws phpFastCacheInvalidArgumentException
+     */
+    protected function driverWrite(CacheItemInterface $item)
+    {
+        /**
+         * Check for Cross-Driver type confusion
+         */
+        if ($item instanceof Item) {
+            $skipExisting = $this->getConfigOption('skipExisting') ?: false;
+            $toWrite = true;
+
+            // check in cache first
+            $in_cache = $this->driverRead($item);
+
+            if ($skipExisting == true) {
+                if ($in_cache == null) {
+                    $toWrite = true;
+                } else {
+                    $toWrite = false;
+                }
+            }
+
+            if ($toWrite == true) {
+                try {
+                    $stm = $this->getDb($item->getKey())
+                      ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
+                    $stm->execute([
+                      ':keyword' => $item->getKey(),
+                      ':object' => $this->encode($this->driverPreWrap($item)),
+                      ':exp' => time() + $item->getTtl(),
+                    ]);
+
+                    return true;
+                } catch (\PDOException $e) {
+
+                    try {
+                        $stm = $this->getDb($item->getKey(), true)
+                          ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
+                        $stm->execute([
+                          ':keyword' => $item->getKey(),
+                          ':object' => $this->encode($this->driverPreWrap($item)),
+                          ':exp' => time() + $item->getTtl(),
+                        ]);
+                    } catch (PDOException $e) {
+                        return false;
+                    }
+                }
+            }
+
+            return false;
+        } else {
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        }
+    }
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return bool
+     * @throws phpFastCacheInvalidArgumentException
+     */
+    protected function driverDelete(CacheItemInterface $item)
+    {
+        /**
+         * Check for Cross-Driver type confusion
+         */
+        if ($item instanceof Item) {
+            try {
+                $stm = $this->getDb($item->getKey())
+                  ->prepare("DELETE FROM `caching` WHERE (`exp` <= :U) OR (`keyword`=:keyword) ");
+
+                return $stm->execute([
+                  ':keyword' => $item->getKey(),
+                  ':U' => time(),
+                ]);
+            } catch (PDOException $e) {
+                return false;
+            }
+        } else {
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function driverClear()
+    {
+        $this->instance = [];
+        $this->indexing = null;
+
+        // delete everything before reset indexing
+        $dir = opendir($this->getSqliteDir());
+        while ($file = readdir($dir)) {
+            if ($file != '.' && $file != '..') {
+                unlink($this->getSqliteDir() . '/' . $file);
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * INIT NEW DB
      * @param \PDO $db
      */
@@ -239,160 +393,6 @@ class Driver implements ExtendedCacheItemPoolInterface
         }
 
         return $this->instance[ $instant ];
-    }
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
-     * @throws phpFastCacheInvalidArgumentException
-     */
-    protected function driverWrite(CacheItemInterface $item)
-    {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            $skipExisting = isset($this->config[ 'skipExisting' ]) ? $this->config[ 'skipExisting' ] : false;
-            $toWrite = true;
-
-            // check in cache first
-            $in_cache = $this->driverRead($item);
-
-            if ($skipExisting == true) {
-                if ($in_cache == null) {
-                    $toWrite = true;
-                } else {
-                    $toWrite = false;
-                }
-            }
-
-            if ($toWrite == true) {
-                try {
-                    $stm = $this->getDb($item->getKey())
-                      ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
-                    $stm->execute([
-                      ':keyword' => $item->getKey(),
-                      ':object' => $this->encode($this->driverPreWrap($item)),
-                      ':exp' => time() + $item->getTtl(),
-                    ]);
-
-                    return true;
-                } catch (\PDOException $e) {
-
-                    try {
-                        $stm = $this->getDb($item->getKey(), true)
-                          ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
-                        $stm->execute([
-                          ':keyword' => $item->getKey(),
-                          ':object' => $this->encode($this->driverPreWrap($item)),
-                          ':exp' => time() + $item->getTtl(),
-                        ]);
-                    } catch (PDOException $e) {
-                        return false;
-                    }
-                }
-            }
-
-            return false;
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
-        }
-    }
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return null|array
-     */
-    protected function driverRead(CacheItemInterface $item)
-    {
-        try {
-            $stm = $this->getDb($item->getKey())
-              ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
-            $stm->execute([
-              ':keyword' => $item->getKey(),
-            ]);
-            $row = $stm->fetch(PDO::FETCH_ASSOC);
-
-        } catch (PDOException $e) {
-            try {
-                $stm = $this->getDb($item->getKey(), true)
-                  ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
-                $stm->execute([
-                  ':keyword' => $item->getKey(),
-                ]);
-                $row = $stm->fetch(PDO::FETCH_ASSOC);
-            } catch (PDOException $e) {
-                return null;
-            }
-        }
-
-        if (isset($row[ 'object' ])) {
-            return $this->decode($row[ 'object' ]);
-        }
-
-        return null;
-    }
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return bool
-     * @throws phpFastCacheInvalidArgumentException
-     */
-    protected function driverDelete(CacheItemInterface $item)
-    {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            try {
-                $stm = $this->getDb($item->getKey())
-                  ->prepare("DELETE FROM `caching` WHERE (`exp` <= :U) OR (`keyword`=:keyword) ");
-
-                return $stm->execute([
-                  ':keyword' => $item->getKey(),
-                  ':U' => time(),
-                ]);
-            } catch (PDOException $e) {
-                return false;
-            }
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    protected function driverClear()
-    {
-        $this->instance = [];
-        $this->indexing = null;
-
-        // delete everything before reset indexing
-        $dir = opendir($this->getSqliteDir());
-        while ($file = readdir($dir)) {
-            if ($file != '.' && $file != '..') {
-                unlink($this->getSqliteDir() . '/' . $file);
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    protected function driverConnect()
-    {
-        if (!file_exists($this->getPath() . '/' . self::FILE_DIR)) {
-            if (!mkdir($this->getPath() . '/' . self::FILE_DIR, $this->getDefaultChmod(), true)
-            ) {
-                $this->fallback = true;
-            }
-        }
-        $this->SqliteDir = $this->getPath() . '/' . self::FILE_DIR;
-
-        return true;
     }
 
     /**

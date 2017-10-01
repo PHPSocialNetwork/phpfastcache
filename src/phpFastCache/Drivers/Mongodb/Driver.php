@@ -29,6 +29,7 @@ use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -38,6 +39,8 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
+    const MONGODB_DEFAULT_DB_NAME = 'phpfastcache';
+
     use DriverBaseTrait;
 
     /**
@@ -158,7 +161,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * @var \MongoDB\Model\BSONDocument $result
          */
         $result = $this->getCollection()->drop()->getArrayCopy();
-        $this->collection = new Collection($this->instance, 'phpFastCache', 'Cache');
+        $this->collection = new Collection($this->instance, $this->getConfigOption('databaseName'), 'Cache');
 
         /**
          * This will rebuild automatically the Collection indexes
@@ -178,24 +181,17 @@ class Driver implements ExtendedCacheItemPoolInterface
         if ($this->instance instanceof \MongoDB\Driver\Manager) {
             throw new LogicException('Already connected to Mongodb server');
         } else {
-            $host = isset($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1';
-            $port = isset($this->config[ 'port' ]) ? $this->config[ 'port' ] : '27017';
-            $timeout = isset($this->config[ 'timeout' ]) ? $this->config[ 'timeout' ] : 3;
-            $password = isset($this->config[ 'password' ]) ? $this->config[ 'password' ] : '';
-            $username = isset($this->config[ 'username' ]) ? $this->config[ 'username' ] : '';
-            $collectionName = isset($this->config[ 'collectionName' ]) ? $this->config[ 'collectionName' ] : 'Cache';
-            $databaseName = isset($this->config[ 'databaseName' ]) ? $this->config[ 'databaseName' ] : 'phpFastCache';
-
+            $clientConfig = $this->getConfig();
 
             /**
              * @todo make an url builder
              */
             $this->instance = $this->instance ?: (new MongodbManager('mongodb://' .
-              ($username ?: '') .
-              ($password ? ":{$password}" : '') .
-              ($username ? '@' : '') . "{$host}" .
-              ($port != '27017' ? ":{$port}" : ''), ['connectTimeoutMS' => $timeout * 1000]));
-            $this->collection = $this->collection ?: new Collection($this->instance, $databaseName, $collectionName);
+              ($clientConfig['username'] ?: '') .
+              ($clientConfig['password'] ? ":{$clientConfig['password']}" : '') .
+              ($clientConfig['username'] ? '@' : '') . "{$clientConfig['host']}" .
+              ($clientConfig['port'] != 27017 ? ":{$clientConfig['port']}" : ''), ['connectTimeoutMS' => $clientConfig['timeout'] * 1000]));
+            $this->collection = $this->collection ?: new Collection($this->instance, $clientConfig['databaseName'], $clientConfig['collectionName']);
 
             return true;
         }
@@ -221,14 +217,14 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function getStats()
     {
-        $serverStats = $this->instance->executeCommand('phpFastCache', new Command([
+        $serverStats = $this->instance->executeCommand($this->getConfigOption('databaseName'), new Command([
           'serverStatus' => 1,
           'recordStats' => 0,
           'repl' => 0,
           'metrics' => 0,
         ]))->toArray()[ 0 ];
 
-        $collectionStats = $this->instance->executeCommand('phpFastCache', new Command([
+        $collectionStats = $this->instance->executeCommand($this->getConfigOption('databaseName'), new Command([
           'collStats' => (isset($this->config[ 'collectionName' ]) ? $this->config[ 'collectionName' ] : 'Cache'),
           'verbose' => true,
         ]))->toArray()[ 0 ];
@@ -269,5 +265,24 @@ class Driver implements ExtendedCacheItemPoolInterface
           ]);
 
         return $stats;
+    }
+
+    /**
+     * @return ArrayObject
+     */
+    public function getDefaultConfig()
+    {
+        $defaultConfig = new ArrayObject();
+
+        $defaultConfig['host'] = '127.0.0.1';
+        $defaultConfig['port'] = 27017;
+        $defaultConfig['timeout'] = 3;
+        $defaultConfig['username'] = '';
+        $defaultConfig['password'] = '';
+        $defaultConfig['servers'] = '';
+        $defaultConfig['collectionName'] = 'Cache';
+        $defaultConfig['databaseName'] = self::MONGODB_DEFAULT_DB_NAME;
+
+        return $defaultConfig;
     }
 }

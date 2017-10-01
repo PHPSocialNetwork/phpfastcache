@@ -17,11 +17,14 @@ use phpFastCache\CacheManager;
 // Include composer autoloader
 require __DIR__ . '/../../vendor/autoload.php';
 
-$InstanceCache = CacheManager::getInstance('predis', [
-    'host' => '127.0.0.1', //Default value
-    'port' => 6379, //Default value
-    'password' => null, //Default value
-    'database' => null, //Default value
+$InstanceCache = CacheManager::getInstance('couchdb', [
+  'host' => '127.0.0.1',
+  'port' => 5984,
+  'path' => '/',
+  'username' => 'your-couchdb-username',
+  'password' => 'your-couchdb-password',
+  'ssl' => true,
+  'timeout' => 10,
 ]);
 
 /**
@@ -34,7 +37,7 @@ $CachedString = $InstanceCache->getItem($key);
 if (is_null($CachedString->get())) {
     //$CachedString = "APC Cache --> Cache Enabled --> Well done !";
     // Write products to Cache in 10 minutes with same keyword
-    $CachedString->set("Predis Cache --> Cache Enabled --> Well done !")->expiresAfter(5);
+    $CachedString->set("Couchdb Cache --> Cache Enabled --> Well done !")->expiresAfter(5);
     $InstanceCache->save($CachedString);
 
     echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ";

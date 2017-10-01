@@ -21,6 +21,7 @@ use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpFastCache\Exceptions\phpFastCacheLogicException;
+use phpFastCache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 use Redis as RedisClient;
 
@@ -58,6 +59,47 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
+     * @return bool
+     * @throws phpFastCacheLogicException
+     */
+    protected function driverConnect()
+    {
+        if ($this->instance instanceof RedisClient) {
+            throw new phpFastCacheLogicException('Already connected to Redis server');
+        } else {
+            $clientConfig = $this->getConfig();
+            $this->instance = $this->instance ?: new RedisClient();
+
+            if (!$this->instance->connect($clientConfig['host'], (int) $clientConfig['port'], (int) $clientConfig['timeout'])) {
+                return false;
+            } else {
+                if ($clientConfig['password'] && !$this->instance->auth($clientConfig['password'])) {
+                    return false;
+                }
+                if ($clientConfig['database']) {
+                    $this->instance->select((int) $clientConfig['database']);
+                }
+
+                return true;
+            }
+        }
+    }
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return null|array
+     */
+    protected function driverRead(CacheItemInterface $item)
+    {
+        $val = $this->instance->get($item->getKey());
+        if ($val == false) {
+            return null;
+        } else {
+            return $this->decode($val);
+        }
+    }
+
+    /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
      * @throws phpFastCacheInvalidArgumentException
@@ -86,20 +128,6 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return null|array
-     */
-    protected function driverRead(CacheItemInterface $item)
-    {
-        $val = $this->instance->get($item->getKey());
-        if ($val == false) {
-            return null;
-        } else {
-            return $this->decode($val);
-        }
-    }
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
@@ -123,38 +151,6 @@ class Driver implements ExtendedCacheItemPoolInterface
         return $this->instance->flushDB();
     }
 
-    /**
-     * @return bool
-     * @throws phpFastCacheLogicException
-     */
-    protected function driverConnect()
-    {
-        if ($this->instance instanceof RedisClient) {
-            throw new phpFastCacheLogicException('Already connected to Redis server');
-        } else {
-            $this->instance = $this->instance ?: new RedisClient();
-
-            $host = isset($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1';
-            $port = isset($this->config[ 'port' ]) ? (int)$this->config[ 'port' ] : '6379';
-            $password = isset($this->config[ 'password' ]) ? $this->config[ 'password' ] : '';
-            $database = isset($this->config[ 'database' ]) ? $this->config[ 'database' ] : '';
-            $timeout = isset($this->config[ 'timeout' ]) ? $this->config[ 'timeout' ] : '';
-
-            if (!$this->instance->connect($host, (int)$port, (int)$timeout)) {
-                return false;
-            } else {
-                if ($password && !$this->instance->auth($password)) {
-                    return false;
-                }
-                if ($database) {
-                    $this->instance->select((int)$database);
-                }
-
-                return true;
-            }
-        }
-    }
-
     /********************
      *
      * PSR-6 Extended Methods
@@ -176,5 +172,21 @@ class Driver implements ExtendedCacheItemPoolInterface
           ->setSize($info[ 'used_memory' ])
           ->setInfo(sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
             $info[ 'redis_version' ], $date->format(DATE_RFC2822)));
+    }
+
+    /**
+     * @return ArrayObject
+     */
+    public function getDefaultConfig()
+    {
+        $defaultConfig = new ArrayObject();
+
+        $defaultConfig['host'] = '127.0.0.1';
+        $defaultConfig['port'] = 6379;
+        $defaultConfig['password'] = null;
+        $defaultConfig['database'] = 0;
+        $defaultConfig['timeout'] = 5;
+
+        return $defaultConfig;
     }
 }

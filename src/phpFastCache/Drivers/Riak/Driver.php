@@ -12,28 +12,35 @@
  *
  */
 
-namespace phpFastCache\Drivers\Leveldb;
+namespace phpFastCache\Drivers\Riak;
 
-use LevelDB as LeveldbClient;
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Core\Pool\IO\IOHelperTrait;
+use phpFastCache\Entities\DriverStatistic;
+use phpFastCache\EventManager;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpFastCache\Exceptions\phpFastCacheLogicException;
+use phpFastCache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
+use Basho\Riak\Riak;
 
 /**
  * Class Driver
  * @package phpFastCache\Drivers
- * @property LeveldbClient $instance Instance of driver service
+ * @property Riak $instance Instance of driver service
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
-    use DriverBaseTrait, IOHelperTrait;
+    const RIAK_DEFAULT_BUCKET_NAME = 'phpfastcache';
 
-    const LEVELDB_FILENAME = '.database';
+    /**
+     * @var string
+     */
+    protected $bucketName = self::RIAK_DEFAULT_BUCKET_NAME;
+
+    use DriverBaseTrait;
 
     /**
      * Driver constructor.
@@ -56,8 +63,9 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck()
     {
-        return extension_loaded('Leveldb');
+        return class_exists('Basho\Riak\Riak');
     }
+
 
     /**
      * @return bool
@@ -65,15 +73,17 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverConnect()
     {
-        if ($this->instance instanceof LeveldbClient) {
-            throw new phpFastCacheLogicException('Already connected to Leveldb database');
+        if ($this->instance instanceof Riak) {
+            throw new phpFastCacheLogicException('Already connected to Riak server');
         } else {
-            $this->instance = $this->instance ?: new LeveldbClient($this->getLeveldbFile());
+            $clientConfig = $this->getConfig();
+            $this->bucketName = $clientConfig['bucketName'];
+
+            $this->instance = new Riak($clientConfig['host'], $clientConfig['port'], $clientConfig['prefix']);
+
+            return true;
         }
-
-        return true;
     }
-
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
@@ -81,12 +91,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverRead(CacheItemInterface $item)
     {
-        $val = $this->instance->get($item->getKey());
-        if ($val == false) {
-            return null;
-        } else {
-            return $this->decode($val);
-        }
+        return $this->decode($this->instance->bucket($this->bucketName)->getBinary($item->getKey())->getData());
     }
 
     /**
@@ -100,7 +105,10 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->instance->set($item->getKey(), $this->encode($this->driverPreWrap($item)));
+            return $this->instance
+              ->bucket($this->bucketName)
+              ->newBinary($item->getKey(), $this->encode($this->driverPreWrap($item)))
+              ->store();
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -117,7 +125,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->instance->delete($item->getKey());
+            return $this->instance->bucket($this->bucketName)->get($item->getKey())->delete();
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -128,33 +136,45 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverClear()
     {
-        if ($this->instance instanceof LeveldbClient) {
-            $this->instance->close();
-            $this->instance = null;
+        $bucket = $this->instance->bucket($this->bucketName);
+        foreach ($bucket->getKeys() as $key) {
+            $bucket->get($key)->delete();
         }
-        $result = (bool)LeveldbClient::destroy($this->getLeveldbFile());
-        $this->driverConnect();
+        return true;
+    }
 
-        return $result;
+    /********************
+     *
+     * PSR-6 Extended Methods
+     *
+     *******************/
+
+    /**
+     * @return DriverStatistic
+     */
+    public function getStats()
+    {
+        $info = $this->instance->bucket($this->bucketName)->getProperties();
+
+        return (new DriverStatistic())
+          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setRawData($info)
+          ->setSize(false)
+          ->setInfo('Riak does not provide size/date information att all :(');
     }
 
     /**
-     * @return string
-     * @throws \phpFastCache\Exceptions\phpFastCacheCoreException
+     * @return ArrayObject
      */
-    public function getLeveldbFile()
+    public function getDefaultConfig()
     {
-        return $this->getPath() . '/' . self::LEVELDB_FILENAME;
-    }
+        $defaultConfig = new ArrayObject();
 
-    /**
-     * Close connection on destruct
-     */
-    public function __destruct()
-    {
-        if ($this->instance instanceof LeveldbClient) {
-            $this->instance->close();
-            $this->instance = null;
-        }
+        $defaultConfig['host'] = '127.0.0.1';
+        $defaultConfig['port'] = 8098;
+        $defaultConfig['prefix'] = 'riak';
+        $defaultConfig['bucketName'] = self::RIAK_DEFAULT_BUCKET_NAME;
+
+        return $defaultConfig;
     }
 }

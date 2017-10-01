@@ -59,6 +59,34 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
+     * @return bool
+     */
+    protected function driverConnect()
+    {
+        return true;
+    }
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return null|array
+     */
+    protected function driverRead(CacheItemInterface $item)
+    {
+        /**
+         * Check for Cross-Driver type confusion
+         */
+        $file_path = $this->getFilePath($item->getKey(), true);
+        if (!file_exists($file_path)) {
+            return null;
+        }
+
+        $content = $this->readfile($file_path);
+
+        return $this->decode($content);
+
+    }
+
+    /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
      * @throws phpFastCacheInvalidArgumentException
@@ -83,26 +111,6 @@ class Driver implements ExtendedCacheItemPoolInterface
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
-    }
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return null|array
-     */
-    protected function driverRead(CacheItemInterface $item)
-    {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        $file_path = $this->getFilePath($item->getKey(), true);
-        if (!file_exists($file_path)) {
-            return null;
-        }
-
-        $content = $this->readfile($file_path);
-
-        return $this->decode($content);
-
     }
 
     /**
@@ -137,14 +145,6 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected function driverClear()
     {
         return (bool)Directory::rrmdir($this->getPath(true));
-    }
-
-    /**
-     * @return bool
-     */
-    protected function driverConnect()
-    {
-        return true;
     }
 
     /**

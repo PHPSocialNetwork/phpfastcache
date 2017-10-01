@@ -21,6 +21,7 @@ use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Util\ArrayObject;
 use phpFastCache\Util\MemcacheDriverCollisionDetectorTrait;
 use Psr\Cache\CacheItemInterface;
 
@@ -68,20 +69,26 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
-     * @throws phpFastCacheInvalidArgumentException
+     * @return bool
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverConnect()
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return $this->instance->set($item->getKey(), $this->driverPreWrap($item), $this->memcacheFlags, $item->getTtl());
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        $this->instance = new MemcacheSoftware();
+        $clientConfig = $this->getConfig();
+
+        foreach ($clientConfig['servers'] as $server) {
+            try {
+                if (!$this->instance->addServer($server[ 'host' ], $server[ 'port' ])) {
+                    $this->fallback = true;
+                }
+                if (!empty($server[ 'sasl_user' ]) && !empty($server[ 'sasl_password' ])) {
+                    $this->instance->setSaslAuthData($server[ 'sasl_user' ], $server[ 'sasl_password' ]);
+                }
+            } catch (\Exception $e) {
+                $this->fallback = true;
+            }
         }
+        return true;
     }
 
     /**
@@ -96,6 +103,23 @@ class Driver implements ExtendedCacheItemPoolInterface
             return null;
         } else {
             return $val;
+        }
+    }
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return mixed
+     * @throws phpFastCacheInvalidArgumentException
+     */
+    protected function driverWrite(CacheItemInterface $item)
+    {
+        /**
+         * Check for Cross-Driver type confusion
+         */
+        if ($item instanceof Item) {
+            return $this->instance->set($item->getKey(), $this->driverPreWrap($item), $this->memcacheFlags, $item->getTtl());
+        } else {
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
@@ -124,38 +148,6 @@ class Driver implements ExtendedCacheItemPoolInterface
         return $this->instance->flush();
     }
 
-    /**
-     * @return bool
-     */
-    protected function driverConnect()
-    {
-        $this->instance = new MemcacheSoftware();
-        $servers = (!empty($this->config[ 'servers' ]) && is_array($this->config[ 'servers' ]) ? $this->config[ 'servers' ] : []);
-        if (count($servers) < 1) {
-            $servers = [
-              [
-                'host' => '127.0.0.1',
-                'port' => 11211,
-                'sasl_user' => false,
-                'sasl_password' => false,
-              ],
-            ];
-        }
-
-        foreach ($servers as $server) {
-            try {
-                if (!$this->instance->addServer($server[ 'host' ], $server[ 'port' ])) {
-                    $this->fallback = true;
-                }
-                if (!empty($server[ 'sasl_user' ]) && !empty($server[ 'sasl_password' ])) {
-                    $this->instance->setSaslAuthData($server[ 'sasl_user' ], $server[ 'sasl_password' ]);
-                }
-            } catch (\Exception $e) {
-                $this->fallback = true;
-            }
-        }
-    }
-
     /********************
      *
      * PSR-6 Extended Methods
@@ -179,5 +171,22 @@ class Driver implements ExtendedCacheItemPoolInterface
           ->setInfo(sprintf("The memcache daemon v%s is up since %s.\n For more information see RawData.", $stats[ 'version' ], $date->format(DATE_RFC2822)))
           ->setRawData($stats)
           ->setSize($stats[ 'bytes' ]);
+    }
+
+    /**
+     * @return ArrayObject
+     */
+    public function getDefaultConfig()
+    {
+        $defaultConfig = new ArrayObject();
+
+        $defaultConfig['servers'] = [
+          'host' => '127.0.0.1',
+          'port' => 11211,
+          'sasl_user' => false,
+          'sasl_password' => false,
+        ];
+
+        return $defaultConfig;
     }
 }

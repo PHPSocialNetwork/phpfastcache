@@ -22,6 +22,7 @@ use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpFastCache\Exceptions\phpFastCacheLogicException;
+use phpFastCache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -68,20 +69,25 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
-     * @throws phpFastCacheInvalidArgumentException
+     * @return bool
+     * @throws phpFastCacheLogicException
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverConnect()
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return $this->getBucket()->upsert($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), ['expiry' => $item->getTtl()]);
+        if ($this->instance instanceof CouchbaseClient) {
+            throw new phpFastCacheLogicException('Already connected to Couchbase server');
         } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+            $clientConfig = $this->getConfig();
+
+            $this->instance = new CouchbaseClient("couchbase://{$clientConfig['host']}", $clientConfig['username'], $clientConfig['password']);
+
+            foreach ($clientConfig['buckets'] as $bucket) {
+                $this->bucketCurrent = $this->bucketCurrent ?: $bucket[ 'bucket' ];
+                $this->setBucket($bucket[ 'bucket' ], $this->instance->openBucket($bucket[ 'bucket' ], $bucket[ 'password' ]));
+            }
         }
+
+        return true;
     }
 
     /**
@@ -97,6 +103,23 @@ class Driver implements ExtendedCacheItemPoolInterface
             return $this->decode($this->getBucket()->get($item->getEncodedKey())->value);
         } catch (\CouchbaseException $e) {
             return null;
+        }
+    }
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return mixed
+     * @throws phpFastCacheInvalidArgumentException
+     */
+    protected function driverWrite(CacheItemInterface $item)
+    {
+        /**
+         * Check for Cross-Driver type confusion
+         */
+        if ($item instanceof Item) {
+            return $this->getBucket()->upsert($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), ['expiry' => $item->getTtl()]);
+        } else {
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
@@ -123,38 +146,6 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected function driverClear()
     {
         return $this->getBucket()->manager()->flush();
-    }
-
-    /**
-     * @return bool
-     * @throws phpFastCacheLogicException
-     */
-    protected function driverConnect()
-    {
-        if ($this->instance instanceof CouchbaseClient) {
-            throw new phpFastCacheLogicException('Already connected to Couchbase server');
-        } else {
-
-
-            $host = isset($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1';
-            $password = isset($this->config[ 'password' ]) ? $this->config[ 'password' ] : '';
-            $username = isset($this->config[ 'username' ]) ? $this->config[ 'username' ] : '';
-            $buckets = isset($this->config[ 'buckets' ]) ? $this->config[ 'buckets' ] : [
-              [
-                'bucket' => 'default',
-                'password' => '',
-              ],
-            ];
-
-            $this->instance = new CouchbaseClient("couchbase://{$host}", $username, $password);
-
-            foreach ($buckets as $bucket) {
-                $this->bucketCurrent = $this->bucketCurrent ?: $bucket[ 'bucket' ];
-                $this->setBucket($bucket[ 'bucket' ], $this->instance->openBucket($bucket[ 'bucket' ], $bucket[ 'password' ]));
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -198,5 +189,25 @@ class Driver implements ExtendedCacheItemPoolInterface
           ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setInfo('CouchBase version ' . $info[ 'nodes' ][ 0 ][ 'version' ] . ', Uptime (in days): ' . round($info[ 'nodes' ][ 0 ][ 'uptime' ] / 86400,
               1) . "\n For more information see RawData.");
+    }
+
+    /**
+     * @return ArrayObject
+     */
+    public function getDefaultConfig()
+    {
+        $defaultConfig = new ArrayObject();
+
+        $defaultConfig['host'] = '127.0.0.1';
+        $defaultConfig['username'] = '';
+        $defaultConfig['password'] = '';
+        $defaultConfig['buckets'] = [
+          [
+            'bucket' => 'default',
+            'password' => '',
+          ],
+        ];
+
+        return $defaultConfig;
     }
 }

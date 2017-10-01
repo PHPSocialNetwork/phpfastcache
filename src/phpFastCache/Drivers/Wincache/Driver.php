@@ -53,21 +53,13 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
-     * @throws phpFastCacheInvalidArgumentException
+     * @return bool
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverConnect()
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return wincache_ucache_set($item->getKey(), $this->driverPreWrap($item), $item->getTtl());
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
-        }
+        return true;
     }
+
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
@@ -81,6 +73,23 @@ class Driver implements ExtendedCacheItemPoolInterface
             return null;
         } else {
             return $val;
+        }
+    }
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return mixed
+     * @throws phpFastCacheInvalidArgumentException
+     */
+    protected function driverWrite(CacheItemInterface $item)
+    {
+        /**
+         * Check for Cross-Driver type confusion
+         */
+        if ($item instanceof Item) {
+            return wincache_ucache_set($item->getKey(), $this->driverPreWrap($item), $item->getTtl());
+        } else {
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
@@ -107,14 +116,6 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected function driverClear()
     {
         return wincache_ucache_clear();
-    }
-
-    /**
-     * @return bool
-     */
-    protected function driverConnect()
-    {
-        return true;
     }
 
     /********************

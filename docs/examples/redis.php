@@ -17,7 +17,12 @@ use phpFastCache\CacheManager;
 // Include composer autoloader
 require __DIR__ . '/../../vendor/autoload.php';
 
-$InstanceCache = CacheManager::getInstance('redis');
+$InstanceCache = CacheManager::getInstance('redis', [
+  'host' => '127.0.0.1', //Default value
+  'port' => 6379, //Default value
+  'password' => null, //Default value
+  'database' => null, //Default value
+]);
 
 /**
  * Try to get $products from Caching First

@@ -53,6 +53,28 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
+     * @return bool
+     */
+    protected function driverConnect()
+    {
+        return true;
+    }
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return null|array
+     */
+    protected function driverRead(CacheItemInterface $item)
+    {
+        $data = $this->decode(xcache_get($item->getKey()));
+        if ($data === false || $data === '') {
+            return null;
+        }
+
+        return $data;
+    }
+
+    /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
      * @throws phpFastCacheInvalidArgumentException
@@ -68,20 +90,6 @@ class Driver implements ExtendedCacheItemPoolInterface
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
-    }
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return null|array
-     */
-    protected function driverRead(CacheItemInterface $item)
-    {
-        $data = $this->decode(xcache_get($item->getKey()));
-        if ($data === false || $data === '') {
-            return null;
-        }
-
-        return $data;
     }
 
     /**
@@ -111,14 +119,6 @@ class Driver implements ExtendedCacheItemPoolInterface
             xcache_clear_cache(XC_TYPE_VAR, $i);
         }
 
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    protected function driverConnect()
-    {
         return true;
     }
 

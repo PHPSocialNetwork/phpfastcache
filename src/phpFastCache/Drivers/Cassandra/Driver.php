@@ -23,6 +23,7 @@ use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpFastCache\Exceptions\phpFastCacheLogicException;
+use phpFastCache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -206,18 +207,14 @@ class Driver implements ExtendedCacheItemPoolInterface
         if ($this->instance instanceof CassandraSession) {
             throw new phpFastCacheLogicException('Already connected to Couchbase server');
         } else {
-            $host = isset($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1';
-            $port = isset($this->config[ 'port' ]) ? $this->config[ 'port' ] : 9042;
-            $timeout = isset($this->config[ 'timeout' ]) ? $this->config[ 'timeout' ] : 2;
-            $password = isset($this->config[ 'password' ]) ? $this->config[ 'password' ] : '';
-            $username = isset($this->config[ 'username' ]) ? $this->config[ 'username' ] : '';
+            $clientConfig = $this->getConfig();
 
             $clusterBuilder = Cassandra::cluster()
-              ->withContactPoints($host)
-              ->withPort($port);
+              ->withContactPoints($clientConfig['host'])
+              ->withPort($clientConfig['port']);
 
-            if (!empty($this->config[ 'ssl' ][ 'enabled' ])) {
-                if (!empty($this->config[ 'ssl' ][ 'verify' ])) {
+            if (!empty($clientConfig['sslEnabled'])) {
+                if (!empty($clientConfig['sslVerify'])) {
                     $sslBuilder = Cassandra::ssl()->withVerifyFlags(Cassandra::VERIFY_PEER_CERT);
                 } else {
                     $sslBuilder = Cassandra::ssl()->withVerifyFlags(Cassandra::VERIFY_NONE);
@@ -226,10 +223,10 @@ class Driver implements ExtendedCacheItemPoolInterface
                 $clusterBuilder->withSSL($sslBuilder->build());
             }
 
-            $clusterBuilder->withConnectTimeout($timeout);
+            $clusterBuilder->withConnectTimeout($clientConfig['timeout']);
 
-            if ($username) {
-                $clusterBuilder->withCredentials($username, $password);
+            if ($clientConfig['username']) {
+                $clusterBuilder->withCredentials($clientConfig['username'], $clientConfig['password']);
             }
 
             $this->instance = $clusterBuilder->build()->connect();
@@ -300,5 +297,23 @@ HELP;
           ->setRawData([])
           ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setInfo('The cache size represents only the cache data itself without counting data structures associated to the cache entries.');
+    }
+
+    /**
+     * @return ArrayObject
+     */
+    public function getDefaultConfig()
+    {
+        $defaultConfig = new ArrayObject();
+
+        $defaultConfig['host'] = '127.0.0.1';
+        $defaultConfig['port'] = 9042;
+        $defaultConfig['timeout'] = 2;
+        $defaultConfig['username'] = '';
+        $defaultConfig['password'] = '';
+        $defaultConfig['sslEnabled'] = false;
+        $defaultConfig['sslVerify'] = false;
+
+        return $defaultConfig;
     }
 }

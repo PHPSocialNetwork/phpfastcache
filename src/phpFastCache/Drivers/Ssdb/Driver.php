@@ -20,6 +20,7 @@ use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Util\ArrayObject;
 use phpssdb\Core\SimpleSSDB;
 use phpssdb\Core\SSDBException;
 use Psr\Cache\CacheItemInterface;
@@ -63,19 +64,26 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
-     * @throws phpFastCacheInvalidArgumentException
+     * @return bool
+     * @throws phpFastCacheDriverException
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverConnect()
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return $this->instance->setx($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), $item->getTtl());
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        try {
+            $clientConfig = $this->getConfig();
+
+            $this->instance = new SimpleSSDB($clientConfig['host'], $clientConfig['port'], $clientConfig['timeout']);
+            if (!empty($clientConfig['password'])) {
+                $this->instance->auth($clientConfig['password']);
+            }
+
+            if (!$this->instance) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (SSDBException $e) {
+            throw new phpFastCacheDriverCheckException('Ssdb failed to connect with error: ' . $e->getMessage(), 0, $e);
         }
     }
 
@@ -90,6 +98,23 @@ class Driver implements ExtendedCacheItemPoolInterface
             return null;
         } else {
             return $this->decode($val);
+        }
+    }
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return mixed
+     * @throws phpFastCacheInvalidArgumentException
+     */
+    protected function driverWrite(CacheItemInterface $item)
+    {
+        /**
+         * Check for Cross-Driver type confusion
+         */
+        if ($item instanceof Item) {
+            return $this->instance->setx($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), $item->getTtl());
+        } else {
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
@@ -118,39 +143,6 @@ class Driver implements ExtendedCacheItemPoolInterface
         return $this->instance->flushdb('kv');
     }
 
-    /**
-     * @return bool
-     * @throws phpFastCacheDriverException
-     */
-    protected function driverConnect()
-    {
-        try {
-            $server = isset($this->config[ 'ssdb' ]) ? $this->config[ 'ssdb' ] : [
-              'host' => "127.0.0.1",
-              'port' => 8888,
-              'password' => '',
-              'timeout' => 2000,
-            ];
-
-            $host = $server[ 'host' ];
-            $port = isset($server[ 'port' ]) ? (int)$server[ 'port' ] : 8888;
-            $password = isset($server[ 'password' ]) ? $server[ 'password' ] : '';
-            $timeout = !empty($server[ 'timeout' ]) ? (int)$server[ 'timeout' ] : 2000;
-            $this->instance = new SimpleSSDB($host, $port, $timeout);
-            if (!empty($password)) {
-                $this->instance->auth($password);
-            }
-
-            if (!$this->instance) {
-                return false;
-            } else {
-                return true;
-            }
-        } catch (SSDBException $e) {
-            throw new phpFastCacheDriverCheckException('Ssdb failed to connect with error: ' . $e->getMessage(), 0, $e);
-        }
-    }
-
     /********************
      *
      * PSR-6 Extended Methods
@@ -175,5 +167,20 @@ class Driver implements ExtendedCacheItemPoolInterface
           ->setSize($this->instance->dbsize());
 
         return $stat;
+    }
+
+    /**
+     * @return ArrayObject
+     */
+    public function getDefaultConfig()
+    {
+        $defaultConfig = new ArrayObject();
+
+        $defaultConfig['host'] = '127.0.0.1';
+        $defaultConfig['port'] = 8888;
+        $defaultConfig['password'] = '';
+        $defaultConfig['timeout'] = 2000;
+
+        return $defaultConfig;
     }
 }

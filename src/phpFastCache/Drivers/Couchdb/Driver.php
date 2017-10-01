@@ -23,6 +23,7 @@ use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpFastCache\Exceptions\phpFastCacheLogicException;
+use phpFastCache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -32,6 +33,8 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
+    const COUCHDB_DEFAULT_DB_NAME = 'phpfastcache';
+
     use DriverBaseTrait;
 
     /**
@@ -59,27 +62,38 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
-     * @throws phpFastCacheDriverException
-     * @throws phpFastCacheInvalidArgumentException
+     * @return bool
+     * @throws phpFastCacheLogicException
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverConnect()
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            try {
-                $this->instance->putDocument(['data' => $this->encode($this->driverPreWrap($item))], $item->getEncodedKey(),
-                  $this->getLatestDocumentRevision($item->getEncodedKey()));
-            } catch (CouchDBException $e) {
-                throw new phpFastCacheDriverException('Got error while trying to upsert a document: ' . $e->getMessage(), null, $e);
-            }
-            return true;
+        if ($this->instance instanceof CouchdbClient) {
+            throw new phpFastCacheLogicException('Already connected to Couchdb server');
         } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+            $clientConfig = $this->getConfig();
+
+            $url = ($clientConfig['ssl'] ? 'https://' : 'http://');
+            if ($clientConfig['username']) {
+                $url .= "{$clientConfig['username']}";
+                if ($clientConfig['password']) {
+                    $url .= ":{$clientConfig['password']}";
+                }
+                $url .= '@';
+            }
+            $url .= $clientConfig['host'];
+            $url .= ":{$clientConfig['port']}";
+            $url .= $clientConfig['path'];
+
+            $this->instance = CouchDBClient::create([
+              'dbname' => $this->getDatabaseName(),
+              'url' => $url,
+              'timeout' => $clientConfig['timeout'],
+            ]);
+
+            $this->createDatabase();
         }
+
+        return true;
     }
 
     /**
@@ -101,6 +115,31 @@ class Driver implements ExtendedCacheItemPoolInterface
             return $this->decode($response->body[ 'data' ]);
         } else {
             throw new phpFastCacheDriverException('Got unexpected HTTP status: ' . $response->status);
+        }
+    }
+
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return mixed
+     * @throws phpFastCacheDriverException
+     * @throws phpFastCacheInvalidArgumentException
+     */
+    protected function driverWrite(CacheItemInterface $item)
+    {
+        /**
+         * Check for Cross-Driver type confusion
+         */
+        if ($item instanceof Item) {
+            try {
+                $this->instance->putDocument(['data' => $this->encode($this->driverPreWrap($item))], $item->getEncodedKey(),
+                  $this->getLatestDocumentRevision($item->getEncodedKey()));
+            } catch (CouchDBException $e) {
+                throw new phpFastCacheDriverException('Got error while trying to upsert a document: ' . $e->getMessage(), null, $e);
+            }
+            return true;
+        } else {
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
@@ -145,47 +184,6 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @return bool
-     * @throws phpFastCacheLogicException
-     */
-    protected function driverConnect()
-    {
-        if ($this->instance instanceof CouchdbClient) {
-            throw new phpFastCacheLogicException('Already connected to Couchdb server');
-        } else {
-            $host = isset($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1';
-            $ssl = isset($this->config[ 'ssl' ]) ? $this->config[ 'ssl' ] : false;
-            $port = isset($this->config[ 'port' ]) ? $this->config[ 'port' ] : 5984;
-            $path = isset($this->config[ 'path' ]) ? $this->config[ 'path' ] : '/';
-            $username = isset($this->config[ 'username' ]) ? $this->config[ 'username' ] : '';
-            $password = isset($this->config[ 'password' ]) ? $this->config[ 'password' ] : '';
-            $timeout = isset($this->config[ 'timeout' ]) ? $this->config[ 'timeout' ] : 10;
-
-            $url = ($ssl ? 'https://' : 'http://');
-            if ($username) {
-                $url .= "{$username}";
-                if ($password) {
-                    $url .= ":{$password}";
-                }
-                $url .= '@';
-            }
-            $url .= $host;
-            $url .= ":{$port}";
-            $url .= $path;
-
-            $this->instance = CouchDBClient::create([
-              'dbname' => $this->getDatabaseName(),
-              'url' => $url,
-              'timeout' => $timeout,
-            ]);
-
-            $this->createDatabase();
-        }
-
-        return true;
-    }
-
-    /**
      * @return string|null
      */
     protected function getLatestDocumentRevision($docId)
@@ -210,7 +208,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function getDatabaseName()
     {
-        return isset($this->config[ 'database' ]) ? $this->config[ 'database' ] : 'phpfastcache';
+        return isset($this->config[ 'database' ]) ? $this->config[ 'database' ] : self::COUCHDB_DEFAULT_DB_NAME;
     }
 
     /**
@@ -254,5 +252,23 @@ HELP;
           ->setRawData($info)
           ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setInfo('Couchdb version ' . $this->instance->getVersion() . "\n For more information see RawData.");
+    }
+
+    /**
+     * @return ArrayObject
+     */
+    public function getDefaultConfig()
+    {
+        $defaultConfig = new ArrayObject();
+
+        $defaultConfig['host'] = '127.0.0.1';
+        $defaultConfig['port'] = 5984;
+        $defaultConfig['path'] = '/';
+        $defaultConfig['username'] = '';
+        $defaultConfig['password'] = '';
+        $defaultConfig['ssl'] = false;
+        $defaultConfig['timeout'] = 10;
+
+        return $defaultConfig;
     }
 }

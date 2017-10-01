@@ -17,12 +17,16 @@ use phpFastCache\CacheManager;
 // Include composer autoloader
 require __DIR__ . '/../../vendor/autoload.php';
 
-$InstanceCache = CacheManager::getInstance('predis', [
-    'host' => '127.0.0.1', //Default value
-    'port' => 6379, //Default value
-    'password' => null, //Default value
-    'database' => null, //Default value
-]);
+$config = [];
+$config['host'] = '127.0.0.1';
+$config['port'] = 9042;
+$config['timeout'] = 2;
+$config['username'] = '';
+$config['password'] = '';
+$config['sslEnabled'] = false;
+$config['sslVerify'] = false;
+
+$InstanceCache = CacheManager::getInstance('cassandra', $config);
 
 /**
  * Try to get $products from Caching First
@@ -34,7 +38,7 @@ $CachedString = $InstanceCache->getItem($key);
 if (is_null($CachedString->get())) {
     //$CachedString = "APC Cache --> Cache Enabled --> Well done !";
     // Write products to Cache in 10 minutes with same keyword
-    $CachedString->set("Predis Cache --> Cache Enabled --> Well done !")->expiresAfter(5);
+    $CachedString->set("Redis Cache --> Cache Enabled --> Well done !")->expiresAfter(5);
     $InstanceCache->save($CachedString);
 
     echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ";

@@ -20,6 +20,7 @@ use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 
 /**

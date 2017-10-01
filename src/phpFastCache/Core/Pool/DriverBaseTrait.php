@@ -17,6 +17,7 @@ namespace phpFastCache\Core\Pool;
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpFastCache\Exceptions\phpFastCacheLogicException;
+use phpFastCache\Util\ArrayObject;
 
 
 /**
@@ -68,20 +69,29 @@ trait DriverBaseTrait
      */
     public function getConfig()
     {
-        return $this->config;
+        return array_merge($this->getDefaultConfig()->toArray(), $this->config);
     }
 
 
     /**
+     * @param $optionName
      * @return mixed
      */
     public function getConfigOption($optionName)
     {
-        if (isset($this->config[ $optionName ])) {
-            return $this->config[ $optionName ];
+        if (isset($this->getConfig()[ $optionName ])) {
+            return $this->getConfig()[ $optionName ];
         } else {
             return null;
         }
+    }
+
+    /**
+     * @return ArrayObject
+     */
+    public function getDefaultConfig()
+    {
+        return new ArrayObject();
     }
 
     /**

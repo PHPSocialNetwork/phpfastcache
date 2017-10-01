@@ -20,8 +20,10 @@ use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\EventManager;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpFastCache\Exceptions\phpFastCacheLogicException;
+use phpFastCache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+
 
 /**
  * Interface ExtendedCacheItemPoolInterface
@@ -56,6 +58,11 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return array
      */
     public function getConfig();
+
+    /**
+     * @return ArrayObject
+     */
+    public function getDefaultConfig();
 
     /**
      * @param string $optionName

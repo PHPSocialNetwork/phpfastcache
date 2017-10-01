@@ -20,6 +20,7 @@ use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Util\ArrayObject;
 use Predis\Client as PredisClient;
 use Predis\Connection\ConnectionException as PredisConnectionException;
 use Psr\Cache\CacheItemInterface;
@@ -62,6 +63,37 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
+     * @return bool
+     * @throws phpFastCacheDriverException
+     */
+    protected function driverConnect()
+    {
+        $this->instance = new PredisClient($this->getConfig());
+
+        try {
+            $this->instance->connect();
+        } catch (PredisConnectionException $e) {
+            throw new phpFastCacheDriverException('Failed to connect to predis server', 0, $e);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return null|array
+     */
+    protected function driverRead(CacheItemInterface $item)
+    {
+        $val = $this->instance->get($item->getKey());
+        if ($val == false) {
+            return null;
+        } else {
+            return $this->decode($val);
+        }
+    }
+
+    /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
      * @throws phpFastCacheInvalidArgumentException
@@ -90,20 +122,6 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return null|array
-     */
-    protected function driverRead(CacheItemInterface $item)
-    {
-        $val = $this->instance->get($item->getKey());
-        if ($val == false) {
-            return null;
-        } else {
-            return $this->decode($val);
-        }
-    }
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
@@ -125,30 +143,6 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected function driverClear()
     {
         return $this->instance->flushdb();
-    }
-
-    /**
-     * @return bool
-     * @throws phpFastCacheDriverException
-     */
-    protected function driverConnect()
-    {
-        $config = isset($this->config[ 'predis' ]) ? $this->config[ 'predis' ] : [];
-
-        $this->instance = new PredisClient(array_merge([
-          'host' => '127.0.0.1',
-          'port' => 6379,
-          'password' => null,
-          'database' => null,
-        ], $config));
-
-        try {
-            $this->instance->connect();
-        } catch (PredisConnectionException $e) {
-            throw new phpFastCacheDriverException('Failed to connect to predis server', 0, $e);
-        }
-
-        return true;
     }
 
     /********************
@@ -187,5 +181,20 @@ HELP;
           ->setSize($size)
           ->setInfo(sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
             $version, $date->format(DATE_RFC2822)));
+    }
+
+    /**
+     * @return ArrayObject
+     */
+    public function getDefaultConfig()
+    {
+        $defaultConfig = new ArrayObject();
+
+        $defaultConfig['host'] = '127.0.0.1';
+        $defaultConfig['port'] = 6379;
+        $defaultConfig['password'] = null;
+        $defaultConfig['database'] = null;
+
+        return $defaultConfig;
     }
 }

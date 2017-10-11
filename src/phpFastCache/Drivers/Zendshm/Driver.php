@@ -131,7 +131,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return string
      */
-    public function getHelp(): string 
+    public function getHelp(): string
     {
         return <<<HELP
 <p>

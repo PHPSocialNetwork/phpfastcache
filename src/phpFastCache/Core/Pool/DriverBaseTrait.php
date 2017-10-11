@@ -67,7 +67,7 @@ trait DriverBaseTrait
     /**
      * @return array
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         return array_merge($this->getDefaultConfig()->toArray(), $this->config);
     }
@@ -89,7 +89,7 @@ trait DriverBaseTrait
     /**
      * @return ArrayObject
      */
-    public function getDefaultConfig()
+    public function getDefaultConfig(): ArrayObject
     {
         return new ArrayObject();
     }
@@ -101,7 +101,7 @@ trait DriverBaseTrait
      * @param $data
      * @return string
      */
-    protected function encode($data)
+    protected function encode($data): string
     {
         return serialize($data);
     }
@@ -122,7 +122,7 @@ trait DriverBaseTrait
      * Check phpModules or CGI
      * @return bool
      */
-    protected function isPHPModule()
+    protected function isPHPModule(): bool
     {
         return (PHP_SAPI === 'apache2handler' || strpos(PHP_SAPI, 'handler') !== false);
     }
@@ -132,7 +132,7 @@ trait DriverBaseTrait
      * @param $class
      * @return bool
      */
-    protected function isExistingDriver($class)
+    protected function isExistingDriver($class): bool
     {
         return class_exists("\\phpFastCache\\Drivers\\{$class}");
     }
@@ -142,7 +142,7 @@ trait DriverBaseTrait
      * @param $tag
      * @return string
      */
-    protected function _getTagName($tag)
+    protected function _getTagName($tag): string
     {
         return "__tag__" . $tag;
     }
@@ -151,7 +151,7 @@ trait DriverBaseTrait
      * @param \phpFastCache\Core\Item\ExtendedCacheItemInterface $item
      * @return array
      */
-    public function driverPreWrap(ExtendedCacheItemInterface $item)
+    public function driverPreWrap(ExtendedCacheItemInterface $item): array
     {
         $wrap = [
           self::DRIVER_DATA_WRAPPER_INDEX => $item->get(),
@@ -224,7 +224,7 @@ trait DriverBaseTrait
     /**
      * @return string
      */
-    public function getDriverName()
+    public function getDriverName(): string
     {
         if(!$this->driverName){
             $this->driverName = ucfirst(substr(strrchr((new \ReflectionObject($this))->getNamespaceName(), '\\'), 1));
@@ -324,10 +324,10 @@ trait DriverBaseTrait
     }
 
     /**
-     * @param $key
+     * @param array $keys
      * @return array
      */
-    public function getTagKeys(array $keys)
+    public function getTagKeys(array $keys): array
     {
         foreach ($keys as &$key) {
             $key = $this->getTagKey($key);
@@ -342,7 +342,7 @@ trait DriverBaseTrait
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    public static function isValidOption($optionName, $optionValue)
+    public static function isValidOption($optionName, $optionValue): bool
     {
         if (!is_string($optionName)) {
             throw new phpFastCacheInvalidArgumentException('$optionName must be a string');
@@ -354,7 +354,7 @@ trait DriverBaseTrait
     /**
      * @return array
      */
-    public static function getRequiredOptions()
+    public static function getRequiredOptions(): array
     {
         return [];
     }
@@ -362,7 +362,7 @@ trait DriverBaseTrait
     /**
      * @return array
      */
-    public static function getValidOptions()
+    public static function getValidOptions(): array
     {
         return [];
     }

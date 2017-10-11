@@ -48,21 +48,25 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck()
+    public function driverCheck(): bool
     {
-        if (extension_loaded('apcu') && ini_get('apc.enabled')) {
-            return true;
-        } else {
-            return false;
-        }
+        return extension_loaded('apcu') && ini_get('apc.enabled');
+    }
+
+    /**
+     * @return bool
+     */
+    protected function driverConnect(): bool
+    {
+        return true;
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -70,7 +74,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         if ($item instanceof Item) {
             $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
-            return apcu_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
+            return (bool) apcu_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -95,13 +99,13 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item)
+    protected function driverDelete(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return apcu_delete($item->getKey());
+            return (bool) apcu_delete($item->getKey());
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -110,17 +114,9 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear()
+    protected function driverClear(): bool
     {
-        return @apcu_clear_cache() && @apcu_clear_cache();
-    }
-
-    /**
-     * @return bool
-     */
-    protected function driverConnect()
-    {
-        return true;
+        return @apcu_clear_cache();
     }
 
     /********************
@@ -132,7 +128,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return DriverStatistic
      */
-    public function getStats()
+    public function getStats(): DriverStatistic
     {
         $stats = (array)apcu_cache_info();
         $date = (new \DateTime())->setTimestamp($stats[ 'start_time' ]);

@@ -47,17 +47,17 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck()
+    public function driverCheck(): bool
     {
         return true;
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -71,9 +71,9 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return null|array
+     * @return array
      */
-    protected function driverRead(CacheItemInterface $item)
+    protected function driverRead(CacheItemInterface $item):array
     {
         return [
           self::DRIVER_DATA_WRAPPER_INDEX => false,
@@ -87,7 +87,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item)
+    protected function driverDelete(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -102,7 +102,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear()
+    protected function driverClear(): bool
     {
         return true;
     }
@@ -110,7 +110,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverConnect()
+    protected function driverConnect(): bool
     {
         return true;
     }
@@ -124,7 +124,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return DriverStatistic
      */
-    public function getStats()
+    public function getStats(): DriverStatistic
     {
         $stat = new DriverStatistic();
         $stat->setInfo('[Devfalse] A void info string')

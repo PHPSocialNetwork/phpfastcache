@@ -57,12 +57,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     /**
      * @return array
      */
-    public function getConfig();
+    public function getConfig(): array;
 
     /**
      * @return ArrayObject
      */
-    public function getDefaultConfig();
+    public function getDefaultConfig(): ArrayObject;
 
     /**
      * @param string $optionName
@@ -73,7 +73,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     /**
      * @return string
      */
-    public function getDriverName();
+    public function getDriverName(): string;
 
 
     /**
@@ -128,7 +128,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *
      * @return string
      */
-    public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512);
+    public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512): string;
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
@@ -139,7 +139,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     /**
      * @return DriverStatistic
      */
-    public function getStats();
+    public function getStats(): DriverStatistic;
 
 
     /**
@@ -148,7 +148,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *
      * @return string
      */
-    public function getHelp();
+    public function getHelp(): string;
 
     /**
      * Returns a traversable set of cache items by a tag name.
@@ -503,8 +503,9 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * Set the EventManager instance
      *
      * @param EventManager $em
+     * @return self
      */
-    public function setEventManager(EventManager $em);
+    public function setEventManager(EventManager $em): self;
 
     /**
      * Save multiple items, possible uses:
@@ -514,5 +515,5 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param ExtendedCacheItemInterface[] $items
      * @return bool
      */
-    public function saveMultiple(...$items);
+    public function saveMultiple(...$items): bool;
 }

@@ -53,7 +53,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck()
+    public function driverCheck(): bool
     {
         if (extension_loaded('Redis')) {
             trigger_error('The native Redis extension is installed, you should use Redis instead of Predis to increase performances', E_USER_NOTICE);
@@ -66,7 +66,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheDriverException
      */
-    protected function driverConnect()
+    protected function driverConnect(): bool
     {
         $this->instance = new PredisClient($this->getConfig());
 
@@ -98,7 +98,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return mixed
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -125,7 +125,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item)
+    protected function driverDelete(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -140,7 +140,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear()
+    protected function driverClear(): bool
     {
         return $this->instance->flushdb();
     }
@@ -155,7 +155,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return string
      */
-    public function getHelp()
+    public function getHelp(): string
     {
         return <<<HELP
 <p>
@@ -168,7 +168,7 @@ HELP;
     /**
      * @return DriverStatistic
      */
-    public function getStats()
+    public function getStats(): DriverStatistic
     {
         $info = $this->instance->info();
         $size = (isset($info[ 'Memory' ][ 'used_memory' ]) ? $info[ 'Memory' ][ 'used_memory' ] : 0);
@@ -186,7 +186,7 @@ HELP;
     /**
      * @return ArrayObject
      */
-    public function getDefaultConfig()
+    public function getDefaultConfig(): ArrayObject
     {
         $defaultConfig = new ArrayObject();
 

@@ -33,7 +33,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
      * @return string
      *   The encoded key string for this cache item.
      */
-    public function getEncodedKey();
+    public function getEncodedKey(): string;
 
     /**
      * @return mixed
@@ -43,7 +43,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
     /**
      * @return \DateTimeInterface
      */
-    public function getExpirationDate();
+    public function getExpirationDate(): \DateTimeInterface;
 
     /**
      * Alias of expireAt() with forced $expiration param
@@ -54,46 +54,46 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
      *   the value should be stored permanently or for as long as the
      *   implementation allows.
      *
-     * @return static
+     * @return self
      *   The called object.
      */
-    public function setExpirationDate(\DateTimeInterface $expiration);
+    public function setExpirationDate(\DateTimeInterface $expiration): self;
 
     /**
      * @return \DateTimeInterface
      * @throws phpFastCacheLogicException
      */
-    public function getCreationDate();
+    public function getCreationDate(): \DateTimeInterface;
 
     /**
      * @return \DateTimeInterface
      * @throws phpFastCacheLogicException
      */
-    public function getModificationDate();
+    public function getModificationDate(): \DateTimeInterface;
 
     /**
      * @param $date \DateTimeInterface
-     * @return $this
+     * @return self
      * @throws phpFastCacheLogicException
      */
-    public function setCreationDate(\DateTimeInterface $date);
+    public function setCreationDate(\DateTimeInterface $date): self;
 
     /**
      * @param $date \DateTimeInterface
-     * @return $this
+     * @return self
      * @throws phpFastCacheLogicException
      */
-    public function setModificationDate(\DateTimeInterface $date);
+    public function setModificationDate(\DateTimeInterface $date): self;
 
     /**
      * @return int
      */
-    public function getTtl();
+    public function getTtl(): int;
 
     /**
      * @return bool
      */
-    public function isExpired();
+    public function isExpired(): bool;
 
     /**
      * @param \phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface $driver
@@ -103,87 +103,87 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
 
     /**
      * @param bool $isHit
-     * @return $this
+     * @return self
      * @throws phpFastCacheInvalidArgumentException
      */
-    public function setHit($isHit);
+    public function setHit($isHit): self;
 
     /**
      * @param int $step
-     * @return $this
+     * @return self
      * @throws phpFastCacheInvalidArgumentException
      */
-    public function increment($step = 1);
+    public function increment($step = 1): self;
 
     /**
      * @param int $step
-     * @return $this
+     * @return self
      * @throws phpFastCacheInvalidArgumentException
      */
-    public function decrement($step = 1);
+    public function decrement($step = 1): self;
 
     /**
      * @param array|string $data
-     * @return $this
+     * @return self
      * @throws phpFastCacheInvalidArgumentException
      */
-    public function append($data);
+    public function append($data): self;
 
     /**
      * @param array|string $data
-     * @return $this
+     * @return self
      * @throws phpFastCacheInvalidArgumentException
      */
-    public function prepend($data);
+    public function prepend($data): self;
 
     /**
      * @param string $tagName
-     * @return $this
+     * @return self
      * @throws phpFastCacheInvalidArgumentException
      */
-    public function addTag($tagName);
+    public function addTag($tagName): self;
 
     /**
      * @param array $tagNames
-     * @return $this
+     * @return self
      */
-    public function addTags(array $tagNames);
+    public function addTags(array $tagNames): self;
 
 
     /**
      * @param array $tags
-     * @return $this
+     * @return self
      * @throws phpFastCacheInvalidArgumentException
      */
-    public function setTags(array $tags);
+    public function setTags(array $tags): self;
 
     /**
      * @return array
      */
-    public function getTags();
+    public function getTags(): self;
 
     /**
      * @param string $separator
-     * @return mixed
+     * @return string
      */
-    public function getTagsAsString($separator = ', ');
+    public function getTagsAsString($separator = ', '): string;
 
     /**
      * @param array $tagName
-     * @return $this
+     * @return self
      */
-    public function removeTag($tagName);
+    public function removeTag($tagName): self;
 
     /**
      * @param array $tagNames
-     * @return $this
+     * @return self
      */
-    public function removeTags(array $tagNames);
+    public function removeTags(array $tagNames): self;
 
     /**
      * @return array
      */
-    public function getRemovedTags();
+    public function getRemovedTags(): array;
 
     /**
      * Return the data as a well-formatted string.
@@ -192,13 +192,13 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
      * @param int $depth json_encode() depth
      * @return string
      */
-    public function getDataAsJsonString($option = 0, $depth = 512);
+    public function getDataAsJsonString($option = 0, $depth = 512): string;
 
     /**
      * Set the EventManager instance
      *
      * @param EventManager $em
-     * @return static
+     * @return self
      */
-    public function setEventManager(EventManager $em);
+    public function setEventManager(EventManager $em): self;
 }

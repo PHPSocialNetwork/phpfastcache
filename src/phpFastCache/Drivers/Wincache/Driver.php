@@ -47,7 +47,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck()
+    public function driverCheck(): bool
     {
         return extension_loaded('wincache') && function_exists('wincache_ucache_set');
     }
@@ -55,7 +55,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverConnect()
+    protected function driverConnect(): bool
     {
         return true;
     }
@@ -81,7 +81,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return mixed
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -98,7 +98,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item)
+    protected function driverDelete(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -113,7 +113,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear()
+    protected function driverClear(): bool
     {
         return wincache_ucache_clear();
     }
@@ -127,7 +127,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return DriverStatistic
      */
-    public function getStats()
+    public function getStats(): DriverStatistic
     {
         $memInfo = wincache_ucache_meminfo();
         $info = wincache_ucache_info();

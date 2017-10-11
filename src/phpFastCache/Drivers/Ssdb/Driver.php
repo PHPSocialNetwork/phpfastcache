@@ -53,7 +53,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck()
+    public function driverCheck(): bool
     {
         static $driverCheck;
         if ($driverCheck === null) {
@@ -67,7 +67,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheDriverException
      */
-    protected function driverConnect()
+    protected function driverConnect(): bool
     {
         try {
             $clientConfig = $this->getConfig();
@@ -106,7 +106,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return mixed
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -123,7 +123,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item)
+    protected function driverDelete(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -138,7 +138,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear()
+    protected function driverClear(): bool
     {
         return $this->instance->flushdb('kv');
     }
@@ -152,7 +152,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return DriverStatistic
      */
-    public function getStats()
+    public function getStats(): DriverStatistic
     {
         $stat = new DriverStatistic();
         $info = $this->instance->info();
@@ -172,7 +172,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return ArrayObject
      */
-    public function getDefaultConfig()
+    public function getDefaultConfig(): ArrayObject
     {
         $defaultConfig = new ArrayObject();
 

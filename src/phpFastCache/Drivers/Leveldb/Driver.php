@@ -54,7 +54,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck()
+    public function driverCheck(): bool
     {
         return extension_loaded('Leveldb');
     }
@@ -63,7 +63,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheLogicException
      */
-    protected function driverConnect()
+    protected function driverConnect(): bool
     {
         if ($this->instance instanceof LeveldbClient) {
             throw new phpFastCacheLogicException('Already connected to Leveldb database');
@@ -91,16 +91,16 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->instance->set($item->getKey(), $this->encode($this->driverPreWrap($item)));
+            return (bool) $this->instance->set($item->getKey(), $this->encode($this->driverPreWrap($item)));
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -111,7 +111,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item)
+    protected function driverDelete(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -126,7 +126,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear()
+    protected function driverClear(): bool
     {
         if ($this->instance instanceof LeveldbClient) {
             $this->instance->close();
@@ -142,7 +142,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return string
      * @throws \phpFastCache\Exceptions\phpFastCacheCoreException
      */
-    public function getLeveldbFile()
+    public function getLeveldbFile(): string
     {
         return $this->getPath() . '/' . self::LEVELDB_FILENAME;
     }

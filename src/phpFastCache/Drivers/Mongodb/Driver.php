@@ -67,7 +67,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck()
+    public function driverCheck(): bool
     {
         if (!class_exists('MongoDB\Driver\Manager') && class_exists('MongoClient')) {
             trigger_error('This driver is used to support the pecl MongoDb extension with mongo-php-library.
@@ -79,11 +79,30 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
+     * @return null|array
+     */
+    protected function driverRead(CacheItemInterface $item)
+    {
+        $document = $this->getCollection()->findOne(['_id' => $item->getEncodedKey()]);
+
+        if ($document) {
+            return [
+              self::DRIVER_DATA_WRAPPER_INDEX => $this->decode($document[ self::DRIVER_DATA_WRAPPER_INDEX ]->getData()),
+              self::DRIVER_TAGS_WRAPPER_INDEX => $this->decode($document[ self::DRIVER_TAGS_WRAPPER_INDEX ]->getData()),
+              self::DRIVER_EDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[ self::DRIVER_EDATE_WRAPPER_INDEX ]->toDateTime()->getTimestamp()),
+            ];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
      * @throws phpFastCacheInvalidArgumentException
      * @throws phpFastCacheDriverException
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -113,29 +132,10 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return null|array
-     */
-    protected function driverRead(CacheItemInterface $item)
-    {
-        $document = $this->getCollection()->findOne(['_id' => $item->getEncodedKey()]);
-
-        if ($document) {
-            return [
-              self::DRIVER_DATA_WRAPPER_INDEX => $this->decode($document[ self::DRIVER_DATA_WRAPPER_INDEX ]->getData()),
-              self::DRIVER_TAGS_WRAPPER_INDEX => $this->decode($document[ self::DRIVER_TAGS_WRAPPER_INDEX ]->getData()),
-              self::DRIVER_EDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[ self::DRIVER_EDATE_WRAPPER_INDEX ]->toDateTime()->getTimestamp()),
-            ];
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item)
+    protected function driverDelete(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -155,7 +155,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear()
+    protected function driverClear(): bool
     {
         /**
          * @var \MongoDB\Model\BSONDocument $result
@@ -201,7 +201,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return Collection
      */
-    protected function getCollection()
+    protected function getCollection(): Collection
     {
         return $this->collection;
     }
@@ -215,7 +215,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return DriverStatistic
      */
-    public function getStats()
+    public function getStats(): DriverStatistic
     {
         $serverStats = $this->instance->executeCommand($this->getConfigOption('databaseName'), new Command([
           'serverStatus' => 1,
@@ -270,7 +270,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return ArrayObject
      */
-    public function getDefaultConfig()
+    public function getDefaultConfig(): ArrayObject
     {
         $defaultConfig = new ArrayObject();
 

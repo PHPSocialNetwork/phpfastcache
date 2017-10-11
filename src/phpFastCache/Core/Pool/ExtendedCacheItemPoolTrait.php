@@ -28,7 +28,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
-    public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512)
+    public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512): string
     {
         $callback = function (CacheItemInterface $item) {
             return $item->get();
@@ -446,16 +446,19 @@ trait ExtendedCacheItemPoolTrait
      * Set the EventManager instance
      *
      * @param EventManager $em
+     * @return $this
      */
     public function setEventManager(EventManager $em)
     {
         $this->eventManager = $em;
+
+        return $this;
     }
 
     /**
      * @inheritdoc
      */
-    public function saveMultiple(...$items)
+    public function saveMultiple(...$items): bool
     {
         if (isset($items[ 0 ]) && is_array($items[ 0 ])) {
             foreach ($items[ 0 ] as $item) {
@@ -474,7 +477,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @return string
      */
-    public function getHelp()
+    public function getHelp(): string
     {
         return '';
     }
@@ -482,6 +485,16 @@ trait ExtendedCacheItemPoolTrait
     /**
      * Driver-related methods
      */
+
+    /**
+     * @return bool
+     */
+    abstract protected function driverCheck(): bool;
+
+    /**
+     * @return bool
+     */
+    abstract protected function driverConnect(): bool;
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
@@ -496,23 +509,18 @@ trait ExtendedCacheItemPoolTrait
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
-     */
-    abstract protected function driverWrite(CacheItemInterface $item);
-
-    /**
      * @return bool
      */
-    abstract protected function driverClear();
-
-    /**
-     * @return bool
-     */
-    abstract protected function driverConnect();
+    abstract protected function driverWrite(CacheItemInterface $item): bool;
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
      */
-    abstract protected function driverDelete(CacheItemInterface $item);
+    abstract protected function driverDelete(CacheItemInterface $item): bool;
+
+    /**
+     * @return bool
+     */
+    abstract protected function driverClear(): bool;
 }

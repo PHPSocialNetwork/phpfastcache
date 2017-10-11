@@ -61,7 +61,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck()
+    public function driverCheck(): bool
     {
         return class_exists('Basho\Riak\Riak');
     }
@@ -71,15 +71,15 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheLogicException
      */
-    protected function driverConnect()
+    protected function driverConnect(): bool
     {
         if ($this->instance instanceof Riak) {
             throw new phpFastCacheLogicException('Already connected to Riak server');
         } else {
             $clientConfig = $this->getConfig();
-            $this->bucketName = $clientConfig['bucketName'];
+            $this->bucketName = $clientConfig[ 'bucketName' ];
 
-            $this->instance = new Riak($clientConfig['host'], $clientConfig['port'], $clientConfig['prefix']);
+            $this->instance = new Riak($clientConfig[ 'host' ], $clientConfig[ 'port' ], $clientConfig[ 'prefix' ]);
 
             return true;
         }
@@ -99,7 +99,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return mixed
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -119,7 +119,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item)
+    protected function driverDelete(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -134,7 +134,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear()
+    protected function driverClear(): bool
     {
         $bucket = $this->instance->bucket($this->bucketName);
         foreach ($bucket->getKeys() as $key) {
@@ -152,7 +152,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return DriverStatistic
      */
-    public function getStats()
+    public function getStats(): DriverStatistic
     {
         $info = $this->instance->bucket($this->bucketName)->getProperties();
 
@@ -166,14 +166,14 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return ArrayObject
      */
-    public function getDefaultConfig()
+    public function getDefaultConfig(): ArrayObject
     {
         $defaultConfig = new ArrayObject();
 
-        $defaultConfig['host'] = '127.0.0.1';
-        $defaultConfig['port'] = 8098;
-        $defaultConfig['prefix'] = 'riak';
-        $defaultConfig['bucketName'] = self::RIAK_DEFAULT_BUCKET_NAME;
+        $defaultConfig[ 'host' ] = '127.0.0.1';
+        $defaultConfig[ 'port' ] = 8098;
+        $defaultConfig[ 'prefix' ] = 'riak';
+        $defaultConfig[ 'bucketName' ] = self::RIAK_DEFAULT_BUCKET_NAME;
 
         return $defaultConfig;
     }

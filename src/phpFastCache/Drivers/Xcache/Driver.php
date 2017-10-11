@@ -47,7 +47,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck()
+    public function driverCheck(): bool
     {
         return extension_loaded('xcache') && function_exists('xcache_get');
     }
@@ -55,7 +55,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverConnect()
+    protected function driverConnect(): bool
     {
         return true;
     }
@@ -79,7 +79,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return mixed
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -97,7 +97,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item)
+    protected function driverDelete(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -112,7 +112,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear()
+    protected function driverClear(): bool
     {
         $cnt = xcache_count(XC_TYPE_VAR);
         for ($i = 0; $i < $cnt; $i++) {
@@ -131,7 +131,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return DriverStatistic
      */
-    public function getStats()
+    public function getStats(): DriverStatistic
     {
         if (!ini_get('xcache.admin.enable_auth')) {
             $info = xcache_info(XC_TYPE_VAR, 0);

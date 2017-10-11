@@ -53,7 +53,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck()
+    public function driverCheck(): bool
     {
         return is_writable($this->getPath()) || @mkdir($this->getPath(), $this->getDefaultChmod(), true);
     }
@@ -61,7 +61,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverConnect()
+    protected function driverConnect(): bool
     {
         return true;
     }
@@ -88,10 +88,10 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -118,7 +118,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item)
+    protected function driverDelete(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -142,7 +142,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear()
+    protected function driverClear(): bool
     {
         return (bool)Directory::rrmdir($this->getPath(true));
     }
@@ -153,7 +153,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    public static function isValidOption($optionName, $optionValue)
+    public static function isValidOption($optionName, $optionValue): bool
     {
         DriverBaseTrait::isValidOption($optionName, $optionValue);
         switch ($optionName) {
@@ -185,7 +185,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return array
      */
-    public static function getValidOptions()
+    public static function getValidOptions(): array
     {
         return ['path', 'default_chmod', 'securityKey', 'htaccess', 'secureFileManipulation'];
     }
@@ -193,7 +193,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return array
      */
-    public static function getRequiredOptions()
+    public static function getRequiredOptions(): array
     {
         return ['path'];
     }

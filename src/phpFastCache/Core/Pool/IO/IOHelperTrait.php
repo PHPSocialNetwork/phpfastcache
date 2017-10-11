@@ -40,7 +40,7 @@ trait IOHelperTrait
      * @return string
      * @throws phpFastCacheIOException
      */
-    public function getPath($readonly = false)
+    public function getPath($readonly = false): string
     {
         /**
          * Get the base system temporary directory
@@ -136,7 +136,7 @@ trait IOHelperTrait
      * @return string
      * @throws phpFastCacheIOException
      */
-    protected function getFilePath($keyword, $skip = false)
+    protected function getFilePath($keyword, $skip = false): string
     {
         $path = $this->getPath();
 
@@ -167,7 +167,7 @@ trait IOHelperTrait
      * @param $keyword
      * @return string
      */
-    protected function encodeFilename($keyword)
+    protected function encodeFilename($keyword): string
     {
         return md5($keyword);
     }
@@ -175,7 +175,7 @@ trait IOHelperTrait
     /**
      * @return int
      */
-    protected function getDefaultChmod()
+    protected function getDefaultChmod(): int
     {
         if (!isset($this->config[ 'default_chmod' ]) || $this->config[ 'default_chmod' ] == '' || is_null($this->config[ 'default_chmod' ])) {
             return 0777;
@@ -186,9 +186,9 @@ trait IOHelperTrait
 
     /**
      * @param $filename
-     * @return mixed
+     * @return string
      */
-    protected static function cleanFileName($filename)
+    protected static function cleanFileName($filename): string
     {
         $regex = [
           '/[\?\[\]\/\\\=\<\>\:\;\,\'\"\&\$\#\*\(\)\|\~\`\!\{\}]/',
@@ -246,7 +246,7 @@ HTACCESS;
      * @return string
      * @throws phpFastCacheIOException
      */
-    protected function readfile($file)
+    protected function readfile($file): string
     {
         if (function_exists('file_get_contents')) {
             return file_get_contents($file);
@@ -274,7 +274,7 @@ HTACCESS;
      * @return bool
      * @throws phpFastCacheIOException
      */
-    protected function writefile($file, $data, $secureFileManipulation = false)
+    protected function writefile($file, $data, $secureFileManipulation = false): bool
     {
         /**
          * @eventName CacheWriteFileOnDisk
@@ -321,7 +321,7 @@ HTACCESS;
      * @return DriverStatistic
      * @throws \phpFastCache\Exceptions\phpFastCacheIOException
      */
-    public function getStats()
+    public function getStats(): DriverStatistic
     {
         $stat = new DriverStatistic();
         $path = $this->getFilePath(false);

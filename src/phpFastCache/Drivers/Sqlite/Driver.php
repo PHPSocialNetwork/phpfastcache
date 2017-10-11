@@ -86,7 +86,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return string
      * @throws \phpFastCache\Exceptions\phpFastCacheCoreException
      */
-    public function getSqliteDir()
+    public function getSqliteDir(): string
     {
         return $this->SqliteDir ?: $this->getPath() . DIRECTORY_SEPARATOR . self::FILE_DIR;
     }
@@ -94,7 +94,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck()
+    public function driverCheck(): bool
     {
         return extension_loaded('pdo_sqlite') && (is_writable($this->getSqliteDir()) || @mkdir($this->getSqliteDir(), $this->getDefaultChmod(), true));
     }
@@ -102,7 +102,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverConnect()
+    protected function driverConnect(): bool
     {
         if (!file_exists($this->getPath() . '/' . self::FILE_DIR)) {
             if (!mkdir($this->getPath() . '/' . self::FILE_DIR, $this->getDefaultChmod(), true)
@@ -154,7 +154,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return mixed
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -212,7 +212,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item)
+    protected function driverDelete(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -237,7 +237,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear()
+    protected function driverClear(): bool
     {
         $this->instance = [];
         $this->indexing = null;
@@ -364,7 +364,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @param bool $reset
      * @return PDO
      */
-    public function getDb($keyword, $reset = false)
+    public function getDb($keyword, $reset = false): PDO
     {
         /**
          * Default is fastcache
@@ -398,7 +398,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return array
      */
-    public function __sleep()
+    public function __sleep(): array
     {
         return array_diff(array_keys(get_object_vars($this)), ['indexing', 'instance']);
     }

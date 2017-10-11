@@ -63,7 +63,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck()
+    public function driverCheck(): bool
     {
         return extension_loaded('Couchbase');
     }
@@ -72,14 +72,22 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheLogicException
      */
-    protected function driverConnect()
+    protected function driverConnect(): bool
     {
         if ($this->instance instanceof CouchbaseClient) {
             throw new phpFastCacheLogicException('Already connected to Couchbase server');
         } else {
             $clientConfig = $this->getConfig();
 
-            $this->instance = new CouchbaseClient("couchbase://{$clientConfig['host']}", $clientConfig['username'], $clientConfig['password']);
+            $this->instance = new CouchbaseClient("couchbase://{$clientConfig['host']}");
+
+            if($clientConfig['username'])
+            {
+                $authenticator = new \Couchbase\ClassicAuthenticator();
+                $authenticator->cluster($clientConfig['username'], $clientConfig['password']);
+                //$authenticator->bucket('protected', 'secret');
+                $this->instance->authenticate($authenticator);
+            }
 
             foreach ($clientConfig['buckets'] as $bucket) {
                 $this->bucketCurrent = $this->bucketCurrent ?: $bucket[ 'bucket' ];
@@ -108,16 +116,16 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->getBucket()->upsert($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), ['expiry' => $item->getTtl()]);
+            return (bool) $this->getBucket()->upsert($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), ['expiry' => $item->getTtl()]);
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -134,7 +142,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->getBucket()->remove($item->getEncodedKey());
+            return (bool) $this->getBucket()->remove($item->getEncodedKey());
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -143,15 +151,16 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear()
+    protected function driverClear(): bool
     {
-        return $this->getBucket()->manager()->flush();
+        $this->getBucket()->manager()->flush();
+        return true;
     }
 
     /**
      * @return \CouchbaseBucket
      */
-    protected function getBucket()
+    protected function getBucket(): \CouchbaseBucket
     {
         return $this->bucketInstances[ $this->bucketCurrent ];
     }
@@ -179,7 +188,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return DriverStatistic
      */
-    public function getStats()
+    public function getStats(): DriverStatistic
     {
         $info = $this->getBucket()->manager()->info();
 
@@ -194,7 +203,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return ArrayObject
      */
-    public function getDefaultConfig()
+    public function getDefaultConfig(): ArrayObject
     {
         $defaultConfig = new ArrayObject();
 

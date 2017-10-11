@@ -56,7 +56,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck()
+    public function driverCheck(): bool
     {
         return class_exists('Doctrine\CouchDB\CouchDBClient');
     }
@@ -65,7 +65,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheLogicException
      */
-    protected function driverConnect()
+    protected function driverConnect(): bool
     {
         if ($this->instance instanceof CouchdbClient) {
             throw new phpFastCacheLogicException('Already connected to Couchdb server');
@@ -121,11 +121,11 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return bool
      * @throws phpFastCacheDriverException
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -149,7 +149,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @throws phpFastCacheDriverException
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item)
+    protected function driverDelete(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -170,7 +170,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheDriverException
      */
-    protected function driverClear()
+    protected function driverClear(): bool
     {
         try {
             $this->instance->deleteDatabase($this->getDatabaseName());
@@ -178,7 +178,6 @@ class Driver implements ExtendedCacheItemPoolInterface
         } catch (CouchDBException $e) {
             throw new phpFastCacheDriverException('Got error while trying to delete and recreate the database: ' . $e->getMessage(), null, $e);
         }
-
 
         return true;
     }
@@ -206,9 +205,9 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return string
      */
-    protected function getDatabaseName()
+    protected function getDatabaseName(): string
     {
-        return isset($this->config[ 'database' ]) ? $this->config[ 'database' ] : self::COUCHDB_DEFAULT_DB_NAME;
+        return $this->getConfigOption( 'database' ) ?: self::COUCHDB_DEFAULT_DB_NAME;
     }
 
     /**
@@ -230,7 +229,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return string
      */
-    public function getHelp()
+    public function getHelp(): string
     {
         return <<<HELP
 <p>
@@ -243,7 +242,7 @@ HELP;
     /**
      * @return DriverStatistic
      */
-    public function getStats()
+    public function getStats(): DriverStatistic
     {
         $info = $this->instance->getDatabaseInfo();
 
@@ -257,7 +256,7 @@ HELP;
     /**
      * @return ArrayObject
      */
-    public function getDefaultConfig()
+    public function getDefaultConfig(): ArrayObject
     {
         $defaultConfig = new ArrayObject();
 

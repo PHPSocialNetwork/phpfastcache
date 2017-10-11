@@ -52,26 +52,17 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck()
+    public function driverCheck(): bool
     {
         return true;
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
-     * @throws phpFastCacheInvalidArgumentException
+     * @return bool
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverConnect(): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return $this->staticStack[ md5($item->getKey()) ] = $this->driverPreWrap($item);
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
-        }
+        return true;
     }
 
     /**
@@ -92,7 +83,25 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item): bool
+    {
+        /**
+         * Check for Cross-Driver type confusion
+         */
+        if ($item instanceof Item) {
+            $this->staticStack[ md5($item->getKey()) ] = $this->driverPreWrap($item);
+            return true;
+        } else {
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        }
+    }
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return bool
+     * @throws phpFastCacheInvalidArgumentException
+     */
+    protected function driverDelete(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -112,18 +121,10 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear()
+    protected function driverClear(): bool
     {
         unset($this->staticStack);
         $this->staticStack = [];
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    protected function driverConnect()
-    {
         return true;
     }
 
@@ -136,7 +137,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return DriverStatistic
      */
-    public function getStats()
+    public function getStats(): DriverStatistic
     {
         $stat = new DriverStatistic();
         $stat->setInfo('[Memstatic] A memory static driver')

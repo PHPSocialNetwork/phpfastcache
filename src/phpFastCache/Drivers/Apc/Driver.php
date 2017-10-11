@@ -48,7 +48,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck()
+    public function driverCheck(): bool
     {
         if (extension_loaded('apc') && ini_get('apc.enabled')) {
             return true;
@@ -58,22 +58,11 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
-     * @throws phpFastCacheInvalidArgumentException
+     * @return bool
      */
-    protected function driverWrite(CacheItemInterface $item)
+    protected function driverConnect(): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            $ttl = $item->getExpirationDate()->getTimestamp() - time();
-
-            return apc_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
-        }
+        return true;
     }
 
     /**
@@ -95,13 +84,32 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item)
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return apc_delete($item->getKey());
+            $ttl = $item->getExpirationDate()->getTimestamp() - time();
+
+            return (bool) apc_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
+        } else {
+            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        }
+    }
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return bool
+     * @throws phpFastCacheInvalidArgumentException
+     */
+    protected function driverDelete(CacheItemInterface $item): bool
+    {
+        /**
+         * Check for Cross-Driver type confusion
+         */
+        if ($item instanceof Item) {
+            return (bool) apc_delete($item->getKey());
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -110,17 +118,9 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear()
+    protected function driverClear(): bool
     {
         return @apc_clear_cache() && @apc_clear_cache('user');
-    }
-
-    /**
-     * @return bool
-     */
-    protected function driverConnect()
-    {
-        return true;
     }
 
     /********************
@@ -132,7 +132,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return DriverStatistic
      */
-    public function getStats()
+    public function getStats(): DriverStatistic
     {
         $stats = (array)apc_cache_info('user');
         $date = (new \DateTime())->setTimestamp($stats[ 'start_time' ]);

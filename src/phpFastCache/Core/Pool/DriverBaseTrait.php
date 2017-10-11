@@ -101,7 +101,7 @@ trait DriverBaseTrait
      * @param $data
      * @return string
      */
-    protected function encode($data): string
+    protected function encode($data): \string
     {
         return serialize($data);
     }
@@ -122,7 +122,7 @@ trait DriverBaseTrait
      * Check phpModules or CGI
      * @return bool
      */
-    protected function isPHPModule(): bool
+    protected function isPHPModule(): \bool
     {
         return (PHP_SAPI === 'apache2handler' || strpos(PHP_SAPI, 'handler') !== false);
     }
@@ -132,7 +132,7 @@ trait DriverBaseTrait
      * @param $class
      * @return bool
      */
-    protected function isExistingDriver($class): bool
+    protected function isExistingDriver($class): \bool
     {
         return class_exists("\\phpFastCache\\Drivers\\{$class}");
     }
@@ -142,7 +142,7 @@ trait DriverBaseTrait
      * @param $tag
      * @return string
      */
-    protected function _getTagName($tag): string
+    protected function _getTagName($tag): \string
     {
         return "__tag__" . $tag;
     }
@@ -224,7 +224,7 @@ trait DriverBaseTrait
     /**
      * @return string
      */
-    public function getDriverName(): string
+    public function getDriverName(): \string
     {
         if(!$this->driverName){
             $this->driverName = ucfirst(substr(strrchr((new \ReflectionObject($this))->getNamespaceName(), '\\'), 1));
@@ -342,7 +342,7 @@ trait DriverBaseTrait
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    public static function isValidOption($optionName, $optionValue): bool
+    public static function isValidOption($optionName, $optionValue): \bool
     {
         if (!is_string($optionName)) {
             throw new phpFastCacheInvalidArgumentException('$optionName must be a string');

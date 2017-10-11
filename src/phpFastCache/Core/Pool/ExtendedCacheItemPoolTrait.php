@@ -28,7 +28,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
-    public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512): string
+    public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512): \string
     {
         $callback = function (CacheItemInterface $item) {
             return $item->get();
@@ -458,7 +458,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
-    public function saveMultiple(...$items): bool
+    public function saveMultiple(...$items): \bool
     {
         if (isset($items[ 0 ]) && is_array($items[ 0 ])) {
             foreach ($items[ 0 ] as $item) {
@@ -477,7 +477,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @return string
      */
-    public function getHelp(): string
+    public function getHelp(): \string
     {
         return '';
     }
@@ -489,12 +489,12 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @return bool
      */
-    abstract protected function driverCheck(): bool;
+    abstract protected function driverCheck(): \bool;
 
     /**
      * @return bool
      */
-    abstract protected function driverConnect(): bool;
+    abstract protected function driverConnect(): \bool;
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
@@ -511,16 +511,16 @@ trait ExtendedCacheItemPoolTrait
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
      */
-    abstract protected function driverWrite(CacheItemInterface $item): bool;
+    abstract protected function driverWrite(CacheItemInterface $item): \bool;
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
      */
-    abstract protected function driverDelete(CacheItemInterface $item): bool;
+    abstract protected function driverDelete(CacheItemInterface $item): \bool;
 
     /**
      * @return bool
      */
-    abstract protected function driverClear(): bool;
+    abstract protected function driverClear(): \bool;
 }

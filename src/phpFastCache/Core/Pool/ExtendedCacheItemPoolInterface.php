@@ -81,7 +81,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     /**
      * @return string
      */
-    public function getDriverName(): string;
+    public function getDriverName(): \string;
 
 
     /**
@@ -136,7 +136,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *
      * @return string
      */
-    public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512): string;
+    public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512): \string;
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
@@ -156,7 +156,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *
      * @return string
      */
-    public function getHelp(): string;
+    public function getHelp(): \string;
 
     /**
      * Returns a traversable set of cache items by a tag name.
@@ -523,5 +523,5 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @param ExtendedCacheItemInterface[] $items
      * @return bool
      */
-    public function saveMultiple(...$items): bool;
+    public function saveMultiple(...$items): \bool;
 }

@@ -33,7 +33,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
      * @return string
      *   The encoded key string for this cache item.
      */
-    public function getEncodedKey(): string;
+    public function getEncodedKey(): \string;
 
     /**
      * @return mixed
@@ -88,12 +88,12 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
     /**
      * @return int
      */
-    public function getTtl(): int;
+    public function getTtl(): \int;
 
     /**
      * @return bool
      */
-    public function isExpired(): bool;
+    public function isExpired(): \bool;
 
     /**
      * @param \phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface $driver
@@ -166,7 +166,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
      * @param string $separator
      * @return string
      */
-    public function getTagsAsString($separator = ', '): string;
+    public function getTagsAsString($separator = ', '): \string;
 
     /**
      * @param array $tagName
@@ -192,7 +192,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
      * @param int $depth json_encode() depth
      * @return string
      */
-    public function getDataAsJsonString($option = 0, $depth = 512): string;
+    public function getDataAsJsonString($option = 0, $depth = 512): \string;
 
     /**
      * Set the EventManager instance

@@ -47,7 +47,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck(): bool
+    public function driverCheck(): \bool
     {
         return true;
     }
@@ -57,7 +57,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return mixed
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(CacheItemInterface $item): \bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -87,7 +87,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(CacheItemInterface $item): \bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -102,7 +102,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear(): bool
+    protected function driverClear(): \bool
     {
         return false;
     }
@@ -110,7 +110,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverConnect(): bool
+    protected function driverConnect(): \bool
     {
         return false;
     }

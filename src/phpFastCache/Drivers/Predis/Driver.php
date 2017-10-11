@@ -53,7 +53,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck(): bool
+    public function driverCheck(): \bool
     {
         if (extension_loaded('Redis')) {
             trigger_error('The native Redis extension is installed, you should use Redis instead of Predis to increase performances', E_USER_NOTICE);
@@ -66,7 +66,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheDriverException
      */
-    protected function driverConnect(): bool
+    protected function driverConnect(): \bool
     {
         $this->instance = new PredisClient($this->getConfig());
 
@@ -98,7 +98,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return mixed
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(CacheItemInterface $item): \bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -125,7 +125,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(CacheItemInterface $item): \bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -140,7 +140,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear(): bool
+    protected function driverClear(): \bool
     {
         return $this->instance->flushdb();
     }
@@ -155,7 +155,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return string
      */
-    public function getHelp(): string
+    public function getHelp(): \string
     {
         return <<<HELP
 <p>

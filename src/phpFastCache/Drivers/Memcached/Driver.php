@@ -54,7 +54,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck(): bool
+    public function driverCheck(): \bool
     {
         return class_exists('Memcached');
     }
@@ -62,7 +62,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverConnect(): bool
+    protected function driverConnect(): \bool
     {
         $this->instance = new MemcachedSoftware();
         $clientConfig = $this->getConfig();
@@ -102,7 +102,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(CacheItemInterface $item): \bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -127,7 +127,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(CacheItemInterface $item): \bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -142,7 +142,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear(): bool
+    protected function driverClear(): \bool
     {
         return $this->instance->flush();
     }

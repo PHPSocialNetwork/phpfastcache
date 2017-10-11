@@ -57,7 +57,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck(): bool
+    public function driverCheck(): \bool
     {
         return extension_loaded('Cassandra') && class_exists(\Cassandra::class);
     }
@@ -67,7 +67,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @throws phpFastCacheLogicException
      * @throws \Cassandra\Exception
      */
-    protected function driverConnect(): bool
+    protected function driverConnect(): \bool
     {
         if ($this->instance instanceof CassandraSession) {
             throw new phpFastCacheLogicException('Already connected to Couchbase server');
@@ -157,7 +157,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(CacheItemInterface $item): \bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -210,7 +210,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(CacheItemInterface $item): \bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -245,7 +245,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear(): bool
+    protected function driverClear(): \bool
     {
         try {
             $this->instance->execute(new Cassandra\SimpleStatement(sprintf(
@@ -268,7 +268,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return string
      */
-    public function getHelp(): string
+    public function getHelp(): \string
     {
         return <<<HELP
 <p>

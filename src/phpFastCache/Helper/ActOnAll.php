@@ -16,6 +16,7 @@ namespace phpFastCache\Helper;
 
 use phpFastCache\CacheManager;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\EventManager;
 use phpFastCache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
@@ -129,9 +130,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param array ...$items
-     * @return mixed
+     * @return bool
      */
-    public function saveMultiple(...$items)
+    public function saveMultiple(...$items): bool
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -149,7 +150,7 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
     /**
      * @return mixed
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -165,9 +166,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getDriverName()
+    public function getDriverName(): string
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -197,9 +198,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
      * @param array $keys
      * @param int $option
      * @param int $depth
-     * @return mixed
+     * @return string
      */
-    public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512)
+    public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512): string
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -216,18 +217,18 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getHelp()
+    public function getHelp(): string
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
     }
 
     /**
-     * @return mixed
+     * @return DriverStatistic
      */
-    public function getStats()
+    public function getStats(): DriverStatistic
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -478,9 +479,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \phpFastCache\EventManager $em
-     * @return mixed
+     * @return ExtendedCacheItemPoolInterface
      */
-    public function setEventManager(EventManager $em)
+    public function setEventManager(EventManager $em): ExtendedCacheItemPoolInterface
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -489,7 +490,7 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
     /**
      * @return ArrayObject
      */
-    public function getDefaultConfig()
+    public function getDefaultConfig(): ArrayObject
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());

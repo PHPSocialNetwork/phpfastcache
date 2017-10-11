@@ -105,10 +105,11 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->instance
+            $this->instance
               ->bucket($this->bucketName)
               ->newBinary($item->getKey(), $this->encode($this->driverPreWrap($item)))
               ->store();
+            return true;
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -125,7 +126,8 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->instance->bucket($this->bucketName)->get($item->getKey())->delete();
+            $this->instance->bucket($this->bucketName)->get($item->getKey())->delete();
+            return true;
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }

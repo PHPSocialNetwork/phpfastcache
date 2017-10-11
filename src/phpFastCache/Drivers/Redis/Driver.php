@@ -70,7 +70,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             $clientConfig = $this->getConfig();
             $this->instance = $this->instance ?: new RedisClient();
 
-            if (!$this->instance->connect($clientConfig['host'], (int) $clientConfig['port'], (int) $clientConfig['timeout'])) {
+            if (!$this->instance->connect($clientConfig['host'], (int) $clientConfig['port'], (float) $clientConfig['timeout'])) {
                 return false;
             } else {
                 if ($clientConfig['password'] && !$this->instance->auth($clientConfig['password'])) {

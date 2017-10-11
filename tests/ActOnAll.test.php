@@ -6,6 +6,7 @@
  */
 
 use phpFastCache\CacheManager;
+use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\Entities\driverStatistic;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Helper\ActOnAll;
@@ -21,16 +22,42 @@ $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
  * Testing memcached as it is declared in .travis.yml
  */
 try{
-    $filesInstance = CacheManager::getInstance('Files');
-    $RedisInstance = CacheManager::getInstance('Redis');
-    $MemcacheInstance = CacheManager::getInstance('Memcached');
+    CacheManager::getInstance('Files');
+    CacheManager::getInstance('Redis');
+    CacheManager::getInstance('Memcached');
 }catch(phpFastCacheDriverCheckException $e){
-    $testHelper->printSkipText($e->getMessage())->terminateTest();
+    try {
+        CacheManager::getInstance('Files');
+        CacheManager::getInstance('Sqlite');
+        CacheManager::getInstance('Memstatic');
+    }catch(phpFastCacheDriverCheckException $e){
+        $testHelper->printSkipText($e->getMessage())->terminateTest();
+    }
 }
 
 
 $actOnAll = new ActOnAll();
 $statsAry = $actOnAll->getStats();
+
+$DriversItems = $actOnAll->getItems(['test-1', 'test-2']);
+
+
+foreach ($DriversItems as $DriverName => $DriverItems) {
+    foreach ($DriverItems as $driverItem) {
+        if(!($driverItem instanceof ExtendedCacheItemInterface))
+        {
+            $testHelper->printFailText("The driver item from {$DriverName} does not implements ExtendedCacheItemInterface");
+        }
+        else
+        {
+            $testHelper->printPassText("The driver item '{$driverItem->getKey()}' from {$DriverName} does implements ExtendedCacheItemInterface");
+        }
+    }
+}
+
+/**
+ * @todo MAKE SETTERS TESTS !!
+ */
 
 if(is_array($statsAry)){
     if(count($statsAry) !== 3){

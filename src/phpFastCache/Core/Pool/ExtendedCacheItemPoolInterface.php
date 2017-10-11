@@ -27,7 +27,15 @@ use Psr\Cache\CacheItemPoolInterface;
 
 /**
  * Interface ExtendedCacheItemPoolInterface
- * @package phpFastCache\Cache
+ *
+ * IMPORTANT NOTICE
+ *
+ * If you modify this file please make sure that
+ * the ActOnAll helper will also get those modifications
+ * since it does no longer implements this interface
+ * @see \phpFastCache\Helper\ActOnAll
+ *
+ * @package phpFastCache\Core\Pool
  */
 interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
 {

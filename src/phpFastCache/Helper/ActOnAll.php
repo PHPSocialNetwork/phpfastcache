@@ -24,8 +24,9 @@ use Psr\Cache\CacheItemInterface;
 /**
  * Class ActOnAll
  * @package phpFastCache\Helper
+ * @todo Review the setters part due to a confusion with cross-driver items
  */
-class ActOnAll implements ExtendedCacheItemPoolInterface
+class ActOnAll
 {
     /**
      * @var ExtendedCacheItemPoolInterface[]
@@ -43,26 +44,13 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
     /**
      * @return \Closure
      */
-    protected function getGenericCallback()
+    protected function getGenericCallback(): \Closure
     {
         return function ($method, $args) {
-            $getterMethod = (strpos($method, 'get') === 0);
-            $return = false;
-
-            if ($getterMethod) {
-                $return = [];
-            }
-
+            $return = [];
             foreach ($this->instances as $instance) {
                 $reflectionMethod = new \ReflectionMethod(get_class($instance), $method);
-                if ($getterMethod) {
-                    $return[ $instance->getDriverName() ] = $reflectionMethod->invokeArgs($instance, $args);
-                } else {
-                    $result = $reflectionMethod->invokeArgs($instance, $args);
-                    if ($result !== false) {
-                        $return = $result;
-                    }
-                }
+                $return[ $instance->getDriverName() ] = $reflectionMethod->invokeArgs($instance, $args);
             }
             return $return;
         };
@@ -71,18 +59,18 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param string $key
-     * @return mixed
+     * @return array
      */
-    public function hasItem($key)
+    public function hasItem($key): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function clear()
+    public function clear(): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -90,9 +78,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param string $key
-     * @return mixed
+     * @return array
      */
-    public function deleteItem($key)
+    public function deleteItem($key): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -100,9 +88,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param array $keys
-     * @return mixed
+     * @return array
      */
-    public function deleteItems(array $keys)
+    public function deleteItems(array $keys): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -110,9 +98,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return array
      */
-    public function save(CacheItemInterface $item)
+    public function save(CacheItemInterface $item): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -120,9 +108,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return array
      */
-    public function saveDeferred(CacheItemInterface $item)
+    public function saveDeferred(CacheItemInterface $item): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -130,25 +118,25 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param array ...$items
-     * @return bool
+     * @return array
      */
-    public function saveMultiple(...$items): bool
+    public function saveMultiple(...$items): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function commit()
+    public function commit(): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getConfig(): array
     {
@@ -157,18 +145,19 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @return mixed
+     * @param string $optionName
+     * @return array
      */
-    public function getConfigOption($optionName)
+    public function getConfigOption(string $optionName): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getDriverName(): string
+    public function getDriverName(): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -176,9 +165,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param string $key
-     * @return mixed
+     * @return array
      */
-    public function getItem($key)
+    public function getItem($key): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -186,9 +175,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param array $keys
-     * @return mixed
+     * @return array
      */
-    public function getItems(array $keys = [])
+    public function getItems(array $keys = []): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -198,9 +187,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
      * @param array $keys
      * @param int $option
      * @param int $depth
-     * @return string
+     * @return array
      */
-    public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512): string
+    public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -208,27 +197,27 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return array
      */
-    public function setItem(CacheItemInterface $item)
+    public function setItem(CacheItemInterface $item): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
     }
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getHelp(): string
+    public function getHelp(): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
     }
 
     /**
-     * @return DriverStatistic
+     * @return DriverStatistic[]
      */
-    public function getStats(): DriverStatistic
+    public function getStats(): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -236,9 +225,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param string $tagName
-     * @return mixed
+     * @return array
      */
-    public function getItemsByTag($tagName)
+    public function getItemsByTag($tagName): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -246,9 +235,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param array $tagNames
-     * @return mixed
+     * @return array
      */
-    public function getItemsByTags(array $tagNames)
+    public function getItemsByTags(array $tagNames): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -258,9 +247,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
      * @param array $tagNames
      * @param int $option
      * @param int $depth
-     * @return mixed
+     * @return array
      */
-    public function getItemsByTagsAsJsonString(array $tagNames, $option = 0, $depth = 512)
+    public function getItemsByTagsAsJsonString(array $tagNames, $option = 0, $depth = 512): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -268,9 +257,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param string $tagName
-     * @return mixed
+     * @return array
      */
-    public function deleteItemsByTag($tagName)
+    public function deleteItemsByTag($tagName): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -278,31 +267,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param array $tagNames
-     * @return mixed
+     * @return array
      */
-    public function deleteItemsByTags(array $tagNames)
-    {
-        $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
-    }
-
-    /**
-     * @param string $tagName
-     * @param int $step
-     * @return mixed
-     */
-    public function incrementItemsByTag($tagName, $step = 1)
-    {
-        $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
-    }
-
-    /**
-     * @param array $tagNames
-     * @param int $step
-     * @return mixed
-     */
-    public function incrementItemsByTags(array $tagNames, $step = 1)
+    public function deleteItemsByTags(array $tagNames): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -311,9 +278,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
     /**
      * @param string $tagName
      * @param int $step
-     * @return mixed
+     * @return array
      */
-    public function decrementItemsByTag($tagName, $step = 1)
+    public function incrementItemsByTag($tagName, $step = 1): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -322,9 +289,31 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
     /**
      * @param array $tagNames
      * @param int $step
-     * @return mixed
+     * @return array
      */
-    public function decrementItemsByTags(array $tagNames, $step = 1)
+    public function incrementItemsByTags(array $tagNames, $step = 1): array
+    {
+        $callback = $this->getGenericCallback();
+        return $callback(__FUNCTION__, func_get_args());
+    }
+
+    /**
+     * @param string $tagName
+     * @param int $step
+     * @return array
+     */
+    public function decrementItemsByTag($tagName, $step = 1): array
+    {
+        $callback = $this->getGenericCallback();
+        return $callback(__FUNCTION__, func_get_args());
+    }
+
+    /**
+     * @param array $tagNames
+     * @param int $step
+     * @return array
+     */
+    public function decrementItemsByTags(array $tagNames, $step = 1): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -333,9 +322,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
     /**
      * @param string $tagName
      * @param array|string $data
-     * @return mixed
+     * @return array
      */
-    public function appendItemsByTag($tagName, $data)
+    public function appendItemsByTag($tagName, $data): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -344,9 +333,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
     /**
      * @param array $tagNames
      * @param array|string $data
-     * @return mixed
+     * @return array
      */
-    public function appendItemsByTags(array $tagNames, $data)
+    public function appendItemsByTags(array $tagNames, $data): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -355,9 +344,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
     /**
      * @param string $tagName
      * @param array|string $data
-     * @return mixed
+     * @return array
      */
-    public function prependItemsByTag($tagName, $data)
+    public function prependItemsByTag($tagName, $data): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -366,9 +355,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
     /**
      * @param array $tagNames
      * @param array|string $data
-     * @return mixed
+     * @return array
      */
-    public function prependItemsByTags(array $tagNames, $data)
+    public function prependItemsByTags(array $tagNames, $data): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -376,9 +365,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param array $tagNames
-     * @return mixed
+     * @return array
      */
-    public function getItemsByTagsAll(array $tagNames)
+    public function getItemsByTagsAll(array $tagNames): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -386,9 +375,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param array $tagNames
-     * @return mixed
+     * @return array
      */
-    public function deleteItemsByTagsAll(array $tagNames)
+    public function deleteItemsByTagsAll(array $tagNames): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -397,9 +386,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
     /**
      * @param array $tagNames
      * @param int $step
-     * @return mixed
+     * @return array
      */
-    public function incrementItemsByTagsAll(array $tagNames, $step = 1)
+    public function incrementItemsByTagsAll(array $tagNames, $step = 1): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -408,9 +397,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
     /**
      * @param array $tagNames
      * @param int $step
-     * @return mixed
+     * @return array
      */
-    public function decrementItemsByTagsAll(array $tagNames, $step = 1)
+    public function decrementItemsByTagsAll(array $tagNames, $step = 1): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -419,9 +408,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
     /**
      * @param array $tagNames
      * @param array|string $data
-     * @return mixed
+     * @return array
      */
-    public function appendItemsByTagsAll(array $tagNames, $data)
+    public function appendItemsByTagsAll(array $tagNames, $data): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -430,9 +419,9 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
     /**
      * @param array $tagNames
      * @param array|string $data
-     * @return mixed
+     * @return array
      */
-    public function prependItemsByTagsAll(array $tagNames, $data)
+    public function prependItemsByTagsAll(array $tagNames, $data): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -440,28 +429,18 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return array
      */
-    public function detachItem(CacheItemInterface $item)
+    public function detachItem(CacheItemInterface $item): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function detachAllItems()
-    {
-        $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
-    }
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
-     */
-    public function attachItem(CacheItemInterface $item)
+    public function detachAllItems(): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -469,9 +448,19 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return mixed
+     * @return array
      */
-    public function isAttached(CacheItemInterface $item)
+    public function attachItem(CacheItemInterface $item): array
+    {
+        $callback = $this->getGenericCallback();
+        return $callback(__FUNCTION__, func_get_args());
+    }
+
+    /**
+     * @param \Psr\Cache\CacheItemInterface $item
+     * @return array
+     */
+    public function isAttached(CacheItemInterface $item): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
@@ -479,18 +468,18 @@ class ActOnAll implements ExtendedCacheItemPoolInterface
 
     /**
      * @param \phpFastCache\EventManager $em
-     * @return ExtendedCacheItemPoolInterface
+     * @return array
      */
-    public function setEventManager(EventManager $em): ExtendedCacheItemPoolInterface
+    public function setEventManager(EventManager $em): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());
     }
 
     /**
-     * @return ArrayObject
+     * @return array
      */
-    public function getDefaultConfig(): ArrayObject
+    public function getDefaultConfig(): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());

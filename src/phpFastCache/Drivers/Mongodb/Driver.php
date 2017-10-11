@@ -67,7 +67,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck(): \bool
+    public function driverCheck(): bool
     {
         if (!class_exists('MongoDB\Driver\Manager') && class_exists('MongoClient')) {
             trigger_error('This driver is used to support the pecl MongoDb extension with mongo-php-library.
@@ -102,7 +102,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @throws phpFastCacheInvalidArgumentException
      * @throws phpFastCacheDriverException
      */
-    protected function driverWrite(CacheItemInterface $item): \bool
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -135,7 +135,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): \bool
+    protected function driverDelete(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -155,7 +155,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear(): \bool
+    protected function driverClear(): bool
     {
         /**
          * @var \MongoDB\Model\BSONDocument $result

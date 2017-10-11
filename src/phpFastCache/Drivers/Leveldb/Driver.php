@@ -54,7 +54,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck(): \bool
+    public function driverCheck(): bool
     {
         return extension_loaded('Leveldb');
     }
@@ -63,7 +63,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheLogicException
      */
-    protected function driverConnect(): \bool
+    protected function driverConnect(): bool
     {
         if ($this->instance instanceof LeveldbClient) {
             throw new phpFastCacheLogicException('Already connected to Leveldb database');
@@ -94,7 +94,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item): \bool
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -111,7 +111,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): \bool
+    protected function driverDelete(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -126,7 +126,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear(): \bool
+    protected function driverClear(): bool
     {
         if ($this->instance instanceof LeveldbClient) {
             $this->instance->close();
@@ -142,7 +142,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return string
      * @throws \phpFastCache\Exceptions\phpFastCacheCoreException
      */
-    public function getLeveldbFile(): \string
+    public function getLeveldbFile(): string
     {
         return $this->getPath() . '/' . self::LEVELDB_FILENAME;
     }

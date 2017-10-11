@@ -63,7 +63,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck(): \bool
+    public function driverCheck(): bool
     {
         return extension_loaded('Couchbase');
     }
@@ -72,7 +72,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheLogicException
      */
-    protected function driverConnect(): \bool
+    protected function driverConnect(): bool
     {
         if ($this->instance instanceof CouchbaseClient) {
             throw new phpFastCacheLogicException('Already connected to Couchbase server');
@@ -119,7 +119,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item): \bool
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -151,7 +151,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear(): \bool
+    protected function driverClear(): bool
     {
         $this->getBucket()->manager()->flush();
         return true;

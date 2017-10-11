@@ -49,7 +49,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    public function driverCheck(): \bool
+    public function driverCheck(): bool
     {
         if (function_exists('setcookie')) {
             return true;
@@ -61,7 +61,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverConnect(): \bool
+    protected function driverConnect(): bool
     {
         return !(!array_key_exists('phpFastCache', $_COOKIE) && !@setcookie('phpFastCache', 1, 10));
     }
@@ -93,7 +93,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return bool
      * @throws phpFastCacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item): \bool
+    protected function driverWrite(CacheItemInterface $item): bool
     {
         /**
          * Check for Cross-Driver type confusion
@@ -117,7 +117,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @param string $key
      * @return int
      */
-    protected function driverReadExpirationDate($key): \int
+    protected function driverReadExpirationDate($key): int
     {
         $this->driverConnect();
         $keyword = self::PREFIX . $key;
@@ -150,7 +150,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      */
-    protected function driverClear(): \bool
+    protected function driverClear(): bool
     {
         $return = null;
         $this->driverConnect();

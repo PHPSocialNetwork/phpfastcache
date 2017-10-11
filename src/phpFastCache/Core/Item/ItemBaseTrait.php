@@ -119,7 +119,7 @@ trait ItemBaseTrait
     /**
      * @return bool
      */
-    public function isHit(): \bool
+    public function isHit(): bool
     {
         return $this->isHit;
     }

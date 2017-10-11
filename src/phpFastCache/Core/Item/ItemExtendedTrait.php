@@ -57,7 +57,7 @@ trait ItemExtendedTrait
     /**
      * @return string
      */
-    public function getEncodedKey(): \string
+    public function getEncodedKey(): string
     {
         if (!$this->encodedKey) {
             $keyHashFunction = $this->driver->getConfigOption('defaultKeyHashFunction');
@@ -164,7 +164,7 @@ trait ItemExtendedTrait
     /**
      * @return int
      */
-    public function getTtl(): \int
+    public function getTtl(): int
     {
         $ttl = $this->expirationDate->getTimestamp() - time();
         if ($ttl > 2592000) {
@@ -177,7 +177,7 @@ trait ItemExtendedTrait
     /**
      * @return bool
      */
-    public function isExpired(): \bool
+    public function isExpired(): bool
     {
         return $this->expirationDate->getTimestamp() < (new \DateTime())->getTimestamp();
     }
@@ -312,7 +312,7 @@ trait ItemExtendedTrait
      * @param string $separator
      * @return string
      */
-    public function getTagsAsString($separator = ', '): \string
+    public function getTagsAsString($separator = ', '): string
     {
         return implode($separator, $this->tags);
     }
@@ -359,7 +359,7 @@ trait ItemExtendedTrait
      * @param int $depth json_encode() depth
      * @return string
      */
-    public function getDataAsJsonString($option = 0, $depth = 512): \string
+    public function getDataAsJsonString($option = 0, $depth = 512): string
     {
         $data = $this->get();
 

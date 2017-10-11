@@ -446,9 +446,9 @@ trait ExtendedCacheItemPoolTrait
      * Set the EventManager instance
      *
      * @param EventManager $em
-     * @return $this
+     * @return ExtendedCacheItemPoolInterface
      */
-    public function setEventManager(EventManager $em): self
+    public function setEventManager(EventManager $em): ExtendedCacheItemPoolInterface
     {
         $this->eventManager = $em;
 

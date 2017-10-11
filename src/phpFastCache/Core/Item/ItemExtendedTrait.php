@@ -57,7 +57,7 @@ trait ItemExtendedTrait
     /**
      * @return string
      */
-    public function getEncodedKey()
+    public function getEncodedKey(): string
     {
         if (!$this->encodedKey) {
             $keyHashFunction = $this->driver->getConfigOption('defaultKeyHashFunction');
@@ -83,7 +83,7 @@ trait ItemExtendedTrait
     /**
      * @return \DateTimeInterface
      */
-    public function getExpirationDate()
+    public function getExpirationDate(): \DateTimeInterface
     {
         return $this->expirationDate;
     }
@@ -97,10 +97,10 @@ trait ItemExtendedTrait
      *   the value should be stored permanently or for as long as the
      *   implementation allows.
      *
-     * @return static
+     * @return ExtendedCacheItemInterface
      *   The called object.
      */
-    public function setExpirationDate(\DateTimeInterface $expiration)
+    public function setExpirationDate(\DateTimeInterface $expiration): ExtendedCacheItemInterface
     {
         return $this->expiresAt($expiration);
     }
@@ -109,7 +109,7 @@ trait ItemExtendedTrait
      * @return \DateTimeInterface
      * @throws phpFastCacheLogicException
      */
-    public function getCreationDate()
+    public function getCreationDate(): \DateTimeInterface
     {
         if ($this->driver->getConfig()[ 'itemDetailedDate' ]) {
             return $this->creationDate;
@@ -120,10 +120,10 @@ trait ItemExtendedTrait
 
     /**
      * @param \DateTimeInterface $date
-     * @return $this
+     * @return ExtendedCacheItemInterface
      * @throws phpFastCacheLogicException
      */
-    public function setCreationDate(\DateTimeInterface $date)
+    public function setCreationDate(\DateTimeInterface $date): ExtendedCacheItemInterface
     {
         if ($this->driver->getConfig()[ 'itemDetailedDate' ]) {
             $this->creationDate = $date;
@@ -137,7 +137,7 @@ trait ItemExtendedTrait
      * @return \DateTimeInterface
      * @throws phpFastCacheLogicException
      */
-    public function getModificationDate()
+    public function getModificationDate(): \DateTimeInterface
     {
         if ($this->driver->getConfig()[ 'itemDetailedDate' ]) {
             return $this->modificationDate;
@@ -148,10 +148,10 @@ trait ItemExtendedTrait
 
     /**
      * @param \DateTimeInterface $date
-     * @return $this
+     * @return ExtendedCacheItemInterface
      * @throws phpFastCacheLogicException
      */
-    public function setModificationDate(\DateTimeInterface $date)
+    public function setModificationDate(\DateTimeInterface $date): ExtendedCacheItemInterface
     {
         if ($this->driver->getConfig()[ 'itemDetailedDate' ]) {
             $this->modificationDate = $date;
@@ -164,7 +164,7 @@ trait ItemExtendedTrait
     /**
      * @return int
      */
-    public function getTtl()
+    public function getTtl(): int
     {
         $ttl = $this->expirationDate->getTimestamp() - time();
         if ($ttl > 2592000) {
@@ -177,17 +177,17 @@ trait ItemExtendedTrait
     /**
      * @return bool
      */
-    public function isExpired()
+    public function isExpired(): bool
     {
         return $this->expirationDate->getTimestamp() < (new \DateTime())->getTimestamp();
     }
 
     /**
      * @param int $step
-     * @return $this
+     * @return ExtendedCacheItemInterface
      * @throws phpFastCacheInvalidArgumentException
      */
-    public function increment($step = 1)
+    public function increment($step = 1):ExtendedCacheItemInterface
     {
         if (is_int($step)) {
             $this->fetched = true;
@@ -201,10 +201,10 @@ trait ItemExtendedTrait
 
     /**
      * @param int $step
-     * @return $this
+     * @return ExtendedCacheItemInterface
      * @throws phpFastCacheInvalidArgumentException
      */
-    public function decrement($step = 1)
+    public function decrement($step = 1): ExtendedCacheItemInterface
     {
         if (is_int($step)) {
             $this->fetched = true;
@@ -218,10 +218,10 @@ trait ItemExtendedTrait
 
     /**
      * @param array|string $data
-     * @return $this
+     * @return ExtendedCacheItemInterface
      * @throws phpFastCacheInvalidArgumentException
      */
-    public function append($data)
+    public function append($data): ExtendedCacheItemInterface
     {
         if (is_array($this->data)) {
             $this->data[] = $data;
@@ -237,10 +237,10 @@ trait ItemExtendedTrait
 
     /**
      * @param array|string $data
-     * @return $this
+     * @return ExtendedCacheItemInterface
      * @throws phpFastCacheInvalidArgumentException
      */
-    public function prepend($data)
+    public function prepend($data): ExtendedCacheItemInterface
     {
         if (is_array($this->data)) {
             array_unshift($this->data, $data);
@@ -255,10 +255,10 @@ trait ItemExtendedTrait
 
     /**
      * @param $tagName
-     * @return $this
+     * @return ExtendedCacheItemInterface
      * @throws phpFastCacheInvalidArgumentException
      */
-    public function addTag($tagName)
+    public function addTag($tagName): ExtendedCacheItemInterface
     {
         if (is_string($tagName)) {
             $this->tags = array_unique(array_merge($this->tags, [$tagName]));
@@ -271,9 +271,9 @@ trait ItemExtendedTrait
 
     /**
      * @param array $tagNames
-     * @return $this
+     * @return ExtendedCacheItemInterface
      */
-    public function addTags(array $tagNames)
+    public function addTags(array $tagNames): ExtendedCacheItemInterface
     {
         foreach ($tagNames as $tagName) {
             $this->addTag($tagName);
@@ -284,10 +284,10 @@ trait ItemExtendedTrait
 
     /**
      * @param array $tags
-     * @return $this
+     * @return ExtendedCacheItemInterface
      * @throws phpFastCacheInvalidArgumentException
      */
-    public function setTags(array $tags)
+    public function setTags(array $tags): ExtendedCacheItemInterface
     {
         if (count($tags)) {
             if (array_filter($tags, 'is_string')) {
@@ -303,7 +303,7 @@ trait ItemExtendedTrait
     /**
      * @return array
      */
-    public function getTags()
+    public function getTags(): array
     {
         return $this->tags;
     }
@@ -312,16 +312,16 @@ trait ItemExtendedTrait
      * @param string $separator
      * @return string
      */
-    public function getTagsAsString($separator = ', ')
+    public function getTagsAsString($separator = ', '): string
     {
         return implode($separator, $this->tags);
     }
 
     /**
      * @param $tagName
-     * @return $this
+     * @return ExtendedCacheItemInterface
      */
-    public function removeTag($tagName)
+    public function removeTag($tagName): ExtendedCacheItemInterface
     {
         if (($key = array_search($tagName, $this->tags)) !== false) {
             unset($this->tags[ $key ]);
@@ -333,9 +333,9 @@ trait ItemExtendedTrait
 
     /**
      * @param array $tagNames
-     * @return $this
+     * @return ExtendedCacheItemInterface
      */
-    public function removeTags(array $tagNames)
+    public function removeTags(array $tagNames): ExtendedCacheItemInterface
     {
         foreach ($tagNames as $tagName) {
             $this->removeTag($tagName);
@@ -347,7 +347,7 @@ trait ItemExtendedTrait
     /**
      * @return array
      */
-    public function getRemovedTags()
+    public function getRemovedTags(): array
     {
         return array_diff($this->removedTags, $this->tags);
     }
@@ -359,7 +359,7 @@ trait ItemExtendedTrait
      * @param int $depth json_encode() depth
      * @return string
      */
-    public function getDataAsJsonString($option = 0, $depth = 512)
+    public function getDataAsJsonString($option = 0, $depth = 512): string
     {
         $data = $this->get();
 
@@ -386,9 +386,9 @@ trait ItemExtendedTrait
      * Set the EventManager instance
      *
      * @param EventManager $em
-     * @return $this
+     * @return ExtendedCacheItemInterface
      */
-    public function setEventManager(EventManager $em)
+    public function setEventManager(EventManager $em): ExtendedCacheItemInterface
     {
         $this->eventManager = $em;
 

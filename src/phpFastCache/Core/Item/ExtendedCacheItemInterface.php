@@ -160,7 +160,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
     /**
      * @return array
      */
-    public function getTags(): self;
+    public function getTags(): array;
 
     /**
      * @param string $separator

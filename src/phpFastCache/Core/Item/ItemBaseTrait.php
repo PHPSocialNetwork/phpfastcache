@@ -119,17 +119,17 @@ trait ItemBaseTrait
     /**
      * @return bool
      */
-    public function isHit()
+    public function isHit(): bool
     {
         return $this->isHit;
     }
 
     /**
      * @param bool $isHit
-     * @return $this
+     * @return ExtendedCacheItemInterface
      * @throws phpFastCacheInvalidArgumentException
      */
-    public function setHit($isHit)
+    public function setHit($isHit): ExtendedCacheItemInterface
     {
         if (is_bool($isHit)) {
             $this->isHit = $isHit;
@@ -142,10 +142,10 @@ trait ItemBaseTrait
 
     /**
      * @param \DateTimeInterface $expiration
-     * @return $this
+     * @return ExtendedCacheItemInterface
      * @throws phpFastCacheInvalidArgumentException
      */
-    public function expiresAt($expiration)
+    public function expiresAt($expiration): ExtendedCacheItemInterface
     {
         if ($expiration instanceof \DateTimeInterface) {
             /**

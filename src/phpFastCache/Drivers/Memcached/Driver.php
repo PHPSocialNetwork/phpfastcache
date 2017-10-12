@@ -127,6 +127,7 @@ class Driver extends DriverAbstract
     protected function driverConnect()
     {
         $this->instance = new MemcachedSoftware();
+        $this->instance->setOption(\Memcached::OPT_BINARY_PROTOCOL, true);
 
         $servers = (!empty($this->config[ 'servers' ]) && is_array($this->config[ 'servers' ]) ? $this->config[ 'servers' ] : []);
         if (count($servers) < 1) {

@@ -65,6 +65,8 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected function driverConnect(): bool
     {
         $this->instance = new MemcachedSoftware();
+        $this->instance->setOption(\Memcached::OPT_BINARY_PROTOCOL, true);
+
         $clientConfig = $this->getConfig();
 
         foreach ($clientConfig[ 'servers' ] as $server) {
@@ -79,6 +81,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                 $this->fallback = true;
             }
         }
+
         return true;
     }
 
@@ -158,9 +161,9 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function getStats(): DriverStatistic
     {
-        $stats = (array)$this->instance->getStats();
+        $stats = current($this->instance->getStats());
         $stats[ 'uptime' ] = (isset($stats[ 'uptime' ]) ? $stats[ 'uptime' ] : 0);
-        $stats[ 'version' ] = (isset($stats[ 'version' ]) ? $stats[ 'version' ] : 'UnknownVersion');
+        $stats[ 'version' ] = (isset($stats[ 'version' ]) ? $stats[ 'version' ] : $this->instance->getVersion());
         $stats[ 'bytes' ] = (isset($stats[ 'bytes' ]) ? $stats[ 'version' ] : 0);
 
         $date = (new \DateTime())->setTimestamp(time() - $stats[ 'uptime' ]);

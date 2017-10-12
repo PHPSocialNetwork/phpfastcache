@@ -81,6 +81,8 @@ class Driver implements ExtendedCacheItemPoolInterface
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        return true;
     }
 
     /**
@@ -129,6 +131,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected function driverConnect()
     {
         $this->instance = new MemcachedSoftware();
+        $this->instance->setOption(\Memcached::OPT_BINARY_PROTOCOL, true);
         $servers = (!empty($this->config[ 'servers' ]) && is_array($this->config[ 'servers' ]) ? $this->config[ 'servers' ] : []);
         if (count($servers) < 1) {
             $servers = [
@@ -166,9 +169,9 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function getStats()
     {
-        $stats = (array)$this->instance->getStats();
+        $stats = current($this->instance->getStats());
         $stats[ 'uptime' ] = (isset($stats[ 'uptime' ]) ? $stats[ 'uptime' ] : 0);
-        $stats[ 'version' ] = (isset($stats[ 'version' ]) ? $stats[ 'version' ] : 'UnknownVersion');
+        $stats[ 'version' ] = (isset($stats[ 'version' ]) ? $stats[ 'version' ] : $this->instance->getVersion());
         $stats[ 'bytes' ] = (isset($stats[ 'bytes' ]) ? $stats[ 'version' ] : 0);
 
         $date = (new \DateTime())->setTimestamp(time() - $stats[ 'uptime' ]);

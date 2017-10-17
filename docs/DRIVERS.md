@@ -33,6 +33,8 @@
   * A high-performance memory driver using a in-memory data structure storage. Less efficient than Redis driver as it is an embedded library
 * Redis
   * A very high-performance memory driver using a in-memory data structure storage. More efficient than Predis driver as it is an compiled library
+* Riak
+  * A very high-performance NoSQL driver using a key-value pair system
 * Sqlite
   * A Sqlite driver that use serialization for storing data for regular performances. A _$path_ config must be specified, else the system temporary directory will be used.
 * Ssdb

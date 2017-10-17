@@ -436,6 +436,7 @@ class CacheManager
           'Mongodb',
           'Predis',
           'Redis',
+          'Riak',
           'Ssdb',
           'Sqlite',
           'Wincache',

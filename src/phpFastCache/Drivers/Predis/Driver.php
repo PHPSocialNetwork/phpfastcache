@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -111,9 +112,9 @@ class Driver implements ExtendedCacheItemPoolInterface
              * @see https://redis.io/commands/expire
              */
             if($ttl <= 0){
-                return $this->instance->expire($item->getKey(), 0);
+                return (bool) $this->instance->expire($item->getKey(), 0);
             }else{
-                return $this->instance->setex($item->getKey(), $ttl, $this->encode($this->driverPreWrap($item)));
+                return $this->instance->setex($item->getKey(), $ttl, $this->encode($this->driverPreWrap($item)))->getPayload() === 'OK';
             }
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
@@ -131,7 +132,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->instance->del([$item->getKey()]);
+            return (bool) $this->instance->del([$item->getKey()]);
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -142,7 +143,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverClear(): bool
     {
-        return $this->instance->flushdb();
+        return $this->instance->flushdb()->getPayload() === 'OK';
     }
 
     /********************

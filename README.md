@@ -13,19 +13,21 @@ One Class uses for All Cache. You don't need to rewrite your code many times aga
 ### Supported drivers at this day *
 :bulb: Feel free to propose a driver by making a new **Pull Request**, they are welcome !
 
-|   Regular drivers  | High performances drivers | Development drivers |
-|--------------------|---------------------------|---------------------|
-|  `Apc(u)`          | `Cassandra`               | `Devnull`           |
-|  `Cookie`          | `CouchBase`               | `Devfalse`          |
-|  `Files`           | `Couchdb`                 | `Devtrue`           |
-|  `Leveldb`         | `Mongodb`                 | `Memstatic`         |
-|  `Memcache(d)`     | `Predis`                  |                     |
-|  `Sqlite`          | `Redis`                   |                     |
-|  `Wincache`        | `Ssdb`                    |                     |
-|  `Xcache`          | `Zend Memory Cache`       |                     |
-|  `Zend Disk Cache` |                           |                     |
+|      Regular drivers            |     High performances drivers      |    Development drivers        |
+|---------------------------------|------------------------------------|-------------------------------|
+|  `Apc(u)` :question:            | `Cassandra`                        | `Devnull`                     |
+|  `Cookie`                       | `CouchBase`                        | `Devfalse`                    |
+|  `Files`                        | `Couchdb`                          | `Devtrue`                     |
+|  `Leveldb` :question:           | `Mongodb`                          | `Memstatic`                   |
+|  `Memcache(d)`                  | `Predis`                           |                               |
+|  `Sqlite`                       | `Redis`                            |                               |
+|  `Wincache` :question:          | `Ssdb`                             |                               |
+|  `Xcache` :question:            | `Zend Memory Cache`                |                               |
+|  `Zend Disk Cache`              |                                    |                               |
 
 \* Driver descriptions available in DOCS/DRIVERS.md
+
+:question: Please note that as of PHP7 some php extensions were not yet updated (and will may not), we keep the code here but there's no guarantee that they are still working especially due to the cores changes introduced by Opcache.
 
 ### Symfony/Drupal developers are not forgotten !
 Starting with v5, phpFastCache comes with a [Symfony Bundle](https://github.com/PHPSocialNetwork/phpfastcache-bundle).

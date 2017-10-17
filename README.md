@@ -21,9 +21,9 @@ One Class uses for All Cache. You don't need to rewrite your code many times aga
 |  `Leveldb` :question:           | `Mongodb`                          | `Memstatic`                   |
 |  `Memcache(d)`                  | `Predis`                           |                               |
 |  `Sqlite`                       | `Redis`                            |                               |
-|  `Wincache` :question:          | `Ssdb`                             |                               |
-|  `Xcache` :question:            | `Zend Memory Cache`                |                               |
-|  `Zend Disk Cache`              |                                    |                               |
+|  `Wincache` :question:          | `Riak`                             |                               |
+|  `Xcache` :question:            | `Ssdb                              |                               |
+|  `Zend Disk Cache`              | `Zend Memory Cache`                |                               |
 
 \* Driver descriptions available in DOCS/DRIVERS.md
 

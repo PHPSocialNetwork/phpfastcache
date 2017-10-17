@@ -15,6 +15,7 @@
 namespace phpFastCache\Core\Pool;
 
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
+use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpFastCache\Exceptions\phpFastCacheLogicException;
 use phpFastCache\Util\ArrayObject;
@@ -47,6 +48,30 @@ trait DriverBaseTrait
      * @var string
      */
     protected $driverName;
+
+    /**
+     * @internal This variable is read-access only
+     * @var string
+     */
+    protected $instanceId;
+
+    /**
+     * Driver constructor.
+     * @param array $config
+     * @param string $instanceId
+     * @throws phpFastCacheDriverCheckException
+     */
+    public function __construct(array $config = [], $instanceId)
+    {
+        $this->setup($config);
+        $this->instanceId = $instanceId;
+
+        if (!$this->driverCheck()) {
+            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
+        }else {
+            $this->driverConnect();
+        }
+    }
 
     /**
      * @param $config_name
@@ -230,6 +255,14 @@ trait DriverBaseTrait
             $this->driverName = ucfirst(substr(strrchr((new \ReflectionObject($this))->getNamespaceName(), '\\'), 1));
         }
         return $this->driverName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInstanceId(): string
+    {
+        return $this->instanceId;
     }
 
     /**

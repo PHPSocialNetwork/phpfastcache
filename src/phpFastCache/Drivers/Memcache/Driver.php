@@ -32,7 +32,10 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
-    use DriverBaseTrait, MemcacheDriverCollisionDetectorTrait;
+    use DriverBaseTrait {
+        __construct as protected __parentConstruct;
+    }
+    use MemcacheDriverCollisionDetectorTrait;
 
     /**
      * @var int
@@ -44,20 +47,10 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @param array $config
      * @throws phpFastCacheDriverException
      */
-    public function __construct(array $config = [])
+    public function __construct(array $config = [], $instanceId)
     {
         self::checkCollision('Memcache');
-        $this->setup($config);
-
-        if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
-        } else {
-            $this->driverConnect();
-
-            if (array_key_exists('compress_data', $config) && $config[ 'compress_data' ] === true) {
-                $this->memcacheFlags = MEMCACHE_COMPRESSED;
-            }
-        }
+        $this->__parentConstruct($config, $instanceId);
     }
 
     /**
@@ -73,6 +66,10 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverConnect(): bool
     {
+        self::checkCollision('Memcache');
+        if (array_key_exists('compress_data', $this->getConfig()) && $this->getConfig()[ 'compress_data' ] === true) {
+            $this->memcacheFlags = MEMCACHE_COMPRESSED;
+        }
         $this->instance = new MemcacheSoftware();
         $clientConfig = $this->getConfig();
 

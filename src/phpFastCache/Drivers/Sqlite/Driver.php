@@ -61,26 +61,6 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected $indexing;
 
-    /**
-     * Driver constructor.
-     * @param array $config
-     * @throws phpFastCacheDriverCheckException
-     * @throws phpFastCacheIOException
-     */
-    public function __construct(array $config = [])
-    {
-        $this->setup($config);
-
-        if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
-        } else {
-            if (!file_exists($this->getSqliteDir()) && !@mkdir($this->getSqliteDir(), $this->getDefaultChmod(), true)) {
-                throw new phpFastCacheIOException(sprintf('Sqlite cannot write in "%s", aborting...', $this->getPath()));
-            } else {
-                $this->driverConnect();
-            }
-        }
-    }
 
     /**
      * @return string
@@ -101,9 +81,13 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @return bool
+     * @throws phpFastCacheIOException
      */
     protected function driverConnect(): bool
     {
+        if (!file_exists($this->getSqliteDir()) && !@mkdir($this->getSqliteDir(), $this->getDefaultChmod(), true)) {
+            throw new phpFastCacheIOException(sprintf('Sqlite cannot write in "%s", aborting...', $this->getPath()));
+        }
         if (!file_exists($this->getPath() . '/' . self::FILE_DIR)) {
             if (!mkdir($this->getPath() . '/' . self::FILE_DIR, $this->getDefaultChmod(), true)
             ) {

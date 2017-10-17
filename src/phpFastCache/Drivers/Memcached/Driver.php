@@ -32,25 +32,21 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
-    use DriverBaseTrait, MemcacheDriverCollisionDetectorTrait;
+    use DriverBaseTrait {
+        __construct as protected __parentConstruct;
+    }
+    use MemcacheDriverCollisionDetectorTrait;
 
     /**
      * Driver constructor.
      * @param array $config
      * @throws phpFastCacheDriverException
      */
-    public function __construct(array $config = [])
+    public function __construct(array $config = [], $instanceId)
     {
         self::checkCollision('Memcached');
-        $this->setup($config);
-
-        if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
-        } else {
-            $this->driverConnect();
-        }
+        $this->__parentConstruct($config, $instanceId);
     }
-
     /**
      * @return bool
      */

@@ -36,20 +36,6 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected $staticStack = [];
 
     /**
-     * Driver constructor.
-     * @param array $config
-     * @throws phpFastCacheDriverException
-     */
-    public function __construct(array $config = [])
-    {
-        $this->setup($config);
-
-        if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
-        }
-    }
-
-    /**
      * @return bool
      */
     public function driverCheck(): bool

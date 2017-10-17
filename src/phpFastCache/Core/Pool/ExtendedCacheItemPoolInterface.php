@@ -83,6 +83,10 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      */
     public function getDriverName(): string;
 
+    /**
+     * @return mixed
+     */
+    public function getInstanceId(): string;
 
     /**
      * [phpFastCache phpDoc Override]

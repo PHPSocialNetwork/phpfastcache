@@ -35,22 +35,6 @@ class Driver implements ExtendedCacheItemPoolInterface
     use DriverBaseTrait;
 
     /**
-     * Driver constructor.
-     * @param array $config
-     * @throws phpFastCacheDriverException
-     */
-    public function __construct(array $config = [])
-    {
-        $this->setup($config);
-
-        if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
-        } elseif (!$this->driverConnect()) {
-            throw new phpFastCacheDriverException('Ssdb is not connected, cannot continue.');
-        }
-    }
-
-    /**
      * @return bool
      */
     public function driverCheck(): bool

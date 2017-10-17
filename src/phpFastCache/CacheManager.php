@@ -17,6 +17,7 @@ namespace phpFastCache;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 use phpFastCache\Exceptions\phpFastCacheDriverNotFoundException;
+use phpFastCache\Exceptions\phpFastCacheInstanceNotFoundException;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpFastCache\Exceptions\phpFastCacheInvalidConfigurationException;
 
@@ -189,13 +190,22 @@ class CacheManager
     /**
      * @param string $driver
      * @param array $config
+     * @param string $instanceId
+     *
      * @return ExtendedCacheItemPoolInterface
+     *
      * @throws phpFastCacheDriverCheckException
      * @throws phpFastCacheInvalidConfigurationException
+     * @throws phpFastCacheDriverNotFoundException
+     * @throws phpFastCacheInvalidArgumentException
      */
-    public static function getInstance($driver = 'auto', array $config = [])
+    public static function getInstance($driver = 'auto', array $config = [], $instanceId = null)
     {
         static $badPracticeOmeter = [];
+
+        if($instanceId !== null && !is_string($instanceId)){
+            throw new phpFastCacheInvalidArgumentException('The Instance ID must be a string');
+        }
 
         /**
          * @todo: Standardize a method for driver name
@@ -207,7 +217,8 @@ class CacheManager
             $driver = self::getAutoClass($config);
         }
 
-        $instance = crc32($driver . serialize($config));
+        $instance = $instanceId ?: crc32($driver . serialize($config));
+
         if (!isset(self::$instances[ $instance ])) {
             $badPracticeOmeter[ $driver ] = 1;
             if (!$config[ 'ignoreSymfonyNotice' ] && interface_exists('Symfony\Component\HttpKernel\KernelInterface') && !class_exists('phpFastCache\Bundle\phpFastCacheBundle')) {
@@ -217,7 +228,7 @@ class CacheManager
             $class = self::getNamespacePath() . $driver . '\Driver';
             try {
                 if(class_exists($class)){
-                    self::$instances[ $instance ] = new $class($config);
+                    self::$instances[ $instance ] = new $class($config, $instance);
                     self::$instances[ $instance ]->setEventManager(EventManager::getInstance());
                 }else{
                     throw new phpFastCacheDriverNotFoundException('The driver "%s" does not exists', $driver);
@@ -229,7 +240,7 @@ class CacheManager
                         if ($fallback !== $driver) {
                             $class = self::getNamespacePath() . $fallback . '\Driver';
                             if(class_exists($class)){
-                                self::$instances[ $instance ] = new $class($config, EventManager::getInstance());
+                                self::$instances[ $instance ] = new $class($config, $instance);
                                 self::$instances[ $instance ]->setEventManager(EventManager::getInstance());
                             }else{
                                 throw new phpFastCacheDriverNotFoundException('The driver "%s" does not exists', $driver);
@@ -254,6 +265,28 @@ class CacheManager
         $badPracticeOmeter[ $driver ]++;
 
         return self::$instances[ $instance ];
+    }
+
+    /**
+     * @param string $instanceId
+     *
+     * @return ExtendedCacheItemPoolInterface
+     *
+     * @throws phpFastCacheInvalidArgumentException
+     * @throws phpFastCacheInstanceNotFoundException
+     */
+    public static function getInstanceById($instanceId): ExtendedCacheItemPoolInterface
+    {
+        if($instanceId !== null && !is_string($instanceId)){
+            throw new phpFastCacheInvalidArgumentException('The Instance ID must be a string');
+        }
+
+        if(isset(self::$instances[ $instanceId ]))
+        {
+            return self::$instances[ $instanceId ];
+        }
+
+        throw new phpFastCacheInstanceNotFoundException(sprintf('Instance ID %s not found', $instanceId));
     }
 
     /**

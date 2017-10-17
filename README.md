@@ -22,7 +22,7 @@ One Class uses for All Cache. You don't need to rewrite your code many times aga
 |  `Memcache(d)`                  | `Predis`                           |                               |
 |  `Sqlite`                       | `Redis`                            |                               |
 |  `Wincache` :question:          | `Riak`                             |                               |
-|  `Xcache` :question:            | `Ssdb                              |                               |
+|  `Xcache` :question:            | `Ssdb`                             |                               |
 |  `Zend Disk Cache`              | `Zend Memory Cache`                |                               |
 
 \* Driver descriptions available in DOCS/DRIVERS.md

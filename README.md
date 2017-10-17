@@ -113,6 +113,7 @@ phpFastCache offers you a lot of useful APIs:
 - getItemsByTags(array $tagNames) // Returns items by one of multiple tag names
 - getItemsByTagsAll(array $tagNames) // Returns items by all of multiple tag names
 - getItemsByTagsAsJsonString(array $tagNames) // Returns A json string that represents an array of items corresponding to given tags
+- getInstanceId() // Returns the instance ID
 - deleteItemsByTag($tagName) // Deletes items by a tag
 - deleteItemsByTags(array $tagNames) // Deletes items  by one of multiple tag names
 - deleteItemsByTagsAll(array $tagNames) // Deletes items by all of multiple tag names

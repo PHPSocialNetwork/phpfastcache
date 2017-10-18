@@ -137,6 +137,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
 
             $host = isset($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1';
+            $port = isset($this->config[ 'port' ]) ? $this->config[ 'port' ] : 8091;
             $password = isset($this->config[ 'password' ]) ? $this->config[ 'password' ] : '';
             $username = isset($this->config[ 'username' ]) ? $this->config[ 'username' ] : '';
             $buckets = isset($this->config[ 'buckets' ]) ? $this->config[ 'buckets' ] : [
@@ -146,7 +147,7 @@ class Driver implements ExtendedCacheItemPoolInterface
               ],
             ];
 
-            $this->instance = new CouchbaseClient("couchbase://{$host}", $username, $password);
+            $this->instance = new CouchbaseClient("couchbase://{$host}:{$port}", $username, $password);
 
             foreach ($buckets as $bucket) {
                 $this->bucketCurrent = $this->bucketCurrent ?: $bucket[ 'bucket' ];

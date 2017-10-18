@@ -63,7 +63,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         } else {
             $clientConfig = $this->getConfig();
 
-            $this->instance = new CouchbaseClient("couchbase://{$clientConfig['host']}");
+            $this->instance = new CouchbaseClient("couchbase://{$clientConfig['host']}:{$clientConfig['port']}");
 
             if($clientConfig['username'])
             {
@@ -192,6 +192,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $defaultConfig = new ArrayObject();
 
         $defaultConfig['host'] = '127.0.0.1';
+        $defaultConfig['port'] = 8091;
         $defaultConfig['username'] = '';
         $defaultConfig['password'] = '';
         $defaultConfig['buckets'] = [

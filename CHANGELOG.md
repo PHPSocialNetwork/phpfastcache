@@ -1,4 +1,4 @@
-##7.0.0-alpha
+## 7.0.0-alpha
 ##### 18 october 2017
 - __Global__
   - Added php7 type hint support. Strict type support is coming in next alphas
@@ -12,6 +12,6 @@
 - __Helpers__
   - Modified ActOnAll helper behavior, this helper now returns an array of driver returns and does no longer implements `ExtendedCacheItemPoolInterface`
 
-##7.0.0-dev
+## 7.0.0-dev
 ##### 01 october 2017
 - Initialized v7 development

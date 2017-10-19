@@ -1,6 +1,5 @@
 ## 6.0.5
 ##### 16 september 2017
-
 - Fixed little typo in readme  (@Geolim4)
 - Psr16 do not cache with negative ttl (@kfreiman)
 - Fixed #505 // 'auto' driver causes each driver to instantiate, instead of stopping after first (@Geolim4)
@@ -8,7 +7,6 @@
 
 ## 6.0.4
 ##### 31 july 2017
-
 - Use Redis on tests instead of Predis when we can (@Geolim4)
 - Fixed issue on (P)Redis with negative TTLs awaiting more specification of the PSR6 about this (@Geolim4)
 - Fix @package title name of namespace (@hammermaps)
@@ -16,7 +14,6 @@
 
 ## 6.0.3
 ##### 15 july 2017
-
 - Added Wiki link in ISSUE_TEMPLATE.md (@Geolim4)
 - Added CustomNamespaces test (@Geolim4)
 - Added fetchAllKeys example as per #494 (@Geolim4)
@@ -32,7 +29,6 @@
 
 ## 6.0.2
 ##### 26 june 2017
-
 - Added code of conduct  (@Geolim4)
 - Added licence header to scrutinizer config file (@Geolim4)
 - Added php 7.1 to travis build (@Geolim4)
@@ -56,7 +52,6 @@
 
 ## 6.0.1
 ##### 19 may 2017
-
 - Fixed #460 Unknown driver path reference (@Geolim4)
 - Fixed #459 examples/withoutComposer.php missing (@Geolim4)
 - Fixed #456 // Bug of Exception workflow in cacheManager introduced in v6 (@Geolim4)
@@ -66,18 +61,14 @@
 
 ## 6.0.0
 ##### 11 may 2017
-
 ### Changes since 6.0.0-rc4
  - Fixed #445 regression
 
 ### Changes since v5
-
 [Migrate your code from v5 to v6](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV5%CB%96%5D-Migrating-your-code-to-the-V6) | [Full changelog since v5](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Changelog) | [Global Support Timeline](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV4%CB%96%5D-Global-support-timeline)
-
 
 ## 6.0.0-rc3
 ##### 29 april 2017
-
 - Added parameter type hint to Psr16Adapter constructor (@ElGigi)
 - Added Help to Couchdb and Predis drivers (@Geolim4)
 - Added cache conditional helper (@Geolim4)
@@ -94,7 +85,6 @@
 
 ## 6.0.0-rc3
 ##### 16 march 2017
-
 - **Added cache slams protection (@Geolim4)**
 - Added more descriptive message in exception #441 (@Geolim4)
 - Replaced \InvalidArgumentException occurrences with phpFastCacheInvalidArgumentException (@Geolim4)
@@ -103,7 +93,6 @@
 
 ## 6.0.0-rc2
 ##### 14 february 2017
-
 - **Added Couchdb driver, yay !**   (@Geolim4)
 - **Added configuration validator** (@Geolim4)
 - Added custom key hash function (@Geolim4)
@@ -123,7 +112,6 @@
 
 ## 6.0.0-rc1
 ##### 25 january 2017
-
 - **Added Cassandra Driver**
 - **Added Psr16 support, yay !**
 - Added getHelp() method to provides basic help about a specific driver
@@ -147,7 +135,6 @@
 
 ## 6.0.0-beta2
 ##### 4 january 2017
-
 - Fixed #411
 - Fixed #406
 - Fixed redundant code in Predis driver
@@ -179,7 +166,6 @@
 
 ## 6.0.0-beta1
 ##### 21 december 2016
-
 - Engrish fixes on the readme (@ylorant)
 - Added Memstatic driver
 - Added **'provide'** section in composer

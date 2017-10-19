@@ -1,3 +1,15 @@
+## 6.0.6
+##### 19 october 2017
+- Added Semver badge (@Geolim4)
+- Added comprehensive changelog (@Geolim4)
+- Fixed #515 // Fixed inefficient Mongodb::driverCheck() method (@Geolim4)
+- Fixed #517 // Couchbase error 	(@Geolim4)
+- Fixed #518 // Memcached seems get() not working (@Geolim4)
+- Modified credits.md file with latest updates (@Geolim4)
+- Renamed CREDITS.txt to markdown file (@Geolim4)
+- Updated sample file withoutComposer.php (@Abs)
+- Removed useless spaces in changelog	21:02	(@Geolim4)
+
 ## 6.0.5
 ##### 16 september 2017
 - Fixed little typo in readme  (@Geolim4)

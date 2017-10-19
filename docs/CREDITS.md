@@ -33,7 +33,7 @@ __phpFastCache Contributors:__    https://github.com/PHPSocialNetwork/phpfastcac
 - __Sabine van Lommen__ * from __Zend.com__ for providing us a free developer licence of Zend Server
 - __Lucas (_hammermaps_)__ for the "Zend Data Cache" driver implementation
 
-* Thanks to the companies that provided us free access to their products to help us to build a better quality software every days.
+\* Thanks to the companies that provided us free access to their products to help us to build a better quality software every days.
 
 But above all, many thanks to these companies to support indisputably Open Source Projects.
 Thanks to all the contributors that added their stone to the building. Each contribution made this project a bit better, every commits, every pull request you made contributed to make this project greater and better.

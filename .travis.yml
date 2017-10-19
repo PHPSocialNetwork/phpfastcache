@@ -20,7 +20,10 @@ php:
   - 7.0
   # - nightly
   # - hhvm We may need to do review this check later
-
+matrix:
+  fast_finish: true
+  allow_failures:
+    - php: 5.3
 script:
   - php -f tests/SyntaxChecker.test.php
   - php -f tests/Autoload.test.php

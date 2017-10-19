@@ -1,4 +1,4 @@
-phpFastCache Copyright (c) 2016
+## phpFastCache Copyright (c) 2016 - 2017
 http://www.phpfastcache.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,16 +20,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-phpFastCache Project Manager:   Khoa Bui (khoaofgod)
+__phpFastCache Project Founder:__ Khoa Bui (khoaofgod)
 
-phpFastCache Lead Developer:    Georges.L (Geolim4)
+__phpFastCache Project Manager:__ Georges.L (Geolim4)
 
-phpFastCache Contributors:      https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
+__phpFastCache Contributors:__    https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
 
+#### Specials thanks:
 
-PHP License, version 3.0:
-Pear (c) 2001-2004 PHP Group, http://pear.php.net
+- __Jetbrains__ * for providing us a free IDE licence
+- __Scrutinizer-CI__ * for providing us a free Security Analysis
+- __Sabine van Lommen__ * from __Zend.com__ for providing us a free developer licence of Zend Server
+- __Lucas (_hammermaps_)__ for the "Zend Data Cache" driver implementation
 
+Thanks to the companies that provided us free product access to help us to build a better quality software every days. 
+But above all thanks to these companies to support indisputably Open Source Projects.
 
-MIT licenced:
-Predis (c) 2009-2015 Daniele Alessandri, http://clorophilla.net
+#### Software licenses:
+
+- PHP License, version 3.0:
+  - Pear (c) 2001-2004 PHP Group, http://pear.php.net
+
+- MIT licenced:
+  - Predis (c) 2009-2015 Daniele Alessandri, http://clorophilla.net

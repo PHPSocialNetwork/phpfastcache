@@ -26,15 +26,17 @@ __phpFastCache Project Manager:__ Georges.L (Geolim4)
 
 __phpFastCache Contributors:__    https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
 
-#### Specials thanks:
+#### Hall of fame (Special thanks):
 
 - __Jetbrains__ * for providing us a free IDE licence
 - __Scrutinizer-CI__ * for providing us a free Security Analysis
 - __Sabine van Lommen__ * from __Zend.com__ for providing us a free developer licence of Zend Server
 - __Lucas (_hammermaps_)__ for the "Zend Data Cache" driver implementation
 
-Thanks to the companies that provided us free product access to help us to build a better quality software every days. 
-But above all thanks to these companies to support indisputably Open Source Projects.
+\* Thanks to the companies that provided us free access to their products to help us to build a better quality software every days.
+
+But above all, many thanks to these companies to support indisputably Open Source Projects.
+Thanks to all the contributors that added their stone to the building. Each contribution made this project a bit better, every commits, every pull request you made contributed to make this project greater and better.
 
 #### Software licenses:
 

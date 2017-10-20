@@ -137,7 +137,7 @@ class TestHelper
      */
     public function runSubProcess($file, $ext = '.php')
     {
-        $this->runAsyncProcess('php ' . getcwd() . DIRECTORY_SEPARATOR . 'subprocess' . DIRECTORY_SEPARATOR . $file . '.subprocess' . $ext);
+        $this->runAsyncProcess(($this->isHHVM() ? 'hhvm ' : 'php ') . getcwd() . DIRECTORY_SEPARATOR . 'subprocess' . DIRECTORY_SEPARATOR . $file . '.subprocess' . $ext);
     }
 
     /**
@@ -146,5 +146,13 @@ class TestHelper
     public function terminateTest()
     {
         exit($this->exitCode);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHHVM()
+    {
+        return defined('HHVM_VERSION');
     }
 }

@@ -274,6 +274,13 @@ trait CacheItemPoolTrait
              */
             $this->deregisterItem($key);
 
+            /**
+             * Perform a tag cleanup to avoid memory leaks
+             */
+            if (strpos($key, self::DRIVER_TAGS_KEY_PREFIX) !== 0) {
+                $this->cleanItemTags($item);
+            }
+
             return true;
         }
 

@@ -293,7 +293,7 @@ trait DriverBaseTrait
              * then remove it from tagsItems index
              */
             if (count($data)) {
-                $tagsItem->expiresAt(max($data));
+                $tagsItem->expiresAt((new \DateTime())->setTimestamp(max($data)));
                 $this->driverWrite($tagsItem);
                 $tagsItem->setHit(true);
             } else {

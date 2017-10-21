@@ -147,4 +147,18 @@ class TestHelper
     {
         exit($this->exitCode);
     }
+
+    /**
+     * @param $obj
+     * @param $prop
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    public function accessInaccessibleMember($obj, $prop) {
+        $reflection = new \ReflectionClass($obj);
+        $property = $reflection->getProperty($prop);
+        $property->setAccessible(true);
+        return $property->getValue($obj);
+    }
+
 }

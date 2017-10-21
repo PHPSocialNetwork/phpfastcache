@@ -427,6 +427,14 @@ trait ExtendedCacheItemPoolTrait
     }
 
     /**
+     * @param ExtendedCacheItemInterface $item
+     */
+    protected function cleanItemTags(ExtendedCacheItemInterface $item)
+    {
+        $this->driverWriteTags($item->removeTags($item->getTags()));
+    }
+
+    /**
      * Returns true if the item exists, is attached and the Spl Hash matches
      * Returns false if the item exists, is attached and the Spl Hash mismatches
      * Returns null if the item does not exists

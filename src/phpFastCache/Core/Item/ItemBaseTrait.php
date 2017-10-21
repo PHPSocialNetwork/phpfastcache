@@ -156,7 +156,7 @@ trait ItemBaseTrait
             $this->eventManager->dispatch('CacheItemExpireAt', $this, $expiration);
             $this->expirationDate = $expiration;
         } else {
-            throw new phpFastCacheInvalidArgumentException('$expiration must be an object implementing the DateTimeInterface');
+            throw new phpFastCacheInvalidArgumentException('$expiration must be an object implementing the DateTimeInterface got: ' . gettype($expiration));
         }
 
         return $this;

@@ -350,6 +350,13 @@ trait ExtendedCacheItemPoolTrait
             gc_collect_cycles();
         }
     }
+    /**
+     * @param ExtendedCacheItemInterface $item
+     */
+    protected function cleanItemTags(ExtendedCacheItemInterface $item)
+    {
+        $this->driverWriteTags($item->removeTags($item->getTags()));
+    }
 
     /**
      * Returns true if the item exists, is attached and the Spl Hash matches

@@ -131,7 +131,7 @@ trait ItemBaseTrait
         if ($expiration instanceof \DateTimeInterface) {
             $this->expirationDate = $expiration;
         } else {
-            throw new \InvalidArgumentException('$expiration must be an object implementing the DateTimeInterface');
+            throw new phpFastCacheInvalidArgumentException('$expiration must be an object implementing the DateTimeInterface got: ' . gettype($expiration));
         }
 
         return $this;

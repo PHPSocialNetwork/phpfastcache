@@ -168,7 +168,7 @@ class Driver implements ExtendedCacheItemPoolInterface
           ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setInfo(sprintf("The memcache daemon v%s is up since %s.\n For more information see RawData.", $stats[ 'version' ], $date->format(DATE_RFC2822)))
           ->setRawData($stats)
-          ->setSize($stats[ 'bytes' ]);
+          ->setSize((int) $stats[ 'bytes' ]);
     }
 
     /**

@@ -136,12 +136,12 @@ trait DriverBaseTrait
      * Decode data types such as object/array
      * for driver that does not support
      * non-scalar value
-     * @param $value
+     * @param string|null $value
      * @return mixed
      */
     protected function decode($value)
     {
-        return @unserialize($value);
+        return unserialize((string) $value);
     }
 
     /**

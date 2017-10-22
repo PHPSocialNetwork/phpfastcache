@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+declare(strict_types=1);
 
 namespace phpFastCache;
 
@@ -203,7 +204,7 @@ class CacheManager
     {
         static $badPracticeOmeter = [];
 
-        if($instanceId !== null && !is_string($instanceId)){
+        if ($instanceId !== null && !is_string($instanceId)) {
             throw new phpFastCacheInvalidArgumentException('The Instance ID must be a string');
         }
 
@@ -227,10 +228,10 @@ class CacheManager
             }
             $class = self::getNamespacePath() . $driver . '\Driver';
             try {
-                if(class_exists($class)){
+                if (class_exists($class)) {
                     self::$instances[ $instance ] = new $class($config, $instance);
                     self::$instances[ $instance ]->setEventManager(EventManager::getInstance());
-                }else{
+                } else {
                     throw new phpFastCacheDriverNotFoundException('The driver "%s" does not exists', $driver);
                 }
             } catch (phpFastCacheDriverCheckException $e) {
@@ -239,10 +240,10 @@ class CacheManager
                         $fallback = self::standardizeDriverName($config[ 'fallback' ]);
                         if ($fallback !== $driver) {
                             $class = self::getNamespacePath() . $fallback . '\Driver';
-                            if(class_exists($class)){
+                            if (class_exists($class)) {
                                 self::$instances[ $instance ] = new $class($config, $instance);
                                 self::$instances[ $instance ]->setEventManager(EventManager::getInstance());
-                            }else{
+                            } else {
                                 throw new phpFastCacheDriverNotFoundException('The driver "%s" does not exists', $driver);
                             }
                             trigger_error(sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver,
@@ -277,12 +278,11 @@ class CacheManager
      */
     public static function getInstanceById($instanceId): ExtendedCacheItemPoolInterface
     {
-        if($instanceId !== null && !is_string($instanceId)){
+        if ($instanceId !== null && !is_string($instanceId)) {
             throw new phpFastCacheInvalidArgumentException('The Instance ID must be a string');
         }
 
-        if(isset(self::$instances[ $instanceId ]))
-        {
+        if (isset(self::$instances[ $instanceId ])) {
             return self::$instances[ $instanceId ];
         }
 
@@ -527,7 +527,7 @@ class CacheManager
                     }
                     if (!in_array($configValue, self::$safeFileExtensions)) {
                         throw new phpFastCacheInvalidConfigurationException(
-                            "{$configName} is not a safe extension, currently allowed extension: " . implode(', ', self::$safeFileExtensions)
+                          "{$configName} is not a safe extension, currently allowed extension: " . implode(', ', self::$safeFileExtensions)
                         );
                     }
                     break;

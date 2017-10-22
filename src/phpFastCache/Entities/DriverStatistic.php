@@ -11,8 +11,11 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+declare(strict_types=1);
 
 namespace phpFastCache\Entities;
+
+use phpFastCache\Exceptions\phpFastCacheInvalidArgumentTypeException;
 
 /**
  * Class DriverStatistic
@@ -26,7 +29,7 @@ class DriverStatistic
     protected $info = '';
 
     /**
-     * @var string
+     * @var int
      */
     protected $size = 0;
 
@@ -41,17 +44,17 @@ class DriverStatistic
     protected $rawData;
 
     /**
-     * @return string|bool Return infos or false if no information available
+     * @return string Return info or false if no information available
      */
-    public function getInfo()
+    public function getInfo(): string
     {
         return $this->info;
     }
 
     /**
-     * @return int|bool Return size in octet or false if no information available
+     * @return int Return size in octet or false if no information available
      */
-    public function getSize()
+    public function getSize(): int
     {
         return $this->size;
     }
@@ -67,11 +70,15 @@ class DriverStatistic
     /**
      * @param $info
      * @return $this
+     * @throws phpFastCacheInvalidArgumentTypeException
      */
     public function setInfo($info)
     {
-        $this->info = ($info ?: '');
-
+        if(is_string($info)){
+            $this->info = ($info ?: '');
+        }else{
+            throw new phpFastCacheInvalidArgumentTypeException('string', $info);
+        }
         return $this;
     }
 
@@ -79,10 +86,15 @@ class DriverStatistic
     /**
      * @param int $size
      * @return $this
+     * @throws phpFastCacheInvalidArgumentTypeException
      */
     public function setSize($size)
     {
-        $this->size = ($size ?: 0);
+        if(is_int($size)){
+            $this->size = ($size ?: 0);
+        }else{
+            throw new phpFastCacheInvalidArgumentTypeException('int', $size);
+        }
 
         return $this;
     }
@@ -120,7 +132,7 @@ class DriverStatistic
     /**
      * @return array
      */
-    public function getPublicDesc()
+    public function getPublicDesc(): array
     {
         return [
           'Info' => 'Cache Information',

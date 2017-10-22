@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+declare(strict_types=1);
 
 define('PFC_PHP_EXT', 'php');
 define('PFC_BIN_DIR', __DIR__ . '/../bin/');

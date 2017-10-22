@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+declare(strict_types=1);
 
 namespace phpFastCache\Helper;
 
@@ -41,7 +42,7 @@ class TestHelper
     /**
      * @return int
      */
-    public function getExitCode()
+    public function getExitCode(): int
     {
         return $this->exitCode;
     }
@@ -49,7 +50,7 @@ class TestHelper
     /**
      * @return $this
      */
-    public function resetExitCode()
+    public function resetExitCode(): self
     {
         $this->exitCode = 0;
 
@@ -60,7 +61,7 @@ class TestHelper
      * @param string $string
      * @return $this
      */
-    public function printSkipText($string)
+    public function printSkipText($string): self
     {
         $this->printText("[SKIP] {$string}");
 
@@ -71,7 +72,7 @@ class TestHelper
      * @param string $string
      * @return $this
      */
-    public function printPassText($string)
+    public function printPassText($string): self
     {
         $this->printText("[PASS] {$string}");
 
@@ -82,7 +83,7 @@ class TestHelper
      * @param string $string
      * @return $this
      */
-    public function printFailText($string)
+    public function printFailText($string): self
     {
         $this->printText("[FAIL] {$string}");
         $this->exitCode = 1;
@@ -94,7 +95,7 @@ class TestHelper
      * @param int $count
      * @return $this
      */
-    public function printNewLine($count = 1)
+    public function printNewLine($count = 1): self
     {
         for ($i = 0; $i < $count; $i++) {
             print PHP_EOL;
@@ -108,7 +109,7 @@ class TestHelper
      * @param bool $strtoupper
      * @return $this
      */
-    public function printText($string, $strtoupper = false)
+    public function printText($string, $strtoupper = false): self
     {
         if (!$strtoupper) {
             print trim($string) . PHP_EOL;
@@ -151,7 +152,7 @@ class TestHelper
     /**
      * @return bool
      */
-    public function isHHVM()
+    public function isHHVM(): bool
     {
         return defined('HHVM_VERSION');
     }
@@ -162,7 +163,8 @@ class TestHelper
      * @return mixed
      * @throws \ReflectionException
      */
-    public function accessInaccessibleMember($obj, $prop) {
+    public function accessInaccessibleMember($obj, $prop)
+    {
         $reflection = new \ReflectionClass($obj);
         $property = $reflection->getProperty($prop);
         $property->setAccessible(true);

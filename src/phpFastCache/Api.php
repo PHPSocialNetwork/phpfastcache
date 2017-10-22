@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+declare(strict_types=1);
 
 namespace phpFastCache;
 
@@ -33,7 +34,7 @@ class Api
      * @see  http://semver.org/
      * @return string
      */
-    public static function getVersion()
+    public static function getVersion():string
     {
         return self::$version;
     }
@@ -42,7 +43,7 @@ class Api
      * Return the API changelog, as a string.
      * @return string
      */
-    public static function getChangelog()
+    public static function getChangelog(): string
     {
         return <<<CHANGELOG
 - 1.2.5

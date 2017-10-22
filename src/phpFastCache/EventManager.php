@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+declare(strict_types=1);
 
 namespace phpFastCache;
 
@@ -52,7 +53,7 @@ class EventManager
     /**
      * @return \phpFastCache\EventManager
      */
-    public static function getInstance()
+    public static function getInstance(): self
     {
         return (self::$instance ?: self::$instance = new self);
     }
@@ -111,7 +112,7 @@ class EventManager
      * @param $callbackName
      * @return bool
      */
-    public function unbindEventCallback($eventName, $callbackName)
+    public function unbindEventCallback($eventName, $callbackName): bool
     {
         if (isset($this->events[ $eventName ][ $callbackName ])) {
             unset($this->events[ $eventName ][ $callbackName ]);

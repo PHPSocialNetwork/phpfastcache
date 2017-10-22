@@ -5,6 +5,7 @@
  * Date: 01/10/2017
  * Time: 00:08
  */
+declare(strict_types=1);
 
 namespace phpFastCache\Util;
 
@@ -26,6 +27,7 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
     protected $position = 0;
 
     /**
+     * @param $args
      * ArrayObject constructor.
      */
     public function __construct(...$args)
@@ -53,7 +55,7 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
     /**
      * @return int
      */
-    public function key()
+    public function key(): int
     {
         return $this->position;
     }
@@ -61,7 +63,7 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
     /**
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->offsetExists($this->position);
     }
@@ -77,7 +79,7 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
     /**
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->array);
     }
@@ -86,7 +88,7 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->array);
     }
@@ -97,7 +99,7 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
      */
     public function offsetGet($offset)
     {
-        return isset($this->array[ $offset ]) ? $this->array[ $offset ] : null;
+        return $this->array[ $offset ] ?? null;
     }
 
     /**
@@ -109,7 +111,7 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
         // NOTE: THIS IS THE FIX FOR THE ISSUE "Indirect modification of overloaded element of SplFixedArray has no effect"
         // NOTE: WHEN APPENDING AN ARRAY (E.G. myArr[] = 5) THE KEY IS NULL, SO WE TEST FOR THIS CONDITION BELOW, AND VOILA
 
-        if (is_null($offset))
+        if ($offset === null)
         {
             $this->array[] = $value;
         }

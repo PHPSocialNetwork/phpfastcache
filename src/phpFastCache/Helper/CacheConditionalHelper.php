@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+declare(strict_types=1);
 
 namespace phpFastCache\Helper;
 
@@ -39,6 +40,7 @@ class CacheConditionalHelper
     /**
      * @param string $cacheKey
      * @param callable $callback
+     * @return mixed
      */
     public function get($cacheKey, callable $callback)
     {

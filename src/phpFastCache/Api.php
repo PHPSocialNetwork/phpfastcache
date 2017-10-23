@@ -34,7 +34,7 @@ class Api
      * @see  http://semver.org/
      * @return string
      */
-    public static function getVersion():string
+    public static function getVersion(): string
     {
         return self::$version;
     }

@@ -18,10 +18,9 @@ namespace phpFastCache\Helper;
 use phpFastCache\CacheManager;
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
-use phpFastCache\Exceptions\phpFastCacheRootException;
-use phpFastCache\Exceptions\phpFastCacheSimpleCacheException;
+use phpFastCache\Exceptions\{
+  phpFastCacheDriverCheckException, phpFastCacheInvalidArgumentException, phpFastCacheRootException, phpFastCacheSimpleCacheException
+};
 use Psr\SimpleCache\CacheInterface;
 
 /**

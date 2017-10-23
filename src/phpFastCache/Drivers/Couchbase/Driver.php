@@ -15,13 +15,13 @@
 namespace phpFastCache\Drivers\Couchbase;
 
 use CouchbaseCluster as CouchbaseClient;
-use phpFastCache\Core\Pool\DriverBaseTrait;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Core\Pool\{
+  DriverBaseTrait, ExtendedCacheItemPoolInterface
+};
 use phpFastCache\Entities\DriverStatistic;
-use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
-use phpFastCache\Exceptions\phpFastCacheDriverException;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
-use phpFastCache\Exceptions\phpFastCacheLogicException;
+use phpFastCache\Exceptions\{
+  phpFastCacheInvalidArgumentException, phpFastCacheLogicException
+};
 use phpFastCache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 
@@ -65,15 +65,14 @@ class Driver implements ExtendedCacheItemPoolInterface
 
             $this->instance = new CouchbaseClient("couchbase://{$clientConfig['host']}:{$clientConfig['port']}");
 
-            if($clientConfig['username'])
-            {
+            if ($clientConfig[ 'username' ]) {
                 $authenticator = new \Couchbase\ClassicAuthenticator();
-                $authenticator->cluster($clientConfig['username'], $clientConfig['password']);
+                $authenticator->cluster($clientConfig[ 'username' ], $clientConfig[ 'password' ]);
                 //$authenticator->bucket('protected', 'secret');
                 $this->instance->authenticate($authenticator);
             }
 
-            foreach ($clientConfig['buckets'] as $bucket) {
+            foreach ($clientConfig[ 'buckets' ] as $bucket) {
                 $this->bucketCurrent = $this->bucketCurrent ?: $bucket[ 'bucket' ];
                 $this->setBucket($bucket[ 'bucket' ], $this->instance->openBucket($bucket[ 'bucket' ], $bucket[ 'password' ]));
             }
@@ -109,7 +108,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return (bool) $this->getBucket()->upsert($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), ['expiry' => $item->getTtl()]);
+            return (bool)$this->getBucket()->upsert($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), ['expiry' => $item->getTtl()]);
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -126,7 +125,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return (bool) $this->getBucket()->remove($item->getEncodedKey());
+            return (bool)$this->getBucket()->remove($item->getEncodedKey());
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -191,11 +190,11 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         $defaultConfig = new ArrayObject();
 
-        $defaultConfig['host'] = '127.0.0.1';
-        $defaultConfig['port'] = 8091;
-        $defaultConfig['username'] = '';
-        $defaultConfig['password'] = '';
-        $defaultConfig['buckets'] = [
+        $defaultConfig[ 'host' ] = '127.0.0.1';
+        $defaultConfig[ 'port' ] = 8091;
+        $defaultConfig[ 'username' ] = '';
+        $defaultConfig[ 'password' ] = '';
+        $defaultConfig[ 'buckets' ] = [
           [
             'bucket' => 'default',
             'password' => '',

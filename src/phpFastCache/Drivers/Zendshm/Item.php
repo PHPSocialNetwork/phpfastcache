@@ -14,11 +14,12 @@ declare(strict_types=1);
 
 namespace phpFastCache\Drivers\Zendshm;
 
-use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Core\Item\ItemBaseTrait;
+use phpFastCache\Core\Item\{ExtendedCacheItemInterface, ItemBaseTrait};
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Drivers\Zendshm\Driver as ZendSHMDriver;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Exceptions\{
+  phpFastCacheInvalidArgumentException, phpFastCacheInvalidArgumentTypeException
+};
 
 /**
  * Class Item
@@ -42,7 +43,7 @@ class Item implements ExtendedCacheItemInterface
             $this->driver->setItem($this);
             $this->expirationDate = new \DateTime();
         } else {
-            throw new phpFastCacheInvalidArgumentException(sprintf('$key must be a string, got type "%s" instead.', gettype($key)));
+            throw new phpFastCacheInvalidArgumentTypeException('string', $key);
         }
     }
 

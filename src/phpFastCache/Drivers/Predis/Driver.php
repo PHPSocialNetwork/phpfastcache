@@ -15,12 +15,11 @@
 
 namespace phpFastCache\Drivers\Predis;
 
-use phpFastCache\Core\Pool\DriverBaseTrait;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use phpFastCache\Entities\DriverStatistic;
-use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
-use phpFastCache\Exceptions\phpFastCacheDriverException;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Exceptions\{
+  phpFastCacheInvalidArgumentException, phpFastCacheDriverException
+};
 use phpFastCache\Util\ArrayObject;
 use Predis\Client as PredisClient;
 use Predis\Connection\ConnectionException as PredisConnectionException;
@@ -95,9 +94,9 @@ class Driver implements ExtendedCacheItemPoolInterface
              * @see https://redis.io/commands/setex
              * @see https://redis.io/commands/expire
              */
-            if($ttl <= 0){
-                return (bool) $this->instance->expire($item->getKey(), 0);
-            }else{
+            if ($ttl <= 0) {
+                return (bool)$this->instance->expire($item->getKey(), 0);
+            } else {
                 return $this->instance->setex($item->getKey(), $ttl, $this->encode($this->driverPreWrap($item)))->getPayload() === 'OK';
             }
         } else {
@@ -116,7 +115,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return (bool) $this->instance->del([$item->getKey()]);
+            return (bool)$this->instance->del([$item->getKey()]);
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -175,10 +174,10 @@ HELP;
     {
         $defaultConfig = new ArrayObject();
 
-        $defaultConfig['host'] = '127.0.0.1';
-        $defaultConfig['port'] = 6379;
-        $defaultConfig['password'] = null;
-        $defaultConfig['database'] = null;
+        $defaultConfig[ 'host' ] = '127.0.0.1';
+        $defaultConfig[ 'port' ] = 6379;
+        $defaultConfig[ 'password' ] = null;
+        $defaultConfig[ 'database' ] = null;
 
         return $defaultConfig;
     }

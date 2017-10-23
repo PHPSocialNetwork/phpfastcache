@@ -60,7 +60,7 @@ class ItemBatch
     /**
      * @return \DateTimeInterface
      */
-    public function getItemDate() :\DateTimeInterface
+    public function getItemDate(): \DateTimeInterface
     {
         return $this->itemDate;
     }

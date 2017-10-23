@@ -14,12 +14,13 @@
 
 namespace phpFastCache\Drivers\Devfalse;
 
-use phpFastCache\Core\Pool\DriverBaseTrait;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Core\Pool\{
+  DriverBaseTrait, ExtendedCacheItemPoolInterface
+};
 use phpFastCache\Entities\DriverStatistic;
-use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
-use phpFastCache\Exceptions\phpFastCacheDriverException;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Exceptions\{
+  phpFastCacheInvalidArgumentException
+};
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -59,7 +60,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @param \Psr\Cache\CacheItemInterface $item
      * @return array
      */
-    protected function driverRead(CacheItemInterface $item):array
+    protected function driverRead(CacheItemInterface $item): array
     {
         return [
           self::DRIVER_DATA_WRAPPER_INDEX => false,

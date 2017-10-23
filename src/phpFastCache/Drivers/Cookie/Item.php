@@ -15,11 +15,12 @@ declare(strict_types=1);
 
 namespace phpFastCache\Drivers\Cookie;
 
-use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Core\Item\ItemBaseTrait;
+use phpFastCache\Core\Item\{ExtendedCacheItemInterface, ItemBaseTrait};
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Drivers\Cookie\Driver as CookieDriver;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Exceptions\{
+  phpFastCacheInvalidArgumentException
+};
 
 /**
  * Class Item

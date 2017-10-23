@@ -13,12 +13,11 @@
 
 namespace phpFastCache\Drivers\Zendshm;
 
-use phpFastCache\Core\Pool\DriverBaseTrait;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use phpFastCache\Entities\DriverStatistic;
-use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
-use phpFastCache\Exceptions\phpFastCacheDriverException;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Exceptions\{
+  phpFastCacheInvalidArgumentException
+};
 use Psr\Cache\CacheItemInterface;
 
 /**

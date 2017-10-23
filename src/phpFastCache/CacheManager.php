@@ -16,11 +16,9 @@ declare(strict_types=1);
 namespace phpFastCache;
 
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
-use phpFastCache\Exceptions\phpFastCacheDriverNotFoundException;
-use phpFastCache\Exceptions\phpFastCacheInstanceNotFoundException;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
-use phpFastCache\Exceptions\phpFastCacheInvalidConfigurationException;
+use phpFastCache\Exceptions\{
+  phpFastCacheDriverCheckException, phpFastCacheDriverNotFoundException, phpFastCacheInstanceNotFoundException, phpFastCacheInvalidArgumentException, phpFastCacheInvalidConfigurationException
+};
 
 /**
  * Class CacheManager

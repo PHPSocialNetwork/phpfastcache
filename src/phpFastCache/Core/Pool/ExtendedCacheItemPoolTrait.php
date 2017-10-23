@@ -17,8 +17,9 @@ namespace phpFastCache\Core\Pool;
 
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\EventManager;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
-use phpFastCache\Exceptions\phpFastCacheLogicException;
+use phpFastCache\Exceptions\{
+  phpFastCacheInvalidArgumentException, phpFastCacheLogicException
+};
 use Psr\Cache\CacheItemInterface;
 
 

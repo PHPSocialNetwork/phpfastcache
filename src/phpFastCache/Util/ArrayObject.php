@@ -33,7 +33,7 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
     public function __construct(...$args)
     {
         $this->position = 0;
-        $this->array = (count($args) === 1 && is_array($args[0] ) ? $args[0] : $args);
+        $this->array = (count($args) === 1 && is_array($args[ 0 ]) ? $args[ 0 ] : $args);
     }
 
     /**
@@ -41,7 +41,7 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
      */
     public function current()
     {
-        return $this->array[$this->position];
+        return $this->array[ $this->position ];
     }
 
     /**
@@ -111,13 +111,10 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
         // NOTE: THIS IS THE FIX FOR THE ISSUE "Indirect modification of overloaded element of SplFixedArray has no effect"
         // NOTE: WHEN APPENDING AN ARRAY (E.G. myArr[] = 5) THE KEY IS NULL, SO WE TEST FOR THIS CONDITION BELOW, AND VOILA
 
-        if ($offset === null)
-        {
+        if ($offset === null) {
             $this->array[] = $value;
-        }
-        else
-        {
-            $this->array[$offset] = $value;
+        } else {
+            $this->array[ $offset ] = $value;
         }
     }
 

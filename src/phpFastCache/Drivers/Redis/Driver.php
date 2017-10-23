@@ -14,13 +14,11 @@
 
 namespace phpFastCache\Drivers\Redis;
 
-use phpFastCache\Core\Pool\DriverBaseTrait;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use phpFastCache\Entities\DriverStatistic;
-use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
-use phpFastCache\Exceptions\phpFastCacheDriverException;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
-use phpFastCache\Exceptions\phpFastCacheLogicException;
+use phpFastCache\Exceptions\{
+  phpFastCacheInvalidArgumentException, phpFastCacheLogicException
+};
 use phpFastCache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 use Redis as RedisClient;
@@ -54,14 +52,14 @@ class Driver implements ExtendedCacheItemPoolInterface
             $clientConfig = $this->getConfig();
             $this->instance = $this->instance ?: new RedisClient();
 
-            if (!$this->instance->connect($clientConfig['host'], (int) $clientConfig['port'], (float) $clientConfig['timeout'])) {
+            if (!$this->instance->connect($clientConfig[ 'host' ], (int)$clientConfig[ 'port' ], (float)$clientConfig[ 'timeout' ])) {
                 return false;
             } else {
-                if ($clientConfig['password'] && !$this->instance->auth($clientConfig['password'])) {
+                if ($clientConfig[ 'password' ] && !$this->instance->auth($clientConfig[ 'password' ])) {
                     return false;
                 }
-                if ($clientConfig['database']) {
-                    $this->instance->select((int) $clientConfig['database']);
+                if ($clientConfig[ 'database' ]) {
+                    $this->instance->select((int)$clientConfig[ 'database' ]);
                 }
 
                 return true;
@@ -100,9 +98,9 @@ class Driver implements ExtendedCacheItemPoolInterface
              * @see https://redis.io/commands/setex
              * @see https://redis.io/commands/expire
              */
-            if($ttl <= 0){
+            if ($ttl <= 0) {
                 return $this->instance->expire($item->getKey(), 0);
-            }else{
+            } else {
                 return $this->instance->setex($item->getKey(), $ttl, $this->encode($this->driverPreWrap($item)));
             }
         } else {
@@ -165,11 +163,11 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         $defaultConfig = new ArrayObject();
 
-        $defaultConfig['host'] = '127.0.0.1';
-        $defaultConfig['port'] = 6379;
-        $defaultConfig['password'] = null;
-        $defaultConfig['database'] = 0;
-        $defaultConfig['timeout'] = 5;
+        $defaultConfig[ 'host' ] = '127.0.0.1';
+        $defaultConfig[ 'port' ] = 6379;
+        $defaultConfig[ 'password' ] = null;
+        $defaultConfig[ 'database' ] = 0;
+        $defaultConfig[ 'timeout' ] = 5;
 
         return $defaultConfig;
     }

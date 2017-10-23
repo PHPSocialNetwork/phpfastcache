@@ -15,14 +15,12 @@
 namespace phpFastCache\Drivers\Memcache;
 
 use Memcache as MemcacheSoftware;
-use phpFastCache\Core\Pool\DriverBaseTrait;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use phpFastCache\Entities\DriverStatistic;
-use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
-use phpFastCache\Exceptions\phpFastCacheDriverException;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
-use phpFastCache\Util\ArrayObject;
-use phpFastCache\Util\MemcacheDriverCollisionDetectorTrait;
+use phpFastCache\Exceptions\{
+  phpFastCacheInvalidArgumentException, phpFastCacheDriverException
+};
+use phpFastCache\Util\{ArrayObject, MemcacheDriverCollisionDetectorTrait};
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -73,7 +71,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $this->instance = new MemcacheSoftware();
         $clientConfig = $this->getConfig();
 
-        foreach ($clientConfig['servers'] as $server) {
+        foreach ($clientConfig[ 'servers' ] as $server) {
             try {
                 if (!$this->instance->addServer($server[ 'host' ], $server[ 'port' ])) {
                     $this->fallback = true;
@@ -167,7 +165,7 @@ class Driver implements ExtendedCacheItemPoolInterface
           ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setInfo(sprintf("The memcache daemon v%s is up since %s.\n For more information see RawData.", $stats[ 'version' ], $date->format(DATE_RFC2822)))
           ->setRawData($stats)
-          ->setSize((int) $stats[ 'bytes' ]);
+          ->setSize((int)$stats[ 'bytes' ]);
     }
 
     /**

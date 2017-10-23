@@ -14,15 +14,16 @@
 
 namespace phpFastCache\Drivers\Couchdb;
 
-use Doctrine\CouchDB\CouchDBClient as CouchdbClient;
-use Doctrine\CouchDB\CouchDBException;
-use phpFastCache\Core\Pool\DriverBaseTrait;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Doctrine\CouchDB\{
+  CouchDBClient as CouchdbClient, CouchDBException
+};
+use phpFastCache\Core\Pool\{
+  DriverBaseTrait, ExtendedCacheItemPoolInterface
+};
+use phpFastCache\Exceptions\{
+  phpFastCacheDriverException, phpFastCacheInvalidArgumentException, phpFastCacheLogicException
+};
 use phpFastCache\Entities\DriverStatistic;
-use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
-use phpFastCache\Exceptions\phpFastCacheDriverException;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
-use phpFastCache\Exceptions\phpFastCacheLogicException;
 use phpFastCache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 
@@ -56,22 +57,22 @@ class Driver implements ExtendedCacheItemPoolInterface
         } else {
             $clientConfig = $this->getConfig();
 
-            $url = ($clientConfig['ssl'] ? 'https://' : 'http://');
-            if ($clientConfig['username']) {
+            $url = ($clientConfig[ 'ssl' ] ? 'https://' : 'http://');
+            if ($clientConfig[ 'username' ]) {
                 $url .= "{$clientConfig['username']}";
-                if ($clientConfig['password']) {
+                if ($clientConfig[ 'password' ]) {
                     $url .= ":{$clientConfig['password']}";
                 }
                 $url .= '@';
             }
-            $url .= $clientConfig['host'];
+            $url .= $clientConfig[ 'host' ];
             $url .= ":{$clientConfig['port']}";
-            $url .= $clientConfig['path'];
+            $url .= $clientConfig[ 'path' ];
 
             $this->instance = CouchDBClient::create([
               'dbname' => $this->getDatabaseName(),
               'url' => $url,
-              'timeout' => $clientConfig['timeout'],
+              'timeout' => $clientConfig[ 'timeout' ],
             ]);
 
             $this->createDatabase();
@@ -191,7 +192,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function getDatabaseName(): string
     {
-        return $this->getConfigOption( 'database' ) ?: self::COUCHDB_DEFAULT_DB_NAME;
+        return $this->getConfigOption('database') ?: self::COUCHDB_DEFAULT_DB_NAME;
     }
 
     /**
@@ -244,13 +245,13 @@ HELP;
     {
         $defaultConfig = new ArrayObject();
 
-        $defaultConfig['host'] = '127.0.0.1';
-        $defaultConfig['port'] = 5984;
-        $defaultConfig['path'] = '/';
-        $defaultConfig['username'] = '';
-        $defaultConfig['password'] = '';
-        $defaultConfig['ssl'] = false;
-        $defaultConfig['timeout'] = 10;
+        $defaultConfig[ 'host' ] = '127.0.0.1';
+        $defaultConfig[ 'port' ] = 5984;
+        $defaultConfig[ 'path' ] = '/';
+        $defaultConfig[ 'username' ] = '';
+        $defaultConfig[ 'password' ] = '';
+        $defaultConfig[ 'ssl' ] = false;
+        $defaultConfig[ 'timeout' ] = 10;
 
         return $defaultConfig;
     }

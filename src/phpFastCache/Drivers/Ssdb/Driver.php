@@ -14,15 +14,13 @@
 
 namespace phpFastCache\Drivers\Ssdb;
 
-use phpFastCache\Core\Pool\DriverBaseTrait;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use phpFastCache\Entities\DriverStatistic;
-use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
-use phpFastCache\Exceptions\phpFastCacheDriverException;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Exceptions\{
+  phpFastCacheInvalidArgumentException, phpFastCacheDriverCheckException, phpFastCacheDriverException
+};
 use phpFastCache\Util\ArrayObject;
-use phpssdb\Core\SimpleSSDB;
-use phpssdb\Core\SSDBException;
+use phpssdb\Core\{SimpleSSDB, SSDBException};
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -56,9 +54,9 @@ class Driver implements ExtendedCacheItemPoolInterface
         try {
             $clientConfig = $this->getConfig();
 
-            $this->instance = new SimpleSSDB($clientConfig['host'], $clientConfig['port'], $clientConfig['timeout']);
-            if (!empty($clientConfig['password'])) {
-                $this->instance->auth($clientConfig['password']);
+            $this->instance = new SimpleSSDB($clientConfig[ 'host' ], $clientConfig[ 'port' ], $clientConfig[ 'timeout' ]);
+            if (!empty($clientConfig[ 'password' ])) {
+                $this->instance->auth($clientConfig[ 'password' ]);
             }
 
             if (!$this->instance) {
@@ -160,10 +158,10 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         $defaultConfig = new ArrayObject();
 
-        $defaultConfig['host'] = '127.0.0.1';
-        $defaultConfig['port'] = 8888;
-        $defaultConfig['password'] = '';
-        $defaultConfig['timeout'] = 2000;
+        $defaultConfig[ 'host' ] = '127.0.0.1';
+        $defaultConfig[ 'port' ] = 8888;
+        $defaultConfig[ 'password' ] = '';
+        $defaultConfig[ 'timeout' ] = 2000;
 
         return $defaultConfig;
     }

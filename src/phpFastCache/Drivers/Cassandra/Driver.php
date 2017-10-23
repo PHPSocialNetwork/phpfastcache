@@ -16,13 +16,11 @@ namespace phpFastCache\Drivers\Cassandra;
 
 use Cassandra;
 use Cassandra\Session as CassandraSession;
-use phpFastCache\Core\Pool\DriverBaseTrait;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use phpFastCache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use phpFastCache\Entities\DriverStatistic;
-use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
-use phpFastCache\Exceptions\phpFastCacheDriverException;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
-use phpFastCache\Exceptions\phpFastCacheLogicException;
+use phpFastCache\Exceptions\{
+  phpFastCacheInvalidArgumentException, phpFastCacheLogicException
+};
 use phpFastCache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 
@@ -59,11 +57,11 @@ class Driver implements ExtendedCacheItemPoolInterface
             $clientConfig = $this->getConfig();
 
             $clusterBuilder = Cassandra::cluster()
-              ->withContactPoints($clientConfig['host'])
-              ->withPort($clientConfig['port']);
+              ->withContactPoints($clientConfig[ 'host' ])
+              ->withPort($clientConfig[ 'port' ]);
 
-            if (!empty($clientConfig['sslEnabled'])) {
-                if (!empty($clientConfig['sslVerify'])) {
+            if (!empty($clientConfig[ 'sslEnabled' ])) {
+                if (!empty($clientConfig[ 'sslVerify' ])) {
                     $sslBuilder = Cassandra::ssl()->withVerifyFlags(Cassandra::VERIFY_PEER_CERT);
                 } else {
                     $sslBuilder = Cassandra::ssl()->withVerifyFlags(Cassandra::VERIFY_NONE);
@@ -72,10 +70,10 @@ class Driver implements ExtendedCacheItemPoolInterface
                 $clusterBuilder->withSSL($sslBuilder->build());
             }
 
-            $clusterBuilder->withConnectTimeout($clientConfig['timeout']);
+            $clusterBuilder->withConnectTimeout($clientConfig[ 'timeout' ]);
 
-            if ($clientConfig['username']) {
-                $clusterBuilder->withCredentials($clientConfig['username'], $clientConfig['password']);
+            if ($clientConfig[ 'username' ]) {
+                $clusterBuilder->withCredentials($clientConfig[ 'username' ], $clientConfig[ 'password' ]);
             }
 
             $this->instance = $clusterBuilder->build()->connect();
@@ -290,13 +288,13 @@ HELP;
     {
         $defaultConfig = new ArrayObject();
 
-        $defaultConfig['host'] = '127.0.0.1';
-        $defaultConfig['port'] = 9042;
-        $defaultConfig['timeout'] = 2;
-        $defaultConfig['username'] = '';
-        $defaultConfig['password'] = '';
-        $defaultConfig['sslEnabled'] = false;
-        $defaultConfig['sslVerify'] = false;
+        $defaultConfig[ 'host' ] = '127.0.0.1';
+        $defaultConfig[ 'port' ] = 9042;
+        $defaultConfig[ 'timeout' ] = 2;
+        $defaultConfig[ 'username' ] = '';
+        $defaultConfig[ 'password' ] = '';
+        $defaultConfig[ 'sslEnabled' ] = false;
+        $defaultConfig[ 'sslVerify' ] = false;
 
         return $defaultConfig;
     }

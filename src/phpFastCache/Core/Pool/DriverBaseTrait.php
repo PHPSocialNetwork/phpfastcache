@@ -16,9 +16,9 @@ declare(strict_types=1);
 namespace phpFastCache\Core\Pool;
 
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
-use phpFastCache\Exceptions\phpFastCacheLogicException;
+use phpFastCache\Exceptions\{
+  phpFastCacheInvalidArgumentException, phpFastCacheDriverCheckException, phpFastCacheLogicException
+};
 use phpFastCache\Util\ArrayObject;
 
 
@@ -69,7 +69,7 @@ trait DriverBaseTrait
 
         if (!$this->driverCheck()) {
             throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
-        }else {
+        } else {
             $this->driverConnect();
         }
     }
@@ -141,7 +141,7 @@ trait DriverBaseTrait
      */
     protected function decode($value)
     {
-        return unserialize((string) $value);
+        return unserialize((string)$value);
     }
 
     /**
@@ -252,7 +252,7 @@ trait DriverBaseTrait
      */
     public function getDriverName(): string
     {
-        if(!$this->driverName){
+        if (!$this->driverName) {
             $this->driverName = ucfirst(substr(strrchr((new \ReflectionObject($this))->getNamespaceName(), '\\'), 1));
         }
         return $this->driverName;
@@ -282,8 +282,7 @@ trait DriverBaseTrait
             throw new phpFastCacheLogicException('Trying to set tag(s) to an Tag item index: ' . $item->getKey());
         }
 
-        if(!$item->getTags() && !$item->getRemovedTags())
-        {
+        if (!$item->getTags() && !$item->getRemovedTags()) {
             return true;
         }
 

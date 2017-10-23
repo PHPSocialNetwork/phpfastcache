@@ -15,11 +15,12 @@ declare(strict_types=1);
 
 namespace phpFastCache\Drivers\Apc;
 
-use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Core\Item\ItemBaseTrait;
+use phpFastCache\Core\Item\{ExtendedCacheItemInterface, ItemBaseTrait};
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Drivers\Apc\Driver as ApcDriver;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Exceptions\{
+  phpFastCacheInvalidArgumentException, phpFastCacheInvalidArgumentTypeException
+};
 
 /**
  * Class Item
@@ -33,7 +34,7 @@ class Item implements ExtendedCacheItemInterface
      * Item constructor.
      * @param \phpFastCache\Drivers\Apc\Driver $driver
      * @param $key
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws phpFastCacheInvalidArgumentTypeException
      */
     public function __construct(ApcDriver $driver, $key)
     {
@@ -43,7 +44,7 @@ class Item implements ExtendedCacheItemInterface
             $this->driver->setItem($this);
             $this->expirationDate = new \DateTime();
         } else {
-            throw new phpFastCacheInvalidArgumentException(sprintf('$key must be a string, got type "%s" instead.', gettype($key)));
+            throw new phpFastCacheInvalidArgumentTypeException('string', $key);
         }
     }
 

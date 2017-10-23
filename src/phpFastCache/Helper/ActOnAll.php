@@ -15,11 +15,9 @@ declare(strict_types=1);
 
 namespace phpFastCache\Helper;
 
-use phpFastCache\CacheManager;
+use phpFastCache\{CacheManager, EventManager};
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Entities\DriverStatistic;
-use phpFastCache\EventManager;
-use phpFastCache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 
 /**

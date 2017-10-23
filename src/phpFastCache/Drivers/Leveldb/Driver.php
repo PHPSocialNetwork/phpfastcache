@@ -15,13 +15,10 @@
 namespace phpFastCache\Drivers\Leveldb;
 
 use LevelDB as LeveldbClient;
-use phpFastCache\Core\Pool\DriverBaseTrait;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\Core\Pool\IO\IOHelperTrait;
-use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
-use phpFastCache\Exceptions\phpFastCacheDriverException;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
-use phpFastCache\Exceptions\phpFastCacheLogicException;
+use phpFastCache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface, IO\IOHelperTrait};
+use phpFastCache\Exceptions\{
+  phpFastCacheInvalidArgumentException, phpFastCacheLogicException
+};
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -84,7 +81,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return (bool) $this->instance->set($item->getKey(), $this->encode($this->driverPreWrap($item)));
+            return (bool)$this->instance->set($item->getKey(), $this->encode($this->driverPreWrap($item)));
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }

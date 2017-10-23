@@ -19,11 +19,11 @@ use InvalidArgumentException;
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\EventManager;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
-use phpFastCache\Exceptions\phpFastCacheLogicException;
+use phpFastCache\Exceptions\{
+  phpFastCacheInvalidArgumentException, phpFastCacheLogicException
+};
 use phpFastCache\Util\ArrayObject;
-use Psr\Cache\CacheItemInterface;
-use Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\{CacheItemInterface, CacheItemPoolInterface};
 
 
 /**

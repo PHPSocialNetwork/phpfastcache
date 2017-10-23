@@ -16,13 +16,13 @@ declare(strict_types=1);
 namespace phpFastCache\Core\Pool;
 
 use phpFastCache\CacheManager;
+use phpFastCache\EventManager;
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\Entities\ItemBatch;
-use phpFastCache\EventManager;
-use phpFastCache\Exceptions\phpFastCacheCoreException;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
-use phpFastCache\Exceptions\phpFastCacheLogicException;
 use phpFastCache\Util\ClassNamespaceResolverTrait;
+use phpFastCache\Exceptions\{
+  phpFastCacheInvalidArgumentException, phpFastCacheCoreException, phpFastCacheLogicException
+};
 use Psr\Cache\CacheItemInterface;
 
 /**

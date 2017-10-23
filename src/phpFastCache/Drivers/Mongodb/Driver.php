@@ -16,19 +16,16 @@
 namespace phpFastCache\Drivers\Mongodb;
 
 use LogicException;
-use MongoDB\BSON\Binary;
-use MongoDB\BSON\UTCDateTime;
-use MongoDB\Collection;
-use MongoDB\DeleteResult;
-use MongoDB\Driver\Command;
-use MongoDB\Driver\Exception\Exception as MongoDBException;
-use MongoDB\Driver\Manager as MongodbManager;
-use phpFastCache\Core\Pool\DriverBaseTrait;
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
+use MongoDB\{
+  BSON\Binary, BSON\UTCDateTime, Collection, DeleteResult, Driver\Command, Driver\Exception\Exception as MongoDBException, Driver\Manager as MongodbManager
+};
+use phpFastCache\Core\Pool\{
+  DriverBaseTrait, ExtendedCacheItemPoolInterface
+};
 use phpFastCache\Entities\DriverStatistic;
-use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
-use phpFastCache\Exceptions\phpFastCacheDriverException;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
+use phpFastCache\Exceptions\{
+  phpFastCacheDriverException, phpFastCacheInvalidArgumentException
+};
 use phpFastCache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 
@@ -171,11 +168,11 @@ class Driver implements ExtendedCacheItemPoolInterface
              * @todo make an url builder
              */
             $this->instance = $this->instance ?: (new MongodbManager('mongodb://' .
-              ($clientConfig['username'] ?: '') .
-              ($clientConfig['password'] ? ":{$clientConfig['password']}" : '') .
-              ($clientConfig['username'] ? '@' : '') . "{$clientConfig['host']}" .
-              ($clientConfig['port'] != 27017 ? ":{$clientConfig['port']}" : ''), ['connectTimeoutMS' => $clientConfig['timeout'] * 1000]));
-            $this->collection = $this->collection ?: new Collection($this->instance, $clientConfig['databaseName'], $clientConfig['collectionName']);
+              ($clientConfig[ 'username' ] ?: '') .
+              ($clientConfig[ 'password' ] ? ":{$clientConfig['password']}" : '') .
+              ($clientConfig[ 'username' ] ? '@' : '') . "{$clientConfig['host']}" .
+              ($clientConfig[ 'port' ] != 27017 ? ":{$clientConfig['port']}" : ''), ['connectTimeoutMS' => $clientConfig[ 'timeout' ] * 1000]));
+            $this->collection = $this->collection ?: new Collection($this->instance, $clientConfig[ 'databaseName' ], $clientConfig[ 'collectionName' ]);
 
             return true;
         }
@@ -258,14 +255,14 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         $defaultConfig = new ArrayObject();
 
-        $defaultConfig['host'] = '127.0.0.1';
-        $defaultConfig['port'] = 27017;
-        $defaultConfig['timeout'] = 3;
-        $defaultConfig['username'] = '';
-        $defaultConfig['password'] = '';
-        $defaultConfig['servers'] = '';
-        $defaultConfig['collectionName'] = 'Cache';
-        $defaultConfig['databaseName'] = self::MONGODB_DEFAULT_DB_NAME;
+        $defaultConfig[ 'host' ] = '127.0.0.1';
+        $defaultConfig[ 'port' ] = 27017;
+        $defaultConfig[ 'timeout' ] = 3;
+        $defaultConfig[ 'username' ] = '';
+        $defaultConfig[ 'password' ] = '';
+        $defaultConfig[ 'servers' ] = '';
+        $defaultConfig[ 'collectionName' ] = 'Cache';
+        $defaultConfig[ 'databaseName' ] = self::MONGODB_DEFAULT_DB_NAME;
 
         return $defaultConfig;
     }

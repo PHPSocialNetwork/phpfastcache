@@ -17,8 +17,9 @@ namespace phpFastCache\Core\Item;
 
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\EventManager;
-use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
-use phpFastCache\Exceptions\phpFastCacheLogicException;
+use phpFastCache\Exceptions\{
+  phpFastCacheInvalidArgumentException, phpFastCacheLogicException
+};
 
 /**
  * Class ItemExtendedTrait
@@ -188,7 +189,7 @@ trait ItemExtendedTrait
      * @return ExtendedCacheItemInterface
      * @throws phpFastCacheInvalidArgumentException
      */
-    public function increment($step = 1):ExtendedCacheItemInterface
+    public function increment($step = 1): ExtendedCacheItemInterface
     {
         if (is_int($step)) {
             $this->fetched = true;

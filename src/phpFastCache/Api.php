@@ -15,6 +15,9 @@ declare(strict_types=1);
 
 namespace phpFastCache;
 
+use phpFastCache\Exceptions\phpFastCacheIOException;
+use phpFastCache\Exceptions\phpFastCacheLogicException;
+
 /**
  * Class Api
  * @package phpFastCache
@@ -22,6 +25,13 @@ namespace phpFastCache;
 class Api
 {
     protected static $version = '1.3.0';
+
+    /**
+     * Api constructor.
+     */
+    final private function __construct()
+    {
+    }
 
     /**
      * This method will returns the current
@@ -37,6 +47,53 @@ class Api
     public static function getVersion(): string
     {
         return self::$version;
+    }
+
+    /**
+     * @param bool $fallbackOnReadme
+     * @param bool $cacheable
+     * @return string
+     * @throws \phpFastCache\Exceptions\phpFastCacheLogicException
+     * @throws \phpFastCache\Exceptions\phpFastCacheIOException
+     */
+    public static function getPhpFastCacheVersion($fallbackOnReadme = true, $cacheable = true): string
+    {
+        /**
+         * Cache the version statically to improve
+         * performances on multiple calls
+         */
+        static $version;
+
+        if($version && $cacheable){
+            return $version;
+        }
+
+        if(function_exists('shell_exec')){
+            $stdout = shell_exec('git describe --abbrev=0 --tags');
+            if(is_string($stdout)){
+                $version = trim($stdout);
+                return $version;
+            }
+            throw new phpFastCacheLogicException('The git command used to retrieve the PhpFastCache version has failed.');
+        }
+
+        if(!$fallbackOnReadme){
+            throw new phpFastCacheLogicException('shell_exec is disabled therefore the PhpFastCache version cannot be retrieved.');
+        }
+
+        $readmeFilename = __DIR__ . '/../../CHANGELOG.md';
+        if(file_exists($readmeFilename)){
+            $versionPrefix = '## ';
+            $changelog = explode("\n", self::getPhpFastCacheChangelog());
+            foreach ($changelog as $line){
+                if(strpos($line, $versionPrefix) === 0){
+                    $version = trim(str_replace($versionPrefix, '', $line));
+                    return $version;
+                }
+            }
+            throw new phpFastCacheLogicException('Unable to retrieve the PhpFastCache version through the CHANGELOG.md as no valid string were found in it.');
+        }
+        throw new phpFastCacheLogicException('shell_exec being disabled we attempted to retrieve the PhpFastCache version through the CHANGELOG.md file but it is not readable or has been removed.');
     }
 
     /**
@@ -110,5 +167,24 @@ class Api
 - 1.0.0
 -- First initial version
 CHANGELOG;
+    }
+
+    /**
+     * Return the PhpFastCache changelog, as a string.
+     * @return string
+     * @throws phpFastCacheLogicException
+     * @throws phpFastCacheIOException
+     */
+    public static function getPhpFastCacheChangelog(): string
+    {
+        $changelogFilename = __DIR__ . '/../../CHANGELOG.md';
+        if(file_exists($changelogFilename)){
+            $string = str_replace(["\r\n", "\r"], "\n", trim(file_get_contents($changelogFilename)));
+            if($string){
+                return $string;
+            }
+            throw new phpFastCacheLogicException('Unable to retrieve the PhpFastCache changelog as it seems to be empty.');
+        }
+        throw new phpFastCacheIOException('The CHANGELOG.md file is not readable or has been removed.');
     }
 }

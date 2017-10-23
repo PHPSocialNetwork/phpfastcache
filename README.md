@@ -137,6 +137,13 @@ phpFastCache offers you a lot of useful APIs:
 
 It also supports multiple calls, Tagging, Setup Folder for caching. Look at our examples folders for more information.
 
+### PhpFastCache versioning API
+PhpFastCache provides a class that gives you basic information about your PhpFastCache installation
+- Get the API version (Item+Pool interface) with `phpFastCache\Api::GetVersion();`
+- Get the API changelog (Item+Pool interface) `phpFastCache\Api::getChangelog();`
+- Get the PhpFastCache version with `phpFastCache\Api::getPhpFastCacheVersion();`
+- Get the PhpFastCache changelog `phpFastCache\Api::getPhpFastCacheChangelog();`
+
 ---------------------------
 Want to keep it simple ?
 ---------------------------

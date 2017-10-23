@@ -21,7 +21,7 @@ namespace phpFastCache;
  */
 class Api
 {
-    protected static $version = '1.2.5';
+    protected static $version = '1.3.0';
 
     /**
      * This method will returns the current
@@ -46,6 +46,12 @@ class Api
     public static function getChangelog(): string
     {
         return <<<CHANGELOG
+- 1.3.0
+-- Implemented full PHP7 type hint support for ExtendedCacheItemPoolInterface and ExtendedCacheItemInterface
+-- Added instance ID getter (introduced in V7):
+   ExtendedCacheItemPoolInterface::getInstanceId()
+-- The method ExtendedCacheItemPoolInterface::getDefaultConfig() will now return a \phpFastCache\Util\ArrayObject
+
 - 1.2.5
 -- Implemented additional simple helper method to direct access to a config option:
    ExtendedCacheItemPoolInterface::getConfigOption()

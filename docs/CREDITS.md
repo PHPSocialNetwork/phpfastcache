@@ -30,6 +30,7 @@ __phpFastCache Contributors:__    https://github.com/PHPSocialNetwork/phpfastcac
 
 - __Jetbrains__ * for providing us a free IDE licence
 - __Scrutinizer-CI__ * for providing us a free Security Analysis
+- __VersionEye__ * For being an awesome tool that helped us to watch version dependencies. You will be missed, thanks you very much Robert.
 - __Sabine van Lommen__ * from __Zend.com__ for providing us a free developer licence of Zend Server
 - __Lucas (_hammermaps_)__ for the "Zend Data Cache" driver implementation
 

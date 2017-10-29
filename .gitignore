@@ -1,13 +1,1 @@
-.idea/.name
-.idea/dictionaries/Khoa.xml
-.idea/encodings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/phpfastcache.iml
-.idea/scopes/scope_settings.xml
-.idea/vcs.xml
-.idea/workspace.xml
-.idea/copyright/profiles_settings.xml
-*.xml
-vendor/
-composer.phar
+node_modules

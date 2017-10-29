@@ -1,0 +1,354 @@
+*
+{
+  box-sizing: border-box;
+}
+
+body
+{
+  padding: 0;
+  margin: 0;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #606C71;
+}
+
+a
+{
+  color: #1E6BB8;
+  text-decoration: none;
+}
+
+a:hover
+{
+  text-decoration: underline;
+}
+
+abbr[title]
+{
+  text-decoration: none;
+}
+
+.page-header .btn
+{
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 0.3rem;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+}
+
+.page-header .btn + .btn
+{
+  margin-left: 1rem;
+}
+
+.page-header .btn:hover
+{
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.page-header .version
+{
+  font-size: 18px;
+}
+
+.page-header .installation
+{
+  font-size: 18px;
+}
+
+.page-header .installation code
+{
+  opacity: 0.7;
+  background: #000;
+  color: #F90;
+  background-image: linear-gradient(900deg, #222, #333);
+}
+
+@media screen and (min-width: 64em)
+{
+  .page-header .btn
+  {
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em)
+{
+  .page-header .btn
+  {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 42em)
+{
+  .page-header .btn
+  {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .page-header .btn + .btn
+  {
+    margin-top: 1rem;
+    margin-left: 0;
+  }
+}
+
+.page-header
+{
+  color: #FFF;
+  text-align: center;
+  background-color: #159957;
+  background-image: linear-gradient(120deg, #4E00FF, #F90);
+}
+
+@media screen and (min-width: 64em)
+{
+  .page-header
+  {
+    margin-top: 0;
+    padding: 5rem 6rem;
+  }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em)
+{
+  .page-header
+  {
+    margin-top: 0;
+    padding: 3rem 4rem;
+  }
+}
+
+@media screen and (max-width: 42em)
+{
+  .page-header
+  {
+    margin-top: 0;
+    padding: 2rem 1rem;
+  }
+}
+
+.project-name
+{
+  margin-top: 0;
+  margin-bottom: 0.1rem;
+}
+
+@media screen and (min-width: 64em)
+{
+  .project-name
+  {
+    font-size: 3.25rem;
+  }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em)
+{
+  .project-name
+  {
+    font-size: 2.25rem;
+  }
+}
+
+@media screen and (max-width: 42em)
+{
+  .project-name
+  {
+    font-size: 1.75rem;
+  }
+}
+
+.project-tagline
+{
+  margin-bottom: 2rem;
+  font-weight: normal;
+  opacity: 0.7;
+}
+
+@media screen and (min-width: 64em)
+{
+  .project-tagline
+  {
+    font-size: 1.25rem;
+  }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em)
+{
+  .project-tagline
+  {
+    font-size: 1.15rem;
+  }
+}
+
+@media screen and (max-width: 42em)
+{
+  .project-tagline
+  {
+    font-size: 1rem;
+  }
+}
+
+.site-footer
+{
+  padding-top: 2rem;
+  margin-top: 2rem;
+  border-top: solid 1px #EFF0F1;
+}
+
+.site-footer-credits
+{
+  color: #819198;
+}
+
+.panel-collapse
+{
+  word-wrap: break-word;
+}
+
+/**
+ * Courtesy of
+ * https://codepen.io/rdallaire/pen/apoyx/
+ */
+#return-to-top
+{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgb(0, 0, 0);
+  background: rgba(0, 0, 0, 0.7);
+  width: 50px;
+  height: 50px;
+  text-decoration: none;
+  -webkit-border-radius: 35px;
+  -moz-border-radius: 35px;
+  border-radius: 35px;
+  opacity: 0;
+  -webkit-transition: all 0.6s linear;
+  -moz-transition: all 0.6s ease;
+  -ms-transition: all 0.6s ease;
+  -o-transition: all 0.6s ease;
+  transition: all 0.6s ease;
+  pointer-events: none;
+}
+
+#return-to-top.visible
+{
+  opacity: 1;
+  pointer-events: unset;
+}
+
+#return-to-top i
+{
+  color: #FFF;
+  margin: 0;
+  position: relative;
+  left: 16px;
+  top: 13px;
+  font-size: 19px;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+#return-to-top:hover
+{
+  background: rgba(0, 0, 0, 0.9);
+}
+
+#return-to-top:hover i
+{
+  color: #FFF;
+  top: 5px;
+}
+
+::-moz-selection
+{
+  color: #A6FF91;
+  background: #403C3B;
+}
+
+::selection
+{
+  color: #A6FF91;
+  background: #403C3B;
+}
+
+table th, table td {
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+table tr {
+  background-color: #fff;
+  border-top: 1px solid #c6cbd1;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+/**
+ * Helpers
+ */
+.tmar1
+{
+  margin-top: 1rem;
+}
+
+.tmar2
+{
+  margin-top: 2rem;
+}
+
+.rmar2
+{
+  margin-right: 2rem;
+}
+
+.fpad2
+{
+  padding: 2rem;
+}
+
+.hpad2
+{
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.vpad1
+{
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.vpad2
+{
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+span.unselectable
+{
+  pointer-events: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}

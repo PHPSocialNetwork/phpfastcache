@@ -1,0 +1,102 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="ExceptionsAnnotatingAndHandlingInspection" enabled="true" level="TYPO" enabled_by_default="true" />
+    <inspection_tool class="ForgottenDebugOutputInspection" enabled="true" level="ERROR" enabled_by_default="true">
+      <option name="configuration">
+        <list>
+          <option value="\Codeception\Util\Debug::debug" />
+          <option value="\Codeception\Util\Debug::pause" />
+          <option value="\Doctrine\Common\Util\Debug::dump" />
+          <option value="\Doctrine\Common\Util\Debug::export" />
+          <option value="\Illuminate\Support\Debug\Dumper::dump" />
+          <option value="\Symfony\Component\Debug\Debug::enable" />
+          <option value="\Symfony\Component\Debug\DebugClassLoader::enable" />
+          <option value="\Symfony\Component\Debug\ErrorHandler::register" />
+          <option value="\Symfony\Component\Debug\ExceptionHandler::register" />
+          <option value="\TYPO3\CMS\Core\Utility\DebugUtility::debug" />
+          <option value="\Zend\Debug\Debug::dump" />
+          <option value="\Zend\Di\Display\Console::export" />
+          <option value="dd" />
+          <option value="debug_print_backtrace" />
+          <option value="debug_zval_dump" />
+          <option value="dpm" />
+          <option value="dpq" />
+          <option value="dsm" />
+          <option value="dvm" />
+          <option value="error_log" />
+          <option value="kpr" />
+          <option value="phpinfo" />
+          <option value="print_r" />
+          <option value="var_dump" />
+          <option value="var_export" />
+          <option value="xdebug_break" />
+          <option value="xdebug_call_class" />
+          <option value="xdebug_call_file" />
+          <option value="xdebug_call_function" />
+          <option value="xdebug_call_line" />
+          <option value="xdebug_code_coverage_started" />
+          <option value="xdebug_debug_zval" />
+          <option value="xdebug_debug_zval_stdout" />
+          <option value="xdebug_dump_superglobals" />
+          <option value="xdebug_enable" />
+          <option value="xdebug_get_code_coverage" />
+          <option value="xdebug_get_collected_errors" />
+          <option value="xdebug_get_declared_vars" />
+          <option value="xdebug_get_function_stack" />
+          <option value="xdebug_get_headers" />
+          <option value="xdebug_get_monitored_functions" />
+          <option value="xdebug_get_profiler_filename" />
+          <option value="xdebug_get_stack_depth" />
+          <option value="xdebug_get_tracefile_name" />
+          <option value="xdebug_is_enabled" />
+          <option value="xdebug_memory_usage" />
+          <option value="xdebug_peak_memory_usage" />
+          <option value="xdebug_print_function_stack" />
+          <option value="xdebug_start_code_coverage" />
+          <option value="xdebug_start_error_collection" />
+          <option value="xdebug_start_function_monitor" />
+          <option value="xdebug_start_trace" />
+          <option value="xdebug_stop_code_coverage" />
+          <option value="xdebug_stop_error_collection" />
+          <option value="xdebug_stop_function_monitor" />
+          <option value="xdebug_stop_trace" />
+          <option value="xdebug_time_index" />
+          <option value="xdebug_var_dump" />
+        </list>
+      </option>
+      <option name="migratedIntoUserSpace" value="true" />
+    </inspection_tool>
+    <inspection_tool class="PhpDocMissingThrowsInspection" enabled="true" level="INFORMATION" enabled_by_default="true" />
+    <inspection_tool class="SecurityAdvisoriesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="optionConfiguration">
+        <list>
+          <option value="behat/behat" />
+          <option value="composer/composer" />
+          <option value="friendsofphp/php-cs-fixer" />
+          <option value="jakub-onderka/php-parallel-lint" />
+          <option value="johnkary/phpunit-speedtrap" />
+          <option value="mockery/mockery" />
+          <option value="pdepend/pdepend" />
+          <option value="phing/phing" />
+          <option value="phpmd/phpmd" />
+          <option value="phpro/grumphp" />
+          <option value="phpspec/phpspec" />
+          <option value="phpspec/prophecy" />
+          <option value="phpstan/phpstan" />
+          <option value="phpunit/dbunit" />
+          <option value="phpunit/phpunit" />
+          <option value="povils/phpmnd" />
+          <option value="satooshi/php-coveralls" />
+          <option value="sebastian/phpcpd" />
+          <option value="slevomat/coding-standard" />
+          <option value="squizlabs/php_codesniffer" />
+          <option value="symfony/phpunit-bridge" />
+          <option value="vimeo/psalm" />
+        </list>
+      </option>
+      <option name="optionConfigurationMigrated" value="true" />
+    </inspection_tool>
+    <inspection_tool class="ThrowRawExceptionInspection" enabled="true" level="TYPO" enabled_by_default="true" />
+  </profile>
+</component>

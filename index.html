@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <title>PhpFastCache - A PHP library made for building reactive apps</title>
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+
+    <!-- SEO METAS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="PhpFastCache is an abstract PHP library made for building reactive apps using various backend such as Redis, Couchbase, Cassandra, etc. One simple php caching class to improve your website speed."/>
+    <meta name="keywords" content="php fast cache, php caching class, php cache class, simple php cache"/>
+
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="http://phpfastcache.dev.geolim4.com/website/"/>
+    <meta property="og:image" content="http://phpfastcache.dev.geolim4.com/website/images/og_512.png"/>
+    <meta property="og:title"content="PhpFastCache - A PHP library made for building reactive apps"/>
+    <meta property="og:description" content="PhpFastCache is an abstract PHP library made for building reactive apps using various backend such as Redis, Couchbase, Cassandra, etc. One simple php caching class to improve your website speed."/>
+
+    <!-- CSS -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700'
+          rel='stylesheet'
+          type='text/css'>
+
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+          crossorigin="anonymous">
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="./css/normalize.css"
+          media="screen">
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="./css/app.css"
+          media="screen">
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="./css/app-responsive.css"
+          media="screen">
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="./css/github-light.css"
+          media="screen">
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="./lib/highlight/styles/ir-black.css"
+          media="screen">
+</head>
+<body>
+<section class="page-header">
+    <a href="https://github.com/PHPSocialNetwork/phpfastcache/fork" target="_blank">
+        <img style="position: absolute; top: 0; right: 0; border: 0;"
+             src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67"
+             alt="Fork me on GitHub"
+             data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png">
+    </a>
+    <img src="./images/icon.svg" width="100">
+    <h1 class="project-name">PhpFastCache</h1>
+    <h2 class="project-tagline">A PHP library made for building reactive apps</h2>
+    <a href="https://github.com/PHPSocialNetwork/phpfastcache" class="btn">View on GitHub</a>
+    <a href="https://github.com/PHPSocialNetwork/phpfastcache/zipball/final" class="btn">Download .zip</a>
+    <a href="https://github.com/PHPSocialNetwork/phpfastcache/tarball/final" class="btn">Download .tar.gz</a>
+    <div class="version tmar1">
+        Latest <abbr title="The actual version published on 'final' branch">stable</abbr> version: <span class="label label-primary"
+                                     data-object-src="https://raw.githubusercontent.com/PHPSocialNetwork/phpfastcache/final/CHANGELOG.md"
+                                     data-object="pfc-version"></span>
+    </div>
+    <div class="installation tmar1">
+        <code onclick="window.getSelection().selectAllChildren($('.code', $(this)).get()[0]);"
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="Just click and copy :) ">
+            <span class="unselectable">$ </span>
+            <span class="code">composer require phpfastcache/phpfastcache</span>
+        </code>
+    </div>
+</section>
+
+<section class="page-content container">
+    <div>
+        <!-- Tab panes -->
+        <ul class="nav nav-tabs tabs-up" id="main-tabs">
+            <li class="active" data-anchor="#readme">
+                <a data-href="./ajax/pages/readme.html"
+                   href="#readme"
+                   class="media_node span"
+                   id="readme_tab"
+                   data-toggle="tab"
+                   data-format="markdown"
+                   rel="tooltip"><i class="fa fa-book" aria-hidden="true"></i> Readme</a>
+            </li>
+            <li data-anchor="#config-options">
+                <a data-href="https://raw.githubusercontent.com/PHPSocialNetwork/phpfastcache/final/docs/OPTIONS.md"
+                   href="#config-options"
+                   class="media_node span"
+                   id="friends_list_tab"
+                   data-toggle="tab"
+                   data-format="markdown"
+                   rel="tooltip"><i class="fa fa-cog" aria-hidden="true"></i> Options</a>
+            </li>
+            <li data-anchor="#events">
+                <a data-href="https://raw.githubusercontent.com/PHPSocialNetwork/phpfastcache/final/docs/EVENTS.md"
+                   href="#events"
+                   class="media_node span"
+                   id="events_tab"
+                   data-toggle="tab"
+                   data-format="markdown"
+                   rel="tooltip"><i class="fa fa-plug" aria-hidden="true"></i> Events</a>
+            </li>
+
+            <li data-anchor="#authors">
+                <a data-href="./ajax/pages/authors.html"
+                   href="#authors"
+                   class="media_node span"
+                   id="authors_tab"
+                   data-toggle="tab"
+                   data-format="html"
+                   rel="tooltip"><i class="fa fa-address-card-o" aria-hidden="true"></i> Authors</a>
+            </li>
+            <li data-anchor="#credits">
+                <a data-href="https://raw.githubusercontent.com/PHPSocialNetwork/phpfastcache/final/docs/CREDITS.md"
+                   href="#credits"
+                   class="media_node span"
+                   id="author_tab"
+                   data-toggle="tab"
+                   data-format="markdown"
+                   rel="tooltip"><i class="fa fa-users" aria-hidden="true"></i> Credits</a>
+            </li>
+            <li data-anchor="#licence">
+                <a data-href="https://raw.githubusercontent.com/PHPSocialNetwork/phpfastcache/final/LICENCE"
+                   href="#licence"
+                   class="media_node span"
+                   id="licence_tab"
+                   data-toggle="tab"
+                   data-format="text"
+                   rel="tooltip"><i class="fa fa-gavel" aria-hidden="true"></i> Licence (MIT)</a>
+            </li>
+        </ul>
+
+
+        <div class="tab-content">
+            <div class="tab-pane fade fpad2 in active" id="readme">
+                <div class="text-center">
+                    <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+                </div>
+            </div>
+            <div class="tab-pane fade fpad2" id="config-options">
+                <div class="text-center">
+                    <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+                </div>
+            </div>
+            <div class="tab-pane fade fpad2" id="events">
+                <div class="text-center">
+                    <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+                </div>
+            </div>
+            <div class="tab-pane fade fpad2" id="licence">
+                <div class="text-center">
+                    <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+                </div>
+            </div>
+            <div class="tab-pane fade fpad2" id="credits">
+                <div class="text-center">
+                    <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+                </div>
+            </div>
+            <div class="tab-pane fade fpad2" id="authors">
+                <div class="text-center">
+                    <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="page-footer">
+    <footer class="site-footer">
+        <span class="site-footer-credits">This page was build with <span style="color: red;">♥</span> using some fabulous web components like:
+            <a href="https://getbootstrap.com/" target="_blank">Bootstrap 3</a>,
+            <a href="http://fontawesome.io/" target="_blank">Font Awesome</a>,
+            <a href="https://highlightjs.org/" target="_blank">highlight.Js</a>,
+            and many others.
+        </span>
+    </footer>
+</section>
+
+<a href="javascript:" id="return-to-top"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+
+<!-- The best for the end: JS -->
+<script src="https://use.fontawesome.com/bb19b964cd.js"
+        crossorigin="anonymous"></script>
+<script
+        src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.rawgit.com/showdownjs/showdown/master/dist/showdown.min.js"
+        crossorigin="anonymous"></script>
+<script src="lib/highlight/highlight.pack.js"
+        crossorigin="anonymous"></script>
+<script src="lib/tabcollapse/bootstrap-tabcollapse.js"
+        crossorigin="anonymous"></script>
+<script src="js/app.js"
+        crossorigin="anonymous"></script>
+</body>
+</html>

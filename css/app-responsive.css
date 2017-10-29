@@ -1,0 +1,166 @@
+@media screen and (min-width: 64em)
+{
+  .page-header .btn
+  {
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em)
+{
+  .page-header .btn
+  {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 42em)
+{
+  .page-header .btn
+  {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .page-header .btn + .btn
+  {
+    margin-top: 1rem;
+    margin-left: 0;
+  }
+
+  .page-header .installation
+  {
+    font-size: 1.3rem;
+  }
+}
+
+@media screen and (min-width: 64em)
+{
+  .page-header
+  {
+    margin-top: 0;
+    padding: 4rem 6rem 3rem 6rem;
+  }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em)
+{
+  .page-header
+  {
+    margin-top: 0;
+    padding: 3rem 4rem;
+  }
+}
+
+@media screen and (max-width: 42em)
+{
+  .page-header
+  {
+    margin-top: 0;
+    padding: 2rem 1rem;
+  }
+}
+
+@media screen and (min-width: 64em)
+{
+  .project-name
+  {
+    font-size: 3.25rem;
+  }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em)
+{
+  .project-name
+  {
+    font-size: 2.25rem;
+  }
+}
+
+@media screen and (max-width: 42em)
+{
+  .project-name
+  {
+    font-size: 1.75rem;
+  }
+}
+
+@media screen and (min-width: 64em)
+{
+  .project-tagline
+  {
+    font-size: 1.25rem;
+  }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em)
+{
+  .project-tagline
+  {
+    font-size: 1.15rem;
+  }
+}
+
+@media screen and (max-width: 42em)
+{
+  .project-tagline
+  {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (min-width: 64em)
+{
+  .page-footer
+  {
+    max-width: 64rem;
+    padding: 2rem 0rem;
+    margin: 0 auto;
+    font-size: 1.1rem;
+  }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em)
+{
+  .page-footer
+  {
+    padding: 2rem 4rem;
+    font-size: 1.1rem;
+  }
+}
+
+@media screen and (max-width: 42em)
+{
+  .page-footer
+  {
+    padding: 2rem 1rem;
+    font-size: 1rem;
+  }
+}
+
+@media screen and (min-width: 64em)
+{
+  .site-footer
+  {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em)
+{
+  .site-footer
+  {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 42em)
+{
+  .site-footer
+  {
+    font-size: 0.9rem;
+  }
+}

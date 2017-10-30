@@ -22,7 +22,6 @@ $(document).ready(function () {
           $(target).html('<div class="text-center"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>');
         }
       }).done(function (data) {
-        console.log($(target));
         switch (format)
         {
           case 'markdown':

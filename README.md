@@ -9,6 +9,8 @@ Simple Yet Powerful PHP Caching Class
 More information in [Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki)
 One Class uses for All Cache. You don't need to rewrite your code many times again.
 
+### PHP7 Strict types enforced
+As of the V7 PhpFastCache enforces the php7 strict types to make sure that it's completely php7 compatible and is type aware.
 
 ### Supported drivers at this day *
 :bulb: Feel free to propose a driver by making a new **Pull Request**, they are welcome !

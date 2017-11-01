@@ -61,24 +61,16 @@ $(document).ready(function () {
           $(this).attr('data-format')
         );
       });
-      //if(target.length){
-
-      /*    hydrateElementAsynchronously(
-           target.data('href'),
-           target,
-           target.attr('data-format')
-          );*/
-      //}
     }
-    // ...
   });
-  // define what element should be observed by the observer
-// and what types of mutations trigger the callback
+  /**
+   * Define what element should be observed by the observer
+   * and what types of mutations trigger the callback
+   */
   observer.observe(document, {
     childList: true,
     subtree: true,
   });
-
 
   /**
    * Ajax Tabs
@@ -135,6 +127,9 @@ $(document).ready(function () {
     }, 500);
   });
 
+  /**
+   * Bind tooltips
+   */
   $('[data-toggle="tooltip"]').tooltip();
 
   /**

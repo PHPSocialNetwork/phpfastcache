@@ -10,6 +10,7 @@
  * @author Lucas Brucksch <support@hammermaps.de>
  *
  */
+declare(strict_types=1);
 
 namespace phpFastCache\Drivers\Zenddisk;
 

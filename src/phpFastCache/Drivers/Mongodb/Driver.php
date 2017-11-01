@@ -12,6 +12,7 @@
  * @author Fabio Covolo Mazzo (fabiocmazzo) <fabiomazzo@gmail.com>
  *
  */
+declare(strict_types=1);
 
 namespace phpFastCache\Drivers\Mongodb;
 

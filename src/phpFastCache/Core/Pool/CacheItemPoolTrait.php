@@ -128,8 +128,7 @@ trait CacheItemPoolTrait
                         $item->set($driverData);
                         $item->expiresAt($this->driverUnwrapEdate($driverArray));
 
-                        if ($this->config[ 'itemDetailedDate' ]) {
-
+                        if ($this->getConfigOption( 'itemDetailedDate')) {
                             /**
                              * If the itemDetailedDate has been
                              * set after caching, we MUST inject
@@ -159,7 +158,7 @@ trait CacheItemPoolTrait
                               ->expiresAfter(abs((int)$this->getConfig()[ 'defaultTtl' ]))
                               ->setHit(false)
                               ->setTags([]);
-                            if ($this->config[ 'itemDetailedDate' ]) {
+                            if ($this->getConfigOption( 'itemDetailedDate')) {
 
                                 /**
                                  * If the itemDetailedDate has been

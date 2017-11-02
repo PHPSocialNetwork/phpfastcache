@@ -28,7 +28,9 @@ use phpFastCache\Exceptions\{
  */
 class Item implements ExtendedCacheItemInterface
 {
-    use ItemBaseTrait;
+    use ItemBaseTrait{
+        ItemBaseTrait::__construct as __BaseConstruct;
+    }
 
     /**
      * Item constructor.
@@ -38,14 +40,7 @@ class Item implements ExtendedCacheItemInterface
      */
     public function __construct(SsdbDriver $driver, $key)
     {
-        if (is_string($key)) {
-            $this->key = $key;
-            $this->driver = $driver;
-            $this->driver->setItem($this);
-            $this->expirationDate = new \DateTime();
-        } else {
-            throw new phpFastCacheInvalidArgumentTypeException('string', $key);
-        }
+        $this->__BaseConstruct($driver, $key);
     }
 
     /**

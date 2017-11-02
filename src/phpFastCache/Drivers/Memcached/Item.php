@@ -28,24 +28,19 @@ use phpFastCache\Exceptions\{
  */
 class Item implements ExtendedCacheItemInterface
 {
-    use ItemBaseTrait;
+    use ItemBaseTrait{
+        ItemBaseTrait::__construct as __BaseConstruct;
+    }
 
     /**
      * Item constructor.
-     * @param \phpFastCache\Drivers\Memcache\Driver $driver
+     * @param \phpFastCache\Drivers\Memcached\Driver $driver
      * @param $key
      * @throws phpFastCacheInvalidArgumentException
      */
     public function __construct(MemcachedDriver $driver, $key)
     {
-        if (is_string($key)) {
-            $this->key = $key;
-            $this->driver = $driver;
-            $this->driver->setItem($this);
-            $this->expirationDate = new \DateTime();
-        } else {
-            throw new phpFastCacheInvalidArgumentTypeException('string', $key);
-        }
+        $this->__BaseConstruct($driver, $key);
     }
 
     /**

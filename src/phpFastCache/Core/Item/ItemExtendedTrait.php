@@ -18,7 +18,7 @@ namespace phpFastCache\Core\Item;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\EventManager;
 use phpFastCache\Exceptions\{
-  phpFastCacheInvalidArgumentException, phpFastCacheLogicException
+  phpFastCacheInvalidArgumentException, phpFastCacheInvalidArgumentTypeException, phpFastCacheLogicException
 };
 
 /**
@@ -55,6 +55,28 @@ trait ItemExtendedTrait
      * @var string
      */
     protected $encodedKey;
+
+    /**
+     * Item constructor.
+     * @param ExtendedCacheItemPoolInterface $driver
+     * @param $key
+     * @throws phpFastCacheInvalidArgumentException
+     */
+    public function __construct(ExtendedCacheItemPoolInterface $driver, $key)
+    {
+        if (is_string($key)) {
+            $this->key = $key;
+            $this->driver = $driver;
+            $this->driver->setItem($this);
+            $this->expirationDate = new \DateTime();
+            if($this->driver->getConfigOption('itemDetailedDate')){
+                $this->creationDate = new \DateTime();
+                $this->modificationDate = new \DateTime();
+            }
+        } else {
+            throw new phpFastCacheInvalidArgumentTypeException('string', $key);
+        }
+    }
 
     /**
      * @return string

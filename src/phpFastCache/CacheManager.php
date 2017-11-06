@@ -39,6 +39,7 @@ use phpFastCache\Exceptions\{
  * @method static ExtendedCacheItemPoolInterface Mongodb() Mongodb($config = []) Return a driver "Mongodb" instance
  * @method static ExtendedCacheItemPoolInterface Predis() Predis($config = []) Return a driver "Predis" instance
  * @method static ExtendedCacheItemPoolInterface Redis() Redis($config = []) Return a driver "Pedis" instance
+ * @method static ExtendedCacheItemPoolInterface Riak() Riak($config = []) Return a driver "Riak" instance
  * @method static ExtendedCacheItemPoolInterface Sqlite() Sqlite($config = []) Return a driver "Sqlite" instance
  * @method static ExtendedCacheItemPoolInterface Ssdb() Ssdb($config = []) Return a driver "Ssdb" instance
  * @method static ExtendedCacheItemPoolInterface Wincache() Wincache($config = []) Return a driver "Wincache" instance
@@ -230,7 +231,7 @@ class CacheManager
                     self::$instances[ $instance ] = new $class($config, $instance);
                     self::$instances[ $instance ]->setEventManager(EventManager::getInstance());
                 } else {
-                    throw new phpFastCacheDriverNotFoundException('The driver "%s" does not exists', $driver);
+                    throw new phpFastCacheDriverNotFoundException(sprintf('The driver "%s" does not exists', $driver));
                 }
             } catch (phpFastCacheDriverCheckException $e) {
                 if ($config[ 'fallback' ]) {
@@ -242,7 +243,7 @@ class CacheManager
                                 self::$instances[ $instance ] = new $class($config, $instance);
                                 self::$instances[ $instance ]->setEventManager(EventManager::getInstance());
                             } else {
-                                throw new phpFastCacheDriverNotFoundException('The driver "%s" does not exists', $driver);
+                                throw new phpFastCacheDriverNotFoundException(sprintf('The driver "%s" does not exists', $driver));
                             }
                             trigger_error(sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver,
                               $fallback), E_USER_WARNING);

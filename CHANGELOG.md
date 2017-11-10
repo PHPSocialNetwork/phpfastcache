@@ -1,3 +1,18 @@
+## 5.0.19
+##### 10 november 2017
+- __Global__
+    - Removed VersionEye badge :sob: (@geolim4)
+    - Added VersionEye mention to credits (@geolim4)
+    - Added comprehensive changelog Geolim4
+    - Updated CREDITS.txt to markdown file (@geolim4)
+- __Core__
+    - Fixed #529 // Memory leak caused by item tags (@geolim4)
+- __Drivers__
+    - Fixed #518 // Memcached seems get() not working	Geolim4
+- __Tests__
+    - Fixed hhvm build with subprocesses (@geolim4)
+    - Added test for option "itemDetailedDate" (@geolim4)
+
 ## 5.0.18
 ##### 16 september 2017
 - Fixed #505 // 'auto' driver causes each driver to instantiate, instead of stopping after first (@Geolim4)

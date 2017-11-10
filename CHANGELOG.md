@@ -1,4 +1,4 @@
-## 6.0.6
+## 6.0.7
 ##### 10 november 2017
 - __Global__
     - Removed VersionEye badge :sob: (@geolim4)

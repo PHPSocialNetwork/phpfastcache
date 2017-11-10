@@ -1,3 +1,29 @@
+## 7.0.0-alpha2
+##### 10 november 2017
+- __Global__
+    - Fixed some typo on CREDITS.md (@geolim4)
+    - Added Strict types support (@geolim4)
+    - Added grouped namespaces (@geolim4)
+    - Added VersionEye mention to credits (@geolim4)
+    - Added OPTIONS.md (@geolim4)
+    - Removed VersionEye badge :sob: (@geolim4)
+    - Improved our fabulous API class to add the changelog/PhpFastCache version support (@geolim4)
+    - Updated readme to add php7 strict types mention (@geolim4)
+    - Updated EVENTS.md @geolim4)
+    - Update withoutComposer.php (@Abs)
+    - Updated CREDITS.txt to markdown file (@geolim4)
+- __Core__
+    - Fixed #529 // Memory leak caused by item tags (@geolim4)
+    - Fixed missing sprintf in CacheManager + Added Riak method annotation (@geolim4)
+    - Updated API version (@geolim4)
+    - Updated composer files (@geolim4)
+- __Drivers__
+    - Fixed #517 // Couchbase error (@geolim4)
+    - Fixed Riak dependency (@geolim4)
+- __Tests__
+    - Fixed hhvm build with subprocesses (@geolim4)
+    - Added test for option "itemDetailedDate" (@geolim4)
+
 ## 7.0.0-alpha
 ##### 18 october 2017
 - __Global__

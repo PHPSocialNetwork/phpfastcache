@@ -1,4 +1,20 @@
 ## 6.0.6
+##### 10 november 2017
+- __Global__
+    - Removed VersionEye badge :sob: (@geolim4)
+    - Added VersionEye mention to credits (@geolim4)
+    - Added comprehensive changelog	Geolim4
+    - Added tests against php 7.2 Geolim4
+    - Updated CREDITS.txt to markdown file (@geolim4)
+    - Updated EVENTS.md (@geolim4)
+    - Added OPTIONS.md	27/10/2017 19:42	Geolim4
+- __Core__
+    - Fixed #529 // Memory leak caused by item tags (@geolim4)
+- __Tests__
+    - Fixed hhvm build with subprocesses (@geolim4)
+    - Added test for option "itemDetailedDate" (@geolim4)
+
+## 6.0.6
 ##### 19 october 2017
 - Added Semver badge (@Geolim4)
 - Added comprehensive changelog (@Geolim4)

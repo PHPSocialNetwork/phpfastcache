@@ -40,14 +40,18 @@ class CacheConditionalHelper
     /**
      * @param string $cacheKey
      * @param callable $callback
+     * @param int|\DateInterval $expiresAfter
      * @return mixed
      */
-    public function get($cacheKey, callable $callback)
+    public function get($cacheKey, callable $callback, $expiresAfter = null)
     {
         $cacheItem = $this->cacheInstance->getItem($cacheKey);
 
         if (!$cacheItem->isHit()) {
             $cacheItem->set($callback());
+            if($expiresAfter){
+                $cacheItem->expiresAfter($expiresAfter);
+            }
             $this->cacheInstance->save($cacheItem);
         }
 

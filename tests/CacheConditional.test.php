@@ -72,4 +72,30 @@ if($cacheValue === $RandomCacheValue){
 }
 
 $cacheInstance->clear();
+
+/**
+ * Test TTL
+ * @since 7.0
+ */
+$ttl = 5;
+$RandomCacheValue = str_shuffle(uniqid('pfc', true));
+$cacheInstance->detachAllItems();
+unset($cacheItem);
+
+$cacheValue = (new CacheConditional($cacheInstance))->get($cacheKey, function() use ($cacheKey, $testHelper, $RandomCacheValue){
+    return $RandomCacheValue;
+}, $ttl);
+
+$testHelper->printText(sprintf('Sleeping for %d seconds...', $ttl));
+sleep($ttl + 1);
+$cacheInstance->detachAllItems();
+$cacheItem = $cacheInstance->getItem($cacheKey);
+
+if(!$cacheItem->isHit()){
+    $testHelper->printPassText(sprintf('The cache promise ttl successfully expired the cache after %d seconds', $ttl));
+}else{
+    $testHelper->printFailText(sprintf('The cache promise ttl does not expired the cache after %d seconds', $ttl));
+}
+
+$cacheInstance->clear();
 $testHelper->terminateTest();

@@ -21,33 +21,39 @@ $driverInstance = CacheManager::getInstance($defaultDriver, [
   'cacheSlamsTimeout' => 20
 ]);
 
-EventManager::getInstance()->onCacheGetItemInSlamBatch(function(ExtendedCacheItemPoolInterface $itemPool, ItemBatch $driverData, $cacheSlamsSpendSeconds) use ($testHelper){
-    $testHelper->printText("Looping in batch for {$cacheSlamsSpendSeconds} second(s) with a batch from " . $driverData->getItemDate()->format(\DateTime::W3C));
-});
+if(!$testHelper->isHHVM()){
 
-$testHelper->runSubProcess('CacheSlamsProtection');
-/**
- * Give some time to the
- * subprocess to start
- * just like a concurrent
- * php request
- */
-usleep(mt_rand(250000, 800000));
+    EventManager::getInstance()->onCacheGetItemInSlamBatch(function(ExtendedCacheItemPoolInterface $itemPool, ItemBatch $driverData, $cacheSlamsSpendSeconds) use ($testHelper){
+        $testHelper->printText("Looping in batch for {$cacheSlamsSpendSeconds} second(s) with a batch from " . $driverData->getItemDate()->format(\DateTime::W3C));
+    });
 
-$item = $driverInstance->getItem('TestCacheSlamsProtection');
+    $testHelper->runSubProcess('CacheSlamsProtection');
+    /**
+     * Give some time to the
+     * subprocess to start
+     * just like a concurrent
+     * php request
+     */
+    usleep(mt_rand(250000, 800000));
 
-/**
- * @see CacheSlamsProtection.subprocess.php:28
- */
-if($item->isHit() && $item->get() === 1337){
-    $testHelper->printPassText('The batch has expired and returned a non-empty item with expected value: ' . $item->get());
+    $item = $driverInstance->getItem('TestCacheSlamsProtection');
+
+    /**
+     * @see CacheSlamsProtection.subprocess.php:28
+     */
+    if($item->isHit() && $item->get() === 1337){
+        $testHelper->printPassText('The batch has expired and returned a non-empty item with expected value: ' . $item->get());
+    }else{
+        $testHelper->printFailText('The batch has expired and returned an empty item with expected value: ' . print_r($item->get(), true));
+    }
+
+    /**
+     * Cleanup the driver
+     */
+    $driverInstance->deleteItem($item->getKey());
+
 }else{
-    $testHelper->printFailText('The batch has expired and returned an empty item with expected value: ' . print_r($item->get(), true));
+    $testHelper->printSkipText('Test ignored on HHVM builds due to sub-process issues with C.I.');
 }
-
-/**
- * Cleanup the driver
- */
-$driverInstance->deleteItem($item->getKey());
 
 $testHelper->terminateTest();

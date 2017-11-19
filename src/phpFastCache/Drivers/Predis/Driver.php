@@ -163,7 +163,7 @@ HELP;
         return (new DriverStatistic())
           ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setRawData($info)
-          ->setSize($size)
+          ->setSize((int) $size)
           ->setInfo(sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
             $version, $date->format(DATE_RFC2822)));
     }

@@ -41,7 +41,7 @@ foreach ($list as $file) {
      * @todo Make the exclusions much cleaner
      */
     if (strpos($file, '/vendor/composer') === false && strpos($file, '/bin/stubs') === false) {
-        exec('php -l "' . realpath($file) . '"', $output, $status);
+        exec((defined('HHVM_VERSION') ? 'hhvm' : 'php') . ' -l "' . realpath($file) . '"', $output, $status);
     } else {
         echo '[SKIP] ' . $file;
         echo "\n";

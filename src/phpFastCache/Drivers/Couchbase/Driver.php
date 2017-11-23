@@ -109,7 +109,11 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return (bool)$this->getBucket()->upsert($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), ['expiry' => $item->getTtl()]);
+            try {
+                return (bool)$this->getBucket()->upsert($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), ['expiry' => $item->getTtl()]);
+            } catch (\CouchbaseException $e) {
+                return false;
+            }
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -126,7 +130,11 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return (bool)$this->getBucket()->remove($item->getEncodedKey());
+            try{
+                return (bool)$this->getBucket()->remove($item->getEncodedKey());
+            }catch (\Couchbase\Exception $e){
+                return $e->getCode() === COUCHBASE_KEY_ENOENT;
+            }
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }

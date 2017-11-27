@@ -54,9 +54,9 @@ class Psr16Adapter implements CacheInterface
     public function get($key, $default = null)
     {
         try {
-            $cacheItemValue = $this->internalCacheInstance->getItem($key)->get();
-            if ($cacheItemValue !== null) {
-                return $cacheItemValue;
+            $cacheItem = $this->internalCacheInstance->getItem($key);
+            if (!$cacheItem->isExpired() && $cacheItem->get() !== null) {
+                return $cacheItem->get();
             } else {
                 return $default;
             }
@@ -181,7 +181,8 @@ class Psr16Adapter implements CacheInterface
     public function has($key)
     {
         try {
-            return $this->internalCacheInstance->getItem($key)->isHit();
+            $cacheItem = $this->internalCacheInstance->getItem($key);
+            return $cacheItem->isHit() && !$cacheItem->isExpired();
         } catch (phpFastCacheInvalidArgumentException $e) {
             throw new phpFastCacheSimpleCacheException($e->getMessage(), null, $e);
         }

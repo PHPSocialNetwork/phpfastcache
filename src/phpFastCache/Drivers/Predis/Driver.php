@@ -116,7 +116,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return (bool)$this->instance->del([$item->getKey()]);
+            return (bool) $this->instance->del([$item->getKey()]);
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }

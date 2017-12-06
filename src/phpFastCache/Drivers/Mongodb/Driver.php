@@ -87,15 +87,22 @@ class Driver implements ExtendedCacheItemPoolInterface
          */
         if ($item instanceof Item) {
             try {
+                $set = [
+                  self::DRIVER_DATA_WRAPPER_INDEX => new Binary($this->encode($item->get()), Binary::TYPE_GENERIC),
+                  self::DRIVER_TAGS_WRAPPER_INDEX => new Binary($this->encode($item->getTags()), Binary::TYPE_GENERIC),
+                  self::DRIVER_EDATE_WRAPPER_INDEX => ($item->getTtl() > 0 ? new UTCDateTime((time() + $item->getTtl()) * 1000) : new UTCDateTime(time() * 1000)),
+                ];
+
+                if(!empty($this->config[ 'itemDetailedDate' ])){
+                    $set += [
+                      self::DRIVER_MDATE_WRAPPER_INDEX => ($item->getModificationDate() ? new UTCDateTime(($item->getModificationDate()->getTimestamp()) * 1000) : new UTCDateTime(time() * 1000)),
+                      self::DRIVER_CDATE_WRAPPER_INDEX => ($item->getCreationDate() ? new UTCDateTime(($item->getCreationDate()->getTimestamp()) * 1000) : new UTCDateTime(time() * 1000)),
+                    ];
+                }
+
                 $result = (array)$this->getCollection()->updateOne(
                   ['_id' => $item->getEncodedKey()],
-                  [
-                    '$set' => [
-                      self::DRIVER_DATA_WRAPPER_INDEX => new Binary($this->encode($item->get()), Binary::TYPE_GENERIC),
-                      self::DRIVER_TAGS_WRAPPER_INDEX => new Binary($this->encode($item->getTags()), Binary::TYPE_GENERIC),
-                      self::DRIVER_EDATE_WRAPPER_INDEX => ($item->getTtl() > 0 ? new UTCDateTime((time() + $item->getTtl()) * 1000) : new UTCDateTime(time() * 1000)),
-                    ],
-                  ],
+                  ['$set' => $set],
                   ['upsert' => true, 'multiple' => false]
                 );
             } catch (MongoDBException $e) {
@@ -117,11 +124,20 @@ class Driver implements ExtendedCacheItemPoolInterface
         $document = $this->getCollection()->findOne(['_id' => $item->getEncodedKey()]);
 
         if ($document) {
-            return [
+            $return = [
               self::DRIVER_DATA_WRAPPER_INDEX => $this->decode($document[ self::DRIVER_DATA_WRAPPER_INDEX ]->getData()),
               self::DRIVER_TAGS_WRAPPER_INDEX => $this->decode($document[ self::DRIVER_TAGS_WRAPPER_INDEX ]->getData()),
               self::DRIVER_EDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[ self::DRIVER_EDATE_WRAPPER_INDEX ]->toDateTime()->getTimestamp()),
             ];
+
+            if(!empty($this->config[ 'itemDetailedDate' ])){
+                $return += [
+                  self::DRIVER_MDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[ self::DRIVER_MDATE_WRAPPER_INDEX ]->toDateTime()->getTimestamp()),
+                  self::DRIVER_CDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[ self::DRIVER_CDATE_WRAPPER_INDEX ]->toDateTime()->getTimestamp()),
+                ];
+            }
+
+            return $return;
         } else {
             return null;
         }

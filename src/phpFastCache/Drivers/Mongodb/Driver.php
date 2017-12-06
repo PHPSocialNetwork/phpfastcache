@@ -74,7 +74,7 @@ class Driver implements ExtendedCacheItemPoolInterface
               self::DRIVER_EDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[ self::DRIVER_EDATE_WRAPPER_INDEX ]->toDateTime()->getTimestamp()),
             ];
 
-            if (!empty($this->config[ 'itemDetailedDate' ])) {
+            if(!empty($this->getConfigOption('itemDetailedDate'))){
                 $return += [
                   self::DRIVER_MDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[ self::DRIVER_MDATE_WRAPPER_INDEX ]->toDateTime()
                     ->getTimestamp()),
@@ -108,7 +108,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                   self::DRIVER_EDATE_WRAPPER_INDEX => ($item->getTtl() > 0 ? new UTCDateTime((time() + $item->getTtl()) * 1000) : new UTCDateTime(time() * 1000)),
                 ];
 
-                if(!empty($this->config[ 'itemDetailedDate' ])){
+                if(!empty($this->getConfigOption('itemDetailedDate'))){
                     $set += [
                       self::DRIVER_MDATE_WRAPPER_INDEX => ($item->getModificationDate() ? new UTCDateTime(($item->getModificationDate()->getTimestamp()) * 1000) : new UTCDateTime(time() * 1000)),
                       self::DRIVER_CDATE_WRAPPER_INDEX => ($item->getCreationDate() ? new UTCDateTime(($item->getCreationDate()->getTimestamp()) * 1000) : new UTCDateTime(time() * 1000)),

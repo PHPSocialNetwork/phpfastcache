@@ -1,3 +1,15 @@
+## 6.0.8
+##### 15 December 2017
+- __Global__
+    - Fixed #547 // Link to wiki page (@do-you-even-curl)
+- __Core__
+    - Fixed #554 // Log actual mkdir() failure reason (@Geolim4)
+    - Fixed #541 // Random "key does not exist on the server" messages (@Geolim4)
+- __Drivers__
+    - Fixed #549 // Mongodb driver + itemDetailedDate option generates driverUnwrapCdate error (@Geolim4)
+- __Helpers__
+    - Fixed #545 // Psr16Adapter get item even if it is expired (@Geolim4)
+
 ## 6.0.7
 ##### 10 november 2017
 - __Global__

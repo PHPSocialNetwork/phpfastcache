@@ -1,3 +1,19 @@
+## 7.0.0-alpha3
+##### 15 december 2017
+- __Global__
+    - Fixed #541 // Random "key does not exist on the server" messages (@Geolim4)
+- __Core__
+    - Fixed #554 // Log actual mkdir() failure reason (@Geolim4)
+- __Drivers__
+    - Fixed #549 // Mongodb driver + itemDetailedDate option generates driverUnwrapCdate error (Using V7 getOption API) (@Geolim4)
+    - Fixed #548 // Wrong type hint on redis driver (@Geolim4)
+- __Helpers__
+    - Fixed #545 // Psr16Adapter get item even if it is expired (@Geolim4)
+	- Added CacheConditionalHelper TTL (@Geolim4)
+- __Tests__
+    - Fixed some missing text output on HHVM builds (@Geolim4)
+    - Fixed HHVM builds (@Geolim4)
+
 ## 7.0.0-alpha2
 ##### 10 november 2017
 - __Global__

@@ -30,8 +30,8 @@ $string = uniqid('pfc', true);
  */
 $cacheItem = $cacheInstance->getItem($cacheKey);
 $cacheItem->set($string);
-$now = time();
 $cacheInstance->save($cacheItem);
+$now = time();
 
 /**
  * Delete memory references

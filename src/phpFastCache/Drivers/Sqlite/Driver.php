@@ -275,7 +275,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                     $stm->execute([
                       ':keyword' => $item->getKey(),
                       ':object' => $this->encode($this->driverPreWrap($item)),
-                      ':exp' => time() + $item->getTtl(),
+                      ':exp' => $item->getExpirationDate()->getTimestamp(),
                     ]);
 
                     return true;
@@ -286,7 +286,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                         $stm->execute([
                           ':keyword' => $item->getKey(),
                           ':object' => $this->encode($this->driverPreWrap($item)),
-                          ':exp' => time() + $item->getTtl(),
+                          ':exp' => $item->getExpirationDate()->getTimestamp(),
                         ]);
                     } catch (PDOException $e) {
                         return false;

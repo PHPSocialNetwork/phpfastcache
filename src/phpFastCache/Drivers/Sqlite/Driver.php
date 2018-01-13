@@ -27,6 +27,7 @@ use Psr\Cache\CacheItemInterface;
 /**
  * Class Driver
  * @package phpFastCache\Drivers
+ * @todo Remove "exp" column in V7
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -267,25 +268,25 @@ class Driver implements ExtendedCacheItemPoolInterface
             }
 
             if ($toWrite == true) {
+                $sql = "INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)";
                 try {
                     $stm = $this->getDb($item->getKey())
-                      ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
+                      ->prepare($sql);
                     $stm->execute([
                       ':keyword' => $item->getKey(),
                       ':object' => $this->encode($this->driverPreWrap($item)),
-                      ':exp' => time() + $item->getTtl(),
+                      ':exp' => $item->getExpirationDate()->getTimestamp(),
                     ]);
 
                     return true;
                 } catch (\PDOException $e) {
-
                     try {
                         $stm = $this->getDb($item->getKey(), true)
-                          ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
+                          ->prepare($sql);
                         $stm->execute([
                           ':keyword' => $item->getKey(),
                           ':object' => $this->encode($this->driverPreWrap($item)),
-                          ':exp' => time() + $item->getTtl(),
+                          ':exp' => $item->getExpirationDate()->getTimestamp(),
                         ]);
                     } catch (PDOException $e) {
                         return false;
@@ -305,18 +306,18 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverRead(CacheItemInterface $item)
     {
+        $sql = "SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1";
         try {
             $stm = $this->getDb($item->getKey())
-              ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
+              ->prepare($sql);
             $stm->execute([
               ':keyword' => $item->getKey(),
             ]);
             $row = $stm->fetch(PDO::FETCH_ASSOC);
-
         } catch (PDOException $e) {
             try {
                 $stm = $this->getDb($item->getKey(), true)
-                  ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
+                  ->prepare($sql);
                 $stm->execute([
                   ':keyword' => $item->getKey(),
                 ]);

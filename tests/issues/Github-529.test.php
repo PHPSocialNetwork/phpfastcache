@@ -10,6 +10,7 @@ use phpFastCache\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
+$status = 0;
 
 /**
  * @param $obj
@@ -57,6 +58,7 @@ $cacheInstance->deleteItemsByTag('tag-all');
 $itemInstances = accessInaccessibleMember($cacheInstance, 'itemInstances');
 if (isset($itemInstances[$cacheInstance::DRIVER_TAGS_KEY_PREFIX . 'tag-all'])) {
     echo '[FAIL] The internal cache item tag is still stored in memory' . PHP_EOL;
+    $status = 255;
 } else {
     echo '[PASS] The internal cache item tag is no longer stored in memory' . PHP_EOL;
 }
@@ -66,6 +68,9 @@ if (isset($itemInstances[$cacheInstance::DRIVER_TAGS_KEY_PREFIX . 'tag-all'])) {
  */
 if ($cacheInstance->getItem($cacheInstance::DRIVER_TAGS_KEY_PREFIX . 'tag-all')->isHit()) {
     echo '[FAIL] The internal cache item tag is still stored on disk' . PHP_EOL;
+    $status = 255;
 } else {
     echo '[PASS] The internal cache item tag is no longer stored on disk' . PHP_EOL;
 }
+
+exit($status);

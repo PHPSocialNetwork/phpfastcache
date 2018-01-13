@@ -219,12 +219,7 @@ trait ItemBaseTrait
      */
     public function getTtl()
     {
-        $ttl = $this->expirationDate->getTimestamp() - time();
-        if ($ttl > 2592000) {
-            $ttl = time() + $ttl;
-        }
-
-        return $ttl;
+        return max(0, $this->expirationDate->getTimestamp() - time());
     }
 
     /**

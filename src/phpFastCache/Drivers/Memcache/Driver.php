@@ -76,7 +76,15 @@ class Driver extends DriverAbstract
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->instance->set($item->getKey(), $this->driverPreWrap($item), $this->memcacheFlags, $item->getTtl());
+            $ttl = $item->getExpirationDate()->getTimestamp() - time();
+
+            // Memcache will only allow a expiration timer less than 2592000 seconds,
+            // otherwise, it will assume you're giving it a UNIX timestamp.
+            if ($ttl > 2592000) {
+                $ttl = time() + $ttl;
+            }
+
+            return $this->instance->set($item->getKey(), $this->driverPreWrap($item), $this->memcacheFlags, $ttl);
         } else {
             throw new \InvalidArgumentException('Cross-Driver type confusion detected');
         }

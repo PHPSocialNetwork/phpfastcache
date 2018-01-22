@@ -168,15 +168,16 @@ class Driver implements ExtendedCacheItemPoolInterface
             } catch (\Exception $e) {
                 $this->fallback = true;
             }
+
+            /**
+             * Since Memcached does not throw
+             * any error if not connected ...
+             */
+            if(!$this->instance->getServerStatus(!empty($server[ 'path' ]) ? $server[ 'path' ] : $server[ 'host' ], !empty($server[ 'port' ]) ? $server[ 'port' ] : 0)){
+                throw new phpFastCacheDriverException('Memcache seems to not be connected');
+            }
         }
 
-        /**
-         * Since Memcached does not throw
-         * any error if not connected ...
-         */
-        if(!$this->instance->getServerStatus()){
-            throw new phpFastCacheDriverException('Memcache seems to not be connected');
-        }
         return true;
     }
 

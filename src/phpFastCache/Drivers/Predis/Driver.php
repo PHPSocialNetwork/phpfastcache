@@ -133,19 +133,34 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverConnect()
     {
-        $config = isset($this->config[ 'predis' ]) ? $this->config[ 'predis' ] : [];
+        /** Backward compatibility */
+        $config = isset($this->config[ 'predis' ]) ? $this->config[ 'predis' ] : $this->config;
+        $path = isset($config[ 'path' ]) ? (string) $config[ 'path' ] : false;
 
-        $this->instance = new PredisClient(array_merge([
+        $defaultConfig = [
           'host' => '127.0.0.1',
           'port' => 6379,
           'password' => null,
           'database' => null,
-        ], $config));
+        ];
+        $config = array_merge($defaultConfig, $config);
+
+        /**
+         * If path is provided we consider it as an UNIX Socket
+         */
+        if($path){
+            $this->instance = new PredisClient([
+              'scheme' => 'unix',
+              'path' =>  $path
+            ]);
+        }else{
+            $this->instance = new PredisClient($config);
+        }
 
         try {
             $this->instance->connect();
         } catch (PredisConnectionException $e) {
-            throw new phpFastCacheDriverException('Failed to connect to predis server', 0, $e);
+            throw new phpFastCacheDriverException('Failed to connect to predis server. Check the Predis documentation: https://github.com/nrk/predis/tree/v1.1#how-to-install-and-use-predis', 0, $e);
         }
 
         return true;

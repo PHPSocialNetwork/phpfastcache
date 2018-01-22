@@ -143,6 +143,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             $servers = [
               [
                 'host' => '127.0.0.1',
+                'path' => false,
                 'port' => 11211,
                 'sasl_user' => false,
                 'sasl_password' => false,
@@ -152,9 +153,15 @@ class Driver implements ExtendedCacheItemPoolInterface
 
         foreach ($servers as $server) {
             try {
-                if (!$this->instance->addServer($server[ 'host' ], $server[ 'port' ])) {
+                /**
+                 * If path is provided we consider it as an UNIX Socket
+                 */
+                if(!empty($server[ 'path' ]) && !$this->instance->addServer($server[ 'path' ], 0)){
+                    $this->fallback = true;
+                }else if (!empty($server[ 'host' ]) && !$this->instance->addServer($server[ 'host' ], $server[ 'port' ])) {
                     $this->fallback = true;
                 }
+
                 if (!empty($server[ 'sasl_user' ]) && !empty($server[ 'sasl_password' ])) {
                     $this->instance->setSaslAuthData($server[ 'sasl_user' ], $server[ 'sasl_password' ]);
                 }

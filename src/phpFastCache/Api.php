@@ -97,11 +97,17 @@ class Api
     }
 
     /**
+     * @param bool $cacheable
      * @return string
-     * @throws \phpFastCache\Exceptions\phpFastCacheLogicException
      */
-    public function getPhpFastCacheGitHeadHash()
+    public static function getPhpFastCacheGitHeadHash($cacheable = true)
     {
+        static $hash;
+
+        if($hash && $cacheable){
+            return $hash;
+        }
+
         if(function_exists('shell_exec')){
             $stdout = shell_exec('git rev-parse --short HEAD');
             if(is_string($stdout)){

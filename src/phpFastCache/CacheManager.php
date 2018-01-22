@@ -460,8 +460,8 @@ class CacheManager
                     break;
                 case 'securityKey':
                 case 'path':
-                    if (!is_string($configValue)) {
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a string");
+                    if (!is_string($configValue) && (!is_bool($configValue) || $configValue)) {
+                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a string or a false boolean");
                     }
                     break;
                 case 'default_chmod':

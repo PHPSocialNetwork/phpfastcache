@@ -1,9 +1,9 @@
 PhpFastCache has some options that you may want to know before using them, here's the list:
 
 ### File-based drivers options *
+* **path** See the "**Host/Authenticating options**" section
 * **default_chmod** _| int>octal (default: 0777)_ `[>=V4]` This option will define the chmod used to write driver cache files. 
 * **securityKey** _| string (default: 'auto')_ `[>=V4]` A security key that define the subdirectory name. 'auto' value will be the HTTP_HOST value.
-* **path** _| string (default: Tmp directory)_ `[>=V4]` The absolute path where the written cache files belong to.
 * **htaccess** _| bool  (default: true)_ `[>=V4]` Option designed to (dis)allow the auto-generation of .htaccess.
 * **autoTmpFallback** _| bool  (default: false)_ `[>=V6]`Option designed to automatically attempt to fallback to temporary directory if the cache fails to write on the specified directory
 * **secureFileManipulation** _| bool  (default: false)_ `[>=V6]` This option enforces a strict I/O manipulation policy by adding more integrity checks. This option may slow down the write operations, therefore you must use it with caution. In case of failure an **phpFastCacheIOException** exception will be thrown. Currently only supported by _Files_ driver.
@@ -22,11 +22,13 @@ PhpFastCache has some options that you may want to know before using them, here'
 * **cacheSlamsTimeout** _| int (default: 15)_ `[>=V6]` This option defines the cache slams timeout in seconds
 
 ### Host/Authenticating options *
-* **host** _| string (default: not set)_ The host
+* **host** _| string (default: not set)_ The hostname
+* **path** _| string (default: not set)_ `[>=V4], [>=V6.1]` The absolute path where the written cache files belong to (system temp directory by default). **As of the V6.1** this option is also used to define (P)redis and Memcache(d) UNIX socket
 * **port** _| int (default: not set)_ The port
 * **username** _| string (default: not set)_ The username
 * **password** _| string (default: not set)_ The password
 * **timeout** _| int (default: not set)_ The timeout (in seconds)
+* **servers** _| array (default: not set)_ Array of servers. Exclusive to Memcache(d)
 
 These options differs depending the driver that you are using, see **/Examples** folder for more information about these options.
 

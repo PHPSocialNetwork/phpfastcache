@@ -16,11 +16,4 @@ resolved in a timely manner.
 Contributing policy
 -------------------
 
-Fork the project, create a feature branch, and send us a pull request.
-
-To ensure a consistent code base, you should make sure the code follows
-the [PSR-2 Coding Standards](http://www.php-fig.org/psr/psr-2/). You can also
-run [php-cs-fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) with the
-configuration file that can be found in the project root directory.
-
-If you would like to help, take a look at the [list of open issues](https://github.com/PHPSocialNetwork/phpfastcache/issues).
+Our contributing policy is described in our [Coding Guideline](https://github.com/PHPSocialNetwork/phpfastcache/blob/v7/CODING_GUIDELINE.md)

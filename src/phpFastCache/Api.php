@@ -68,10 +68,10 @@ class Api
             return $version;
         }
 
-        if(function_exists('shell_exec')){
+        if(\function_exists('shell_exec')){
             $stdout = shell_exec('git describe --abbrev=0 --tags');
-            if(is_string($stdout)){
-                $version = trim($stdout);
+            if(\is_string($stdout)){
+                $version = \trim($stdout);
                 return $version;
             }
             throw new phpFastCacheLogicException('The git command used to retrieve the PhpFastCache version has failed.');
@@ -82,12 +82,12 @@ class Api
         }
 
         $changelogFilename = __DIR__ . '/../../CHANGELOG.md';
-        if(file_exists($changelogFilename)){
+        if(\file_exists($changelogFilename)){
             $versionPrefix = '## ';
-            $changelog = explode("\n", self::getPhpFastCacheChangelog());
+            $changelog = \explode("\n", self::getPhpFastCacheChangelog());
             foreach ($changelog as $line){
-                if(strpos($line, $versionPrefix) === 0){
-                    $version = trim(str_replace($versionPrefix, '', $line));
+                if(\strpos($line, $versionPrefix) === 0){
+                    $version = \trim(\str_replace($versionPrefix, '', $line));
                     return $version;
                 }
             }
@@ -108,10 +108,10 @@ class Api
             return $hash;
         }
 
-        if(function_exists('shell_exec')){
+        if(\function_exists('shell_exec')){
             $stdout = shell_exec('git rev-parse --short HEAD');
-            if(is_string($stdout)){
-                $hash = trim($stdout);
+            if(\is_string($stdout)){
+                $hash = \trim($stdout);
                 return "#{$hash}";
             }
         }
@@ -201,8 +201,8 @@ CHANGELOG;
     public static function getPhpFastCacheChangelog(): string
     {
         $changelogFilename = __DIR__ . '/../../CHANGELOG.md';
-        if(file_exists($changelogFilename)){
-            $string = str_replace(["\r\n", "\r"], "\n", trim(file_get_contents($changelogFilename)));
+        if(\file_exists($changelogFilename)){
+            $string = \str_replace(["\r\n", "\r"], "\n", \trim(file_get_contents($changelogFilename)));
             if($string){
                 return $string;
             }

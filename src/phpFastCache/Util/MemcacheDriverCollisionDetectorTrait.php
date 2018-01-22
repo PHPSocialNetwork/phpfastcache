@@ -34,8 +34,8 @@ trait MemcacheDriverCollisionDetectorTrait
     {
         $CONSTANT_NAME = __NAMESPACE__ . '\MEMCACHE_DRIVER_USED';
 
-        if ($driverName && is_string($driverName)) {
-            if (!defined($CONSTANT_NAME)) {
+        if ($driverName && \is_string($driverName)) {
+            if (!\defined($CONSTANT_NAME)) {
                 define($CONSTANT_NAME, $driverName);
 
                 return true;

@@ -35,7 +35,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        return extension_loaded('wincache') && function_exists('wincache_ucache_set');
+        return extension_loaded('wincache') && \function_exists('wincache_ucache_set');
     }
 
     /**
@@ -122,7 +122,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         return (new DriverStatistic())
           ->setInfo(sprintf("The Wincache daemon is up since %s.\n For more information see RawData.", $date->format(DATE_RFC2822)))
           ->setSize($memInfo[ 'memory_free' ] - $memInfo[ 'memory_total' ])
-          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setRawData($memInfo);
     }
 }

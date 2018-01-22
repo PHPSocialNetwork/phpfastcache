@@ -37,7 +37,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        if (function_exists('setcookie')) {
+        if (\function_exists('setcookie')) {
             return true;
         } else {
             return false;
@@ -49,7 +49,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverConnect(): bool
     {
-        return !(!array_key_exists('phpFastCache', $_COOKIE) && !@setcookie('phpFastCache', 1, 10));
+        return !(!\array_key_exists('phpFastCache', $_COOKIE) && !@setcookie('phpFastCache', 1, 10));
     }
 
     /**
@@ -61,7 +61,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         $this->driverConnect();
         $keyword = self::PREFIX . $item->getKey();
-        $x = isset($_COOKIE[ $keyword ]) ? json_decode($_COOKIE[ $keyword ], true) : false;
+        $x = isset($_COOKIE[ $keyword ]) ? \json_decode($_COOKIE[ $keyword ], true) : false;
 
         if ($x == false) {
             return null;
@@ -87,7 +87,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         if ($item instanceof Item) {
             $this->driverConnect();
             $keyword = self::PREFIX . $item->getKey();
-            $v = json_encode($this->driverPreWrap($item));
+            $v = \json_encode($this->driverPreWrap($item));
 
             if (isset($this->config[ 'limited_memory_each_object' ]) && strlen($v) > $this->config[ 'limited_memory_each_object' ]) {
                 return false;
@@ -107,7 +107,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         $this->driverConnect();
         $keyword = self::PREFIX . $key;
-        $x = isset($_COOKIE[ $keyword ]) ? $this->decode(json_decode($_COOKIE[ $keyword ])->t) : 0;
+        $x = isset($_COOKIE[ $keyword ]) ? $this->decode(\json_decode($_COOKIE[ $keyword ])->t) : 0;
 
         return $x ? $x - time() : $x;
     }
@@ -141,7 +141,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $return = null;
         $this->driverConnect();
         foreach ($_COOKIE as $keyword => $value) {
-            if (strpos($keyword, self::PREFIX) !== false) {
+            if (\strpos($keyword, self::PREFIX) !== false) {
                 $_COOKIE[ $keyword ] = null;
                 $result = @setcookie($keyword, null, -10);
                 if ($return !== false) {
@@ -172,7 +172,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Only count PFC Cookie
          */
         foreach ($_COOKIE as $key => $value) {
-            if (strpos($key, self::PREFIX) === 0) {
+            if (\strpos($key, self::PREFIX) === 0) {
                 $size += strlen($value);
             }
         }

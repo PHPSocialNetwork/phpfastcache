@@ -132,8 +132,8 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *
      * @param array $keys
      * An indexed array of keys of items to retrieve.
-     * @param int $option json_encode() options
-     * @param int $depth json_encode() depth
+     * @param int $option \json_encode() options
+     * @param int $depth \json_encode() depth
      *
      * @throws InvalidArgumentException
      *   If any of the keys in $keys are not a legal value a phpFastCacheInvalidArgumentException
@@ -222,8 +222,8 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *
      * @param string[] $tagNames
      * An indexed array of keys of items to retrieve.
-     * @param int $option json_encode() options
-     * @param int $depth json_encode() depth
+     * @param int $option \json_encode() options
+     * @param int $depth \json_encode() depth
      *
      * @throws InvalidArgumentException
      *   If any of the keys in $keys are not a legal value a phpFastCacheInvalidArgumentException

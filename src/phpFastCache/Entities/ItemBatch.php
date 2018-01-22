@@ -41,7 +41,7 @@ class ItemBatch
      */
     public function __construct($itemKey, \DateTimeInterface $itemDate)
     {
-        if (is_string($itemKey)) {
+        if (\is_string($itemKey)) {
             $this->itemKey = $itemKey;
             $this->itemDate = $itemDate;
         } else {

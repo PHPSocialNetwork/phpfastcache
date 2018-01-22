@@ -35,7 +35,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        return extension_loaded('xcache') && function_exists('xcache_get');
+        return extension_loaded('xcache') && \function_exists('xcache_get');
     }
 
     /**
@@ -124,8 +124,8 @@ class Driver implements ExtendedCacheItemPoolInterface
 
             return (new DriverStatistic())
               ->setSize(abs($info[ 'size' ] - $info[ 'avail' ]))
-              ->setData(implode(', ', array_keys($this->itemInstances)))
-              ->setInfo(sprintf("Xcache v%s with following modules loaded:\n %s", XCACHE_VERSION, str_replace(' ', ', ', XCACHE_MODULES)))
+              ->setData(\implode(', ', \array_keys($this->itemInstances)))
+              ->setInfo(sprintf("Xcache v%s with following modules loaded:\n %s", XCACHE_VERSION, \str_replace(' ', ', ', XCACHE_MODULES)))
               ->setRawData($info);
         } else {
             throw new \RuntimeException("PhpFastCache is not able to read Xcache configuration. Please put this to your php.ini:\n

@@ -119,7 +119,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $date = (new \DateTime())->setTimestamp($stats[ 'start_time' ]);
 
         return (new DriverStatistic())
-          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setInfo(sprintf("The APCU cache is up since %s, and have %d item(s) in cache.\n For more information see RawData.", $date->format(DATE_RFC2822),
             $stats[ 'num_entries' ]))
           ->setRawData($stats)

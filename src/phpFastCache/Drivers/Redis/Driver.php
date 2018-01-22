@@ -161,7 +161,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $date = (new \DateTime())->setTimestamp(time() - $info[ 'uptime_in_seconds' ]);
 
         return (new DriverStatistic())
-          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setRawData($info)
           ->setSize((int)$info[ 'used_memory' ])
           ->setInfo(sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",

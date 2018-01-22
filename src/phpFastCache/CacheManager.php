@@ -203,7 +203,7 @@ class CacheManager
     {
         static $badPracticeOmeter = [];
 
-        if ($instanceId !== null && !is_string($instanceId)) {
+        if ($instanceId !== null && !\is_string($instanceId)) {
             throw new phpFastCacheInvalidArgumentException('The Instance ID must be a string');
         }
 
@@ -211,13 +211,13 @@ class CacheManager
          * @todo: Standardize a method for driver name
          */
         $driver = self::standardizeDriverName($driver);
-        $config = array_merge(self::$config, $config);
+        $config = \array_merge(self::$config, $config);
         self::validateConfig($config);
         if (!$driver || $driver === 'Auto') {
             $driver = self::getAutoClass($config);
         }
 
-        $instance = $instanceId ?: crc32($driver . serialize($config));
+        $instance = $instanceId ?: crc32($driver . \serialize($config));
 
         if (!isset(self::$instances[ $instance ])) {
             $badPracticeOmeter[ $driver ] = 1;
@@ -277,7 +277,7 @@ class CacheManager
      */
     public static function getInstanceById($instanceId): ExtendedCacheItemPoolInterface
     {
-        if ($instanceId !== null && !is_string($instanceId)) {
+        if ($instanceId !== null && !\is_string($instanceId)) {
             throw new phpFastCacheInvalidArgumentException('The Instance ID must be a string');
         }
 
@@ -347,7 +347,7 @@ class CacheManager
      */
     public static function __callStatic($name, $arguments)
     {
-        $options = (array_key_exists(0, $arguments) && is_array($arguments) ? $arguments[ 0 ] : []);
+        $options = (\array_key_exists(0, $arguments) && \is_array($arguments) ? $arguments[ 0 ] : []);
 
         return self::getInstance($name, $options);
     }
@@ -360,7 +360,7 @@ class CacheManager
         self::$instances = [];
 
         gc_collect_cycles();
-        return !count(self::$instances);
+        return !\count(self::$instances);
     }
 
     /**
@@ -376,7 +376,7 @@ class CacheManager
      */
     public static function setNamespacePath($path)
     {
-        self::$namespacePath = trim($path, "\\") . '\\';
+        self::$namespacePath = \trim($path, "\\") . '\\';
     }
 
     /**
@@ -386,9 +386,9 @@ class CacheManager
      */
     public static function setDefaultConfig($name, $value = null)
     {
-        if (is_array($name)) {
-            self::$config = array_merge(self::$config, $name);
-        } else if (is_string($name)) {
+        if (\is_array($name)) {
+            self::$config = \array_merge(self::$config, $name);
+        } else if (\is_string($name)) {
             self::$config[ $name ] = $value;
         } else {
             throw new phpFastCacheInvalidArgumentException('Invalid variable type: $name');
@@ -450,7 +450,7 @@ class CacheManager
      */
     public static function getStaticAllDrivers()
     {
-        return array_merge(self::getStaticSystemDrivers(), [
+        return \array_merge(self::getStaticSystemDrivers(), [
           'Devtrue',
           'Devfalse',
           'Cookie',
@@ -464,10 +464,10 @@ class CacheManager
      */
     public static function standardizeDriverName($driverName)
     {
-        if (!is_string($driverName)) {
-            throw new phpFastCacheInvalidArgumentException(sprintf('Expected $driverName to be a string got "%s" instead', gettype($driverName)));
+        if (!\is_string($driverName)) {
+            throw new phpFastCacheInvalidArgumentException(sprintf('Expected $driverName to be a string got "%s" instead', \gettype($driverName)));
         }
-        return ucfirst(strtolower(trim($driverName)));
+        return \ucfirst(\strtolower(\trim($driverName)));
     }
 
     /**
@@ -486,47 +486,47 @@ class CacheManager
                 case 'ignoreSymfonyNotice':
                 case 'htaccess':
                 case 'compress_data':
-                    if (!is_bool($configValue)) {
+                    if (!\is_bool($configValue)) {
                         throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean");
                     }
                     break;
                 case 'defaultTtl':
-                    if (!is_numeric($configValue)) {
+                    if (!\is_numeric($configValue)) {
                         throw new phpFastCacheInvalidConfigurationException("{$configName} must be numeric");
                     }
                     break;
                 case 'defaultKeyHashFunction':
-                    if (!is_string($configValue) && !function_exists($configValue)) {
+                    if (!\is_string($configValue) && !\function_exists($configValue)) {
                         throw new phpFastCacheInvalidConfigurationException("{$configName} must be a valid function name string");
                     }
                     break;
                 case 'securityKey':
                 case 'path':
-                     if (!is_string($configValue) && (!is_bool($configValue) || $configValue)) {
+                     if (!\is_string($configValue) && (!\is_bool($configValue) || $configValue)) {
                          throw new phpFastCacheInvalidConfigurationException("{$configName} must be a string or a false boolean");
                      }
                     break;
                 case 'default_chmod':
                 case 'limited_memory_each_object':
-                    if (!is_int($configValue)) {
+                    if (!\is_int($configValue)) {
                         throw new phpFastCacheInvalidConfigurationException("{$configName} must be an integer");
                     }
                     break;
                 case 'fallback':
-                    if (!is_bool($configValue) && !is_string($configValue)) {
+                    if (!\is_bool($configValue) && !\is_string($configValue)) {
                         throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean or string");
                     }
                     break;
                 case 'cacheFileExtension':
-                    if (!is_string($configValue)) {
+                    if (!\is_string($configValue)) {
                         throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean");
                     }
-                    if (strpos($configValue, '.') !== false) {
+                    if (\strpos($configValue, '.') !== false) {
                         throw new phpFastCacheInvalidConfigurationException("{$configName} cannot contain a dot \".\"");
                     }
-                    if (!in_array($configValue, self::$safeFileExtensions)) {
+                    if (!\in_array($configValue, self::$safeFileExtensions)) {
                         throw new phpFastCacheInvalidConfigurationException(
-                          "{$configName} is not a safe extension, currently allowed extension: " . implode(', ', self::$safeFileExtensions)
+                          "{$configName} is not a safe extension, currently allowed extension: " . \implode(', ', self::$safeFileExtensions)
                         );
                     }
                     break;

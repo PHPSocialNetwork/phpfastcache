@@ -48,7 +48,7 @@ class ActOnAll
         return function ($method, $args) {
             $return = [];
             foreach ($this->instances as $instance) {
-                $reflectionMethod = new \ReflectionMethod(get_class($instance), $method);
+                $reflectionMethod = new \ReflectionMethod(\get_class($instance), $method);
                 $return[ $instance->getDriverName() ] = $reflectionMethod->invokeArgs($instance, $args);
             }
             return $return;

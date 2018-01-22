@@ -79,7 +79,7 @@ class Directory
      */
     public static function rrmdir($source, $removeOnlyChildren = false)
     {
-        if (empty($source) || file_exists($source) === false) {
+        if (empty($source) || \file_exists($source) === false) {
             return false;
         }
 
@@ -140,6 +140,6 @@ class Directory
          */
         $__FILE__ = preg_replace('~^(([a-z0-9\-]+)://)~', '', __FILE__);// remove file protocols such as "phar://" etc.
         $prefix = $__FILE__[ 0 ] === DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
-        return $prefix . implode(DIRECTORY_SEPARATOR, $absolutes);
+        return $prefix . \implode(DIRECTORY_SEPARATOR, $absolutes);
     }
 }

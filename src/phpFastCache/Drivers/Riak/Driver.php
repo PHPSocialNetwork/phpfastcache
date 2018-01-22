@@ -141,7 +141,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $info = $this->instance->bucket($this->bucketName)->getProperties();
 
         return (new DriverStatistic())
-          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setRawData($info)
           ->setSize(false)
           ->setInfo('Riak does not provide size/date information att all :(');

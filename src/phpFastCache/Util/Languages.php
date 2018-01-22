@@ -27,7 +27,7 @@ class Languages
 {
     public static function setEncoding($encoding = 'UTF-8', $language = null)
     {
-        if ($language === null || !in_array($language, ['uni', 'Japanese', 'ja', 'English', 'en'], true)) {
+        if ($language === null || !\in_array($language, ['uni', 'Japanese', 'ja', 'English', 'en'], true)) {
             $language = 'uni';
         }
         switch (strtoupper($encoding)) {

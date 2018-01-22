@@ -182,7 +182,7 @@ class Driver implements ExtendedCacheItemPoolInterface
           false
         );
         if (!empty($response->headers[ 'etag' ])) {
-            return trim($response->headers[ 'etag' ], " '\"\t\n\r\0\x0B");
+            return \trim($response->headers[ 'etag' ], " '\"\t\n\r\0\x0B");
         }
 
         return null;
@@ -201,7 +201,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function createDatabase()
     {
-        if (!in_array($this->instance->getDatabase(), $this->instance->getAllDatabases(), true)) {
+        if (!\in_array($this->instance->getDatabase(), $this->instance->getAllDatabases(), true)) {
             $this->instance->createDatabase($this->instance->getDatabase());
         }
     }
@@ -235,7 +235,7 @@ HELP;
         return (new DriverStatistic())
           ->setSize($info[ 'sizes' ][ 'active' ])
           ->setRawData($info)
-          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setInfo('Couchdb version ' . $this->instance->getVersion() . "\n For more information see RawData.");
     }
 

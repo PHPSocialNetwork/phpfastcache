@@ -132,7 +132,7 @@ trait ItemBaseTrait
      */
     public function setHit($isHit): ExtendedCacheItemInterface
     {
-        if (is_bool($isHit)) {
+        if (\is_bool($isHit)) {
             $this->isHit = $isHit;
 
             return $this;
@@ -157,7 +157,7 @@ trait ItemBaseTrait
             $this->eventManager->dispatch('CacheItemExpireAt', $this, $expiration);
             $this->expirationDate = $expiration;
         } else {
-            throw new phpFastCacheInvalidArgumentException('$expiration must be an object implementing the DateTimeInterface got: ' . gettype($expiration));
+            throw new phpFastCacheInvalidArgumentException('$expiration must be an object implementing the DateTimeInterface got: ' . \gettype($expiration));
         }
 
         return $this;
@@ -170,7 +170,7 @@ trait ItemBaseTrait
      */
     public function expiresAfter($time)
     {
-        if (is_numeric($time)) {
+        if (\is_numeric($time)) {
             if ($time <= 0) {
                 /**
                  * 5 years, however memcached or memory cached will gone when u restart it

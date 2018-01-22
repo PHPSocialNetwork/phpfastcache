@@ -83,8 +83,8 @@ trait DriverBaseTrait
         /**
          * Config for class
          */
-        if (is_array($config_name)) {
-            $this->config = array_merge($this->config, $config_name);
+        if (\is_array($config_name)) {
+            $this->config = \array_merge($this->config, $config_name);
         } else {
             $this->config[ $config_name ] = $value;
         }
@@ -95,7 +95,7 @@ trait DriverBaseTrait
      */
     public function getConfig(): array
     {
-        return array_merge($this->getDefaultConfig()->toArray(), $this->config);
+        return \array_merge($this->getDefaultConfig()->toArray(), $this->config);
     }
 
 
@@ -129,7 +129,7 @@ trait DriverBaseTrait
      */
     protected function encode($data): string
     {
-        return serialize($data);
+        return \serialize($data);
     }
 
     /**
@@ -150,7 +150,7 @@ trait DriverBaseTrait
      */
     protected function isPHPModule(): bool
     {
-        return (PHP_SAPI === 'apache2handler' || strpos(PHP_SAPI, 'handler') !== false);
+        return (PHP_SAPI === 'apache2handler' || \strpos(PHP_SAPI, 'handler') !== false);
     }
 
 
@@ -253,7 +253,7 @@ trait DriverBaseTrait
     public function getDriverName(): string
     {
         if (!$this->driverName) {
-            $this->driverName = ucfirst(substr(strrchr((new \ReflectionObject($this))->getNamespaceName(), '\\'), 1));
+            $this->driverName = \ucfirst(\substr(strrchr((new \ReflectionObject($this))->getNamespaceName(), '\\'), 1));
         }
         return $this->driverName;
     }
@@ -278,7 +278,7 @@ trait DriverBaseTrait
          * on tags item, it can leads
          * to an infinite recursive calls
          */
-        if (strpos($item->getKey(), self::DRIVER_TAGS_KEY_PREFIX) === 0) {
+        if (\strpos($item->getKey(), self::DRIVER_TAGS_KEY_PREFIX) === 0) {
             throw new phpFastCacheLogicException('Trying to set tag(s) to an Tag item index: ' . $item->getKey());
         }
 
@@ -335,7 +335,7 @@ trait DriverBaseTrait
              * any cache item references left
              * then remove it from tagsItems index
              */
-            if (count($data)) {
+            if (\count($data)) {
                 $tagsItem->expiresAt((new \DateTime())->setTimestamp(max($data)));
                 $this->driverWrite($tagsItem);
                 $tagsItem->setHit(true);
@@ -377,7 +377,7 @@ trait DriverBaseTrait
      */
     public static function isValidOption($optionName, $optionValue): bool
     {
-        if (!is_string($optionName)) {
+        if (!\is_string($optionName)) {
             throw new phpFastCacheInvalidArgumentException('$optionName must be a string');
         }
 

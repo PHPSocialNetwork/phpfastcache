@@ -64,7 +64,7 @@ trait ItemExtendedTrait
      */
     public function __construct(ExtendedCacheItemPoolInterface $driver, $key)
     {
-        if (is_string($key)) {
+        if (\is_string($key)) {
             $this->key = $key;
             $this->driver = $driver;
             $this->driver->setItem($this);
@@ -89,7 +89,7 @@ trait ItemExtendedTrait
             if ($keyHashFunction) {
                 $this->encodedKey = $keyHashFunction($this->getKey());
             } else {
-                $this->encodedKey = md5($this->getKey());
+                $this->encodedKey = \md5($this->getKey());
             }
         }
 
@@ -208,7 +208,7 @@ trait ItemExtendedTrait
      */
     public function increment($step = 1): ExtendedCacheItemInterface
     {
-        if (is_int($step)) {
+        if (\is_int($step)) {
             $this->fetched = true;
             $this->data += $step;
         } else {
@@ -225,7 +225,7 @@ trait ItemExtendedTrait
      */
     public function decrement($step = 1): ExtendedCacheItemInterface
     {
-        if (is_int($step)) {
+        if (\is_int($step)) {
             $this->fetched = true;
             $this->data -= $step;
         } else {
@@ -242,9 +242,9 @@ trait ItemExtendedTrait
      */
     public function append($data): ExtendedCacheItemInterface
     {
-        if (is_array($this->data)) {
+        if (\is_array($this->data)) {
             $this->data[] = $data;
-        } else if (is_string($data)) {
+        } else if (\is_string($data)) {
             $this->data .= (string)$data;
         } else {
             throw new phpFastCacheInvalidArgumentException('$data must be either array nor string.');
@@ -261,9 +261,9 @@ trait ItemExtendedTrait
      */
     public function prepend($data): ExtendedCacheItemInterface
     {
-        if (is_array($this->data)) {
-            array_unshift($this->data, $data);
-        } else if (is_string($data)) {
+        if (\is_array($this->data)) {
+            \array_unshift($this->data, $data);
+        } else if (\is_string($data)) {
             $this->data = (string)$data . $this->data;
         } else {
             throw new phpFastCacheInvalidArgumentException('$data must be either array nor string.');
@@ -279,8 +279,8 @@ trait ItemExtendedTrait
      */
     public function addTag($tagName): ExtendedCacheItemInterface
     {
-        if (is_string($tagName)) {
-            $this->tags = array_unique(array_merge($this->tags, [$tagName]));
+        if (\is_string($tagName)) {
+            $this->tags = \array_unique(\array_merge($this->tags, [$tagName]));
 
             return $this;
         } else {
@@ -308,8 +308,8 @@ trait ItemExtendedTrait
      */
     public function setTags(array $tags): ExtendedCacheItemInterface
     {
-        if (count($tags)) {
-            if (array_filter($tags, 'is_string')) {
+        if (\count($tags)) {
+            if (\array_filter($tags, 'is_string')) {
                 $this->tags = $tags;
             } else {
                 throw new phpFastCacheInvalidArgumentException('$tagName must be an array of string');
@@ -333,7 +333,7 @@ trait ItemExtendedTrait
      */
     public function getTagsAsString($separator = ', '): string
     {
-        return implode($separator, $this->tags);
+        return \implode($separator, $this->tags);
     }
 
     /**
@@ -368,27 +368,27 @@ trait ItemExtendedTrait
      */
     public function getRemovedTags(): array
     {
-        return array_diff($this->removedTags, $this->tags);
+        return \array_merge($this->removedTags, $this->tags);
     }
 
     /**
      * Return the data as a well-formatted string.
      * Any scalar value will be casted to an array
-     * @param int $option json_encode() options
-     * @param int $depth json_encode() depth
+     * @param int $option \json_encode() options
+     * @param int $depth \json_encode() depth
      * @return string
      */
     public function getDataAsJsonString($option = 0, $depth = 512): string
     {
         $data = $this->get();
 
-        if (is_object($data) || is_array($data)) {
-            $data = json_encode($data, $option, $depth);
+        if (\is_object($data) || \is_array($data)) {
+            $data = \json_encode($data, $option, $depth);
         } else {
-            $data = json_encode([$data], $option, $depth);
+            $data = \json_encode([$data], $option, $depth);
         }
 
-        return json_encode($data, $option, $depth);
+        return \json_encode($data, $option, $depth);
     }
 
     /**
@@ -421,8 +421,8 @@ trait ItemExtendedTrait
      */
     final public function __debugInfo()
     {
-        $info = get_object_vars($this);
-        $info[ 'driver' ] = 'object(' . get_class($info[ 'driver' ]) . ')';
+        $info = \get_object_vars($this);
+        $info[ 'driver' ] = 'object(' . \get_class($info[ 'driver' ]) . ')';
 
         return (array)$info;
     }

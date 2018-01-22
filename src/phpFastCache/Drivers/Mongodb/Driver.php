@@ -233,7 +233,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $array_filter_recursive = function ($array, callable $callback = null) use (&$array_filter_recursive) {
             $array = $callback($array);
 
-            if (is_object($array) || is_array($array)) {
+            if (\is_object($array) || \is_array($array)) {
                 foreach ($array as &$value) {
                     $value = call_user_func($array_filter_recursive, $value, $callback);
                 }
@@ -259,7 +259,7 @@ class Driver implements ExtendedCacheItemPoolInterface
           ->setInfo('MongoDB version ' . $serverStats->version . ', Uptime (in days): ' . round($serverStats->uptime / 86400,
               1) . "\n For more information see RawData.")
           ->setSize($collectionStats->size)
-          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setRawData([
             'serverStatus' => $serverStats,
             'collStats' => $collectionStats,

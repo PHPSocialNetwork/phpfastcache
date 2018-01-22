@@ -27,7 +27,7 @@ class phpFastCacheInvalidArgumentTypeException extends phpFastCacheInvalidArgume
      */
     public function __construct($expectedType, $unexpectedData)
     {
-        $type = gettype($unexpectedData);
-        parent::__construct("Expecting '{$expectedType}', got '" . ($type === 'object' ? $type . '(' . get_class($type) . ')' : $type) . "'");
+        $type = \gettype($unexpectedData);
+        parent::__construct("Expecting '{$expectedType}', got '" . ($type === 'object' ? $type . '(' . \get_class($type) . ')' : $type) . "'");
     }
 }

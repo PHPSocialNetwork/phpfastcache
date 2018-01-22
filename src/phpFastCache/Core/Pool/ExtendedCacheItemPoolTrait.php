@@ -35,7 +35,7 @@ trait ExtendedCacheItemPoolTrait
         $callback = function (CacheItemInterface $item) {
             return $item->get();
         };
-        return json_encode(array_map($callback, array_values($this->getItems($keys))), $option, $depth);
+        return \json_encode(array_map($callback, array_values($this->getItems($keys))), $option, $depth);
     }
 
     /**
@@ -43,7 +43,7 @@ trait ExtendedCacheItemPoolTrait
      */
     public function getItemsByTag($tagName)
     {
-        if (is_string($tagName)) {
+        if (\is_string($tagName)) {
             $driverResponse = $this->getItem($this->getTagKey($tagName));
             if ($driverResponse->isHit()) {
                 $items = (array)$driverResponse->get();
@@ -58,7 +58,7 @@ trait ExtendedCacheItemPoolTrait
                  *
                  * #headache
                  */
-                return array_filter($this->getItems(array_unique(array_keys($items))), function (ExtendedCacheItemInterface $item) {
+                return \array_filter($this->getItems(\array_unique(\array_keys($items))), function (ExtendedCacheItemInterface $item) {
                     return $item->isHit();
                 });
             } else {
@@ -75,9 +75,9 @@ trait ExtendedCacheItemPoolTrait
     public function getItemsByTags(array $tagNames)
     {
         $items = [];
-        foreach (array_unique($tagNames) as $tagName) {
-            if (is_string($tagName)) {
-                $items = array_merge($items, $this->getItemsByTag($tagName));
+        foreach (\array_unique($tagNames) as $tagName) {
+            if (\is_string($tagName)) {
+                $items = \array_merge($items, $this->getItemsByTag($tagName));
             } else {
                 throw new phpFastCacheInvalidArgumentException('$tagName must be a a string');
             }
@@ -95,7 +95,7 @@ trait ExtendedCacheItemPoolTrait
         $items = $this->getItemsByTags($tagNames);
 
         foreach ($items as $key => $item) {
-            if (array_diff($tagNames, $item->getTags())) {
+            if (\array_merge($tagNames, $item->getTags())) {
                 unset($items[ $key ]);
             }
         }
@@ -113,7 +113,7 @@ trait ExtendedCacheItemPoolTrait
             return $item->get();
         };
 
-        return json_encode(array_map($callback, array_values($this->getItemsByTags($tagNames))), $option, $depth);
+        return \json_encode(array_map($callback, array_values($this->getItemsByTags($tagNames))), $option, $depth);
     }
 
     /**
@@ -121,7 +121,7 @@ trait ExtendedCacheItemPoolTrait
      */
     public function deleteItemsByTag($tagName)
     {
-        if (is_string($tagName)) {
+        if (\is_string($tagName)) {
             $return = null;
             foreach ($this->getItemsByTag($tagName) as $item) {
                 $result = $this->deleteItem($item->getKey());
@@ -175,7 +175,7 @@ trait ExtendedCacheItemPoolTrait
      */
     public function incrementItemsByTag($tagName, $step = 1)
     {
-        if (is_string($tagName) && is_int($step)) {
+        if (\is_string($tagName) && \is_int($step)) {
             foreach ($this->getItemsByTag($tagName) as $item) {
                 $item->increment($step);
                 $this->saveDeferred($item);
@@ -208,7 +208,7 @@ trait ExtendedCacheItemPoolTrait
      */
     public function incrementItemsByTagsAll(array $tagNames, $step = 1)
     {
-        if (is_int($step)) {
+        if (\is_int($step)) {
             $items = $this->getItemsByTagsAll($tagNames);
 
             foreach ($items as $key => $item) {
@@ -226,7 +226,7 @@ trait ExtendedCacheItemPoolTrait
      */
     public function decrementItemsByTag($tagName, $step = 1)
     {
-        if (is_string($tagName) && is_int($step)) {
+        if (\is_string($tagName) && \is_int($step)) {
             foreach ($this->getItemsByTag($tagName) as $item) {
                 $item->decrement($step);
                 $this->saveDeferred($item);
@@ -259,7 +259,7 @@ trait ExtendedCacheItemPoolTrait
      */
     public function decrementItemsByTagsAll(array $tagNames, $step = 1)
     {
-        if (is_int($step)) {
+        if (\is_int($step)) {
             $items = $this->getItemsByTagsAll($tagNames);
 
             foreach ($items as $key => $item) {
@@ -277,7 +277,7 @@ trait ExtendedCacheItemPoolTrait
      */
     public function appendItemsByTag($tagName, $data)
     {
-        if (is_string($tagName)) {
+        if (\is_string($tagName)) {
             foreach ($this->getItemsByTag($tagName) as $item) {
                 $item->append($data);
                 $this->saveDeferred($item);
@@ -328,7 +328,7 @@ trait ExtendedCacheItemPoolTrait
      */
     public function prependItemsByTag($tagName, $data)
     {
-        if (is_string($tagName)) {
+        if (\is_string($tagName)) {
             foreach ($this->getItemsByTag($tagName) as $item) {
                 $item->prepend($data);
                 $this->saveDeferred($item);
@@ -400,7 +400,7 @@ trait ExtendedCacheItemPoolTrait
      */
     public function attachItem(CacheItemInterface $item)
     {
-        if (isset($this->itemInstances[ $item->getKey() ]) && spl_object_hash($item) !== spl_object_hash($this->itemInstances[ $item->getKey() ])) {
+        if (isset($this->itemInstances[ $item->getKey() ]) && \spl_object_hash($item) !== \spl_object_hash($this->itemInstances[ $item->getKey() ])) {
             throw new phpFastCacheLogicException('The item already exists and cannot be overwritten because the Spl object hash mismatches ! You probably tried to re-attach a detached item which has been already retrieved from cache.');
         } else {
             $this->itemInstances[ $item->getKey() ] = $item;
@@ -418,7 +418,7 @@ trait ExtendedCacheItemPoolTrait
         if ($item instanceof CacheItemInterface) {
             unset($this->itemInstances[ $item->getKey() ]);
 
-        } else if (is_string($item)) {
+        } else if (\is_string($item)) {
             unset($this->itemInstances[ $item ]);
         } else {
             throw new phpFastCacheInvalidArgumentException('Invalid type for $item variable');
@@ -447,7 +447,7 @@ trait ExtendedCacheItemPoolTrait
     public function isAttached(CacheItemInterface $item)
     {
         if (isset($this->itemInstances[ $item->getKey() ])) {
-            return spl_object_hash($item) === spl_object_hash($this->itemInstances[ $item->getKey() ]);
+            return \spl_object_hash($item) === \spl_object_hash($this->itemInstances[ $item->getKey() ]);
         }
         return null;
     }
@@ -470,12 +470,12 @@ trait ExtendedCacheItemPoolTrait
      */
     public function saveMultiple(...$items): bool
     {
-        if (isset($items[ 0 ]) && is_array($items[ 0 ])) {
+        if (isset($items[ 0 ]) && \is_array($items[ 0 ])) {
             foreach ($items[ 0 ] as $item) {
                 $this->save($item);
             }
             return true;
-        } else if (is_array($items)) {
+        } else if (\is_array($items)) {
             foreach ($items as $item) {
                 $this->save($item);
             }

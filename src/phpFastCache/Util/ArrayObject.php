@@ -33,7 +33,7 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
     public function __construct(...$args)
     {
         $this->position = 0;
-        $this->array = (count($args) === 1 && is_array($args[ 0 ]) ? $args[ 0 ] : $args);
+        $this->array = (\count($args) === 1 && \is_array($args[ 0 ]) ? $args[ 0 ] : $args);
     }
 
     /**
@@ -81,7 +81,7 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
      */
     public function count(): int
     {
-        return count($this->array);
+        return \count($this->array);
     }
 
     /**
@@ -90,7 +90,7 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
      */
     public function offsetExists($offset): bool
     {
-        return array_key_exists($offset, $this->array);
+        return \array_key_exists($offset, $this->array);
     }
 
     /**

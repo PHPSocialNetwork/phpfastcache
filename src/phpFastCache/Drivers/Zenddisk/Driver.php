@@ -35,7 +35,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        if (extension_loaded('Zend Data Cache') && function_exists('zend_disk_cache_store')) {
+        if (extension_loaded('Zend Data Cache') && \function_exists('zend_disk_cache_store')) {
             return true;
         } else {
             return false;
@@ -134,7 +134,7 @@ HELP;
         $stat = new DriverStatistic();
         $stat->setInfo('[ZendDisk] A void info string')
           ->setSize(0)
-          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setRawData(false);
 
         return $stat;

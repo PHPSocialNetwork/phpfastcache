@@ -35,7 +35,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        if (extension_loaded('Zend Data Cache') && function_exists('zend_shm_cache_store')) {
+        if (extension_loaded('Zend Data Cache') && \function_exists('zend_shm_cache_store')) {
             return true;
         } else {
             return false;
@@ -133,7 +133,7 @@ HELP;
     {
         $stats = (array)zend_shm_cache_info();
         return (new DriverStatistic())
-          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setInfo(sprintf("The Zend memory have %d item(s) in cache.\n For more information see RawData.", $stats[ 'items_total' ]))
           ->setRawData($stats)
           ->setSize($stats[ 'memory_total' ]);

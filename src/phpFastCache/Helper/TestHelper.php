@@ -113,9 +113,9 @@ class TestHelper
     public function printText($string, $strtoupper = false): self
     {
         if (!$strtoupper) {
-            print trim($string) . PHP_EOL;
+            print \trim($string) . PHP_EOL;
         } else {
-            print strtoupper(trim($string) . PHP_EOL);
+            print strtoupper(\trim($string) . PHP_EOL);
         }
 
         return $this;
@@ -126,7 +126,7 @@ class TestHelper
      */
     public function runAsyncProcess($cmd)
     {
-        if (substr(php_uname(), 0, 7) === 'Windows') {
+        if (\substr(php_uname(), 0, 7) === 'Windows') {
             pclose(popen('start /B ' . $cmd, 'r'));
         } else {
             exec($cmd . ' > /dev/null &');
@@ -155,7 +155,7 @@ class TestHelper
      */
     public function isHHVM(): bool
     {
-        return defined('HHVM_VERSION');
+        return \defined('HHVM_VERSION');
     }
 
     /**

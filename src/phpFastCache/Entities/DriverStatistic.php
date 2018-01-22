@@ -74,7 +74,7 @@ class DriverStatistic
      */
     public function setInfo($info)
     {
-        if (is_string($info)) {
+        if (\is_string($info)) {
             $this->info = ($info ?: '');
         } else {
             throw new phpFastCacheInvalidArgumentTypeException('string', $info);
@@ -90,7 +90,7 @@ class DriverStatistic
      */
     public function setSize($size)
     {
-        if (is_int($size)) {
+        if (\is_int($size)) {
             $this->size = ($size ?: 0);
         } else {
             throw new phpFastCacheInvalidArgumentTypeException('int', $size);

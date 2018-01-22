@@ -40,7 +40,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        return is_writable($this->getPath()) || @mkdir($this->getPath(), $this->getDefaultChmod(), true);
+        return \is_writable($this->getPath()) || @mkdir($this->getPath(), $this->getDefaultChmod(), true);
     }
 
     /**
@@ -61,7 +61,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         $file_path = $this->getFilePath($item->getKey(), true);
-        if (!file_exists($file_path)) {
+        if (!\file_exists($file_path)) {
             return null;
         }
 
@@ -110,8 +110,8 @@ class Driver implements ExtendedCacheItemPoolInterface
          */
         if ($item instanceof Item) {
             $file_path = $this->getFilePath($item->getKey(), true);
-            if (file_exists($file_path) && @unlink($file_path)) {
-                $dir = dirname($file_path);
+            if (\file_exists($file_path) && @unlink($file_path)) {
+                $dir = \dirname($file_path);
                 if (!(new \FilesystemIterator($dir))->valid()) {
                     rmdir($dir);
                 }
@@ -143,22 +143,22 @@ class Driver implements ExtendedCacheItemPoolInterface
         DriverBaseTrait::isValidOption($optionName, $optionValue);
         switch ($optionName) {
             case 'path':
-                return is_string($optionValue);
+                return \is_string($optionValue);
                 break;
 
             case 'default_chmod':
-                return is_numeric($optionValue);
+                return \is_numeric($optionValue);
                 break;
 
             case 'securityKey':
-                return is_string($optionValue);
+                return \is_string($optionValue);
                 break;
             case 'htaccess':
-                return is_bool($optionValue);
+                return \is_bool($optionValue);
                 break;
 
             case 'secureFileManipulation':
-                return is_bool($optionValue);
+                return \is_bool($optionValue);
                 break;
 
             default:

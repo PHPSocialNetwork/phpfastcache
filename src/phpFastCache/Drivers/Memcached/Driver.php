@@ -62,8 +62,8 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         $this->instance = new MemcachedSoftware();
         $this->instance->setOption(\Memcached::OPT_BINARY_PROTOCOL, true);
-        $servers = (!empty($this->config[ 'servers' ]) && is_array($this->config[ 'servers' ]) ? $this->config[ 'servers' ] : []);
-        if (count($servers) < 1) {
+        $servers = (!empty($this->config[ 'servers' ]) && \is_array($this->config[ 'servers' ]) ? $this->config[ 'servers' ] : []);
+        if (\count($servers) < 1) {
             $servers = [
               [
                 'host' => !empty($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1',
@@ -190,7 +190,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $date = (new \DateTime())->setTimestamp(time() - $stats[ 'uptime' ]);
 
         return (new DriverStatistic())
-          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setInfo(sprintf("The memcache daemon v%s is up since %s.\n For more information see RawData.", $stats[ 'version' ], $date->format(DATE_RFC2822)))
           ->setRawData($stats)
           ->setSize((int)$stats[ 'bytes' ]);

@@ -91,16 +91,16 @@ class EventManager
      */
     public function __call($name, $arguments)
     {
-        if (strpos($name, 'on') === 0) {
-            $name = substr($name, 2);
+        if (\strpos($name, 'on') === 0) {
+            $name = \substr($name, 2);
             if (is_callable($arguments[ 0 ])) {
-                if (isset($arguments[ 1 ]) && is_string($arguments[ 0 ])) {
+                if (isset($arguments[ 1 ]) && \is_string($arguments[ 0 ])) {
                     $this->events[ $name ][ $arguments[ 1 ] ] = $arguments[ 0 ];
                 } else {
                     $this->events[ $name ][] = $arguments[ 0 ];
                 }
             } else {
-                throw new phpFastCacheInvalidArgumentException(sprintf('Expected Callable, got "%s"', gettype($arguments[ 0 ])));
+                throw new phpFastCacheInvalidArgumentException(sprintf('Expected Callable, got "%s"', \gettype($arguments[ 0 ])));
             }
         } else {
             throw new \BadMethodCallException('An event must start with "on" such as "onCacheGetItem"');

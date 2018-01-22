@@ -169,7 +169,7 @@ HELP;
         $date = (isset($info[ 'Server' ][ 'uptime_in_seconds' ]) ? (new \DateTime())->setTimestamp(time() - $info[ 'Server' ][ 'uptime_in_seconds' ]) : 'unknown date');
 
         return (new DriverStatistic())
-          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setRawData($info)
           ->setSize((int) $size)
           ->setInfo(sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",

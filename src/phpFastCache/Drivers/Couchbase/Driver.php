@@ -164,7 +164,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function setBucket($bucketName, \CouchbaseBucket $CouchbaseBucket)
     {
-        if (!array_key_exists($bucketName, $this->bucketInstances)) {
+        if (!\array_key_exists($bucketName, $this->bucketInstances)) {
             $this->bucketInstances[ $bucketName ] = $CouchbaseBucket;
         } else {
             throw new phpFastCacheLogicException('A bucket instance with this name already exists.');
@@ -187,7 +187,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         return (new DriverStatistic())
           ->setSize($info[ 'basicStats' ][ 'diskUsed' ])
           ->setRawData($info)
-          ->setData(implode(', ', array_keys($this->itemInstances)))
+          ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setInfo('CouchBase version ' . $info[ 'nodes' ][ 0 ][ 'version' ] . ', Uptime (in days): ' . round($info[ 'nodes' ][ 0 ][ 'uptime' ] / 86400,
               1) . "\n For more information see RawData.");
     }

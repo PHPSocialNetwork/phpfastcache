@@ -76,7 +76,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        return extension_loaded('pdo_sqlite') && (is_writable($this->getSqliteDir()) || @mkdir($this->getSqliteDir(), $this->getDefaultChmod(), true));
+        return extension_loaded('pdo_sqlite') && (\is_writable($this->getSqliteDir()) || @mkdir($this->getSqliteDir(), $this->getDefaultChmod(), true));
     }
 
     /**
@@ -85,10 +85,10 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverConnect(): bool
     {
-        if (!file_exists($this->getSqliteDir()) && !@mkdir($this->getSqliteDir(), $this->getDefaultChmod(), true)) {
+        if (!\file_exists($this->getSqliteDir()) && !@mkdir($this->getSqliteDir(), $this->getDefaultChmod(), true)) {
             throw new phpFastCacheIOException(sprintf('Sqlite cannot write in "%s", aborting...', $this->getPath()));
         }
-        if (!file_exists($this->getPath() . '/' . self::FILE_DIR)) {
+        if (!\file_exists($this->getPath() . '/' . self::FILE_DIR)) {
             if (!mkdir($this->getPath() . '/' . self::FILE_DIR, $this->getDefaultChmod(), true)
             ) {
                 $this->fallback = true;
@@ -282,7 +282,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         if ($this->indexing == null) {
             $createTable = false;
-            if (!file_exists($this->SqliteDir . '/indexing')) {
+            if (!\file_exists($this->SqliteDir . '/indexing')) {
                 $createTable = true;
             }
 
@@ -309,7 +309,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
             // check file size
 
-            $size = file_exists($this->SqliteDir . '/db' . $db) ? filesize($this->SqliteDir . '/db' . $db) : 1;
+            $size = \file_exists($this->SqliteDir . '/db' . $db) ? filesize($this->SqliteDir . '/db' . $db) : 1;
             $size = round($size / 1024 / 1024, 1);
 
 
@@ -361,7 +361,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         if (!isset($this->instance[ $instant ])) {
             // check DB Files ready or not
             $createTable = false;
-            if (!file_exists($this->SqliteDir . '/db' . $instant) || $reset == true) {
+            if (!\file_exists($this->SqliteDir . '/db' . $instant) || $reset == true) {
                 $createTable = true;
             }
             $PDO = new PDO('sqlite:' . $this->SqliteDir . '/db' . $instant);
@@ -384,6 +384,6 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function __sleep(): array
     {
-        return array_diff(array_keys(get_object_vars($this)), ['indexing', 'instance']);
+        return \array_merge(\array_keys(\get_object_vars($this)), ['indexing', 'instance']);
     }
 }

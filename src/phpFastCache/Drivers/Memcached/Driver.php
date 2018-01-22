@@ -69,12 +69,12 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            $ttl = $item->getExpirationDate()->getTimestamp() - time();
+            $ttl = $item->getTtl();
 
             // Memcache will only allow a expiration timer less than 2592000 seconds,
             // otherwise, it will assume you're giving it a UNIX timestamp.
-            if ($ttl > 2592000) {
-                $ttl = time() + $ttl;
+            if ($ttl >= 2592000) {
+                $ttl = $item->getExpirationDate()->getTimestamp();
             }
 
             return $this->instance->set($item->getKey(), $this->driverPreWrap($item), $ttl);

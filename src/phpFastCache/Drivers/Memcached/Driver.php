@@ -159,10 +159,21 @@ class Driver implements ExtendedCacheItemPoolInterface
                 if (!empty($server[ 'sasl_user' ]) && !empty($server[ 'sasl_password' ])) {
                     $this->instance->setSaslAuthData($server[ 'sasl_user' ], $server[ 'sasl_password' ]);
                 }
+
             } catch (\Exception $e) {
                 $this->fallback = true;
             }
         }
+
+        /**
+         * Since Memcached does not throw
+         * any error if not connected ...
+         */
+        $version = $this->instance->getVersion();
+        if(!$version || $this->instance->getResultCode() !== MemcachedSoftware::RES_SUCCESS){
+            throw new phpFastCacheDriverException('Memcached seems to not be connected');
+        }
+        return true;
     }
 
     /********************

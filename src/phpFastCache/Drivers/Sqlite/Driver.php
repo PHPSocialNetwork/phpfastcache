@@ -384,6 +384,6 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function __sleep(): array
     {
-        return \array_merge(\array_keys(\get_object_vars($this)), ['indexing', 'instance']);
+        return \array_diff(\array_keys(\get_object_vars($this)), ['indexing', 'instance']);
     }
 }

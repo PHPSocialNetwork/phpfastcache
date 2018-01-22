@@ -368,7 +368,7 @@ trait ItemExtendedTrait
      */
     public function getRemovedTags(): array
     {
-        return \array_merge($this->removedTags, $this->tags);
+        return \array_diff($this->removedTags, $this->tags);
     }
 
     /**

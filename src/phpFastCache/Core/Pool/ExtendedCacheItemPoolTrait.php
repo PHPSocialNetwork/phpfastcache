@@ -95,7 +95,7 @@ trait ExtendedCacheItemPoolTrait
         $items = $this->getItemsByTags($tagNames);
 
         foreach ($items as $key => $item) {
-            if (\array_merge($tagNames, $item->getTags())) {
+            if (\array_diff($tagNames, $item->getTags())) {
                 unset($items[ $key ]);
             }
         }

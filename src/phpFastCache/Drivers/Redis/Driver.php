@@ -15,7 +15,9 @@ declare(strict_types=1);
 
 namespace phpFastCache\Drivers\Redis;
 
-use phpFastCache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use phpFastCache\Core\Pool\{
+  DriverBaseTrait, ExtendedCacheItemPoolInterface
+};
 use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\{
   phpFastCacheInvalidArgumentException, phpFastCacheLogicException
@@ -53,18 +55,27 @@ class Driver implements ExtendedCacheItemPoolInterface
             $clientConfig = $this->getConfig();
             $this->instance = $this->instance ?: new RedisClient();
 
-            if (!$this->instance->connect($clientConfig[ 'host' ], (int)$clientConfig[ 'port' ], (float)$clientConfig[ 'timeout' ])) {
-                return false;
+            /**
+             * If path is provided we consider it as an UNIX Socket
+             */
+            if ($clientConfig[ 'path' ]) {
+                $isConnected = $this->instance->connect($clientConfig[ 'path' ]);
             } else {
+                $isConnected = $this->instance->connect($clientConfig[ 'host' ], (int)$clientConfig[ 'port' ], (int)$clientConfig[ 'timeout' ]);
+            }
+
+            if (!$isConnected && $clientConfig[ 'path' ]) {
+                return false;
+            } else if (!$clientConfig[ 'path' ]) {
                 if ($clientConfig[ 'password' ] && !$this->instance->auth($clientConfig[ 'password' ])) {
                     return false;
                 }
-                if ($clientConfig[ 'database' ]) {
-                    $this->instance->select((int)$clientConfig[ 'database' ]);
-                }
-
-                return true;
             }
+
+            if ($clientConfig[ 'database' ]) {
+                $this->instance->select((int)$clientConfig[ 'database' ]);
+            }
+            return true;
         }
     }
 
@@ -120,7 +131,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return (bool) $this->instance->del($item->getKey());
+            return (bool)$this->instance->del($item->getKey());
         } else {
             throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
@@ -152,7 +163,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         return (new DriverStatistic())
           ->setData(implode(', ', array_keys($this->itemInstances)))
           ->setRawData($info)
-          ->setSize((int) $info[ 'used_memory' ])
+          ->setSize((int)$info[ 'used_memory' ])
           ->setInfo(sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
             $info[ 'redis_version' ], $date->format(DATE_RFC2822)));
     }

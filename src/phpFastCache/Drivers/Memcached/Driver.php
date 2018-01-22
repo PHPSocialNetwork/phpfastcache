@@ -136,11 +136,11 @@ class Driver implements ExtendedCacheItemPoolInterface
         if (count($servers) < 1) {
             $servers = [
               [
-                'host' => '127.0.0.1',
-                'path' => false,
-                'port' => 11211,
-                'sasl_user' => false,
-                'sasl_password' => false,
+                'host' => !empty($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1',
+                'path' => !empty($this->config[ 'path' ]) ? $this->config[ 'path' ] : false,
+                'port' => !empty($this->config[ 'port' ]) ? $this->config[ 'port' ] : 11211,
+                'sasl_user' => !empty($this->config[ 'sasl_user' ]) ? $this->config[ 'sasl_user' ] : false,
+                'sasl_password' =>!empty($this->config[ 'sasl_password' ]) ? $this->config[ 'sasl_password' ]: false,
               ],
             ];
         }

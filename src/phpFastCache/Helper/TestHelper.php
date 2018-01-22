@@ -34,6 +34,7 @@ class TestHelper
      */
     public function __construct($testName)
     {
+        $this->printText('[PhpFastCache CORE v' . Api::getPhpFastCacheVersion() .  Api::getPhpFastCacheGitHeadHash() . ']', true);
         $this->printText('[PhpFastCache API v' . Api::getVersion() . ']', true);
         $this->printText("[Begin Test: '{$testName}']");
         $this->printText('---');

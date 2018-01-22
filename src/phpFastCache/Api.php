@@ -50,13 +50,13 @@ class Api
     }
 
     /**
-     * @param bool $fallbackOnReadme
+     * @param bool $fallbackOnChangelog
      * @param bool $cacheable
      * @return string
      * @throws \phpFastCache\Exceptions\phpFastCacheLogicException
      * @throws \phpFastCache\Exceptions\phpFastCacheIOException
      */
-    public static function getPhpFastCacheVersion($fallbackOnReadme = true, $cacheable = true): string
+    public static function getPhpFastCacheVersion($fallbackOnChangelog = true, $cacheable = true): string
     {
         /**
          * Cache the version statically to improve
@@ -77,12 +77,12 @@ class Api
             throw new phpFastCacheLogicException('The git command used to retrieve the PhpFastCache version has failed.');
         }
 
-        if(!$fallbackOnReadme){
+        if(!$fallbackOnChangelog){
             throw new phpFastCacheLogicException('shell_exec is disabled therefore the PhpFastCache version cannot be retrieved.');
         }
 
-        $readmeFilename = __DIR__ . '/../../CHANGELOG.md';
-        if(file_exists($readmeFilename)){
+        $changelogFilename = __DIR__ . '/../../CHANGELOG.md';
+        if(file_exists($changelogFilename)){
             $versionPrefix = '## ';
             $changelog = explode("\n", self::getPhpFastCacheChangelog());
             foreach ($changelog as $line){
@@ -95,6 +95,23 @@ class Api
         }
         throw new phpFastCacheLogicException('shell_exec being disabled we attempted to retrieve the PhpFastCache version through the CHANGELOG.md file but it is not readable or has been removed.');
     }
+
+    /**
+     * @return string
+     * @throws \phpFastCache\Exceptions\phpFastCacheLogicException
+     */
+    public function getPhpFastCacheGitHeadHash()
+    {
+        if(function_exists('shell_exec')){
+            $stdout = shell_exec('git rev-parse --short HEAD');
+            if(is_string($stdout)){
+                $hash = trim($stdout);
+                return "#{$hash}";
+            }
+        }
+        return '';
+    }
+
 
     /**
      * Return the API changelog, as a string.

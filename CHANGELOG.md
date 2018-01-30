@@ -1,5 +1,20 @@
+## 6.1.0
+##### 30 january 2018
+- __Global__
+    - Updated "path" configuration validator (Now usable for UNIX sockets and "files" drivers path) (@Geolim4)
+    - Upgrading straight from 6.0.8 to 6.1.0 as per [Semver](https://semver.org/) since the UNIX socket support has been added for (P)Redis & Memcache(d). The BC stays intact.
+- __Core__
+    - **Fixed #560** // Massive storage date issue for 30days+ expiration dates (@Geolim4)
+- __Drivers__
+    - Added multiple Memcache(d) configuration style support (@Geolim4)
+    - Fixed missing parameters in memcache driver (@Geolim4)
+    - Fixed #563 // Memcached TTL issue (@Geolim4)
+    - **Added UNIX socket support** for (P)Redis and Memcache(d) as requested in #563 (@Geolim4)
+- __Tests__
+    - Added new test for Memcached (@Geolim4)
+
 ## 6.0.8
-##### 15 December 2017
+##### 15 december 2017
 - __Global__
     - Fixed #547 // Link to wiki page (@do-you-even-curl)
 - __Core__

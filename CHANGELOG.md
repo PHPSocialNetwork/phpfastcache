@@ -1,3 +1,8 @@
+## 5.0.20
+##### 30 january 2018
+- __Core__
+    - **Fixed #560** // Massive storage date issue for 30days+ expiration dates (@Geolim4)
+
 ## 5.0.19
 ##### 10 november 2017
 - __Global__

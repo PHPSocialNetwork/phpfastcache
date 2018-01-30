@@ -1,3 +1,16 @@
+## 7.0.0-beta
+##### 30 january 2018
+- __Global__
+    - Added Opcache improvements by namespacing php core's functions (@Geolim4)
+    - Updated contributing.md + added coding guideline (@Geolim4)
+    - Fixed little notice (@Geolim4)
+- __Drivers__
+    - Added UNIX socket support for (P)Redis and Memcache(d) as requested in #563 (@Geolim4)
+- __Helpers__
+    - Updated test helper and API to add the git version (if available) (@Geolim4)
+- __Tests__
+    - Fixed #560 // Potential delay issue in test (@Geolim4)
+
 ## 7.0.0-alpha3
 ##### 15 december 2017
 - __Global__

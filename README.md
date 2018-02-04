@@ -240,9 +240,9 @@ composer require phpFastCache/phpFastCache
 use phpFastCache\CacheManager;
 
 // Setup File Path on your config files
-CacheManager::setup(array(
+CacheManager::setDefaultConfig([
     "path" => '/var/www/phpfastcache.com/dev/tmp', // or in windows "C:/tmp/"
-));
+]);
 
 // In your class, function, you can call the Cache
 $InstanceCache = CacheManager::getInstance('files');
@@ -280,8 +280,9 @@ echo implode('<br />', $CachedString->get());// Will echo your product list
 
 ```
 
-##### :floppy_disk: Legacy / Lazy Method (Without Composer)
-* See the file examples/withoutComposer.php for more information.
+##### :floppy_disk: Legacy implementation (Without Composer)
+PhpFastCache provide it's own autoload for legacy implementation.
+Please see the sample in docs/examples/withoutComposer.php for more information.
 
 #### :zap: Step 3: Enjoy ! Your website is now faster than lightning !
 For curious developers, there is a lot of other examples available  [here](https://github.com/PHPSocialNetwork/phpfastcache/tree/final/docs/examples).

@@ -135,7 +135,7 @@ trait ItemExtendedTrait
      */
     public function getCreationDate(): \DateTimeInterface
     {
-        if ($this->driver->getConfig()[ 'itemDetailedDate' ]) {
+        if ($this->driver->getConfig()->isItemDetailedDate()) {
             return $this->creationDate;
         } else {
             throw new phpFastCacheLogicException('Cannot access to the creation date when the "itemDetailedDate" configuration is disabled.');
@@ -149,7 +149,7 @@ trait ItemExtendedTrait
      */
     public function setCreationDate(\DateTimeInterface $date): ExtendedCacheItemInterface
     {
-        if ($this->driver->getConfig()[ 'itemDetailedDate' ]) {
+        if ($this->driver->getConfig()->isItemDetailedDate()) {
             $this->creationDate = $date;
             return $this;
         } else {
@@ -163,7 +163,7 @@ trait ItemExtendedTrait
      */
     public function getModificationDate(): \DateTimeInterface
     {
-        if ($this->driver->getConfig()[ 'itemDetailedDate' ]) {
+        if ($this->driver->getConfig()->isItemDetailedDate()) {
             return $this->modificationDate;
         } else {
             throw new phpFastCacheLogicException('Cannot access to the modification date when the "itemDetailedDate" configuration is disabled.');
@@ -177,7 +177,7 @@ trait ItemExtendedTrait
      */
     public function setModificationDate(\DateTimeInterface $date): ExtendedCacheItemInterface
     {
-        if ($this->driver->getConfig()[ 'itemDetailedDate' ]) {
+        if ($this->driver->getConfig()->isItemDetailedDate()) {
             $this->modificationDate = $date;
             return $this;
         } else {

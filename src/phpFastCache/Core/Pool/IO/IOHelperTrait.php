@@ -154,7 +154,7 @@ trait IOHelperTrait
          */
         if (!$skip) {
             if (!\file_exists($path)) {
-                if (@!mkdir($path, $this->getDefaultChmod(), true)) {
+                if (@!\mkdir($path, $this->getDefaultChmod(), true)) {
                     throw new phpFastCacheIOException('PLEASE CHMOD ' . $path . ' - ' . $this->getDefaultChmod() . ' OR ANY WRITABLE PERMISSION!');
                 }
             }

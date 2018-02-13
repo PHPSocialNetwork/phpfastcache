@@ -24,7 +24,7 @@ use phpFastCache\Exceptions\phpFastCacheLogicException;
  */
 class Api
 {
-    protected static $version = '1.3.0';
+    protected static $version = '2.0.0';
 
     /**
      * Api constructor.
@@ -120,12 +120,19 @@ class Api
 
 
     /**
+     * @todo Put this content to a file !!!!
      * Return the API changelog, as a string.
      * @return string
      */
     public static function getChangelog(): string
     {
         return <<<CHANGELOG
+- 2.0.0
+-- Introduced BC breaks:
+-- Updated ExtendedCacheItemPoolInterface to be compliant with the new \$config object introduced in V7.
+-- ExtendedCacheItemPoolInterface::getConfig() no longer returns an array but a ConfigurationOption object
+-- ExtendedCacheItemPoolInterface::getDefaultConfig() no longer returns an array but a ConfigurationOption object
+
 - 1.3.0
 -- Implemented full PHP7 type hint support for ExtendedCacheItemPoolInterface and ExtendedCacheItemInterface
 -- Added instance ID getter (introduced in V7):

@@ -28,12 +28,24 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
-    use DriverBaseTrait, IOHelperTrait;
-
+    use IOHelperTrait;
+    use DriverBaseTrait {
+        DriverBaseTrait::__construct as private __parentConstruct;
+    }
     /**
      *
      */
     const FILE_DIR = 'files';
+
+    /**
+     * Driver constructor.
+     * @param Config $config
+     * @param string $instanceId
+     */
+    public function __construct(Config $config, string $instanceId)
+    {
+        $this->__parentConstruct($config, $instanceId);
+    }
 
     /**
      * @return bool

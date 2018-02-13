@@ -93,7 +93,7 @@ class EventManager
     {
         if (\strpos($name, 'on') === 0) {
             $name = \substr($name, 2);
-            if (is_callable($arguments[ 0 ])) {
+            if (\is_callable($arguments[ 0 ])) {
                 if (isset($arguments[ 1 ]) && \is_string($arguments[ 0 ])) {
                     $this->events[ $name ][ $arguments[ 1 ] ] = $arguments[ 0 ];
                 } else {
@@ -114,10 +114,9 @@ class EventManager
      */
     public function unbindEventCallback($eventName, $callbackName): bool
     {
-        if (isset($this->events[ $eventName ][ $callbackName ])) {
-            unset($this->events[ $eventName ][ $callbackName ]);
-            return true;
-        }
-        return false;
+        $return = isset($this->events[ $eventName ][ $callbackName ]);
+        unset($this->events[ $eventName ][ $callbackName ]);
+
+        return $return;
     }
 }

@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace phpFastCache\Core\Pool;
 
 use InvalidArgumentException;
+use phpFastCache\Config\ConfigurationOption;
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\EventManager;
@@ -64,14 +65,14 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
 
 
     /**
-     * @return array
+     * @return ConfigurationOption
      */
-    public function getConfig(): array;
+    public function getConfig(): ConfigurationOption;
 
     /**
-     * @return ArrayObject
+     * @return ConfigurationOption
      */
-    public function getDefaultConfig(): ArrayObject;
+    public function getDefaultConfig(): ConfigurationOption;
 
     /**
      * @param string $optionName

@@ -19,12 +19,12 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
     /**
      * @var array
      */
-    protected $array = [];
+    private $array = [];
 
     /**
      * @var int
      */
-    protected $position = 0;
+    private $position = 0;
 
     /**
      * @param $args
@@ -32,7 +32,6 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
      */
     public function __construct(...$args)
     {
-        $this->position = 0;
         $this->array = (\count($args) === 1 && \is_array($args[ 0 ]) ? $args[ 0 ] : $args);
     }
 
@@ -132,5 +131,24 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
     public function toArray()
     {
         return $this->array;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    protected function &getArray()
+    {
+        return $this->array;
+    }
+
+    /**
+     * @param array $array
+     * @return self
+     */
+    public function mergeArray($array): self
+    {
+        $this->array = array_merge($this->array, $array);
+
+        return $this;
     }
 }

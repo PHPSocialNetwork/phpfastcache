@@ -15,9 +15,10 @@ declare(strict_types=1);
 
 namespace phpFastCache;
 
+use phpFastCache\Config\ConfigurationOption;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Exceptions\{
-  phpFastCacheDriverCheckException, phpFastCacheDriverNotFoundException, phpFastCacheInstanceNotFoundException, phpFastCacheInvalidArgumentException, phpFastCacheInvalidConfigurationException
+  phpFastCacheDeprecatedException, phpFastCacheDriverCheckException, phpFastCacheDriverNotFoundException, phpFastCacheInstanceNotFoundException, phpFastCacheInvalidArgumentException, phpFastCacheInvalidConfigurationException
 };
 
 /**
@@ -51,6 +52,11 @@ use phpFastCache\Exceptions\{
 class CacheManager
 {
     /**
+     * @var ConfigurationOption
+     */
+    protected static $config;
+
+    /**
      * @var int
      */
     public static $ReadHits = 0;
@@ -59,123 +65,6 @@ class CacheManager
      * @var int
      */
     public static $WriteHits = 0;
-
-    /**
-     * @var array
-     */
-    protected static $config = [
-        /**
-         * Specify if the item must provide detailed creation/modification dates
-         */
-      'itemDetailedDate' => false,
-
-        /**
-         * Automatically attempt to fallback to temporary directory
-         * if the cache fails to write on the specified directory
-         */
-      'autoTmpFallback' => false,
-
-        /**
-         * Provide a secure file manipulation mechanism,
-         * on intensive usage the performance can be affected.
-         */
-      'secureFileManipulation' => false,
-
-        /**
-         * Ignore Symfony notice for Symfony project which
-         * do not makes use of PhpFastCache's Symfony Bundle
-         */
-      'ignoreSymfonyNotice' => false,
-
-        /**
-         * Default time-to-live in second
-         */
-      'defaultTtl' => 900,
-
-        /**
-         * Default key hash function
-         * (md5 by default)
-         */
-      'defaultKeyHashFunction' => '',
-
-        /**
-         * The securityKey that will be used
-         * to create sub-directory
-         * (Files-based drivers only)
-         */
-      'securityKey' => 'Auto',
-
-        /**
-         * Auto-generate .htaccess if it's missing
-         * (Files-based drivers only)
-         */
-      'htaccess' => true,
-
-        /**
-         * Default files chmod
-         * 0777 recommended
-         * (Files-based drivers only)
-         */
-      'default_chmod' => 0777,
-
-        /**
-         * The path where we will writecache files
-         * default value if empty: sys_get_temp_dir()
-         * (Files-based drivers only)
-         */
-      'path' => '',
-
-        /**
-         * Driver fallback in case of failure.
-         * Caution, in case of failure an E_WARNING
-         * error will always be raised
-         */
-      'fallback' => false,
-
-        /**
-         * Maximum size (bytes) of object store in memory
-         * (Memcache(d) drivers only)
-         */
-      'limited_memory_each_object' => 4096,
-
-        /**
-         * Compress stored data, if the backend supports it
-         * (Memcache(d) drivers only)
-         */
-      'compress_data' => false,
-
-        /**
-         * Prevent cache slams when
-         * making use of heavy cache
-         * items
-         */
-      'preventCacheSlams' => false,
-
-        /**
-         * Cache slams timeout
-         * in seconds
-         */
-      'cacheSlamsTimeout' => 15,
-
-        /**
-         * Cache slams timeout
-         * in seconds
-         */
-      'cacheFileExtension' => 'txt',
-
-    ];
-
-    /**
-     * Feel free to propose your own one
-     * by opening a pull request :)
-     * @var array
-     */
-    protected static $safeFileExtensions = [
-      'txt',
-      'cache',
-      'db',
-      'pfc',
-    ];
 
     /**
      * @var string
@@ -189,7 +78,7 @@ class CacheManager
 
     /**
      * @param string $driver
-     * @param array $config
+     * @param array|ConfigurationOption $config
      * @param string $instanceId
      *
      * @return ExtendedCacheItemPoolInterface
@@ -199,7 +88,7 @@ class CacheManager
      * @throws phpFastCacheDriverNotFoundException
      * @throws phpFastCacheInvalidArgumentException
      */
-    public static function getInstance($driver = 'auto', array $config = [], $instanceId = null)
+    public static function getInstance($driver = 'auto', $config = null, $instanceId = null)
     {
         static $badPracticeOmeter = [];
 
@@ -207,49 +96,43 @@ class CacheManager
             throw new phpFastCacheInvalidArgumentException('The Instance ID must be a string');
         }
 
-        /**
-         * @todo: Standardize a method for driver name
-         */
+        if (is_array($config)) {
+            $config = new ConfigurationOption($config);
+            trigger_error(
+              'The CacheManager will drops the support of primitive configuration arrays, use a "\phpFastCache\Config\ConfigurationOption" object instead',
+              E_USER_DEPRECATED
+            );
+        }elseif ($config === null){
+            $config = self::getDefaultConfig();
+        }else if(!($config instanceof ConfigurationOption)){
+            throw new phpFastCacheInvalidArgumentException(sprintf('Unsupported config type: %s', gettype($config)));
+        }
+
         $driver = self::standardizeDriverName($driver);
-        $config = \array_merge(self::$config, $config);
-        self::validateConfig($config);
+
         if (!$driver || $driver === 'Auto') {
             $driver = self::getAutoClass($config);
         }
 
-        $instance = $instanceId ?: crc32($driver . \serialize($config));
+        $instance = $instanceId ?: md5($driver . \serialize($config->toArray()));
 
         if (!isset(self::$instances[ $instance ])) {
             $badPracticeOmeter[ $driver ] = 1;
-            if (!$config[ 'ignoreSymfonyNotice' ] && interface_exists('Symfony\Component\HttpKernel\KernelInterface') && !class_exists('phpFastCache\Bundle\phpFastCacheBundle')) {
-                trigger_error('A Symfony Bundle to make the PhpFastCache integration more easier is now available here: https://github.com/PHPSocialNetwork/phpfastcache-bundle',
-                  E_USER_NOTICE);
-            }
-            $class = self::getNamespacePath() . $driver . '\Driver';
+            $driverClass = self::getNamespacePath() . $driver . '\Driver';
             try {
-                if (class_exists($class)) {
-                    self::$instances[ $instance ] = new $class($config, $instance);
+                if (class_exists($driverClass)) {
+                    $configClass = $driverClass::getConfigClass();
+                    self::$instances[ $instance ] = new $driverClass(new $configClass($config->toArray()), $instance);
                     self::$instances[ $instance ]->setEventManager(EventManager::getInstance());
                 } else {
                     throw new phpFastCacheDriverNotFoundException(sprintf('The driver "%s" does not exists', $driver));
                 }
             } catch (phpFastCacheDriverCheckException $e) {
-                if ($config[ 'fallback' ]) {
+                if ($config->getFallback()) {
                     try {
-                        $fallback = self::standardizeDriverName($config[ 'fallback' ]);
-                        if ($fallback !== $driver) {
-                            $class = self::getNamespacePath() . $fallback . '\Driver';
-                            if (class_exists($class)) {
-                                self::$instances[ $instance ] = new $class($config, $instance);
-                                self::$instances[ $instance ]->setEventManager(EventManager::getInstance());
-                            } else {
-                                throw new phpFastCacheDriverNotFoundException(sprintf('The driver "%s" does not exists', $driver));
-                            }
-                            trigger_error(sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver,
-                              $fallback), E_USER_WARNING);
-                        } else {
-                            throw new phpFastCacheInvalidConfigurationException('The fallback driver cannot be the same than the default driver', 0, $e);
-                        }
+                        $fallback = $config->getFallback();
+                        $config->setFallback('');
+                        return self::getInstance($fallback, $config);
                     } catch (phpFastCacheInvalidArgumentException $e) {
                         throw new phpFastCacheInvalidConfigurationException('Invalid fallback driver configuration', 0, $e);
                     }
@@ -257,7 +140,7 @@ class CacheManager
                     throw new phpFastCacheDriverCheckException($e->getMessage(), $e->getCode(), $e);
                 }
             }
-        } else if ($badPracticeOmeter[ $driver ] >= 5) {
+        } else if ($badPracticeOmeter[ $driver ] >= 2) {
             trigger_error('[' . $driver . '] Calling many times CacheManager::getInstance() for already instanced drivers is a bad practice and have a significant impact on performances.
            See https://github.com/PHPSocialNetwork/phpfastcache/wiki/[V5]-Why-calling-getInstance%28%29-each-time-is-a-bad-practice-%3F');
         }
@@ -297,7 +180,7 @@ class CacheManager
      * @internal
      * @return ExtendedCacheItemPoolInterface[]
      */
-    public static function getInstances()
+    public static function getInstances(): array
     {
         return self::$instances;
     }
@@ -308,15 +191,17 @@ class CacheManager
      * any external development use the
      * getInstances() method instead
      *
+     * @todo Use a proper way to passe them as a reference ?
      * @internal
      * @return ExtendedCacheItemPoolInterface[]
      */
-    public static function &getInternalInstances()
+    public static function &getInternalInstances(): array
     {
         return self::$instances;
     }
 
     /**
+     * @todo Does we really keep it ??
      * @param $config
      * @return string
      * @throws phpFastCacheDriverCheckException
@@ -380,39 +265,19 @@ class CacheManager
     }
 
     /**
-     * @param $name string|array
-     * @param mixed $value
-     * @throws phpFastCacheInvalidArgumentException
+     * @param ConfigurationOption $config
      */
-    public static function setDefaultConfig($name, $value = null)
+    public static function setDefaultConfig(ConfigurationOption $config)
     {
-        if (\is_array($name)) {
-            self::$config = \array_merge(self::$config, $name);
-        } else if (\is_string($name)) {
-            self::$config[ $name ] = $value;
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Invalid variable type: $name');
-        }
+        self::$config = $config;
     }
 
     /**
-     * @param $name string|array
-     * @param mixed $value
-     * @throws phpFastCacheInvalidConfigurationException
-     * @deprecated Method "setup" is deprecated, please use "setDefaultConfig" method instead
+     * @return ConfigurationOption
      */
-    public static function setup($name, $value = null)
+    public static function getDefaultConfig(): ConfigurationOption
     {
-        throw new phpFastCacheInvalidConfigurationException(sprintf('Method "%s" is deprecated, please use "setDefaultConfig" method instead.', __FUNCTION__));
-    }
-
-
-    /**
-     * @return array
-     */
-    public static function getDefaultConfig()
-    {
-        return self::$config;
+        return self::$config ?: self::$config = new ConfigurationOption();
     }
 
     /**
@@ -420,6 +285,9 @@ class CacheManager
      */
     public static function getStaticSystemDrivers()
     {
+        /**
+         * @todo Reflection reader
+         */
         return [
           'Apc',
           'Apcu',
@@ -450,6 +318,9 @@ class CacheManager
      */
     public static function getStaticAllDrivers()
     {
+        /**
+         * @todo Reflection reader
+         */
         return \array_merge(self::getStaticSystemDrivers(), [
           'Devtrue',
           'Devfalse',
@@ -458,81 +329,11 @@ class CacheManager
     }
 
     /**
-     * @param $driverName
+     * @param string $driverName
      * @return string
-     * @throws \phpFastCache\Exceptions\phpFastCacheInvalidArgumentException
      */
-    public static function standardizeDriverName($driverName)
+    public static function standardizeDriverName(string $driverName): string
     {
-        if (!\is_string($driverName)) {
-            throw new phpFastCacheInvalidArgumentException(sprintf('Expected $driverName to be a string got "%s" instead', \gettype($driverName)));
-        }
         return \ucfirst(\strtolower(\trim($driverName)));
-    }
-
-    /**
-     * @param array $config
-     * @todo Move this to a config file
-     * @throws phpFastCacheInvalidConfigurationException
-     * @return bool
-     */
-    protected static function validateConfig(array $config)
-    {
-        foreach ($config as $configName => $configValue) {
-            switch ($configName) {
-                case 'itemDetailedDate':
-                case 'autoTmpFallback':
-                case 'secureFileManipulation':
-                case 'ignoreSymfonyNotice':
-                case 'htaccess':
-                case 'compress_data':
-                    if (!\is_bool($configValue)) {
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean");
-                    }
-                    break;
-                case 'defaultTtl':
-                    if (!\is_numeric($configValue)) {
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be numeric");
-                    }
-                    break;
-                case 'defaultKeyHashFunction':
-                    if (!\is_string($configValue) && !\function_exists($configValue)) {
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a valid function name string");
-                    }
-                    break;
-                case 'securityKey':
-                case 'path':
-                     if (!\is_string($configValue) && (!\is_bool($configValue) || $configValue)) {
-                         throw new phpFastCacheInvalidConfigurationException("{$configName} must be a string or a false boolean");
-                     }
-                    break;
-                case 'default_chmod':
-                case 'limited_memory_each_object':
-                    if (!\is_int($configValue)) {
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be an integer");
-                    }
-                    break;
-                case 'fallback':
-                    if (!\is_bool($configValue) && !\is_string($configValue)) {
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean or string");
-                    }
-                    break;
-                case 'cacheFileExtension':
-                    if (!\is_string($configValue)) {
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} must be a boolean");
-                    }
-                    if (\strpos($configValue, '.') !== false) {
-                        throw new phpFastCacheInvalidConfigurationException("{$configName} cannot contain a dot \".\"");
-                    }
-                    if (!\in_array($configValue, self::$safeFileExtensions)) {
-                        throw new phpFastCacheInvalidConfigurationException(
-                          "{$configName} is not a safe extension, currently allowed extension: " . \implode(', ', self::$safeFileExtensions)
-                        );
-                    }
-                    break;
-            }
-        }
-
-        return true;
     }
 }

@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace phpFastCache\Core\Pool;
 
+use phpFastCache\Config\ConfigurationOption;
 use phpFastCache\Core\Item\ExtendedCacheItemInterface;
 use phpFastCache\Exceptions\{
   phpFastCacheInvalidArgumentException, phpFastCacheDriverCheckException, phpFastCacheLogicException
@@ -31,7 +32,7 @@ trait DriverBaseTrait
     use ExtendedCacheItemPoolTrait;
 
     /**
-     * @var array default options, this will be merge to Driver's Options
+     * @var ConfigurationOption the options
      */
     protected $config = [];
 
@@ -58,13 +59,13 @@ trait DriverBaseTrait
 
     /**
      * Driver constructor.
-     * @param array $config
+     * @param ConfigurationOption $config
      * @param string $instanceId
      * @throws phpFastCacheDriverCheckException
      */
-    public function __construct(array $config = [], $instanceId)
+    public function __construct(ConfigurationOption $config, $instanceId)
     {
-        $this->setup($config);
+        $this->setConfig($config);
         $this->instanceId = $instanceId;
 
         if (!$this->driverCheck()) {
@@ -75,27 +76,19 @@ trait DriverBaseTrait
     }
 
     /**
-     * @param $config_name
-     * @param string $value
+     * @param ConfigurationOption $config_name
      */
-    public function setup($config_name, $value = '')
+    public function setConfig(ConfigurationOption $config)
     {
-        /**
-         * Config for class
-         */
-        if (\is_array($config_name)) {
-            $this->config = \array_merge($this->config, $config_name);
-        } else {
-            $this->config[ $config_name ] = $value;
-        }
+        $this->config = $config;
     }
 
     /**
-     * @return array
+     * @return ConfigurationOption
      */
-    public function getConfig(): array
+    public function getConfig(): ConfigurationOption
     {
-        return \array_merge($this->getDefaultConfig()->toArray(), $this->config);
+        return $this->config;
     }
 
 
@@ -105,19 +98,16 @@ trait DriverBaseTrait
      */
     public function getConfigOption($optionName)
     {
-        if (isset($this->getConfig()[ $optionName ])) {
-            return $this->getConfig()[ $optionName ];
-        } else {
-            return null;
-        }
+        return $this->getConfig()->getOption($optionName);
     }
 
     /**
-     * @return ArrayObject
+     * @return ConfigurationOption
      */
-    public function getDefaultConfig(): ArrayObject
+    public function getDefaultConfig(): ConfigurationOption
     {
-        return new ArrayObject();
+        $className = self::getConfigClass();
+        return new $className;
     }
 
     /**
@@ -141,7 +131,7 @@ trait DriverBaseTrait
      */
     protected function decode($value)
     {
-        return unserialize((string)$value);
+        return unserialize((string) $value);
     }
 
     /**
@@ -158,20 +148,11 @@ trait DriverBaseTrait
      * @param $class
      * @return bool
      */
-    protected function isExistingDriver($class): bool
+    protected function driverExists($class): bool
     {
         return class_exists("\\phpFastCache\\Drivers\\{$class}");
     }
 
-
-    /**
-     * @param $tag
-     * @return string
-     */
-    protected function _getTagName($tag): string
-    {
-        return "__tag__" . $tag;
-    }
 
     /**
      * @param \phpFastCache\Core\Item\ExtendedCacheItemInterface $item
@@ -398,5 +379,17 @@ trait DriverBaseTrait
     public static function getValidOptions(): array
     {
         return [];
+    }
+
+    /**
+     * @return string
+     */
+    public static function getConfigClass(): string
+    {
+        $localConfigClass = substr(static::class, 0, strrpos(static::class, '\\')) . '\Config';
+        if(class_exists($localConfigClass) && is_a($localConfigClass, ConfigurationOption::class, true)){
+            return $localConfigClass;
+        }
+        return ConfigurationOption::class;
     }
 }

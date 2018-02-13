@@ -106,7 +106,11 @@ class ConfigurationOption extends ArrayObject
         }
 
         foreach (get_object_vars($this) as $property => $value) {
-            $array[ $property ] = &$this->$property;
+            if(array_key_exists($property, $array)){
+                $this->$property = &$array[ $property ];
+            }else{
+                $array[ $property ] = &$this->$property;
+            }
         }
     }
 

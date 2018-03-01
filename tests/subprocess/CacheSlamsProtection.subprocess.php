@@ -6,15 +6,16 @@
  */
 
 use phpFastCache\CacheManager;
+use phpFastCache\Config\ConfigurationOption;
 use phpFastCache\Entities\ItemBatch;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../src/autoload.php';
 
-$driverInstance = CacheManager::getInstance('Files', [
+$driverInstance = CacheManager::getInstance('Files', new ConfigurationOption([
   'preventCacheSlams' => true,
   'cacheSlamsTimeout' => 15
-]);
+]));
 
 /**
  * Emulate an active ItemBatch

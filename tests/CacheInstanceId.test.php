@@ -16,7 +16,7 @@ $testHelper = new TestHelper('New cache instance');
 $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 $instanceId = str_shuffle(md5(time() - mt_rand(0, 86400)));
 
-$driverInstance = CacheManager::getInstance($defaultDriver, [], $instanceId);
+$driverInstance = CacheManager::getInstance($defaultDriver, null, $instanceId);
 
 if ($driverInstance->getInstanceId() !== $instanceId) {
     $testHelper->printFailText('Unexpected instance ID: ' . $driverInstance->getInstanceId());

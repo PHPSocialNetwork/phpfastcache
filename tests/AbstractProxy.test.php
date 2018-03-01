@@ -22,7 +22,7 @@ $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
  */
 class CustomMemcachedCacheClass extends phpFastCacheAbstractProxy
 {
-    public function __construct($driver = '', array $config = [])
+    public function __construct($driver = '', $config = null)
     {
         global $defaultDriver;
         $driver = $defaultDriver;

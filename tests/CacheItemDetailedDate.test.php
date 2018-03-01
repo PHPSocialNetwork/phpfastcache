@@ -6,6 +6,7 @@
  */
 
 use phpFastCache\CacheManager;
+use phpFastCache\Config\ConfigurationOption;
 use phpFastCache\Exceptions\phpFastCacheLogicException;
 use phpFastCache\Helper\CacheConditionalHelper as CacheConditional;
 use phpFastCache\Helper\TestHelper;
@@ -15,7 +16,10 @@ chdir(__DIR__);
 require_once __DIR__ . '/../src/autoload.php';
 $testHelper = new TestHelper('Cache option: itemDetailedDate');
 $defaultDriver = (!empty($argv[ 1 ]) ? ucfirst($argv[ 1 ]) : 'Files');
-$cacheInstance = CacheManager::getInstance($defaultDriver, ['itemDetailedDate' => true, 'path' => __DIR__ . '/../cache/']);
+$cacheInstance = CacheManager::getInstance($defaultDriver, new ConfigurationOption([
+  'itemDetailedDate' => true,
+  'path' => __DIR__ . '/../cache/'
+]));
 $cacheKey = 'cacheKey';
 $RandomCacheValue = str_shuffle(uniqid('pfc', true));
 

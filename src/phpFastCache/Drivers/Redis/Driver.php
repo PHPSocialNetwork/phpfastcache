@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace phpFastCache\Drivers\Redis;
 
+use phpFastCache\Config\ConfigurationOption;
 use phpFastCache\Core\Pool\{
   DriverBaseTrait, ExtendedCacheItemPoolInterface
 };
@@ -171,16 +172,14 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return ArrayObject
      */
-    public function getDefaultConfig(): ArrayObject
+    public function getDefaultConfig(): ConfigurationOption
     {
-        $defaultConfig = new ArrayObject();
-
-        $defaultConfig[ 'host' ] = '127.0.0.1';
-        $defaultConfig[ 'port' ] = 6379;
-        $defaultConfig[ 'password' ] = null;
-        $defaultConfig[ 'database' ] = 0;
-        $defaultConfig[ 'timeout' ] = 5;
-
-        return $defaultConfig;
+        return new ConfigurationOption([
+          'host' => '127.0.0.1',
+          'port' => 6379,
+          'password' => null,
+          'database' => 0,
+          'timeout' => 5,
+        ]);
     }
 }

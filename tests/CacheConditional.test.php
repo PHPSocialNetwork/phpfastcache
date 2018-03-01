@@ -14,7 +14,7 @@ chdir(__DIR__);
 require_once __DIR__ . '/../src/autoload.php';
 $testHelper = new TestHelper('Cache Promise');
 $defaultDriver = (!empty($argv[ 1 ]) ? ucfirst($argv[ 1 ]) : 'Files');
-$cacheInstance = CacheManager::getInstance($defaultDriver, []);
+$cacheInstance = CacheManager::getInstance($defaultDriver);
 $cacheKey = 'cacheKey';
 $RandomCacheValue = str_shuffle(uniqid('pfc', true));
 

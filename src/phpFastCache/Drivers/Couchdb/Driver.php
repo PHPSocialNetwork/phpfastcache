@@ -18,6 +18,7 @@ namespace phpFastCache\Drivers\Couchdb;
 use Doctrine\CouchDB\{
   CouchDBClient as CouchdbClient, CouchDBException
 };
+use phpFastCache\Config\ConfigurationOption;
 use phpFastCache\Core\Pool\{
   DriverBaseTrait, ExtendedCacheItemPoolInterface
 };
@@ -242,18 +243,16 @@ HELP;
     /**
      * @return ArrayObject
      */
-    public function getDefaultConfig(): ArrayObject
+    public function getDefaultConfig(): ConfigurationOption
     {
-        $defaultConfig = new ArrayObject();
-
-        $defaultConfig[ 'host' ] = '127.0.0.1';
-        $defaultConfig[ 'port' ] = 5984;
-        $defaultConfig[ 'path' ] = '/';
-        $defaultConfig[ 'username' ] = '';
-        $defaultConfig[ 'password' ] = '';
-        $defaultConfig[ 'ssl' ] = false;
-        $defaultConfig[ 'timeout' ] = 10;
-
-        return $defaultConfig;
+        return new ConfigurationOption([
+          'host'  => '127.0.0.1',
+          'port'  => 5984,
+          'path'  => '/',
+          'username'  => '',
+          'password'  => '',
+          'ssl'  => false,
+          'timeout'  => 10,
+        ]);
     }
 }

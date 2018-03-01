@@ -68,19 +68,11 @@ class Driver extends DriverAbstract
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
-     * @return array [
-     *      'd' => 'THE ITEM DATA'
-     *      't' => 'THE ITEM DATE EXPIRATION'
-     *      'g' => 'THE ITEM TAGS'
-     * ]
+     * @return null
      */
     protected function driverRead(CacheItemInterface $item)
     {
-        return [
-          self::DRIVER_DATA_WRAPPER_INDEX => null,
-          self::DRIVER_TAGS_WRAPPER_INDEX => [],
-          self::DRIVER_TIME_WRAPPER_INDEX => new \DateTime(),
-        ];
+        return null;
     }
 
     /**

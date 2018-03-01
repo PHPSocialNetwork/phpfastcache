@@ -1,3 +1,8 @@
+## 5.0.21
+##### 1 march 2018
+- __Drivers__
+    - Fixed #576 // Devnull driver returning non-null value
+
 ## 5.0.20
 ##### 30 january 2018
 - __Core__

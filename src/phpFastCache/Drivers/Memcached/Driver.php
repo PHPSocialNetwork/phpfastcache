@@ -30,6 +30,7 @@ use Psr\Cache\CacheItemInterface;
  * @package phpFastCache\Drivers
  * @property MemcachedSoftware $instance
  * @property Config $config Config object
+ * @method Config getConfig() Return the config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {

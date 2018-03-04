@@ -35,6 +35,7 @@ use Psr\Cache\CacheItemInterface;
  * @package phpFastCache\Drivers
  * @property MongodbManager $instance Instance of driver service
  * @property Config $config Config object
+ * @method Config getConfig() Return the config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {

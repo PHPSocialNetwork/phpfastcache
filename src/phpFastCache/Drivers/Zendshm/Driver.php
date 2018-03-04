@@ -26,6 +26,7 @@ use Psr\Cache\CacheItemInterface;
  * Requires Zend Data Cache Functions from ZendServer
  * @package phpFastCache\Drivers
  * @property Config $config Config object
+ * @method Config getConfig() Return the config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {

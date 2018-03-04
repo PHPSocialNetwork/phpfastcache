@@ -29,6 +29,7 @@ use Psr\Cache\CacheItemInterface;
  * @package phpFastCache\Drivers
  * @property Riak $instance Instance of driver service
  * @property Config $config Config object
+ * @method Config getConfig() Return the config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -46,7 +47,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        return \class_exists('Basho\Riak\Riak');
+        return true; //\class_exists('Basho\Riak\Riak');
     }
 
 
@@ -58,14 +59,13 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         if ($this->instance instanceof Riak) {
             throw new phpFastCacheLogicException('Already connected to Riak server');
-        } else {
-            $clientConfig = $this->getConfig();
-            $this->bucketName = $clientConfig[ 'bucketName' ];
-
-            $this->instance = new Riak($clientConfig[ 'host' ], $clientConfig[ 'port' ], $clientConfig[ 'prefix' ]);
-
-            return true;
         }
+
+        $this->bucketName = $this->getConfig()->getBucketName();
+
+        $this->instance = new Riak($this->getConfig()->getHost(), $this->getConfig()->getPort(), $this->getConfig()->getPrefix());
+
+        return true;
     }
 
     /**

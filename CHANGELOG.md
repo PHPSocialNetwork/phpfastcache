@@ -1,3 +1,14 @@
+## 7.0.0-beta2
+##### 4 march 2018
+- __Core__
+    - **Added new ConfigurationOption object syntax** (@Geolim4). Please read carefully the migration guide (MigratingFromV6ToV7.md).
+- __Drivers__
+    - Fixed #576 // Devnull driver returning non-dull data (@Geolim4)
+- __Helpers__
+    - Added exception catcher to to test Helper to FAIL or SKIP depending the exception (@Geolim4)
+- __Tests__
+    - Fixed nightly build that sometimes fails with Memcache
+
 ## 7.0.0-beta
 ##### 30 january 2018
 - __Global__

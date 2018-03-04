@@ -20,10 +20,12 @@ class Config extends ConfigurationOption
      * @var int
      */
     protected $port = 5984;
+
     /**
      * @var string
      */
     protected $path = '/';
+
     /**
      * @var string
      */
@@ -51,9 +53,9 @@ class Config extends ConfigurationOption
 
     /**
      * @param string $host
-     * @return Config
+     * @return self
      */
-    public function setHost(string $host): Config
+    public function setHost(string $host): self
     {
         $this->host = $host;
         return $this;
@@ -69,29 +71,11 @@ class Config extends ConfigurationOption
 
     /**
      * @param int $port
-     * @return Config
+     * @return self
      */
-    public function setPort(int $port): Config
+    public function setPort(int $port): self
     {
         $this->port = $port;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-
-    /**
-     * @param string $path
-     * @return Config
-     */
-    public function setPath(string $path): Config
-    {
-        $this->path = $path;
         return $this;
     }
 
@@ -105,9 +89,9 @@ class Config extends ConfigurationOption
 
     /**
      * @param string $username
-     * @return Config
+     * @return self
      */
-    public function setUsername(string $username): Config
+    public function setUsername(string $username): self
     {
         $this->username = $username;
         return $this;
@@ -123,9 +107,9 @@ class Config extends ConfigurationOption
 
     /**
      * @param string $password
-     * @return Config
+     * @return self
      */
-    public function setPassword(string $password): Config
+    public function setPassword(string $password): self
     {
         $this->password = $password;
         return $this;
@@ -141,9 +125,9 @@ class Config extends ConfigurationOption
 
     /**
      * @param bool $ssl
-     * @return Config
+     * @return self
      */
-    public function setSsl(bool $ssl): Config
+    public function setSsl(bool $ssl): self
     {
         $this->ssl = $ssl;
         return $this;
@@ -159,13 +143,11 @@ class Config extends ConfigurationOption
 
     /**
      * @param int $timeout
-     * @return Config
+     * @return self
      */
-    public function setTimeout(int $timeout): Config
+    public function setTimeout(int $timeout): self
     {
         $this->timeout = $timeout;
         return $this;
     }
-
-
 }

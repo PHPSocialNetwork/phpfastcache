@@ -103,4 +103,17 @@ class Config extends ConfigurationOption
         $this->database = $database;
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    public function getPredisConfigArray(): array
+    {
+        return [
+          'host' => $this->getHost(),
+          'port' => $this->getPort(),
+          'password' => $this->getPassword() ?: null,
+          'database' => $this->getDatabase(),
+        ];
+    }
 }

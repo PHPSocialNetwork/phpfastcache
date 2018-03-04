@@ -61,12 +61,14 @@ class Driver implements ExtendedCacheItemPoolInterface
               'path' =>  $this->config->getOption('path')
             ]);
         }else{
-            $this->instance = new PredisClient($this->getConfig()->toArray());
+            var_dump($this->getConfig()->getPredisConfigArray());
+            $this->instance = new PredisClient($this->getConfig()->getPredisConfigArray());
         }
 
         try {
             $this->instance->connect();
         } catch (PredisConnectionException $e) {
+            echo $e->getMessage();
             throw new phpFastCacheDriverException('Failed to connect to predis server. Check the Predis documentation: https://github.com/nrk/predis/tree/v1.1#how-to-install-and-use-predis', 0, $e);
         }
 

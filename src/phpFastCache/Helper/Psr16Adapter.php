@@ -37,10 +37,10 @@ class Psr16Adapter implements CacheInterface
     /**
      * Psr16Adapter constructor.
      * @param string $driver
-     * @param array $config
+     * @param array|\phpFastCache\Config\ConfigurationOption $config
      * @throws phpFastCacheDriverCheckException
      */
-    public function __construct($driver, array $config = [])
+    public function __construct($driver, $config = null)
     {
         $this->internalCacheInstance = CacheManager::getInstance($driver, $config);
     }

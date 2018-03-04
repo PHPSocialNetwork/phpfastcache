@@ -95,6 +95,5 @@ try{
 $cacheInstance->clear();
 unset($cacheInstance);
 CacheManager::clearInstances();
-$cacheInstance = CacheManager::getInstance($defaultDriver, ['itemDetailedDate' => false]);
 
 $testHelper->terminateTest();

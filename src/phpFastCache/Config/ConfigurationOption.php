@@ -40,11 +40,6 @@ class ConfigurationOption extends ArrayObject
     protected $defaultKeyHashFunction = '';
 
     /**
-     * @var string
-     */
-    protected $htaccess = 'Auto';
-
-    /**
      * @var int
      */
     protected $defaultChmod = 0777;
@@ -223,24 +218,6 @@ class ConfigurationOption extends ArrayObject
             throw new phpFastCacheInvalidConfigurationException('defaultKeyHashFunction must be a valid function name string');
         }
         $this->defaultKeyHashFunction = $defaultKeyHashFunction;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getHtaccess(): string
-    {
-        return $this->htaccess;
-    }
-
-    /**
-     * @param string $htaccess
-     * @return ConfigurationOption
-     */
-    public function setHtaccess(string $htaccess): self
-    {
-        $this->htaccess = $htaccess;
         return $this;
     }
 

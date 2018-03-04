@@ -18,6 +18,29 @@ class Config extends ConfigurationOption
     protected $secureFileManipulation = false;
 
     /**
+     * @var string
+     */
+    protected $htaccess = 'Auto';
+
+    /**
+     * @return string
+     */
+    public function getHtaccess(): string
+    {
+        return $this->htaccess;
+    }
+
+    /**
+     * @param string $htaccess
+     * @return Config
+     */
+    public function setHtaccess(string $htaccess): self
+    {
+        $this->htaccess = $htaccess;
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function isSecureFileManipulation(): bool

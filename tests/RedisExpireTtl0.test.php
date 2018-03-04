@@ -11,7 +11,7 @@ use phpFastCache\Helper\TestHelper;
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('(P)Redis Expire TTL to 0');
-$cacheInstance = CacheManager::getInstance('Redis', []);
+$cacheInstance = CacheManager::getInstance('Redis');
 $cacheKey = 'cacheKey';
 $RandomCacheValue = str_shuffle(uniqid('pfc', true));
 $loops = 10;

@@ -6,8 +6,10 @@
  */
 
 use phpFastCache\CacheManager;
+use phpFastCache\Config\ConfigurationOption;
 use phpFastCache\Exceptions\phpFastCacheInvalidConfigurationException;
 use phpFastCache\Helper\TestHelper;
+use phpFastCache\Drivers\Files\Config as FilesConfig;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../src/autoload.php';
@@ -16,19 +18,19 @@ $testHelper = new TestHelper('Configuration validator');
 
 $tests = [
   [
-    'Files' => [
+    'Files' => new FilesConfig([
       'path' => new \StdClass,
-    ],
+    ]),
   ],
   [
-    'Files' => [
+    'Files' => new FilesConfig([
       'htaccess' => new \StdClass,
-    ],
+    ]),
   ],
   [
-    'Files' => [
+    'Files' => new FilesConfig([
       'defaultTtl' => [],
-    ],
+    ]),
   ],
 ];
 

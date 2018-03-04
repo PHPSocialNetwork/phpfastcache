@@ -12,5 +12,26 @@ use phpFastCache\Config\ConfigurationOption;
 
 class Config extends ConfigurationOption
 {
+    /**
+     * @var string
+     */
+    protected $htaccess = 'Auto';
 
+    /**
+     * @return string
+     */
+    public function getHtaccess(): string
+    {
+        return $this->htaccess;
+    }
+
+    /**
+     * @param string $htaccess
+     * @return Config
+     */
+    public function setHtaccess(string $htaccess): self
+    {
+        $this->htaccess = $htaccess;
+        return $this;
+    }
 }

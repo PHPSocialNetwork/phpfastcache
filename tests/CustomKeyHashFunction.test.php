@@ -6,6 +6,7 @@
  */
 
 use phpFastCache\CacheManager;
+use phpFastCache\Config\ConfigurationOption;
 use phpFastCache\Exceptions\phpFastCacheInvalidConfigurationException;
 use phpFastCache\Helper\TestHelper;
 
@@ -17,7 +18,7 @@ function myAwesomeHashFunction($string){
     return 'customHash.' . sha1($string);
 }
 
-$cacheInstance = CacheManager::getInstance('Files', ['defaultKeyHashFunction' => 'myAwesomeHashFunction']);
+$cacheInstance = CacheManager::getInstance('Files', new ConfigurationOption(['defaultKeyHashFunction' => 'myAwesomeHashFunction']));
 
 $item = $cacheInstance->getItem(str_shuffle(uniqid('pfc', true)));
 $item->set(true)->expiresAfter(300);

@@ -7,13 +7,16 @@
 
 use phpFastCache\CacheManager;
 use phpFastCache\Helper\TestHelper;
+use phpFastCache\Drivers\Memcached\Config as MemcachedConfig;
+use phpFastCache\Drivers\Memcache\Config as MemcacheConfig;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Memcached altyernative configuration syntax');
 
-$cacheInstanceDefSyntax = CacheManager::getInstance('Memcached', []);
-$cacheInstanceOldSyntax = CacheManager::getInstance('Memcached', [
+$cacheInstanceDefSyntax = CacheManager::getInstance('Memcached');
+
+$cacheInstanceOldSyntax = CacheManager::getInstance('Memcached', new MemcachedConfig([
   'servers' => [
     [
       'host' => '127.0.0.1',
@@ -21,12 +24,14 @@ $cacheInstanceOldSyntax = CacheManager::getInstance('Memcached', [
       'port' => 11211,
     ]
   ]
-]);
-$cacheInstanceNewSyntax = CacheManager::getInstance('Memcached', [
+]));
+
+$cacheInstanceNewSyntax = CacheManager::getInstance('Memcached', new MemcachedConfig([
   'host' => '127.0.0.1',
   'path' => false,
   'port' => 11211,
-]);
+]));
+
 $cacheKey = 'cacheKey';
 $RandomCacheValue = str_shuffle(uniqid('pfc', true));
 

@@ -115,7 +115,7 @@ if(!class_exists(phpFastCache\CustomDriversPath\Files2\Item::class)
 }
 
 CacheManager::setNamespacePath(phpFastCache\CustomDriversPath::class);
-$cacheInstance = CacheManager::getInstance('Files2', []);
+$cacheInstance = CacheManager::getInstance('Files2');
 $cacheKey = 'cacheKey';
 $RandomCacheValue = str_shuffle(uniqid('pfc', true));
 

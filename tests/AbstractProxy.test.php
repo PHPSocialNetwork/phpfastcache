@@ -15,6 +15,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('phpFastCacheAbstractProxy class');
 $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 
+
 /**
  * Dynamic driver-based example
  * Class myCustomCacheClass

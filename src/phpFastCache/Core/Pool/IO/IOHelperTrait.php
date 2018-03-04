@@ -52,7 +52,7 @@ trait IOHelperTrait
          * Calculate the security key
          */
         {
-            $securityKey = \array_key_exists('securityKey', $this->config) ? $this->config[ 'securityKey' ] : '';
+            $securityKey = \array_key_exists('securityKey', $this->config) ? $this->config->getOption('securityKey') : '';
             if (!$securityKey || $securityKey === 'auto') {
                 if (isset($_SERVER[ 'HTTP_HOST' ])) {
                     $securityKey = preg_replace('/^www./', '', \strtolower(\str_replace(':', '_', $_SERVER[ 'HTTP_HOST' ])));
@@ -74,10 +74,10 @@ trait IOHelperTrait
          */
         $tmp_dir = rtrim($tmp_dir, '/') . DIRECTORY_SEPARATOR;
 
-        if (empty($this->config[ 'path' ]) || !\is_string($this->config[ 'path' ])) {
+        if (empty($this->config->getOption('path')) || !\is_string($this->config->getOption('path'))) {
             $path = $tmp_dir;
         } else {
-            $path = rtrim($this->config[ 'path' ], '/') . DIRECTORY_SEPARATOR;
+            $path = rtrim($this->config->getOption('path'), '/') . DIRECTORY_SEPARATOR;
         }
 
         $path_suffix = $securityKey . DIRECTORY_SEPARATOR . $this->getDriverName();
@@ -92,7 +92,7 @@ trait IOHelperTrait
          * return the temp dir
          */
         if ($readonly === true) {
-            if ($this->config[ 'autoTmpFallback' ] && (!@\file_exists($full_path) || !@\is_writable($full_path))) {
+            if ($this->config->getOption('autoTmpFallback') && (!@\file_exists($full_path) || !@\is_writable($full_path))) {
                 return $full_path_tmp;
             }
             return $full_path;
@@ -101,7 +101,7 @@ trait IOHelperTrait
                 if (!@\file_exists($full_path)) {
                     @mkdir($full_path, $this->getDefaultChmod(), true);
                 } else if (!@\is_writable($full_path)) {
-                    if (!@chmod($full_path, $this->getDefaultChmod()) && $this->config[ 'autoTmpFallback' ]) {
+                    if (!@chmod($full_path, $this->getDefaultChmod()) && $this->config->getOption('autoTmpFallback')) {
                         /**
                          * Switch back to tmp dir
                          * again if the path is not writable
@@ -123,7 +123,7 @@ trait IOHelperTrait
                 }
 
                 $this->tmp[ $full_path_hash ] = $full_path;
-                $this->htaccessGen($full_path, \array_key_exists('htaccess', $this->config) ? $this->config[ 'htaccess' ] : false);
+                $this->htaccessGen($full_path, \array_key_exists('htaccess', $this->config) ? $this->config->getOption('htaccess') : false);
             }
         }
 
@@ -160,7 +160,7 @@ trait IOHelperTrait
             }
         }
 
-        return $path . '/' . $filename . '.' . $this->config[ 'cacheFileExtension' ];
+        return $path . '/' . $filename . '.' . $this->config->getOption('cacheFileExtension');
     }
 
 
@@ -178,10 +178,10 @@ trait IOHelperTrait
      */
     protected function getDefaultChmod(): int
     {
-        if (!isset($this->config[ 'default_chmod' ]) || $this->config[ 'default_chmod' ] == '' || is_null($this->config[ 'default_chmod' ])) {
+        if ($this->config->getOption('default_chmod') !== null || $this->config->getOption('default_chmod') == '' || is_null($this->config->getOption('default_chmod'))) {
             return 0777;
         } else {
-            return $this->config[ 'default_chmod' ];
+            return $this->config->getOption('default_chmod');
         }
     }
 

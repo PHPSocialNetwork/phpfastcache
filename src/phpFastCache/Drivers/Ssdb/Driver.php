@@ -28,6 +28,7 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver
  * @package phpFastCache\Drivers
  * @property SimpleSSDB $instance Instance of driver service
+ * @property Config $config Config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -40,7 +41,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         static $driverCheck;
         if ($driverCheck === null) {
-            return ($driverCheck = class_exists('phpssdb\Core\SSDB'));
+            return ($driverCheck = \class_exists('phpssdb\Core\SSDB'));
         }
 
         return $driverCheck;
@@ -144,26 +145,11 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Data returned by Ssdb are very poorly formatted
          * using hardcoded offset of pair key-value :-(
          */
-        $stat->setInfo(sprintf("Ssdb-server v%s with a total of %s call(s).\n For more information see RawData.", $info[ 2 ], $info[ 6 ]))
+        $stat->setInfo(\sprintf("Ssdb-server v%s with a total of %s call(s).\n For more information see RawData.", $info[ 2 ], $info[ 6 ]))
           ->setRawData($info)
           ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setSize($this->instance->dbsize());
 
         return $stat;
-    }
-
-    /**
-     * @return ArrayObject
-     */
-    public function getDefaultConfig(): ArrayObject
-    {
-        $defaultConfig = new ArrayObject();
-
-        $defaultConfig[ 'host' ] = '127.0.0.1';
-        $defaultConfig[ 'port' ] = 8888;
-        $defaultConfig[ 'password' ] = '';
-        $defaultConfig[ 'timeout' ] = 2000;
-
-        return $defaultConfig;
     }
 }

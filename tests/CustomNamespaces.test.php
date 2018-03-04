@@ -84,6 +84,37 @@ class Item extends FilesItem
 }
 ITEM_CLASS_STRING;
 
+/**
+ * The config class string
+ */
+$configClassString = <<<CONFIG_CLASS_STRING
+<?php
+/**
+ *
+ * This file is part of phpFastCache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt file.
+ *
+ * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
+ * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ *
+ */
+
+namespace phpFastCache\CustomDriversPath\Files2;
+use phpFastCache\Drivers\Files\Config as FilesConfig;
+
+/**
+ * Class Config
+ * @package phpFastCache\CustomDriversPath\Files2
+ */
+class Config extends FilesConfig
+{
+
+}
+CONFIG_CLASS_STRING;
+
 
 /**
  * Write the files
@@ -92,6 +123,7 @@ ITEM_CLASS_STRING;
 
 if(!file_put_contents("{$testDir}Driver.php", $driverClassString)
   || !file_put_contents("{$testDir}Item.php", $itemClassString)
+  || !file_put_contents("{$testDir}Config.php", $configClassString)
 ){
     $testHelper->printFailText('The php files of driver "Files2" were not written');
     $testHelper->terminateTest();

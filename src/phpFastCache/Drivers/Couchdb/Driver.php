@@ -33,6 +33,7 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver
  * @package phpFastCache\Drivers
  * @property CouchdbClient $instance Instance of driver service
+ * @property Config $config Config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -45,7 +46,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        return class_exists('Doctrine\CouchDB\CouchDBClient');
+        return \class_exists('Doctrine\CouchDB\CouchDBClient');
     }
 
     /**
@@ -238,21 +239,5 @@ HELP;
           ->setRawData($info)
           ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setInfo('Couchdb version ' . $this->instance->getVersion() . "\n For more information see RawData.");
-    }
-
-    /**
-     * @return ArrayObject
-     */
-    public function getDefaultConfig(): ConfigurationOption
-    {
-        return new ConfigurationOption([
-          'host'  => '127.0.0.1',
-          'port'  => 5984,
-          'path'  => '/',
-          'username'  => '',
-          'password'  => '',
-          'ssl'  => false,
-          'timeout'  => 10,
-        ]);
     }
 }

@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace phpFastCache\Helper;
 
 use phpFastCache\Api;
+use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
 
 /**
  * Class TestHelper
@@ -36,8 +37,15 @@ class TestHelper
     {
         $this->printText('[PhpFastCache CORE v' . Api::getPhpFastCacheVersion() .  Api::getPhpFastCacheGitHeadHash() . ']', true);
         $this->printText('[PhpFastCache API v' . Api::getVersion() . ']', true);
+        $this->printText('[PHP v' . PHP_VERSION . ']', true);
         $this->printText("[Begin Test: '{$testName}']");
         $this->printText('---');
+
+        /**
+         * Catch all uncaught exception
+         * to our own exception handler
+         */
+        set_exception_handler(array($this, 'exceptionHandler'));
     }
 
     /**
@@ -170,5 +178,23 @@ class TestHelper
         $property = $reflection->getProperty($prop);
         $property->setAccessible(true);
         return $property->getValue($obj);
+    }
+
+    /**
+     * @param \Throwable $exception
+     */
+    public function exceptionHandler(\Throwable $exception) {
+        if($exception instanceof phpFastCacheDriverCheckException){
+            $this->printSkipText('A driver could not be initialized due to missing requirement: ' . $exception->getMessage());
+        }else{
+            $this->printFailText(sprintf(
+              'Uncaught exception "%s" in "%s" line %d with message: "%s"',
+              \get_class($exception),
+              $exception->getFile(),
+              $exception->getLine(),
+              $exception->getMessage()
+            ));
+        }
+        $this->terminateTest();
     }
 }

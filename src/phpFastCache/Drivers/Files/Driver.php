@@ -25,6 +25,7 @@ use Psr\Cache\CacheItemInterface;
 /**
  * Class Driver
  * @package phpFastCache\Drivers
+ * @property Config $config Config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -101,7 +102,7 @@ class Driver implements ExtendedCacheItemPoolInterface
              * Force write
              */
             try {
-                return $this->writefile($file_path, $data, $this->config[ 'secureFileManipulation' ]);
+                return $this->writefile($file_path, $data, $this->config->getOption('secureFileManipulation'));
             } catch (\Exception $e) {
                 return false;
             }

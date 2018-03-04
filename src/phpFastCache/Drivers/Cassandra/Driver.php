@@ -29,6 +29,7 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver
  * @package phpFastCache\Drivers
  * @property CassandraSession $instance Instance of driver service
+ * @property Config $config Config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -42,7 +43,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        return extension_loaded('Cassandra') && class_exists(\Cassandra::class);
+        return \extension_loaded('Cassandra') && \class_exists(\Cassandra::class);
     }
 
     /**
@@ -82,16 +83,16 @@ class Driver implements ExtendedCacheItemPoolInterface
             /**
              * In case of emergency:
              * $this->instance->execute(
-             *      new Cassandra\SimpleStatement(sprintf("DROP KEYSPACE %s;", self::CASSANDRA_KEY_SPACE))
+             *      new Cassandra\SimpleStatement(\sprintf("DROP KEYSPACE %s;", self::CASSANDRA_KEY_SPACE))
              * );
              */
 
-            $this->instance->execute(new Cassandra\SimpleStatement(sprintf(
+            $this->instance->execute(new Cassandra\SimpleStatement(\sprintf(
               "CREATE KEYSPACE IF NOT EXISTS %s WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };",
               self::CASSANDRA_KEY_SPACE
             )));
-            $this->instance->execute(new Cassandra\SimpleStatement(sprintf('USE %s;', self::CASSANDRA_KEY_SPACE)));
-            $this->instance->execute(new Cassandra\SimpleStatement(sprintf('
+            $this->instance->execute(new Cassandra\SimpleStatement(\sprintf('USE %s;', self::CASSANDRA_KEY_SPACE)));
+            $this->instance->execute(new Cassandra\SimpleStatement(\sprintf('
                 CREATE TABLE IF NOT EXISTS %s (
                     cache_uuid uuid,
                     cache_id varchar,
@@ -118,7 +119,7 @@ class Driver implements ExtendedCacheItemPoolInterface
               'arguments' => ['cache_id' => $item->getKey()],
               'page_size' => 1,
             ]);
-            $query = sprintf(
+            $query =\sprintf(
               'SELECT cache_data FROM %s.%s WHERE cache_id = :cache_id;',
               self::CASSANDRA_KEY_SPACE,
               self::CASSANDRA_TABLE
@@ -161,7 +162,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                   'serial_consistency' => Cassandra::CONSISTENCY_SERIAL,
                 ]);
 
-                $query = sprintf('INSERT INTO %s.%s
+                $query =\sprintf('INSERT INTO %s.%s
                     (
                       cache_uuid, 
                       cache_id, 
@@ -205,7 +206,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                     'cache_id' => $item->getKey(),
                   ],
                 ]);
-                $result = $this->instance->execute(new Cassandra\SimpleStatement(sprintf(
+                $result = $this->instance->execute(new Cassandra\SimpleStatement(\sprintf(
                   'DELETE FROM %s.%s WHERE cache_id = :cache_id;',
                   self::CASSANDRA_KEY_SPACE,
                   self::CASSANDRA_TABLE
@@ -231,7 +232,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected function driverClear(): bool
     {
         try {
-            $this->instance->execute(new Cassandra\SimpleStatement(sprintf(
+            $this->instance->execute(new Cassandra\SimpleStatement(\sprintf(
               'TRUNCATE %s.%s;',
               self::CASSANDRA_KEY_SPACE, self::CASSANDRA_TABLE
             )));
@@ -269,7 +270,7 @@ HELP;
      */
     public function getStats(): DriverStatistic
     {
-        $result = $this->instance->execute(new Cassandra\SimpleStatement(sprintf(
+        $result = $this->instance->execute(new Cassandra\SimpleStatement(\sprintf(
           'SELECT SUM(cache_length) as cache_size FROM %s.%s',
           self::CASSANDRA_KEY_SPACE,
           self::CASSANDRA_TABLE
@@ -280,23 +281,5 @@ HELP;
           ->setRawData([])
           ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setInfo('The cache size represents only the cache data itself without counting data structures associated to the cache entries.');
-    }
-
-    /**
-     * @return ArrayObject
-     */
-    public function getDefaultConfig(): ArrayObject
-    {
-        $defaultConfig = new ArrayObject();
-
-        $defaultConfig[ 'host' ] = '127.0.0.1';
-        $defaultConfig[ 'port' ] = 9042;
-        $defaultConfig[ 'timeout' ] = 2;
-        $defaultConfig[ 'username' ] = '';
-        $defaultConfig[ 'password' ] = '';
-        $defaultConfig[ 'sslEnabled' ] = false;
-        $defaultConfig[ 'sslVerify' ] = false;
-
-        return $defaultConfig;
     }
 }

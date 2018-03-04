@@ -25,6 +25,7 @@ use Psr\Cache\CacheItemInterface;
 /**
  * Class Driver
  * @package phpFastCache\Drivers
+ * @property Config $config Config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -35,7 +36,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        return extension_loaded('wincache') && \function_exists('wincache_ucache_set');
+        return \extension_loaded('wincache') && \function_exists('wincache_ucache_set');
     }
 
     /**
@@ -57,9 +58,9 @@ class Driver implements ExtendedCacheItemPoolInterface
 
         if ($suc === false) {
             return null;
-        } else {
-            return $val;
         }
+
+        return $val;
     }
 
     /**
@@ -74,9 +75,9 @@ class Driver implements ExtendedCacheItemPoolInterface
          */
         if ($item instanceof Item) {
             return wincache_ucache_set($item->getKey(), $this->driverPreWrap($item), $item->getTtl());
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
@@ -91,9 +92,8 @@ class Driver implements ExtendedCacheItemPoolInterface
          */
         if ($item instanceof Item) {
             return wincache_ucache_delete($item->getKey());
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
@@ -120,7 +120,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $date = (new \DateTime())->setTimestamp(time() - $info[ 'total_cache_uptime' ]);
 
         return (new DriverStatistic())
-          ->setInfo(sprintf("The Wincache daemon is up since %s.\n For more information see RawData.", $date->format(DATE_RFC2822)))
+          ->setInfo(\sprintf("The Wincache daemon is up since %s.\n For more information see RawData.", $date->format(DATE_RFC2822)))
           ->setSize($memInfo[ 'memory_free' ] - $memInfo[ 'memory_total' ])
           ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setRawData($memInfo);

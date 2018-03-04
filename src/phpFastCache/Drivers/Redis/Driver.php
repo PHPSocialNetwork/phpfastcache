@@ -30,7 +30,7 @@ use Redis as RedisClient;
 /**
  * Class Driver
  * @package phpFastCache\Drivers
- * @property RedisClient $instance Instance of driver service
+ * @property Config $config Config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -41,7 +41,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        return extension_loaded('Redis');
+        return \extension_loaded('Redis');
     }
 
     /**
@@ -59,22 +59,22 @@ class Driver implements ExtendedCacheItemPoolInterface
             /**
              * If path is provided we consider it as an UNIX Socket
              */
-            if ($clientConfig[ 'path' ]) {
-                $isConnected = $this->instance->connect($clientConfig[ 'path' ]);
+            if ($this->config->getOption('path')) {
+                $isConnected = $this->instance->connect($this->config->getOption('path'));
             } else {
-                $isConnected = $this->instance->connect($clientConfig[ 'host' ], (int)$clientConfig[ 'port' ], (int)$clientConfig[ 'timeout' ]);
+                $isConnected = $this->instance->connect($this->config->getOption('host'), $this->config->getOption('port'), (int)$this->config->getOption('timeout'));
             }
 
-            if (!$isConnected && $clientConfig[ 'path' ]) {
+            if (!$isConnected && $this->config->getOption('path')) {
                 return false;
-            } else if (!$clientConfig[ 'path' ]) {
-                if ($clientConfig[ 'password' ] && !$this->instance->auth($clientConfig[ 'password' ])) {
+            } else if (!$this->config->getOption('path')) {
+                if ($this->config->getOption('password') && !$this->instance->auth($this->config->getOption('password'))) {
                     return false;
                 }
             }
 
-            if ($clientConfig[ 'database' ]) {
-                $this->instance->select((int)$clientConfig[ 'database' ]);
+            if ($this->config->getOption('database') !== null) {
+                $this->instance->select($this->config->getOption('database'));
             }
             return true;
         }
@@ -165,21 +165,7 @@ class Driver implements ExtendedCacheItemPoolInterface
           ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setRawData($info)
           ->setSize((int)$info[ 'used_memory' ])
-          ->setInfo(sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
+          ->setInfo(\sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
             $info[ 'redis_version' ], $date->format(DATE_RFC2822)));
-    }
-
-    /**
-     * @return ArrayObject
-     */
-    public function getDefaultConfig(): ConfigurationOption
-    {
-        return new ConfigurationOption([
-          'host' => '127.0.0.1',
-          'port' => 6379,
-          'password' => null,
-          'database' => 0,
-          'timeout' => 5,
-        ]);
     }
 }

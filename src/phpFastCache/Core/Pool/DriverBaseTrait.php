@@ -70,13 +70,13 @@ trait DriverBaseTrait
 
         if (!$this->driverCheck()) {
             throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
-        } else {
-            $this->driverConnect();
         }
+
+        $this->driverConnect();
     }
 
     /**
-     * @param ConfigurationOption $config_name
+     * @param ConfigurationOption $config
      */
     public function setConfig(ConfigurationOption $config)
     {
@@ -150,7 +150,7 @@ trait DriverBaseTrait
      */
     protected function driverExists($class): bool
     {
-        return class_exists("\\phpFastCache\\Drivers\\{$class}");
+        return \class_exists("\\phpFastCache\\Drivers\\{$class}");
     }
 
 
@@ -166,7 +166,7 @@ trait DriverBaseTrait
           self::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),
         ];
 
-        if ($this->config[ 'itemDetailedDate' ]) {
+        if ($this->config->getOption('itemDetailedDate')) {
             $wrap[ self::DRIVER_MDATE_WRAPPER_INDEX ] = new \DateTime();
             /**
              * If the creation date exists
@@ -387,7 +387,7 @@ trait DriverBaseTrait
     public static function getConfigClass(): string
     {
         $localConfigClass = substr(static::class, 0, strrpos(static::class, '\\')) . '\Config';
-        if(class_exists($localConfigClass) && is_a($localConfigClass, ConfigurationOption::class, true)){
+        if(\class_exists($localConfigClass) && is_a($localConfigClass, ConfigurationOption::class, true)){
             return $localConfigClass;
         }
         return ConfigurationOption::class;

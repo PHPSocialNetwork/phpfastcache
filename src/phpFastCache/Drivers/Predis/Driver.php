@@ -30,6 +30,7 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver
  * @package phpFastCache\Drivers
  * @property PredisClient $instance Instance of driver service
+ * @property Config $config Config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -44,7 +45,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             trigger_error('The native Redis extension is installed, you should use Redis instead of Predis to increase performances', E_USER_NOTICE);
         }
 
-        return class_exists('Predis\Client');
+        return \class_exists('Predis\Client');
     }
 
     /**
@@ -53,14 +54,13 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverConnect(): bool
     {
-        $config = $this->getConfig();
-        if(!empty($config['path'])){
+        if(!empty($this->config->getOption('path'))){
             $this->instance = new PredisClient([
               'scheme' => 'unix',
-              'path' =>  $config['path']
+              'path' =>  $this->config->getOption('path')
             ]);
         }else{
-            $this->instance = new PredisClient($this->getConfig());
+            $this->instance = new PredisClient($this->getConfig()->toArray());
         }
 
         try {
@@ -172,23 +172,7 @@ HELP;
           ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setRawData($info)
           ->setSize((int) $size)
-          ->setInfo(sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
+          ->setInfo(\sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
             $version, $date->format(DATE_RFC2822)));
-    }
-
-    /**
-     * @return ArrayObject
-     */
-    public function getDefaultConfig(): ArrayObject
-    {
-        $defaultConfig = new ArrayObject();
-
-        $defaultConfig[ 'host' ] = '127.0.0.1';
-        $defaultConfig[ 'path' ] = false;
-        $defaultConfig[ 'port' ] = 6379;
-        $defaultConfig[ 'password' ] = null;
-        $defaultConfig[ 'database' ] = null;
-
-        return $defaultConfig;
     }
 }

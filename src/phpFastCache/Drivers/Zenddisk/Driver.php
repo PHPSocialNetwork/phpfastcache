@@ -25,6 +25,7 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver (zend disk cache)
  * Requires Zend Data Cache Functions from ZendServer
  * @package phpFastCache\Drivers
+ * @property Config $config Config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {

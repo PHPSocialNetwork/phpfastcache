@@ -28,6 +28,7 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver
  * @package phpFastCache\Drivers
  * @property Riak $instance Instance of driver service
+ * @property Config $config Config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -45,7 +46,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        return class_exists('Basho\Riak\Riak');
+        return \class_exists('Basho\Riak\Riak');
     }
 
 
@@ -145,20 +146,5 @@ class Driver implements ExtendedCacheItemPoolInterface
           ->setRawData($info)
           ->setSize(false)
           ->setInfo('Riak does not provide size/date information att all :(');
-    }
-
-    /**
-     * @return ArrayObject
-     */
-    public function getDefaultConfig(): ArrayObject
-    {
-        $defaultConfig = new ArrayObject();
-
-        $defaultConfig[ 'host' ] = '127.0.0.1';
-        $defaultConfig[ 'port' ] = 8098;
-        $defaultConfig[ 'prefix' ] = 'riak';
-        $defaultConfig[ 'bucketName' ] = self::RIAK_DEFAULT_BUCKET_NAME;
-
-        return $defaultConfig;
     }
 }

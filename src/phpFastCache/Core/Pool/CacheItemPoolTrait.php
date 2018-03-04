@@ -23,12 +23,13 @@ use phpFastCache\Util\ClassNamespaceResolverTrait;
 use phpFastCache\Exceptions\{
   phpFastCacheInvalidArgumentException, phpFastCacheCoreException, phpFastCacheLogicException
 };
+use phpFastCache\Config\ConfigurationOption;
 use Psr\Cache\CacheItemInterface;
 
 /**
  * Trait StandardPsr6StructureTrait
  * @package phpFastCache\Core
- * @property array $config The config array
+ * @property ConfigurationOption $config The config array
  */
 trait CacheItemPoolTrait
 {

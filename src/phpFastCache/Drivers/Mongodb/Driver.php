@@ -34,6 +34,7 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver
  * @package phpFastCache\Drivers
  * @property MongodbManager $instance Instance of driver service
+ * @property Config $config Config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -51,12 +52,12 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        if (!class_exists('MongoDB\Driver\Manager') && class_exists('MongoClient')) {
+        if (!class_exists('MongoDB\Driver\Manager') && \class_exists('MongoClient')) {
             trigger_error('This driver is used to support the pecl MongoDb extension with mongo-php-library.
             For MongoDb with Mongo PECL support use Mongo Driver.', E_USER_ERROR);
         }
 
-        return class_exists('MongoDB\Collection');
+        return \extension_loaded('Mongodb') && \class_exists('MongoDB\Collection');
     }
 
     /**
@@ -84,9 +85,9 @@ class Driver implements ExtendedCacheItemPoolInterface
             }
 
             return $return;
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
@@ -226,7 +227,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         ]))->toArray()[ 0 ];
 
         $collectionStats = $this->instance->executeCommand($this->getConfigOption('databaseName'), new Command([
-          'collStats' => (isset($this->config[ 'collectionName' ]) ? $this->config[ 'collectionName' ] : 'Cache'),
+          'collStats' => ($this->config->getOption('collectionName') !== null ? $this->config->getOption('collectionName') : 'Cache'),
           'verbose' => true,
         ]))->toArray()[ 0 ];
 
@@ -266,24 +267,5 @@ class Driver implements ExtendedCacheItemPoolInterface
           ]);
 
         return $stats;
-    }
-
-    /**
-     * @return ArrayObject
-     */
-    public function getDefaultConfig(): ArrayObject
-    {
-        $defaultConfig = new ArrayObject();
-
-        $defaultConfig[ 'host' ] = '127.0.0.1';
-        $defaultConfig[ 'port' ] = 27017;
-        $defaultConfig[ 'timeout' ] = 3;
-        $defaultConfig[ 'username' ] = '';
-        $defaultConfig[ 'password' ] = '';
-        $defaultConfig[ 'servers' ] = '';
-        $defaultConfig[ 'collectionName' ] = 'Cache';
-        $defaultConfig[ 'databaseName' ] = self::MONGODB_DEFAULT_DB_NAME;
-
-        return $defaultConfig;
     }
 }

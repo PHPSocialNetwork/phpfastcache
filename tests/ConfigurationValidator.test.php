@@ -6,7 +6,6 @@
  */
 
 use phpFastCache\CacheManager;
-use phpFastCache\Config\ConfigurationOption;
 use phpFastCache\Exceptions\phpFastCacheInvalidConfigurationException;
 use phpFastCache\Helper\TestHelper;
 use phpFastCache\Drivers\Files\Config as FilesConfig;
@@ -18,28 +17,33 @@ $testHelper = new TestHelper('Configuration validator');
 
 $tests = [
   [
-    'Files' => new FilesConfig([
+    'Files' => [
       'path' => new \StdClass,
-    ]),
+    ],
   ],
   [
-    'Files' => new FilesConfig([
+    'Files' => [
       'htaccess' => new \StdClass,
-    ]),
+    ],
   ],
   [
-    'Files' => new FilesConfig([
+    'Files' => [
       'defaultTtl' => [],
-    ]),
+    ],
+  ],
+  [
+    'Files' =>[
+      'unwantedOption' => new \StdClass,
+    ],
   ],
 ];
 
 foreach ($tests as $test) {
     try {
-        CacheManager::getInstance(key($test), current($test));
+        CacheManager::getInstance(key($test), new FilesConfig(current($test)));
         $testHelper->printFailText('Configuration validator has failed to correctly validate a driver configuration option');
     } catch (phpFastCacheInvalidConfigurationException $e) {
-        $testHelper->printPassText('Configuration validator has successfully validated a driver configuration option by throwing an Exception');
+        $testHelper->printPassText('Configuration validator has successfully validated a driver configuration option by throwing an Exception --- ' . $e->getMessage());
     }
 }
 

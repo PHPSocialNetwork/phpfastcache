@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace phpFastCache\Drivers\Memcache;
 
 use Memcache as MemcacheSoftware;
+use phpFastCache\Config\ConfigurationOption;
 use phpFastCache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use phpFastCache\Entities\DriverStatistic;
 use phpFastCache\Exceptions\{
@@ -28,6 +29,7 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver
  * @package phpFastCache\Drivers
  * @property MemcacheSoftware $instance
+ * @property Config $config Config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -43,10 +45,11 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * Driver constructor.
-     * @param array $config
+     * @param ConfigurationOption $config
+     * @param string $instanceId
      * @throws phpFastCacheDriverException
      */
-    public function __construct(array $config = [], $instanceId)
+    public function __construct(ConfigurationOption $config, string $instanceId)
     {
         self::checkCollision('Memcache');
         $this->__parentConstruct($config, $instanceId);
@@ -57,7 +60,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        return class_exists('Memcache');
+        return \class_exists('Memcache');
     }
 
     /**
@@ -66,15 +69,15 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected function driverConnect(): bool
     {
         $this->instance = new MemcacheSoftware();
-        $servers = (!empty($this->config[ 'servers' ]) && \is_array($this->config[ 'servers' ]) ? $this->config[ 'servers' ] : []);
+        $servers = (!empty($this->config->getOption('servers')) && \is_array($this->config->getOption('servers')) ? $this->config->getOption('servers') : []);
         if (\count($servers) < 1) {
             $servers = [
               [
-                'host' => !empty($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1',
-                'path' => !empty($this->config[ 'path' ]) ? $this->config[ 'path' ] : false,
-                'port' => !empty($this->config[ 'port' ]) ? $this->config[ 'port' ] : 11211,
-                'sasl_user' => !empty($this->config[ 'sasl_user' ]) ? $this->config[ 'sasl_user' ] : false,
-                'sasl_password' =>!empty($this->config[ 'sasl_password' ]) ? $this->config[ 'sasl_password' ]: false,
+                'host' => !empty($this->config->getOption('host')) ? $this->config->getOption('host') : '127.0.0.1',
+                'path' => !empty($this->config->getOption('path')) ? $this->config->getOption('path') : false,
+                'port' => !empty($this->config->getOption('port')) ? $this->config->getOption('port') : 11211,
+                'saslUser' => !empty($this->config->getOption('saslUser')) ? $this->config->getOption('saslUser') : false,
+                'saslPassword' =>!empty($this->config->getOption('saslPassword')) ? $this->config->getOption('saslPassword'): false,
               ],
             ];
         }
@@ -90,7 +93,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                     $this->fallback = true;
                 }
 
-                if (!empty($server[ 'sasl_user' ]) && !empty($server[ 'sasl_password' ])) {
+                if (!empty($server[ 'saslUser' ]) && !empty($server[ 'saslPassword' ])) {
                     throw new phpFastCacheDriverException('Unlike Memcached, Memcache does not support SASL authentication');
                 }
             } catch (\Exception $e) {
@@ -193,27 +196,8 @@ class Driver implements ExtendedCacheItemPoolInterface
 
         return (new DriverStatistic())
           ->setData(\implode(', ', \array_keys($this->itemInstances)))
-          ->setInfo(sprintf("The memcache daemon v%s is up since %s.\n For more information see RawData.", $stats[ 'version' ], $date->format(DATE_RFC2822)))
+          ->setInfo(\sprintf("The memcache daemon v%s is up since %s.\n For more information see RawData.", $stats[ 'version' ], $date->format(DATE_RFC2822)))
           ->setRawData($stats)
           ->setSize((int)$stats[ 'bytes' ]);
-    }
-
-    /**
-     * @return ArrayObject
-     */
-    public function getDefaultConfig(): ArrayObject
-    {
-        $defaultConfig = new ArrayObject();
-
-        $defaultConfig[ 'servers' ] = [
-          [
-            'host' => '127.0.0.1',
-            'port' => 11211,
-            'sasl_user' => false,
-            'sasl_password' => false,
-          ],
-        ];
-
-        return $defaultConfig;
     }
 }

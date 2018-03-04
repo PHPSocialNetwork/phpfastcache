@@ -25,6 +25,7 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver (zend memory cache)
  * Requires Zend Data Cache Functions from ZendServer
  * @package phpFastCache\Drivers
+ * @property Config $config Config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -134,7 +135,7 @@ HELP;
         $stats = (array)zend_shm_cache_info();
         return (new DriverStatistic())
           ->setData(\implode(', ', \array_keys($this->itemInstances)))
-          ->setInfo(sprintf("The Zend memory have %d item(s) in cache.\n For more information see RawData.", $stats[ 'items_total' ]))
+          ->setInfo(\sprintf("The Zend memory have %d item(s) in cache.\n For more information see RawData.", $stats[ 'items_total' ]))
           ->setRawData($stats)
           ->setSize($stats[ 'memory_total' ]);
     }

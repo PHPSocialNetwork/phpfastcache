@@ -19,8 +19,8 @@ class Config extends ConfigurationOption
       [
         'host' => '127.0.0.1',
         'port' => 11211,
-        'sasl_user' => false,
-        'sasl_password' => false,
+        'saslUser' => false,
+        'saslPassword' => false,
       ],
     ];
 
@@ -35,6 +35,52 @@ class Config extends ConfigurationOption
     protected $port = 11211;
 
     /**
+     * @var bool
+     */
+    protected $saslUser = false;
+
+    /**
+     * @var bool
+     */
+    protected $saslPassword = false;
+
+    /**
+     * @return bool
+     */
+    public function isSaslUser(): bool
+    {
+        return $this->saslUser;
+    }
+
+    /**
+     * @param bool $saslUser
+     * @return self
+     */
+    public function setSaslUser(bool $saslUser): self
+    {
+        $this->saslUser = $saslUser;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSaslPassword(): bool
+    {
+        return $this->saslPassword;
+    }
+
+    /**
+     * @param bool $saslPassword
+     * @return self
+     */
+    public function setSaslPassword(bool $saslPassword): self
+    {
+        $this->saslPassword = $saslPassword;
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getServers(): array
@@ -44,7 +90,7 @@ class Config extends ConfigurationOption
 
     /**
      * @param array $servers
-     * @return Config
+     * @return self
      */
     public function setServers(array $servers): self
     {
@@ -62,7 +108,7 @@ class Config extends ConfigurationOption
 
     /**
      * @param string $host
-     * @return Config
+     * @return self
      */
     public function setHost(string $host): self
     {

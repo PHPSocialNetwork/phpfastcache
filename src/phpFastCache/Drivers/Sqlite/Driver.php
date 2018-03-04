@@ -26,7 +26,7 @@ use Psr\Cache\CacheItemInterface;
 /**
  * Class Driver
  * @package phpFastCache\Drivers
- * @todo Remove "exp" column in V7
+ * @property Config $config Config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -76,7 +76,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        return extension_loaded('pdo_sqlite') && (\is_writable($this->getSqliteDir()) || @mkdir($this->getSqliteDir(), $this->getDefaultChmod(), true));
+        return \extension_loaded('pdo_sqlite') && (\is_writable($this->getSqliteDir()) || @mkdir($this->getSqliteDir(), $this->getDefaultChmod(), true));
     }
 
     /**
@@ -86,7 +86,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected function driverConnect(): bool
     {
         if (!\file_exists($this->getSqliteDir()) && !@mkdir($this->getSqliteDir(), $this->getDefaultChmod(), true)) {
-            throw new phpFastCacheIOException(sprintf('Sqlite cannot write in "%s", aborting...', $this->getPath()));
+            throw new phpFastCacheIOException(\sprintf('Sqlite cannot write in "%s", aborting...', $this->getPath()));
         }
         if (!\file_exists($this->getPath() . '/' . self::FILE_DIR)) {
             if (!mkdir($this->getPath() . '/' . self::FILE_DIR, $this->getDefaultChmod(), true)
@@ -186,9 +186,9 @@ class Driver implements ExtendedCacheItemPoolInterface
             }
 
             return false;
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
@@ -265,7 +265,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             }
         }
 
-        $db->exec('drop table if exists "balancing"');
+        $db->exec('DROP TABLE if exists "balancing"');
         $db->exec('CREATE TABLE "balancing" ("keyword" VARCHAR PRIMARY KEY NOT NULL UNIQUE, "db" INTEGER)');
         $db->exec('CREATE INDEX "db" ON "balancing" ("db")');
         $db->exec('CREATE UNIQUE INDEX "lookup" ON "balancing" ("keyword")');

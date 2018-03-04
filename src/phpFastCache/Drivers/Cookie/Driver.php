@@ -25,6 +25,7 @@ use Psr\Cache\CacheItemInterface;
 /**
  * Class Driver
  * @package phpFastCache\Drivers
+ * @property Config $config Config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -89,14 +90,13 @@ class Driver implements ExtendedCacheItemPoolInterface
             $keyword = self::PREFIX . $item->getKey();
             $v = \json_encode($this->driverPreWrap($item));
 
-            if (isset($this->config[ 'limited_memory_each_object' ]) && strlen($v) > $this->config[ 'limited_memory_each_object' ]) {
+            if ($this->config->getOption('limited_memory_each_object') !== null && strlen($v) > $this->config->getOption('limited_memory_each_object')) {
                 return false;
             }
 
             return setcookie($keyword, $v, $item->getExpirationDate()->getTimestamp(), '/');
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
@@ -128,9 +128,9 @@ class Driver implements ExtendedCacheItemPoolInterface
             $_COOKIE[ $keyword ] = null;
 
             return @setcookie($keyword, null, -10);
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
@@ -173,7 +173,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          */
         foreach ($_COOKIE as $key => $value) {
             if (\strpos($key, self::PREFIX) === 0) {
-                $size += strlen($value);
+                $size += \strlen($value);
             }
         }
 

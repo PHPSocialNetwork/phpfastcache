@@ -12,7 +12,7 @@ chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
 $testHelper = new TestHelper('Github issue #522 - Predis returns wrong type hints');
 // Hide php Redis extension notice by using a little @
-@$cacheInstance = CacheManager::getInstance('Predis');
+$cacheInstance = @CacheManager::getInstance('Predis');
 $stringObject = new stdClass;
 $stringObject->test = '';
 

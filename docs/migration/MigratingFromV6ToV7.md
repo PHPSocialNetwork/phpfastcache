@@ -39,12 +39,14 @@ CacheManager::getInstanceById($instanceId);
 Some configuration names were still using "snake case" format:
 - default_chmod
 - compress_data
+- sasl_user
 - ...
 
 #### :alarm_clock: Now:
 These configuration names are now "Camelized":
 - defaultChmod
 - compressData
+- saslUser
 - ...
 
 As of the V7 there's no "snake case" names left.

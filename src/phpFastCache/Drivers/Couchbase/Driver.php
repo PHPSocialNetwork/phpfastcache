@@ -30,6 +30,7 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver
  * @package phpFastCache\Drivers
  * @property CouchbaseClient $instance Instance of driver service
+ * @property Config $config Config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -50,7 +51,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        return extension_loaded('Couchbase');
+        return \extension_loaded('Couchbase');
     }
 
     /**
@@ -190,26 +191,5 @@ class Driver implements ExtendedCacheItemPoolInterface
           ->setData(\implode(', ', \array_keys($this->itemInstances)))
           ->setInfo('CouchBase version ' . $info[ 'nodes' ][ 0 ][ 'version' ] . ', Uptime (in days): ' . round($info[ 'nodes' ][ 0 ][ 'uptime' ] / 86400,
               1) . "\n For more information see RawData.");
-    }
-
-    /**
-     * @return ArrayObject
-     */
-    public function getDefaultConfig(): ArrayObject
-    {
-        $defaultConfig = new ArrayObject();
-
-        $defaultConfig[ 'host' ] = '127.0.0.1';
-        $defaultConfig[ 'port' ] = 8091;
-        $defaultConfig[ 'username' ] = '';
-        $defaultConfig[ 'password' ] = '';
-        $defaultConfig[ 'buckets' ] = [
-          [
-            'bucket' => 'default',
-            'password' => '',
-          ],
-        ];
-
-        return $defaultConfig;
     }
 }

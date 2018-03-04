@@ -37,7 +37,7 @@ class ConfigurationOption extends ArrayObject
     /**
      * @var string|Callable
      */
-    protected $defaultKeyHashFunction = '';
+    protected $defaultKeyHashFunction = 'md5';
 
     /**
      * @var int
@@ -52,7 +52,7 @@ class ConfigurationOption extends ArrayObject
     /**
      * @var string
      */
-    protected $fallback;
+    protected $fallback = '';
 
     /**
      * @var int
@@ -105,6 +105,34 @@ class ConfigurationOption extends ArrayObject
                 $this->$property = &$array[ $property ];
             }else{
                 $array[ $property ] = &$this->$property;
+            }
+        }
+
+        foreach (get_class_methods($this) as $method) {
+            if(strpos($method, 'set') === 0){
+                $value = null;
+                try{
+                    /**
+                     * We use property instead of getter
+                     * because of is/get conditions and
+                     * to allow us to retrieve the value
+                     * in catch statement bloc
+                     */
+                    $value = $this->{lcfirst(substr($method, 3))};
+                    $this->{$method}($value);
+                }catch(\TypeError $e){
+                    $typeHintGot = \is_object($value) ? \get_class($value) : \gettype($value);
+                    $reflectionMethod = new \ReflectionMethod($this, $method);
+                    $parameter = $reflectionMethod->getParameters()[0] ?? null;
+                    $typeHintExpected = ($parameter instanceof \ReflectionParameter ? ($parameter->getType() === 'object' ? $parameter->getClass() : $parameter->getType()) : 'Unknown type');
+
+                    throw new phpFastCacheInvalidConfigurationException(sprintf(
+                      'Invalid type hint found for "%s", expected "%s" got "%s"',
+                      lcfirst(substr($method, 3)),
+                      $typeHintExpected,
+                      $typeHintGot
+                    ));
+                }
             }
         }
     }

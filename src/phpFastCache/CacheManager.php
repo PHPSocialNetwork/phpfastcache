@@ -120,7 +120,7 @@ class CacheManager
             $badPracticeOmeter[ $driver ] = 1;
             $driverClass = self::getNamespacePath() . $driver . '\Driver';
             try {
-                if (class_exists($driverClass)) {
+                if (\class_exists($driverClass)) {
                     $configClass = $driverClass::getConfigClass();
                     self::$instances[ $instance ] = new $driverClass(new $configClass($config->toArray()), $instance);
                     self::$instances[ $instance ]->setEventManager(EventManager::getInstance());
@@ -130,8 +130,10 @@ class CacheManager
             } catch (phpFastCacheDriverCheckException $e) {
                 if ($config->getFallback()) {
                     try {
+
                         $fallback = $config->getFallback();
                         $config->setFallback('');
+                        trigger_error(sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver, $fallback), E_USER_WARNING);
                         return self::getInstance($fallback, $config);
                     } catch (phpFastCacheInvalidArgumentException $e) {
                         throw new phpFastCacheInvalidConfigurationException('Invalid fallback driver configuration', 0, $e);

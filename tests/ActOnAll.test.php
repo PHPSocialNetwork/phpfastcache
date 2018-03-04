@@ -27,6 +27,7 @@ try{
     CacheManager::getInstance('Memcached');
 }catch(phpFastCacheDriverCheckException $e){
     try {
+        CacheManager::clearInstances();
         CacheManager::getInstance('Files');
         CacheManager::getInstance('Sqlite');
         CacheManager::getInstance('Memstatic');

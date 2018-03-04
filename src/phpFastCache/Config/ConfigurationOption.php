@@ -70,7 +70,7 @@ class ConfigurationOption extends ArrayObject
     protected $preventCacheSlams = false;
 
     /**
-     * @var bool
+     * @var int
      */
     protected $cacheSlamsTimeout = 15;
 
@@ -359,18 +359,18 @@ class ConfigurationOption extends ArrayObject
     }
 
     /**
-     * @return bool
+     * @return int
      */
-    public function isCacheSlamsTimeout(): bool
+    public function getCacheSlamsTimeout(): int
     {
         return $this->cacheSlamsTimeout;
     }
 
     /**
-     * @param bool $cacheSlamsTimeout
+     * @param int $cacheSlamsTimeout
      * @return ConfigurationOption
      */
-    public function setCacheSlamsTimeout(bool $cacheSlamsTimeout): self
+    public function setCacheSlamsTimeout(int $cacheSlamsTimeout): self
     {
         $this->cacheSlamsTimeout = $cacheSlamsTimeout;
         return $this;

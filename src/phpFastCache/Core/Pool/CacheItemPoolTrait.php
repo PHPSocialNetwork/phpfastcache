@@ -97,7 +97,7 @@ trait CacheItemPoolTrait
 
                         if ($this->getConfig()[ 'preventCacheSlams' ]) {
                             while ($driverData instanceof ItemBatch) {
-                                if ($driverData->getItemDate()->getTimestamp() + $this->getConfig()[ 'cacheSlamsTimeout' ] < time()) {
+                                if ($driverData->getItemDate()->getTimestamp() + $this->getConfigOption('cacheSlamsTimeout') < time()) {
                                     /**
                                      * The timeout has been reached
                                      * Consider that the batch has
@@ -343,7 +343,7 @@ trait CacheItemPoolTrait
             $itemBatch = $class->newInstanceArgs([$this, $item->getKey()]);
             $itemBatch->setEventManager($this->eventManager)
               ->set(new ItemBatch($item->getKey(), new \DateTime()))
-              ->expiresAfter($this->getConfig()[ 'cacheSlamsTimeout' ]);
+              ->expiresAfter($this->getConfigOption('cacheSlamsTimeout'));
 
             /**
              * To avoid SPL mismatches

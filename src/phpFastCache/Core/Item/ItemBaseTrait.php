@@ -197,7 +197,7 @@ trait ItemBaseTrait
 
             $this->expirationDate = (new \DateTime())->add($time);
         } else {
-            throw new phpFastCacheInvalidArgumentException('Invalid date format');
+            throw new phpFastCacheInvalidArgumentException(sprintf('Invalid date format, got "%s"', gettype($time)));
         }
 
         return $this;

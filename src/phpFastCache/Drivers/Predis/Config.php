@@ -28,9 +28,9 @@ class Config extends ConfigurationOption
     protected $password = '';
 
     /**
-     * @var null
+     * @var int
      */
-    protected $database;
+    protected $database = 0;
 
     /**
      * @return string
@@ -87,18 +87,18 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @return null
+     * @return int
      */
-    public function getDatabase()
+    public function getDatabase(): int
     {
         return $this->database;
     }
 
     /**
-     * @param null $database
+     * @param int $database
      * @return Config
      */
-    public function setDatabase($database): self
+    public function setDatabase(int $database): self
     {
         $this->database = $database;
         return $this;

@@ -86,7 +86,7 @@ class ConfigurationOption extends ArrayObject
     public function __construct(...$args)
     {
         parent::__construct(...$args);
-        $array = $this->getArray();
+        $array =& $this->getArray();
 
         /**
          * Detect unwanted keys and throw an exception.
@@ -101,6 +101,7 @@ class ConfigurationOption extends ArrayObject
         }
 
         foreach (get_object_vars($this) as $property => $value) {
+
             if(array_key_exists($property, $array)){
                 $this->$property = &$array[ $property ];
             }else{

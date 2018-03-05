@@ -24,7 +24,7 @@ build:
         override: [php-scrutinizer-run]
   environment: 
     php: 
-      version: 7.0
+      version: 7.0.0
 checks: 
   php: true
 coding_style: 

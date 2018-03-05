@@ -32,7 +32,7 @@ function read_dir($dir, $ext = null)
     return $list;
 }
 
-$list = read_dir('./src', 'php');
+$list = read_dir('./lib', 'php');
 
 $exit = 0;
 foreach ($list as $file) {

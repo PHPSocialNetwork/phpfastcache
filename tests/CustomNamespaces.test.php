@@ -8,13 +8,12 @@
 use Phpfastcache\CacheManager;
 use Phpfastcache\Helper\CacheConditionalHelper as CacheConditional;
 use Phpfastcache\Helper\TestHelper;
-use Psr\Cache\CacheItemPoolInterface;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Custom namespaces');
 
-$testDir = __DIR__ . '/../lib/phpFastCache/CustomDriversPath/Files2/';
+$testDir = __DIR__ . '/../lib/Phpfastcache/CustomDriversPath/Files2/';
 
 if (@!mkdir($testDir, 0777, true) && !is_dir($testDir))
 {

@@ -10,7 +10,7 @@ use Phpfastcache\Helper\TestHelper;
 
 
 chdir(__DIR__);
-require_once __DIR__ . '/../../src/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 $testHelper = new TestHelper('Github issue #545 - Psr16Adapter get item even if it is expired');
 $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 $Psr16Adapter = new Psr16Adapter($defaultDriver);

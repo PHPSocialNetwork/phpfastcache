@@ -11,7 +11,7 @@ use Phpfastcache\Drivers\Files\Driver as FilesDriver;
 use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
-require_once __DIR__ . '/../../src/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 $testHelper = new TestHelper('Github issue #471 - Fallback must be a boolean');
 CacheManager::setDefaultConfig(new ConfigurationOption(['path' => __DIR__ . '/../../cache']));
 

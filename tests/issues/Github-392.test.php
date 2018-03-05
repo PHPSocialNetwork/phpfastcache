@@ -9,7 +9,7 @@ use Phpfastcache\CacheManager;
 use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
-require_once __DIR__ . '/../../src/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 $testHelper = new TestHelper('Github issue #392 - Issue after calling removeTag');
 
 $InstanceCache = CacheManager::getInstance('Files');

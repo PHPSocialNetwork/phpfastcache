@@ -5,13 +5,13 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use phpFastCache\CacheManager;
-use phpFastCache\Exceptions\phpFastCacheInvalidConfigurationException;
-use phpFastCache\Helper\TestHelper;
-use phpFastCache\Drivers\Files\Config as FilesConfig;
+use Phpfastcache\CacheManager;
+use Phpfastcache\Exceptions\phpFastCacheInvalidConfigurationException;
+use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Drivers\Files\Config as FilesConfig;
 
 chdir(__DIR__);
-require_once __DIR__ . '/../src/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Configuration validator');
 
 

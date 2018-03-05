@@ -5,10 +5,10 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use phpFastCache\CacheManager;
-use phpFastCache\Config\ConfigurationOption;
-use phpFastCache\Drivers\Files\Driver as FilesDriver;
-use phpFastCache\Helper\TestHelper;
+use Phpfastcache\CacheManager;
+use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Drivers\Files\Driver as FilesDriver;
+use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../src/autoload.php';

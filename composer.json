@@ -7,16 +7,16 @@
     "license": "MIT",
     "authors": [
             {
-                "name": "Khoa Bui",
-                "email": "khoaofgod@gmail.com",
-                "homepage": "http://www.phpfastcache.com",
-                "role": "Developer"
-            },
-            {
                 "name": "Georges.L",
                 "email": "contact@geolim4.com",
                 "homepage": "https://github.com/Geolim4",
-                "role": "Developer"
+                "role": "Actual Project Manager/Developer"
+            },
+            {
+                "name": "Khoa Bui",
+                "email": "khoaofgod@gmail.com",
+                "homepage": "http://www.phpfastcache.com",
+                "role": "Former Project Developer/Original Creator"
             }
         ],
     "require": {
@@ -48,7 +48,7 @@
     },
     "autoload": {
         "psr-4": {
-            "phpFastCache\\": "src/phpFastCache/"
+            "Phpfastcache\\": "lib/Phpfastcache/"
         }
     }
 }

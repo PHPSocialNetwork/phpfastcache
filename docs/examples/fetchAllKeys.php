@@ -11,7 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
-use phpFastCache\CacheManager;
+use Phpfastcache\CacheManager;
 
 // Include composer autoloader
 require __DIR__ . '/../../vendor/autoload.php';
@@ -20,7 +20,7 @@ $InstanceCache = CacheManager::getInstance('files');
 $InstanceCache->clear();
 
 /**
- * @var $keys \phpFastCache\Core\Item\ExtendedCacheItemInterface[]
+ * @var $keys \Phpfastcache\Core\Item\ExtendedCacheItemInterface[]
  */
 $keyPrefix = "product_page_";
 $keys = [];

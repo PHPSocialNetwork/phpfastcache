@@ -5,12 +5,12 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use phpFastCache\CacheManager;
-use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Entities\driverStatistic;
-use phpFastCache\Exceptions\phpFastCacheDriverCheckException;
-use phpFastCache\Helper\ActOnAll;
-use phpFastCache\Helper\TestHelper;
+use Phpfastcache\CacheManager;
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Entities\driverStatistic;
+use Phpfastcache\Exceptions\phpFastCacheDriverCheckException;
+use Phpfastcache\Helper\ActOnAll;
+use Phpfastcache\Helper\TestHelper;
 
 
 chdir(__DIR__);

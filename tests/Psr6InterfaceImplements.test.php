@@ -5,8 +5,8 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use phpFastCache\CacheManager;
-use phpFastCache\Helper\TestHelper;
+use Phpfastcache\CacheManager;
+use Phpfastcache\Helper\TestHelper;
 use Psr\Cache\CacheItemPoolInterface;
 
 chdir(__DIR__);

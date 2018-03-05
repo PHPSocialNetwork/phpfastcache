@@ -5,9 +5,9 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use phpFastCache\CacheManager;
-use phpFastCache\Config\ConfigurationOption;
-use phpFastCache\Helper\TestHelper;
+use Phpfastcache\CacheManager;
+use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Helper\TestHelper;
 
 
 chdir(__DIR__);

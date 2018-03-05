@@ -5,9 +5,9 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use phpFastCache\Api;
-use phpFastCache\Exceptions\phpFastCacheRootException;
-use phpFastCache\Helper\TestHelper;
+use Phpfastcache\Api;
+use Phpfastcache\Exceptions\phpFastCacheRootException;
+use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';

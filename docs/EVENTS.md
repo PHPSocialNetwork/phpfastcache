@@ -2,7 +2,7 @@
 You can subscribe to an event by passing a Closure to an active event:
 
 ```php
-use phpFastCache\EventManager;
+use Phpfastcache\EventManager;
 
 /**
 * Bind the event callback
@@ -17,7 +17,7 @@ An event callback can get unbind but you MUST provide a name to the callback pre
 
 
 ```php
-use phpFastCache\EventManager;
+use Phpfastcache\EventManager;
 
 /**
 * Bind the event callback

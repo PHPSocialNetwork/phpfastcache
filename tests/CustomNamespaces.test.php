@@ -5,16 +5,16 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use phpFastCache\CacheManager;
-use phpFastCache\Helper\CacheConditionalHelper as CacheConditional;
-use phpFastCache\Helper\TestHelper;
+use Phpfastcache\CacheManager;
+use Phpfastcache\Helper\CacheConditionalHelper as CacheConditional;
+use Phpfastcache\Helper\TestHelper;
 use Psr\Cache\CacheItemPoolInterface;
 
 chdir(__DIR__);
-require_once __DIR__ . '/../src/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Custom namespaces');
 
-$testDir = __DIR__ . '/../src/phpFastCache/CustomDriversPath/Files2/';
+$testDir = __DIR__ . '/../lib/phpFastCache/CustomDriversPath/Files2/';
 
 if (@!mkdir($testDir, 0777, true) && !is_dir($testDir))
 {
@@ -40,12 +40,12 @@ $driverClassString = <<<DRIVER_CLASS_STRING
  *
  */
 
-namespace phpFastCache\CustomDriversPath\Files2;
-use phpFastCache\Drivers\Files\Driver as FilesDriver;
+namespace Phpfastcache\CustomDriversPath\Files2;
+use Phpfastcache\Drivers\Files\Driver as FilesDriver;
 
 /**
  * Class Driver
- * @package phpFastCache\CustomDriversPath\Files2
+ * @package Phpfastcache\CustomDriversPath\Files2
  */
 class Driver extends FilesDriver
 {
@@ -71,12 +71,12 @@ $itemClassString = <<<ITEM_CLASS_STRING
  *
  */
 
-namespace phpFastCache\CustomDriversPath\Files2;
-use phpFastCache\Drivers\Files\Item as FilesItem;
+namespace Phpfastcache\CustomDriversPath\Files2;
+use Phpfastcache\Drivers\Files\Item as FilesItem;
 
 /**
  * Class Item
- * @package phpFastCache\CustomDriversPath\Files2
+ * @package Phpfastcache\CustomDriversPath\Files2
  */
 class Item extends FilesItem
 {
@@ -102,12 +102,12 @@ $configClassString = <<<CONFIG_CLASS_STRING
  *
  */
 
-namespace phpFastCache\CustomDriversPath\Files2;
-use phpFastCache\Drivers\Files\Config as FilesConfig;
+namespace Phpfastcache\CustomDriversPath\Files2;
+use Phpfastcache\Drivers\Files\Config as FilesConfig;
 
 /**
  * Class Config
- * @package phpFastCache\CustomDriversPath\Files2
+ * @package Phpfastcache\CustomDriversPath\Files2
  */
 class Config extends FilesConfig
 {
@@ -137,8 +137,8 @@ if(!file_put_contents("{$testDir}Driver.php", $driverClassString)
 chmod("{$testDir}Driver.php", 0644);
 chmod("{$testDir}Item.php", 0644);
 
-if(!class_exists(phpFastCache\CustomDriversPath\Files2\Item::class)
-  || !class_exists(phpFastCache\CustomDriversPath\Files2\Driver::class)
+if(!class_exists(Phpfastcache\CustomDriversPath\Files2\Item::class)
+  || !class_exists(Phpfastcache\CustomDriversPath\Files2\Driver::class)
 ){
     $testHelper->printFailText('The php classes of driver "Files2" does not exists');
     $testHelper->terminateTest();
@@ -146,7 +146,7 @@ if(!class_exists(phpFastCache\CustomDriversPath\Files2\Item::class)
     $testHelper->printPassText('The php classes of driver "Files2" were found');
 }
 
-CacheManager::setNamespacePath(phpFastCache\CustomDriversPath::class);
+CacheManager::setNamespacePath(Phpfastcache\CustomDriversPath::class);
 $cacheInstance = CacheManager::getInstance('Files2');
 $cacheKey = 'cacheKey';
 $RandomCacheValue = str_shuffle(uniqid('pfc', true));

@@ -5,9 +5,9 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Helper\TestHelper;
-use phpFastCache\Proxy\phpFastCacheAbstractProxy;
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Proxy\phpFastCacheAbstractProxy;
 
 
 chdir(__DIR__);

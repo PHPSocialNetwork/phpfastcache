@@ -17,8 +17,8 @@ require __DIR__ . '/../../vendor/autoload.php';
 date_default_timezone_set("Europe/Paris");
 
 
-use phpFastCache\CacheManager;
-use phpFastCache\Core\phpFastCache;
+use Phpfastcache\CacheManager;
+use Phpfastcache\Core\phpFastCache;
 
 // Setup File Path on your config files
 CacheManager::setDefaultConfig([

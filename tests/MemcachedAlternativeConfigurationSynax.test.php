@@ -5,10 +5,10 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use phpFastCache\CacheManager;
-use phpFastCache\Helper\TestHelper;
-use phpFastCache\Drivers\Memcached\Config as MemcachedConfig;
-use phpFastCache\Drivers\Memcache\Config as MemcacheConfig;
+use Phpfastcache\CacheManager;
+use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Drivers\Memcached\Config as MemcachedConfig;
+use Phpfastcache\Drivers\Memcache\Config as MemcacheConfig;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';

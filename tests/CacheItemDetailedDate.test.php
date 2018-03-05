@@ -5,15 +5,15 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use phpFastCache\CacheManager;
-use phpFastCache\Config\ConfigurationOption;
-use phpFastCache\Exceptions\phpFastCacheLogicException;
-use phpFastCache\Helper\CacheConditionalHelper as CacheConditional;
-use phpFastCache\Helper\TestHelper;
+use Phpfastcache\CacheManager;
+use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Exceptions\phpFastCacheLogicException;
+use Phpfastcache\Helper\CacheConditionalHelper as CacheConditional;
+use Phpfastcache\Helper\TestHelper;
 use Psr\Cache\CacheItemPoolInterface;
 
 chdir(__DIR__);
-require_once __DIR__ . '/../src/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Cache option: itemDetailedDate');
 $defaultDriver = (!empty($argv[ 1 ]) ? ucfirst($argv[ 1 ]) : 'Files');
 $cacheInstance = CacheManager::getInstance($defaultDriver, new ConfigurationOption([

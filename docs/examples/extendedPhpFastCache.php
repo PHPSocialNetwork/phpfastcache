@@ -14,8 +14,8 @@
 
 namespace MyCustom\Project;
 
-use phpFastCache\Drivers\Files\Driver as FilesDriver;
-use phpFastCache\Proxy\phpFastCacheAbstractProxy;
+use Phpfastcache\Drivers\Files\Driver as FilesDriver;
+use Phpfastcache\Proxy\phpFastCacheAbstractProxy;
 
 /**
  * Specific driver-based example

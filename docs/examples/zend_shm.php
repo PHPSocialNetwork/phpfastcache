@@ -10,7 +10,7 @@
  * @author Lucas Brucksch <support@hammermaps.de>
  *
  */
-use phpFastCache\CacheManager;
+use Phpfastcache\CacheManager;
 
 // Include composer autoloader
 require __DIR__ . '/../../vendor/autoload.php';

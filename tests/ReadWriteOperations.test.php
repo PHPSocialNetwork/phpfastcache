@@ -5,14 +5,14 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use phpFastCache\CacheManager;
-use phpFastCache\Config\ConfigurationOption;
-use phpFastCache\Drivers\Files\Config as FilesConfig;
-use phpFastCache\Core\Item\ExtendedCacheItemInterface;
-use phpFastCache\Helper\TestHelper;
+use Phpfastcache\CacheManager;
+use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Drivers\Files\Config as FilesConfig;
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
-require_once __DIR__ . '/../src/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Read/Write operations (I/O)');
 CacheManager::setDefaultConfig(new ConfigurationOption(['path' => __DIR__ . '/../../cache']));
 

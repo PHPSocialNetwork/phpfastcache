@@ -12,7 +12,7 @@
  *
  */
 
-use phpFastCache\CacheManager;
+use Phpfastcache\CacheManager;
 
 /**
  * You don't use composer ?

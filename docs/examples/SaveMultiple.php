@@ -15,7 +15,7 @@
 require __DIR__ . '/../../vendor/autoload.php';
 // OR require_once("../src/phpFastCache/phpFastCache.php");
 
-use phpFastCache\CacheManager;
+use Phpfastcache\CacheManager;
 
 // Setup File Path on your config files
 CacheManager::setDefaultConfig([

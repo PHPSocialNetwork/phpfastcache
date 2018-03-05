@@ -5,8 +5,8 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use phpFastCache\Helper\Psr16Adapter;
-use phpFastCache\Helper\TestHelper;
+use Phpfastcache\Helper\Psr16Adapter;
+use Phpfastcache\Helper\TestHelper;
 
 
 chdir(__DIR__);

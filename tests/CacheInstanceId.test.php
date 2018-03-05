@@ -5,10 +5,10 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
-use phpFastCache\CacheManager;
-use phpFastCache\Exceptions\phpFastCacheInstanceNotFoundException;
-use phpFastCache\Helper\TestHelper;
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\CacheManager;
+use Phpfastcache\Exceptions\phpFastCacheInstanceNotFoundException;
+use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';

@@ -1,7 +1,9 @@
 [![Total Downloads](http://img.shields.io/packagist/dt/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Latest Stable Version](http://img.shields.io/packagist/v/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![License](https://img.shields.io/packagist/l/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Coding Standards](https://img.shields.io/badge/CI-PSR6-orange.svg)](https://github.com/php-fig/cache)  [![Coding Standards](https://img.shields.io/badge/CS-PSR16-orange.svg)](https://github.com/php-fig/simple-cache)    
 [![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/badges/quality-score.png?b=final)](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/?branch=final) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=final)](https://travis-ci.org/PHPSocialNetwork/phpfastcache) [![Semver compliant](https://img.shields.io/badge/Semver-2.0.0-yellow.svg)](http://semver.org/spec/v2.0.0.html) [![Patreon](https://img.shields.io/badge/Support%20us%20on-Patreon-f96854.svg)](https://www.patreon.com/geolim4)
 
-:exclamation: V7 USERS, PLEASE NOTE THAT THE V7 REQUIRES PHP 7 AT LEAST :exclamation:
+#### :warning: Please note that the V7 is a major (BC breaking) update of PhpFastCache !
+> As the V7 is **absolutely** not compatible with previous versions, please read carefully the [migration guide](./docs/migration/MigratingFromV6ToV7.md) to ensure your the smoothest migration possible.
+Also please note that the V7 requires at least PHP7 or higher to work properly.
 
 ---------------------------
 Simple Yet Powerful PHP Caching Class
@@ -45,7 +47,7 @@ Different from the usual caching methods you'll find everywhere on the internet,
 However, when you still want to use traditional caching methods, we support them too.
 
 ```php
-use phpFastCache\CacheManager;
+use Phpfastcache\CacheManager;
 
 CacheManager::getInstance('files', $config);
 // An alternative exists:
@@ -141,10 +143,10 @@ It also supports multiple calls, Tagging, Setup Folder for caching. Look at our 
 
 ### PhpFastCache versioning API
 PhpFastCache provides a class that gives you basic information about your PhpFastCache installation
-- Get the API version (Item+Pool interface) with `phpFastCache\Api::GetVersion();`
-- Get the API changelog (Item+Pool interface) `phpFastCache\Api::getChangelog();`
-- Get the PhpFastCache version with `phpFastCache\Api::getPhpFastCacheVersion();`
-- Get the PhpFastCache changelog `phpFastCache\Api::getPhpFastCacheChangelog();`
+- Get the API version (Item+Pool interface) with `Phpfastcache\Api::GetVersion();`
+- Get the API changelog (Item+Pool interface) `Phpfastcache\Api::getChangelog();`
+- Get the PhpFastCache version with `Phpfastcache\Api::getPhpFastCacheVersion();`
+- Get the PhpFastCache changelog `Phpfastcache\Api::getPhpFastCacheChangelog();`
 
 ---------------------------
 Want to keep it simple ?
@@ -162,7 +164,7 @@ Want to keep it simple ?
 
 Basic usage:
 ```php
-use phpFastCache\Helper\Psr16Adapter;
+use Phpfastcache\Helper\Psr16Adapter;
 
 $Psr16Adapter = new Psr16Adapter($defaultDriver);
 
@@ -191,7 +193,7 @@ Introducing to events
 You can subscribe to an event by passing a Closure to an active event:
 
 ```php
-use phpFastCache\EventManager;
+use Phpfastcache\EventManager;
 
 /**
 * Bind the event callback
@@ -205,7 +207,7 @@ EventManager::getInstance()->onCacheGetItem(function(ExtendedCacheItemPoolInterf
 An event callback can get unbind but you MUST provide a name to the callback previously:
 
 ```php
-use phpFastCache\EventManager;
+use Phpfastcache\EventManager;
 
 /**
 * Bind the event callback
@@ -249,7 +251,7 @@ composer require phpFastCache/phpFastCache
 
 #### :construction: Step 2: Setup your website code to implement the phpFastCache calls (with Composer)
 ```php
-use phpFastCache\CacheManager;
+use Phpfastcache\CacheManager;
 
 // Setup File Path on your config files
 CacheManager::setup(array(

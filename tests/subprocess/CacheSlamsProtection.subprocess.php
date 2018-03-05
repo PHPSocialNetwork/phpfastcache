@@ -5,12 +5,12 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use phpFastCache\CacheManager;
-use phpFastCache\Config\ConfigurationOption;
-use phpFastCache\Entities\ItemBatch;
+use Phpfastcache\CacheManager;
+use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Entities\ItemBatch;
 
 chdir(__DIR__);
-require_once __DIR__ . '/../../src/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 $driverInstance = CacheManager::getInstance('Files', new ConfigurationOption([
   'preventCacheSlams' => true,

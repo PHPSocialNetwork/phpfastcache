@@ -12,7 +12,7 @@
  *
  */
 
-use phpFastCache\CacheManager;
+use Phpfastcache\CacheManager;
 
 // Include composer autoloader
 require __DIR__ . '/../../src/autoload.php';

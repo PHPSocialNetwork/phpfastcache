@@ -1,4 +1,14 @@
-Because the V7 is not backward compatible with the V6, here's a guide to help you to migrate your code:
+Because the V7 is **absolutely** not backward compatible with the V6, here's a guide to help you to migrate your code:
+
+### :warning: Phpfastcache global namespace  :warning:
+As of the V7 and to comply with modern standards the Phpfastcache namespace has changed :warning:
+
+#### :clock1: Then:
+We used to declare this namespace: `namespace phpFastCache;` or `use phpFastCache\...;` 
+
+#### :alarm_clock: Now:
+The time has changed, you now have to use: `namespace Phpfastcache;` or `use Phpfastcache\...;` 
+For any useful purpose, the `src/` directory has been moved along to `lib/`.
 
 ### Return type & Scalar type declarations 
 :anger: :exclamation: The V7 will make use of new php's return type & scalars type declarations features. 
@@ -21,7 +31,7 @@ Whatever you call will now result in an array of returns giving you the possibil
 Also the ActOnAll helper does no longer implements `ExtendedCacheItemPoolInterface` due to the type hint implementation.
 
 ### Cache Manager: Instance ID
-:new: As of the V7 you can now specify an instance ID using the CacheManager:
+:new: As of the V7 you can now (optionally) specify an instance ID using the CacheManager:
 
 ```php
 CacheManager::getInstance($defaultDriver, $options, $instanceId);
@@ -54,11 +64,11 @@ As of the V7 there's no "snake case" names left.
 ### Configuration option type
 
 #### :clock1: Then:
-The configuration data used to be an array passed through a `CacheManager` method.
+The configuration data used to be a primitive array passed through a `CacheManager` method.
 
 #### :alarm_clock: Now:
-The will now accept only a `\phpFastCache\Config\ConfigurationOption` object.
-There's a short alias available for less verbose configuration: `\phpFastCache\Config\Config`
+The will now accept only a `\Phpfastcache\Config\ConfigurationOption` object.
+There's a short alias available for less verbose configuration: `\Phpfastcache\Config\Config`
 This object will contain fluent setters allowing you to make use of chained setters.
 Despite the fact that this is a bad practice, this object which implements ArrayAccess interface 
 will allow you to treat the object as an array for primitive variable accesses:

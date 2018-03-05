@@ -123,9 +123,9 @@ class Driver implements ExtendedCacheItemPoolInterface
 
         if ($val === false) {
             return null;
-        } else {
-            return $val;
         }
+
+        return $val;
     }
 
     /**
@@ -147,9 +147,9 @@ class Driver implements ExtendedCacheItemPoolInterface
                 $ttl = time() + $ttl;
             }
             return $this->instance->set($item->getKey(), $this->driverPreWrap($item), $this->memcacheFlags, $ttl);
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
@@ -164,9 +164,9 @@ class Driver implements ExtendedCacheItemPoolInterface
          */
         if ($item instanceof Item) {
             return $this->instance->delete($item->getKey());
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**

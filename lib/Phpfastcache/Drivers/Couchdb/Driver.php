@@ -58,29 +58,29 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         if ($this->instance instanceof CouchdbClient) {
             throw new phpFastCacheLogicException('Already connected to Couchdb server');
-        } else {
-            $clientConfig = $this->getConfig();
-
-            $url = ($clientConfig[ 'ssl' ] ? 'https://' : 'http://');
-            if ($clientConfig[ 'username' ]) {
-                $url .= "{$clientConfig['username']}";
-                if ($clientConfig[ 'password' ]) {
-                    $url .= ":{$clientConfig['password']}";
-                }
-                $url .= '@';
-            }
-            $url .= $clientConfig[ 'host' ];
-            $url .= ":{$clientConfig['port']}";
-            $url .= $clientConfig[ 'path' ];
-
-            $this->instance = CouchDBClient::create([
-              'dbname' => $this->getDatabaseName(),
-              'url' => $url,
-              'timeout' => $clientConfig[ 'timeout' ],
-            ]);
-
-            $this->createDatabase();
         }
+
+        $clientConfig = $this->getConfig();
+
+        $url = ($clientConfig[ 'ssl' ] ? 'https://' : 'http://');
+        if ($clientConfig[ 'username' ]) {
+            $url .= "{$clientConfig['username']}";
+            if ($clientConfig[ 'password' ]) {
+                $url .= ":{$clientConfig['password']}";
+            }
+            $url .= '@';
+        }
+        $url .= $clientConfig[ 'host' ];
+        $url .= ":{$clientConfig['port']}";
+        $url .= $clientConfig[ 'path' ];
+
+        $this->instance = CouchDBClient::create([
+          'dbname' => $this->getDatabaseName(),
+          'url' => $url,
+          'timeout' => $clientConfig[ 'timeout' ],
+        ]);
+
+        $this->createDatabase();
 
         return true;
     }
@@ -127,9 +127,9 @@ class Driver implements ExtendedCacheItemPoolInterface
                 throw new phpFastCacheDriverException('Got error while trying to upsert a document: ' . $e->getMessage(), null, $e);
             }
             return true;
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
@@ -150,9 +150,9 @@ class Driver implements ExtendedCacheItemPoolInterface
                 throw new phpFastCacheDriverException('Got error while trying to delete a document: ' . $e->getMessage(), null, $e);
             }
             return true;
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**

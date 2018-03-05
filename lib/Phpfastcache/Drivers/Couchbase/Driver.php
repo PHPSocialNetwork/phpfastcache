@@ -63,22 +63,22 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         if ($this->instance instanceof CouchbaseClient) {
             throw new phpFastCacheLogicException('Already connected to Couchbase server');
-        } else {
-            $clientConfig = $this->getConfig();
+        }
 
-            $this->instance = new CouchbaseClient("couchbase://{$clientConfig['host']}:{$clientConfig['port']}");
+        $clientConfig = $this->getConfig();
 
-            if ($clientConfig[ 'username' ]) {
-                $authenticator = new \Couchbase\ClassicAuthenticator();
-                $authenticator->cluster($clientConfig[ 'username' ], $clientConfig[ 'password' ]);
-                //$authenticator->bucket('protected', 'secret');
-                $this->instance->authenticate($authenticator);
-            }
+        $this->instance = new CouchbaseClient("couchbase://{$clientConfig['host']}:{$clientConfig['port']}");
 
-            foreach ($clientConfig[ 'buckets' ] as $bucket) {
-                $this->bucketCurrent = $this->bucketCurrent ?: $bucket[ 'bucket' ];
-                $this->setBucket($bucket[ 'bucket' ], $this->instance->openBucket($bucket[ 'bucket' ], $bucket[ 'password' ]));
-            }
+        if ($clientConfig[ 'username' ]) {
+            $authenticator = new \Couchbase\ClassicAuthenticator();
+            $authenticator->cluster($clientConfig[ 'username' ], $clientConfig[ 'password' ]);
+            //$authenticator->bucket('protected', 'secret');
+            $this->instance->authenticate($authenticator);
+        }
+
+        foreach ($clientConfig[ 'buckets' ] as $bucket) {
+            $this->bucketCurrent = $this->bucketCurrent ?: $bucket[ 'bucket' ];
+            $this->setBucket($bucket[ 'bucket' ], $this->instance->openBucket($bucket[ 'bucket' ], $bucket[ 'password' ]));
         }
 
         return true;
@@ -116,9 +116,9 @@ class Driver implements ExtendedCacheItemPoolInterface
             } catch (\CouchbaseException $e) {
                 return false;
             }
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
@@ -137,9 +137,9 @@ class Driver implements ExtendedCacheItemPoolInterface
             }catch (\Couchbase\Exception $e){
                 return $e->getCode() === COUCHBASE_KEY_ENOENT;
             }
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**

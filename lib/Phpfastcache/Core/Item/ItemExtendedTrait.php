@@ -137,9 +137,9 @@ trait ItemExtendedTrait
     {
         if ($this->driver->getConfig()->isItemDetailedDate()) {
             return $this->creationDate;
-        } else {
-            throw new phpFastCacheLogicException('Cannot access to the creation date when the "itemDetailedDate" configuration is disabled.');
         }
+
+        throw new phpFastCacheLogicException('Cannot access to the creation date when the "itemDetailedDate" configuration is disabled.');
     }
 
     /**
@@ -152,9 +152,9 @@ trait ItemExtendedTrait
         if ($this->driver->getConfig()->isItemDetailedDate()) {
             $this->creationDate = $date;
             return $this;
-        } else {
-            throw new phpFastCacheLogicException('Cannot access to the creation date when the "itemDetailedDate" configuration is disabled.');
         }
+
+        throw new phpFastCacheLogicException('Cannot access to the creation date when the "itemDetailedDate" configuration is disabled.');
     }
 
     /**
@@ -165,9 +165,9 @@ trait ItemExtendedTrait
     {
         if ($this->driver->getConfig()->isItemDetailedDate()) {
             return $this->modificationDate;
-        } else {
-            throw new phpFastCacheLogicException('Cannot access to the modification date when the "itemDetailedDate" configuration is disabled.');
         }
+
+        throw new phpFastCacheLogicException('Cannot access to the modification date when the "itemDetailedDate" configuration is disabled.');
     }
 
     /**
@@ -180,9 +180,9 @@ trait ItemExtendedTrait
         if ($this->driver->getConfig()->isItemDetailedDate()) {
             $this->modificationDate = $date;
             return $this;
-        } else {
-            throw new phpFastCacheLogicException('Cannot access to the modification date when the "itemDetailedDate" configuration is disabled.');
         }
+
+        throw new phpFastCacheLogicException('Cannot access to the modification date when the "itemDetailedDate" configuration is disabled.');
     }
 
     /**
@@ -283,9 +283,9 @@ trait ItemExtendedTrait
             $this->tags = \array_unique(\array_merge($this->tags, [$tagName]));
 
             return $this;
-        } else {
-            throw new phpFastCacheInvalidArgumentException('$tagName must be a string');
         }
+
+        throw new phpFastCacheInvalidArgumentException('$tagName must be a string');
     }
 
     /**

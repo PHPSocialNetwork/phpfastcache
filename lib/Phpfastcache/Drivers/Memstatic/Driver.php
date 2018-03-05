@@ -79,9 +79,9 @@ class Driver implements ExtendedCacheItemPoolInterface
         if ($item instanceof Item) {
             $this->staticStack[ \md5($item->getKey()) ] = $this->driverPreWrap($item);
             return true;
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
@@ -101,9 +101,9 @@ class Driver implements ExtendedCacheItemPoolInterface
                 return true;
             }
             return false;
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**

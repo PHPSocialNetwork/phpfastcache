@@ -38,9 +38,9 @@ class Languages
                     mb_http_input($encoding);
                     mb_language($language);
                     mb_regex_encoding($encoding);
-                } else {
-                    throw new phpFastCacheCoreException("MB String need to be installed for Unicode Encoding");
                 }
+
+                throw new phpFastCacheCoreException("MB String need to be installed for Unicode Encoding");
                 break;
         }
     }

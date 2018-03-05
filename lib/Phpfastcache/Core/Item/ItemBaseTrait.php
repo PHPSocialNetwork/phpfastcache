@@ -136,9 +136,9 @@ trait ItemBaseTrait
             $this->isHit = $isHit;
 
             return $this;
-        } else {
-            throw new phpFastCacheInvalidArgumentException('$isHit must be a boolean');
         }
+
+        throw new phpFastCacheInvalidArgumentException('$isHit must be a boolean');
     }
 
     /**

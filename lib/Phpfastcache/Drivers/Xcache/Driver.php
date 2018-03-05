@@ -129,11 +129,10 @@ class Driver implements ExtendedCacheItemPoolInterface
               ->setData(\implode(', ', \array_keys($this->itemInstances)))
               ->setInfo(\sprintf("Xcache v%s with following modules loaded:\n %s", XCACHE_VERSION, \str_replace(' ', ', ', XCACHE_MODULES)))
               ->setRawData($info);
-        } else {
-            throw new \RuntimeException("PhpFastCache is not able to read Xcache configuration. Please put this to your php.ini:\n
+        }
+        throw new \RuntimeException("PhpFastCache is not able to read Xcache configuration. Please put this to your php.ini:\n
             [xcache.admin]
             xcache.admin.enable_auth = Off\n
             Then reboot your webserver and make sure that the native Xcache ini configuration file does not override your setting.");
-        }
     }
 }

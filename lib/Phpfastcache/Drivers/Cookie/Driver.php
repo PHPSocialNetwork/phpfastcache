@@ -39,11 +39,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        if (\function_exists('setcookie')) {
-            return true;
-        } else {
-            return false;
-        }
+        return \function_exists('setcookie');
     }
 
     /**
@@ -67,13 +63,13 @@ class Driver implements ExtendedCacheItemPoolInterface
 
         if ($x == false) {
             return null;
-        } else {
-            if (!is_scalar($this->driverUnwrapData($x)) && !is_null($this->driverUnwrapData($x))) {
-                throw new phpFastCacheDriverException('Hacking attempt: The decoding returned a non-scalar value, Cookie driver does not allow this.');
-            }
-
-            return $x;
         }
+
+        if (!is_scalar($this->driverUnwrapData($x)) && !is_null($this->driverUnwrapData($x))) {
+            throw new phpFastCacheDriverException('Hacking attempt: The decoding returned a non-scalar value, Cookie driver does not allow this.');
+        }
+
+        return $x;
     }
 
     /**

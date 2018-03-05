@@ -96,35 +96,35 @@ trait IOHelperTrait
                 return $full_path_tmp;
             }
             return $full_path;
-        } else {
-            if (!isset($this->tmp[ $full_path_hash ]) || (!@\file_exists($full_path) || !@\is_writable($full_path))) {
-                if (!@\file_exists($full_path)) {
-                    @mkdir($full_path, $this->getDefaultChmod(), true);
-                } else if (!@\is_writable($full_path)) {
-                    if (!@chmod($full_path, $this->getDefaultChmod()) && $this->config->getOption('autoTmpFallback')) {
-                        /**
-                         * Switch back to tmp dir
-                         * again if the path is not writable
-                         */
-                        $full_path = $full_path_tmp;
-                        if (!@\file_exists($full_path)) {
-                            @mkdir($full_path, $this->getDefaultChmod(), true);
-                        }
+        }
+
+        if (!isset($this->tmp[ $full_path_hash ]) || (!@\file_exists($full_path) || !@\is_writable($full_path))) {
+            if (!@\file_exists($full_path)) {
+                @mkdir($full_path, $this->getDefaultChmod(), true);
+            } else if (!@\is_writable($full_path)) {
+                if (!@chmod($full_path, $this->getDefaultChmod()) && $this->config->getOption('autoTmpFallback')) {
+                    /**
+                     * Switch back to tmp dir
+                     * again if the path is not writable
+                     */
+                    $full_path = $full_path_tmp;
+                    if (!@\file_exists($full_path)) {
+                        @mkdir($full_path, $this->getDefaultChmod(), true);
                     }
                 }
-
-                /**
-                 * In case there is no directory
-                 * writable including the temporary
-                 * one, we must throw an exception
-                 */
-                if (!@\file_exists($full_path) || !@\is_writable($full_path)) {
-                    throw new phpFastCacheIOException('Path "' . $full_path . '" is not writable, please set a chmod 0777 or any writable permission and make sure to make use of an absolute path !');
-                }
-
-                $this->tmp[ $full_path_hash ] = $full_path;
-                $this->htaccessGen($full_path, \array_key_exists('htaccess', $this->config) ? $this->config->getOption('htaccess') : false);
             }
+
+            /**
+             * In case there is no directory
+             * writable including the temporary
+             * one, we must throw an exception
+             */
+            if (!@\file_exists($full_path) || !@\is_writable($full_path)) {
+                throw new phpFastCacheIOException('Path "' . $full_path . '" is not writable, please set a chmod 0777 or any writable permission and make sure to make use of an absolute path !');
+            }
+
+            $this->tmp[ $full_path_hash ] = $full_path;
+            $this->htaccessGen($full_path, \array_key_exists('htaccess', $this->config) ? $this->config->getOption('htaccess') : false);
         }
 
         return realpath($full_path);
@@ -180,9 +180,9 @@ trait IOHelperTrait
     {
         if ($this->config->getOption('default_chmod') !== null || $this->config->getOption('default_chmod') == '' || is_null($this->config->getOption('default_chmod'))) {
             return 0777;
-        } else {
-            return $this->config->getOption('default_chmod');
         }
+
+        return $this->config->getOption('default_chmod');
     }
 
     /**
@@ -251,21 +251,21 @@ HTACCESS;
     {
         if (\function_exists('file_get_contents')) {
             return file_get_contents($file);
-        } else {
-            $string = '';
-
-            $file_handle = @fopen($file, 'r');
-            if (!$file_handle) {
-                throw new phpFastCacheIOException("Cannot read file located at: {$file}");
-            }
-            while (!feof($file_handle)) {
-                $line = fgets($file_handle);
-                $string .= $line;
-            }
-            fclose($file_handle);
-
-            return $string;
         }
+
+        $string = '';
+
+        $file_handle = @fopen($file, 'r');
+        if (!$file_handle) {
+            throw new phpFastCacheIOException("Cannot read file located at: {$file}");
+        }
+        while (!feof($file_handle)) {
+            $line = fgets($file_handle);
+            $string .= $line;
+        }
+        fclose($file_handle);
+
+        return $string;
     }
 
     /**

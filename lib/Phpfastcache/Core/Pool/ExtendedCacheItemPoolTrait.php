@@ -61,12 +61,11 @@ trait ExtendedCacheItemPoolTrait
                 return \array_filter($this->getItems(\array_unique(\array_keys($items))), function (ExtendedCacheItemInterface $item) {
                     return $item->isHit();
                 });
-            } else {
-                return [];
             }
-        } else {
-            throw new phpFastCacheInvalidArgumentException('$tagName must be a string');
+            return [];
         }
+
+        throw new phpFastCacheInvalidArgumentException('$tagName must be a string');
     }
 
     /**
@@ -131,9 +130,9 @@ trait ExtendedCacheItemPoolTrait
             }
 
             return $return;
-        } else {
-            throw new phpFastCacheInvalidArgumentException('$tagName must be a string');
         }
+
+        throw new phpFastCacheInvalidArgumentException('$tagName must be a string');
     }
 
     /**
@@ -182,9 +181,9 @@ trait ExtendedCacheItemPoolTrait
             }
 
             return $this->commit();
-        } else {
-            throw new phpFastCacheInvalidArgumentException('$tagName must be a string and $step an integer');
         }
+
+        throw new phpFastCacheInvalidArgumentException('$tagName must be a string and $step an integer');
     }
 
     /**
@@ -216,9 +215,9 @@ trait ExtendedCacheItemPoolTrait
                 $this->saveDeferred($item);
             }
             return $this->commit();
-        } else {
-            throw new phpFastCacheInvalidArgumentException('$step must be an integer');
         }
+
+        throw new phpFastCacheInvalidArgumentException('$step must be an integer');
     }
 
     /**
@@ -233,9 +232,9 @@ trait ExtendedCacheItemPoolTrait
             }
 
             return $this->commit();
-        } else {
-            throw new phpFastCacheInvalidArgumentException('$tagName must be a string and $step an integer');
         }
+
+        throw new phpFastCacheInvalidArgumentException('$tagName must be a string and $step an integer');
     }
 
     /**
@@ -267,9 +266,9 @@ trait ExtendedCacheItemPoolTrait
                 $this->saveDeferred($item);
             }
             return $this->commit();
-        } else {
-            throw new phpFastCacheInvalidArgumentException('$step must be an integer');
         }
+
+        throw new phpFastCacheInvalidArgumentException('$step must be an integer');
     }
 
     /**
@@ -284,9 +283,9 @@ trait ExtendedCacheItemPoolTrait
             }
 
             return $this->commit();
-        } else {
-            throw new phpFastCacheInvalidArgumentException('$tagName must be a string');
         }
+
+        throw new phpFastCacheInvalidArgumentException('$tagName must be a string');
     }
 
     /**
@@ -318,9 +317,9 @@ trait ExtendedCacheItemPoolTrait
                 $this->saveDeferred($item);
             }
             return $this->commit();
-        } else {
-            throw new phpFastCacheInvalidArgumentException('$data must be scalar');
         }
+
+        throw new phpFastCacheInvalidArgumentException('$data must be scalar');
     }
 
     /**
@@ -335,9 +334,9 @@ trait ExtendedCacheItemPoolTrait
             }
 
             return $this->commit();
-        } else {
-            throw new phpFastCacheInvalidArgumentException('$tagName must be a string');
         }
+
+        throw new phpFastCacheInvalidArgumentException('$tagName must be a string');
     }
 
     /**
@@ -369,9 +368,9 @@ trait ExtendedCacheItemPoolTrait
                 $this->saveDeferred($item);
             }
             return $this->commit();
-        } else {
-            throw new phpFastCacheInvalidArgumentException('$data must be scalar');
         }
+
+        throw new phpFastCacheInvalidArgumentException('$data must be scalar');
     }
 
     /**
@@ -402,9 +401,9 @@ trait ExtendedCacheItemPoolTrait
     {
         if (isset($this->itemInstances[ $item->getKey() ]) && \spl_object_hash($item) !== \spl_object_hash($this->itemInstances[ $item->getKey() ])) {
             throw new phpFastCacheLogicException('The item already exists and cannot be overwritten because the Spl object hash mismatches ! You probably tried to re-attach a detached item which has been already retrieved from cache.');
-        } else {
-            $this->itemInstances[ $item->getKey() ] = $item;
         }
+
+        $this->itemInstances[ $item->getKey() ] = $item;
     }
 
 

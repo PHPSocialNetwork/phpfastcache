@@ -37,11 +37,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        if (extension_loaded('Zend Data Cache') && \function_exists('zend_disk_cache_store')) {
-            return true;
-        } else {
-            return false;
-        }
+        return \extension_loaded('Zend Data Cache') && \function_exists('zend_disk_cache_store');
     }
 
     /**
@@ -80,9 +76,9 @@ class Driver implements ExtendedCacheItemPoolInterface
             $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
             return zend_disk_cache_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
@@ -96,10 +92,10 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return zend_disk_cache_delete($item->getKey());
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+            return (bool) zend_disk_cache_delete($item->getKey());
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**

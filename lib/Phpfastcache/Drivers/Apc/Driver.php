@@ -49,11 +49,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        if (extension_loaded('apc') && ini_get('apc.enabled')) {
-            return true;
-        } else {
-            return false;
-        }
+        return extension_loaded('apc') && ini_get('apc.enabled');
     }
 
     /**
@@ -92,9 +88,9 @@ class Driver implements ExtendedCacheItemPoolInterface
             $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
             return (bool)apc_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
@@ -109,9 +105,9 @@ class Driver implements ExtendedCacheItemPoolInterface
          */
         if ($item instanceof Item) {
             return (bool)apc_delete($item->getKey());
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**

@@ -53,32 +53,31 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         if ($this->instance instanceof RedisClient) {
             throw new phpFastCacheLogicException('Already connected to Redis server');
-        } else {
-            $clientConfig = $this->getConfig();
-            $this->instance = $this->instance ?: new RedisClient();
-
-            /**
-             * If path is provided we consider it as an UNIX Socket
-             */
-            if ($this->config->getOption('path')) {
-                $isConnected = $this->instance->connect($this->config->getOption('path'));
-            } else {
-                $isConnected = $this->instance->connect($this->config->getOption('host'), $this->config->getOption('port'), (int)$this->config->getOption('timeout'));
-            }
-
-            if (!$isConnected && $this->config->getOption('path')) {
-                return false;
-            } else if (!$this->config->getOption('path')) {
-                if ($this->config->getOption('password') && !$this->instance->auth($this->config->getOption('password'))) {
-                    return false;
-                }
-            }
-
-            if ($this->config->getOption('database') !== null) {
-                $this->instance->select($this->config->getOption('database'));
-            }
-            return true;
         }
+
+        $this->instance = $this->instance ?: new RedisClient();
+
+        /**
+         * If path is provided we consider it as an UNIX Socket
+         */
+        if ($this->config->getOption('path')) {
+            $isConnected = $this->instance->connect($this->config->getOption('path'));
+        } else {
+            $isConnected = $this->instance->connect($this->config->getOption('host'), $this->config->getOption('port'), (int)$this->config->getOption('timeout'));
+        }
+
+        if (!$isConnected && $this->config->getOption('path')) {
+            return false;
+        } else if (!$this->config->getOption('path')) {
+            if ($this->config->getOption('password') && !$this->instance->auth($this->config->getOption('password'))) {
+                return false;
+            }
+        }
+
+        if ($this->config->getOption('database') !== null) {
+            $this->instance->select($this->config->getOption('database'));
+        }
+        return true;
     }
 
     /**
@@ -90,9 +89,9 @@ class Driver implements ExtendedCacheItemPoolInterface
         $val = $this->instance->get($item->getKey());
         if ($val == false) {
             return null;
-        } else {
-            return $this->decode($val);
         }
+
+        return $this->decode($val);
     }
 
     /**
@@ -114,12 +113,12 @@ class Driver implements ExtendedCacheItemPoolInterface
              */
             if ($ttl <= 0) {
                 return $this->instance->expire($item->getKey(), 0);
-            } else {
-                return $this->instance->setex($item->getKey(), $ttl, $this->encode($this->driverPreWrap($item)));
             }
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+
+            return $this->instance->setex($item->getKey(), $ttl, $this->encode($this->driverPreWrap($item)));
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
@@ -134,9 +133,9 @@ class Driver implements ExtendedCacheItemPoolInterface
          */
         if ($item instanceof Item) {
             return (bool)$this->instance->del($item->getKey());
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**

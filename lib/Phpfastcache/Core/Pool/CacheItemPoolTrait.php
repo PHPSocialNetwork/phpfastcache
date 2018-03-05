@@ -202,9 +202,9 @@ trait CacheItemPoolTrait
             $this->itemInstances[ $item->getKey() ] = $item;
 
             return $this;
-        } else {
-            throw new phpFastCacheInvalidArgumentException(sprintf('Invalid Item Class "%s" for this driver.', \get_class($item)));
         }
+
+        throw new phpFastCacheInvalidArgumentException(sprintf('Invalid Item Class "%s" for this driver.', \get_class($item)));
     }
 
     /**

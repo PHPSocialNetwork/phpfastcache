@@ -53,8 +53,8 @@ class Item implements ExtendedCacheItemInterface
             $this->driver = $driver;
 
             return $this;
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Invalid driver instance');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Invalid driver instance');
     }
 }

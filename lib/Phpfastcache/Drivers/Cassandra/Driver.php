@@ -56,44 +56,45 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         if ($this->instance instanceof CassandraSession) {
             throw new phpFastCacheLogicException('Already connected to Couchbase server');
-        } else {
-            $clientConfig = $this->getConfig();
+        }
 
-            $clusterBuilder = Cassandra::cluster()
-              ->withContactPoints($clientConfig[ 'host' ])
-              ->withPort($clientConfig[ 'port' ]);
+        $clientConfig = $this->getConfig();
 
-            if (!empty($clientConfig[ 'sslEnabled' ])) {
-                if (!empty($clientConfig[ 'sslVerify' ])) {
-                    $sslBuilder = Cassandra::ssl()->withVerifyFlags(Cassandra::VERIFY_PEER_CERT);
-                } else {
-                    $sslBuilder = Cassandra::ssl()->withVerifyFlags(Cassandra::VERIFY_NONE);
-                }
+        $clusterBuilder = Cassandra::cluster()
+          ->withContactPoints($clientConfig[ 'host' ])
+          ->withPort($clientConfig[ 'port' ]);
 
-                $clusterBuilder->withSSL($sslBuilder->build());
+        if (!empty($clientConfig[ 'sslEnabled' ])) {
+            if (!empty($clientConfig[ 'sslVerify' ])) {
+                $sslBuilder = Cassandra::ssl()->withVerifyFlags(Cassandra::VERIFY_PEER_CERT);
+            } else {
+                $sslBuilder = Cassandra::ssl()->withVerifyFlags(Cassandra::VERIFY_NONE);
             }
 
-            $clusterBuilder->withConnectTimeout($clientConfig[ 'timeout' ]);
+            $clusterBuilder->withSSL($sslBuilder->build());
+        }
 
-            if ($clientConfig[ 'username' ]) {
-                $clusterBuilder->withCredentials($clientConfig[ 'username' ], $clientConfig[ 'password' ]);
-            }
+        $clusterBuilder->withConnectTimeout($clientConfig[ 'timeout' ]);
 
-            $this->instance = $clusterBuilder->build()->connect();
+        if ($clientConfig[ 'username' ]) {
+            $clusterBuilder->withCredentials($clientConfig[ 'username' ], $clientConfig[ 'password' ]);
+        }
 
-            /**
-             * In case of emergency:
-             * $this->instance->execute(
-             *      new Cassandra\SimpleStatement(\sprintf("DROP KEYSPACE %s;", self::CASSANDRA_KEY_SPACE))
-             * );
-             */
+        $this->instance = $clusterBuilder->build()->connect();
 
-            $this->instance->execute(new Cassandra\SimpleStatement(\sprintf(
-              "CREATE KEYSPACE IF NOT EXISTS %s WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };",
-              self::CASSANDRA_KEY_SPACE
-            )));
-            $this->instance->execute(new Cassandra\SimpleStatement(\sprintf('USE %s;', self::CASSANDRA_KEY_SPACE)));
-            $this->instance->execute(new Cassandra\SimpleStatement(\sprintf('
+        /**
+         * In case of emergency:
+         * $this->instance->execute(
+         *      new Cassandra\SimpleStatement(\sprintf("DROP KEYSPACE %s;", self::CASSANDRA_KEY_SPACE))
+         * );
+         */
+
+        $this->instance->execute(new Cassandra\SimpleStatement(\sprintf(
+          "CREATE KEYSPACE IF NOT EXISTS %s WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };",
+          self::CASSANDRA_KEY_SPACE
+        )));
+        $this->instance->execute(new Cassandra\SimpleStatement(\sprintf('USE %s;', self::CASSANDRA_KEY_SPACE)));
+        $this->instance->execute(new Cassandra\SimpleStatement(\sprintf('
                 CREATE TABLE IF NOT EXISTS %s (
                     cache_uuid uuid,
                     cache_id varchar,
@@ -103,8 +104,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                     cache_length int,
                     PRIMARY KEY (cache_id)
                 );', self::CASSANDRA_TABLE
-            )));
-        }
+        )));
 
         return true;
     }
@@ -129,9 +129,9 @@ class Driver implements ExtendedCacheItemPoolInterface
 
             if ($results instanceof Cassandra\Rows && $results->count() === 1) {
                 return $this->decode($results->first()[ 'cache_data' ]);
-            } else {
-                return null;
             }
+
+            return null;
         } catch (Cassandra\Exception $e) {
             return null;
         }

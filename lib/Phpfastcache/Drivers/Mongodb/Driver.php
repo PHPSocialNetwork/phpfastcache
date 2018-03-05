@@ -128,9 +128,9 @@ class Driver implements ExtendedCacheItemPoolInterface
             }
 
             return isset($result[ 'ok' ]) ? $result[ 'ok' ] == 1 : true;
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
@@ -150,9 +150,9 @@ class Driver implements ExtendedCacheItemPoolInterface
             $deletionResult = $this->getCollection()->deleteOne(['_id' => $item->getEncodedKey()]);
 
             return $deletionResult->isAcknowledged();
-        } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
+
+        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
@@ -183,21 +183,21 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         if ($this->instance instanceof \MongoDB\Driver\Manager) {
             throw new LogicException('Already connected to Mongodb server');
-        } else {
-            $clientConfig = $this->getConfig();
-
-            /**
-             * @todo make an url builder
-             */
-            $this->instance = $this->instance ?: (new MongodbManager('mongodb://' .
-              ($clientConfig[ 'username' ] ?: '') .
-              ($clientConfig[ 'password' ] ? ":{$clientConfig['password']}" : '') .
-              ($clientConfig[ 'username' ] ? '@' : '') . "{$clientConfig['host']}" .
-              ($clientConfig[ 'port' ] != 27017 ? ":{$clientConfig['port']}" : ''), ['connectTimeoutMS' => $clientConfig[ 'timeout' ] * 1000]));
-            $this->collection = $this->collection ?: new Collection($this->instance, $clientConfig[ 'databaseName' ], $clientConfig[ 'collectionName' ]);
-
-            return true;
         }
+
+        $clientConfig = $this->getConfig();
+
+        /**
+         * @todo make an url builder
+         */
+        $this->instance = $this->instance ?: (new MongodbManager('mongodb://' .
+          ($clientConfig[ 'username' ] ?: '') .
+          ($clientConfig[ 'password' ] ? ":{$clientConfig['password']}" : '') .
+          ($clientConfig[ 'username' ] ? '@' : '') . "{$clientConfig['host']}" .
+          ($clientConfig[ 'port' ] != 27017 ? ":{$clientConfig['port']}" : ''), ['connectTimeoutMS' => $clientConfig[ 'timeout' ] * 1000]));
+        $this->collection = $this->collection ?: new Collection($this->instance, $clientConfig[ 'databaseName' ], $clientConfig[ 'collectionName' ]);
+
+        return true;
     }
 
 

@@ -15,11 +15,41 @@ PHPFASTCACHE's specialties
 -------------------
 As of the V7 your contributions MUST comply the following standards:
 
-- **PHP CORE FUNCTIONS**
-  - To improve opcode efficiency, you MUST prefix core function by a '\\'
-    - E.g: `$var = \str_replace('value', '', $var);`
-- **PHP CORE CLASSES**
-  - Do not imports non-namespaced classes, use an absolute path instead:  
-    - E.g: `$date = new \DateTime();`
+### PHP CORE FUNCTIONS
+- To improve opcode efficiency, you MUST prefix core function by a '\\'
+  - E.g: `$var = \str_replace('value', '', $var);`
 
+### PHP CORE CLASSES
+- Do not imports non-namespaced classes, use an absolute path instead:  
+  - E.g: `$date = new \DateTime();`
+
+### CODE STYLE
+- Unneeded/inconsistent `else` statements have to be shortened.
+  - E.g: 
+ ```php 
+ <?php
+function setAcme($acme)
+{
+    if ($acme instanceof Acme) {
+        $this->acme = $acme;
+        return $this;
+    } else {
+        throw new phpFastCacheInvalidArgumentException('Invalid acme instance');
+    }
+}
+ ```
+  - This example can be safely replaced by this one:
+```php 
+ <?php
+function setAcme($acme)
+{
+    if ($acme instanceof Acme) {
+        $this->acme = $acme;
+        return $this;
+    } 
+
+    throw new phpFastCacheInvalidArgumentException('Invalid acme instance');
+}
+ ```
+[Read this thread on StackExchange for more information](https://softwareengineering.stackexchange.com/questions/122485/elegant-ways-to-handle-ifif-else-else)
 This list is non-exhaustive and will may subject to evolve at any time.

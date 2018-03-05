@@ -16,9 +16,15 @@ before_commands:
   - "composer require phpfastcache/phpssdb ~1.0.0\""
   - "composer require phpfastcache/couchdb \"~1.0.0\""
 build:
+  nodes:
+    analysis:
+      project_setup:
+        override: true
+      tests:
+        override: [php-scrutinizer-run]
   environment: 
     php: 
-      version: 5.6
+      version: 7.0
 checks: 
   php: true
 coding_style: 
@@ -28,6 +34,7 @@ coding_style:
         concatenation: true
 filter: 
   excluded_paths: 
+    - .github/*
     - bin/*
     - docs/*
     - examples/*
@@ -43,9 +50,9 @@ tools:
     enabled: true
     filter: 
       paths: 
-        - src/*
+        - lib/*
   php_mess_detector: 
     enabled: true
     filter: 
       paths: 
-        - src/*
+        - lib/*

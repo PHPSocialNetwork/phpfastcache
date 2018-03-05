@@ -22,7 +22,11 @@ use Phpfastcache\Exceptions\{
 };
 use Psr\Cache\CacheItemInterface;
 
-
+/**
+ * Trait ExtendedCacheItemPoolTrait
+ * @package Phpfastcache\Core\Pool
+ * @method bool driverWriteTags() Imported from DriverBaseTrait
+ */
 trait ExtendedCacheItemPoolTrait
 {
     use CacheItemPoolTrait;

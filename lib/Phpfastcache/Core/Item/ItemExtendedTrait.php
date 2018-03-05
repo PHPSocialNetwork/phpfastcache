@@ -31,6 +31,7 @@ use Phpfastcache\Exceptions\{
  * @property bool $fetched Fetch flag status
  * @property array $tags The tags array
  * @property array $removedTags The removed tags array
+ * @property string $key The item key
  */
 trait ItemExtendedTrait
 {

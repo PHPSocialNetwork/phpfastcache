@@ -28,7 +28,7 @@ spl_autoload_register(function ($entity) {
          */
         return;
     } else if (\strpos($entity, 'Psr\Cache') === 0) {
-        $path = PFC_BIN_DIR . 'legacy/Psr/Cache/src/' . \substr(strrchr($entity, '\\'), 1) . '.' . PFC_PHP_EXT;
+        $path = PFC_BIN_DIR . 'dependencies/Psr/Cache/src/' . \substr(strrchr($entity, '\\'), 1) . '.' . PFC_PHP_EXT;
 
         if (\is_readable($path)) {
             require_once $path;
@@ -37,7 +37,7 @@ spl_autoload_register(function ($entity) {
         }
         return;
     } else if (\strpos($entity, 'Psr\SimpleCache') === 0) {
-        $path = PFC_BIN_DIR . 'legacy/Psr/SimpleCache/src/' . \substr(strrchr($entity, '\\'), 1) . '.' . PFC_PHP_EXT;
+        $path = PFC_BIN_DIR . 'dependencies/Psr/SimpleCache/src/' . \substr(strrchr($entity, '\\'), 1) . '.' . PFC_PHP_EXT;
 
         if (\is_readable($path)) {
             require_once $path;

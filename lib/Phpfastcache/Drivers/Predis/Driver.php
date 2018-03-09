@@ -61,7 +61,6 @@ class Driver implements ExtendedCacheItemPoolInterface
               'path' =>  $this->config->getOption('path')
             ]);
         }else{
-            var_dump($this->getConfig()->getPredisConfigArray());
             $this->instance = new PredisClient($this->getConfig()->getPredisConfigArray());
         }
 

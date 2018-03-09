@@ -42,9 +42,9 @@ Also a [Drupal 8 Module](https://github.com/PHPSocialNetwork/phpfastcache-drupal
 ---------------------------
 Not a "Traditional" Caching
 ---------------------------
-phpFastCache is not like the traditional caching methods which keep reading and writing to files, sqlite or keeping open massive amounts of connections to memcache, redis, mongodb... Also, when you use Memcache / Memcached, your miss hits will be reduced.
-Different from the usual caching methods you'll find everywhere on the internet, the phpFastCache library reduces high I/O load, and is faster than the traditional caching methods by at least ~7 times.
-However, when you still want to use traditional caching methods, we support them too.
+phpFastCache is not like the traditional caching methods which keep reading and writing to files, sqlite or keeping open massive amounts of connections to memcache, redis, mongodb... 
+Also, when you use high performances drivers, your miss hits will be drastically reduced.
+Slightly different from the usual caching libraries you will find everywhere on the internet, the phpFastCache library reduces the I/O and CPU load as much as possible.
 
 ```php
 use Phpfastcache\CacheManager;
@@ -56,17 +56,18 @@ CacheManager::Files($config);
 ```
 
 ---------------------------
-Reduce Database Calls
+Reduce Database/Webservice Calls
 ---------------------------
 
-Your website has 10,000 visitors who are online, and your dynamic page has to send 10,000 times the same queries to database on every page load.
-With phpFastCache, your page only sends 1 query to your DB, and uses the cache to serve the 9,999 other visitors.
+Your website has 10,000 visitors who are online, and your dynamic page has to send 10,000 times the same queries to database or the webservice on every page load.
+With phpFastCache, your page only sends 1 query to your DB/WS, and uses the cache to serve the 9,999 other visitors.
+You can off course decide the TTL that will matches your needs.
 
 ---------------------------
 Rich Development API
 ---------------------------
 
-phpFastCache offers you a lot of useful APIs:
+phpFastCache provides you a lot of useful APIs:
 
 ### Item API
 - getKey() // Returns the item identifier (key)

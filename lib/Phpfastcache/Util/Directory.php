@@ -31,7 +31,7 @@ class Directory
      * @param bool $includeDirAllocSize
      * @return integer
      */
-    public static function dirSize($directory, $includeDirAllocSize = false)
+    public static function dirSize($directory, $includeDirAllocSize = false): int
     {
         $size = 0;
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)) as $file) {
@@ -52,7 +52,7 @@ class Directory
      * @param string $path
      * @return int
      */
-    public static function getFileCount($path)
+    public static function getFileCount($path): int
     {
         $count = 0;
         $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::SELF_FIRST);
@@ -77,7 +77,7 @@ class Directory
      *
      * @return bool true on success; false on failure
      */
-    public static function rrmdir($source, $removeOnlyChildren = false)
+    public static function rrmdir($source, $removeOnlyChildren = false): bool
     {
         if (empty($source) || \file_exists($source) === false) {
             return false;
@@ -120,7 +120,7 @@ class Directory
      * @param $path
      * @return string
      */
-    public static function getAbsolutePath($path)
+    public static function getAbsolutePath($path): string
     {
         $parts = preg_split('~[/\\\\]+~', $path, 0, PREG_SPLIT_NO_EMPTY);
         $absolutes = [];

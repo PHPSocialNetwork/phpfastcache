@@ -52,7 +52,7 @@ trait IOHelperTrait
          */
         {
             $securityKey = array_key_exists('securityKey', $this->config) ? $this->config[ 'securityKey' ] : '';
-            if (!$securityKey || $securityKey === 'auto') {
+            if (!$securityKey || mb_strtolower($securityKey) === 'auto') {
                 if (isset($_SERVER[ 'HTTP_HOST' ])) {
                     $securityKey = preg_replace('/^www./', '', strtolower(str_replace(':', '_', $_SERVER[ 'HTTP_HOST' ])));
                 } else {

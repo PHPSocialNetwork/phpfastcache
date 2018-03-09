@@ -126,3 +126,13 @@ PhpFastCache ignored invalid configuration Key/value.
 PhpFastCache will now throws a `phpFastCacheInvalidConfigurationException` if you
 attempt to make use of an invalid configuration Key/value.
 
+### API changelog
+
+#### :clock1: Then:
+The API changelog used to be hardcoded as a HEREDOC in the `Api::getChangelog()` method. 
+
+#### :alarm_clock: Now:
+The API changelog format has been moved to a MarDown file (.md)
+If you were using `Api::getChangelog()` you may need to check that your code is still working as expected.
+The method still returns a valid string but its format has changed slightly.
+

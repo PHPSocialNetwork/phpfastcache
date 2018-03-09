@@ -39,7 +39,7 @@ $cacheInstance->save($cacheItem);
 unset($cacheItem);
 $cacheInstance->detachAllItems();
 
-if(strpos($cacheInstance->getPath(), 'phpfastcache\\' . $_SERVER[ 'HTTP_HOST' ]) !== false){
+if(strpos($cacheInstance->getPath(), 'phpfastcache' . DIRECTORY_SEPARATOR . $_SERVER[ 'HTTP_HOST' ]) !== false){
     $testHelper->printPassText('The "securityKey" option in automatic mode writes the HTTP_HOST directory as expected.');
 }else{
     $testHelper->printFailText('The "securityKey" option in automatic mode leads to the following path: ' . $cacheInstance->getPath());

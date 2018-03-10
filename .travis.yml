@@ -35,6 +35,7 @@ php:
   # - 5.6
   - 7.0
   - 7.1
+  - 7.2
   - nightly
   - hhvm
 
@@ -48,4 +49,4 @@ install:
   - ./bin/ci/install_dependencies.sh
 
 script:
-  - php -f bin/ci/run_tests.php
+  - php -f ./bin/ci/run_tests.php

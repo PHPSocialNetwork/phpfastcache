@@ -7,7 +7,7 @@
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
-use Phpfastcache\Exceptions\phpFastCacheLogicException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Helper\CacheConditionalHelper as CacheConditional;
 use Phpfastcache\Helper\TestHelper;
 use Psr\Cache\CacheItemPoolInterface;
@@ -63,8 +63,8 @@ try{
     }else{
         $testHelper->printFailText('The method getCreationDate() does not returned a DateTimeInterface object, got: ' . var_export($creationDate, true));
     }
-}catch(phpFastCacheLogicException $e){
-    $testHelper->printFailText('The method getCreationDate() unexpectedly thrown a phpFastCacheLogicException');
+}catch(PhpfastcacheLogicException $e){
+    $testHelper->printFailText('The method getCreationDate() unexpectedly thrown a phpfastcacheLogicException');
 }
 
 try{
@@ -88,8 +88,8 @@ try{
     }else{
         $testHelper->printFailText('The method getModificationDate() does not returned a DateTimeInterface object, got: ' . var_export($modificationDate, true));
     }
-}catch(phpFastCacheLogicException $e){
-    $testHelper->printFailText('The method getModificationDate() unexpectedly thrown a phpFastCacheLogicException');
+}catch(PhpfastcacheLogicException $e){
+    $testHelper->printFailText('The method getModificationDate() unexpectedly thrown a phpfastcacheLogicException');
 }
 
 $cacheInstance->clear();

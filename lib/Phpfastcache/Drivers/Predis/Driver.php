@@ -19,7 +19,7 @@ namespace Phpfastcache\Drivers\Predis;
 use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  phpFastCacheInvalidArgumentException, phpFastCacheDriverException
+  PhpfastcacheInvalidArgumentException, PhpfastcacheDriverException
 };
 use Phpfastcache\Util\ArrayObject;
 use Predis\Client as PredisClient;
@@ -51,7 +51,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @return bool
-     * @throws phpFastCacheDriverException
+     * @throws PhpfastcacheDriverException
      */
     protected function driverConnect(): bool
     {
@@ -68,7 +68,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             $this->instance->connect();
         } catch (PredisConnectionException $e) {
             echo $e->getMessage();
-            throw new phpFastCacheDriverException('Failed to connect to predis server. Check the Predis documentation: https://github.com/nrk/predis/tree/v1.1#how-to-install-and-use-predis', 0, $e);
+            throw new PhpfastcacheDriverException('Failed to connect to predis server. Check the Predis documentation: https://github.com/nrk/predis/tree/v1.1#how-to-install-and-use-predis', 0, $e);
         }
 
         return true;
@@ -91,7 +91,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item): bool
     {
@@ -112,13 +112,13 @@ class Driver implements ExtendedCacheItemPoolInterface
             return $this->instance->setex($item->getKey(), $ttl, $this->encode($this->driverPreWrap($item)))->getPayload() === 'OK';
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item): bool
     {
@@ -129,7 +129,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             return (bool) $this->instance->del([$item->getKey()]);
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**

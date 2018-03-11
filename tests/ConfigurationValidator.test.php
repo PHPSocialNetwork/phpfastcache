@@ -6,7 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Exceptions\phpFastCacheInvalidConfigurationException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Helper\TestHelper;
 use Phpfastcache\Drivers\Files\Config as FilesConfig;
 
@@ -42,7 +42,7 @@ foreach ($tests as $test) {
     try {
         CacheManager::getInstance(key($test), new FilesConfig(current($test)));
         $testHelper->printFailText('Configuration validator has failed to correctly validate a driver configuration option');
-    } catch (phpFastCacheInvalidConfigurationException $e) {
+    } catch (PhpfastcacheInvalidConfigurationException $e) {
         $testHelper->printPassText('Configuration validator has successfully validated a driver configuration option by throwing an Exception --- ' . $e->getMessage());
     }
 }

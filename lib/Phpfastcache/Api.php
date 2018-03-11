@@ -15,8 +15,8 @@ declare(strict_types=1);
 
 namespace Phpfastcache;
 
-use Phpfastcache\Exceptions\phpFastCacheIOException;
-use Phpfastcache\Exceptions\phpFastCacheLogicException;
+use Phpfastcache\Exceptions\PhpfastcacheIOException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
  * Class Api
@@ -53,8 +53,8 @@ class Api
      * @param bool $fallbackOnChangelog
      * @param bool $cacheable
      * @return string
-     * @throws \Phpfastcache\Exceptions\phpFastCacheLogicException
-     * @throws \Phpfastcache\Exceptions\phpFastCacheIOException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheLogicException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheIOException
      */
     public static function getPhpFastCacheVersion($fallbackOnChangelog = true, $cacheable = true): string
     {
@@ -74,11 +74,11 @@ class Api
                 $version = \trim($stdout);
                 return $version;
             }
-            throw new phpFastCacheLogicException('The git command used to retrieve the PhpFastCache version has failed.');
+            throw new PhpfastcacheLogicException('The git command used to retrieve the PhpFastCache version has failed.');
         }
 
         if(!$fallbackOnChangelog){
-            throw new phpFastCacheLogicException('shell_exec is disabled therefore the PhpFastCache version cannot be retrieved.');
+            throw new PhpfastcacheLogicException('shell_exec is disabled therefore the PhpFastCache version cannot be retrieved.');
         }
 
         $changelogFilename = __DIR__ . '/../../CHANGELOG.md';
@@ -91,9 +91,9 @@ class Api
                     return $version;
                 }
             }
-            throw new phpFastCacheLogicException('Unable to retrieve the PhpFastCache version through the CHANGELOG.md as no valid string were found in it.');
+            throw new PhpfastcacheLogicException('Unable to retrieve the PhpFastCache version through the CHANGELOG.md as no valid string were found in it.');
         }
-        throw new phpFastCacheLogicException('shell_exec being disabled we attempted to retrieve the PhpFastCache version through the CHANGELOG.md file but it is not readable or has been removed.');
+        throw new PhpfastcacheLogicException('shell_exec being disabled we attempted to retrieve the PhpFastCache version through the CHANGELOG.md file but it is not readable or has been removed.');
     }
 
     /**
@@ -122,8 +122,8 @@ class Api
     /**
      * Return the API changelog, as a string.
      * @return string
-     * @throws phpFastCacheLogicException
-     * @throws phpFastCacheIOException
+     * @throws PhpfastcacheLogicException
+     * @throws PhpfastcacheIOException
      */
     public static function getChangelog(): string
     {
@@ -133,16 +133,16 @@ class Api
             if($string){
                 return $string;
             }
-            throw new phpFastCacheLogicException('Unable to retrieve the PhpFastCache API changelog as it seems to be empty.');
+            throw new PhpfastcacheLogicException('Unable to retrieve the PhpFastCache API changelog as it seems to be empty.');
         }
-        throw new phpFastCacheIOException('The CHANGELOG_API.md file is not readable or has been removed.');
+        throw new PhpfastcacheIOException('The CHANGELOG_API.md file is not readable or has been removed.');
     }
 
     /**
      * Return the PhpFastCache changelog, as a string.
      * @return string
-     * @throws phpFastCacheLogicException
-     * @throws phpFastCacheIOException
+     * @throws PhpfastcacheLogicException
+     * @throws PhpfastcacheIOException
      */
     public static function getPhpFastCacheChangelog(): string
     {
@@ -152,8 +152,8 @@ class Api
             if($string){
                 return $string;
             }
-            throw new phpFastCacheLogicException('Unable to retrieve the PhpFastCache changelog as it seems to be empty.');
+            throw new PhpfastcacheLogicException('Unable to retrieve the PhpFastCache changelog as it seems to be empty.');
         }
-        throw new phpFastCacheIOException('The CHANGELOG.md file is not readable or has been removed.');
+        throw new PhpfastcacheIOException('The CHANGELOG.md file is not readable or has been removed.');
     }
 }

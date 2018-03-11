@@ -7,7 +7,7 @@
 
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\CacheManager;
-use Phpfastcache\Exceptions\phpFastCacheInstanceNotFoundException;
+use Phpfastcache\Exceptions\PhpfastcacheInstanceNotFoundException;
 use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
@@ -27,7 +27,7 @@ if ($driverInstance->getInstanceId() !== $instanceId) {
 try{
     CacheManager::getInstanceById(str_shuffle($instanceId));
     $testHelper->printFailText('Non-existing instance ID has thrown no exception');
-}catch(phpFastCacheInstanceNotFoundException $e){
+}catch(PhpfastcacheInstanceNotFoundException $e){
     $testHelper->printPassText('Non-existing instance ID has thrown an exception');
 }
 

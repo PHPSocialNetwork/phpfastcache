@@ -25,7 +25,7 @@ use Phpfastcache\Core\Pool\{
 };
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  phpFastCacheDriverException, phpFastCacheInvalidArgumentException
+  PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException
 };
 use Phpfastcache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
@@ -94,8 +94,8 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
-     * @throws phpFastCacheInvalidArgumentException
-     * @throws phpFastCacheDriverException
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheDriverException
      */
     protected function driverWrite(CacheItemInterface $item): bool
     {
@@ -124,19 +124,19 @@ class Driver implements ExtendedCacheItemPoolInterface
                   ['upsert' => true, 'multiple' => false]
                 );
             } catch (MongoDBException $e) {
-                throw new phpFastCacheDriverException('Got an exception while trying to write data to MongoDB server', null, $e);
+                throw new PhpfastcacheDriverException('Got an exception while trying to write data to MongoDB server', null, $e);
             }
 
             return isset($result[ 'ok' ]) ? $result[ 'ok' ] == 1 : true;
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item): bool
     {
@@ -152,7 +152,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             return $deletionResult->isAcknowledged();
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**

@@ -18,7 +18,7 @@ namespace Phpfastcache\Core\Pool;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Exceptions\{
-  phpFastCacheInvalidArgumentException, phpFastCacheDriverCheckException, phpFastCacheLogicException
+  PhpfastcacheInvalidArgumentException, PhpfastcacheDriverCheckException, PhpfastcacheLogicException
 };
 use Phpfastcache\Util\ArrayObject;
 
@@ -61,7 +61,7 @@ trait DriverBaseTrait
      * Driver constructor.
      * @param ConfigurationOption $config
      * @param string $instanceId
-     * @throws phpFastCacheDriverCheckException
+     * @throws PhpfastcacheDriverCheckException
      */
     public function __construct(ConfigurationOption $config, $instanceId)
     {
@@ -69,7 +69,7 @@ trait DriverBaseTrait
         $this->instanceId = $instanceId;
 
         if (!$this->driverCheck()) {
-            throw new phpFastCacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
+            throw new PhpfastcacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
         }
 
         $this->driverConnect();
@@ -250,7 +250,7 @@ trait DriverBaseTrait
     /**
      * @param \Phpfastcache\Core\Item\ExtendedCacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheLogicException
+     * @throws PhpfastcacheLogicException
      */
     public function driverWriteTags(ExtendedCacheItemInterface $item)
     {
@@ -260,7 +260,7 @@ trait DriverBaseTrait
          * to an infinite recursive calls
          */
         if (\strpos($item->getKey(), self::DRIVER_TAGS_KEY_PREFIX) === 0) {
-            throw new phpFastCacheLogicException('Trying to set tag(s) to an Tag item index: ' . $item->getKey());
+            throw new PhpfastcacheLogicException('Trying to set tag(s) to an Tag item index: ' . $item->getKey());
         }
 
         if (!$item->getTags() && !$item->getRemovedTags()) {
@@ -354,12 +354,12 @@ trait DriverBaseTrait
      * @param string $optionName
      * @param mixed $optionValue
      * @return bool
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public static function isValidOption($optionName, $optionValue): bool
     {
         if (!\is_string($optionName)) {
-            throw new phpFastCacheInvalidArgumentException('$optionName must be a string');
+            throw new PhpfastcacheInvalidArgumentException('$optionName must be a string');
         }
 
         return true;

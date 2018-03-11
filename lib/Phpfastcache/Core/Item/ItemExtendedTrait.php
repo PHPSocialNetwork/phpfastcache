@@ -18,7 +18,7 @@ namespace Phpfastcache\Core\Item;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\EventManager;
 use Phpfastcache\Exceptions\{
-  phpFastCacheInvalidArgumentException, phpFastCacheInvalidArgumentTypeException, phpFastCacheLogicException
+  PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidArgumentTypeException, PhpfastcacheLogicException
 };
 
 /**
@@ -61,7 +61,7 @@ trait ItemExtendedTrait
      * Item constructor.
      * @param ExtendedCacheItemPoolInterface $driver
      * @param $key
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function __construct(ExtendedCacheItemPoolInterface $driver, $key)
     {
@@ -75,7 +75,7 @@ trait ItemExtendedTrait
                 $this->modificationDate = new \DateTime();
             }
         } else {
-            throw new phpFastCacheInvalidArgumentTypeException('string', $key);
+            throw new PhpfastcacheInvalidArgumentTypeException('string', $key);
         }
     }
 
@@ -132,7 +132,7 @@ trait ItemExtendedTrait
 
     /**
      * @return \DateTimeInterface
-     * @throws phpFastCacheLogicException
+     * @throws PhpfastcacheLogicException
      */
     public function getCreationDate(): \DateTimeInterface
     {
@@ -140,13 +140,13 @@ trait ItemExtendedTrait
             return $this->creationDate;
         }
 
-        throw new phpFastCacheLogicException('Cannot access to the creation date when the "itemDetailedDate" configuration is disabled.');
+        throw new PhpfastcacheLogicException('Cannot access to the creation date when the "itemDetailedDate" configuration is disabled.');
     }
 
     /**
      * @param \DateTimeInterface $date
      * @return ExtendedCacheItemInterface
-     * @throws phpFastCacheLogicException
+     * @throws PhpfastcacheLogicException
      */
     public function setCreationDate(\DateTimeInterface $date): ExtendedCacheItemInterface
     {
@@ -155,12 +155,12 @@ trait ItemExtendedTrait
             return $this;
         }
 
-        throw new phpFastCacheLogicException('Cannot access to the creation date when the "itemDetailedDate" configuration is disabled.');
+        throw new PhpfastcacheLogicException('Cannot access to the creation date when the "itemDetailedDate" configuration is disabled.');
     }
 
     /**
      * @return \DateTimeInterface
-     * @throws phpFastCacheLogicException
+     * @throws PhpfastcacheLogicException
      */
     public function getModificationDate(): \DateTimeInterface
     {
@@ -168,13 +168,13 @@ trait ItemExtendedTrait
             return $this->modificationDate;
         }
 
-        throw new phpFastCacheLogicException('Cannot access to the modification date when the "itemDetailedDate" configuration is disabled.');
+        throw new PhpfastcacheLogicException('Cannot access to the modification date when the "itemDetailedDate" configuration is disabled.');
     }
 
     /**
      * @param \DateTimeInterface $date
      * @return ExtendedCacheItemInterface
-     * @throws phpFastCacheLogicException
+     * @throws PhpfastcacheLogicException
      */
     public function setModificationDate(\DateTimeInterface $date): ExtendedCacheItemInterface
     {
@@ -183,7 +183,7 @@ trait ItemExtendedTrait
             return $this;
         }
 
-        throw new phpFastCacheLogicException('Cannot access to the modification date when the "itemDetailedDate" configuration is disabled.');
+        throw new PhpfastcacheLogicException('Cannot access to the modification date when the "itemDetailedDate" configuration is disabled.');
     }
 
     /**
@@ -205,7 +205,7 @@ trait ItemExtendedTrait
     /**
      * @param int $step
      * @return ExtendedCacheItemInterface
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function increment($step = 1): ExtendedCacheItemInterface
     {
@@ -213,7 +213,7 @@ trait ItemExtendedTrait
             $this->fetched = true;
             $this->data += $step;
         } else {
-            throw new phpFastCacheInvalidArgumentException('$step must be numeric.');
+            throw new PhpfastcacheInvalidArgumentException('$step must be numeric.');
         }
 
         return $this;
@@ -222,7 +222,7 @@ trait ItemExtendedTrait
     /**
      * @param int $step
      * @return ExtendedCacheItemInterface
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function decrement($step = 1): ExtendedCacheItemInterface
     {
@@ -230,7 +230,7 @@ trait ItemExtendedTrait
             $this->fetched = true;
             $this->data -= $step;
         } else {
-            throw new phpFastCacheInvalidArgumentException('$step must be numeric.');
+            throw new PhpfastcacheInvalidArgumentException('$step must be numeric.');
         }
 
         return $this;
@@ -239,7 +239,7 @@ trait ItemExtendedTrait
     /**
      * @param array|string $data
      * @return ExtendedCacheItemInterface
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function append($data): ExtendedCacheItemInterface
     {
@@ -248,7 +248,7 @@ trait ItemExtendedTrait
         } else if (\is_string($data)) {
             $this->data .= (string)$data;
         } else {
-            throw new phpFastCacheInvalidArgumentException('$data must be either array nor string.');
+            throw new PhpfastcacheInvalidArgumentException('$data must be either array nor string.');
         }
 
         return $this;
@@ -258,7 +258,7 @@ trait ItemExtendedTrait
     /**
      * @param array|string $data
      * @return ExtendedCacheItemInterface
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function prepend($data): ExtendedCacheItemInterface
     {
@@ -267,7 +267,7 @@ trait ItemExtendedTrait
         } else if (\is_string($data)) {
             $this->data = (string)$data . $this->data;
         } else {
-            throw new phpFastCacheInvalidArgumentException('$data must be either array nor string.');
+            throw new PhpfastcacheInvalidArgumentException('$data must be either array nor string.');
         }
 
         return $this;
@@ -276,7 +276,7 @@ trait ItemExtendedTrait
     /**
      * @param $tagName
      * @return ExtendedCacheItemInterface
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function addTag($tagName): ExtendedCacheItemInterface
     {
@@ -286,7 +286,7 @@ trait ItemExtendedTrait
             return $this;
         }
 
-        throw new phpFastCacheInvalidArgumentException('$tagName must be a string');
+        throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
     }
 
     /**
@@ -305,7 +305,7 @@ trait ItemExtendedTrait
     /**
      * @param array $tags
      * @return ExtendedCacheItemInterface
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function setTags(array $tags): ExtendedCacheItemInterface
     {
@@ -313,7 +313,7 @@ trait ItemExtendedTrait
             if (\array_filter($tags, 'is_string')) {
                 $this->tags = $tags;
             } else {
-                throw new phpFastCacheInvalidArgumentException('$tagName must be an array of string');
+                throw new PhpfastcacheInvalidArgumentException('$tagName must be an array of string');
             }
         }
 

@@ -6,7 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Exceptions\phpFastCacheDriverException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
@@ -23,7 +23,7 @@ try{
     $item->set($cacheValue)->expiresAfter(300);
     $cacheInstance->save($item);
     $testHelper->printPassText('Successfully saved a new cache item into Couchdb server');
-}catch(phpFastCacheDriverException $e){
+}catch(PhpfastcacheDriverException $e){
     $testHelper->printFailText('Failed to save a new cache item into Couchdb server with exception: ' . $e->getMessage());
 }
 
@@ -38,7 +38,7 @@ try{
     }else{
         $testHelper->printFailText('Getter returned unexpected value, expecting "' . $cacheValue . '", got "' . $item->get() . '"');
     }
-}catch(phpFastCacheDriverException $e){
+}catch(PhpfastcacheDriverException $e){
     $testHelper->printFailText('Failed to save a new cache item into Couchdb server with exception: ' . $e->getMessage());
 }
 
@@ -53,7 +53,7 @@ try{
     }else{
         $testHelper->printFailText('Failed to clear the Couchdb server, a cache item has been found');
     }
-}catch(phpFastCacheDriverException $e){
+}catch(PhpfastcacheDriverException $e){
     $testHelper->printFailText('Failed to clear the Couchdb server with exception: ' . $e->getMessage());
 }
 

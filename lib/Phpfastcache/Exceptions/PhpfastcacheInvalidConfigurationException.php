@@ -11,14 +11,15 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+declare(strict_types=1);
 
 namespace Phpfastcache\Exceptions;
 
 /**
- * Class phpFastCacheDriverCheckException
- * @package phpFastCache\Exceptions
+ * Class PhpfastcacheInvalidConfigurationException
+ * @package Phpfastcache\Exceptions
  */
-class phpFastCacheDriverCheckException extends phpFastCacheDriverException
+class PhpfastcacheInvalidConfigurationException extends PhpfastcacheRootException
 {
 
 }

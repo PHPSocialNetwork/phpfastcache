@@ -11,16 +11,15 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+declare(strict_types=1);
 
 namespace Phpfastcache\Exceptions;
 
-use Psr\Cache\InvalidArgumentException;
-
 /**
- * Class phpFastCacheCoreException
- * @package phpFastCache\Exceptions
+ * Class PhpfastcacheInstanceNotFoundException
+ * @package Phpfastcache\Exceptions
  */
-class phpFastCacheInvalidArgumentException extends phpFastCacheRootException implements InvalidArgumentException
+class PhpfastcacheInstanceNotFoundException extends PhpfastcacheRootException
 {
 
 }

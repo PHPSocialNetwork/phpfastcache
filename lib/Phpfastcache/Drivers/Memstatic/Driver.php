@@ -18,7 +18,7 @@ namespace Phpfastcache\Drivers\Memstatic;
 use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  phpFastCacheInvalidArgumentException
+  PhpfastcacheInvalidArgumentException
 };
 use Psr\Cache\CacheItemInterface;
 
@@ -69,7 +69,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item): bool
     {
@@ -81,13 +81,13 @@ class Driver implements ExtendedCacheItemPoolInterface
             return true;
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item): bool
     {
@@ -103,7 +103,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             return false;
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**

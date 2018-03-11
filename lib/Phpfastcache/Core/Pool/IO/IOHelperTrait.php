@@ -19,7 +19,7 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\EventManager;
-use Phpfastcache\Exceptions\phpFastCacheIOException;
+use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Util\Directory;
 
 /**
@@ -39,7 +39,7 @@ trait IOHelperTrait
     /**
      * @param bool $readonly
      * @return string
-     * @throws phpFastCacheIOException
+     * @throws PhpfastcacheIOException
      */
     public function getPath($readonly = false): string
     {
@@ -120,7 +120,7 @@ trait IOHelperTrait
              * one, we must throw an exception
              */
             if (!@\file_exists($full_path) || !@\is_writable($full_path)) {
-                throw new phpFastCacheIOException('Path "' . $full_path . '" is not writable, please set a chmod 0777 or any writable permission and make sure to make use of an absolute path !');
+                throw new PhpfastcacheIOException('Path "' . $full_path . '" is not writable, please set a chmod 0777 or any writable permission and make sure to make use of an absolute path !');
             }
 
             $this->tmp[ $full_path_hash ] = $full_path;
@@ -135,7 +135,7 @@ trait IOHelperTrait
      * @param $keyword
      * @param bool $skip
      * @return string
-     * @throws phpFastCacheIOException
+     * @throws PhpfastcacheIOException
      */
     protected function getFilePath($keyword, $skip = false): string
     {
@@ -155,7 +155,7 @@ trait IOHelperTrait
         if (!$skip) {
             if (!\file_exists($path)) {
                 if (@!\mkdir($path, $this->getDefaultChmod(), true)) {
-                    throw new phpFastCacheIOException('PLEASE CHMOD ' . $path . ' - ' . $this->getDefaultChmod() . ' OR ANY WRITABLE PERMISSION!');
+                    throw new PhpfastcacheIOException('PLEASE CHMOD ' . $path . ' - ' . $this->getDefaultChmod() . ' OR ANY WRITABLE PERMISSION!');
                 }
             }
         }
@@ -204,7 +204,7 @@ trait IOHelperTrait
     /**
      * @param $path
      * @param bool $create
-     * @throws phpFastCacheIOException
+     * @throws PhpfastcacheIOException
      */
     protected function htaccessGen($path, $create = true)
     {
@@ -212,10 +212,10 @@ trait IOHelperTrait
             if (!\is_writable($path)) {
                 try {
                     if (!chmod($path, 0777)) {
-                        throw new phpFastCacheIOException('Chmod failed on : ' . $path);
+                        throw new PhpfastcacheIOException('Chmod failed on : ' . $path);
                     }
-                } catch (phpFastCacheIOException $e) {
-                    throw new phpFastCacheIOException('PLEASE CHMOD ' . $path . ' - 0777 OR ANY WRITABLE PERMISSION!', 0, $e);
+                } catch (PhpfastcacheIOException $e) {
+                    throw new PhpfastcacheIOException('PLEASE CHMOD ' . $path . ' - 0777 OR ANY WRITABLE PERMISSION!', 0, $e);
                 }
             }
 
@@ -233,7 +233,7 @@ HTACCESS;
 
                 $file = @fopen($path . '/.htaccess', 'w+');
                 if (!$file) {
-                    throw new phpFastCacheIOException('PLEASE CHMOD ' . $path . ' - 0777 OR ANY WRITABLE PERMISSION!');
+                    throw new PhpfastcacheIOException('PLEASE CHMOD ' . $path . ' - 0777 OR ANY WRITABLE PERMISSION!');
                 }
                 fwrite($file, $content);
                 fclose($file);
@@ -245,7 +245,7 @@ HTACCESS;
     /**
      * @param $file
      * @return string
-     * @throws phpFastCacheIOException
+     * @throws PhpfastcacheIOException
      */
     protected function readfile($file): string
     {
@@ -257,7 +257,7 @@ HTACCESS;
 
         $file_handle = @fopen($file, 'r');
         if (!$file_handle) {
-            throw new phpFastCacheIOException("Cannot read file located at: {$file}");
+            throw new PhpfastcacheIOException("Cannot read file located at: {$file}");
         }
         while (!feof($file_handle)) {
             $line = fgets($file_handle);
@@ -273,7 +273,7 @@ HTACCESS;
      * @param string $data
      * @param bool $secureFileManipulation
      * @return bool
-     * @throws phpFastCacheIOException
+     * @throws PhpfastcacheIOException
      */
     protected function writefile($file, $data, $secureFileManipulation = false): bool
     {
@@ -299,7 +299,7 @@ HTACCESS;
             fclose($f);
 
             if (!rename($tmpFilename, $file)) {
-                throw new phpFastCacheIOException(sprintf('Failed to rename %s to %s', $tmpFilename, $file));
+                throw new PhpfastcacheIOException(sprintf('Failed to rename %s to %s', $tmpFilename, $file));
             }
         } else {
             $f = fopen($file, 'w+');
@@ -320,7 +320,7 @@ HTACCESS;
      * Provide a generic getStats() method
      * for files-based drivers
      * @return DriverStatistic
-     * @throws \Phpfastcache\Exceptions\phpFastCacheIOException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheIOException
      */
     public function getStats(): DriverStatistic
     {
@@ -328,7 +328,7 @@ HTACCESS;
         $path = $this->getFilePath(false);
 
         if (!\is_dir($path)) {
-            throw new phpFastCacheIOException("Can't read PATH:" . $path);
+            throw new PhpfastcacheIOException("Can't read PATH:" . $path);
         }
 
         $stat->setData(\implode(', ', \array_keys($this->itemInstances)))

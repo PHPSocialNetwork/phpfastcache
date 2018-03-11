@@ -10,6 +10,17 @@ We used to declare this namespace: `namespace phpFastCache;` or `use phpFastCach
 The time has changed, you now have to use: `namespace Phpfastcache;` or `use Phpfastcache\...;` 
 For any useful purpose, the `src/` directory has been moved along to `lib/`.
 
+### :warning: Phpfastcache "phpFastCache*" classes  :warning:
+As of the V7 and to comply with modern standards the "phpFastCache*" classes have been **C**apitalized :warning:
+
+#### :clock1: Then:
+We used to declare this kind of class: `class phpFastCacheAbstractProxy`
+
+#### :alarm_clock: Now:
+The time has changed, you now have to use: `class PhpfastcacheAbstractProxy` 
+For any useful purpose, all the PhpFastCache exceptions has been **C**apitalized.
+Class `Phpfastcache\Exceptions\phpFastCache[...]Exception` have been renamed to `Phpfastcache\Exceptions\Phpfastcache[...]Exception`
+
 ### Return type & Scalar type declarations 
 :anger: :exclamation: The V7 will make use of new php's return type & scalars type declarations features. 
 This means that you will now have to be very careful about the data types that you are sending to the phpFastCache API.

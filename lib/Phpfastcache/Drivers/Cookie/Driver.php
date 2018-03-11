@@ -18,7 +18,7 @@ namespace Phpfastcache\Drivers\Cookie;
 use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  phpFastCacheInvalidArgumentException, phpFastCacheDriverException
+  PhpfastcacheInvalidArgumentException, PhpfastcacheDriverException
 };
 use Psr\Cache\CacheItemInterface;
 
@@ -53,7 +53,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return null|array
-     * @throws \Phpfastcache\Exceptions\phpFastCacheDriverException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverException
      */
     protected function driverRead(CacheItemInterface $item)
     {
@@ -66,7 +66,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         }
 
         if (!is_scalar($this->driverUnwrapData($x)) && !is_null($this->driverUnwrapData($x))) {
-            throw new phpFastCacheDriverException('Hacking attempt: The decoding returned a non-scalar value, Cookie driver does not allow this.');
+            throw new PhpfastcacheDriverException('Hacking attempt: The decoding returned a non-scalar value, Cookie driver does not allow this.');
         }
 
         return $x;
@@ -75,7 +75,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item): bool
     {
@@ -93,7 +93,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
             return setcookie($keyword, $v, $item->getExpirationDate()->getTimestamp(), '/');
         }
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
@@ -112,7 +112,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item)
     {
@@ -127,7 +127,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             return @setcookie($keyword, null, -10);
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**

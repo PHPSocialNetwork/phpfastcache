@@ -18,7 +18,7 @@ namespace Phpfastcache\Drivers\Leveldb;
 use LevelDB as LeveldbClient;
 use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface, IO\IOHelperTrait};
 use Phpfastcache\Exceptions\{
-  phpFastCacheInvalidArgumentException, phpFastCacheLogicException
+  PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
 };
 use Psr\Cache\CacheItemInterface;
 
@@ -45,12 +45,12 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @return bool
-     * @throws phpFastCacheLogicException
+     * @throws PhpfastcacheLogicException
      */
     protected function driverConnect(): bool
     {
         if ($this->instance instanceof LeveldbClient) {
-            throw new phpFastCacheLogicException('Already connected to Leveldb database');
+            throw new PhpfastcacheLogicException('Already connected to Leveldb database');
         }
 
         $this->instance = $this->instance ?: new LeveldbClient($this->getLeveldbFile());
@@ -76,7 +76,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item): bool
     {
@@ -87,13 +87,13 @@ class Driver implements ExtendedCacheItemPoolInterface
             return (bool)$this->instance->set($item->getKey(), $this->encode($this->driverPreWrap($item)));
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item): bool
     {
@@ -104,7 +104,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             return $this->instance->delete($item->getKey());
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
@@ -124,7 +124,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @return string
-     * @throws \Phpfastcache\Exceptions\phpFastCacheCoreException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheCoreException
      */
     public function getLeveldbFile(): string
     {

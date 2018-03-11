@@ -23,7 +23,7 @@ use Phpfastcache\Core\Pool\{
   DriverBaseTrait, ExtendedCacheItemPoolInterface
 };
 use Phpfastcache\Exceptions\{
-  phpFastCacheDriverException, phpFastCacheInvalidArgumentException, phpFastCacheLogicException
+  PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
 };
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Util\ArrayObject;
@@ -52,12 +52,12 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @return bool
-     * @throws phpFastCacheLogicException
+     * @throws PhpfastcacheLogicException
      */
     protected function driverConnect(): bool
     {
         if ($this->instance instanceof CouchdbClient) {
-            throw new phpFastCacheLogicException('Already connected to Couchdb server');
+            throw new PhpfastcacheLogicException('Already connected to Couchdb server');
         }
 
         $clientConfig = $this->getConfig();
@@ -88,14 +88,14 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return null|array
-     * @throws phpFastCacheDriverException
+     * @throws PhpfastcacheDriverException
      */
     protected function driverRead(CacheItemInterface $item)
     {
         try {
             $response = $this->instance->findDocument($item->getEncodedKey());
         } catch (CouchDBException $e) {
-            throw new phpFastCacheDriverException('Got error while trying to get a document: ' . $e->getMessage(), null, $e);
+            throw new PhpfastcacheDriverException('Got error while trying to get a document: ' . $e->getMessage(), null, $e);
         }
 
         if ($response->status === 404 || empty($response->body[ 'data' ])) {
@@ -103,7 +103,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         } else if ($response->status === 200) {
             return $this->decode($response->body[ 'data' ]);
         } else {
-            throw new phpFastCacheDriverException('Got unexpected HTTP status: ' . $response->status);
+            throw new PhpfastcacheDriverException('Got unexpected HTTP status: ' . $response->status);
         }
     }
 
@@ -111,8 +111,8 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheDriverException
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheDriverException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item): bool
     {
@@ -124,19 +124,19 @@ class Driver implements ExtendedCacheItemPoolInterface
                 $this->instance->putDocument(['data' => $this->encode($this->driverPreWrap($item))], $item->getEncodedKey(),
                   $this->getLatestDocumentRevision($item->getEncodedKey()));
             } catch (CouchDBException $e) {
-                throw new phpFastCacheDriverException('Got error while trying to upsert a document: ' . $e->getMessage(), null, $e);
+                throw new PhpfastcacheDriverException('Got error while trying to upsert a document: ' . $e->getMessage(), null, $e);
             }
             return true;
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheDriverException
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheDriverException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item): bool
     {
@@ -147,17 +147,17 @@ class Driver implements ExtendedCacheItemPoolInterface
             try {
                 $this->instance->deleteDocument($item->getEncodedKey(), $this->getLatestDocumentRevision($item->getEncodedKey()));
             } catch (CouchDBException $e) {
-                throw new phpFastCacheDriverException('Got error while trying to delete a document: ' . $e->getMessage(), null, $e);
+                throw new PhpfastcacheDriverException('Got error while trying to delete a document: ' . $e->getMessage(), null, $e);
             }
             return true;
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
      * @return bool
-     * @throws phpFastCacheDriverException
+     * @throws PhpfastcacheDriverException
      */
     protected function driverClear(): bool
     {
@@ -165,7 +165,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             $this->instance->deleteDatabase($this->getDatabaseName());
             $this->createDatabase();
         } catch (CouchDBException $e) {
-            throw new phpFastCacheDriverException('Got error while trying to delete and recreate the database: ' . $e->getMessage(), null, $e);
+            throw new PhpfastcacheDriverException('Got error while trying to delete and recreate the database: ' . $e->getMessage(), null, $e);
         }
 
         return true;

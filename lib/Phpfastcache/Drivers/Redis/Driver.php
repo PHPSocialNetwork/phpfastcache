@@ -21,7 +21,7 @@ use Phpfastcache\Core\Pool\{
 };
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  phpFastCacheInvalidArgumentException, phpFastCacheLogicException
+  PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
 };
 use Phpfastcache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
@@ -47,12 +47,12 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @return bool
-     * @throws phpFastCacheLogicException
+     * @throws PhpfastcacheLogicException
      */
     protected function driverConnect(): bool
     {
         if ($this->instance instanceof RedisClient) {
-            throw new phpFastCacheLogicException('Already connected to Redis server');
+            throw new PhpfastcacheLogicException('Already connected to Redis server');
         }
 
         $this->instance = $this->instance ?: new RedisClient();
@@ -97,7 +97,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item): bool
     {
@@ -118,13 +118,13 @@ class Driver implements ExtendedCacheItemPoolInterface
             return $this->instance->setex($item->getKey(), $ttl, $this->encode($this->driverPreWrap($item)));
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item): bool
     {
@@ -135,7 +135,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             return (bool)$this->instance->del($item->getKey());
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**

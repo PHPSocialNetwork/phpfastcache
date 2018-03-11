@@ -7,12 +7,12 @@
 
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Helper\TestHelper;
-use Phpfastcache\Proxy\phpFastCacheAbstractProxy;
+use Phpfastcache\Proxy\PhpfastcacheAbstractProxy;
 
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
-$testHelper = new TestHelper('phpFastCacheAbstractProxy class');
+$testHelper = new TestHelper('phpfastcacheAbstractProxy class');
 $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 
 
@@ -21,7 +21,7 @@ $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
  * Class myCustomCacheClass
  * @package MyCustom\Project
  */
-class CustomMemcachedCacheClass extends phpFastCacheAbstractProxy
+class CustomMemcachedCacheClass extends PhpfastcacheAbstractProxy
 {
     public function __construct($driver = '', $config = null)
     {

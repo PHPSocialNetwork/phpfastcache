@@ -20,7 +20,7 @@ use Cassandra\Session as CassandraSession;
 use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  phpFastCacheInvalidArgumentException, phpFastCacheLogicException
+  PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
 };
 use Phpfastcache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
@@ -49,13 +49,13 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @return bool
-     * @throws phpFastCacheLogicException
+     * @throws PhpfastcacheLogicException
      * @throws \Cassandra\Exception
      */
     protected function driverConnect(): bool
     {
         if ($this->instance instanceof CassandraSession) {
-            throw new phpFastCacheLogicException('Already connected to Couchbase server');
+            throw new PhpfastcacheLogicException('Already connected to Couchbase server');
         }
 
         $clientConfig = $this->getConfig();
@@ -140,7 +140,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item): bool
     {
@@ -183,17 +183,17 @@ class Driver implements ExtendedCacheItemPoolInterface
                  */
                 return $result instanceof Cassandra\Rows;
             } catch (\Cassandra\Exception\InvalidArgumentException $e) {
-                throw new phpFastCacheInvalidArgumentException($e, 0, $e);
+                throw new PhpfastcacheInvalidArgumentException($e, 0, $e);
             }
         } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+            throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item): bool
     {
@@ -223,7 +223,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                 return false;
             }
         } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+            throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 

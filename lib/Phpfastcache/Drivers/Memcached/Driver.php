@@ -20,7 +20,7 @@ use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  phpFastCacheInvalidArgumentException, phpFastCacheDriverException
+  PhpfastcacheInvalidArgumentException, PhpfastcacheDriverException
 };
 use Phpfastcache\Util\{ArrayObject, MemcacheDriverCollisionDetectorTrait};
 use Psr\Cache\CacheItemInterface;
@@ -43,7 +43,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * Driver constructor.
      * @param ConfigurationOption $config
      * @param string $instanceId
-     * @throws phpFastCacheDriverException
+     * @throws PhpfastcacheDriverException
      */
     public function __construct(ConfigurationOption $config, string $instanceId)
     {
@@ -105,7 +105,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          */
         $version = $this->instance->getVersion();
         if(!$version || $this->instance->getResultCode() !== MemcachedSoftware::RES_SUCCESS){
-            throw new phpFastCacheDriverException('Memcached seems to not be connected');
+            throw new PhpfastcacheDriverException('Memcached seems to not be connected');
         }
         return true;
     }
@@ -128,7 +128,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item): bool
     {
@@ -147,13 +147,13 @@ class Driver implements ExtendedCacheItemPoolInterface
             return $this->instance->set($item->getKey(), $this->driverPreWrap($item), $ttl);
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item): bool
     {
@@ -164,7 +164,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             return $this->instance->delete($item->getKey());
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**

@@ -19,7 +19,7 @@ use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, ItemBaseTrait};
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Drivers\Cookie\Driver as CookieDriver;
 use Phpfastcache\Exceptions\{
-  phpFastCacheInvalidArgumentException
+  PhpfastcacheInvalidArgumentException
 };
 
 /**
@@ -36,7 +36,7 @@ class Item implements ExtendedCacheItemInterface
      * Item constructor.
      * @param \Phpfastcache\Drivers\Cookie\Driver $driver
      * @param $key
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function __construct(CookieDriver $driver, $key)
     {
@@ -46,7 +46,7 @@ class Item implements ExtendedCacheItemInterface
 
     /**
      * @param ExtendedCacheItemPoolInterface $driver
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      * @return static
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver)
@@ -57,6 +57,6 @@ class Item implements ExtendedCacheItemInterface
             return $this;
         }
 
-        throw new phpFastCacheInvalidArgumentException('Invalid driver instance');
+        throw new PhpfastcacheInvalidArgumentException('Invalid driver instance');
     }
 }

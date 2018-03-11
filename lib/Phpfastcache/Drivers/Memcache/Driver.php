@@ -20,7 +20,7 @@ use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  phpFastCacheInvalidArgumentException, phpFastCacheDriverException
+  PhpfastcacheInvalidArgumentException, PhpfastcacheDriverException
 };
 use Phpfastcache\Util\{ArrayObject, MemcacheDriverCollisionDetectorTrait};
 use Psr\Cache\CacheItemInterface;
@@ -48,7 +48,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * Driver constructor.
      * @param ConfigurationOption $config
      * @param string $instanceId
-     * @throws phpFastCacheDriverException
+     * @throws PhpfastcacheDriverException
      */
     public function __construct(ConfigurationOption $config, string $instanceId)
     {
@@ -95,7 +95,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                 }
 
                 if (!empty($server[ 'saslUser' ]) && !empty($server[ 'saslPassword' ])) {
-                    throw new phpFastCacheDriverException('Unlike Memcached, Memcache does not support SASL authentication');
+                    throw new PhpfastcacheDriverException('Unlike Memcached, Memcache does not support SASL authentication');
                 }
             } catch (\Exception $e) {
                 $this->fallback = true;
@@ -106,7 +106,7 @@ class Driver implements ExtendedCacheItemPoolInterface
              * any error if not connected ...
              */
             if(!$this->instance->getServerStatus(!empty($server[ 'path' ]) ? $server[ 'path' ] : $server[ 'host' ], !empty($server[ 'port' ]) ? $server[ 'port' ] : 0)){
-                throw new phpFastCacheDriverException('Memcache seems to not be connected');
+                throw new PhpfastcacheDriverException('Memcache seems to not be connected');
             }
         }
 
@@ -131,7 +131,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item): bool
     {
@@ -149,13 +149,13 @@ class Driver implements ExtendedCacheItemPoolInterface
             return $this->instance->set($item->getKey(), $this->driverPreWrap($item), $this->memcacheFlags, $ttl);
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item): bool
     {
@@ -166,7 +166,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             return $this->instance->delete($item->getKey());
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**

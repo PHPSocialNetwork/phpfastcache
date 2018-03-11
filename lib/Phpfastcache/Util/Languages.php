@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Util;
 
-use Phpfastcache\Exceptions\phpFastCacheCoreException;
+use Phpfastcache\Exceptions\PhpfastcacheCoreException;
 
 /**
  * Class Languages
@@ -40,7 +40,7 @@ class Languages
                     mb_regex_encoding($encoding);
                 }
 
-                throw new phpFastCacheCoreException("MB String need to be installed for Unicode Encoding");
+                throw new PhpfastcacheCoreException("MB String need to be installed for Unicode Encoding");
                 break;
         }
     }

@@ -19,7 +19,7 @@ use PDO;
 use PDOException;
 use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface, IO\IOHelperTrait};
 use Phpfastcache\Exceptions\{
-  phpFastCacheInvalidArgumentException, phpFastCacheIOException
+  PhpfastcacheInvalidArgumentException, PhpfastcacheIOException
 };
 use Psr\Cache\CacheItemInterface;
 
@@ -65,7 +65,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @return string
-     * @throws \Phpfastcache\Exceptions\phpFastCacheCoreException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheCoreException
      */
     public function getSqliteDir(): string
     {
@@ -82,12 +82,12 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @return bool
-     * @throws phpFastCacheIOException
+     * @throws PhpfastcacheIOException
      */
     protected function driverConnect(): bool
     {
         if (!\file_exists($this->getSqliteDir()) && !@mkdir($this->getSqliteDir(), $this->getDefaultChmod(), true)) {
-            throw new phpFastCacheIOException(\sprintf('Sqlite cannot write in "%s", aborting...', $this->getPath()));
+            throw new PhpfastcacheIOException(\sprintf('Sqlite cannot write in "%s", aborting...', $this->getPath()));
         }
         if (!\file_exists($this->getPath() . '/' . self::FILE_DIR)) {
             if (!mkdir($this->getPath() . '/' . self::FILE_DIR, $this->getDefaultChmod(), true)
@@ -137,7 +137,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item): bool
     {
@@ -189,13 +189,13 @@ class Driver implements ExtendedCacheItemPoolInterface
             return false;
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item): bool
     {
@@ -215,7 +215,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                 return false;
             }
         } else {
-            throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+            throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
         }
     }
 

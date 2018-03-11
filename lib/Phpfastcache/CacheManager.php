@@ -18,7 +18,7 @@ namespace Phpfastcache;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\{
-  phpFastCacheDeprecatedException, phpFastCacheDriverCheckException, phpFastCacheDriverNotFoundException, phpFastCacheInstanceNotFoundException, phpFastCacheInvalidArgumentException, phpFastCacheInvalidConfigurationException
+  PhpfastcacheDeprecatedException, PhpfastcacheDriverCheckException, PhpfastcacheDriverNotFoundException, PhpfastcacheInstanceNotFoundException, PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidConfigurationException
 };
 
 /**
@@ -83,17 +83,17 @@ class CacheManager
      *
      * @return ExtendedCacheItemPoolInterface
      *
-     * @throws phpFastCacheDriverCheckException
-     * @throws phpFastCacheInvalidConfigurationException
-     * @throws phpFastCacheDriverNotFoundException
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheDriverCheckException
+     * @throws PhpfastcacheInvalidConfigurationException
+     * @throws PhpfastcacheDriverNotFoundException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public static function getInstance($driver = 'auto', $config = null, $instanceId = null)
     {
         static $badPracticeOmeter = [];
 
         if ($instanceId !== null && !\is_string($instanceId)) {
-            throw new phpFastCacheInvalidArgumentException('The Instance ID must be a string');
+            throw new PhpfastcacheInvalidArgumentException('The Instance ID must be a string');
         }
 
         if (is_array($config)) {
@@ -105,7 +105,7 @@ class CacheManager
         }elseif ($config === null){
             $config = self::getDefaultConfig();
         }else if(!($config instanceof ConfigurationOption)){
-            throw new phpFastCacheInvalidArgumentException(sprintf('Unsupported config type: %s', gettype($config)));
+            throw new PhpfastcacheInvalidArgumentException(sprintf('Unsupported config type: %s', gettype($config)));
         }
 
         $driver = self::standardizeDriverName($driver);
@@ -125,9 +125,9 @@ class CacheManager
                     self::$instances[ $instance ] = new $driverClass(new $configClass($config->toArray()), $instance);
                     self::$instances[ $instance ]->setEventManager(EventManager::getInstance());
                 } else {
-                    throw new phpFastCacheDriverNotFoundException(sprintf('The driver "%s" does not exists', $driver));
+                    throw new PhpfastcacheDriverNotFoundException(sprintf('The driver "%s" does not exists', $driver));
                 }
-            } catch (phpFastCacheDriverCheckException $e) {
+            } catch (PhpfastcacheDriverCheckException $e) {
                 if ($config->getFallback()) {
                     try {
 
@@ -135,11 +135,11 @@ class CacheManager
                         $config->setFallback('');
                         trigger_error(sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver, $fallback), E_USER_WARNING);
                         return self::getInstance($fallback, $config);
-                    } catch (phpFastCacheInvalidArgumentException $e) {
-                        throw new phpFastCacheInvalidConfigurationException('Invalid fallback driver configuration', 0, $e);
+                    } catch (PhpfastcacheInvalidArgumentException $e) {
+                        throw new PhpfastcacheInvalidConfigurationException('Invalid fallback driver configuration', 0, $e);
                     }
                 } else {
-                    throw new phpFastCacheDriverCheckException($e->getMessage(), $e->getCode(), $e);
+                    throw new PhpfastcacheDriverCheckException($e->getMessage(), $e->getCode(), $e);
                 }
             }
         } else if ($badPracticeOmeter[ $driver ] >= 2) {
@@ -157,20 +157,20 @@ class CacheManager
      *
      * @return ExtendedCacheItemPoolInterface
      *
-     * @throws phpFastCacheInvalidArgumentException
-     * @throws phpFastCacheInstanceNotFoundException
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheInstanceNotFoundException
      */
     public static function getInstanceById($instanceId): ExtendedCacheItemPoolInterface
     {
         if ($instanceId !== null && !\is_string($instanceId)) {
-            throw new phpFastCacheInvalidArgumentException('The Instance ID must be a string');
+            throw new PhpfastcacheInvalidArgumentException('The Instance ID must be a string');
         }
 
         if (isset(self::$instances[ $instanceId ])) {
             return self::$instances[ $instanceId ];
         }
 
-        throw new phpFastCacheInstanceNotFoundException(sprintf('Instance ID %s not found', $instanceId));
+        throw new PhpfastcacheInstanceNotFoundException(sprintf('Instance ID %s not found', $instanceId));
     }
 
     /**
@@ -206,7 +206,7 @@ class CacheManager
      * @todo Does we really keep it ??
      * @param $config
      * @return string
-     * @throws phpFastCacheDriverCheckException
+     * @throws PhpfastcacheDriverCheckException
      */
     public static function getAutoClass(array $config = [])
     {
@@ -218,7 +218,7 @@ class CacheManager
                     self::getInstance($driver, $config);
                     $autoDriver = $driver;
                     break;
-                } catch (phpFastCacheDriverCheckException $e) {
+                } catch (PhpfastcacheDriverCheckException $e) {
                     continue;
                 }
             }

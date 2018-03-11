@@ -15,7 +15,7 @@
 namespace MyCustom\Project;
 
 use Phpfastcache\Drivers\Files\Driver as FilesDriver;
-use Phpfastcache\Proxy\phpFastCacheAbstractProxy;
+use Phpfastcache\Proxy\PhpfastcacheAbstractProxy;
 
 /**
  * Specific driver-based example
@@ -40,7 +40,7 @@ class extendedPhpFastCache extends FilesDriver
  * Class myCustomCacheClass
  * @package MyCustom\Project
  */
-class myCustomCacheClass extends phpFastCacheAbstractProxy
+class myCustomCacheClass extends PhpfastcacheAbstractProxy
 {
     public function __construct($driver = '', array $config = [])
     {

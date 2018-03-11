@@ -18,7 +18,7 @@ namespace Phpfastcache\Core\Item;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\EventManager;
 use Phpfastcache\Exceptions\{
-  phpFastCacheInvalidArgumentException, phpFastCacheLogicException
+  PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
 };
 use Psr\Cache\CacheItemInterface;
 
@@ -63,27 +63,27 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
 
     /**
      * @return \DateTimeInterface
-     * @throws phpFastCacheLogicException
+     * @throws PhpfastcacheLogicException
      */
     public function getCreationDate(): \DateTimeInterface;
 
     /**
      * @return \DateTimeInterface
-     * @throws phpFastCacheLogicException
+     * @throws PhpfastcacheLogicException
      */
     public function getModificationDate(): \DateTimeInterface;
 
     /**
      * @param $date \DateTimeInterface
      * @return self
-     * @throws phpFastCacheLogicException
+     * @throws PhpfastcacheLogicException
      */
     public function setCreationDate(\DateTimeInterface $date): self;
 
     /**
      * @param $date \DateTimeInterface
      * @return self
-     * @throws phpFastCacheLogicException
+     * @throws PhpfastcacheLogicException
      */
     public function setModificationDate(\DateTimeInterface $date): self;
 
@@ -106,42 +106,42 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
     /**
      * @param bool $isHit
      * @return self
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function setHit($isHit): self;
 
     /**
      * @param int $step
      * @return self
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function increment($step = 1): self;
 
     /**
      * @param int $step
      * @return self
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function decrement($step = 1): self;
 
     /**
      * @param array|string $data
      * @return self
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function append($data): self;
 
     /**
      * @param array|string $data
      * @return self
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function prepend($data): self;
 
     /**
      * @param string $tagName
      * @return self
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function addTag($tagName): self;
 
@@ -155,7 +155,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
     /**
      * @param array $tags
      * @return self
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function setTags(array $tags): self;
 

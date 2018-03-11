@@ -8,7 +8,7 @@
 use Phpfastcache\CacheManager;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\driverStatistic;
-use Phpfastcache\Exceptions\phpFastCacheDriverCheckException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Helper\ActOnAll;
 use Phpfastcache\Helper\TestHelper;
 
@@ -25,13 +25,13 @@ try{
     CacheManager::getInstance('Files');
     CacheManager::getInstance('Redis');
     CacheManager::getInstance('Memcached');
-}catch(phpFastCacheDriverCheckException $e){
+}catch(PhpfastcacheDriverCheckException $e){
     try {
         CacheManager::clearInstances();
         CacheManager::getInstance('Files');
         CacheManager::getInstance('Sqlite');
         CacheManager::getInstance('Memstatic');
-    }catch(phpFastCacheDriverCheckException $e){
+    }catch(PhpfastcacheDriverCheckException $e){
         $testHelper->printSkipText($e->getMessage())->terminateTest();
     }
 }

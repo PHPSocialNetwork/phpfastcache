@@ -18,7 +18,7 @@ use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, ItemBaseTrait};
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Drivers\Zenddisk\Driver as ZendDiskDriver;
 use Phpfastcache\Exceptions\{
-  phpFastCacheInvalidArgumentException, phpFastCacheInvalidArgumentTypeException
+  PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidArgumentTypeException
 };
 
 /**
@@ -36,7 +36,7 @@ class Item implements ExtendedCacheItemInterface
      * Item constructor.
      * @param \Phpfastcache\Drivers\Zenddisk\Driver $driver
      * @param $key
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function __construct(ZendDiskDriver $driver, $key)
     {
@@ -45,7 +45,7 @@ class Item implements ExtendedCacheItemInterface
 
     /**
      * @param ExtendedCacheItemPoolInterface $driver
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      * @return static
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver)
@@ -56,6 +56,6 @@ class Item implements ExtendedCacheItemInterface
             return $this;
         }
 
-        throw new phpFastCacheInvalidArgumentException('Invalid driver instance');
+        throw new PhpfastcacheInvalidArgumentException('Invalid driver instance');
     }
 }

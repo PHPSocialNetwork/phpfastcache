@@ -20,7 +20,7 @@ use Phpfastcache\Core\Item\ItemBaseTrait;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Drivers\Cassandra\Driver as CassandraDriver;
 use Phpfastcache\Exceptions\{
-  phpFastCacheInvalidArgumentException, phpFastCacheInvalidArgumentTypeException
+  PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidArgumentTypeException
 };
 
 /**
@@ -37,7 +37,7 @@ class Item implements ExtendedCacheItemInterface
      * Item constructor.
      * @param \Phpfastcache\Drivers\Cassandra\Driver $driver
      * @param $key
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function __construct(CassandraDriver $driver, $key)
     {
@@ -46,7 +46,7 @@ class Item implements ExtendedCacheItemInterface
 
     /**
      * @param ExtendedCacheItemPoolInterface $driver
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      * @return static
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver)
@@ -57,6 +57,6 @@ class Item implements ExtendedCacheItemInterface
             return $this;
         }
 
-        throw new phpFastCacheInvalidArgumentException('Invalid driver instance');
+        throw new PhpfastcacheInvalidArgumentException('Invalid driver instance');
     }
 }

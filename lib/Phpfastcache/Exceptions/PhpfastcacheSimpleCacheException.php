@@ -11,14 +11,17 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+declare(strict_types=1);
 
 namespace Phpfastcache\Exceptions;
 
+use Psr\SimpleCache\CacheException;
+
 /**
- * Class phpFastCacheInvalidConfigurationException
- * @package phpFastCache\Exceptions
+ * Class PhpfastcacheRootException
+ * @package Phpfastcache\Exceptions
  */
-class phpFastCacheInvalidConfigurationException extends phpFastCacheRootException
+class PhpfastcacheSimpleCacheException extends \Exception implements CacheException
 {
 
 }

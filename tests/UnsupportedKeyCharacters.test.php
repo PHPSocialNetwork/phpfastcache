@@ -6,7 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Exceptions\phpFastCacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Helper\TestHelper;
 use Psr\Cache\CacheItemPoolInterface;
 
@@ -19,28 +19,28 @@ $driverInstance = CacheManager::getInstance($defaultDriver);
 try {
     $driverInstance->getItem('test{test');
     $testHelper->printFailText('1/4 An unsupported key character did not get caught by regular expression');
-}catch(phpFastCacheInvalidArgumentException $e){
+}catch(PhpfastcacheInvalidArgumentException $e){
     $testHelper->printPassText('1/4 An unsupported key character has been caught by regular expression');
 }
 
 try {
     $driverInstance->getItem(':testtest');
     $testHelper->printFailText('2/4 An unsupported key character did not get caught by regular expression');
-}catch(phpFastCacheInvalidArgumentException $e){
+}catch(PhpfastcacheInvalidArgumentException $e){
     $testHelper->printPassText('2/4 An unsupported key character has been caught by regular expression');
 }
 
 try {
     $driverInstance->getItem('testtest}');
     $testHelper->printFailText('3/4 An unsupported key character did not get caught by regular expression');
-}catch(phpFastCacheInvalidArgumentException $e){
+}catch(PhpfastcacheInvalidArgumentException $e){
     $testHelper->printPassText('3/4 An unsupported key character has been caught by regular expression');
 }
 
 try {
     $driverInstance->getItem('testtest');
     $testHelper->printPassText('4/4 No exception caught while trying with a key without unsupported character');
-}catch(phpFastCacheInvalidArgumentException $e){
+}catch(PhpfastcacheInvalidArgumentException $e){
     $testHelper->printFailText('4/4 An exception has been caught while trying with a key without unsupported character');
 }
 

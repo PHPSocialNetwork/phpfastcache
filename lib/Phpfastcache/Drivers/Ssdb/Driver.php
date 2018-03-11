@@ -18,7 +18,7 @@ namespace Phpfastcache\Drivers\Ssdb;
 use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  phpFastCacheInvalidArgumentException, phpFastCacheDriverCheckException, phpFastCacheDriverException
+  PhpfastcacheInvalidArgumentException, PhpfastcacheDriverCheckException, PhpfastcacheDriverException
 };
 use Phpfastcache\Util\ArrayObject;
 use phpssdb\Core\{SimpleSSDB, SSDBException};
@@ -50,7 +50,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @return bool
-     * @throws phpFastCacheDriverException
+     * @throws PhpfastcacheDriverException
      */
     protected function driverConnect(): bool
     {
@@ -68,7 +68,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
             return true;
         } catch (SSDBException $e) {
-            throw new phpFastCacheDriverCheckException('Ssdb failed to connect with error: ' . $e->getMessage(), 0, $e);
+            throw new PhpfastcacheDriverCheckException('Ssdb failed to connect with error: ' . $e->getMessage(), 0, $e);
         }
     }
 
@@ -89,7 +89,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return mixed
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item): bool
     {
@@ -100,13 +100,13 @@ class Driver implements ExtendedCacheItemPoolInterface
             return $this->instance->setx($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), $item->getTtl());
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item
      * @return bool
-     * @throws phpFastCacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item): bool
     {
@@ -117,7 +117,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             return $this->instance->del($item->getEncodedKey());
         }
 
-        throw new phpFastCacheInvalidArgumentException('Cross-Driver type confusion detected');
+        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**

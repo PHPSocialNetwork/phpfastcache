@@ -11,15 +11,16 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+declare(strict_types=1);
 
 namespace Phpfastcache\Exceptions;
 
 /**
- * Class phpFastCacheIOException
- * @package phpFastCache\Exceptions
+ * Class PhpfastcacheIOException
+ * @package Phpfastcache\Exceptions
  * @since v6
  */
-class phpFastCacheIOException extends phpFastCacheCoreException
+class PhpfastcacheIOException extends PhpfastcacheCoreException
 {
     /**
      * @inheritdoc

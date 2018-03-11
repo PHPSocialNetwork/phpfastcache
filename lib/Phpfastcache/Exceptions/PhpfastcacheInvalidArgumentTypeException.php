@@ -11,14 +11,15 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+declare(strict_types=1);
 
 namespace Phpfastcache\Exceptions;
 
 /**
- * Class phpFastCacheInvalidArgumentTypeException
- * @package phpFastCache\Exceptions
+ * Class PhpfastcacheInvalidArgumentTypeException
+ * @package Phpfastcache\Exceptions
  */
-class phpFastCacheInvalidArgumentTypeException extends phpFastCacheInvalidArgumentException
+class PhpfastcacheInvalidArgumentTypeException extends PhpfastcacheInvalidArgumentException
 {
     /**
      * @link http://php.net/manual/en/exception.construct.php

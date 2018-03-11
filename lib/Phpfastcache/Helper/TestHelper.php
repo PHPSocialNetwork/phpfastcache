@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Helper;
 
 use Phpfastcache\Api;
-use Phpfastcache\Exceptions\phpFastCacheDriverCheckException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 
 /**
  * Class TestHelper
@@ -184,7 +184,7 @@ class TestHelper
      * @param \Throwable $exception
      */
     public function exceptionHandler(\Throwable $exception) {
-        if($exception instanceof phpFastCacheDriverCheckException){
+        if($exception instanceof PhpfastcacheDriverCheckException){
             $this->printSkipText('A driver could not be initialized due to missing requirement: ' . $exception->getMessage());
         }else{
             $this->printFailText(sprintf(

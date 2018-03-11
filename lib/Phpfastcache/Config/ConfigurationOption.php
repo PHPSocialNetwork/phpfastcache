@@ -8,7 +8,7 @@
 
 namespace Phpfastcache\Config;
 
-use Phpfastcache\Exceptions\phpFastCacheInvalidConfigurationException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Util\ArrayObject;
 
 class ConfigurationOption extends ArrayObject
@@ -93,7 +93,7 @@ class ConfigurationOption extends ArrayObject
          * No more kidding now, it's 21th century.
          */
         if(array_diff_key($array, get_object_vars($this))){
-            throw new phpFastCacheInvalidConfigurationException(sprintf(
+            throw new PhpfastcacheInvalidConfigurationException(sprintf(
               'Invalid option(s) for the config %s: %s',
               static::class,
               implode(', ',  array_keys(array_diff_key($array, get_object_vars($this))))
@@ -127,7 +127,7 @@ class ConfigurationOption extends ArrayObject
                     $parameter = $reflectionMethod->getParameters()[0] ?? null;
                     $typeHintExpected = ($parameter instanceof \ReflectionParameter ? ($parameter->getType() === 'object' ? $parameter->getClass() : $parameter->getType()) : 'Unknown type');
 
-                    throw new phpFastCacheInvalidConfigurationException(sprintf(
+                    throw new PhpfastcacheInvalidConfigurationException(sprintf(
                       'Invalid type hint found for "%s", expected "%s" got "%s"',
                       lcfirst(substr($method, 3)),
                       $typeHintExpected,
@@ -239,12 +239,12 @@ class ConfigurationOption extends ArrayObject
     /**
      * @param Callable|string $defaultKeyHashFunction
      * @return ConfigurationOption
-     * @throws  phpFastCacheInvalidConfigurationException
+     * @throws  PhpfastcacheInvalidConfigurationException
      */
     public function setDefaultKeyHashFunction($defaultKeyHashFunction)
     {
         if (!\function_exists($defaultKeyHashFunction) || !\is_callable($defaultKeyHashFunction)) {
-            throw new phpFastCacheInvalidConfigurationException('defaultKeyHashFunction must be a valid function name string');
+            throw new PhpfastcacheInvalidConfigurationException('defaultKeyHashFunction must be a valid function name string');
         }
         $this->defaultKeyHashFunction = $defaultKeyHashFunction;
         return $this;
@@ -387,7 +387,7 @@ class ConfigurationOption extends ArrayObject
     /**
      * @param string $cacheFileExtension
      * @return ConfigurationOption
-     * @throws phpFastCacheInvalidConfigurationException
+     * @throws PhpfastcacheInvalidConfigurationException
      */
     public function setCacheFileExtension(string $cacheFileExtension): self
     {
@@ -403,10 +403,10 @@ class ConfigurationOption extends ArrayObject
         ];
 
         if (\strpos($cacheFileExtension, '.') !== false) {
-            throw new phpFastCacheInvalidConfigurationException('cacheFileExtension cannot contain a dot "."');
+            throw new PhpfastcacheInvalidConfigurationException('cacheFileExtension cannot contain a dot "."');
         }
         if (!\in_array($cacheFileExtension, $safeFileExtensions, true)) {
-            throw new phpFastCacheInvalidConfigurationException(
+            throw new PhpfastcacheInvalidConfigurationException(
               "{$cacheFileExtension} is not a safe extension, currently allowed extension: " . \implode(', ', $safeFileExtensions)
             );
         }

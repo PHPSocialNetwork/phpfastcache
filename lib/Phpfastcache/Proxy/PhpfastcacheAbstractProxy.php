@@ -51,7 +51,7 @@ use Psr\Cache\CacheItemInterface;
  * @method void prependItemsByTag($tagName, $data) // Prepend items by a tag
  * @method void prependItemsByTags(array $tagNames, $data) // Prepend items by a tags
  */
-abstract class phpFastCacheAbstractProxy
+abstract class PhpfastcacheAbstractProxy
 {
     /**
      * @var \Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface
@@ -59,7 +59,7 @@ abstract class phpFastCacheAbstractProxy
     protected $instance;
 
     /**
-     * phpFastCache constructor.
+     * PhpfastcacheAbstractProxy constructor.
      * @param string $driver
      * @param array|\Phpfastcache\Config\ConfigurationOption $config
      */

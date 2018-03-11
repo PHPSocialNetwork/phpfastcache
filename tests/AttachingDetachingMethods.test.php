@@ -6,7 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Exceptions\phpFastCacheLogicException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Helper\TestHelper;
 use Psr\Cache\CacheItemPoolInterface;
 
@@ -44,8 +44,8 @@ if (!is_object($driverInstance)) {
     try{
         $driverInstance->attachItem($itemDetached);
         $testHelper->printFailText('ExtendedCacheItemPoolInterface::attachItem() attached $itemDetached without trowing an error.');
-    }catch(phpFastCacheLogicException $e){
-        $testHelper->printPassText('ExtendedCacheItemPoolInterface::attachItem() failed to attach $itemDetached by trowing a phpFastCacheLogicException exception.');
+    }catch(PhpfastcacheLogicException $e){
+        $testHelper->printPassText('ExtendedCacheItemPoolInterface::attachItem() failed to attach $itemDetached by trowing a phpfastcacheLogicException exception.');
     }
 }
 

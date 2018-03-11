@@ -7,7 +7,7 @@
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
-use Phpfastcache\Exceptions\phpFastCacheInvalidConfigurationException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
@@ -18,21 +18,21 @@ CacheManager::setDefaultConfig(new ConfigurationOption(['path' => __DIR__ . '/..
 try{
     $cacheInstance = CacheManager::getInstance('Files', new ConfigurationOption(['cacheFileExtension' => 'php']));
     $testHelper->printFailText('No error thrown while trying to setup a dangerous file extension');
-}catch(phpFastCacheInvalidConfigurationException $e){
+}catch(PhpfastcacheInvalidConfigurationException $e){
     $testHelper->printPassText('An error has been thrown while trying to setup a dangerous file extension');
 }
 
 try{
     $cacheInstance = CacheManager::getInstance('Files', new ConfigurationOption(['cacheFileExtension' => '.cache']));
     $testHelper->printFailText('No error thrown while trying to setup a dotted file extension');
-}catch(phpFastCacheInvalidConfigurationException $e){
+}catch(PhpfastcacheInvalidConfigurationException $e){
     $testHelper->printPassText('An error has been thrown while trying to setup a dotted file extension');
 }
 
 try{
     $cacheInstance = CacheManager::getInstance('Files', new ConfigurationOption(['cacheFileExtension' => 'cache']));
     $testHelper->printPassText('No error thrown while trying to setup a safe file extension');
-}catch(phpFastCacheInvalidConfigurationException $e){
+}catch(PhpfastcacheInvalidConfigurationException $e){
     $testHelper->printFailText('An error has been thrown while trying to setup a safe file extension');
 }
 

@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Entities;
 
-use Phpfastcache\Exceptions\phpFastCacheInvalidArgumentTypeException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentTypeException;
 
 /**
  * Class DriverStatistic
@@ -70,14 +70,14 @@ class DriverStatistic
     /**
      * @param $info
      * @return $this
-     * @throws phpFastCacheInvalidArgumentTypeException
+     * @throws PhpfastcacheInvalidArgumentTypeException
      */
     public function setInfo($info)
     {
         if (\is_string($info)) {
             $this->info = ($info ?: '');
         } else {
-            throw new phpFastCacheInvalidArgumentTypeException('string', $info);
+            throw new PhpfastcacheInvalidArgumentTypeException('string', $info);
         }
         return $this;
     }
@@ -86,14 +86,14 @@ class DriverStatistic
     /**
      * @param int $size
      * @return $this
-     * @throws phpFastCacheInvalidArgumentTypeException
+     * @throws PhpfastcacheInvalidArgumentTypeException
      */
     public function setSize($size)
     {
         if (\is_int($size)) {
             $this->size = ($size ?: 0);
         } else {
-            throw new phpFastCacheInvalidArgumentTypeException('int', $size);
+            throw new PhpfastcacheInvalidArgumentTypeException('int', $size);
         }
 
         return $this;

@@ -130,11 +130,10 @@ class CacheManager
             } catch (PhpfastcacheDriverCheckException $e) {
                 if ($config->getFallback()) {
                     try {
-
                         $fallback = $config->getFallback();
                         $config->setFallback('');
                         trigger_error(sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver, $fallback), E_USER_WARNING);
-                        return self::getInstance($fallback, $config);
+                        return self::getInstance($fallback, $config->getFallbackConfig());
                     } catch (PhpfastcacheInvalidArgumentException $e) {
                         throw new PhpfastcacheInvalidConfigurationException('Invalid fallback driver configuration', 0, $e);
                     }

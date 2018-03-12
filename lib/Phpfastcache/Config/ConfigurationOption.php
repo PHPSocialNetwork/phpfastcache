@@ -8,6 +8,7 @@
 
 namespace Phpfastcache\Config;
 
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Util\ArrayObject;
 
@@ -53,6 +54,11 @@ class ConfigurationOption extends ArrayObject
      * @var string
      */
     protected $fallback = '';
+
+    /**
+     * @var \Phpfastcache\Config\ConfigurationOption
+     */
+    protected $fallbackConfig;
 
     /**
      * @var int
@@ -301,6 +307,31 @@ class ConfigurationOption extends ArrayObject
     public function setFallback(string $fallback): self
     {
         $this->fallback = $fallback;
+        return $this;
+    }
+
+    /**
+     * @return \Phpfastcache\Config\ConfigurationOption|null
+     */
+    public function getFallbackConfig()
+    {
+        return $this->fallbackConfig;
+    }
+
+    /**
+     * @param \Phpfastcache\Config\ConfigurationOption|null $fallbackConfig
+     * @return ConfigurationOption
+     */
+    public function setFallbackConfig($fallbackConfig): self
+    {
+        if($fallbackConfig !== null && !($fallbackConfig instanceof self)){
+            throw new PhpfastcacheInvalidArgumentException(sprintf(
+              'Invalid argument "%s" for %s',
+              gettype($fallbackConfig) === 'object' ? get_class($fallbackConfig) : gettype($fallbackConfig),
+              __METHOD__
+            ));
+        }
+        $this->fallbackConfig = $fallbackConfig;
         return $this;
     }
 

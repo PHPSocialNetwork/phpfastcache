@@ -35,7 +35,7 @@ class TestHelper
      */
     public function __construct($testName)
     {
-        $this->printText('[PhpFastCache CORE v' . Api::getPhpFastCacheVersion() .  Api::getPhpFastCacheGitHeadHash() . ']', true);
+        $this->printText('[PhpFastCache CORE v' . Api::getPhpFastCacheVersion() . Api::getPhpFastCacheGitHeadHash() . ']', true);
         $this->printText('[PhpFastCache API v' . Api::getVersion() . ']', true);
         $this->printText('[PHP v' . PHP_VERSION . ']', true);
         $this->printText("[Begin Test: '{$testName}']");
@@ -45,7 +45,8 @@ class TestHelper
          * Catch all uncaught exception
          * to our own exception handler
          */
-        set_exception_handler(array($this, 'exceptionHandler'));
+        set_exception_handler([$this, 'exceptionHandler']);
+        set_error_handler([$this, 'errorHandler']);
     }
 
     /**
@@ -84,6 +85,28 @@ class TestHelper
     public function printPassText($string): self
     {
         $this->printText("[PASS] {$string}");
+
+        return $this;
+    }
+
+    /**
+     * @param string $string
+     * @return $this
+     */
+    public function printInfoText($string): self
+    {
+        $this->printText("[INFO] {$string}");
+
+        return $this;
+    }
+
+    /**
+     * @param string $string
+     * @return $this
+     */
+    public function printDebugText($string): self
+    {
+        $this->printText("[DEBUG] {$string}");
 
         return $this;
     }
@@ -183,10 +206,11 @@ class TestHelper
     /**
      * @param \Throwable $exception
      */
-    public function exceptionHandler(\Throwable $exception) {
-        if($exception instanceof PhpfastcacheDriverCheckException){
+    public function exceptionHandler(\Throwable $exception)
+    {
+        if ($exception instanceof PhpfastcacheDriverCheckException) {
             $this->printSkipText('A driver could not be initialized due to missing requirement: ' . $exception->getMessage());
-        }else{
+        } else {
             $this->printFailText(sprintf(
               'Uncaught exception "%s" in "%s" line %d with message: "%s"',
               \get_class($exception),
@@ -196,5 +220,61 @@ class TestHelper
             ));
         }
         $this->terminateTest();
+    }
+
+    /**
+     * @param int $errno
+     * @param string $errstr
+     * @param string $errfile
+     * @param int $errline
+     */
+    public function errorHandler(int $errno, string $errstr, string $errfile, int $errline)
+    {
+        $errorType = '';
+
+        switch ($errno) {
+            case E_PARSE:
+            case E_ERROR:
+            case E_CORE_ERROR:
+            case E_COMPILE_ERROR:
+            case E_USER_ERROR:
+                $errorType = '[FATAL ERROR]';
+                break;
+            case E_WARNING:
+            case E_USER_WARNING:
+            case E_COMPILE_WARNING:
+            case E_RECOVERABLE_ERROR:
+                $errorType = '[WARNING]';
+                break;
+            case E_NOTICE:
+            case E_USER_NOTICE:
+                $errorType = '[NOTICE]';
+                break;
+            case E_STRICT:
+                $errorType = '[STRICT]';
+                break;
+            case E_DEPRECATED:
+            case E_USER_DEPRECATED:
+                $errorType = '[DEPRECATED]';
+                break;
+            default :
+                break;
+        }
+
+        if ($errorType === '[FATAL ERROR]') {
+            $this->printFailText(sprintf(
+              "A critical error has been caught: \"%s\" in %s line %d",
+              "$errorType $errstr",
+              $errfile,
+              $errline
+            ));
+        } else {
+            $this->printDebugText(sprintf(
+              "A non-critical error has been caught: \"%s\" in %s line %d",
+              "$errorType $errstr",
+              $errfile,
+              $errline
+            ));
+        }
     }
 }

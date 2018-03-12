@@ -2,7 +2,8 @@ PhpFastCache has some options that you may want to know before using them, here'
 
 ### File-based drivers options *
 * **path** See the "**Host/Authenticating options**" section
-* **default_chmod** _| int>octal (default: 0777)_ `[>=V4]` This option will define the chmod used to write driver cache files. 
+* **default_chmod** _| int>octal (default: 0777)_ `[>=V4, <V7]` This option will define the chmod used to write driver cache files.
+* **defaultChmod** _| int>octal (default: 0777)_ `[>=V7]` New configuration name of `default_chmod` as of V7
 * **securityKey** _| string (default: 'auto')_ `[>=V4]` A security key that define the subdirectory name. 'auto' value will be the HTTP_HOST value.
 * **htaccess** _| bool  (default: true)_ `[>=V4]` Option designed to (dis)allow the auto-generation of .htaccess.
 * **autoTmpFallback** _| bool  (default: false)_ `[>=V6]`Option designed to automatically attempt to fallback to temporary directory if the cache fails to write on the specified directory
@@ -13,6 +14,7 @@ PhpFastCache has some options that you may want to know before using them, here'
 
 ### Global options
 * **fallback** _| string|bool_  (default: false)`[>=V4.2]` A driver name used in case the main driver stopped working. E.g. a missing php extension.
+* **fallbackConfig** _| ConfigurationOption|null_  (default: null)`[>=V7]` A dedicated `ConfigurationOption` object for the `fallback` driver, if needed.
 * **compress_data** _| bool  (default: false)_ `[>=V4.3]` Compress stored data, if the backend supports it. Currently only supported by _Memcache(d)_ driver.
 * **limited_memory_each_object** _| int (default: 4096)_ `[>=V4.2]` Maximum size (bytes) of object stored in memory. Currently only supported by _Cookie_ driver.
 * **defaultTtl** _| int (default: 900)_ `[>=V5]` This option define a default ttl (time-to-live, in seconds) for item that has no specified expiration date/ttl.

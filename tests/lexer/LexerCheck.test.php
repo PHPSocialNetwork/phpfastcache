@@ -1,13 +1,18 @@
 <?php
 
+use Phpfastcache\Helper\TestHelper;
+
 chdir(__DIR__ . '/../../');
+require_once __DIR__ . '/../../vendor/autoload.php';
+$testHelper = new TestHelper('PHP Lexer');
+
 
 /**
  * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-function read_dir($dir, $ext = null)
+function phpfastcache_read_dir($dir, $ext = null)
 {
     $list = [];
     $dir .= '/';
@@ -20,7 +25,7 @@ function read_dir($dir, $ext = null)
         }
         $name = $dir . $name;
         if (is_dir($name)) {
-            $list = array_merge($list, read_dir($name, $ext));
+            $list = array_merge($list, phpfastcache_read_dir($name, $ext));
         } elseif (is_file($name)) {
             if (!is_null($ext) && substr(strrchr($name, '.'), 1) != $ext) {
                 continue;
@@ -32,29 +37,18 @@ function read_dir($dir, $ext = null)
     return $list;
 }
 
-$list = read_dir('./lib', 'php');
+$list = phpfastcache_read_dir('./lib', 'php');
 
-$exit = 0;
-foreach ($list as $file) {
+foreach (array_map('realpath', $list) as $file) {
     $output = '';
-    /**
-     * @todo Make the exclusions much cleaner
-     */
-    if (strpos($file, '/vendor/composer') === false && strpos($file, '/bin/stubs') === false) {
-        exec((defined('HHVM_VERSION') ? 'hhvm' : 'php') . ' -l "' . realpath($file) . '"', $output, $status);
-    } else {
-        echo '[SKIP] ' . $file;
-        echo "\n";
-        continue;
-    }
+    \exec(($testHelper->isHHVM() ? 'hhvm' : 'php') . ' -l "' . $file . '"', $output, $status);
+
+    $output = trim(implode("\n", $output));
 
     if ($status !== 0) {
-        $exit = $status;
-        echo '[FAIL]';
+        $testHelper->printFailText($output ?: "Syntax error found in {$file}");
     } else {
-        echo '[PASS]';
+        $testHelper->printPassText($output ?: "No syntax errors detected in {$file}");
     }
-    echo ' ' . implode("\n", $output);
-    echo "\n";
 }
-exit($exit);
+$testHelper->terminateTest();

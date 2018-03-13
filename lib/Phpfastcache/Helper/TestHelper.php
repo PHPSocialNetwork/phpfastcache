@@ -30,11 +30,17 @@ class TestHelper
     protected $exitCode = 0;
 
     /**
+     * @var int
+     */
+    protected $timestamp;
+
+    /**
      * TestHelper constructor.
      * @param $testName
      */
     public function __construct($testName)
     {
+        $this->timestamp = microtime(true);
         $this->printText('[PhpFastCache CORE v' . Api::getPhpFastCacheVersion() . Api::getPhpFastCacheGitHeadHash() . ']', true);
         $this->printText('[PhpFastCache API v' . Api::getVersion() . ']', true);
         $this->printText('[PHP v' . PHP_VERSION . ']', true);
@@ -178,6 +184,9 @@ class TestHelper
      */
     public function terminateTest()
     {
+        $execTime = round(microtime(true) - $this->timestamp, 3);
+
+        $this->printText('Test finished in ' . $execTime . 's');
         exit($this->exitCode);
     }
 

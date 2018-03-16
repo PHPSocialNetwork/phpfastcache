@@ -26,6 +26,9 @@ Class `Phpfastcache\Exceptions\phpFastCache[...]Exception` have been renamed to 
 - `Phpfastcache\CacheManager::getStaticSystemDrivers()` replaced by `Phpfastcache\CacheManager::getDriverList()`
 - Configuration option `ignoreSymfonyNotice` will not be replaced since that the related Symfony notice in `Phpfastcache\CacheManager::getInstance()` has been removed
 
+### Configuration
+- Added configuration option `fallbackConfig` for a better fallback configuration
+
 ### Return type & Scalar type declarations 
 :anger: :exclamation: The V7 will make use of new php's return type & scalars type declarations features. 
 This means that you will now have to be very careful about the data types that you are sending to the phpFastCache API.

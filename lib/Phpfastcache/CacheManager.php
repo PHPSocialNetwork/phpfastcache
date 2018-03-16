@@ -18,8 +18,9 @@ namespace Phpfastcache;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheDeprecatedException, PhpfastcacheDriverCheckException, PhpfastcacheDriverNotFoundException, PhpfastcacheInstanceNotFoundException, PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidConfigurationException
+  PhpfastcacheDeprecatedException, PhpfastcacheDriverCheckException, PhpfastcacheDriverNotFoundException, PhpfastcacheInstanceNotFoundException, PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidConfigurationException, PhpfastcacheLogicException, PhpfastcacheUnsupportedOperationException
 };
+use Phpfastcache\Util\ClassNamespaceResolverTrait;
 
 /**
  * Class CacheManager
@@ -51,6 +52,8 @@ use Phpfastcache\Exceptions\{
  */
 class CacheManager
 {
+    use ClassNamespaceResolverTrait;
+
     /**
      * @var ConfigurationOption
      */
@@ -88,7 +91,7 @@ class CacheManager
      * @throws PhpfastcacheDriverNotFoundException
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public static function getInstance($driver = 'auto', $config = null, $instanceId = null)
+    public static function getInstance($driver = 'auto', $config = null, $instanceId = null): ExtendedCacheItemPoolInterface
     {
         static $badPracticeOmeter = [];
 
@@ -202,17 +205,17 @@ class CacheManager
     }
 
     /**
-     * @todo Does we really keep it ??
-     * @param $config
+     * @param ConfigurationOption $config
      * @return string
      * @throws PhpfastcacheDriverCheckException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheLogicException
      */
-    public static function getAutoClass(array $config = [])
+    public static function getAutoClass(ConfigurationOption $config): string
     {
         static $autoDriver;
 
         if ($autoDriver === null) {
-            foreach (self::getStaticSystemDrivers() as $driver) {
+            foreach (self::getDriverList() as $driver) {
                 try {
                     self::getInstance($driver, $config);
                     $autoDriver = $driver;
@@ -223,15 +226,19 @@ class CacheManager
             }
         }
 
+        if(!$autoDriver || !\is_string($autoDriver)){
+            throw new PhpfastcacheLogicException('Unable to find out a valid driver automatically');
+        }
+
         return $autoDriver;
     }
 
     /**
      * @param string $name
      * @param array $arguments
-     * @return \Psr\Cache\CacheItemPoolInterface
+     * @return \Psr\Cache\ExtendedCacheItemPoolInterface
      */
-    public static function __callStatic($name, $arguments)
+    public static function __callStatic(string $name, array $arguments): ExtendedCacheItemPoolInterface
     {
         $options = (\array_key_exists(0, $arguments) && \is_array($arguments) ? $arguments[ 0 ] : []);
 
@@ -241,7 +248,7 @@ class CacheManager
     /**
      * @return bool
      */
-    public static function clearInstances()
+    public static function clearInstances(): bool
     {
         self::$instances = [];
 
@@ -252,9 +259,17 @@ class CacheManager
     /**
      * @return string
      */
-    public static function getNamespacePath()
+    public static function getNamespacePath(): string
     {
-        return self::$namespacePath ?: __NAMESPACE__ . '\Drivers\\';
+        return self::$namespacePath ?: self::getDefaultNamespacePath();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getDefaultNamespacePath(): string
+    {
+        return  __NAMESPACE__ . '\Drivers\\';
     }
 
     /**
@@ -283,12 +298,11 @@ class CacheManager
 
     /**
      * @return array
+     * @deprecated As of V7 will be removed soon or later, use CacheManager::getDriverList() instead
      */
-    public static function getStaticSystemDrivers()
+    public static function getStaticSystemDrivers(): array
     {
-        /**
-         * @todo Reflection reader
-         */
+        trigger_error(sprintf('Method "%s" is deprecated as of the V7 and will be removed soon or later, use CacheManager::getDriverList() instead.', __METHOD__), E_USER_DEPRECATED);
         return [
           'Apc',
           'Apcu',
@@ -316,17 +330,43 @@ class CacheManager
 
     /**
      * @return array
+     * @deprecated As of V7 will be removed soon or later, use CacheManager::getDriverList() instead
      */
-    public static function getStaticAllDrivers()
+    public static function getStaticAllDrivers(): array
     {
-        /**
-         * @todo Reflection reader
-         */
+        trigger_error(sprintf('Method "%s" is deprecated as of the V7 and will be removed soon or later, use CacheManager::getDriverList() instead.', __METHOD__), E_USER_DEPRECATED);
         return \array_merge(self::getStaticSystemDrivers(), [
           'Devtrue',
           'Devfalse',
           'Cookie',
         ]);
+    }
+
+    /**
+     * @return string[]
+     * @throws PhpfastcacheUnsupportedOperationException
+     */
+    public static function getDriverList(): array
+    {
+        static $driverList;
+
+        if(self::getDefaultNamespacePath() === self::getNamespacePath()){
+            if($driverList === null){
+                $prefix = 'Phpfastcache\Drivers\\';
+                $classMap = self::createClassMap(__DIR__ . '/Drivers');
+                $driverList = [];
+
+                foreach ($classMap as $class => $file) {
+                    $driverList[] = str_replace($prefix, '', substr($class, 0, strrpos($class, '\\') ));
+                }
+
+                $driverList = array_values(array_unique($driverList));
+            }
+
+            return $driverList;
+        }
+
+        throw new PhpfastcacheUnsupportedOperationException('Cannot get the driver list if the default namespace path has changed.');
     }
 
     /**

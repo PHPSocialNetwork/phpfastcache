@@ -21,6 +21,11 @@ The time has changed, you now have to use: `class PhpfastcacheAbstractProxy`
 For any useful purpose, all the PhpFastCache exceptions has been **C**apitalized.
 Class `Phpfastcache\Exceptions\phpFastCache[...]Exception` have been renamed to `Phpfastcache\Exceptions\Phpfastcache[...]Exception`
 
+### Deprecations
+- `Phpfastcache\CacheManager::getStaticAllDrivers()` replaced by `Phpfastcache\CacheManager::getDriverList()`
+- `Phpfastcache\CacheManager::getStaticSystemDrivers()` replaced by `Phpfastcache\CacheManager::getDriverList()`
+- Configuration option `ignoreSymfonyNotice` will not be replaced since that the related Symfony notice in `Phpfastcache\CacheManager::getInstance()` has been removed
+
 ### Return type & Scalar type declarations 
 :anger: :exclamation: The V7 will make use of new php's return type & scalars type declarations features. 
 This means that you will now have to be very careful about the data types that you are sending to the phpFastCache API.
@@ -146,4 +151,3 @@ The API changelog used to be hardcoded as a HEREDOC in the `Api::getChangelog()`
 The API changelog format has been moved to a MarDown file (.md)
 If you were using `Api::getChangelog()` you may need to check that your code is still working as expected.
 The method still returns a valid string but its format has changed slightly.
-

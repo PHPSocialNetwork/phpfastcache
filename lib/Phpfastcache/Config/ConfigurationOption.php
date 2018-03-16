@@ -200,15 +200,18 @@ class ConfigurationOption extends ArrayObject
 
     /**
      * @return bool
+     * @deprecated As of V7
      */
     public function isIgnoreSymfonyNotice(): bool
     {
+
         return $this->ignoreSymfonyNotice;
     }
 
     /**
      * @param bool $ignoreSymfonyNotice
      * @return ConfigurationOption
+     * @deprecated As of V7
      */
     public function setIgnoreSymfonyNotice(bool $ignoreSymfonyNotice): self
     {

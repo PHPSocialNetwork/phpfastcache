@@ -23,7 +23,7 @@
     - Added notice/warning/error catcher to test Helper to keep a clean build report (@Geolim4)
 - __Utils__
     - Added exception catcher to to test Helper to FAIL or SKIP depending the exception (@Geolim4)
-    -  strictly return type hints in Directory class (@Geolim4)
+    - Updated strictly return type hints in Directory class (@Geolim4)
 - __Tests__
     - Added duration time for each tests (@Geolim4)
     - Updated Lexer Test for better compatibility with HHVM (@Geolim4)

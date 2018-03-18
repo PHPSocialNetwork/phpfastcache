@@ -69,7 +69,7 @@ trait DriverBaseTrait
         $this->instanceId = $instanceId;
 
         if (!$this->driverCheck()) {
-            throw new PhpfastcacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
+            throw new PhpfastcacheDriverCheckException(\sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
         }
 
         $this->driverConnect();

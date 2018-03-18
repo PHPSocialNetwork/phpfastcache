@@ -106,7 +106,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $keyword = self::PREFIX . $key;
         $x = isset($_COOKIE[ $keyword ]) ? $this->decode(\json_decode($_COOKIE[ $keyword ])->t) : 0;
 
-        return $x ? $x - time() : $x;
+        return $x ? $x - \time() : $x;
     }
 
     /**

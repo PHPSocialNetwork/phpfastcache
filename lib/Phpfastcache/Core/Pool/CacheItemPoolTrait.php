@@ -30,6 +30,7 @@ use Psr\Cache\CacheItemInterface;
  * Trait StandardPsr6StructureTrait
  * @package phpFastCache\Core
  * @property ConfigurationOption $config The config array
+ * @method ConfigurationOption getConfig() Return the config object
  */
 trait CacheItemPoolTrait
 {
@@ -71,16 +72,14 @@ trait CacheItemPoolTrait
              * loop dispatching operations
              */
             if (!isset($this->itemInstances[ $key ])) {
-                if (preg_match('~([' . preg_quote(self::$unsupportedKeyChars, '~') . ']+)~', $key, $matches)) {
+                if (\preg_match('~([' . \preg_quote(self::$unsupportedKeyChars, '~') . ']+)~', $key, $matches)) {
                     throw new PhpfastcacheInvalidArgumentException('Unsupported key character detected: "' . $matches[ 1 ] . '". Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers');
                 }
 
-                /**
-                 * @var $item ExtendedCacheItemInterface
-                 */
                 CacheManager::$ReadHits++;
                 $cacheSlamsSpendSeconds = 0;
                 $class = $this->getClassNamespace() . '\Item';
+                /** @var $item ExtendedCacheItemInterface */
                 $item = new $class($this, $key);
                 $item->setEventManager($this->eventManager);
 
@@ -90,14 +89,14 @@ trait CacheItemPoolTrait
 
                     if ($driverArray) {
                         if (!\is_array($driverArray)) {
-                            throw new PhpfastcacheCoreException(sprintf('The driverRead method returned an unexpected variable type: %s',
+                            throw new PhpfastcacheCoreException(\sprintf('The driverRead method returned an unexpected variable type: %s',
                               \gettype($driverArray)));
                         }
                         $driverData = $this->driverUnwrapData($driverArray);
 
                         if ($this->getConfig()[ 'preventCacheSlams' ]) {
                             while ($driverData instanceof ItemBatch) {
-                                if ($driverData->getItemDate()->getTimestamp() + $this->getConfigOption('cacheSlamsTimeout') < time()) {
+                                if ($driverData->getItemDate()->getTimestamp() + $this->getConfigOption('cacheSlamsTimeout') < \time()) {
                                     /**
                                      * The timeout has been reached
                                      * Consider that the batch has
@@ -120,7 +119,7 @@ trait CacheItemPoolTrait
                                  * attempting to get exit
                                  * the current batch process
                                  */
-                                sleep(1);
+                                \sleep(1);
                                 $cacheSlamsSpendSeconds++;
                                 goto getItemDriverRead;
                             }
@@ -156,7 +155,7 @@ trait CacheItemPoolTrait
                              * Reset the Item
                              */
                             $item->set(null)
-                              ->expiresAfter(abs((int)$this->getConfig()[ 'defaultTtl' ]))
+                              ->expiresAfter(\abs((int)$this->getConfig()[ 'defaultTtl' ]))
                               ->setHit(false)
                               ->setTags([]);
                             if ($this->getConfigOption( 'itemDetailedDate')) {
@@ -178,7 +177,7 @@ trait CacheItemPoolTrait
                 }
             }
         } else {
-            throw new PhpfastcacheInvalidArgumentException(sprintf('$key must be a string, got type "%s" instead.', \gettype($key)));
+            throw new PhpfastcacheInvalidArgumentException(\sprintf('$key must be a string, got type "%s" instead.', \gettype($key)));
         }
 
         /**
@@ -204,7 +203,7 @@ trait CacheItemPoolTrait
             return $this;
         }
 
-        throw new PhpfastcacheInvalidArgumentException(sprintf('Invalid Item Class "%s" for this driver.', \get_class($item)));
+        throw new PhpfastcacheInvalidArgumentException(\sprintf('Invalid Item Class "%s" for this driver.', \get_class($item)));
     }
 
     /**
@@ -335,7 +334,7 @@ trait CacheItemPoolTrait
         $this->eventManager->dispatch('CacheSaveItem', $this, $item);
 
 
-        if ($this->getConfig()[ 'preventCacheSlams' ]) {
+        if ($this->getConfig()->isPreventCacheSlams()) {
             /**
              * @var $itemBatch ExtendedCacheItemInterface
              */

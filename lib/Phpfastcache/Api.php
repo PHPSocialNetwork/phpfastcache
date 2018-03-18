@@ -109,7 +109,7 @@ class Api
         }
 
         if(\function_exists('shell_exec')){
-            $stdout = shell_exec('git rev-parse --short HEAD');
+            $stdout = \shell_exec('git rev-parse --short HEAD');
             if(\is_string($stdout)){
                 $hash = \trim($stdout);
                 return "#{$hash}";
@@ -129,7 +129,7 @@ class Api
     {
         $changelogFilename = __DIR__ . '/../../CHANGELOG_API.md';
         if(\file_exists($changelogFilename)){
-            $string = \str_replace(["\r\n", "\r"], "\n", \trim(file_get_contents($changelogFilename)));
+            $string = \str_replace(["\r\n", "\r"], "\n", \trim(\file_get_contents($changelogFilename)));
             if($string){
                 return $string;
             }
@@ -148,7 +148,7 @@ class Api
     {
         $changelogFilename = __DIR__ . '/../../CHANGELOG.md';
         if(\file_exists($changelogFilename)){
-            $string = \str_replace(["\r\n", "\r"], "\n", \trim(file_get_contents($changelogFilename)));
+            $string = \str_replace(["\r\n", "\r"], "\n", \trim(\file_get_contents($changelogFilename)));
             if($string){
                 return $string;
             }

@@ -30,7 +30,7 @@ foreach (phpfastcache_glob_recursive(PFC_TEST_DIR . DIRECTORY_SEPARATOR . '*.tes
     echo "\e[97m--\n";
     $command = "php -f {$filename} {$driver}";
     echo "\e[33mphpfastcache@test \e[34m" . __DIR__ . " \e[92m# \e[91m" . $command . "\n";
-    exec($command, $output, $return_var);
+    \exec($command, $output, $return_var);
     echo "=====================================\n";
     echo "\e[95m" . \implode("\n", $output) . "\n";
     echo "=====================================\n";

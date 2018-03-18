@@ -211,7 +211,7 @@ trait IOHelperTrait
         if ($create === true) {
             if (!\is_writable($path)) {
                 try {
-                    if (!chmod($path, 0777)) {
+                    if (!\chmod($path, 0777)) {
                         throw new PhpfastcacheIOException('Chmod failed on : ' . $path);
                     }
                 } catch (PhpfastcacheIOException $e) {
@@ -231,12 +231,12 @@ Deny from all
 </IfModule>
 HTACCESS;
 
-                $file = @fopen($path . '/.htaccess', 'w+');
+                $file = @\fopen($path . '/.htaccess', 'w+');
                 if (!$file) {
                     throw new PhpfastcacheIOException('PLEASE CHMOD ' . $path . ' - 0777 OR ANY WRITABLE PERMISSION!');
                 }
-                fwrite($file, $content);
-                fclose($file);
+                \fwrite($file, $content);
+                \fclose($file);
             }
         }
     }
@@ -250,20 +250,20 @@ HTACCESS;
     protected function readfile($file): string
     {
         if (\function_exists('file_get_contents')) {
-            return file_get_contents($file);
+            return \file_get_contents($file);
         }
 
         $string = '';
 
-        $file_handle = @fopen($file, 'r');
+        $file_handle = @\fopen($file, 'r');
         if (!$file_handle) {
             throw new PhpfastcacheIOException("Cannot read file located at: {$file}");
         }
-        while (!feof($file_handle)) {
-            $line = fgets($file_handle);
+        while (!\feof($file_handle)) {
+            $line = \fgets($file_handle);
             $string .= $line;
         }
-        fclose($file_handle);
+        \fclose($file_handle);
 
         return $string;
     }
@@ -288,23 +288,23 @@ HTACCESS;
 
         if ($secureFileManipulation) {
             $tmpFilename = Directory::getAbsolutePath(\dirname($file) . '/tmp_' . \md5(
-                str_shuffle(\uniqid($this->getDriverName(), false))
-                . str_shuffle(\uniqid($this->getDriverName(), false))
+                \str_shuffle(\uniqid($this->getDriverName(), false))
+                . \str_shuffle(\uniqid($this->getDriverName(), false))
               ));
 
-            $f = fopen($tmpFilename, 'w+');
-            flock($f, LOCK_EX);
+            $f = \fopen($tmpFilename, 'w+');
+            \flock($f, LOCK_EX);
             $octetWritten = fwrite($f, $data);
-            flock($f, LOCK_UN);
-            fclose($f);
+            \flock($f, LOCK_UN);
+            \fclose($f);
 
-            if (!rename($tmpFilename, $file)) {
-                throw new PhpfastcacheIOException(sprintf('Failed to rename %s to %s', $tmpFilename, $file));
+            if (!\rename($tmpFilename, $file)) {
+                throw new PhpfastcacheIOException(\sprintf('Failed to rename %s to %s', $tmpFilename, $file));
             }
         } else {
-            $f = fopen($file, 'w+');
-            $octetWritten = fwrite($f, $data);
-            fclose($f);
+            $f = \fopen($file, 'w+');
+            $octetWritten = \fwrite($f, $data);
+            \fclose($f);
         }
 
         return $octetWritten !== false;

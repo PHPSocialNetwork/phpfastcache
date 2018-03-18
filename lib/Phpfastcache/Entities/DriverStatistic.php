@@ -68,17 +68,13 @@ class DriverStatistic
     }
 
     /**
-     * @param $info
+     * @param string $info
      * @return $this
-     * @throws PhpfastcacheInvalidArgumentTypeException
      */
-    public function setInfo($info)
+    public function setInfo(string $info): self
     {
-        if (\is_string($info)) {
-            $this->info = ($info ?: '');
-        } else {
-            throw new PhpfastcacheInvalidArgumentTypeException('string', $info);
-        }
+        $this->info = $info;
+
         return $this;
     }
 
@@ -86,15 +82,10 @@ class DriverStatistic
     /**
      * @param int $size
      * @return $this
-     * @throws PhpfastcacheInvalidArgumentTypeException
      */
-    public function setSize($size)
+    public function setSize(int $size)
     {
-        if (\is_int($size)) {
-            $this->size = ($size ?: 0);
-        } else {
-            throw new PhpfastcacheInvalidArgumentTypeException('int', $size);
-        }
+        $this->size = $size;
 
         return $this;
     }
@@ -103,7 +94,7 @@ class DriverStatistic
      * @param mixed $data
      * @return $this
      */
-    public function setData($data)
+    public function setData($data): self
     {
         $this->data = ($data ?: '');
 
@@ -122,7 +113,7 @@ class DriverStatistic
      * @param mixed $raw
      * @return $this
      */
-    public function setRawData($raw)
+    public function setRawData($raw): self
     {
         $this->rawData = $raw;
 

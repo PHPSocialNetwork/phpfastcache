@@ -105,7 +105,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            $ttl = $item->getExpirationDate()->getTimestamp() - time();
+            $ttl = $item->getExpirationDate()->getTimestamp() - \time();
 
             /**
              * @see https://redis.io/commands/setex
@@ -159,7 +159,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         // used_memory
         $info = $this->instance->info();
-        $date = (new \DateTime())->setTimestamp(time() - $info[ 'uptime_in_seconds' ]);
+        $date = (new \DateTime())->setTimestamp(\time() - $info[ 'uptime_in_seconds' ]);
 
         return (new DriverStatistic())
           ->setData(\implode(', ', \array_keys($this->itemInstances)))

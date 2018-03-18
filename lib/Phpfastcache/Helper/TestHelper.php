@@ -220,7 +220,7 @@ class TestHelper
         if ($exception instanceof PhpfastcacheDriverCheckException) {
             $this->printSkipText('A driver could not be initialized due to missing requirement: ' . $exception->getMessage());
         } else {
-            $this->printFailText(sprintf(
+            $this->printFailText(\sprintf(
               'Uncaught exception "%s" in "%s" line %d with message: "%s"',
               \get_class($exception),
               $exception->getFile(),
@@ -271,14 +271,14 @@ class TestHelper
         }
 
         if ($errorType === '[FATAL ERROR]') {
-            $this->printFailText(sprintf(
+            $this->printFailText(\sprintf(
               "A critical error has been caught: \"%s\" in %s line %d",
               "$errorType $errstr",
               $errfile,
               $errline
             ));
         } else {
-            $this->printDebugText(sprintf(
+            $this->printDebugText(\sprintf(
               "A non-critical error has been caught: \"%s\" in %s line %d",
               "$errorType $errstr",
               $errfile,

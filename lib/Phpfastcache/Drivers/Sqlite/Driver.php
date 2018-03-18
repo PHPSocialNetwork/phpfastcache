@@ -209,7 +209,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
                 return $stm->execute([
                   ':keyword' => $item->getKey(),
-                  ':U' => time(),
+                  ':U' => \time(),
                 ]);
             } catch (PDOException $e) {
                 return false;

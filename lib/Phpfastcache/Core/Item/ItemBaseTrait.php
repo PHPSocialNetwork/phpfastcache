@@ -186,7 +186,7 @@ trait ItemBaseTrait
              */
             $this->eventManager->dispatch('CacheItemExpireAfter', $this, $time);
 
-            $this->expirationDate = (new \DateTime())->add(new \DateInterval(sprintf('PT%dS', $time)));
+            $this->expirationDate = (new \DateTime())->add(new \DateInterval(\sprintf('PT%dS', $time)));
         } else if ($time instanceof \DateInterval) {
             /**
              * @eventName CacheItemExpireAt
@@ -197,7 +197,7 @@ trait ItemBaseTrait
 
             $this->expirationDate = (new \DateTime())->add($time);
         } else {
-            throw new PhpfastcacheInvalidArgumentException(sprintf('Invalid date format, got "%s"', gettype($time)));
+            throw new PhpfastcacheInvalidArgumentException(\sprintf('Invalid date format, got "%s"', gettype($time)));
         }
 
         return $this;

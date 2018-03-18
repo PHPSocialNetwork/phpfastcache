@@ -99,7 +99,7 @@ class ConfigurationOption extends ArrayObject
          * No more kidding now, it's 21th century.
          */
         if(array_diff_key($array, get_object_vars($this))){
-            throw new PhpfastcacheInvalidConfigurationException(sprintf(
+            throw new PhpfastcacheInvalidConfigurationException(\sprintf(
               'Invalid option(s) for the config %s: %s',
               static::class,
               implode(', ',  array_keys(array_diff_key($array, get_object_vars($this))))
@@ -133,7 +133,7 @@ class ConfigurationOption extends ArrayObject
                     $parameter = $reflectionMethod->getParameters()[0] ?? null;
                     $typeHintExpected = ($parameter instanceof \ReflectionParameter ? ($parameter->getType() === 'object' ? $parameter->getClass() : $parameter->getType()) : 'Unknown type');
 
-                    throw new PhpfastcacheInvalidConfigurationException(sprintf(
+                    throw new PhpfastcacheInvalidConfigurationException(\sprintf(
                       'Invalid type hint found for "%s", expected "%s" got "%s"',
                       lcfirst(substr($method, 3)),
                       $typeHintExpected,
@@ -204,7 +204,6 @@ class ConfigurationOption extends ArrayObject
      */
     public function isIgnoreSymfonyNotice(): bool
     {
-
         return $this->ignoreSymfonyNotice;
     }
 
@@ -215,6 +214,9 @@ class ConfigurationOption extends ArrayObject
      */
     public function setIgnoreSymfonyNotice(bool $ignoreSymfonyNotice): self
     {
+        if($ignoreSymfonyNotice){
+            trigger_error('Configuration option "ignoreSymfonyNotice" is deprecated as of the V7', E_USER_DEPRECATED);
+        }
         $this->ignoreSymfonyNotice = $ignoreSymfonyNotice;
         return $this;
     }
@@ -328,7 +330,7 @@ class ConfigurationOption extends ArrayObject
     public function setFallbackConfig($fallbackConfig): self
     {
         if($fallbackConfig !== null && !($fallbackConfig instanceof self)){
-            throw new PhpfastcacheInvalidArgumentException(sprintf(
+            throw new PhpfastcacheInvalidArgumentException(\sprintf(
               'Invalid argument "%s" for %s',
               gettype($fallbackConfig) === 'object' ? get_class($fallbackConfig) : gettype($fallbackConfig),
               __METHOD__

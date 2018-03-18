@@ -83,8 +83,8 @@ class Directory
             return false;
         }
 
-        if (is_file($source) || is_link($source)) {
-            return unlink($source);
+        if (\is_file($source) || \is_link($source)) {
+            return \unlink($source);
         }
 
         $files = new RecursiveIteratorIterator
@@ -107,7 +107,7 @@ class Directory
         }
 
         if ($removeOnlyChildren === false) {
-            return rmdir($source);
+            return \rmdir($source);
         }
 
         return true;
@@ -122,14 +122,14 @@ class Directory
      */
     public static function getAbsolutePath($path): string
     {
-        $parts = preg_split('~[/\\\\]+~', $path, 0, PREG_SPLIT_NO_EMPTY);
+        $parts = \preg_split('~[/\\\\]+~', $path, 0, PREG_SPLIT_NO_EMPTY);
         $absolutes = [];
         foreach ($parts as $part) {
             if ('.' === $part) {
                 continue;
             }
             if ('..' === $part) {
-                array_pop($absolutes);
+                \array_pop($absolutes);
             } else {
                 $absolutes[] = $part;
             }
@@ -138,7 +138,7 @@ class Directory
         /**
          * Allows to dereference char
          */
-        $__FILE__ = preg_replace('~^(([a-z0-9\-]+)://)~', '', __FILE__);// remove file protocols such as "phar://" etc.
+        $__FILE__ = \preg_replace('~^(([a-z0-9\-]+)://)~', '', __FILE__);// remove file protocols such as "phar://" etc.
         $prefix = $__FILE__[ 0 ] === DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
         return $prefix . \implode(DIRECTORY_SEPARATOR, $absolutes);
     }

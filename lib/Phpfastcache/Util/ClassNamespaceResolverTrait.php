@@ -67,7 +67,7 @@ trait ClassNamespaceResolverTrait
                 $classes = self::findClasses($path);
                 if (\PHP_VERSION_ID >= 70000) {
                     // PHP 7 memory manager will not release after token_get_all(), see https://bugs.php.net/70098
-                    gc_mem_caches();
+                    \gc_mem_caches();
                 }
                 foreach ($classes as $class) {
                     $map[ $class ] = $path;
@@ -90,8 +90,8 @@ trait ClassNamespaceResolverTrait
      */
     protected static function findClasses(string $path): array
     {
-        $contents = file_get_contents($path);
-        $tokens = token_get_all($contents);
+        $contents = \file_get_contents($path);
+        $tokens = \token_get_all($contents);
         $classes = [];
         $namespace = '';
         for ($i = 0; isset($tokens[ $i ]); ++$i) {
@@ -105,7 +105,7 @@ trait ClassNamespaceResolverTrait
                     $namespace = '';
                     // If there is a namespace, extract it
                     while (isset($tokens[ ++$i ][ 1 ])) {
-                        if (in_array($tokens[ $i ][ 0 ], [T_STRING, T_NS_SEPARATOR])) {
+                        if (\in_array($tokens[ $i ][ 0 ], [T_STRING, T_NS_SEPARATOR])) {
                             $namespace .= $tokens[ $i ][ 1 ];
                         }
                     }
@@ -139,7 +139,7 @@ trait ClassNamespaceResolverTrait
                             break;
                         }
                     }
-                    $classes[] = ltrim($namespace . $class, '\\');
+                    $classes[] = \ltrim($namespace . $class, '\\');
                     break;
                 default:
                     break;

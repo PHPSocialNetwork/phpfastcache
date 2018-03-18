@@ -76,10 +76,10 @@ abstract class PhpfastcacheAbstractProxy
      */
     public function __call($name, $args)
     {
-        if (method_exists($this->instance, $name)) {
-            return call_user_func_array([$this->instance, $name], $args);
+        if (\method_exists($this->instance, $name)) {
+            return \call_user_func_array([$this->instance, $name], $args);
         }
 
-        throw new \BadMethodCallException(sprintf('Method %s does not exists', $name));
+        throw new \BadMethodCallException(\sprintf('Method %s does not exists', $name));
     }
 }

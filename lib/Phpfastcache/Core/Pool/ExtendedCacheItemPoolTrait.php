@@ -39,7 +39,7 @@ trait ExtendedCacheItemPoolTrait
         $callback = function (CacheItemInterface $item) {
             return $item->get();
         };
-        return \json_encode(array_map($callback, array_values($this->getItems($keys))), $option, $depth);
+        return \json_encode(\array_map($callback, \array_values($this->getItems($keys))), $option, $depth);
     }
 
     /**
@@ -116,7 +116,7 @@ trait ExtendedCacheItemPoolTrait
             return $item->get();
         };
 
-        return \json_encode(array_map($callback, array_values($this->getItemsByTags($tagNames))), $option, $depth);
+        return \json_encode(\array_map($callback, \array_values($this->getItemsByTags($tagNames))), $option, $depth);
     }
 
     /**
@@ -364,7 +364,7 @@ trait ExtendedCacheItemPoolTrait
      */
     public function prependItemsByTagsAll(array $tagNames, $data)
     {
-        if (is_scalar($data)) {
+        if (\is_scalar($data)) {
             $items = $this->getItemsByTagsAll($tagNames);
 
             foreach ($items as $key => $item) {
@@ -426,8 +426,8 @@ trait ExtendedCacheItemPoolTrait
         } else {
             throw new PhpfastcacheInvalidArgumentException('Invalid type for $item variable');
         }
-        if (gc_enabled()) {
-            gc_collect_cycles();
+        if (\gc_enabled()) {
+            \gc_collect_cycles();
         }
     }
 

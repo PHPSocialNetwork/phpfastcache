@@ -2,7 +2,7 @@
 [![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/badges/quality-score.png?b=final)](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/?branch=final) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=final)](https://travis-ci.org/PHPSocialNetwork/phpfastcache) [![Semver compliant](https://img.shields.io/badge/Semver-2.0.0-yellow.svg)](https://semver.org/spec/v2.0.0.html) [![Patreon](https://img.shields.io/badge/Support%20us%20on-Patreon-f96854.svg)](https://www.patreon.com/geolim4)
 
 #### :warning: Please note that the V7 is a major (BC breaking) update of PhpFastCache !
-> As the V7 is **absolutely** not compatible with previous versions, please read carefully the [migration guide](./docs/migration/MigratingFromV6ToV7.md) to ensure your the smoothest migration possible.
+> As the V7 is **absolutely** not compatible with previous versions, please read carefully the [migration guide](./docs/migration/MigratingFromV6ToV7.md) to ensure you the smoothest migration possible.
 Also please note that the V7 requires at least PHP7 or higher to work properly.
 
 ---------------------------

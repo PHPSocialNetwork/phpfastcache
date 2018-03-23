@@ -1,3 +1,8 @@
+## 6.1.2
+##### 23 march 2018
+- __Core__
+    - Fixed #581 // Files driver "securityKey" option configuration not working as documented
+
 ## 6.1.1
 ##### 1 march 2018
 - __Global__

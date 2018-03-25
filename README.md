@@ -81,6 +81,9 @@ phpFastCache provides you a lot of useful APIs:
 - prepend($data) // Prepends data to a string or an array (unshift)
 - isHit() // Checks if your cache entry exists and is still valid, it's the equivalent of isset()
 - isExpired() // Checks if your cache entry is expired
+- isNull() // Checks if the data is null or not despite the hit/miss status.
+- isEmpty() // Checks if the data is empty or not despite the hit/miss status.
+- getLength() // Gets the data length if the data is a string, array, or objects that implement \Countable interface.
 - getTtl() // Gets the remaining Time To Live as an integer
 - getExpirationDate() // Gets the expiration date as a Datetime object
 - addTag($tagName) // Adds a tag

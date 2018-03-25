@@ -96,7 +96,7 @@ class TestHelper
     }
 
     /**
-     * @param string $string
+     * @param string printFailText
      * @return $this
      */
     public function printInfoText($string): self

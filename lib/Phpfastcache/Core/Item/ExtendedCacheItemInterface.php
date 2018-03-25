@@ -98,6 +98,26 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
     public function isExpired(): bool;
 
     /**
+     * @return bool
+     */
+    public function isNull(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isEmpty(): bool;
+
+    /**
+     * Return the data length:
+     * - Either the number of char if it's a string (binary mode)
+     * - or the number of element if it's an array
+     * - or the number returned by count() if it's an object implementing \Countable interface
+     * - or -1 for anything else
+     * @return int
+     */
+    public function getLength(): int;
+
+    /**
      * @param \Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface $driver
      * @return mixed
      */

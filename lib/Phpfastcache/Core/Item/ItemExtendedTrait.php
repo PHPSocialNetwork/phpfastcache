@@ -203,6 +203,50 @@ trait ItemExtendedTrait
     }
 
     /**
+     * @return bool
+     */
+    public function isNull(): bool
+    {
+        return $this->data === null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return empty($this->data);
+    }
+
+    /**
+     * Return the data length:
+     * Either the string length if it's a string (binary mode)
+     * # or the number of element (count) if it's an array
+     * # or the number returned by count() if it's an object implementing \Countable interface
+     * # -1 for anything else
+     * @return int
+     */
+    public function getLength(): int
+    {
+        switch (\gettype($this->data))
+        {
+            case 'array':
+            case 'object':
+                if(\is_array($this->data) || $this->data instanceof \Countable){
+                    return \count($this->data);
+                }
+            break;
+
+            case 'string':
+                return \strlen($this->data);
+                break;
+        }
+
+        return -1;
+    }
+
+
+    /**
      * @param int $step
      * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException

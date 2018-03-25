@@ -1,3 +1,9 @@
+## 2.0.1
+- Implemented additional atomic methods:
+- Added ExtendedCacheItemInterface::isNull() to test if the data is null or not despite the hit/miss status.
+- Added ExtendedCacheItemInterface::isEmpty() to test if the data is empty or not despite the hit/miss status.
+- Added ExtendedCacheItemInterface::getLength() get the data length if the data is a string, array, or objects that implement \Countable interface.
+
 ## 2.0.0
 - Introduced BC breaks:
 - Updated ExtendedCacheItemPoolInterface to be compliant with the new \$config object introduced in V7.

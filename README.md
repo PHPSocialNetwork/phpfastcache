@@ -47,6 +47,7 @@ Also, when you use high performances drivers, your miss hits will be drastically
 Slightly different from the usual caching libraries you will find everywhere on the internet, the phpFastCache library reduces the I/O and CPU load as much as possible.
 
 ```php
+<?php
 use Phpfastcache\CacheManager;
 
 CacheManager::getInstance('files', $config);
@@ -67,82 +68,91 @@ You can off course decide the TTL that will matches your needs.
 Rich Development API
 ---------------------------
 
-phpFastCache provides you a lot of useful APIs:
+PhpFastCache provides you a lot of useful APIs:
 
-### Item API
-- getKey() // Returns the item identifier (key)
-- get() // The getter, obviously, returns your cache object
-- set($value) // The setter, for those who missed it, can be anything except resources or non-serializer object (ex: PDO objects, file pointers, etc).
-- expiresAfter($ttl) // Allows you to extends the lifetime of an entry without altering its value (formerly known as touch())
-- expiresAt($expiration) // Sets the expiration time for this cache item (as a DateTimeInterface object)
-- increment($step = 1) // To allow us to count on an integer item
-- decrement($step = 1) // Redundant joke...
-- append($data) // Appends data to a string or an array (push)
-- prepend($data) // Prepends data to a string or an array (unshift)
-- isHit() // Checks if your cache entry exists and is still valid, it's the equivalent of isset()
-- isExpired() // Checks if your cache entry is expired
-- isNull() // Checks if the data is null or not despite the hit/miss status.
-- isEmpty() // Checks if the data is empty or not despite the hit/miss status.
-- getLength() // Gets the data length if the data is a string, array, or objects that implement \Countable interface.
-- getTtl() // Gets the remaining Time To Live as an integer
-- getExpirationDate() // Gets the expiration date as a Datetime object
-- addTag($tagName) // Adds a tag
-- addTags(array $tagNames) // Adds multiple tags
-- setTags(array $tags) // Sets multiple tags
-- getTags() // Gets the tags
-- getTagsAsString($separator = ', ') // Gets the data as a string separated by $separator
-- removeTag($tagName) // Removes a tag
-- removeTags(array $tagNames) // Removes multiple tags
-- getDataAsJsonString()// Return the data as a well-formatted json string
-- setExpirationDate() // Alias of expireAt() (for more code logic)
-- getCreationDate() // Gets the creation date for this cache item (as a DateTimeInterface object)  * 
-- getModificationDate() // Gets the modification date for this cache item (as a DateTimeInterface object) *
-- setCreationDate($expiration) // Sets the creation date for this cache item (as a DateTimeInterface object) *
-- setModificationDate($expiration) // Sets the modification date for this cache item (as a DateTimeInterface object) *
-- setEventManager($evtMngr) // Sets the event manager
+### Item API (ExtendedCacheItemInterface)
+| Method                               |  Return                      |  Description                                                                                                                           | 
+|--------------------------------------|------------------------------|----------------------------------------------------------------------------------------------------------------------------------------| 
+| `addTag($tagName)`                   | ExtendedCacheItemInterface   |  Adds a tag                                                                                                                            | 
+| `addTags(array $tagNames)`           | ExtendedCacheItemInterface   |  Adds multiple tags                                                                                                                    | 
+| `append($data)`                      | ExtendedCacheItemInterface   |  Appends data to a string or an array (push)                                                                                           | 
+| `decrement($step = 1)`               | ExtendedCacheItemInterface   |  Redundant joke...                                                                                                                     | 
+| `expiresAfter($ttl)`                 | ExtendedCacheItemInterface   |  Allows you to extends the lifetime of an entry without altering its value (formerly known as touch())                                 | 
+| `expiresAt($expiration)`             | ExtendedCacheItemInterface   |  Sets the expiration time for this cache item (as a DateTimeInterface object)                                                          | 
+| `get()`                              | mixed                        |  The getter, obviously, returns your cache object                                                                                      | 
+| `getCreationDate()`                  | \DatetimeInterface           |  Gets the creation date for this cache item (as a DateTimeInterface object)  *                                                         | 
+| `getDataAsJsonString()`              | string                       |  Return the data as a well-formatted json string                                                                                       | 
+| `getEncodedKey()`                    | string                       |  Returns the final and internal item identifier (key), generally used for debug purposes                                               | 
+| `getExpirationDate()`                | ExtendedCacheItemInterface   |  Gets the expiration date as a Datetime object                                                                                         | 
+| `getKey()`                           | string                       |  Returns the item identifier (key)                                                                                                     | 
+| `getLength()`                        | int                          |  Gets the data length if the data is a string, array, or objects that implement \Countable interface.                                  | 
+| `getModificationDate()`              | \DatetimeInterface           |  Gets the modification date for this cache item (as a DateTimeInterface object) *                                                      | 
+| `getTags()`                          | string[]                     |  Gets the tags                                                                                                                         | 
+| `getTagsAsString($separator = ', ')` | string                       |  Gets the data as a string separated by $separator                                                                                     | 
+| `getTtl()`                           | int                          |  Gets the remaining Time To Live as an integer                                                                                         | 
+| `increment($step = 1)`               | ExtendedCacheItemInterface   |  To allow us to count on an integer item                                                                                               | 
+| `isEmpty()`                          | bool                         |  Checks if the data is empty or not despite the hit/miss status.                                                                       | 
+| `isExpired()`                        | bool                         |  Checks if your cache entry is expired                                                                                                 | 
+| `isHit()`                            | bool                         |  Checks if your cache entry exists and is still valid, it's the equivalent of isset()                                                  | 
+| `isNull()`                           | bool                         |  Checks if the data is null or not despite the hit/miss status.                                                                        | 
+| `prepend($data)`                     | ExtendedCacheItemInterface   |  Prepends data to a string or an array (unshift)                                                                                       | 
+| `removeTag($tagName)`                | ExtendedCacheItemInterface   |  Removes a tag                                                                                                                         | 
+| `removeTags(array $tagNames)`        | ExtendedCacheItemInterface   |  Removes multiple tags                                                                                                                 | 
+| `set($value)`                        | ExtendedCacheItemInterface   |  The setter, for those who missed it, can be anything except resources or non-serializer object (ex: PDO objects, file pointers, etc). | 
+| `setCreationDate($expiration)`       | \DatetimeInterface           |  Sets the creation date for this cache item (as a DateTimeInterface object) *                                                          | 
+| `setEventManager($evtMngr)`          | ExtendedCacheItemInterface   |  Sets the event manager                                                                                                                | 
+| `setExpirationDate()`                | ExtendedCacheItemInterface   |  Alias of expireAt() (for more code logic)                                                                                             | 
+| `setModificationDate($expiration)`   | \DatetimeInterface           |  Sets the modification date for this cache item (as a DateTimeInterface object) *                                                      | 
+| `setTags(array $tags)`               | ExtendedCacheItemInterface   |  Sets multiple tags                                                                                                                    | 
 
-\* Require configuration directive "itemDetailedDate" to be enabled
+\* Require configuration directive "itemDetailedDate" to be enabled, else a \LogicException will be thrown
 
-### ItemPool API
-- getItem($key) // Retrieves an item and returns an empty item if not found
-- getItems(array $keys) // Retrieves one or more item and returns an array of items
-- getItemsAsJsonString(array $keys) // Returns A json string that represents an array of items
-- hasItem($key) // Tests if an item exists
-- deleteItem($key) // Deletes an item
-- deleteItems(array $keys) // Deletes one or more items
-- save(CacheItemInterface $item) // Persists a cache item immediately
-- saveMultiple(...$items) // Persists multiple cache items immediately
-- saveDeferred(CacheItemInterface $item); // Sets a cache item to be persisted later
-- commit(); // Persists any deferred cache items
-- clear() // Allows you to completely empty the cache and restart from the beginning
-- getHelp() // Provides a very basic help for a specific driver
-- getStats() // Returns the cache statistics as an object, useful for checking disk space used by the cache etc.
-- getItemsByTag($tagName) // Returns items by a tag
-- getItemsByTags(array $tagNames) // Returns items by one of multiple tag names
-- getItemsByTagsAll(array $tagNames) // Returns items by all of multiple tag names
-- getItemsByTagsAsJsonString(array $tagNames) // Returns A json string that represents an array of items corresponding to given tags
-- getInstanceId() // Returns the instance ID
-- deleteItemsByTag($tagName) // Deletes items by a tag
-- deleteItemsByTags(array $tagNames) // Deletes items  by one of multiple tag names
-- deleteItemsByTagsAll(array $tagNames) // Deletes items by all of multiple tag names
-- incrementItemsByTag($tagName, $step = 1) // Increments items by a tag
-- incrementItemsByTags(array $tagNames, $step = 1) // Increments items by one of multiple tag names
-- incrementItemsByTagsAll(array $tagNames, $step = 1) // Increments items by all of multiple tag names
-- decrementItemsByTag($tagName, $step = 1) // Decrements items by a tag
-- decrementItemsByTags(array $tagNames, $step = 1) // Decrements items by one of multiple tag names
-- decrementItemsByTagsAll(array $tagNames, $step = 1) // Decrements items by all of multiple tag names
-- appendItemsByTag($tagName, $data) // Appends items by a tag
-- appendItemsByTags(array $tagNames, $data) // Appends items by one of multiple tag names
-- appendItemsByTagsAll(array $tagNames, $data) // Appends items by all of multiple tag names
-- prependItemsByTag($tagName, $data) // Prepends items by a tag
-- prependItemsByTags(array $tagNames, $data) // Prepends items by one of multiple tag names
-- prependItemsByTagsAll(array $tagNames, $data) // Prepends items by all of multiple tag names
-- detachItem($item) // Detaches an item from the pool
-- detachAllItems($item) // Detaches all items from the pool
-- attachItem($item) // (Re-)attaches an item to the pool
-- isAttached($item) // Verify if an item is (still) attached
-- setEventManager(EventManager $evtMngr) // Sets the event manager
-
+### ItemPool API (ExtendedCacheItemPoolInterface)
+| Method                                                 | Return                         | Description                                                                                      | 
+|--------------------------------------------------------|--------------------------------|--------------------------------------------------------------------------------------------------| 
+| `appendItemsByTag($tagName, $data)`                    | bool                           | Appends items by a tag                                                                           | 
+| `appendItemsByTags(array $tagNames, $data)`            | bool                           | Appends items by one of multiple tag names                                                       | 
+| `appendItemsByTagsAll(array $tagNames, $data)`         | bool                           | Appends items by all of multiple tag names                                                       | 
+| `attachItem($item)`                                    | void                           | (Re-)attaches an item to the pool                                                                | 
+| `clear()`                                              | bool                           | Allows you to completely empty the cache and restart from the beginning                          | 
+| `commit()`                                             | bool                           | Persists any deferred cache items                                                                | 
+| `decrementItemsByTag($tagName, $step = 1)`             | bool                           | Decrements items by a tag                                                                        | 
+| `decrementItemsByTags(array $tagNames, $step = 1)`     | bool                           | Decrements items by one of multiple tag names                                                    | 
+| `decrementItemsByTagsAll(array $tagNames, $step = 1)`  | bool                           | Decrements items by all of multiple tag names                                                    | 
+| `deleteItem($key)`                                     | bool                           | Deletes an item                                                                                  | 
+| `deleteItems(array $keys)`                             | bool                           | Deletes one or more items                                                                        | 
+| `deleteItemsByTag($tagName)`                           | bool                           | Deletes items by a tag                                                                           | 
+| `deleteItemsByTags(array $tagNames)`                   | bool                           | Deletes items  by one of multiple tag names                                                      | 
+| `deleteItemsByTagsAll(array $tagNames)`                | bool                           | Deletes items by all of multiple tag names                                                       | 
+| `detachAllItems($item)`                                | void                           | Detaches all items from the pool                                                                 | 
+| `detachItem($item)`                                    | void                           | Detaches an item from the pool                                                                   | 
+| `getConfig()`                                          | ConfigurationOption            | Returns the configuration object                                                                 | 
+| `getConfigOption($optionName);`                        | mixed                          | Returns a configuration value by its key `$optionName`                                           | 
+| `getDefaultConfig()`                                   | ConfigurationOption            | Returns the default configuration object (not altered by the object instance)                    | 
+| `getDriverName()`                                      | string                         | Returns the current driver name (without the namespace)                                          | 
+| `getHelp()`                                            | string                         | Provides a very basic help for a specific driver                                                 | 
+| `getInstanceId()`                                      | string                         | Returns the instance ID                                                                          | 
+| `getItem($key)`                                        | ExtendedCacheItemInterface     | Retrieves an item and returns an empty item if not found                                         | 
+| `getItems(array $keys)`                                | ExtendedCacheItemInterface[]   | Retrieves one or more item and returns an array of items                                         | 
+| `getItemsAsJsonString(array $keys)`                    | string                         | Returns A json string that represents an array of items                                          | 
+| `getItemsByTag($tagName)`                              | ExtendedCacheItemInterface[]   | Returns items by a tag                                                                           | 
+| `getItemsByTags(array $tagNames)`                      | ExtendedCacheItemInterface[]   | Returns items by one of multiple tag names                                                       | 
+| `getItemsByTagsAll(array $tagNames)`                   | ExtendedCacheItemInterface[]   | Returns items by all of multiple tag names                                                       | 
+| `getItemsByTagsAsJsonString(array $tagNames)`          | string                         | Returns A json string that represents an array of items corresponding                            | 
+| `getStats()`                                           | DriverStatistic                | Returns the cache statistics as an object, useful for checking disk space used by the cache etc. | 
+| `hasItem($key)`                                        | bool                           | Tests if an item exists                                                                          | 
+| `incrementItemsByTag($tagName, $step = 1)`             | bool                           | Increments items by a tag                                                                        | 
+| `incrementItemsByTags(array $tagNames, $step = 1)`     | bool                           | Increments items by one of multiple tag names                                                    | 
+| `incrementItemsByTagsAll(array $tagNames, $step = 1)`  | bool                           | Increments items by all of multiple tag names                                                    | 
+| `isAttached($item)`                                    | bool                           | Verify if an item is (still) attached                                                            | 
+| `prependItemsByTag($tagName, $data)`                   | bool                           | Prepends items by a tag                                                                          | 
+| `prependItemsByTags(array $tagNames, $data)`           | bool                           | Prepends items by one of multiple tag names                                                      | 
+| `prependItemsByTagsAll(array $tagNames, $data)`        | bool                           | Prepends items by all of multiple tag names                                                      | 
+| `save(CacheItemInterface $item)`                       | bool                           | Persists a cache item immediately                                                                | 
+| `saveDeferred(CacheItemInterface $item)`               | bool                           | Sets a cache item to be persisted later                                                          | 
+| `saveMultiple(...$items)`                              | bool                           | Persists multiple cache items immediately                                                        | 
+| `setEventManager(EventManager $evtMngr)`               | ExtendedCacheItemPoolInterface | Sets the event manager                                                                           |
+ 
 It also supports multiple calls, Tagging, Setup Folder for caching. Look at our examples folders for more information.
 
 ### PhpFastCache versioning API
@@ -157,17 +167,19 @@ Want to keep it simple ?
 ---------------------------
 :sweat_smile: Good news, as of the V6, a Psr16 adapter is provided to keep the cache simplest using very basic getters/setters:
 
-- get($key, $default = null);
-- set($key, $value, $ttl = null);
-- delete($key);
-- clear();
-- getMultiple($keys, $default = null);
-- setMultiple($values, $ttl = null);
-- deleteMultiple($keys);
-- has($key);
+- `get($key, $default = null);`
+- `set($key, $value, $ttl = null);`
+- `delete($key);`
+- `clear();`
+- `getMultiple($keys, $default = null);`
+- `setMultiple($values, $ttl = null);`
+- `deleteMultiple($keys);`
+- `has($key);`
 
 Basic usage:
 ```php
+<?php
+
 use Phpfastcache\Helper\Psr16Adapter;
 
 $Psr16Adapter = new Psr16Adapter($defaultDriver);
@@ -197,6 +209,8 @@ Introducing to events
 You can subscribe to an event by passing a Closure to an active event:
 
 ```php
+<?php
+
 use Phpfastcache\EventManager;
 
 /**
@@ -211,6 +225,7 @@ EventManager::getInstance()->onCacheGetItem(function(ExtendedCacheItemPoolInterf
 An event callback can get unbind but you MUST provide a name to the callback previously:
 
 ```php
+<?php
 use Phpfastcache\EventManager;
 
 /**
@@ -255,6 +270,7 @@ composer require phpFastCache/phpFastCache
 
 #### :construction: Step 2: Setup your website code to implement the phpFastCache calls (with Composer)
 ```php
+<?php
 use Phpfastcache\CacheManager;
 
 // Setup File Path on your config files

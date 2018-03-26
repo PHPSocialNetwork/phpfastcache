@@ -9,6 +9,7 @@
 - Updated ExtendedCacheItemPoolInterface to be compliant with the new \$config object introduced in V7.
 - ExtendedCacheItemPoolInterface::getConfig() no longer returns an array but a ConfigurationOption object
 - ExtendedCacheItemPoolInterface::getDefaultConfig() no longer returns an array but a ConfigurationOption object
+- Removed ExtendedCacheItemInterface::getUncommittedData() that is no longer used in the V7
 
 ## 1.3.0
 - Implemented full PHP7 type hint support for ExtendedCacheItemPoolInterface and ExtendedCacheItemInterface

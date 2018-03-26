@@ -98,14 +98,6 @@ trait ItemExtendedTrait
     }
 
     /**
-     * @return mixed
-     */
-    public function getUncommittedData()
-    {
-        return $this->data;
-    }
-
-    /**
      * @return \DateTimeInterface
      */
     public function getExpirationDate(): \DateTimeInterface

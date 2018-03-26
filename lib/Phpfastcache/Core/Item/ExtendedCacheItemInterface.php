@@ -38,11 +38,6 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
     public function getEncodedKey(): string;
 
     /**
-     * @return mixed
-     */
-    public function getUncommittedData();
-
-    /**
      * @return \DateTimeInterface
      */
     public function getExpirationDate(): \DateTimeInterface;

@@ -18,6 +18,7 @@ services:
   - memcached
   - redis-server
   - couchdb
+  - mongodb
 before_script:
   - |
     if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then

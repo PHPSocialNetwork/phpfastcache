@@ -20,6 +20,8 @@ services:
   - couchdb
   - mongodb
 before_script:
+  - sleep 15
+  - mongo pfc_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
   - |
     if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
       cat bin/ci/php_phpfastcache.ini >> /etc/hhvm/php.ini

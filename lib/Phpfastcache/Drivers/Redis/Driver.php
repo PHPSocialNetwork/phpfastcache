@@ -60,22 +60,24 @@ class Driver implements ExtendedCacheItemPoolInterface
         /**
          * If path is provided we consider it as an UNIX Socket
          */
-        if ($this->config->getOption('path')) {
-            $isConnected = $this->instance->connect($this->config->getOption('path'));
+        if ($this->getConfig()->getPath()) {
+            $isConnected = $this->instance->connect($this->getConfig()->getPath());
         } else {
-            $isConnected = $this->instance->connect($this->config->getOption('host'), $this->config->getOption('port'), (int)$this->config->getOption('timeout'));
+            $isConnected = $this->instance->connect($this->getConfig()->getHost(), $this->getConfig()->getHost(), $this->getConfig()->getTimeout());
         }
 
-        if (!$isConnected && $this->config->getOption('path')) {
+        if (!$isConnected && $this->getConfig()->getPath()) {
             return false;
-        } else if (!$this->config->getOption('path')) {
-            if ($this->config->getOption('password') && !$this->instance->auth($this->config->getOption('password'))) {
+        }
+
+        if (!$this->getConfig()->getPath()) {
+            if ($this->getConfig()->getPassword() && !$this->instance->auth($this->getConfig()->getPassword())) {
                 return false;
             }
         }
 
-        if ($this->config->getOption('database') !== null) {
-            $this->instance->select($this->config->getOption('database'));
+        if ($this->getConfig()->getDatabase() !== null) {
+            $this->instance->select($this->getConfig()->getDatabase());
         }
         return true;
     }

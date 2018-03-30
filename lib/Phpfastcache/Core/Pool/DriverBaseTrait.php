@@ -95,9 +95,11 @@ trait DriverBaseTrait
     /**
      * @param $optionName
      * @return mixed
+     * @deprecated Use getConfig()->getOptionName() instead
      */
     public function getConfigOption($optionName)
     {
+        trigger_error(sprintf('Method "%s" is deprecated, use "getConfig()->getOptionName()" instead', __METHOD__), E_USER_DEPRECATED);
         return $this->getConfig()->getOption($optionName);
     }
 
@@ -166,7 +168,7 @@ trait DriverBaseTrait
           self::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),
         ];
 
-        if ($this->config->getOption('itemDetailedDate')) {
+        if ($this->getConfig()->isItemDetailedDate()) {
             $wrap[ self::DRIVER_MDATE_WRAPPER_INDEX ] = new \DateTime();
             /**
              * If the creation date exists

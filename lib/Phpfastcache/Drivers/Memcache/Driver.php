@@ -70,15 +70,16 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected function driverConnect(): bool
     {
         $this->instance = new MemcacheSoftware();
-        $servers = (!empty($this->config->getOption('servers')) && \is_array($this->config->getOption('servers')) ? $this->config->getOption('servers') : []);
+        $servers = $this->getConfig()->getServers();
+
         if (\count($servers) < 1) {
             $servers = [
               [
-                'host' => !empty($this->config->getOption('host')) ? $this->config->getOption('host') : '127.0.0.1',
-                'path' => !empty($this->config->getOption('path')) ? $this->config->getOption('path') : false,
-                'port' => !empty($this->config->getOption('port')) ? $this->config->getOption('port') : 11211,
-                'saslUser' => !empty($this->config->getOption('saslUser')) ? $this->config->getOption('saslUser') : false,
-                'saslPassword' =>!empty($this->config->getOption('saslPassword')) ? $this->config->getOption('saslPassword'): false,
+                'host' => $this->getConfig()->getHost(),
+                'path' => $this->getConfig()->getPath(),
+                'port' => $this->getConfig()->getPort(),
+                'saslUser' => $this->getConfig()->getSaslUser() ?: false,
+                'saslPassword' => $this->getConfig()->getSaslPassword() ?: false,
               ],
             ];
         }

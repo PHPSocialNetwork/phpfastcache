@@ -55,10 +55,10 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverConnect(): bool
     {
-        if(!empty($this->config->getOption('path'))){
+        if(!empty($this->getConfig()->getPath())){
             $this->instance = new PredisClient([
               'scheme' => 'unix',
-              'path' =>  $this->config->getOption('path')
+              'path' =>  $this->getConfig()->getPath()
             ]);
         }else{
             $this->instance = new PredisClient($this->getConfig()->getPredisConfigArray());

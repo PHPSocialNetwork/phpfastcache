@@ -103,7 +103,7 @@ class Driver implements ExtendedCacheItemPoolInterface
              * Force write
              */
             try {
-                return $this->writefile($file_path, $data, $this->config->getOption('secureFileManipulation'));
+                return $this->writefile($file_path, $data, $this->getConfig()->isSecureFileManipulation());
             } catch (\Exception $e) {
                 return false;
             }

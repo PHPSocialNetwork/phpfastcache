@@ -83,7 +83,7 @@ class Driver implements ExtendedCacheItemPoolInterface
               self::DRIVER_EDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[ self::DRIVER_EDATE_WRAPPER_INDEX ]->toDateTime()->getTimestamp()),
             ];
 
-            if(!empty($this->getConfigOption('itemDetailedDate'))){
+            if(!empty($this->getConfig()->isItemDetailedDate())){
                 $return += [
                   self::DRIVER_MDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[ self::DRIVER_MDATE_WRAPPER_INDEX ]->toDateTime()
                     ->getTimestamp()),
@@ -117,7 +117,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                   self::DRIVER_EDATE_WRAPPER_INDEX => ($item->getTtl() > 0 ? new UTCDateTime((\time() + $item->getTtl()) * 1000) : new UTCDateTime(\time() * 1000)),
                 ];
 
-                if(!empty($this->getConfigOption('itemDetailedDate'))){
+                if(!empty($this->getConfig()->isItemDetailedDate())){
                     $set += [
                       self::DRIVER_MDATE_WRAPPER_INDEX => ($item->getModificationDate() ? new UTCDateTime(($item->getModificationDate()->getTimestamp()) * 1000) : new UTCDateTime(\time() * 1000)),
                       self::DRIVER_CDATE_WRAPPER_INDEX => ($item->getCreationDate() ? new UTCDateTime(($item->getCreationDate()->getTimestamp()) * 1000) : new UTCDateTime(\time() * 1000)),
@@ -181,9 +181,9 @@ class Driver implements ExtendedCacheItemPoolInterface
             throw new LogicException('Already connected to Mongodb server');
         }
 
-        $timeout = $this->getConfigOption('timeout') * 1000;
-        $collectionName = $this->getConfigOption('collectionName');
-        $databaseName = $this->getConfigOption('databaseName');
+        $timeout = $this->getConfig()->getTimeout() * 1000;
+        $collectionName = $this->getConfig()->getCollectionName();
+        $databaseName = $this->getConfig()->getDatabaseName();
 
         $this->instance = $this->instance ?: new Client($this->buildConnectionURI($databaseName), ['connectTimeoutMS' => $timeout]);
         $this->database = $this->database ?: $this->instance->selectDatabase($databaseName);
@@ -223,10 +223,10 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function buildConnectionURI($databaseName = ''): string
     {
-        $host = $this->getConfigOption('host');
-        $port = $this->getConfigOption('port');
-        $username =  $this->getConfigOption('username');
-        $password = $this->getConfigOption('password');
+        $host = $this->getConfig()->getHost();
+        $port = $this->getConfig()->getPort();
+        $username = $this->getConfig()->getUsername();
+        $password =  $this->getConfig()->getPassword();
 
         return implode('', [
           'mongodb://',
@@ -266,7 +266,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         ]))->toArray()[ 0 ];
 
         $collectionStats = $this->instance->getManager()->executeCommand('phpFastCache', new Command([
-          'collStats' => (isset($this->config[ 'collectionName' ]) ? $this->config[ 'collectionName' ] : 'Cache'),
+          'collStats' => (isset($this->getConfig()[ 'collectionName' ]) ? $this->getConfig()[ 'collectionName' ] : 'Cache'),
           'verbose' => true,
         ]))->toArray()[ 0 ];
 

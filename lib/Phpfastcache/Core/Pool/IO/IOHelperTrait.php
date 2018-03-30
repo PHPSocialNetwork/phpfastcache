@@ -21,6 +21,7 @@ use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\EventManager;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Util\Directory;
+use\Phpfastcache\Drivers\Files\Config;
 
 /**
  * Trait IOHelperTrait
@@ -28,6 +29,7 @@ use Phpfastcache\Util\Directory;
  * @property array $config The configuration array passed via DriverBaseTrait
  * @property ExtendedCacheItemInterface[] $itemInstances The item instance passed via CacheItemPoolTrait
  * @property EventManager $eventManager The event manager passed via CacheItemPoolTrait
+ * @method Config getConfig() Return the config object
  */
 trait IOHelperTrait
 {
@@ -52,7 +54,7 @@ trait IOHelperTrait
          * Calculate the security key
          */
         {
-            $securityKey = \array_key_exists('securityKey', $this->config) ? $this->config->getOption('securityKey') : '';
+            $securityKey = \array_key_exists('securityKey', $this->getConfig()) ? $this->getConfig()->getSecurityKey() : '';
             if (!$securityKey || mb_strtolower($securityKey) === 'auto') {
                 if (isset($_SERVER[ 'HTTP_HOST' ])) {
                     $securityKey = preg_replace('/^www./', '', \strtolower(\str_replace(':', '_', $_SERVER[ 'HTTP_HOST' ])));
@@ -74,10 +76,10 @@ trait IOHelperTrait
          */
         $tmp_dir = rtrim($tmp_dir, '/') . DIRECTORY_SEPARATOR;
 
-        if (empty($this->config->getOption('path')) || !\is_string($this->config->getOption('path'))) {
+        if (empty($this->getConfig()->getPath())) {
             $path = $tmp_dir;
         } else {
-            $path = rtrim($this->config->getOption('path'), '/') . DIRECTORY_SEPARATOR;
+            $path = rtrim($this->getConfig()->getPath(), '/') . DIRECTORY_SEPARATOR;
         }
 
         $path_suffix = $securityKey . DIRECTORY_SEPARATOR . $this->getDriverName();
@@ -92,7 +94,7 @@ trait IOHelperTrait
          * return the temp dir
          */
         if ($readonly === true) {
-            if ($this->config->getOption('autoTmpFallback') && (!@\file_exists($full_path) || !@\is_writable($full_path))) {
+            if ($this->getConfig()->isAutoTmpFallback() && (!@\file_exists($full_path) || !@\is_writable($full_path))) {
                 return $full_path_tmp;
             }
             return $full_path;
@@ -102,7 +104,7 @@ trait IOHelperTrait
             if (!@\file_exists($full_path)) {
                 @mkdir($full_path, $this->getDefaultChmod(), true);
             } else if (!@\is_writable($full_path)) {
-                if (!@chmod($full_path, $this->getDefaultChmod()) && $this->config->getOption('autoTmpFallback')) {
+                if (!@chmod($full_path, $this->getDefaultChmod()) && $this->getConfig()->isAutoTmpFallback()) {
                     /**
                      * Switch back to tmp dir
                      * again if the path is not writable
@@ -124,7 +126,7 @@ trait IOHelperTrait
             }
 
             $this->tmp[ $full_path_hash ] = $full_path;
-            $this->htaccessGen($full_path, \array_key_exists('htaccess', $this->config) ? $this->config->getOption('htaccess') : false);
+            $this->htaccessGen($full_path, \array_key_exists('htaccess', $this->getConfig()) ? $this->getConfig()->getHtaccess() : false);
         }
 
         return realpath($full_path);
@@ -160,7 +162,7 @@ trait IOHelperTrait
             }
         }
 
-        return $path . '/' . $filename . '.' . $this->config->getOption('cacheFileExtension');
+        return $path . '/' . $filename . '.' . $this->getConfig()->getCacheFileExtension();
     }
 
 
@@ -178,11 +180,11 @@ trait IOHelperTrait
      */
     protected function getDefaultChmod(): int
     {
-        if ($this->config->getOption('default_chmod') !== null || $this->config->getOption('default_chmod') == '' || is_null($this->config->getOption('default_chmod'))) {
+        if (!$this->getConfig()->getDefaultChmod()) {
             return 0777;
         }
 
-        return $this->config->getOption('default_chmod');
+        return $this->getConfig()->getDefaultChmod();
     }
 
     /**

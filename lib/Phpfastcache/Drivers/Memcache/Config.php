@@ -37,44 +37,44 @@ class Config extends ConfigurationOption
     /**
      * @var bool
      */
-    protected $saslUser = false;
+    protected $saslUser = '';
 
     /**
      * @var bool
      */
-    protected $saslPassword = false;
+    protected $saslPassword = '';
 
     /**
      * @return bool
      */
-    public function isSaslUser(): bool
+    public function getSaslUser(): string
     {
         return $this->saslUser;
     }
 
     /**
-     * @param bool $saslUser
+     * @param string $saslUser
      * @return self
      */
-    public function setSaslUser(bool $saslUser): self
+    public function setSaslUser(string $saslUser): self
     {
         $this->saslUser = $saslUser;
         return $this;
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isSaslPassword(): bool
+    public function getSaslPassword(): string
     {
         return $this->saslPassword;
     }
 
     /**
-     * @param bool $saslPassword
+     * @param string $saslPassword
      * @return self
      */
-    public function setSaslPassword(bool $saslPassword): self
+    public function setSaslPassword(string $saslPassword): self
     {
         $this->saslPassword = $saslPassword;
         return $this;

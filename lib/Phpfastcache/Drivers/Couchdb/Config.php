@@ -44,6 +44,29 @@ class Config extends ConfigurationOption
     protected $timeout = 10;
 
     /**
+     * @var string
+     */
+    protected $database = Driver::COUCHDB_DEFAULT_DB_NAME;
+
+    /**
+     * @return string
+     */
+    public function getDatabase(): string
+    {
+        return $this->database;
+    }
+
+    /**
+     * @param string $database
+     * @return Config
+     */
+    public function setDatabase(string $database): Config
+    {
+        $this->database = $database;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getHost(): string

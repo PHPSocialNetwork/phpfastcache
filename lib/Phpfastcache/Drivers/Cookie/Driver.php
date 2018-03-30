@@ -87,7 +87,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             $keyword = self::PREFIX . $item->getKey();
             $v = \json_encode($this->driverPreWrap($item));
 
-            if ($this->config->getOption('limited_memory_each_object') !== null && strlen($v) > $this->config->getOption('limited_memory_each_object')) {
+            if ($this->getConfig()->getLimitedMemoryByObject() !== null && \strlen($v) > $this->getConfig()->getLimitedMemoryByObject()) {
                 return false;
             }
 

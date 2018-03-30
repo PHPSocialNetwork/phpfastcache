@@ -23,6 +23,29 @@ class Config extends ConfigurationOption
     protected $htaccess = true;
 
     /**
+     * @var string
+     */
+    protected $securityKey = '';
+
+    /**
+     * @return string
+     */
+    public function getSecurityKey(): string
+    {
+        return $this->securityKey;
+    }
+
+    /**
+     * @param string $securityKey
+     * @return Config
+     */
+    public function setSecurityKey(string $securityKey): Config
+    {
+        $this->securityKey = $securityKey;
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function getHtaccess(): bool

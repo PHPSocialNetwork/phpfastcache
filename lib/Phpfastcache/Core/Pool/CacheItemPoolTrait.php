@@ -96,7 +96,7 @@ trait CacheItemPoolTrait
 
                         if ($this->getConfig()[ 'preventCacheSlams' ]) {
                             while ($driverData instanceof ItemBatch) {
-                                if ($driverData->getItemDate()->getTimestamp() + $this->getConfigOption('cacheSlamsTimeout') < \time()) {
+                                if ($driverData->getItemDate()->getTimestamp() + $this->getConfig()->getCacheSlamsTimeout() < \time()) {
                                     /**
                                      * The timeout has been reached
                                      * Consider that the batch has
@@ -128,7 +128,7 @@ trait CacheItemPoolTrait
                         $item->set($driverData);
                         $item->expiresAt($this->driverUnwrapEdate($driverArray));
 
-                        if ($this->getConfigOption( 'itemDetailedDate')) {
+                        if ($this->getConfig()->isItemDetailedDate()) {
                             /**
                              * If the itemDetailedDate has been
                              * set after caching, we MUST inject
@@ -158,7 +158,7 @@ trait CacheItemPoolTrait
                               ->expiresAfter(\abs((int)$this->getConfig()[ 'defaultTtl' ]))
                               ->setHit(false)
                               ->setTags([]);
-                            if ($this->getConfigOption( 'itemDetailedDate')) {
+                            if ($this->getConfig()->isItemDetailedDate()) {
 
                                 /**
                                  * If the itemDetailedDate has been
@@ -342,7 +342,7 @@ trait CacheItemPoolTrait
             $itemBatch = $class->newInstanceArgs([$this, $item->getKey()]);
             $itemBatch->setEventManager($this->eventManager)
               ->set(new ItemBatch($item->getKey(), new \DateTime()))
-              ->expiresAfter($this->getConfigOption('cacheSlamsTimeout'));
+              ->expiresAfter($this->getConfig()->getCacheSlamsTimeout());
 
             /**
              * To avoid SPL mismatches

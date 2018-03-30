@@ -145,48 +145,19 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            $skipExisting = $this->getConfigOption('skipExisting') ?: false;
-            $toWrite = true;
+            try {
+                $stm = $this->getDb($item->getKey())
+                  ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
+                $stm->execute([
+                  ':keyword' => $item->getKey(),
+                  ':object' => $this->encode($this->driverPreWrap($item)),
+                  ':exp' => $item->getExpirationDate()->getTimestamp(),
+                ]);
 
-            // check in cache first
-            $in_cache = $this->driverRead($item);
-
-            if ($skipExisting == true) {
-                if ($in_cache == null) {
-                    $toWrite = true;
-                } else {
-                    $toWrite = false;
-                }
+                return true;
+            } catch (\PDOException $e) {
+                return false;
             }
-
-            if ($toWrite == true) {
-                try {
-                    $stm = $this->getDb($item->getKey())
-                      ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
-                    $stm->execute([
-                      ':keyword' => $item->getKey(),
-                      ':object' => $this->encode($this->driverPreWrap($item)),
-                      ':exp' => $item->getExpirationDate()->getTimestamp(),
-                    ]);
-
-                    return true;
-                } catch (\PDOException $e) {
-
-                    try {
-                        $stm = $this->getDb($item->getKey(), true)
-                          ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
-                        $stm->execute([
-                          ':keyword' => $item->getKey(),
-                          ':object' => $this->encode($this->driverPreWrap($item)),
-                          ':exp' => $item->getExpirationDate()->getTimestamp(),
-                        ]);
-                    } catch (PDOException $e) {
-                        return false;
-                    }
-                }
-            }
-
-            return false;
         }
 
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');

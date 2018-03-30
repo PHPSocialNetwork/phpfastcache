@@ -196,7 +196,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function getDatabaseName(): string
     {
-        return $this->getConfigOption('database') ?: self::COUCHDB_DEFAULT_DB_NAME;
+        return $this->getConfig()->getDatabase() ?: self::COUCHDB_DEFAULT_DB_NAME;
     }
 
     /**

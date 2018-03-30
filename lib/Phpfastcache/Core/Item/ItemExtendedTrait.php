@@ -70,7 +70,7 @@ trait ItemExtendedTrait
             $this->driver = $driver;
             $this->driver->setItem($this);
             $this->expirationDate = new \DateTime();
-            if($this->driver->getConfigOption('itemDetailedDate')){
+            if($this->driver->getConfig()->isItemDetailedDate()){
                 $this->creationDate = new \DateTime();
                 $this->modificationDate = new \DateTime();
             }
@@ -85,7 +85,7 @@ trait ItemExtendedTrait
     public function getEncodedKey(): string
     {
         if (!$this->encodedKey) {
-            $keyHashFunction = $this->driver->getConfigOption('defaultKeyHashFunction');
+            $keyHashFunction = $this->driver->getConfig()->getDefaultKeyHashFunction();
 
             if ($keyHashFunction) {
                 $this->encodedKey = $keyHashFunction($this->getKey());

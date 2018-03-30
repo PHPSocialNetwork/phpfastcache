@@ -54,7 +54,7 @@ trait IOHelperTrait
          * Calculate the security key
          */
         {
-            $securityKey = \array_key_exists('securityKey', $this->getConfig()) ? $this->getConfig()->getSecurityKey() : '';
+            $securityKey = $this->getConfig()->getSecurityKey();
             if (!$securityKey || mb_strtolower($securityKey) === 'auto') {
                 if (isset($_SERVER[ 'HTTP_HOST' ])) {
                     $securityKey = preg_replace('/^www./', '', \strtolower(\str_replace(':', '_', $_SERVER[ 'HTTP_HOST' ])));

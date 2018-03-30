@@ -18,7 +18,6 @@ $cacheInstance = CacheManager::getInstance('Mongodb', [
     'password' => 'test',
 ]);
 
-
 $cacheKey = str_shuffle(uniqid('pfc', true));
 $cacheValue = str_shuffle(uniqid('pfc', true));
 
@@ -30,7 +29,6 @@ try{
 }catch(phpFastCacheDriverException $e){
     $testHelper->printFailText('Failed to save a new cache item into Mongodb server with exception: ' . $e->getMessage());
 }
-
 
 try{
     unset($item);

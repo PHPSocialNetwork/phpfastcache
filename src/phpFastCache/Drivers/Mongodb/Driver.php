@@ -18,11 +18,11 @@ namespace phpFastCache\Drivers\Mongodb;
 use LogicException;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\UTCDateTime;
+use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\DeleteResult;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\Exception as MongoDBException;
-use MongoDB\Driver\Manager as MongodbManager;
 use phpFastCache\Core\Pool\DriverBaseTrait;
 use phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface;
 use phpFastCache\Entities\DriverStatistic;
@@ -39,6 +39,11 @@ use Psr\Cache\CacheItemInterface;
 class Driver implements ExtendedCacheItemPoolInterface
 {
     use DriverBaseTrait;
+
+    /**
+     * @var Database
+     */
+    public $database;
 
     /**
      * @var Collection
@@ -66,12 +71,15 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck()
     {
-        if (!class_exists('MongoDB\Driver\Manager') && class_exists('MongoClient')) {
+        // Get if the (new) extension is installed by checking its class
+        $mongoExtensionExists = class_exists('MongoDB\Driver\Manager');
+
+        if (!$mongoExtensionExists && class_exists('MongoClient')) {
             trigger_error('This driver is used to support the pecl MongoDb extension with mongo-php-library.
             For MongoDb with Mongo PECL support use Mongo Driver.', E_USER_ERROR);
         }
-
-        return class_exists('MongoDB\Collection');
+        
+        return $mongoExtensionExists && class_exists('MongoDB\Collection');
     }
 
     /**
@@ -170,18 +178,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverClear()
     {
-        /**
-         * @var \MongoDB\Model\BSONDocument $result
-         */
-        $result = $this->getCollection()->drop()->getArrayCopy();
-        $this->collection = new Collection($this->instance, 'phpFastCache', 'Cache');
-
-        /**
-         * This will rebuild automatically the Collection indexes
-         */
-        $this->save($this->getItem('__PFC_CACHE_CLEARED__')->set(true));
-
-        return !empty($result[ 'ok' ]);
+        return $this->collection->deleteMany([])->isAcknowledged();
     }
 
     /**
@@ -194,29 +191,66 @@ class Driver implements ExtendedCacheItemPoolInterface
         if ($this->instance instanceof \MongoDB\Driver\Manager) {
             throw new LogicException('Already connected to Mongodb server');
         } else {
-            $host = isset($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1';
-            $port = isset($this->config[ 'port' ]) ? $this->config[ 'port' ] : '27017';
-            $timeout = isset($this->config[ 'timeout' ]) ? $this->config[ 'timeout' ] : 3;
-            $password = isset($this->config[ 'password' ]) ? $this->config[ 'password' ] : '';
-            $username = isset($this->config[ 'username' ]) ? $this->config[ 'username' ] : '';
+            $timeout = isset($this->config[ 'timeout' ]) ? $this->config[ 'timeout' ] * 1000 : 3000;
             $collectionName = isset($this->config[ 'collectionName' ]) ? $this->config[ 'collectionName' ] : 'Cache';
             $databaseName = isset($this->config[ 'databaseName' ]) ? $this->config[ 'databaseName' ] : 'phpFastCache';
 
+            $this->instance = $this->instance ?: (new Client($this->buildConnectionURI($databaseName), ['connectTimeoutMS' => $timeout]));
+            $this->database = $this->database ?: $this->instance->selectDatabase($databaseName);
 
-            /**
-             * @todo make an url builder
-             */
-            $this->instance = $this->instance ?: (new MongodbManager('mongodb://' .
-              ($username ?: '') .
-              ($password ? ":{$password}" : '') .
-              ($username ? '@' : '') . "{$host}" .
-              ($port != '27017' ? ":{$port}" : ''), ['connectTimeoutMS' => $timeout * 1000]));
-            $this->collection = $this->collection ?: new Collection($this->instance, $databaseName, $collectionName);
+            if (!$this->collectionExists($collectionName)) {
+                $this->database->createCollection($collectionName);
+            }
+
+            $this->collection = $this->database->selectCollection($collectionName);
 
             return true;
         }
     }
 
+    /**
+     * Checks if a collection name exists on the Mongo database.
+     *
+     * @param string $collectionName The collection name to check.
+     *
+     * @return bool True if the collection exists, false if not.
+     */
+    protected function collectionExists($collectionName)
+    {
+        foreach ($this->database->listCollections() as $collection) {
+            if ($collection->getName() == $collectionName) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    /**
+     * Builds the connection URI from the given parameters.
+     * 
+     * @param string $databaseName
+     * @return string The connection URI.
+     */
+    protected function buildConnectionURI($databaseName = '')
+    {
+        $host = isset($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1';
+        $port = isset($this->config[ 'port' ]) ? $this->config[ 'port' ] : '27017';
+        $password = isset($this->config[ 'password' ]) ? $this->config[ 'password' ] : '';
+        $username = isset($this->config[ 'username' ]) ? $this->config[ 'username' ] : '';
+
+        $parts = [
+            'mongodb://',
+            ($username ?: ''),
+            ($password ? ":{$password}" : ''),
+            ($username ? '@' : ''),
+            $host,
+            ($port != '27017' ? ":{$port}" : ''),
+            ($databaseName ? "/{$databaseName}" : '')
+        ];
+
+        return implode('', $parts);
+    }
 
     /**
      * @return Collection
@@ -237,14 +271,14 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function getStats()
     {
-        $serverStats = $this->instance->executeCommand('phpFastCache', new Command([
+        $serverStats = $this->instance->getManager()->executeCommand('phpFastCache', new Command([
           'serverStatus' => 1,
           'recordStats' => 0,
           'repl' => 0,
           'metrics' => 0,
         ]))->toArray()[ 0 ];
 
-        $collectionStats = $this->instance->executeCommand('phpFastCache', new Command([
+        $collectionStats = $this->instance->getManager()->executeCommand('phpFastCache', new Command([
           'collStats' => (isset($this->config[ 'collectionName' ]) ? $this->config[ 'collectionName' ] : 'Cache'),
           'verbose' => true,
         ]))->toArray()[ 0 ];

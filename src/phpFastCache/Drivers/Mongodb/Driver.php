@@ -178,18 +178,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverClear()
     {
-        /**
-         * @var \MongoDB\Model\BSONDocument $result
-         */
-        $result = $this->getCollection()->drop()->getArrayCopy();
-        $this->collection = new Collection($this->instance, 'phpFastCache', 'Cache');
-
-        /**
-         * This will rebuild automatically the Collection indexes
-         */
-        $this->save($this->getItem('__PFC_CACHE_CLEARED__')->set(true));
-
-        return !empty($result[ 'ok' ]);
+        return $this->collection->deleteMany([])->isAcknowledged();
     }
 
     /**

@@ -256,7 +256,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             ($password ? ":{$password}" : ''),
             ($username ? '@' : ''),
             $host,
-            ($port != '27017' ? ":{$port}" : '')
+            ($port != '27017' ? ":{$port}" : ''),
             ($databaseName ? "/{$databaseName}" : '')
         ];
 

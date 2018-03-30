@@ -6,17 +6,18 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Drivers\Mongodb\Config;
 use Phpfastcache\Exceptions\phpFastCacheDriverException;
 use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Mongodb driver');
-$cacheInstance = CacheManager::getInstance('Mongodb', [
+$cacheInstance = CacheManager::getInstance('Mongodb', new Config([
   'databaseName' => 'pfc_test',
   'username' => 'travis',
   'password' => 'test',
-]);
+]));
 
 $cacheKey = str_shuffle(uniqid('pfc', true));
 $cacheValue = str_shuffle(uniqid('pfc', true));

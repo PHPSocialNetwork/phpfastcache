@@ -63,7 +63,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         if ($this->getConfig()->getPath()) {
             $isConnected = $this->instance->connect($this->getConfig()->getPath());
         } else {
-            $isConnected = $this->instance->connect($this->getConfig()->getHost(), $this->getConfig()->getHost(), $this->getConfig()->getTimeout());
+            $isConnected = $this->instance->connect($this->getConfig()->getHost(), $this->getConfig()->getPort(), $this->getConfig()->getTimeout());
         }
 
         if (!$isConnected && $this->getConfig()->getPath()) {

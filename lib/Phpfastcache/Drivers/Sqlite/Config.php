@@ -8,30 +8,11 @@
 
 namespace Phpfastcache\Drivers\Sqlite;
 
-use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Config\{
+  ConfigurationOption, IOConfigurationOptionTrait
+};
 
 class Config extends ConfigurationOption
 {
-    /**
-     * @var string
-     */
-    protected $htaccess = true;
-
-    /**
-     * @return bool
-     */
-    public function getHtaccess(): bool
-    {
-        return $this->htaccess;
-    }
-
-    /**
-     * @param bool $htaccess
-     * @return Config
-     */
-    public function setHtaccess(bool $htaccess): self
-    {
-        $this->htaccess = $htaccess;
-        return $this;
-    }
+    use IOConfigurationOptionTrait;
 }

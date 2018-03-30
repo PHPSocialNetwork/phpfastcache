@@ -61,4 +61,18 @@ try{
     $testHelper->printFailText('Failed to clear the Mongodb server with exception: ' . $e->getMessage());
 }
 
+try{
+    $item = $cacheInstance->getItem($cacheKey);
+    $item->set($cacheValue)->expiresAfter(300);
+    $cacheInstance->save($item);
+
+    if($cacheInstance->deleteItem($item->getKey())){
+        $testHelper->printPassText('Deleter successfully removed the item from cache');
+    }else{
+        $testHelper->printFailText('Deleter failed to remove the item from cache');
+    }
+}catch(phpFastCacheDriverException $e){
+    $testHelper->printFailText('Failed to remove a cache item from Mongodb server with exception: ' . $e->getMessage());
+}
+
 $testHelper->terminateTest();

@@ -99,7 +99,7 @@ class CacheManager
             throw new PhpfastcacheInvalidArgumentException('The Instance ID must be a string');
         }
 
-        if (is_array($config)) {
+        if (\is_array($config)) {
             $config = new ConfigurationOption($config);
             trigger_error(
               'The CacheManager will drops the support of primitive configuration arrays, use a "\Phpfastcache\Config\ConfigurationOption" object instead',

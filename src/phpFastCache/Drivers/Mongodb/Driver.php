@@ -206,7 +206,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             $collectionName = isset($this->config[ 'collectionName' ]) ? $this->config[ 'collectionName' ] : 'Cache';
             $databaseName = isset($this->config[ 'databaseName' ]) ? $this->config[ 'databaseName' ] : 'phpFastCache';
 
-            $this->instance = $this->instance ?: (new Client($this->buildConnectionURI(), ['connectTimeoutMS' => $timeout]));
+            $this->instance = $this->instance ?: (new Client($this->buildConnectionURI($databaseName), ['connectTimeoutMS' => $timeout]));
             $this->database = $this->database ?: $this->instance->selectDatabase($databaseName);
 
             if (!$this->collectionExists($collectionName)) {
@@ -240,9 +240,10 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * Builds the connection URI from the given parameters.
      * 
+     * @param string $databaseName
      * @return string The connection URI.
      */
-    protected function buildConnectionURI()
+    protected function buildConnectionURI($databaseName = '')
     {
         $host = isset($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1';
         $port = isset($this->config[ 'port' ]) ? $this->config[ 'port' ] : '27017';
@@ -256,6 +257,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             ($username ? '@' : ''),
             $host,
             ($port != '27017' ? ":{$port}" : '')
+            ($databaseName ? "/{$databaseName}" : '')
         ];
 
         return implode('', $parts);

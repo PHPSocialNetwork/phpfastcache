@@ -20,6 +20,7 @@ services:
   - couchdb
   - mongodb
 before_script:
+  - pecl channel-update pecl.php.net
   - pecl install -f mongodb-stable
   - sleep 15
   - mongo pfc_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'

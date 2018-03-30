@@ -18,7 +18,7 @@ namespace Phpfastcache\Drivers\Mongodb;
 
 use LogicException;
 use MongoDB\{
-  BSON\Binary, BSON\UTCDateTime, Collection, DeleteResult, Driver\Command, Driver\Exception\Exception as MongoDBException, Driver\Manager as MongodbManager
+  Client, Database, BSON\Binary, BSON\UTCDateTime, Collection, DeleteResult, Driver\Command, Driver\Exception\Exception as MongoDBException
 };
 use Phpfastcache\Core\Pool\{
   DriverBaseTrait, ExtendedCacheItemPoolInterface
@@ -27,13 +27,13 @@ use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
   PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException
 };
-use Phpfastcache\Util\ArrayObject;
+
 use Psr\Cache\CacheItemInterface;
 
 /**
  * Class Driver
  * @package phpFastCache\Drivers
- * @property MongodbManager $instance Instance of driver service
+ * @property Client $instance Instance of driver service
  * @property Config $config Config object
  * @method Config getConfig() Return the config object
  */
@@ -49,16 +49,23 @@ class Driver implements ExtendedCacheItemPoolInterface
     public $collection;
 
     /**
+     * @var Database
+     */
+    public $database;
+
+    /**
      * @return bool
      */
     public function driverCheck(): bool
     {
-        if (!class_exists('MongoDB\Driver\Manager') && \class_exists('MongoClient')) {
+        $mongoExtensionExists = class_exists(\MongoDB\Driver\Manager::class);
+
+        if (!$mongoExtensionExists && class_exists(\MongoClient::class)) {
             trigger_error('This driver is used to support the pecl MongoDb extension with mongo-php-library.
             For MongoDb with Mongo PECL support use Mongo Driver.', E_USER_ERROR);
         }
 
-        return \extension_loaded('Mongodb') && \class_exists('MongoDB\Collection');
+        return $mongoExtensionExists && class_exists(\MongoDB\Collection::class);
     }
 
     /**
@@ -160,18 +167,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverClear(): bool
     {
-        /**
-         * @var \MongoDB\Model\BSONDocument $result
-         */
-        $result = $this->getCollection()->drop()->getArrayCopy();
-        $this->collection = new Collection($this->instance, $this->getConfigOption('databaseName'), 'Cache');
-
-        /**
-         * This will rebuild automatically the Collection indexes
-         */
-        $this->save($this->getItem('__PFC_CACHE_CLEARED__')->set(true));
-
-        return !empty($result[ 'ok' ]);
+        return $this->collection->deleteMany([])->isAcknowledged();
     }
 
     /**
@@ -179,27 +175,69 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @throws MongodbException
      * @throws LogicException
      */
-    protected function driverConnect()
+    protected function driverConnect(): bool
     {
-        if ($this->instance instanceof \MongoDB\Driver\Manager) {
+        if ($this->instance instanceof Client) {
             throw new LogicException('Already connected to Mongodb server');
         }
 
-        $clientConfig = $this->getConfig();
+        $timeout = $this->getConfigOption('timeout') * 1000;
+        $collectionName = $this->getConfigOption('collectionName');
+        $databaseName = $this->getConfigOption('databaseName');
 
-        /**
-         * @todo make an url builder
-         */
-        $this->instance = $this->instance ?: (new MongodbManager('mongodb://' .
-          ($clientConfig[ 'username' ] ?: '') .
-          ($clientConfig[ 'password' ] ? ":{$clientConfig['password']}" : '') .
-          ($clientConfig[ 'username' ] ? '@' : '') . "{$clientConfig['host']}" .
-          ($clientConfig[ 'port' ] != 27017 ? ":{$clientConfig['port']}" : ''), ['connectTimeoutMS' => $clientConfig[ 'timeout' ] * 1000]));
-        $this->collection = $this->collection ?: new Collection($this->instance, $clientConfig[ 'databaseName' ], $clientConfig[ 'collectionName' ]);
+        $this->instance = $this->instance ?: new Client($this->buildConnectionURI($databaseName), ['connectTimeoutMS' => $timeout]);
+        $this->database = $this->database ?: $this->instance->selectDatabase($databaseName);
+
+        if (!$this->collectionExists($collectionName)) {
+            $this->database->createCollection($collectionName);
+        }
+
+        $this->collection = $this->database->selectCollection($collectionName);
 
         return true;
     }
 
+    /**
+     * Checks if a collection name exists on the Mongo database.
+     *
+     * @param string $collectionName The collection name to check.
+     *
+     * @return bool True if the collection exists, false if not.
+     */
+    protected function collectionExists($collectionName): bool
+    {
+        foreach ($this->database->listCollections() as $collection) {
+            if ($collection->getName() === $collectionName) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Builds the connection URI from the given parameters.
+     *
+     * @param string $databaseName
+     * @return string The connection URI.
+     */
+    protected function buildConnectionURI($databaseName = ''): string
+    {
+        $host = $this->getConfigOption('host');
+        $port = $this->getConfigOption('port');
+        $username =  $this->getConfigOption('username');
+        $password = $this->getConfigOption('password');
+
+        return implode('', [
+          'mongodb://',
+          ($username ?: ''),
+          ($password ? ":{$password}" : ''),
+          ($username ? '@' : ''),
+          $host,
+          ($port !== 27017 ? ":{$port}" : ''),
+          ($databaseName ? "/{$databaseName}" : '')
+        ]);
+    }
 
     /**
      * @return Collection
@@ -220,15 +258,15 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function getStats(): DriverStatistic
     {
-        $serverStats = $this->instance->executeCommand($this->getConfigOption('databaseName'), new Command([
+        $serverStats = $this->instance->getManager()->executeCommand('phpFastCache', new Command([
           'serverStatus' => 1,
           'recordStats' => 0,
           'repl' => 0,
           'metrics' => 0,
         ]))->toArray()[ 0 ];
 
-        $collectionStats = $this->instance->executeCommand($this->getConfigOption('databaseName'), new Command([
-          'collStats' => ($this->config->getOption('collectionName') !== null ? $this->config->getOption('collectionName') : 'Cache'),
+        $collectionStats = $this->instance->getManager()->executeCommand('phpFastCache', new Command([
+          'collStats' => (isset($this->config[ 'collectionName' ]) ? $this->config[ 'collectionName' ] : 'Cache'),
           'verbose' => true,
         ]))->toArray()[ 0 ];
 
@@ -237,7 +275,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
             if (\is_object($array) || \is_array($array)) {
                 foreach ($array as &$value) {
-                    $value = call_user_func($array_filter_recursive, $value, $callback);
+                    $value = \call_user_func($array_filter_recursive, $value, $callback);
                 }
             }
 
@@ -258,7 +296,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $collectionStats = $array_filter_recursive($collectionStats, $callback);
 
         $stats = (new DriverStatistic())
-          ->setInfo('MongoDB version ' . $serverStats->version . ', Uptime (in days): ' . round($serverStats->uptime / 86400,
+          ->setInfo('MongoDB version ' . $serverStats->version . ', Uptime (in days): ' . \round($serverStats->uptime / 86400,
               1) . "\n For more information see RawData.")
           ->setSize($collectionStats->size)
           ->setData(\implode(', ', \array_keys($this->itemInstances)))

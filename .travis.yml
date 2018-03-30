@@ -19,8 +19,13 @@ services:
   - redis-server
   - couchdb
   - riak
+  - mongodb
 
 before_script:
+  - pecl channel-update pecl.php.net
+  - pecl install -f mongodb-stable
+  - sleep 15
+  - mongo pfc_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
   - |
     if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
       cat bin/ci/hhvm_phpfastcache.ini >> /etc/hhvm/php.ini

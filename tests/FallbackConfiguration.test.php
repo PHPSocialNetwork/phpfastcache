@@ -12,7 +12,7 @@ use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/mock/autoload.php';
+require_once __DIR__ . '/mock/Autoload.php';
 $testHelper = new TestHelper('Custom namespaces');
 
 if(!class_exists(Phpfastcache\Drivers\Fakefiles\Item::class)

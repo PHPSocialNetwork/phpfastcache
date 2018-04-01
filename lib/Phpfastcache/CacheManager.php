@@ -52,6 +52,8 @@ use Phpfastcache\Util\ClassNamespaceResolverTrait;
  */
 class CacheManager
 {
+    const AUTOMATIC_DRIVER_CLASS = 'Auto';
+
     use ClassNamespaceResolverTrait;
 
     /**
@@ -78,6 +80,16 @@ class CacheManager
      * @var ExtendedCacheItemPoolInterface[]
      */
     protected static $instances = [];
+
+    /**
+     * @var array
+     */
+    protected static $driverOverrides = [];
+
+    /**
+     * @var array
+     */
+    protected static $driverCustoms = [];
 
     /**
      * @param string $driver
@@ -113,7 +125,7 @@ class CacheManager
 
         $driver = self::standardizeDriverName($driver);
 
-        if (!$driver || $driver === 'Auto') {
+        if (!$driver || $driver === self::AUTOMATIC_DRIVER_CLASS) {
             $driver = self::getAutoClass($config);
         }
 
@@ -121,7 +133,7 @@ class CacheManager
 
         if (!isset(self::$instances[ $instance ])) {
             $badPracticeOmeter[ $driver ] = 1;
-            $driverClass = self::getNamespacePath() . $driver . '\Driver';
+            $driverClass = self::getDriverClass($driver);
             try {
                 if (\class_exists($driverClass)) {
                     $configClass = $driverClass::getConfigClass();
@@ -274,9 +286,11 @@ class CacheManager
 
     /**
      * @param string $path
+     * @deprecated This method has been deprecated as of V7, please use driver override feature instead
      */
     public static function setNamespacePath($path)
     {
+        trigger_error('This method has been deprecated as of V7, please use cache manager "override" or "custom driver" features instead', E_USER_DEPRECATED);
         self::$namespacePath = \trim($path, "\\") . '\\';
     }
 
@@ -363,6 +377,10 @@ class CacheManager
                 $driverList = array_values(array_unique($driverList));
             }
 
+            $driverList = array_merge($driverList, array_keys(self::$driverCustoms));
+
+            sort($driverList);
+
             return $driverList;
         }
 
@@ -376,5 +394,128 @@ class CacheManager
     public static function standardizeDriverName(string $driverName): string
     {
         return \ucfirst(\strtolower(\trim($driverName)));
+    }
+
+    /**
+     * @param string $driverName
+     * @return string
+     */
+    public static function getDriverClass(string $driverName): string
+    {
+        if(!empty(self::$driverCustoms[$driverName])){
+            $driverClass = self::$driverCustoms[$driverName];
+        }else if(!empty(self::$driverOverrides[$driverName])){
+            $driverClass = self::$driverOverrides[$driverName];
+        } else{
+            $driverClass = self::getNamespacePath() . $driverName . '\Driver';
+        }
+
+        return $driverClass;
+    }
+
+    /**
+     * @param string $driverName
+     * @param string $className
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheLogicException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheUnsupportedOperationException
+     * @return void
+     */
+    public static function addCustomDriver(string $driverName, string $className){
+        $driverName = self::standardizeDriverName($driverName);
+
+        if(empty($driverName)){
+            throw new PhpfastcacheInvalidArgumentException("Can't add a custom driver because its name is empty");
+        }
+
+        if(!\class_exists($className)){
+            throw new PhpfastcacheInvalidArgumentException(
+              sprintf("Can't add '%s' because the class '%s' does not exists", $driverName, $className)
+            );
+        }
+
+        if(!empty(self::$driverCustoms[$driverName])){
+            throw new PhpfastcacheLogicException(sprintf("Driver '%s' has been already added", $driverName));
+        }
+
+        if(\in_array($driverName, self::getDriverList(), true)){
+            throw new PhpfastcacheLogicException(sprintf("Driver '%s' is already a part of the PhpFastCache core", $driverName));
+        }
+
+        self::$driverCustoms[$driverName] = $className;
+    }
+
+    /**
+     * @param string $driverName
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheLogicException
+     * @return void
+     */
+    public static function removeCustomDriver(string $driverName)
+    {
+        $driverName = self::standardizeDriverName($driverName);
+
+        if(empty($driverName)){
+            throw new PhpfastcacheInvalidArgumentException("Can't remove a custom driver because its name is empty");
+        }
+
+        if(!isset(self::$driverCustoms[$driverName])){
+            throw new PhpfastcacheLogicException(sprintf("Driver '%s' does not exists", $driverName));
+        }
+
+        unset(self::$driverCustoms[$driverName]);
+    }
+
+    /**
+     * @param string $driverName
+     * @param string $className
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheLogicException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheUnsupportedOperationException
+     * @return void
+     */
+    public static function addCoreDriverOverride(string $driverName, string $className){
+        $driverName = self::standardizeDriverName($driverName);
+
+        if(empty($driverName)){
+            throw new PhpfastcacheInvalidArgumentException("Can't add a core driver override because its name is empty");
+        }
+
+        if(!\class_exists($className)){
+            throw new PhpfastcacheInvalidArgumentException(
+              sprintf("Can't override '%s' because the class '%s' does not exists", $driverName, $className)
+            );
+        }
+
+        if(!empty(self::$driverOverrides[$driverName])){
+            throw new PhpfastcacheLogicException(sprintf("Driver '%s' has been already overridden", $driverName));
+        }
+
+        if(!\in_array($driverName, self::getDriverList(), true)){
+            throw new PhpfastcacheLogicException(sprintf("Driver '%s' can't be overridden since its not a part of the PhpFastCache core", $driverName));
+        }
+
+        self::$driverOverrides[$driverName] = $className;
+    }
+
+    /**
+     * @param string $driverName
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheLogicException
+     * @return void
+     */
+    public static function removeCoreDriverOverride(string $driverName)
+    {
+        $driverName = self::standardizeDriverName($driverName);
+
+        if(empty($driverName)){
+            throw new PhpfastcacheInvalidArgumentException("Can't remove a core driver override because its name is empty");
+        }
+
+        if(!isset(self::$driverOverrides[$driverName])){
+            throw new PhpfastcacheLogicException(sprintf("Driver '%s' were not overridden", $driverName));
+        }
+
+        unset(self::$driverOverrides[$driverName]);
     }
 }

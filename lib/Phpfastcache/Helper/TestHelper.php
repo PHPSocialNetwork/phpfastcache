@@ -121,6 +121,17 @@ class TestHelper
      * @param string $string
      * @return $this
      */
+    public function printNoteText($string): self
+    {
+        $this->printText("[NOTE] {$string}");
+
+        return $this;
+    }
+
+    /**
+     * @param string $string
+     * @return $this
+     */
     public function printFailText($string): self
     {
         $this->printText("[FAIL] {$string}");

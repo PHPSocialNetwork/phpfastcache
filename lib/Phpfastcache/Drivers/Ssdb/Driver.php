@@ -57,9 +57,9 @@ class Driver implements ExtendedCacheItemPoolInterface
         try {
             $clientConfig = $this->getConfig();
 
-            $this->instance = new SimpleSSDB($clientConfig[ 'host' ], $clientConfig[ 'port' ], $clientConfig[ 'timeout' ]);
-            if (!empty($clientConfig[ 'password' ])) {
-                $this->instance->auth($clientConfig[ 'password' ]);
+            $this->instance = new SimpleSSDB($clientConfig->getHost(), $clientConfig->getPort(), $clientConfig->getTimeout());
+            if (!empty($clientConfig->getPassword())) {
+                $this->instance->auth($clientConfig->getPassword());
             }
 
             if (!$this->instance) {

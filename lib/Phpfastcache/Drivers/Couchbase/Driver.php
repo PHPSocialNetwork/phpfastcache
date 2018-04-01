@@ -67,16 +67,16 @@ class Driver implements ExtendedCacheItemPoolInterface
 
         $clientConfig = $this->getConfig();
 
-        $this->instance = new CouchbaseClient("couchbase://{$clientConfig['host']}:{$clientConfig['port']}");
+        $this->instance = new CouchbaseClient("couchbase://{$clientConfig->getHost()}:{$clientConfig->getPort()}");
 
-        if ($clientConfig[ 'username' ]) {
+        if ($clientConfig->getUsername()) {
             $authenticator = new \Couchbase\ClassicAuthenticator();
-            $authenticator->cluster($clientConfig[ 'username' ], $clientConfig[ 'password' ]);
+            $authenticator->cluster($clientConfig->getUsername(), $clientConfig->getPassword());
             //$authenticator->bucket('protected', 'secret');
             $this->instance->authenticate($authenticator);
         }
 
-        foreach ($clientConfig[ 'buckets' ] as $bucket) {
+        foreach ($clientConfig->getBuckets() as $bucket) {
             $this->bucketCurrent = $this->bucketCurrent ?: $bucket[ 'bucket' ];
             $this->setBucket($bucket[ 'bucket' ], $this->instance->openBucket($bucket[ 'bucket' ], $bucket[ 'password' ]));
         }

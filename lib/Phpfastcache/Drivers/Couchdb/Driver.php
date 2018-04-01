@@ -62,22 +62,22 @@ class Driver implements ExtendedCacheItemPoolInterface
 
         $clientConfig = $this->getConfig();
 
-        $url = ($clientConfig[ 'ssl' ] ? 'https://' : 'http://');
-        if ($clientConfig[ 'username' ]) {
-            $url .= "{$clientConfig['username']}";
-            if ($clientConfig[ 'password' ]) {
-                $url .= ":{$clientConfig['password']}";
+        $url = ($clientConfig->isSsl() ? 'https://' : 'http://');
+        if ($clientConfig->getUsername()) {
+            $url .= $clientConfig->getUsername();
+            if ($clientConfig->getPassword()) {
+                $url .= ":{$clientConfig->getPassword()}";
             }
             $url .= '@';
         }
-        $url .= $clientConfig[ 'host' ];
-        $url .= ":{$clientConfig['port']}";
-        $url .= $clientConfig[ 'path' ];
+        $url .= $clientConfig->getHost();
+        $url .= ":{$clientConfig->getPort()}";
+        $url .= $clientConfig->getPath();
 
         $this->instance = CouchDBClient::create([
           'dbname' => $this->getDatabaseName(),
           'url' => $url,
-          'timeout' => $clientConfig[ 'timeout' ],
+          'timeout' => $clientConfig->getTimeout(),
         ]);
 
         $this->createDatabase();
@@ -100,11 +100,13 @@ class Driver implements ExtendedCacheItemPoolInterface
 
         if ($response->status === 404 || empty($response->body[ 'data' ])) {
             return null;
-        } else if ($response->status === 200) {
-            return $this->decode($response->body[ 'data' ]);
-        } else {
-            throw new PhpfastcacheDriverException('Got unexpected HTTP status: ' . $response->status);
         }
+
+        if ($response->status === 200) {
+            return $this->decode($response->body[ 'data' ]);
+        }
+
+        throw new PhpfastcacheDriverException('Got unexpected HTTP status: ' . $response->status);
     }
 
 

@@ -61,11 +61,11 @@ class Driver implements ExtendedCacheItemPoolInterface
         $clientConfig = $this->getConfig();
 
         $clusterBuilder = Cassandra::cluster()
-          ->withContactPoints($clientConfig[ 'host' ])
-          ->withPort($clientConfig[ 'port' ]);
+          ->withContactPoints($clientConfig->getHost())
+          ->withPort($clientConfig->getPort());
 
-        if (!empty($clientConfig[ 'sslEnabled' ])) {
-            if (!empty($clientConfig[ 'sslVerify' ])) {
+        if (!empty($clientConfig->isSslEnabled())) {
+            if (!empty($clientConfig->isSslVerify())) {
                 $sslBuilder = Cassandra::ssl()->withVerifyFlags(Cassandra::VERIFY_PEER_CERT);
             } else {
                 $sslBuilder = Cassandra::ssl()->withVerifyFlags(Cassandra::VERIFY_NONE);
@@ -74,10 +74,10 @@ class Driver implements ExtendedCacheItemPoolInterface
             $clusterBuilder->withSSL($sslBuilder->build());
         }
 
-        $clusterBuilder->withConnectTimeout($clientConfig[ 'timeout' ]);
+        $clusterBuilder->withConnectTimeout($clientConfig->getTimeout());
 
-        if ($clientConfig[ 'username' ]) {
-            $clusterBuilder->withCredentials($clientConfig[ 'username' ], $clientConfig[ 'password' ]);
+        if ($clientConfig->getUsername()) {
+            $clusterBuilder->withCredentials($clientConfig->getUsername(), $clientConfig->getPassword());
         }
 
         $this->instance = $clusterBuilder->build()->connect();

@@ -9,8 +9,6 @@ use Phpfastcache\CacheManager;
 use Phpfastcache\Drivers\Fakefiles\Config;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
-use Phpfastcache\Exceptions\PhpfastcacheLogicException;
-use Phpfastcache\Helper\CacheConditionalHelper as CacheConditional;
 use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
@@ -29,33 +27,38 @@ if (!class_exists(Phpfastcache\Drivers\Fakefiles\Item::class)
 }
 
 try {
-    CacheManager::addCoreDriverOverride('Fakefiles', \Phpfastcache\Drivers\Fakefiles\Driver::class);
-    $testHelper->printFailText('No exception thrown while trying to override an non-existing driver');
-} catch (PhpfastcacheLogicException $e) {
-    $testHelper->printPassText('An exception has been thrown while trying to override an non-existing driver');
+    CacheManager::addCustomDriver('Fakefiles', \Phpfastcache\Drivers\Fakefiles\Driver::class);
+    $testHelper->printPassText('No exception thrown while trying to add a custom driver');
+} catch (\Throwable $e) {
+    $testHelper->printFailText('An exception has been thrown while trying to add a custom driver');
 }
 
 try {
-    CacheManager::addCoreDriverOverride('', \Phpfastcache\Drivers\Fakefiles\Driver::class);
+    CacheManager::addCustomDriver('Fakefiles', \Phpfastcache\Drivers\Fakefiles\Driver::class);
+    $testHelper->printFailText('No exception thrown  while trying to re-add a the same custom driver');
+} catch (\Throwable $e) {
+    $testHelper->printPassText('An exception has been thrown while trying to re-add a the same custom driver');
+}
+
+try {
+    CacheManager::addCustomDriver('', \Phpfastcache\Drivers\Fakefiles\Driver::class);
     $testHelper->printFailText('No exception thrown while trying to override an empty driver');
 } catch (PhpfastcacheInvalidArgumentException $e) {
     $testHelper->printPassText('An exception has been thrown while trying to override an empty driver');
 }
 
-CacheManager::addCoreDriverOverride('Files', \Phpfastcache\Drivers\Fakefiles\Driver::class);
-
 try{
-    $cacheInstance = CacheManager::getInstance('Files', new Config(['customOption' => true]));
+    $cacheInstance = CacheManager::getInstance('Fakefiles', new Config(['customOption' => true]));
     $testHelper->printPassText('The custom driver is unavailable at the moment and no exception has been thrown.');
 }catch (PhpfastcacheDriverCheckException $e){
     $testHelper->printPassText('The custom driver is unavailable at the moment and the exception has been catch.');
 }
 
-CacheManager::removeCoreDriverOverride('Files');
+CacheManager::removeCustomDriver('Fakefiles');
 
 try{
-    $cacheInstance = CacheManager::getInstance('Files');
-    $testHelper->printPassText('The custom driver has been removed but is still.');
+    $cacheInstance = CacheManager::getInstance('Fakefiles');
+    $testHelper->printPassText('The custom driver has been removed but is still active.');
 }catch (PhpfastcacheDriverCheckException $e){
     $testHelper->printPassText('The custom driver is unavailable at the moment and the exception has been catch.');
 }

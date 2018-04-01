@@ -18,7 +18,7 @@ namespace Phpfastcache;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheDeprecatedException, PhpfastcacheDriverCheckException, PhpfastcacheDriverNotFoundException, PhpfastcacheInstanceNotFoundException, PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidConfigurationException, PhpfastcacheLogicException, PhpfastcacheUnsupportedOperationException
+  PhpfastcacheDeprecatedException, PhpfastcacheDriverCheckException, PhpfastcacheDriverException, PhpfastcacheDriverNotFoundException, PhpfastcacheInstanceNotFoundException, PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidConfigurationException, PhpfastcacheLogicException, PhpfastcacheUnsupportedOperationException
 };
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
 
@@ -102,6 +102,7 @@ class CacheManager
      * @throws PhpfastcacheInvalidConfigurationException
      * @throws PhpfastcacheDriverNotFoundException
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheDriverException
      */
     public static function getInstance($driver = 'auto', $config = null, $instanceId = null): ExtendedCacheItemPoolInterface
     {
@@ -134,6 +135,14 @@ class CacheManager
         if (!isset(self::$instances[ $instance ])) {
             $badPracticeOmeter[ $driver ] = 1;
             $driverClass = self::getDriverClass($driver);
+
+            if(!is_a($driverClass, ExtendedCacheItemPoolInterface::class, true)){
+                throw new PhpfastcacheDriverException(sprintf(
+                  'Class "%s" does not implement "%s"',
+                  $driverClass,
+                  ExtendedCacheItemPoolInterface::class
+                ));
+            }
             try {
                 if (\class_exists($driverClass)) {
                     $configClass = $driverClass::getConfigClass();

@@ -32,7 +32,6 @@ $testHelper->printText('Preparing test item...');
 $cacheItem = $cacheInstance->getItem($cacheKey);
 $cacheItem->set($string);
 $cacheInstance->save($cacheItem);
-$now = time();
 
 /**
  * Delete memory references
@@ -43,10 +42,15 @@ unset($cacheItem);
 $cacheInstance->detachAllItems();
 $cacheItem = $cacheInstance->getItem($cacheKey);
 
-if($cacheItem->getTtl() === $defaultTTl){
+/**
+ * Round up to the nearest 10 to avoid a potential issue
+ * due to the time spend to write the cache on disk that will
+ * loss 1 second to the cache ttl :/
+ */
+if((int) ceil($cacheItem->getTtl() / 10) * 10 === $defaultTTl){
     $testHelper->printPassText('The cache Item TTL matches the default TTL after 30 days.');
 }else{
-    $testHelper->printFailText('The cache Item TTL des not matches the default TTL after 30 days, got the following value: ' . $cacheItem->getTtl());
+    $testHelper->printFailText('The cache Item TTL des not matches the default TTL after 30 days, got the following value: ' . ceil($cacheItem->getTtl() / 10) * 10);
 }
 
 $testHelper->terminateTest();

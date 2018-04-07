@@ -53,6 +53,7 @@ use Phpfastcache\Util\ClassNamespaceResolverTrait;
 class CacheManager
 {
     const AUTOMATIC_DRIVER_CLASS = 'Auto';
+    const CORE_DRIVER_NAMESPACE = 'Phpfastcache\Drivers\\';
 
     use ClassNamespaceResolverTrait;
 
@@ -375,7 +376,7 @@ class CacheManager
 
         if(self::getDefaultNamespacePath() === self::getNamespacePath()){
             if($driverList === null){
-                $prefix = 'Phpfastcache\Drivers\\';
+                $prefix = self::CORE_DRIVER_NAMESPACE;
                 $classMap = self::createClassMap(__DIR__ . '/Drivers');
                 $driverList = [];
 
@@ -502,6 +503,12 @@ class CacheManager
 
         if(!\in_array($driverName, self::getDriverList(), true)){
             throw new PhpfastcacheLogicException(sprintf("Driver '%s' can't be overridden since its not a part of the PhpFastCache core", $driverName));
+        }
+
+        if(!\is_subclass_of($className, self::CORE_DRIVER_NAMESPACE . $driverName . '\\Driver', true)){
+            throw new PhpfastcacheLogicException(
+              sprintf("Can't override '%s' because the class '%s' MUST extend '%s'", $driverName, $className, self::CORE_DRIVER_NAMESPACE . $driverName . '\\Driver')
+            );
         }
 
         self::$driverOverrides[$driverName] = $className;

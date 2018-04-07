@@ -530,4 +530,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return bool
      */
     public function saveMultiple(...$items): bool;
+
+    /**
+     * Defines if the driver is allowed
+     * to be used in "Auto" driver.
+     *
+     * @return bool
+     */
+    public static function isUsableInAutoContext(): bool;
 }

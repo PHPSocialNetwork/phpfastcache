@@ -1,3 +1,6 @@
+## 2.0.2
+- Added ExtendedCacheItemPoolInterface::isUsableInAutoContext() to check if the driver is allowed to be used in 'Auto' context.
+
 ## 2.0.1
 - Implemented additional atomic methods:
 - Added ExtendedCacheItemInterface::isNull() to test if the data is null or not despite the hit/miss status.

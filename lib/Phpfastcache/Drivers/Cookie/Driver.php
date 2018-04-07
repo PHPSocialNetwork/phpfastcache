@@ -150,6 +150,14 @@ class Driver implements ExtendedCacheItemPoolInterface
         return $return;
     }
 
+    /**
+     * @inheritdoc
+     */
+    public static function isUsableInAutoContext(): bool
+    {
+        return false;
+    }
+
     /********************
      *
      * PSR-6 Extended Methods

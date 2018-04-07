@@ -93,6 +93,11 @@ class CacheManager
     protected static $driverCustoms = [];
 
     /**
+     * @var array
+     */
+    protected static $badPracticeOmeter = [];
+
+    /**
      * @param string $driver
      * @param array|ConfigurationOption $config
      * @param string $instanceId
@@ -105,14 +110,8 @@ class CacheManager
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheDriverException
      */
-    public static function getInstance($driver = 'auto', $config = null, $instanceId = null): ExtendedCacheItemPoolInterface
+    public static function getInstance(string $driver = 'auto', $config = null, string $instanceId = null): ExtendedCacheItemPoolInterface
     {
-        static $badPracticeOmeter = [];
-
-        if ($instanceId !== null && !\is_string($instanceId)) {
-            throw new PhpfastcacheInvalidArgumentException('The Instance ID must be a string');
-        }
-
         if (\is_array($config)) {
             $config = new ConfigurationOption($config);
             trigger_error(
@@ -134,7 +133,7 @@ class CacheManager
         $instance = $instanceId ?: md5($driver . \serialize($config->toArray()));
 
         if (!isset(self::$instances[ $instance ])) {
-            $badPracticeOmeter[ $driver ] = 1;
+            self::$badPracticeOmeter[ $driver ] = 1;
             $driverClass = self::getDriverClass($driver);
 
             if(!is_a($driverClass, ExtendedCacheItemPoolInterface::class, true)){
@@ -166,12 +165,12 @@ class CacheManager
                     throw new PhpfastcacheDriverCheckException($e->getMessage(), $e->getCode(), $e);
                 }
             }
-        } else if ($badPracticeOmeter[ $driver ] >= 2) {
+        } else if (self::$badPracticeOmeter[ $driver ] >= 2) {
             trigger_error('[' . $driver . '] Calling many times CacheManager::getInstance() for already instanced drivers is a bad practice and have a significant impact on performances.
            See https://github.com/PHPSocialNetwork/phpfastcache/wiki/[V5]-Why-calling-getInstance%28%29-each-time-is-a-bad-practice-%3F');
         }
 
-        $badPracticeOmeter[ $driver ]++;
+        self::$badPracticeOmeter[ $driver ]++;
 
         return self::$instances[ $instance ];
     }
@@ -184,7 +183,7 @@ class CacheManager
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheInstanceNotFoundException
      */
-    public static function getInstanceById($instanceId): ExtendedCacheItemPoolInterface
+    public static function getInstanceById(string $instanceId): ExtendedCacheItemPoolInterface
     {
         if ($instanceId !== null && !\is_string($instanceId)) {
             throw new PhpfastcacheInvalidArgumentException('The Instance ID must be a string');
@@ -238,12 +237,15 @@ class CacheManager
 
         if ($autoDriver === null) {
             foreach (self::getDriverList() as $driver) {
-                try {
-                    self::getInstance($driver, $config);
-                    $autoDriver = $driver;
-                    break;
-                } catch (PhpfastcacheDriverCheckException $e) {
-                    continue;
+                /** @var ExtendedCacheItemPoolInterface $driver */
+                if((self::CORE_DRIVER_NAMESPACE . $driver . '\Driver')::isUsableInAutoContext()){
+                    try {
+                        self::getInstance($driver, $config);
+                        $autoDriver = $driver;
+                        break;
+                    } catch (PhpfastcacheDriverCheckException $e) {
+                        continue;
+                    }
                 }
             }
         }
@@ -251,6 +253,8 @@ class CacheManager
         if(!$autoDriver || !\is_string($autoDriver)){
             throw new PhpfastcacheLogicException('Unable to find out a valid driver automatically');
         }
+
+        self::$badPracticeOmeter[ $autoDriver ]--;
 
         return $autoDriver;
     }

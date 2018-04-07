@@ -478,13 +478,23 @@ trait ExtendedCacheItemPoolTrait
                 $this->save($item);
             }
             return true;
-        } else if (\is_array($items)) {
+        }
+
+        if (\is_array($items)) {
             foreach ($items as $item) {
                 $this->save($item);
             }
             return true;
         }
         return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function isUsableInAutoContext(): bool
+    {
+        return true;
     }
 
     /**

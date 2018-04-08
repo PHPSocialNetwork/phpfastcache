@@ -1,23 +1,51 @@
+## 7.0.0-rc
+##### 8 april 2018
+- __Global__
+    - **Added "custom driver" and "override core driver" features** (@Geolim4)
+    - **Updated & completely reworked Mongodb driver** (@ylorant)
+    - Deprecated custom namespace feature in favor of the new feature above (@Geolim4)
+    - Deprecated `$this->getConfigOption($optionName)` for `$this->geConfig()->getOptionName()` (@Geolim4)
+    - Deprecated `$this->getConfig()->getOption($optionName)` for `$this->geConfig()->getOptionName()` (@Geolim4)
+- __Core__
+    - Enforced more argument type hint & absolute core php function namespaces (@Geolim4)
+    - Removed `ExtendedCacheItemInterface::getUncommittedData()` that should have been removed before :| (@Geolim4)
+    - Added additional atomic methods in ExtendedCacheItemInterface (`isNull()`, `isEmpty()`, `getLength()`) (@Geolim4)
+- __Drivers__
+    - Improved "Auto" driver context with tests, new interface method and additional checks (@Geolim4)
+- __Helpers__
+    - Added "NOTE" method to testHelper (@Geolim4)
+- __Utils__
+    - Removed unused Util "Languages" (@Geolim4)
+- __Tests__
+    - Fixed randomly failing test "Github-560" (@Geolim4)
+    - Fixed include issue in tests (@Geolim4)
+    - Updated tests for custom drivers (@Geolim4)
+- __Misc__
+    - Added specific IoConfiguration for files-based drivers (@Geolim4)
+    - Updated README to re-arrange the API section more properly (@Geolim4)
+    - Fixed HTTP images that broke site SSL seal in README (@Geolim4)
+    - Updated composer description & dependencies constraints (@Geolim4)
+
 ## 7.0.0-beta3
 ##### 17 march 2018
 - __Global__
-	- **Updated root namespace: "phpFastCache\" => "Phpfastcache\"** (@Geolim4)
-	- **Updated root directory: "src" => "lib"** (@Geolim4)
-	- Dismissed unneeded/inconsistent "else" statements (@Geolim4)
+    - **Updated root namespace: "phpFastCache\" => "Phpfastcache\"** (@Geolim4)
+    - **Updated root directory: "src" => "lib"** (@Geolim4)
+    - Dismissed unneeded/inconsistent "else" statements (@Geolim4)
 - __Core__
-	- **Capitalized Phpfastcache classe names** (@Geolim4) Please read carefully the migration guide (MigratingFromV6ToV7.md).
+    - **Capitalized Phpfastcache classe names** (@Geolim4) Please read carefully the migration guide (MigratingFromV6ToV7.md).
     - Added CacheManager::getDriverList() (@Geolim4)
     - Updated strictly return type hints in CacheManager (@Geolim4)
-	- Deprecated CacheManager::getStaticAllDrivers() (@Geolim4)
-	- Deprecated CacheManager::getStaticSystemDrivers() (@Geolim4)
-	- Deprecated configuration option "ignoreSymfonyNotice" (@Geolim4)
-	- Added PhpfastcacheUnsupportedOperationException exception (@Geolim4)
+    - Deprecated CacheManager::getStaticAllDrivers() (@Geolim4)
+    - Deprecated CacheManager::getStaticSystemDrivers() (@Geolim4)
+    - Deprecated configuration option "ignoreSymfonyNotice" (@Geolim4)
+    - Added PhpfastcacheUnsupportedOperationException exception (@Geolim4)
 - __Drivers__
     - Fixed #576 // Devnull driver returning non-dull data (@Geolim4)
-	- Fixed #581 // Files driver "securityKey" option configuration not working as documented
+    - Fixed #581 // Files driver "securityKey" option configuration not working as documented
 - __Configuration__
-	- Added configuration option `fallbackConfig` for a better fallback configuration (@Geolim4)
-	- Deprecated configuration option "ignoreSymfonyNotice" (@Geolim4)
+    - Added configuration option `fallbackConfig` for a better fallback configuration (@Geolim4)
+    - Deprecated configuration option "ignoreSymfonyNotice" (@Geolim4)
 - __Helpers__
     - Added exception catcher to test Helper to FAIL or SKIP depending the exception (@Geolim4)
     - Added notice/warning/error catcher to test Helper to keep a clean build report (@Geolim4)
@@ -27,15 +55,15 @@
 - __Tests__
     - Added duration time for each tests (@Geolim4)
     - Updated Lexer Test for better compatibility with HHVM (@Geolim4)
-	- Fixed #581 // Issue with test file namespace imports (@Geolim4)
-	- Updated Travis build to include 7.2 (@Geolim4)
-	- Updated scrutinizer build settings (@Geolim4)
+    - Fixed #581 // Issue with test file namespace imports (@Geolim4)
+    - Updated Travis build to include 7.2 (@Geolim4)
+    - Updated scrutinizer build settings (@Geolim4)
 - __Misc__
-	- Added deprecation section in migrating guide
-	- Moved API changelog to a standalone file
-	- Professionalized a bit more the README
-	- Removed lib/Phpfastcache/.htaccess that does no longer belong in its place
-	- Added .gitattributes file
+    - Added deprecation section in migrating guide
+    - Moved API changelog to a standalone file
+    - Professionalized a bit more the README
+    - Removed lib/Phpfastcache/.htaccess that does no longer belong in its place
+    - Added .gitattributes file
 
 ## 7.0.0-beta2
 ##### 4 march 2018
@@ -72,7 +100,7 @@
     - Fixed #548 // Wrong type hint on redis driver (@Geolim4)
 - __Helpers__
     - Fixed #545 // Psr16Adapter get item even if it is expired (@Geolim4)
-	- Added CacheConditionalHelper TTL (@Geolim4)
+    - Added CacheConditionalHelper TTL (@Geolim4)
 - __Tests__
     - Fixed some missing text output on HHVM builds (@Geolim4)
     - Fixed HHVM builds (@Geolim4)

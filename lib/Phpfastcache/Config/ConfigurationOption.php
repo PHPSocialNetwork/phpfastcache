@@ -151,7 +151,7 @@ class ConfigurationOption extends ArrayObject
      */
     public function getOption(string $optionName)
     {
-        trigger_error(sprintf('Method "%s" is deprecated, use "getOptionName()" instead', __METHOD__), E_USER_DEPRECATED);
+        \trigger_error(sprintf('Method "%s" is deprecated, use "getOptionName()" instead', __METHOD__), E_USER_DEPRECATED);
         return $this->$optionName ?? null;
     }
 
@@ -217,7 +217,7 @@ class ConfigurationOption extends ArrayObject
     public function setIgnoreSymfonyNotice(bool $ignoreSymfonyNotice): self
     {
         if($ignoreSymfonyNotice){
-            trigger_error('Configuration option "ignoreSymfonyNotice" is deprecated as of the V7', E_USER_DEPRECATED);
+            \trigger_error('Configuration option "ignoreSymfonyNotice" is deprecated as of the V7', E_USER_DEPRECATED);
         }
         $this->ignoreSymfonyNotice = $ignoreSymfonyNotice;
         return $this;

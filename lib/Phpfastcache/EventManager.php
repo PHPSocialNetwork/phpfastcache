@@ -69,7 +69,7 @@ class EventManager
      * @param string $eventName
      * @param array ...$args
      */
-    public function dispatch($eventName, ...$args)
+    public function dispatch(string $eventName, ...$args)
     {
         /**
          * Replace array_key_exists by isset
@@ -89,7 +89,7 @@ class EventManager
      * @throws PhpfastcacheInvalidArgumentException
      * @throws \BadMethodCallException
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments)
     {
         if (\strpos($name, 'on') === 0) {
             $name = \substr($name, 2);
@@ -108,11 +108,11 @@ class EventManager
     }
 
     /**
-     * @param $eventName
-     * @param $callbackName
+     * @param string $eventName
+     * @param string $callbackName
      * @return bool
      */
-    public function unbindEventCallback($eventName, $callbackName): bool
+    public function unbindEventCallback(string $eventName, string $callbackName): bool
     {
         $return = isset($this->events[ $eventName ][ $callbackName ]);
         unset($this->events[ $eventName ][ $callbackName ]);

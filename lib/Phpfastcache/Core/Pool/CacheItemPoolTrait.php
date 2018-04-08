@@ -172,7 +172,7 @@ trait CacheItemPoolTrait
                             $item->setHit(true);
                         }
                     } else {
-                        $item->expiresAfter(abs((int)$this->getConfig()[ 'defaultTtl' ]));
+                        $item->expiresAfter(\abs((int)$this->getConfig()[ 'defaultTtl' ]));
                     }
                 }
             }

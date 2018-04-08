@@ -43,7 +43,7 @@ class CacheConditionalHelper
      * @param int|\DateInterval $expiresAfter
      * @return mixed
      */
-    public function get($cacheKey, callable $callback, $expiresAfter = null)
+    public function get(string $cacheKey, callable $callback, $expiresAfter = null)
     {
         $cacheItem = $this->cacheInstance->getItem($cacheKey);
 

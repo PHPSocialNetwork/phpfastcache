@@ -110,11 +110,11 @@ class CacheManager
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheDriverException
      */
-    public static function getInstance(string $driver = 'auto', $config = null, string $instanceId = null): ExtendedCacheItemPoolInterface
+    public static function getInstance(string $driver = self::AUTOMATIC_DRIVER_CLASS, $config = null, string $instanceId = null): ExtendedCacheItemPoolInterface
     {
         if (\is_array($config)) {
             $config = new ConfigurationOption($config);
-            trigger_error(
+            \trigger_error(
               'The CacheManager will drops the support of primitive configuration arrays, use a "\Phpfastcache\Config\ConfigurationOption" object instead',
               E_USER_DEPRECATED
             );
@@ -156,7 +156,7 @@ class CacheManager
                     try {
                         $fallback = $config->getFallback();
                         $config->setFallback('');
-                        trigger_error(\sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver, $fallback), E_USER_WARNING);
+                        \trigger_error(\sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver, $fallback), E_USER_WARNING);
                         return self::getInstance($fallback, $config->getFallbackConfig());
                     } catch (PhpfastcacheInvalidArgumentException $e) {
                         throw new PhpfastcacheInvalidConfigurationException('Invalid fallback driver configuration', 0, $e);
@@ -166,7 +166,7 @@ class CacheManager
                 }
             }
         } else if (self::$badPracticeOmeter[ $driver ] >= 2) {
-            trigger_error('[' . $driver . '] Calling many times CacheManager::getInstance() for already instanced drivers is a bad practice and have a significant impact on performances.
+            \trigger_error('[' . $driver . '] Calling many times CacheManager::getInstance() for already instanced drivers is a bad practice and have a significant impact on performances.
            See https://github.com/PHPSocialNetwork/phpfastcache/wiki/[V5]-Why-calling-getInstance%28%29-each-time-is-a-bad-practice-%3F');
         }
 
@@ -295,7 +295,7 @@ class CacheManager
      */
     public static function getDefaultNamespacePath(): string
     {
-        return  __NAMESPACE__ . '\Drivers\\';
+        return self::CORE_DRIVER_NAMESPACE;
     }
 
     /**
@@ -304,7 +304,7 @@ class CacheManager
      */
     public static function setNamespacePath($path)
     {
-        trigger_error('This method has been deprecated as of V7, please use cache manager "override" or "custom driver" features instead', E_USER_DEPRECATED);
+        \trigger_error('This method has been deprecated as of V7, please use cache manager "override" or "custom driver" features instead', E_USER_DEPRECATED);
         self::$namespacePath = \trim($path, "\\") . '\\';
     }
 
@@ -330,7 +330,7 @@ class CacheManager
      */
     public static function getStaticSystemDrivers(): array
     {
-        trigger_error(\sprintf('Method "%s" is deprecated as of the V7 and will be removed soon or later, use CacheManager::getDriverList() instead.', __METHOD__), E_USER_DEPRECATED);
+        \trigger_error(\sprintf('Method "%s" is deprecated as of the V7 and will be removed soon or later, use CacheManager::getDriverList() instead.', __METHOD__), E_USER_DEPRECATED);
         return [
           'Apc',
           'Apcu',
@@ -362,7 +362,7 @@ class CacheManager
      */
     public static function getStaticAllDrivers(): array
     {
-        trigger_error(\sprintf('Method "%s" is deprecated as of the V7 and will be removed soon or later, use CacheManager::getDriverList() instead.', __METHOD__), E_USER_DEPRECATED);
+        \trigger_error(\sprintf('Method "%s" is deprecated as of the V7 and will be removed soon or later, use CacheManager::getDriverList() instead.', __METHOD__), E_USER_DEPRECATED);
         return \array_merge(self::getStaticSystemDrivers(), [
           'Devtrue',
           'Devfalse',

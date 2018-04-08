@@ -40,7 +40,7 @@ trait MemcacheDriverCollisionDetectorTrait
 
                 return true;
             } else if (\constant($CONSTANT_NAME) !== $driverName) {
-                trigger_error('Memcache collision detected, you used both Memcache and Memcached driver in your script, this may leads to unexpected behaviours',
+                \trigger_error('Memcache collision detected, you used both Memcache and Memcached driver in your script, this may leads to unexpected behaviours',
                   E_USER_WARNING);
 
                 return false;

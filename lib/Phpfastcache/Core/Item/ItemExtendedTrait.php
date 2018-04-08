@@ -379,7 +379,7 @@ trait ItemExtendedTrait
      */
     public function removeTag($tagName): ExtendedCacheItemInterface
     {
-        if (($key = array_search($tagName, $this->tags)) !== false) {
+        if (($key = \array_search($tagName, $this->tags)) !== false) {
             unset($this->tags[ $key ]);
             $this->removedTags[] = $tagName;
         }
@@ -461,6 +461,6 @@ trait ItemExtendedTrait
         $info = \get_object_vars($this);
         $info[ 'driver' ] = 'object(' . \get_class($info[ 'driver' ]) . ')';
 
-        return (array)$info;
+        return $info;
     }
 }

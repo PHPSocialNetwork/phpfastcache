@@ -35,11 +35,11 @@ class ItemBatch
 
     /**
      * ItemBatch constructor.
-     * @param $itemKey
+     * @param string $itemKey
      * @param \DateTimeInterface $itemDate
      * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentTypeException
      */
-    public function __construct($itemKey, \DateTimeInterface $itemDate)
+    public function __construct(string $itemKey, \DateTimeInterface $itemDate)
     {
         if (\is_string($itemKey)) {
             $this->itemKey = $itemKey;

@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool;
 
+use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Exceptions\{
@@ -99,7 +100,7 @@ trait DriverBaseTrait
      */
     public function getConfigOption($optionName)
     {
-        trigger_error(sprintf('Method "%s" is deprecated, use "getConfig()->getOptionName()" instead', __METHOD__), E_USER_DEPRECATED);
+        \trigger_error(sprintf('Method "%s" is deprecated, use "getConfig()->getOptionName()" instead', __METHOD__), E_USER_DEPRECATED);
         return $this->getConfig()->getOption($optionName);
     }
 
@@ -144,17 +145,6 @@ trait DriverBaseTrait
     {
         return (PHP_SAPI === 'apache2handler' || \strpos(PHP_SAPI, 'handler') !== false);
     }
-
-
-    /**
-     * @param $class
-     * @return bool
-     */
-    protected function driverExists($class): bool
-    {
-        return \class_exists("\\phpFastCache\\Drivers\\{$class}");
-    }
-
 
     /**
      * @param \Phpfastcache\Core\Item\ExtendedCacheItemInterface $item
@@ -284,7 +274,7 @@ trait DriverBaseTrait
              * that has slow performances
              */
 
-            $tagsItem->set(array_merge((array)$data, [$item->getKey() => $expTimestamp]));
+            $tagsItem->set(\array_merge((array)$data, [$item->getKey() => $expTimestamp]));
 
             /**
              * Set the expiration date
@@ -388,7 +378,7 @@ trait DriverBaseTrait
      */
     public static function getConfigClass(): string
     {
-        $localConfigClass = substr(static::class, 0, strrpos(static::class, '\\')) . '\Config';
+        $localConfigClass = \substr(static::class, 0, \strrpos(static::class, '\\')) . '\Config';
         if(\class_exists($localConfigClass) && is_a($localConfigClass, ConfigurationOption::class, true)){
             return $localConfigClass;
         }

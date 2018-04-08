@@ -61,7 +61,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $mongoExtensionExists = class_exists(\MongoDB\Driver\Manager::class);
 
         if (!$mongoExtensionExists && class_exists(\MongoClient::class)) {
-            trigger_error('This driver is used to support the pecl MongoDb extension with mongo-php-library.
+            \trigger_error('This driver is used to support the pecl MongoDb extension with mongo-php-library.
             For MongoDb with Mongo PECL support use Mongo Driver.', E_USER_ERROR);
         }
 

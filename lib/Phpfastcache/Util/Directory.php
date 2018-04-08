@@ -31,7 +31,7 @@ class Directory
      * @param bool $includeDirAllocSize
      * @return integer
      */
-    public static function dirSize($directory, $includeDirAllocSize = false): int
+    public static function dirSize(string $directory, bool $includeDirAllocSize = false): int
     {
         $size = 0;
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)) as $file) {
@@ -52,7 +52,7 @@ class Directory
      * @param string $path
      * @return int
      */
-    public static function getFileCount($path): int
+    public static function getFileCount(string $path): int
     {
         $count = 0;
         $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::SELF_FIRST);
@@ -77,7 +77,7 @@ class Directory
      *
      * @return bool true on success; false on failure
      */
-    public static function rrmdir($source, $removeOnlyChildren = false): bool
+    public static function rrmdir(string $source, bool $removeOnlyChildren = false): bool
     {
         if (empty($source) || \file_exists($source) === false) {
             return false;
@@ -101,7 +101,7 @@ class Directory
                 if (self::rrmdir($fileinfo->getRealPath()) === false) {
                     return false;
                 }
-            } else if (unlink($fileinfo->getRealPath()) === false) {
+            } else if (\unlink($fileinfo->getRealPath()) === false) {
                 return false;
             }
         }
@@ -117,10 +117,10 @@ class Directory
      * Alias of realpath() but work
      * on non-existing files
      *
-     * @param $path
+     * @param string $path
      * @return string
      */
-    public static function getAbsolutePath($path): string
+    public static function getAbsolutePath(string $path): string
     {
         $parts = \preg_split('~[/\\\\]+~', $path, 0, PREG_SPLIT_NO_EMPTY);
         $absolutes = [];

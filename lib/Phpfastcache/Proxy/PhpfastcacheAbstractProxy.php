@@ -63,18 +63,18 @@ abstract class PhpfastcacheAbstractProxy
      * @param string $driver
      * @param array|\Phpfastcache\Config\ConfigurationOption $config
      */
-    public function __construct($driver = 'auto', $config = null)
+    public function __construct(string $driver = CacheManager::AUTOMATIC_DRIVER_CLASS, $config = null)
     {
         $this->instance = CacheManager::getInstance($driver, $config);
     }
 
     /**
-     * @param $name
-     * @param $args
+     * @param string $name
+     * @param array $args
      * @return mixed
      * @throws \BadMethodCallException
      */
-    public function __call($name, $args)
+    public function __call(string $name, array $args)
     {
         if (\method_exists($this->instance, $name)) {
             return \call_user_func_array([$this->instance, $name], $args);

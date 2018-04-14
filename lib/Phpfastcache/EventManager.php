@@ -13,7 +13,7 @@
  */
 declare(strict_types=1);
 
-namespace phpFastCache;
+namespace Phpfastcache;
 
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 

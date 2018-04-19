@@ -122,7 +122,7 @@ class Directory
      */
     public static function getAbsolutePath(string $path): string
     {
-        $parts = \preg_split('~[/\\\\]+~', $path, 0, PREG_SPLIT_NO_EMPTY);
+        $parts = \preg_split('~[/\\\\]+~', $path, 0, \PREG_SPLIT_NO_EMPTY);
         $absolutes = [];
         foreach ($parts as $part) {
             if ('.' === $part) {
@@ -139,7 +139,7 @@ class Directory
          * Allows to dereference char
          */
         $__FILE__ = \preg_replace('~^(([a-z0-9\-]+)://)~', '', __FILE__);// remove file protocols such as "phar://" etc.
-        $prefix = $__FILE__[ 0 ] === DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
-        return $prefix . \implode(DIRECTORY_SEPARATOR, $absolutes);
+        $prefix = $__FILE__[ 0 ] === \DIRECTORY_SEPARATOR ? \DIRECTORY_SEPARATOR : '';
+        return $prefix . \implode(\DIRECTORY_SEPARATOR, $absolutes);
     }
 }

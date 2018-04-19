@@ -183,7 +183,7 @@ trait ItemExtendedTrait
      */
     public function getTtl(): int
     {
-        return max(0, $this->expirationDate->getTimestamp() - \time());
+        return \max(0, $this->expirationDate->getTimestamp() - \time());
     }
 
     /**

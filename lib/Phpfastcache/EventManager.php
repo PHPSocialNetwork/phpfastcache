@@ -78,7 +78,7 @@ class EventManager
          */
         if (isset($this->events[ $eventName ])) {
             foreach ($this->events[ $eventName ] as $event) {
-                call_user_func_array($event, $args);
+                \call_user_func_array($event, $args);
             }
         }
     }

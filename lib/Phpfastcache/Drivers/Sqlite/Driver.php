@@ -69,7 +69,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function getSqliteDir(): string
     {
-        return $this->SqliteDir ?: $this->getPath() . DIRECTORY_SEPARATOR . self::FILE_DIR;
+        return $this->SqliteDir ?: $this->getPath() . \DIRECTORY_SEPARATOR . self::FILE_DIR;
     }
 
     /**

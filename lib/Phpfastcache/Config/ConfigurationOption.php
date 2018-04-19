@@ -151,7 +151,7 @@ class ConfigurationOption extends ArrayObject
      */
     public function getOption(string $optionName)
     {
-        \trigger_error(sprintf('Method "%s" is deprecated, use "getOptionName()" instead', __METHOD__), E_USER_DEPRECATED);
+        \trigger_error(\sprintf('Method "%s" is deprecated, use "getOptionName()" instead', __METHOD__), E_USER_DEPRECATED);
         return $this->$optionName ?? null;
     }
 

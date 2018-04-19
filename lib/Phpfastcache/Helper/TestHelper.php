@@ -163,7 +163,7 @@ class TestHelper
         if (!$strtoupper) {
             print \trim($string) . PHP_EOL;
         } else {
-            print strtoupper(\trim($string) . PHP_EOL);
+            print \strtoupper(\trim($string) . PHP_EOL);
         }
 
         return $this;
@@ -174,10 +174,10 @@ class TestHelper
      */
     public function runAsyncProcess($cmd)
     {
-        if (\substr(php_uname(), 0, 7) === 'Windows') {
-            pclose(popen('start /B ' . $cmd, 'r'));
+        if (\substr(\php_uname(), 0, 7) === 'Windows') {
+            \pclose(\popen('start /B ' . $cmd, 'r'));
         } else {
-            exec($cmd . ' > /dev/null &');
+            \exec($cmd . ' > /dev/null &');
         }
     }
 
@@ -187,7 +187,7 @@ class TestHelper
      */
     public function runSubProcess($file, $ext = '.php')
     {
-        $this->runAsyncProcess(($this->isHHVM() ? 'hhvm ' : 'php ') . getcwd() . DIRECTORY_SEPARATOR . 'subprocess' . DIRECTORY_SEPARATOR . $file . '.subprocess' . $ext);
+        $this->runAsyncProcess(($this->isHHVM() ? 'hhvm ' : 'php ') . \getcwd() . \DIRECTORY_SEPARATOR . 'subprocess' . \DIRECTORY_SEPARATOR . $file . '.subprocess' . $ext);
     }
 
     /**
@@ -195,7 +195,7 @@ class TestHelper
      */
     public function terminateTest()
     {
-        $execTime = round(microtime(true) - $this->timestamp, 3);
+        $execTime = \round(\microtime(true) - $this->timestamp, 3);
 
         $this->printText('Test finished in ' . $execTime . 's');
         exit($this->exitCode);

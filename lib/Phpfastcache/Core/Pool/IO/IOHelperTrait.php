@@ -48,16 +48,16 @@ trait IOHelperTrait
         /**
          * Get the base system temporary directory
          */
-        $tmp_dir = rtrim(ini_get('upload_tmp_dir') ?: sys_get_temp_dir(), '\\/') . DIRECTORY_SEPARATOR . 'phpfastcache';
+        $tmp_dir = \rtrim(\ini_get('upload_tmp_dir') ?: \sys_get_temp_dir(), '\\/') . \DIRECTORY_SEPARATOR . 'phpfastcache';
 
         /**
          * Calculate the security key
          */
         {
             $securityKey = $this->getConfig()->getSecurityKey();
-            if (!$securityKey || mb_strtolower($securityKey) === 'auto') {
+            if (!$securityKey || \mb_strtolower($securityKey) === 'auto') {
                 if (isset($_SERVER[ 'HTTP_HOST' ])) {
-                    $securityKey = preg_replace('/^www./', '', \strtolower(\str_replace(':', '_', $_SERVER[ 'HTTP_HOST' ])));
+                    $securityKey = \preg_replace('/^www./', '', \strtolower(\str_replace(':', '_', $_SERVER[ 'HTTP_HOST' ])));
                 } else {
                     $securityKey = ($this->isPHPModule() ? 'web' : 'cli');
                 }
@@ -74,15 +74,15 @@ trait IOHelperTrait
          * Extends the temporary directory
          * with the security key and the driver name
          */
-        $tmp_dir = rtrim($tmp_dir, '/') . DIRECTORY_SEPARATOR;
+        $tmp_dir = \rtrim($tmp_dir, '/') . \DIRECTORY_SEPARATOR;
 
         if (empty($this->getConfig()->getPath())) {
             $path = $tmp_dir;
         } else {
-            $path = rtrim($this->getConfig()->getPath(), '/') . DIRECTORY_SEPARATOR;
+            $path = rtrim($this->getConfig()->getPath(), '/') . \DIRECTORY_SEPARATOR;
         }
 
-        $path_suffix = $securityKey . DIRECTORY_SEPARATOR . $this->getDriverName();
+        $path_suffix = $securityKey . \DIRECTORY_SEPARATOR . $this->getDriverName();
         $full_path = Directory::getAbsolutePath($path . $path_suffix);
         $full_path_tmp = Directory::getAbsolutePath($tmp_dir . $path_suffix);
         $full_path_hash = \md5($full_path);
@@ -148,8 +148,8 @@ trait IOHelperTrait
         }
 
         $filename = $this->encodeFilename($keyword);
-        $folder = \substr($filename, 0, 2) . DIRECTORY_SEPARATOR . \substr($filename, 2, 2);
-        $path = rtrim($path, '/\\') . DIRECTORY_SEPARATOR . $folder;
+        $folder = \substr($filename, 0, 2) . \DIRECTORY_SEPARATOR . \substr($filename, 2, 2);
+        $path = \rtrim($path, '/\\') . \DIRECTORY_SEPARATOR . $folder;
 
         /**
          * Skip Create Sub Folders;
@@ -200,7 +200,7 @@ trait IOHelperTrait
         ];
         $replace = ['-', '', ''];
 
-        return \trim(preg_replace($regex, $replace, \trim($filename)), '-');
+        return \trim(\preg_replace($regex, $replace, \trim($filename)), '-');
     }
 
     /**
@@ -295,9 +295,9 @@ HTACCESS;
               ));
 
             $f = \fopen($tmpFilename, 'w+');
-            \flock($f, LOCK_EX);
+            \flock($f, \LOCK_EX);
             $octetWritten = fwrite($f, $data);
-            \flock($f, LOCK_UN);
+            \flock($f, \LOCK_UN);
             \fclose($f);
 
             if (!\rename($tmpFilename, $file)) {

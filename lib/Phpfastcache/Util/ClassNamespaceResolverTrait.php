@@ -32,7 +32,7 @@ trait ClassNamespaceResolverTrait
     protected function getClassNamespace(): string
     {
         if (!$this->namespace) {
-            $this->namespace = \substr(static::class, 0, strrpos(static::class, '\\'));
+            $this->namespace = \substr(static::class, 0, \strrpos(static::class, '\\'));
         }
 
         return $this->namespace;
@@ -61,7 +61,7 @@ trait ClassNamespaceResolverTrait
                     continue;
                 }
                 $path = $file->getRealPath() ?: $file->getPathname();
-                if ('php' !== pathinfo($path, PATHINFO_EXTENSION)) {
+                if ('php' !== pathinfo($path, \PATHINFO_EXTENSION)) {
                     continue;
                 }
                 $classes = self::findClasses($path);
@@ -101,29 +101,29 @@ trait ClassNamespaceResolverTrait
             }
             $class = '';
             switch ($token[ 0 ]) {
-                case T_NAMESPACE:
+                case \T_NAMESPACE:
                     $namespace = '';
                     // If there is a namespace, extract it
                     while (isset($tokens[ ++$i ][ 1 ])) {
-                        if (\in_array($tokens[ $i ][ 0 ], [T_STRING, T_NS_SEPARATOR])) {
+                        if (\in_array($tokens[ $i ][ 0 ], [\T_STRING, \T_NS_SEPARATOR])) {
                             $namespace .= $tokens[ $i ][ 1 ];
                         }
                     }
                     $namespace .= '\\';
                     break;
-                case T_CLASS:
-                case T_INTERFACE:
-                case T_TRAIT:
+                case \T_CLASS:
+                case \T_INTERFACE:
+                case \T_TRAIT:
                     // Skip usage of ::class constant
                     $isClassConstant = false;
                     for ($j = $i - 1; $j > 0; --$j) {
                         if (!isset($tokens[ $j ][ 1 ])) {
                             break;
                         }
-                        if (T_DOUBLE_COLON === $tokens[ $j ][ 0 ]) {
+                        if (\T_DOUBLE_COLON === $tokens[ $j ][ 0 ]) {
                             $isClassConstant = true;
                             break;
-                        } elseif (!\in_array($tokens[ $j ][ 0 ], [T_WHITESPACE, T_DOC_COMMENT, T_COMMENT], false)) {
+                        } elseif (!\in_array($tokens[ $j ][ 0 ], [\T_WHITESPACE, \T_DOC_COMMENT, \T_COMMENT], false)) {
                             break;
                         }
                     }
@@ -133,9 +133,9 @@ trait ClassNamespaceResolverTrait
                     // Find the classname
                     while (isset($tokens[ ++$i ][ 1 ])) {
                         $t = $tokens[ $i ];
-                        if (T_STRING === $t[ 0 ]) {
+                        if (\T_STRING === $t[ 0 ]) {
                             $class .= $t[ 1 ];
-                        } elseif ('' !== $class && T_WHITESPACE === $t[ 0 ]) {
+                        } elseif ('' !== $class && \T_WHITESPACE === $t[ 0 ]) {
                             break;
                         }
                     }

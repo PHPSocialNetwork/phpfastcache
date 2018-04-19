@@ -3,6 +3,7 @@
 
 #### :warning: Please note that the V7 is a major (BC breaking) update of PhpFastCache !
 > As the V7 is **absolutely** not compatible with previous versions, please read carefully the [migration guide](./docs/migration/MigratingFromV6ToV7.md) to ensure you the smoothest migration possible.
+One of the biggest change is the configuration system which is now an object that replace the primitive array that we used to implement back then. 
 Also please note that the V7 requires at least PHP7 or higher to work properly.
 
 ---------------------------
@@ -15,7 +16,7 @@ One Class uses for All Cache. You don't need to rewrite your code many times aga
 As of the V7 PhpFastCache enforces the php7 strict types to make sure that it's completely php7 compatible and is type aware.
 
 ### Supported drivers at this day *
-:bulb: Feel free to propose a driver by making a new **Pull Request**, they are welcome !
+:bulb: Feel free to propose a driver by making a new **[Pull Request](https://github.com/PHPSocialNetwork/phpfastcache/compare)**, they are welcome !
 
 |      Regular drivers            |     High performances drivers      |    Development drivers        |
 |---------------------------------|------------------------------------|-------------------------------|
@@ -274,6 +275,8 @@ composer require phpFastCache/phpFastCache
 use Phpfastcache\CacheManager;
 
 // Setup File Path on your config files
+// Please note that as of the V6.1 the "path" config 
+// can also be used for Unix sockets (Redis, Memcache, etc)
 CacheManager::setup(array(
     "path" => '/var/www/phpfastcache.com/dev/tmp', // or in windows "C:/tmp/"
 ));
@@ -314,11 +317,11 @@ echo implode('<br />', $CachedString->get());// Will echo your product list
 
 ```
 
-##### :floppy_disk: Legacy / Lazy Method (Without Composer)
+##### :floppy_disk: Legacy support (Without Composer)
 * See the file examples/withoutComposer.php for more information.
 
 #### :zap: Step 3: Enjoy ! Your website is now faster than lightning !
-For curious developers, there is a lot of other examples available  [here](https://github.com/PHPSocialNetwork/phpfastcache/tree/final/docs/examples).
+For curious developers, there is a lot of other examples available [here](./docs/examples).
 
 #### :boom: phpFastCache support
-Found an issue or have an idea ? Come [here](https://github.com/PHPSocialNetwork/phpfastcache/issues) and let us know !
+Found an issue or have an idea ? Come **[here](https://github.com/PHPSocialNetwork/phpfastcache/issues)** and let us know !

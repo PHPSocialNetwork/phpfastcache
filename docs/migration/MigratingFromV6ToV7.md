@@ -107,7 +107,7 @@ $cacheInstace = CacheManager::getInstance('Files', new Config([
 ```
 #### For non-global option you MUST use the specific Config object provided for each drivers 
 ```php
-// The recommanded was is to use an alias to not confuse yourself 
+// The recommanded way is to use an alias to not confuse yourself 
 use \phpFastCache\Drivers\Files\Config as FilesConfig;
 
 $config = new FilesConfig();

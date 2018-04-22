@@ -36,9 +36,9 @@ class TestHelper
 
     /**
      * TestHelper constructor.
-     * @param $testName
+     * @param string $testName
      */
-    public function __construct($testName)
+    public function __construct(string $testName)
     {
         $this->timestamp = microtime(true);
         $this->printText('[PhpFastCache CORE v' . Api::getPhpFastCacheVersion() . Api::getPhpFastCacheGitHeadHash() . ']', true);
@@ -77,9 +77,9 @@ class TestHelper
      * @param string $string
      * @return $this
      */
-    public function printSkipText($string): self
+    public function printSkipText(string $string): self
     {
-        $this->printText("[SKIP] {$string}");
+        $this->printText($string, false, 'SKIP');
 
         return $this;
     }
@@ -88,9 +88,10 @@ class TestHelper
      * @param string $string
      * @return $this
      */
-    public function printPassText($string): self
+    public function printPassText(string $string): self
     {
-        $this->printText("[PASS] {$string}");
+        $this->printText($string, false, 'PASS');
+
 
         return $this;
     }
@@ -99,9 +100,10 @@ class TestHelper
      * @param string printFailText
      * @return $this
      */
-    public function printInfoText($string): self
+    public function printInfoText(string $string): self
     {
-        $this->printText("[INFO] {$string}");
+        $this->printText($string, false, 'INFO');
+
 
         return $this;
     }
@@ -110,9 +112,9 @@ class TestHelper
      * @param string $string
      * @return $this
      */
-    public function printDebugText($string): self
+    public function printDebugText(string $string): self
     {
-        $this->printText("[DEBUG] {$string}");
+        $this->printText($string, false, 'DEBUG');
 
         return $this;
     }
@@ -121,9 +123,9 @@ class TestHelper
      * @param string $string
      * @return $this
      */
-    public function printNoteText($string): self
+    public function printNoteText(string $string): self
     {
-        $this->printText("[NOTE] {$string}");
+        $this->printText($string, false, 'NOTE');
 
         return $this;
     }
@@ -132,9 +134,9 @@ class TestHelper
      * @param string $string
      * @return $this
      */
-    public function printFailText($string): self
+    public function printFailText(string $string): self
     {
-        $this->printText("[FAIL] {$string}");
+        $this->printText($string, false, 'FAIL');
         $this->exitCode = 1;
 
         return $this;
@@ -144,22 +146,23 @@ class TestHelper
      * @param int $count
      * @return $this
      */
-    public function printNewLine($count = 1): self
+    public function printNewLine(int $count = 1): self
     {
-        for ($i = 0; $i < $count; $i++) {
-            print PHP_EOL;
-        }
-
+        print \str_repeat(PHP_EOL, $count);
         return $this;
     }
 
     /**
-     * @param $string
+     * @param string $string
      * @param bool $strtoupper
+     * @param string $prefix
      * @return $this
      */
-    public function printText($string, $strtoupper = false): self
+    public function printText(string $string, bool $strtoupper = false, string $prefix = ''): self
     {
+        if($prefix){
+            $string = "[{$prefix}] {$string}";
+        }
         if (!$strtoupper) {
             print \trim($string) . PHP_EOL;
         } else {
@@ -172,7 +175,7 @@ class TestHelper
     /**
      * @param string $cmd
      */
-    public function runAsyncProcess($cmd)
+    public function runAsyncProcess(string $cmd)
     {
         if (\substr(\php_uname(), 0, 7) === 'Windows') {
             \pclose(\popen('start /B ' . $cmd, 'r'));
@@ -185,7 +188,7 @@ class TestHelper
      * @param string $file
      * @param string $ext
      */
-    public function runSubProcess($file, $ext = '.php')
+    public function runSubProcess(string $file, string $ext = '.php')
     {
         $this->runAsyncProcess(($this->isHHVM() ? 'hhvm ' : 'php ') . \getcwd() . \DIRECTORY_SEPARATOR . 'subprocess' . \DIRECTORY_SEPARATOR . $file . '.subprocess' . $ext);
     }

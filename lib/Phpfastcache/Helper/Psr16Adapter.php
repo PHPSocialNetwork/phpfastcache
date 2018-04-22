@@ -80,7 +80,7 @@ class Psr16Adapter implements CacheInterface
      * @return bool
      * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
-    public function set($key, $value, $ttl = null)
+    public function set($key, $value, $ttl = null): bool
     {
         try {
             $cacheItem = $this->internalCacheInstance
@@ -102,7 +102,7 @@ class Psr16Adapter implements CacheInterface
      * @return bool
      * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
-    public function delete($key)
+    public function delete($key): bool
     {
         try {
             return $this->internalCacheInstance->deleteItem($key);
@@ -115,7 +115,7 @@ class Psr16Adapter implements CacheInterface
      * @return bool
      * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
-    public function clear()
+    public function clear(): bool
     {
         try {
             return $this->internalCacheInstance->clear();
@@ -147,7 +147,7 @@ class Psr16Adapter implements CacheInterface
      * @return bool
      * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
-    public function setMultiple($values, $ttl = null)
+    public function setMultiple($values, $ttl = null): bool
     {
         try {
             foreach ($values as $key => $value) {
@@ -172,7 +172,7 @@ class Psr16Adapter implements CacheInterface
      * @return bool
      * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
-    public function deleteMultiple($keys)
+    public function deleteMultiple($keys): bool
     {
         try {
             return $this->internalCacheInstance->deleteItems($keys);
@@ -186,7 +186,7 @@ class Psr16Adapter implements CacheInterface
      * @return bool
      * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
-    public function has($key)
+    public function has($key): bool
     {
         try {
             $cacheItem = $this->internalCacheInstance->getItem($key);
@@ -194,5 +194,18 @@ class Psr16Adapter implements CacheInterface
         } catch (PhpfastcacheInvalidArgumentException $e) {
             throw new PhpfastcacheSimpleCacheException($e->getMessage(), null, $e);
         }
+    }
+
+    /**
+     * Extra methods that are not part of
+     * psr16 specifications
+     */
+
+    /**
+     * @return \Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface
+     */
+    public function getInternalCacheInstance(): ExtendedCacheItemPoolInterface
+    {
+        return $this->internalCacheInstance;
     }
 }

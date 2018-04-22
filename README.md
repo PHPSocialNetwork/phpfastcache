@@ -183,6 +183,7 @@ Basic usage:
 
 use Phpfastcache\Helper\Psr16Adapter;
 
+$defaultDriver = 'Files';
 $Psr16Adapter = new Psr16Adapter($defaultDriver);
 
 if(!$Psr16Adapter->has('test-key')){

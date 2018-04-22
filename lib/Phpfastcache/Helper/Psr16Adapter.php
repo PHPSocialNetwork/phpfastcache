@@ -19,7 +19,7 @@ use Phpfastcache\CacheManager;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheDriverCheckException, PhpfastcacheInvalidArgumentException, PhpfastcacheRootException, PhpfastcacheSimpleCacheException
+  PhpfastcacheDriverCheckException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException, PhpfastcacheRootException, PhpfastcacheSimpleCacheException
 };
 use Psr\SimpleCache\CacheInterface;
 
@@ -36,13 +36,21 @@ class Psr16Adapter implements CacheInterface
 
     /**
      * Psr16Adapter constructor.
-     * @param string $driver
-     * @param array|\Phpfastcache\Config\ConfigurationOption $config
+     * @param string|ExtendedCacheItemPoolInterface $driver
+     * @param array|\Phpfastcache\Config\ConfigurationOption|null $config
      * @throws PhpfastcacheDriverCheckException
+     * @throws PhpfastcacheLogicException
      */
     public function __construct($driver, $config = null)
     {
-        $this->internalCacheInstance = CacheManager::getInstance($driver, $config);
+        if($driver instanceof ExtendedCacheItemPoolInterface){
+            if($config !== null){
+                throw new PhpfastcacheLogicException("You can't pass a config parameter along with an non-string '\$driver' parameter.");
+            }
+            $this->internalCacheInstance = $driver;
+        }else{
+            $this->internalCacheInstance = CacheManager::getInstance($driver, $config);
+        }
     }
 
     /**

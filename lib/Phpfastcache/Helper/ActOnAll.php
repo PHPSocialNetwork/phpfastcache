@@ -65,7 +65,7 @@ class ActOnAll
     public function hasItem($key): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -74,7 +74,7 @@ class ActOnAll
     public function clear(): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -84,7 +84,7 @@ class ActOnAll
     public function deleteItem($key): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -94,7 +94,7 @@ class ActOnAll
     public function deleteItems(array $keys): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -104,7 +104,7 @@ class ActOnAll
     public function save(CacheItemInterface $item): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -114,7 +114,7 @@ class ActOnAll
     public function saveDeferred(CacheItemInterface $item): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -124,7 +124,7 @@ class ActOnAll
     public function saveMultiple(...$items): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -133,7 +133,7 @@ class ActOnAll
     public function commit(): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -142,7 +142,7 @@ class ActOnAll
     public function getConfig(): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -152,7 +152,7 @@ class ActOnAll
     public function getConfigOption(string $optionName): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -161,7 +161,7 @@ class ActOnAll
     public function getDriverName(): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -171,7 +171,7 @@ class ActOnAll
     public function getItem($key): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -181,7 +181,7 @@ class ActOnAll
     public function getItems(array $keys = []): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -193,7 +193,7 @@ class ActOnAll
     public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -203,7 +203,7 @@ class ActOnAll
     public function setItem(CacheItemInterface $item): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -212,7 +212,7 @@ class ActOnAll
     public function getHelp(): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -221,7 +221,7 @@ class ActOnAll
     public function getStats(): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -231,7 +231,7 @@ class ActOnAll
     public function getItemsByTag($tagName): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -241,7 +241,7 @@ class ActOnAll
     public function getItemsByTags(array $tagNames): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -253,7 +253,7 @@ class ActOnAll
     public function getItemsByTagsAsJsonString(array $tagNames, $option = 0, $depth = 512): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -263,7 +263,7 @@ class ActOnAll
     public function deleteItemsByTag($tagName): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -273,7 +273,7 @@ class ActOnAll
     public function deleteItemsByTags(array $tagNames): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -284,7 +284,7 @@ class ActOnAll
     public function incrementItemsByTag($tagName, $step = 1): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -295,7 +295,7 @@ class ActOnAll
     public function incrementItemsByTags(array $tagNames, $step = 1): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -306,7 +306,7 @@ class ActOnAll
     public function decrementItemsByTag($tagName, $step = 1): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -317,7 +317,7 @@ class ActOnAll
     public function decrementItemsByTags(array $tagNames, $step = 1): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -328,7 +328,7 @@ class ActOnAll
     public function appendItemsByTag($tagName, $data): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -339,7 +339,7 @@ class ActOnAll
     public function appendItemsByTags(array $tagNames, $data): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -350,7 +350,7 @@ class ActOnAll
     public function prependItemsByTag($tagName, $data): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -361,7 +361,7 @@ class ActOnAll
     public function prependItemsByTags(array $tagNames, $data): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -371,7 +371,7 @@ class ActOnAll
     public function getItemsByTagsAll(array $tagNames): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -381,7 +381,7 @@ class ActOnAll
     public function deleteItemsByTagsAll(array $tagNames): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -392,7 +392,7 @@ class ActOnAll
     public function incrementItemsByTagsAll(array $tagNames, $step = 1): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -403,7 +403,7 @@ class ActOnAll
     public function decrementItemsByTagsAll(array $tagNames, $step = 1): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -414,7 +414,7 @@ class ActOnAll
     public function appendItemsByTagsAll(array $tagNames, $data): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -425,7 +425,7 @@ class ActOnAll
     public function prependItemsByTagsAll(array $tagNames, $data): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -435,7 +435,7 @@ class ActOnAll
     public function detachItem(CacheItemInterface $item): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -444,7 +444,7 @@ class ActOnAll
     public function detachAllItems(): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -454,7 +454,7 @@ class ActOnAll
     public function attachItem(CacheItemInterface $item): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -464,7 +464,7 @@ class ActOnAll
     public function isAttached(CacheItemInterface $item): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -474,7 +474,7 @@ class ActOnAll
     public function setEventManager(EventInterface $em): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 
     /**
@@ -483,6 +483,6 @@ class ActOnAll
     public function getDefaultConfig(): array
     {
         $callback = $this->getGenericCallback();
-        return $callback(__FUNCTION__, func_get_args());
+        return $callback(__FUNCTION__, \func_get_args());
     }
 }

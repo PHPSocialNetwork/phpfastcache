@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Item;
 
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\EventManager;
+use Phpfastcache\Event\EventInterface;
 use Phpfastcache\Exceptions\{
   PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidArgumentTypeException, PhpfastcacheLogicException
 };
@@ -42,7 +42,7 @@ trait ItemExtendedTrait
      *******************/
 
     /**
-     * @var EventManager
+     * @var EventInterface
      */
     protected $eventManager;
 
@@ -441,10 +441,10 @@ trait ItemExtendedTrait
     /**
      * Set the EventManager instance
      *
-     * @param EventManager $em
+     * @param EventInterface $em
      * @return ExtendedCacheItemInterface
      */
-    public function setEventManager(EventManager $em): ExtendedCacheItemInterface
+    public function setEventManager(EventInterface $em): ExtendedCacheItemInterface
     {
         $this->eventManager = $em;
 

@@ -1,3 +1,7 @@
+## 2.0.3
+- Updated ExtendedCacheItemPoolInterface::setEventManager() first argument that now MUSt implement `\Phpfastcache\Event\EventInterface`
+- Updated ExtendedCacheItemInterface::setEventManager() first argument that now MUSt implement `\Phpfastcache\Event\EventInterface`
+
 ## 2.0.2
 - Added ExtendedCacheItemPoolInterface::isUsableInAutoContext() to check if the driver is allowed to be used in 'Auto' context.
 

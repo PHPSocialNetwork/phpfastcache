@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache;
 
+use Phpfastcache\Event\EventInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
 /**
@@ -38,7 +39,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
  *
  *
  */
-class EventManager
+class EventManager implements EventInterface
 {
     /**
      * @var $this
@@ -51,9 +52,9 @@ class EventManager
     protected $events = [];
 
     /**
-     * @return \Phpfastcache\EventManager
+     * @return EventInterface
      */
-    public static function getInstance(): self
+    public static function getInstance(): EventInterface
     {
         return (self::$instance ?: self::$instance = new self);
     }
@@ -61,8 +62,9 @@ class EventManager
     /**
      * EventManager constructor.
      */
-    protected function __construct()
+    final protected function __construct()
     {
+        // The constructor should not be instantiated externally
     }
 
     /**

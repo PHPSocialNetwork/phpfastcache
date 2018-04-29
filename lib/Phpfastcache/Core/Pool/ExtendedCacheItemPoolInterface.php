@@ -19,11 +19,10 @@ use InvalidArgumentException;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\EventManager;
+use Phpfastcache\Event\EventInterface;
 use Phpfastcache\Exceptions\{
   PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
 };
-use Phpfastcache\Util\ArrayObject;
 use Psr\Cache\{CacheItemInterface, CacheItemPoolInterface};
 
 
@@ -516,10 +515,10 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
     /**
      * Set the EventManager instance
      *
-     * @param EventManager $em
+     * @param EventInterface $em
      * @return self
      */
-    public function setEventManager(EventManager $em): self;
+    public function setEventManager(EventInterface $em): self;
 
     /**
      * Save multiple items, possible uses:

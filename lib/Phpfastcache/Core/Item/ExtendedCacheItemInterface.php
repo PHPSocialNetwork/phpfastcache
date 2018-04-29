@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Item;
 
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\EventManager;
+use Phpfastcache\Event\EventInterface;
 use Phpfastcache\Exceptions\{
   PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
 };
@@ -214,8 +214,8 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
     /**
      * Set the EventManager instance
      *
-     * @param EventManager $em
+     * @param EventInterface $em
      * @return self
      */
-    public function setEventManager(EventManager $em): self;
+    public function setEventManager(EventInterface $em): self;
 }

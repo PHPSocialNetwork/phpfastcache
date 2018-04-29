@@ -15,7 +15,9 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Helper;
 
-use Phpfastcache\{CacheManager, EventManager};
+use Phpfastcache\{
+  CacheManager, Event\EventInterface, EventManager
+};
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Entities\DriverStatistic;
 use Psr\Cache\CacheItemInterface;
@@ -466,10 +468,10 @@ class ActOnAll
     }
 
     /**
-     * @param \Phpfastcache\EventManager $em
+     * @param EventInterface $em
      * @return array
      */
-    public function setEventManager(EventManager $em): array
+    public function setEventManager(EventInterface $em): array
     {
         $callback = $this->getGenericCallback();
         return $callback(__FUNCTION__, func_get_args());

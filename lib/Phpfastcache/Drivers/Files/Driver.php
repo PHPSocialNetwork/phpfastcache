@@ -143,57 +143,6 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverClear(): bool
     {
-        return (bool)Directory::rrmdir($this->getPath(true));
-    }
-
-    /**
-     * @param string $optionName
-     * @param mixed $optionValue
-     * @return bool
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public static function isValidOption($optionName, $optionValue): bool
-    {
-        DriverBaseTrait::isValidOption($optionName, $optionValue);
-        switch ($optionName) {
-            case 'path':
-                return \is_string($optionValue);
-                break;
-
-            case 'default_chmod':
-                return \is_numeric($optionValue);
-                break;
-
-            case 'securityKey':
-                return \is_string($optionValue);
-                break;
-            case 'htaccess':
-                return \is_bool($optionValue);
-                break;
-
-            case 'secureFileManipulation':
-                return \is_bool($optionValue);
-                break;
-
-            default:
-                return false;
-                break;
-        }
-    }
-
-    /**
-     * @return array
-     */
-    public static function getValidOptions(): array
-    {
-        return ['path', 'default_chmod', 'securityKey', 'htaccess', 'secureFileManipulation'];
-    }
-
-    /**
-     * @return array
-     */
-    public static function getRequiredOptions(): array
-    {
-        return ['path'];
+        return Directory::rrmdir($this->getPath(true));
     }
 }

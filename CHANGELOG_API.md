@@ -1,3 +1,6 @@
+## 2.0.4
+- Added ExtendedCacheItemPoolInterface::getConfigClass() that returns the config class name
+
 ## 2.0.3
 - Updated ExtendedCacheItemPoolInterface::setEventManager() first argument that now MUSt implement `\Phpfastcache\Event\EventInterface`
 - Updated ExtendedCacheItemInterface::setEventManager() first argument that now MUSt implement `\Phpfastcache\Event\EventInterface`

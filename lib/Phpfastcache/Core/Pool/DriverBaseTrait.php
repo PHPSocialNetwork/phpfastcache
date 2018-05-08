@@ -343,37 +343,6 @@ trait DriverBaseTrait
     }
 
     /**
-     * @param string $optionName
-     * @param mixed $optionValue
-     * @return bool
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public static function isValidOption($optionName, $optionValue): bool
-    {
-        if (!\is_string($optionName)) {
-            throw new PhpfastcacheInvalidArgumentException('$optionName must be a string');
-        }
-
-        return true;
-    }
-
-    /**
-     * @return array
-     */
-    public static function getRequiredOptions(): array
-    {
-        return [];
-    }
-
-    /**
-     * @return array
-     */
-    public static function getValidOptions(): array
-    {
-        return [];
-    }
-
-    /**
      * @return string
      */
     public static function getConfigClass(): string

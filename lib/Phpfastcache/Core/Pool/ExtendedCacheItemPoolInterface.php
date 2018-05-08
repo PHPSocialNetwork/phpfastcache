@@ -537,4 +537,10 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return bool
      */
     public static function isUsableInAutoContext(): bool;
+
+    /**
+     * Return the config class name
+     * @return string
+     */
+    public static function getConfigClass(): string;
 }

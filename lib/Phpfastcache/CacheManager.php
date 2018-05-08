@@ -374,10 +374,11 @@ class CacheManager
     }
 
     /**
+     * @param bool $FQNAsKey Describe keys with Full Qualified Class Name
      * @return string[]
      * @throws PhpfastcacheUnsupportedOperationException
      */
-    public static function getDriverList(): array
+    public static function getDriverList($FQCNAsKey = false): array
     {
         static $driverList;
 
@@ -396,7 +397,15 @@ class CacheManager
 
             $driverList = \array_merge($driverList, \array_keys(self::$driverCustoms));
 
-            \sort($driverList);
+            if($FQCNAsKey){
+                $realDriverList = [];
+                foreach ($driverList as $driverName){
+                    $realDriverList[self::getDriverClass($driverName)] = $driverName;
+                }
+                $driverList = $realDriverList;
+            }
+
+            \asort($driverList);
 
             return $driverList;
         }

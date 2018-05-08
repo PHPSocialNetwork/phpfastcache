@@ -1,3 +1,18 @@
+## 7.0.0-rc2
+##### 8 may 2018
+- __Global__
+    - More Opcache optimizations (@Geolim4)
+- __Core__
+    - Updated EventManager now MUST implement `Phpfastcache\Event\EventInterface` (@Geolim4)
+    - Upgraded API version from 2.0.2 to 2.0.3 (@Geolim4)
+    - Fixed namespace issue on EventManager (@Cyperghost)
+- __Helpers__
+    - Improved TestHelper efficiency (@Geolim4)
+    - Forced return type hint to Psr16Adapter && added a getter for the internal cache instance (@Geolim4)
+    - The Psr16Adapter will now also accept an `ExtendedCacheItemPoolInterface` object to the $driver parameter in constructor (@Geolim4)
+- __Misc__
+    - Updated Readme (@Geolim4)
+
 ## 7.0.0-rc
 ##### 8 april 2018
 - __Global__

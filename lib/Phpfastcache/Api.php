@@ -69,12 +69,15 @@ class Api
         }
 
         if(\function_exists('shell_exec')){
-            $stdout = shell_exec('git describe --abbrev=0 --tags');
+            $command = 'git -C "' . __DIR__ . '" describe --abbrev=0 --tags';
+            $stdout = shell_exec($command);
             if(\is_string($stdout)){
                 $version = \trim($stdout);
                 return $version;
             }
-            throw new PhpfastcacheLogicException('The git command used to retrieve the PhpFastCache version has failed.');
+            if(!$fallbackOnChangelog){
+                throw new PhpfastcacheLogicException('The git command used to retrieve the PhpFastCache version has failed.');
+            }
         }
 
         if(!$fallbackOnChangelog){

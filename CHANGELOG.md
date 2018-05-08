@@ -1,3 +1,11 @@
+## 7.0.0-rc3
+##### 9 may 2018
+- __Core__
+    - Added method "getConfigClass" ExtendedCacheItemPoolInterface (@Geolim4)
+    - Upgraded API version from 2.0.3 to 2.0.4 (@Geolim4)
+    - Added "FQCNAsKey" parameter to CacheManager::getDriverList() (@Geolim4)
+    - Fixed fallback behavior in getPhpFastCacheVersion method (@Geolim4)
+
 ## 7.0.0-rc2
 ##### 8 may 2018
 - __Global__

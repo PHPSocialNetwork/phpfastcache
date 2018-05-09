@@ -85,7 +85,7 @@ trait IOHelperTrait
         $path_suffix = $securityKey . \DIRECTORY_SEPARATOR . $this->getDriverName();
         $full_path = Directory::getAbsolutePath($path . $path_suffix);
         $full_path_tmp = Directory::getAbsolutePath($tmp_dir . $path_suffix);
-        $full_path_hash = \md5($full_path);
+        $full_path_hash = $this->getConfig()->getDefaultFileNameHashFunction()($full_path);
 
         /**
          * In readonly mode we only attempt
@@ -172,7 +172,7 @@ trait IOHelperTrait
      */
     protected function encodeFilename($keyword): string
     {
-        return \md5($keyword);
+        return $this->getConfig()->getDefaultFileNameHashFunction()($keyword);
     }
 
     /**
@@ -289,7 +289,7 @@ HTACCESS;
         $this->eventManager->dispatch('CacheWriteFileOnDisk', $this, $file, $secureFileManipulation);
 
         if ($secureFileManipulation) {
-            $tmpFilename = Directory::getAbsolutePath(\dirname($file) . '/tmp_' . \md5(
+            $tmpFilename = Directory::getAbsolutePath(\dirname($file) . '/tmp_' . $this->getConfig()->getDefaultFileNameHashFunction()(
                 \str_shuffle(\uniqid($this->getDriverName(), false))
                 . \str_shuffle(\uniqid($this->getDriverName(), false))
               ));

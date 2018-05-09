@@ -41,6 +41,11 @@ class ConfigurationOption extends ArrayObject
     protected $defaultKeyHashFunction = 'md5';
 
     /**
+     * @var string|Callable
+     */
+    protected $defaultFileNameHashFunction = 'md5';
+
+    /**
      * @var int
      */
     protected $defaultChmod = 0777;
@@ -264,6 +269,28 @@ class ConfigurationOption extends ArrayObject
     }
 
     /**
+     * @return Callable|string
+     */
+    public function getDefaultFileNameHashFunction()
+    {
+        return $this->defaultFileNameHashFunction;
+    }
+
+    /**
+     * @param Callable|string $defaultKeyHashFunction
+     * @return ConfigurationOption
+     * @throws  PhpfastcacheInvalidConfigurationException
+     */
+    public function setDefaultFileNameHashFunction($defaultFileNameHashFunction)
+    {
+        if (!\function_exists($defaultFileNameHashFunction) || !\is_callable($defaultFileNameHashFunction)) {
+            throw new PhpfastcacheInvalidConfigurationException('defaultFileNameHashFunction must be a valid function name string');
+        }
+        $this->defaultFileNameHashFunction = $defaultFileNameHashFunction;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getDefaultChmod(): int
@@ -445,7 +472,7 @@ class ConfigurationOption extends ArrayObject
         }
         if (!\in_array($cacheFileExtension, $safeFileExtensions, true)) {
             throw new PhpfastcacheInvalidConfigurationException(
-              "{$cacheFileExtension} is not a safe extension, currently allowed extension: " . \implode(', ', $safeFileExtensions)
+              "Extension \"{$cacheFileExtension}\" is not safe, currently allowed extension names: " . \implode(', ', $safeFileExtensions)
             );
         }
 

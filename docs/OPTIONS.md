@@ -20,6 +20,7 @@ PhpFastCache has some options that you may want to know before using them, here'
 * **defaultTtl** _| int (default: 900)_ `[>=V5]` This option define a default ttl (time-to-live, in seconds) for item that has no specified expiration date/ttl.
 * **itemDetailedDate** _| bool (default: false)_ `[>=V6]` This option will define if the Items will make use of detailed dates such as Creation/modification date. Trying to access to these date without being explicitly enabled will throw a `LogicException`
 * **defaultKeyHashFunction** _| string (default: 'md5')_ `[>=V6]` This option will allow you to define a custom hash function for the `$item->getEncodedKey()` method. Callable objects are not allowed, but static method such as `\Absolute\Namespace\ToStatic::method` are allowed.
+* **defaultFileNameHashFunction** _| string (default: 'md5')_ `[>=V7]` This option will allow you to define a custom hash function for every I/O method that ends up to write an hashed filename on the disk.
 * **preventCacheSlams** _| bool (default: false)_ `[>=V6]` This option will allow you to prevent cache slams when making use of heavy cache items
 * **cacheSlamsTimeout** _| int (default: 15)_ `[>=V6]` This option defines the cache slams timeout in seconds
 

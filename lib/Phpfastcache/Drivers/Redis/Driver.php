@@ -55,6 +55,19 @@ class Driver implements ExtendedCacheItemPoolInterface
             throw new PhpfastcacheLogicException('Already connected to Redis server');
         }
 
+        /**
+         * In case of an user-provided
+         * Redis client just return here
+         */
+        if($this->getConfig()->getRedisClient() instanceof RedisClient){
+            /**
+             * Unlike Predis, we can't test if we're are connected
+             * or not, so let's just assume that we are
+             */
+            $this->instance = $this->getConfig()->getRedisClient();
+            return true;
+        }
+
         $this->instance = $this->instance ?: new RedisClient();
 
         /**

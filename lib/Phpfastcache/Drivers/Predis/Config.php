@@ -33,6 +33,11 @@ class Config extends ConfigurationOption
     protected $database = 0;
 
     /**
+     * @var \Predis\Client
+     */
+    protected $predisClient;
+
+    /**
      * @return string
      */
     public function getHost(): string
@@ -115,5 +120,23 @@ class Config extends ConfigurationOption
           'password' => $this->getPassword() ?: null,
           'database' => $this->getDatabase(),
         ];
+    }
+
+    /**
+     * @return \Predis\Client|null
+     */
+    public function getPredisClient()
+    {
+        return $this->predisClient;
+    }
+
+    /**
+     * @param \Predis\Client $predisClient|null
+     * @return Config
+     */
+    public function setPredisClient(\Predis\Client $predisClient = null): Config
+    {
+        $this->predisClient = $predisClient;
+        return $this;
     }
 }

@@ -9,6 +9,7 @@
 namespace Phpfastcache\Drivers\Redis;
 
 use Phpfastcache\Config\ConfigurationOption;
+use Redis as RedisClient;
 
 class Config extends ConfigurationOption
 {
@@ -36,6 +37,11 @@ class Config extends ConfigurationOption
      * @var int
      */
     protected $timeout = 5;
+
+    /**
+     * @var RedisClient
+     */
+    protected $redisClient;
 
     /**
      * @return string
@@ -124,6 +130,24 @@ class Config extends ConfigurationOption
     public function setTimeout(int $timeout): self
     {
         $this->timeout = $timeout;
+        return $this;
+    }
+
+    /**
+     * @return RedisClient|null
+     */
+    public function getRedisClient()
+    {
+        return $this->redisClient;
+    }
+
+    /**
+     * @param RedisClient $predisClient|null
+     * @return Config
+     */
+    public function setRedisClient(RedisClient $redisClient = null): Config
+    {
+        $this->redisClient = $redisClient;
         return $this;
     }
 }

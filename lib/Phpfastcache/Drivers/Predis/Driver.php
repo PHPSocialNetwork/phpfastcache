@@ -19,7 +19,7 @@ namespace Phpfastcache\Drivers\Predis;
 use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException, PhpfastcacheDriverException
+  PhpfastcacheInvalidArgumentException, PhpfastcacheDriverException, PhpfastcacheLogicException
 };
 use Phpfastcache\Util\ArrayObject;
 use Predis\Client as PredisClient;
@@ -52,9 +52,26 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @return bool
      * @throws PhpfastcacheDriverException
+     * @throws PhpfastcacheLogicException
      */
     protected function driverConnect(): bool
     {
+        if ($this->instance instanceof PredisClient) {
+            throw new PhpfastcacheLogicException('Already connected to Predis server');
+        }
+
+        /**
+         * In case of an user-provided
+         * Predis client just return here
+         */
+        if($this->getConfig()->getPredisClient() instanceof PredisClient){
+            $this->instance = $this->getConfig()->getPredisClient();
+            if(!$this->instance->isConnected()){
+                $this->instance->connect();
+            }
+            return true;
+        }
+
         if(!empty($this->getConfig()->getPath())){
             $this->instance = new PredisClient([
               'scheme' => 'unix',

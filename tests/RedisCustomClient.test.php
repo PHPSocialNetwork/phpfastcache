@@ -26,9 +26,9 @@ try{
     $cacheInstance->detachAllItems();
     unset($cacheItem);
     if($cacheInstance->getItem($cacheKey)->get() === 1337){
-        $testHelper->printPassText('Successfully written and read data from outside redis client');
+        $testHelper->printPassText('Successfully written and read data from outside Redis client');
     }else{
-        $testHelper->printFailText('Error writing or reading data from outside redis client');
+        $testHelper->printFailText('Error writing or reading data from outside Redis client');
     }
 }catch (\RedisException $e){
     $testHelper->printFailText('A Redis exception occurred: ' . $e->getMessage());

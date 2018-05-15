@@ -1,3 +1,15 @@
+## 7.0.0-rc4
+##### 15 may 2018
+- __Core__
+    - Added "defaultFileNameHashFunction" option (@Geolim4)
+- __Drivers__
+    - Implemented #598 // Ability to use custom predis/redis client (@Geolim4, @dol)
+- __Tests__
+    - Added test for custom predis client (@Geolim4)
+    - Added test for custom redis client (@Geolim4)
+- __Misc__
+    - Added doc for redis and predis client options (@Geolim4)
+
 ## 7.0.0-rc3
 ##### 9 may 2018
 - __Core__

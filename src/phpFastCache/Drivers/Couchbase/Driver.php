@@ -155,7 +155,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             
             // Establish username and password for bucket access
             $authenticator = new \Couchbase\PasswordAuthenticator();
-            $authenticator->username($this->config[ 'username' ])->password($this->config[ 'password' ]);
+            $authenticator->username($username)->password($password);
 
             // Connect to Couchbase Server
             if (isset($port)) {

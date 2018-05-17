@@ -36,6 +36,7 @@
         "ext-sqlite": "*",
         "ext-wincache": "*",
         "ext-leveldb": "*",
+        "ext-couchbase": "*",
         "predis/predis": "~1.1.0",
         "mongodb/mongodb": "^1.1",
         "phpfastcache/phpssdb": "~1.0.0",

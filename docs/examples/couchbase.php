@@ -19,13 +19,11 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 $InstanceCache = CacheManager::getInstance('couchbase', [
   'host' => 'your-couchbase-host',
-  'port' => 8091,
   'username' => 'your-couchbase-username',
   'password' => 'your-couchbase-password',
   'buckets' => [
     [
       'bucket' => 'default', // The bucket name, generally "default" by default
-      'password' => '' // The bucket password if there is
     ],
   ]
 ]);

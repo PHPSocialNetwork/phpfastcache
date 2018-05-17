@@ -143,23 +143,34 @@ class Driver implements ExtendedCacheItemPoolInterface
             throw new phpFastCacheLogicException('Already connected to Couchbase server');
         } else {
 
-
             $host = isset($this->config[ 'host' ]) ? $this->config[ 'host' ] : '127.0.0.1';
-            $port = isset($this->config[ 'port' ]) ? $this->config[ 'port' ] : 8091;
-            $password = isset($this->config[ 'password' ]) ? $this->config[ 'password' ] : '';
-            $username = isset($this->config[ 'username' ]) ? $this->config[ 'username' ] : '';
+            $port = isset($this->config[ 'port' ]) ? $this->config[ 'port' ] : NULL;
+            $password = isset($this->config[ 'password' ]) ? $this->config[ 'password' ] : NULL;
+            $username = isset($this->config[ 'username' ]) ? $this->config[ 'username' ] : NULL;
             $buckets = isset($this->config[ 'buckets' ]) ? $this->config[ 'buckets' ] : [
               [
                 'bucket' => 'default',
-                'password' => '',
               ],
             ];
+            
+            // Establish username and password for bucket access
+            $authenticator = new \Couchbase\PasswordAuthenticator();
+            $authenticator->username($username)->password($password);
 
-            $this->instance = new CouchbaseClient("couchbase://{$host}:{$port}", $username, $password);
+            // Connect to Couchbase Server
+            if (isset($port)) {
+                $cluster = new CouchbaseClient("couchbase://" . $host . ":" . $port);
+            } else {
+                $cluster = new CouchbaseClient("couchbase://" . $host);  
+            }
+
+            // Authenticate, then open buckets
+            $cluster->authenticate($authenticator);
+            $this->instance = $this->instance ?: $cluster;
 
             foreach ($buckets as $bucket) {
                 $this->bucketCurrent = $this->bucketCurrent ?: $bucket[ 'bucket' ];
-                $this->setBucket($bucket[ 'bucket' ], $this->instance->openBucket($bucket[ 'bucket' ], $bucket[ 'password' ]));
+                $this->setBucket($bucket[ 'bucket' ], $this->instance->openBucket($bucket[ 'bucket' ]));
             }
         }
 

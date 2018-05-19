@@ -16,25 +16,28 @@ class Config extends ConfigurationOption
      * @var string
      */
     protected $host = '127.0.0.1';
+
     /**
      * @var int
      */
-    protected $port = 8091;
+    protected $port;
+
     /**
      * @var string
      */
-    protected $username = '';
+    protected $username;
+
     /**
      * @var string
      */
-    protected $password = '';
+    protected $password;
+
     /**
      * @var array
      */
     protected $buckets = [
       [
         'bucket' => 'default',
-        'password' => '',
       ],
     ];
 
@@ -68,7 +71,7 @@ class Config extends ConfigurationOption
      * @param int $port
      * @return Config
      */
-    public function setPort(int $port): Config
+    public function setPort(int $port = null): Config
     {
         $this->port = $port;
         return $this;
@@ -86,7 +89,7 @@ class Config extends ConfigurationOption
      * @param string $username
      * @return Config
      */
-    public function setUsername(string $username): Config
+    public function setUsername(string $username = null): Config
     {
         $this->username = $username;
         return $this;
@@ -104,7 +107,7 @@ class Config extends ConfigurationOption
      * @param string $password
      * @return Config
      */
-    public function setPassword(string $password): Config
+    public function setPassword(string $password = null): Config
     {
         $this->password = $password;
         return $this;

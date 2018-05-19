@@ -45,14 +45,14 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @var string
      */
-    protected $bucketCurrent = '';
+    protected $currentBucket = '';
 
     /**
      * @return bool
      */
     public function driverCheck(): bool
     {
-        return \extension_loaded('Couchbase');
+        return \extension_loaded('couchbase');
     }
 
     /**
@@ -79,7 +79,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $this->instance->authenticate($authenticator);
 
         foreach ($clientConfig->getBuckets() as $bucket) {
-            $this->bucketCurrent = $this->bucketCurrent ?: $bucket[ 'bucket' ];
+            $this->currentBucket = $this->currentBucket ?: $bucket[ 'bucket' ];
             $this->setBucket($bucket[ 'bucket' ], $this->instance->openBucket($bucket[ 'bucket' ]));
         }
 
@@ -158,7 +158,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function getBucket(): \CouchbaseBucket
     {
-        return $this->bucketInstances[ $this->bucketCurrent ];
+        return $this->bucketInstances[ $this->currentBucket ];
     }
 
     /**

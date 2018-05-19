@@ -60,9 +60,9 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getPort(): int
+    public function getPort()
     {
         return $this->port;
     }
@@ -78,9 +78,9 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUsername(): string
+    public function getUsername()
     {
         return $this->username;
     }
@@ -96,9 +96,9 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPassword(): string
+    public function getPassword()
     {
         return $this->password;
     }

@@ -75,7 +75,6 @@ class Driver implements ExtendedCacheItemPoolInterface
         $authenticator = new \Couchbase\PasswordAuthenticator();
         $authenticator->username($clientConfig->getUsername())->password($clientConfig->getPassword());
 
-
         $this->instance = new CouchbaseClient(
           'couchbase://' . $clientConfig->getHost() . ($clientConfig->getPort() ? ":{$clientConfig->getPort()}" : '')
         );

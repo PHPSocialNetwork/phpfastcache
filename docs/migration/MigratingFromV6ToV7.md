@@ -154,3 +154,8 @@ The API changelog used to be hardcoded as a HEREDOC in the `Api::getChangelog()`
 The API changelog format has been moved to a MarDown file (.md)
 If you were using `Api::getChangelog()` you may need to check that your code is still working as expected.
 The method still returns a valid string but its format has changed slightly.
+
+### Couchbase PHP SDK
+The Couchbase driver has been updated to works with PHP SDK 2.4+ (Couchbase Server 5+).
+Therefore it way requires a Couchbase Server updated combined with an SDK update.
+

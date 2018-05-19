@@ -19,10 +19,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+__phpFastCache Current Project Manager:__ Georges.L (Geolim4)
 
-__phpFastCache Project Founder:__ Khoa Bui (khoaofgod)
-
-__phpFastCache Project Manager:__ Georges.L (Geolim4)
+__phpFastCache Former Project Founder:__ Khoa Bui (khoaofgod)
 
 __phpFastCache Contributors:__    https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
 
@@ -33,6 +32,7 @@ __phpFastCache Contributors:__    https://github.com/PHPSocialNetwork/phpfastcac
 - __VersionEye__ * For being an awesome tool that helped us to watch version dependencies. You will be missed, thanks you very much Robert.
 - __Sabine van Lommen__ * from __Zend.com__ for providing us a free developer licence of Zend Server
 - __Lucas (_hammermaps_)__ for the "Zend Data Cache" driver implementation
+- __Anton (_git-webmaster_)__ for kindly providing us a Couchbase server for deep tests purposes.
 
 \* Thanks to the companies that provided us free access to their products to help us to build a better quality software every days.
 

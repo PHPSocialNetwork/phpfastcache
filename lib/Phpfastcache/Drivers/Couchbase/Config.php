@@ -25,12 +25,12 @@ class Config extends ConfigurationOption
     /**
      * @var string
      */
-    protected $username;
+    protected $username = '';
 
     /**
      * @var string
      */
-    protected $password;
+    protected $password = '';
 
     /**
      * @var string

@@ -25,6 +25,11 @@ use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 class TestHelper
 {
     /**
+     * @var string
+     */
+    protected $testName;
+
+    /**
      * @var int
      */
     protected $exitCode = 0;
@@ -36,16 +41,15 @@ class TestHelper
 
     /**
      * TestHelper constructor.
+     *
      * @param string $testName
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheIOException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheLogicException
      */
     public function __construct(string $testName)
     {
         $this->timestamp = microtime(true);
-        $this->printText('[PhpFastCache CORE v' . Api::getPhpFastCacheVersion() . Api::getPhpFastCacheGitHeadHash() . ']', true);
-        $this->printText('[PhpFastCache API v' . Api::getVersion() . ']', true);
-        $this->printText('[PHP v' . PHP_VERSION . ']', true);
-        $this->printText("[Begin Test: '{$testName}']");
-        $this->printText('---');
+        $this->testName = $testName;
 
         /**
          * Catch all uncaught exception
@@ -53,6 +57,26 @@ class TestHelper
          */
         set_exception_handler([$this, 'exceptionHandler']);
         set_error_handler([$this, 'errorHandler']);
+
+        $this->printHeaders();
+    }
+
+    /**
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheIOException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheLogicException
+     */
+    public function printHeaders()
+    {
+        if(!$this->isCli() && !\headers_sent()){
+            \header('Content-Type: text/plain, true');
+        }
+
+        $this->printText('[PhpFastCache CORE v' . Api::getPhpFastCacheVersion() . Api::getPhpFastCacheGitHeadHash() . ']', true);
+        $this->printText('[PhpFastCache API v' . Api::getVersion() . ']', true);
+        $this->printText('[PHP v' . PHP_VERSION . ']', true);
+        $this->printText("[Begin Test: '{$this->testName}']");
+        $this->printText('---');
+
     }
 
     /**
@@ -160,7 +184,7 @@ class TestHelper
      */
     public function printText(string $string, bool $strtoupper = false, string $prefix = ''): self
     {
-        if($prefix){
+        if ($prefix) {
             $string = "[{$prefix}] {$string}";
         }
         if (!$strtoupper) {
@@ -299,5 +323,34 @@ class TestHelper
               $errline
             ));
         }
+    }
+
+    /**
+     * @see https://stackoverflow.com/questions/933367/php-how-to-best-determine-if-the-current-invocation-is-from-cli-or-web-server
+     * @return bool
+     */
+    public function isCli(): bool
+    {
+        if (\defined('STDIN')) {
+            return true;
+        }
+
+        if (\php_sapi_name() === 'cli') {
+            return true;
+        }
+
+        if (\array_key_exists('SHELL', $_ENV)) {
+            return true;
+        }
+
+        if (empty($_SERVER[ 'REMOTE_ADDR' ]) && !isset($_SERVER[ 'HTTP_USER_AGENT' ]) && \count($_SERVER[ 'argv' ]) > 0) {
+            return true;
+        }
+
+        if (!\array_key_exists('REQUEST_METHOD', $_SERVER)) {
+            return true;
+        }
+
+        return false;
     }
 }

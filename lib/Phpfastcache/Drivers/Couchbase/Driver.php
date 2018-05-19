@@ -23,7 +23,6 @@ use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
   PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
 };
-use Phpfastcache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -114,7 +113,11 @@ class Driver implements ExtendedCacheItemPoolInterface
          */
         if ($item instanceof Item) {
             try {
-                return (bool)$this->getBucket()->upsert($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), ['expiry' => $item->getTtl()]);
+                return (bool)$this->getBucket()->upsert(
+                  $item->getEncodedKey(),
+                  $this->encode($this->driverPreWrap($item)),
+                  ['expiry' => $item->getTtl()]
+                );
             } catch (\CouchbaseException $e) {
                 return false;
             }
@@ -134,9 +137,9 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            try{
+            try {
                 return (bool)$this->getBucket()->remove($item->getEncodedKey());
-            }catch (\Couchbase\Exception $e){
+            } catch (\Couchbase\Exception $e) {
                 return $e->getCode() === COUCHBASE_KEY_ENOENT;
             }
         }

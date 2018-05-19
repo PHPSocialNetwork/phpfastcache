@@ -33,13 +33,9 @@ class Config extends ConfigurationOption
     protected $password;
 
     /**
-     * @var array
+     * @var string
      */
-    protected $buckets = [
-      [
-        'bucket' => 'default',
-      ],
-    ];
+    protected $bucketName = 'default';
 
     /**
      * @return string
@@ -78,9 +74,9 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
@@ -89,16 +85,16 @@ class Config extends ConfigurationOption
      * @param string $username
      * @return Config
      */
-    public function setUsername(string $username = null): Config
+    public function setUsername(string $username): Config
     {
         $this->username = $username;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -107,27 +103,27 @@ class Config extends ConfigurationOption
      * @param string $password
      * @return Config
      */
-    public function setPassword(string $password = null): Config
+    public function setPassword(string $password): Config
     {
         $this->password = $password;
         return $this;
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getBuckets(): array
+    public function getBucketName(): string
     {
-        return $this->buckets;
+        return $this->bucketName;
     }
 
     /**
-     * @param array $buckets
+     * @param string $bucketName
      * @return Config
      */
-    public function setBuckets(array $buckets): Config
+    public function setBucketName(string $bucketName): Config
     {
-        $this->buckets = $buckets;
+        $this->bucketName = $bucketName;
         return $this;
     }
 }

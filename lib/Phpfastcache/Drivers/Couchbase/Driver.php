@@ -42,6 +42,11 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected $bucketInstances = [];
 
     /**
+     * @var \CouchbaseBucket
+     */
+    protected $bucketInstance;
+
+    /**
      * @var string
      */
     protected $currentBucket = '';
@@ -76,11 +81,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         );
 
         $this->instance->authenticate($authenticator);
-
-        foreach ($clientConfig->getBuckets() as $bucket) {
-            $this->currentBucket = $this->currentBucket ?: $bucket[ 'bucket' ];
-            $this->setBucket($bucket[ 'bucket' ], $this->instance->openBucket($bucket[ 'bucket' ]));
-        }
+        $this->setBucket($this->instance->openBucket( $clientConfig->getBucketName()));
 
         return true;
     }
@@ -161,21 +162,15 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function getBucket(): \CouchbaseBucket
     {
-        return $this->bucketInstances[ $this->currentBucket ];
+        return $this->bucketInstance;
     }
 
     /**
-     * @param $bucketName
      * @param \CouchbaseBucket $CouchbaseBucket
-     * @throws PhpfastcacheLogicException
      */
-    protected function setBucket($bucketName, \CouchbaseBucket $CouchbaseBucket)
+    protected function setBucket(\CouchbaseBucket $CouchbaseBucket)
     {
-        if (!\array_key_exists($bucketName, $this->bucketInstances)) {
-            $this->bucketInstances[ $bucketName ] = $CouchbaseBucket;
-        } else {
-            throw new PhpfastcacheLogicException('A bucket instance with this name already exists.');
-        }
+        $this->bucketInstance = $CouchbaseBucket;
     }
 
     /********************

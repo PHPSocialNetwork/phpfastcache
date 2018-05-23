@@ -159,3 +159,7 @@ The method still returns a valid string but its format has changed slightly.
 The Couchbase driver has been updated to works with PHP SDK 2.4+ (Couchbase Server 5+).
 Therefore it way requires a Couchbase Server updated combined with an SDK update.
 
+### Constants autoload-related
+As of the V7, all the constant starting by _PFC\_*_ were moved into the `Phpfastcache\Autoload` namespace\ 
+to not pollute php's root namespace.
+

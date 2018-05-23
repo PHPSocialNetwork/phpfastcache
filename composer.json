@@ -3,7 +3,7 @@
     "type" : "library",
     "description": "PHP Abstract Cache Class - Reduce your database call using cache system. PhpFastCache handles a lot of drivers such as Apc(u), Cassandra, CouchBase, Couchdb, Mongodb, Files, (P)redis, Leveldb, Memcache(d), Ssdb, Sqlite, Wincache, Xcache, Zend Data Cache.",
     "keywords": ["abstract", "cache","caching","php cache","mysql cache","apc","apcu","memcache","memcached","wincache","files cache","pdo cache","cache class","redis","predis","cookie", "mongodb", "cassandra", "couchdb", "couchbase", "LevelDb", "Ssdb", "Wincache", "xcache","zend","zend disk cache","zend memory cache","zend data cache","zend server"],
-    "homepage": "http://www.phpfastcache.com",
+    "homepage": "https://www.phpfastcache.com",
     "license": "MIT",
     "minimum-stability": "stable",
     "authors": [
@@ -16,7 +16,7 @@
             {
                 "name": "Khoa Bui",
                 "email": "khoaofgod@gmail.com",
-                "homepage": "http://www.phpfastcache.com",
+                "homepage": "https://www.phpfastcache.com",
                 "role": "Former Project Developer/Original Creator"
             }
         ],

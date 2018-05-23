@@ -22,7 +22,7 @@ namespace Phpfastcache\Exceptions;
 class PhpfastcacheInvalidArgumentTypeException extends PhpfastcacheInvalidArgumentException
 {
     /**
-     * @link http://php.net/manual/en/exception.construct.php
+     * @link https://php.net/manual/en/exception.construct.php
      * @param string $expectedType
      * @param mixed $unexpectedData
      */

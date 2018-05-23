@@ -41,7 +41,7 @@ class Api
      * - ExtendedCacheItemPoolInterface
      * - ExtendedCacheItemInterface
      *
-     * @see  http://semver.org/
+     * @see  https://semver.org/
      * @return string
      */
     public static function getVersion(): string

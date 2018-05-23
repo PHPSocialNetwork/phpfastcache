@@ -121,7 +121,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         return <<<HELP
 <p>
-This driver rely on Zend Server 8.5+, see: http://www.zend.com/en/products/zend_server
+This driver rely on Zend Server 8.5+, see: https://www.zend.com/en/products/zend_server
 </p>
 HELP;
     }

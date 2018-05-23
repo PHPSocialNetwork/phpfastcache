@@ -45,4 +45,4 @@ Thanks to all the contributors that added their stone to the building. Each cont
   - Pear (c) 2001-2004 PHP Group, http://pear.php.net
 
 - MIT licenced:
-  - Predis (c) 2009-2015 Daniele Alessandri, http://clorophilla.net
+  - Predis (c) 2009-2015 Daniele Alessandri, https://clorophilla.net

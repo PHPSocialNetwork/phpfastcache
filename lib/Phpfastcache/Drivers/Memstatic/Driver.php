@@ -15,10 +15,12 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Memstatic;
 
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\{
+    DriverBaseTrait, ExtendedCacheItemPoolInterface
+};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException
+    PhpfastcacheInvalidArgumentException
 };
 use Psr\Cache\CacheItemInterface;
 
@@ -60,8 +62,8 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected function driverRead(CacheItemInterface $item)
     {
         $key = \md5($item->getKey());
-        if (isset($this->staticStack[ $key ])) {
-            return $this->staticStack[ $key ];
+        if (isset($this->staticStack[$key])) {
+            return $this->staticStack[$key];
         }
         return null;
     }
@@ -77,7 +79,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            $this->staticStack[ \md5($item->getKey()) ] = $this->driverPreWrap($item);
+            $this->staticStack[\md5($item->getKey())] = $this->driverPreWrap($item);
             return true;
         }
 
@@ -96,8 +98,8 @@ class Driver implements ExtendedCacheItemPoolInterface
          */
         if ($item instanceof Item) {
             $key = \md5($item->getKey());
-            if (isset($this->staticStack[ $key ])) {
-                unset($this->staticStack[ $key ]);
+            if (isset($this->staticStack[$key])) {
+                unset($this->staticStack[$key]);
                 return true;
             }
             return false;
@@ -129,9 +131,9 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         $stat = new DriverStatistic();
         $stat->setInfo('[Memstatic] A memory static driver')
-          ->setSize(mb_strlen(\serialize($this->staticStack)))
-          ->setData(\implode(', ', \array_keys($this->itemInstances)))
-          ->setRawData($this->staticStack);
+            ->setSize(mb_strlen(\serialize($this->staticStack)))
+            ->setData(\implode(', ', \array_keys($this->itemInstances)))
+            ->setRawData($this->staticStack);
 
         return $stat;
     }

@@ -18,7 +18,7 @@ namespace Phpfastcache\Core\Item;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventInterface;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
+    PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
 };
 use Psr\Cache\CacheItemInterface;
 

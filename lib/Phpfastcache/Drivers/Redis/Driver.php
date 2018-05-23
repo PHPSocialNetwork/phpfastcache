@@ -15,15 +15,13 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Redis;
 
-use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Pool\{
-  DriverBaseTrait, ExtendedCacheItemPoolInterface
+    DriverBaseTrait, ExtendedCacheItemPoolInterface
 };
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
+    PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
 };
-use Phpfastcache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 use Redis as RedisClient;
 
@@ -59,7 +57,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * In case of an user-provided
          * Redis client just return here
          */
-        if($this->getConfig()->getRedisClient() instanceof RedisClient){
+        if ($this->getConfig()->getRedisClient() instanceof RedisClient) {
             /**
              * Unlike Predis, we can't test if we're are connected
              * or not, so let's just assume that we are
@@ -174,13 +172,13 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         // used_memory
         $info = $this->instance->info();
-        $date = (new \DateTime())->setTimestamp(\time() - $info[ 'uptime_in_seconds' ]);
+        $date = (new \DateTime())->setTimestamp(\time() - $info['uptime_in_seconds']);
 
         return (new DriverStatistic())
-          ->setData(\implode(', ', \array_keys($this->itemInstances)))
-          ->setRawData($info)
-          ->setSize((int)$info[ 'used_memory' ])
-          ->setInfo(\sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
-            $info[ 'redis_version' ], $date->format(DATE_RFC2822)));
+            ->setData(\implode(', ', \array_keys($this->itemInstances)))
+            ->setRawData($info)
+            ->setSize((int)$info['used_memory'])
+            ->setInfo(\sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
+                $info['redis_version'], $date->format(DATE_RFC2822)));
     }
 }

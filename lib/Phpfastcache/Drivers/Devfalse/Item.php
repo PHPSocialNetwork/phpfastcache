@@ -20,7 +20,7 @@ use Phpfastcache\Core\Item\ItemBaseTrait;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Drivers\Devfalse\Driver as DevfalseDriver;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidArgumentTypeException
+    PhpfastcacheInvalidArgumentException
 };
 
 /**
@@ -29,7 +29,7 @@ use Phpfastcache\Exceptions\{
  */
 class Item implements ExtendedCacheItemInterface
 {
-    use ItemBaseTrait{
+    use ItemBaseTrait {
         ItemBaseTrait::__construct as __BaseConstruct;
     }
 

@@ -67,7 +67,7 @@ class TestHelper
      */
     public function printHeaders()
     {
-        if(!$this->isCli() && !\headers_sent()){
+        if (!$this->isCli() && !\headers_sent()) {
             \header('Content-Type: text/plain, true');
         }
 
@@ -259,11 +259,11 @@ class TestHelper
             $this->printSkipText('A driver could not be initialized due to missing requirement: ' . $exception->getMessage());
         } else {
             $this->printFailText(\sprintf(
-              'Uncaught exception "%s" in "%s" line %d with message: "%s"',
-              \get_class($exception),
-              $exception->getFile(),
-              $exception->getLine(),
-              $exception->getMessage()
+                'Uncaught exception "%s" in "%s" line %d with message: "%s"',
+                \get_class($exception),
+                $exception->getFile(),
+                $exception->getLine(),
+                $exception->getMessage()
             ));
         }
         $this->terminateTest();
@@ -310,17 +310,17 @@ class TestHelper
 
         if ($errorType === '[FATAL ERROR]') {
             $this->printFailText(\sprintf(
-              "A critical error has been caught: \"%s\" in %s line %d",
-              "$errorType $errstr",
-              $errfile,
-              $errline
+                "A critical error has been caught: \"%s\" in %s line %d",
+                "$errorType $errstr",
+                $errfile,
+                $errline
             ));
         } else {
             $this->printDebugText(\sprintf(
-              "A non-critical error has been caught: \"%s\" in %s line %d",
-              "$errorType $errstr",
-              $errfile,
-              $errline
+                "A non-critical error has been caught: \"%s\" in %s line %d",
+                "$errorType $errstr",
+                $errfile,
+                $errline
             ));
         }
     }
@@ -343,7 +343,7 @@ class TestHelper
             return true;
         }
 
-        if (empty($_SERVER[ 'REMOTE_ADDR' ]) && !isset($_SERVER[ 'HTTP_USER_AGENT' ]) && \count($_SERVER[ 'argv' ]) > 0) {
+        if (empty($_SERVER['REMOTE_ADDR']) && !isset($_SERVER['HTTP_USER_AGENT']) && \count($_SERVER['argv']) > 0) {
             return true;
         }
 

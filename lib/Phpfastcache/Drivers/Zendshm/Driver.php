@@ -14,10 +14,12 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Zendshm;
 
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\{
+    DriverBaseTrait, ExtendedCacheItemPoolInterface
+};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException
+    PhpfastcacheInvalidArgumentException
 };
 use Psr\Cache\CacheItemInterface;
 
@@ -92,7 +94,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return (bool) zend_shm_cache_delete($item->getKey());
+            return (bool)zend_shm_cache_delete($item->getKey());
         }
 
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
@@ -131,9 +133,9 @@ HELP;
     {
         $stats = (array)zend_shm_cache_info();
         return (new DriverStatistic())
-          ->setData(\implode(', ', \array_keys($this->itemInstances)))
-          ->setInfo(\sprintf("The Zend memory have %d item(s) in cache.\n For more information see RawData.", $stats[ 'items_total' ]))
-          ->setRawData($stats)
-          ->setSize($stats[ 'memory_total' ]);
+            ->setData(\implode(', ', \array_keys($this->itemInstances)))
+            ->setInfo(\sprintf("The Zend memory have %d item(s) in cache.\n For more information see RawData.", $stats['items_total']))
+            ->setRawData($stats)
+            ->setSize($stats['memory_total']);
     }
 }

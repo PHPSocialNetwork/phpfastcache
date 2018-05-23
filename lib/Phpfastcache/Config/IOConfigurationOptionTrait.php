@@ -8,10 +8,6 @@
 
 namespace Phpfastcache\Config;
 
-use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
-use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
-use Phpfastcache\Util\ArrayObject;
-
 trait IOConfigurationOptionTrait
 {
     /**

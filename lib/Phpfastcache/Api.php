@@ -64,32 +64,32 @@ class Api
          */
         static $version;
 
-        if($version && $cacheable){
+        if ($version && $cacheable) {
             return $version;
         }
 
-        if(\function_exists('shell_exec')){
+        if (\function_exists('shell_exec')) {
             $command = 'git -C "' . __DIR__ . '" describe --abbrev=0 --tags';
             $stdout = shell_exec($command);
-            if(\is_string($stdout)){
+            if (\is_string($stdout)) {
                 $version = \trim($stdout);
                 return $version;
             }
-            if(!$fallbackOnChangelog){
+            if (!$fallbackOnChangelog) {
                 throw new PhpfastcacheLogicException('The git command used to retrieve the PhpFastCache version has failed.');
             }
         }
 
-        if(!$fallbackOnChangelog){
+        if (!$fallbackOnChangelog) {
             throw new PhpfastcacheLogicException('shell_exec is disabled therefore the PhpFastCache version cannot be retrieved.');
         }
 
         $changelogFilename = __DIR__ . '/../../CHANGELOG.md';
-        if(\file_exists($changelogFilename)){
+        if (\file_exists($changelogFilename)) {
             $versionPrefix = '## ';
             $changelog = \explode("\n", self::getPhpFastCacheChangelog());
-            foreach ($changelog as $line){
-                if(\strpos($line, $versionPrefix) === 0){
+            foreach ($changelog as $line) {
+                if (\strpos($line, $versionPrefix) === 0) {
                     $version = \trim(\str_replace($versionPrefix, '', $line));
                     return $version;
                 }
@@ -107,13 +107,13 @@ class Api
     {
         static $hash;
 
-        if($hash && $cacheable){
+        if ($hash && $cacheable) {
             return $hash;
         }
 
-        if(\function_exists('shell_exec')){
+        if (\function_exists('shell_exec')) {
             $stdout = \shell_exec('git rev-parse --short HEAD');
-            if(\is_string($stdout)){
+            if (\is_string($stdout)) {
                 $hash = \trim($stdout);
                 return "#{$hash}";
             }
@@ -131,9 +131,9 @@ class Api
     public static function getChangelog(): string
     {
         $changelogFilename = __DIR__ . '/../../CHANGELOG_API.md';
-        if(\file_exists($changelogFilename)){
+        if (\file_exists($changelogFilename)) {
             $string = \str_replace(["\r\n", "\r"], "\n", \trim(\file_get_contents($changelogFilename)));
-            if($string){
+            if ($string) {
                 return $string;
             }
             throw new PhpfastcacheLogicException('Unable to retrieve the PhpFastCache API changelog as it seems to be empty.');
@@ -150,9 +150,9 @@ class Api
     public static function getPhpFastCacheChangelog(): string
     {
         $changelogFilename = __DIR__ . '/../../CHANGELOG.md';
-        if(\file_exists($changelogFilename)){
+        if (\file_exists($changelogFilename)) {
             $string = \str_replace(["\r\n", "\r"], "\n", \trim(\file_get_contents($changelogFilename)));
-            if($string){
+            if ($string) {
                 return $string;
             }
             throw new PhpfastcacheLogicException('Unable to retrieve the PhpFastCache changelog as it seems to be empty.');

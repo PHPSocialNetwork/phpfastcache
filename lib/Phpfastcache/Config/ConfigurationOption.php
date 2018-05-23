@@ -103,27 +103,27 @@ class ConfigurationOption extends ArrayObject
          * Detect unwanted keys and throw an exception.
          * No more kidding now, it's 21th century.
          */
-        if(array_diff_key($array, get_object_vars($this))){
+        if (array_diff_key($array, get_object_vars($this))) {
             throw new PhpfastcacheInvalidConfigurationException(\sprintf(
-              'Invalid option(s) for the config %s: %s',
-              static::class,
-              implode(', ',  array_keys(array_diff_key($array, get_object_vars($this))))
+                'Invalid option(s) for the config %s: %s',
+                static::class,
+                implode(', ', array_keys(array_diff_key($array, get_object_vars($this))))
             ));
         }
 
         foreach (get_object_vars($this) as $property => $value) {
 
-            if(array_key_exists($property, $array)){
-                $this->$property = &$array[ $property ];
-            }else{
-                $array[ $property ] = &$this->$property;
+            if (array_key_exists($property, $array)) {
+                $this->$property = &$array[$property];
+            } else {
+                $array[$property] = &$this->$property;
             }
         }
 
         foreach (get_class_methods($this) as $method) {
-            if(strpos($method, 'set') === 0){
+            if (strpos($method, 'set') === 0) {
                 $value = null;
-                try{
+                try {
                     /**
                      * We use property instead of getter
                      * because of is/get conditions and
@@ -132,17 +132,17 @@ class ConfigurationOption extends ArrayObject
                      */
                     $value = $this->{lcfirst(substr($method, 3))};
                     $this->{$method}($value);
-                }catch(\TypeError $e){
+                } catch (\TypeError $e) {
                     $typeHintGot = \is_object($value) ? \get_class($value) : \gettype($value);
                     $reflectionMethod = new \ReflectionMethod($this, $method);
                     $parameter = $reflectionMethod->getParameters()[0] ?? null;
                     $typeHintExpected = ($parameter instanceof \ReflectionParameter ? ($parameter->getType() === 'object' ? $parameter->getClass() : $parameter->getType()) : 'Unknown type');
 
                     throw new PhpfastcacheInvalidConfigurationException(\sprintf(
-                      'Invalid type hint found for "%s", expected "%s" got "%s"',
-                      lcfirst(substr($method, 3)),
-                      $typeHintExpected,
-                      $typeHintGot
+                        'Invalid type hint found for "%s", expected "%s" got "%s"',
+                        lcfirst(substr($method, 3)),
+                        $typeHintExpected,
+                        $typeHintGot
                     ));
                 }
             }
@@ -221,7 +221,7 @@ class ConfigurationOption extends ArrayObject
      */
     public function setIgnoreSymfonyNotice(bool $ignoreSymfonyNotice): self
     {
-        if($ignoreSymfonyNotice){
+        if ($ignoreSymfonyNotice) {
             \trigger_error('Configuration option "ignoreSymfonyNotice" is deprecated as of the V7', E_USER_DEPRECATED);
         }
         $this->ignoreSymfonyNotice = $ignoreSymfonyNotice;
@@ -358,11 +358,11 @@ class ConfigurationOption extends ArrayObject
      */
     public function setFallbackConfig($fallbackConfig): self
     {
-        if($fallbackConfig !== null && !($fallbackConfig instanceof self)){
+        if ($fallbackConfig !== null && !($fallbackConfig instanceof self)) {
             throw new PhpfastcacheInvalidArgumentException(\sprintf(
-              'Invalid argument "%s" for %s',
-              gettype($fallbackConfig) === 'object' ? get_class($fallbackConfig) : gettype($fallbackConfig),
-              __METHOD__
+                'Invalid argument "%s" for %s',
+                \gettype($fallbackConfig) === 'object' ? \get_class($fallbackConfig) : \gettype($fallbackConfig),
+                __METHOD__
             ));
         }
         $this->fallbackConfig = $fallbackConfig;
@@ -461,10 +461,10 @@ class ConfigurationOption extends ArrayObject
          * by opening a pull request :)
          */
         static $safeFileExtensions = [
-          'txt',
-          'cache',
-          'db',
-          'pfc',
+            'txt',
+            'cache',
+            'db',
+            'pfc',
         ];
 
         if (\strpos($cacheFileExtension, '.') !== false) {
@@ -472,7 +472,7 @@ class ConfigurationOption extends ArrayObject
         }
         if (!\in_array($cacheFileExtension, $safeFileExtensions, true)) {
             throw new PhpfastcacheInvalidConfigurationException(
-              "Extension \"{$cacheFileExtension}\" is not safe, currently allowed extension names: " . \implode(', ', $safeFileExtensions)
+                "Extension \"{$cacheFileExtension}\" is not safe, currently allowed extension names: " . \implode(', ', $safeFileExtensions)
             );
         }
 

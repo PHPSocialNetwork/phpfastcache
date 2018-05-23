@@ -15,10 +15,12 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Wincache;
 
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\{
+    DriverBaseTrait, ExtendedCacheItemPoolInterface
+};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException
+    PhpfastcacheInvalidArgumentException
 };
 use Psr\Cache\CacheItemInterface;
 
@@ -118,12 +120,12 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         $memInfo = wincache_ucache_meminfo();
         $info = wincache_ucache_info();
-        $date = (new \DateTime())->setTimestamp(\time() - $info[ 'total_cache_uptime' ]);
+        $date = (new \DateTime())->setTimestamp(\time() - $info['total_cache_uptime']);
 
         return (new DriverStatistic())
-          ->setInfo(\sprintf("The Wincache daemon is up since %s.\n For more information see RawData.", $date->format(DATE_RFC2822)))
-          ->setSize($memInfo[ 'memory_free' ] - $memInfo[ 'memory_total' ])
-          ->setData(\implode(', ', \array_keys($this->itemInstances)))
-          ->setRawData($memInfo);
+            ->setInfo(\sprintf("The Wincache daemon is up since %s.\n For more information see RawData.", $date->format(DATE_RFC2822)))
+            ->setSize($memInfo['memory_free'] - $memInfo['memory_total'])
+            ->setData(\implode(', ', \array_keys($this->itemInstances)))
+            ->setRawData($memInfo);
     }
 }

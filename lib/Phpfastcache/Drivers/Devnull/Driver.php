@@ -15,10 +15,12 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Devnull;
 
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\{
+    DriverBaseTrait, ExtendedCacheItemPoolInterface
+};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException
+    PhpfastcacheInvalidArgumentException
 };
 use Psr\Cache\CacheItemInterface;
 
@@ -120,9 +122,9 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         $stat = new DriverStatistic();
         $stat->setInfo('[Devnull] A void info string')
-          ->setSize(0)
-          ->setData(\implode(', ', \array_keys($this->itemInstances)))
-          ->setRawData(null);
+            ->setSize(0)
+            ->setData(\implode(', ', \array_keys($this->itemInstances)))
+            ->setRawData(null);
 
         return $stat;
     }

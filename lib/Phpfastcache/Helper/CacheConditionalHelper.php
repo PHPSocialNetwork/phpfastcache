@@ -49,7 +49,7 @@ class CacheConditionalHelper
 
         if (!$cacheItem->isHit()) {
             $cacheItem->set($callback());
-            if($expiresAfter){
+            if ($expiresAfter) {
                 $cacheItem->expiresAfter($expiresAfter);
             }
             $this->cacheInstance->save($cacheItem);

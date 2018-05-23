@@ -16,12 +16,13 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Riak;
 
 use Basho\Riak\Riak;
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\{
+    DriverBaseTrait, ExtendedCacheItemPoolInterface
+};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
+    PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
 };
-use Phpfastcache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -89,9 +90,9 @@ class Driver implements ExtendedCacheItemPoolInterface
          */
         if ($item instanceof Item) {
             $this->instance
-              ->bucket($this->bucketName)
-              ->newBinary($item->getKey(), $this->encode($this->driverPreWrap($item)))
-              ->store();
+                ->bucket($this->bucketName)
+                ->newBinary($item->getKey(), $this->encode($this->driverPreWrap($item)))
+                ->store();
             return true;
         }
 
@@ -142,9 +143,9 @@ class Driver implements ExtendedCacheItemPoolInterface
         $info = $this->instance->bucket($this->bucketName)->getProperties();
 
         return (new DriverStatistic())
-          ->setData(\implode(', ', \array_keys($this->itemInstances)))
-          ->setRawData($info)
-          ->setSize(false)
-          ->setInfo('Riak does not provide size/date information att all :(');
+            ->setData(\implode(', ', \array_keys($this->itemInstances)))
+            ->setRawData($info)
+            ->setSize(false)
+            ->setInfo('Riak does not provide size/date information att all :(');
     }
 }

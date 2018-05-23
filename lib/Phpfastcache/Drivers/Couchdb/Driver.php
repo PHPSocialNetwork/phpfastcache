@@ -16,17 +16,15 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Couchdb;
 
 use Doctrine\CouchDB\{
-  CouchDBClient as CouchdbClient, CouchDBException
+    CouchDBClient as CouchdbClient, CouchDBException
 };
-use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Pool\{
-  DriverBaseTrait, ExtendedCacheItemPoolInterface
-};
-use Phpfastcache\Exceptions\{
-  PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
+    DriverBaseTrait, ExtendedCacheItemPoolInterface
 };
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Util\ArrayObject;
+use Phpfastcache\Exceptions\{
+    PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
+};
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -75,9 +73,9 @@ class Driver implements ExtendedCacheItemPoolInterface
         $url .= $clientConfig->getPath();
 
         $this->instance = CouchDBClient::create([
-          'dbname' => $this->getDatabaseName(),
-          'url' => $url,
-          'timeout' => $clientConfig->getTimeout(),
+            'dbname' => $this->getDatabaseName(),
+            'url' => $url,
+            'timeout' => $clientConfig->getTimeout(),
         ]);
 
         $this->createDatabase();
@@ -98,12 +96,12 @@ class Driver implements ExtendedCacheItemPoolInterface
             throw new PhpfastcacheDriverException('Got error while trying to get a document: ' . $e->getMessage(), null, $e);
         }
 
-        if ($response->status === 404 || empty($response->body[ 'data' ])) {
+        if ($response->status === 404 || empty($response->body['data'])) {
             return null;
         }
 
         if ($response->status === 200) {
-            return $this->decode($response->body[ 'data' ]);
+            return $this->decode($response->body['data']);
         }
 
         throw new PhpfastcacheDriverException('Got unexpected HTTP status: ' . $response->status);
@@ -124,7 +122,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         if ($item instanceof Item) {
             try {
                 $this->instance->putDocument(['data' => $this->encode($this->driverPreWrap($item))], $item->getEncodedKey(),
-                  $this->getLatestDocumentRevision($item->getEncodedKey()));
+                    $this->getLatestDocumentRevision($item->getEncodedKey()));
             } catch (CouchDBException $e) {
                 throw new PhpfastcacheDriverException('Got error while trying to upsert a document: ' . $e->getMessage(), null, $e);
             }
@@ -181,13 +179,13 @@ class Driver implements ExtendedCacheItemPoolInterface
         $path = '/' . $this->getDatabaseName() . '/' . urlencode($docId);
 
         $response = $this->instance->getHttpClient()->request(
-          'HEAD',
-          $path,
-          null,
-          false
+            'HEAD',
+            $path,
+            null,
+            false
         );
-        if (!empty($response->headers[ 'etag' ])) {
-            return \trim($response->headers[ 'etag' ], " '\"\t\n\r\0\x0B");
+        if (!empty($response->headers['etag'])) {
+            return \trim($response->headers['etag'], " '\"\t\n\r\0\x0B");
         }
 
         return null;
@@ -238,9 +236,9 @@ HELP;
         $info = $this->instance->getDatabaseInfo();
 
         return (new DriverStatistic())
-          ->setSize($info[ 'sizes' ][ 'active' ])
-          ->setRawData($info)
-          ->setData(\implode(', ', \array_keys($this->itemInstances)))
-          ->setInfo('Couchdb version ' . $this->instance->getVersion() . "\n For more information see RawData.");
+            ->setSize($info['sizes']['active'])
+            ->setRawData($info)
+            ->setData(\implode(', ', \array_keys($this->itemInstances)))
+            ->setInfo('Couchdb version ' . $this->instance->getVersion() . "\n For more information see RawData.");
     }
 }

@@ -55,7 +55,7 @@ trait ClassNamespaceResolverTrait
         }
         $map = [];
 
-        if(\is_array($dir) || $dir instanceof \Traversable){
+        if (\is_array($dir) || $dir instanceof \Traversable) {
             foreach ($dir as $file) {
                 if (!$file->isFile()) {
                     continue;
@@ -70,7 +70,7 @@ trait ClassNamespaceResolverTrait
                     \gc_mem_caches();
                 }
                 foreach ($classes as $class) {
-                    $map[ $class ] = $path;
+                    $map[$class] = $path;
                 }
             }
         }
@@ -94,19 +94,19 @@ trait ClassNamespaceResolverTrait
         $tokens = \token_get_all($contents);
         $classes = [];
         $namespace = '';
-        for ($i = 0; isset($tokens[ $i ]); ++$i) {
-            $token = $tokens[ $i ];
-            if (!isset($token[ 1 ])) {
+        for ($i = 0; isset($tokens[$i]); ++$i) {
+            $token = $tokens[$i];
+            if (!isset($token[1])) {
                 continue;
             }
             $class = '';
-            switch ($token[ 0 ]) {
+            switch ($token[0]) {
                 case \T_NAMESPACE:
                     $namespace = '';
                     // If there is a namespace, extract it
-                    while (isset($tokens[ ++$i ][ 1 ])) {
-                        if (\in_array($tokens[ $i ][ 0 ], [\T_STRING, \T_NS_SEPARATOR])) {
-                            $namespace .= $tokens[ $i ][ 1 ];
+                    while (isset($tokens[++$i][1])) {
+                        if (\in_array($tokens[$i][0], [\T_STRING, \T_NS_SEPARATOR])) {
+                            $namespace .= $tokens[$i][1];
                         }
                     }
                     $namespace .= '\\';
@@ -117,13 +117,13 @@ trait ClassNamespaceResolverTrait
                     // Skip usage of ::class constant
                     $isClassConstant = false;
                     for ($j = $i - 1; $j > 0; --$j) {
-                        if (!isset($tokens[ $j ][ 1 ])) {
+                        if (!isset($tokens[$j][1])) {
                             break;
                         }
-                        if (\T_DOUBLE_COLON === $tokens[ $j ][ 0 ]) {
+                        if (\T_DOUBLE_COLON === $tokens[$j][0]) {
                             $isClassConstant = true;
                             break;
-                        } elseif (!\in_array($tokens[ $j ][ 0 ], [\T_WHITESPACE, \T_DOC_COMMENT, \T_COMMENT], false)) {
+                        } elseif (!\in_array($tokens[$j][0], [\T_WHITESPACE, \T_DOC_COMMENT, \T_COMMENT], false)) {
                             break;
                         }
                     }
@@ -131,11 +131,11 @@ trait ClassNamespaceResolverTrait
                         break;
                     }
                     // Find the classname
-                    while (isset($tokens[ ++$i ][ 1 ])) {
-                        $t = $tokens[ $i ];
-                        if (\T_STRING === $t[ 0 ]) {
-                            $class .= $t[ 1 ];
-                        } elseif ('' !== $class && \T_WHITESPACE === $t[ 0 ]) {
+                    while (isset($tokens[++$i][1])) {
+                        $t = $tokens[$i];
+                        if (\T_STRING === $t[0]) {
+                            $class .= $t[1];
+                        } elseif ('' !== $class && \T_WHITESPACE === $t[0]) {
                             break;
                         }
                     }

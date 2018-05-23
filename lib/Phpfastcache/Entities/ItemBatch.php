@@ -15,8 +15,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Entities;
 
-use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentTypeException;
-
 /**
  * Class ItemBatch
  * @package phpFastCache\Entities
@@ -37,16 +35,11 @@ class ItemBatch
      * ItemBatch constructor.
      * @param string $itemKey
      * @param \DateTimeInterface $itemDate
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentTypeException
      */
     public function __construct(string $itemKey, \DateTimeInterface $itemDate)
     {
-        if (\is_string($itemKey)) {
-            $this->itemKey = $itemKey;
-            $this->itemDate = $itemDate;
-        } else {
-            throw new PhpfastcacheInvalidArgumentTypeException('string', $itemKey);
-        }
+        $this->itemKey = $itemKey;
+        $this->itemDate = $itemDate;
     }
 
     /**

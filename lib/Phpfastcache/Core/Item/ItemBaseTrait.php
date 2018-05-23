@@ -187,17 +187,19 @@ trait ItemBaseTrait
             $this->eventManager->dispatch('CacheItemExpireAfter', $this, $time);
 
             $this->expirationDate = (new \DateTime())->add(new \DateInterval(\sprintf('PT%dS', $time)));
-        } else if ($time instanceof \DateInterval) {
-            /**
-             * @eventName CacheItemExpireAt
-             * @param ExtendedCacheItemInterface $this
-             * @param \DateTimeInterface $expiration
-             */
-            $this->eventManager->dispatch('CacheItemExpireAfter', $this, $time);
-
-            $this->expirationDate = (new \DateTime())->add($time);
         } else {
-            throw new PhpfastcacheInvalidArgumentException(\sprintf('Invalid date format, got "%s"', \gettype($time)));
+            if ($time instanceof \DateInterval) {
+                /**
+                 * @eventName CacheItemExpireAt
+                 * @param ExtendedCacheItemInterface $this
+                 * @param \DateTimeInterface $expiration
+                 */
+                $this->eventManager->dispatch('CacheItemExpireAfter', $this, $time);
+
+                $this->expirationDate = (new \DateTime())->add($time);
+            } else {
+                throw new PhpfastcacheInvalidArgumentException(\sprintf('Invalid date format, got "%s"', \gettype($time)));
+            }
         }
 
         return $this;

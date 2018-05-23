@@ -15,13 +15,16 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Ssdb;
 
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\{
+    DriverBaseTrait, ExtendedCacheItemPoolInterface
+};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException, PhpfastcacheDriverCheckException, PhpfastcacheDriverException
+    PhpfastcacheDriverCheckException, PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException
 };
-use Phpfastcache\Util\ArrayObject;
-use phpssdb\Core\{SimpleSSDB, SSDBException};
+use phpssdb\Core\{
+    SimpleSSDB, SSDBException
+};
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -146,10 +149,10 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Data returned by Ssdb are very poorly formatted
          * using hardcoded offset of pair key-value :-(
          */
-        $stat->setInfo(\sprintf("Ssdb-server v%s with a total of %s call(s).\n For more information see RawData.", $info[ 2 ], $info[ 6 ]))
-          ->setRawData($info)
-          ->setData(\implode(', ', \array_keys($this->itemInstances)))
-          ->setSize($this->instance->dbsize());
+        $stat->setInfo(\sprintf("Ssdb-server v%s with a total of %s call(s).\n For more information see RawData.", $info[2], $info[6]))
+            ->setRawData($info)
+            ->setData(\implode(', ', \array_keys($this->itemInstances)))
+            ->setSize($this->instance->dbsize());
 
         return $stat;
     }

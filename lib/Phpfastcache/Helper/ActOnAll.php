@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Helper;
 
 use Phpfastcache\{
-  CacheManager, Event\EventInterface, EventManager
+    CacheManager, Event\EventInterface
 };
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Entities\DriverStatistic;
@@ -51,7 +51,7 @@ class ActOnAll
             $return = [];
             foreach ($this->instances as $instance) {
                 $reflectionMethod = new \ReflectionMethod(\get_class($instance), $method);
-                $return[ $instance->getDriverName() ] = $reflectionMethod->invokeArgs($instance, $args);
+                $return[$instance->getDriverName()] = $reflectionMethod->invokeArgs($instance, $args);
             }
             return $return;
         };

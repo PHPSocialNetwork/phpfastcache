@@ -14,10 +14,12 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Zenddisk;
 
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\{
+    DriverBaseTrait, ExtendedCacheItemPoolInterface
+};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException
+    PhpfastcacheInvalidArgumentException
 };
 use Psr\Cache\CacheItemInterface;
 
@@ -92,7 +94,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return (bool) zend_disk_cache_delete($item->getKey());
+            return (bool)zend_disk_cache_delete($item->getKey());
         }
 
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
@@ -131,9 +133,9 @@ HELP;
     {
         $stat = new DriverStatistic();
         $stat->setInfo('[ZendDisk] A void info string')
-          ->setSize(0)
-          ->setData(\implode(', ', \array_keys($this->itemInstances)))
-          ->setRawData(false);
+            ->setSize(0)
+            ->setData(\implode(', ', \array_keys($this->itemInstances)))
+            ->setRawData(false);
 
         return $stat;
     }

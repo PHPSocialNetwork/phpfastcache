@@ -15,10 +15,12 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Apc;
 
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\{
+    DriverBaseTrait, ExtendedCacheItemPoolInterface
+};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException
+    PhpfastcacheInvalidArgumentException
 };
 use Psr\Cache\CacheItemInterface;
 
@@ -130,13 +132,13 @@ class Driver implements ExtendedCacheItemPoolInterface
     public function getStats(): DriverStatistic
     {
         $stats = (array)apc_cache_info('user');
-        $date = (new \DateTime())->setTimestamp($stats[ 'start_time' ]);
+        $date = (new \DateTime())->setTimestamp($stats['start_time']);
 
         return (new DriverStatistic())
-          ->setData(\implode(', ', \array_keys($this->itemInstances)))
-          ->setInfo(\sprintf("The APC cache is up since %s, and have %d item(s) in cache.\n For more information see RawData.", $date->format(DATE_RFC2822),
-            $stats[ 'num_entries' ]))
-          ->setRawData($stats)
-          ->setSize($stats[ 'mem_size' ]);
+            ->setData(\implode(', ', \array_keys($this->itemInstances)))
+            ->setInfo(\sprintf("The APC cache is up since %s, and have %d item(s) in cache.\n For more information see RawData.", $date->format(DATE_RFC2822),
+                $stats['num_entries']))
+            ->setRawData($stats)
+            ->setSize($stats['mem_size']);
     }
 }

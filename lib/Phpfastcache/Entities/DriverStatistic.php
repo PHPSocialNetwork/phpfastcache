@@ -15,8 +15,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Entities;
 
-use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentTypeException;
-
 /**
  * Class DriverStatistic
  * @package phpFastCache\Entities
@@ -126,10 +124,10 @@ class DriverStatistic
     public function getPublicDesc(): array
     {
         return [
-          'Info' => 'Cache Information',
-          'Size' => 'Cache Size',
-          'Data' => 'Cache items keys',
-          'RawData' => 'Cache raw data',
+            'Info' => 'Cache Information',
+            'Size' => 'Cache Size',
+            'Data' => 'Cache items keys',
+            'RawData' => 'Cache raw data',
         ];
     }
 }

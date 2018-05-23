@@ -16,14 +16,14 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Pool;
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\EventManager;
+use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\ItemBatch;
-use Phpfastcache\Util\ClassNamespaceResolverTrait;
+use Phpfastcache\EventManager;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException, PhpfastcacheCoreException, PhpfastcacheLogicException
+    PhpfastcacheCoreException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
 };
-use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Util\ClassNamespaceResolverTrait;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -71,9 +71,9 @@ trait CacheItemPoolTrait
              * due to performance issue on huge
              * loop dispatching operations
              */
-            if (!isset($this->itemInstances[ $key ])) {
+            if (!isset($this->itemInstances[$key])) {
                 if (\preg_match('~([' . \preg_quote(self::$unsupportedKeyChars, '~') . ']+)~', $key, $matches)) {
-                    throw new PhpfastcacheInvalidArgumentException('Unsupported key character detected: "' . $matches[ 1 ] . '". Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers');
+                    throw new PhpfastcacheInvalidArgumentException('Unsupported key character detected: "' . $matches[1] . '". Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers');
                 }
 
                 CacheManager::$ReadHits++;
@@ -90,11 +90,11 @@ trait CacheItemPoolTrait
                     if ($driverArray) {
                         if (!\is_array($driverArray)) {
                             throw new PhpfastcacheCoreException(\sprintf('The driverRead method returned an unexpected variable type: %s',
-                              \gettype($driverArray)));
+                                \gettype($driverArray)));
                         }
                         $driverData = $this->driverUnwrapData($driverArray);
 
-                        if ($this->getConfig()[ 'preventCacheSlams' ]) {
+                        if ($this->getConfig()['preventCacheSlams']) {
                             while ($driverData instanceof ItemBatch) {
                                 if ($driverData->getItemDate()->getTimestamp() + $this->getConfig()->getCacheSlamsTimeout() < \time()) {
                                     /**
@@ -155,9 +155,9 @@ trait CacheItemPoolTrait
                              * Reset the Item
                              */
                             $item->set(null)
-                              ->expiresAfter(\abs((int)$this->getConfig()[ 'defaultTtl' ]))
-                              ->setHit(false)
-                              ->setTags([]);
+                                ->expiresAfter(\abs((int)$this->getConfig()['defaultTtl']))
+                                ->setHit(false)
+                                ->setTags([]);
                             if ($this->getConfig()->isItemDetailedDate()) {
 
                                 /**
@@ -172,7 +172,7 @@ trait CacheItemPoolTrait
                             $item->setHit(true);
                         }
                     } else {
-                        $item->expiresAfter(\abs((int)$this->getConfig()[ 'defaultTtl' ]));
+                        $item->expiresAfter(\abs((int)$this->getConfig()['defaultTtl']));
                     }
                 }
             }
@@ -185,9 +185,9 @@ trait CacheItemPoolTrait
          * @param $this ExtendedCacheItemPoolInterface
          * @param $this ExtendedCacheItemInterface
          */
-        $this->eventManager->dispatch('CacheGetItem', $this, $this->itemInstances[ $key ]);
+        $this->eventManager->dispatch('CacheGetItem', $this, $this->itemInstances[$key]);
 
-        return $this->itemInstances[ $key ];
+        return $this->itemInstances[$key];
     }
 
     /**
@@ -198,7 +198,7 @@ trait CacheItemPoolTrait
     public function setItem(CacheItemInterface $item)
     {
         if ($this->getClassNamespace() . '\\Item' === \get_class($item)) {
-            $this->itemInstances[ $item->getKey() ] = $item;
+            $this->itemInstances[$item->getKey()] = $item;
 
             return $this;
         }
@@ -215,7 +215,7 @@ trait CacheItemPoolTrait
     {
         $collection = [];
         foreach ($keys as $key) {
-            $collection[ $key ] = $this->getItem($key);
+            $collection[$key] = $this->getItem($key);
         }
 
         return $collection;
@@ -320,10 +320,12 @@ trait CacheItemPoolTrait
          * due to performance issue on huge
          * loop dispatching operations
          */
-        if (!isset($this->itemInstances[ $item->getKey() ])) {
-            $this->itemInstances[ $item->getKey() ] = $item;
-        } else if (\spl_object_hash($item) !== \spl_object_hash($this->itemInstances[ $item->getKey() ])) {
-            throw new \RuntimeException('Spl object hash mismatches ! You probably tried to save a detached item which has been already retrieved from cache.');
+        if (!isset($this->itemInstances[$item->getKey()])) {
+            $this->itemInstances[$item->getKey()] = $item;
+        } else {
+            if (\spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
+                throw new \RuntimeException('Spl object hash mismatches ! You probably tried to save a detached item which has been already retrieved from cache.');
+            }
         }
 
         /**
@@ -341,8 +343,8 @@ trait CacheItemPoolTrait
             $class = new \ReflectionClass((new \ReflectionObject($this))->getNamespaceName() . '\Item');
             $itemBatch = $class->newInstanceArgs([$this, $item->getKey()]);
             $itemBatch->setEventManager($this->eventManager)
-              ->set(new ItemBatch($item->getKey(), new \DateTime()))
-              ->expiresAfter($this->getConfig()->getCacheSlamsTimeout());
+                ->set(new ItemBatch($item->getKey(), new \DateTime()))
+                ->expiresAfter($this->getConfig()->getCacheSlamsTimeout());
 
             /**
              * To avoid SPL mismatches
@@ -374,9 +376,11 @@ trait CacheItemPoolTrait
     public function saveDeferred(CacheItemInterface $item)
     {
         if (!\array_key_exists($item->getKey(), $this->itemInstances)) {
-            $this->itemInstances[ $item->getKey() ] = $item;
-        } else if (\spl_object_hash($item) !== \spl_object_hash($this->itemInstances[ $item->getKey() ])) {
-            throw new \RuntimeException('Spl object hash mismatches ! You probably tried to save a detached item which has been already retrieved from cache.');
+            $this->itemInstances[$item->getKey()] = $item;
+        } else {
+            if (\spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
+                throw new \RuntimeException('Spl object hash mismatches ! You probably tried to save a detached item which has been already retrieved from cache.');
+            }
         }
 
         /**
@@ -386,7 +390,7 @@ trait CacheItemPoolTrait
          */
         $this->eventManager->dispatch('CacheSaveDeferredItem', $this, $item);
 
-        return $this->deferredList[ $item->getKey() ] = $item;
+        return $this->deferredList[$item->getKey()] = $item;
     }
 
     /**
@@ -406,7 +410,7 @@ trait CacheItemPoolTrait
         foreach ($this->deferredList as $key => $item) {
             $result = $this->save($item);
             if ($return !== false) {
-                unset($this->deferredList[ $key ]);
+                unset($this->deferredList[$key]);
                 $return = $result;
             }
         }

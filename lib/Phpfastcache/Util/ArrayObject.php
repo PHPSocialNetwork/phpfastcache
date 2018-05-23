@@ -32,7 +32,7 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
      */
     public function __construct(...$args)
     {
-        $this->array = (\count($args) === 1 && \is_array($args[ 0 ]) ? $args[ 0 ] : $args);
+        $this->array = (\count($args) === 1 && \is_array($args[0]) ? $args[0] : $args);
     }
 
     /**
@@ -40,7 +40,7 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
      */
     public function current()
     {
-        return $this->array[ $this->position ];
+        return $this->array[$this->position];
     }
 
     /**
@@ -98,7 +98,7 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
      */
     public function offsetGet($offset)
     {
-        return $this->array[ $offset ] ?? null;
+        return $this->array[$offset] ?? null;
     }
 
     /**
@@ -113,7 +113,7 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
         if ($offset === null) {
             $this->array[] = $value;
         } else {
-            $this->array[ $offset ] = $value;
+            $this->array[$offset] = $value;
         }
     }
 
@@ -122,7 +122,7 @@ class ArrayObject implements \ArrayAccess, \Iterator, \Countable
      */
     public function offsetUnset($offset)
     {
-        unset($this->array[ $offset ]);
+        unset($this->array[$offset]);
     }
 
     /**

@@ -142,7 +142,7 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @param RedisClient $predisClient|null
+     * @param RedisClient $predisClient |null
      * @return Config
      */
     public function setRedisClient(RedisClient $redisClient = null): Config

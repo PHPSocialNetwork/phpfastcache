@@ -18,7 +18,7 @@ namespace Phpfastcache;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheDriverCheckException, PhpfastcacheDriverException, PhpfastcacheDriverNotFoundException, PhpfastcacheInstanceNotFoundException, PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidConfigurationException, PhpfastcacheLogicException, PhpfastcacheUnsupportedOperationException
+    PhpfastcacheDriverCheckException, PhpfastcacheDriverException, PhpfastcacheDriverNotFoundException, PhpfastcacheInstanceNotFoundException, PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidConfigurationException, PhpfastcacheLogicException, PhpfastcacheUnsupportedOperationException
 };
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
 
@@ -53,7 +53,7 @@ use Phpfastcache\Util\ClassNamespaceResolverTrait;
 class CacheManager
 {
     const AUTOMATIC_DRIVER_CLASS = 'Auto';
-    const CORE_DRIVER_NAMESPACE  = 'Phpfastcache\Drivers\\';
+    const CORE_DRIVER_NAMESPACE = 'Phpfastcache\Drivers\\';
 
     use ClassNamespaceResolverTrait;
 
@@ -115,13 +115,15 @@ class CacheManager
         if (\is_array($config)) {
             $config = new ConfigurationOption($config);
             \trigger_error(
-              'The CacheManager will drops the support of primitive configuration arrays, use a "\Phpfastcache\Config\ConfigurationOption" object instead',
-              E_USER_DEPRECATED
+                'The CacheManager will drops the support of primitive configuration arrays, use a "\Phpfastcache\Config\ConfigurationOption" object instead',
+                E_USER_DEPRECATED
             );
         } elseif ($config === null) {
             $config = self::getDefaultConfig();
-        } else if (!($config instanceof ConfigurationOption)) {
-            throw new PhpfastcacheInvalidArgumentException(\sprintf('Unsupported config type: %s', \gettype($config)));
+        } else {
+            if (!($config instanceof ConfigurationOption)) {
+                throw new PhpfastcacheInvalidArgumentException(\sprintf('Unsupported config type: %s', \gettype($config)));
+            }
         }
 
         $driver = self::standardizeDriverName($driver);
@@ -132,22 +134,22 @@ class CacheManager
 
         $instance = $instanceId ?: \md5($driver . \serialize($config->toArray()));
 
-        if (!isset(self::$instances[ $instance ])) {
-            self::$badPracticeOmeter[ $driver ] = 1;
+        if (!isset(self::$instances[$instance])) {
+            self::$badPracticeOmeter[$driver] = 1;
             $driverClass = self::getDriverClass($driver);
 
             if (!is_a($driverClass, ExtendedCacheItemPoolInterface::class, true)) {
                 throw new PhpfastcacheDriverException(\sprintf(
-                  'Class "%s" does not implement "%s"',
-                  $driverClass,
-                  ExtendedCacheItemPoolInterface::class
+                    'Class "%s" does not implement "%s"',
+                    $driverClass,
+                    ExtendedCacheItemPoolInterface::class
                 ));
             }
             try {
                 if (\class_exists($driverClass)) {
                     $configClass = $driverClass::getConfigClass();
-                    self::$instances[ $instance ] = new $driverClass(new $configClass($config->toArray()), $instance);
-                    self::$instances[ $instance ]->setEventManager(EventManager::getInstance());
+                    self::$instances[$instance] = new $driverClass(new $configClass($config->toArray()), $instance);
+                    self::$instances[$instance]->setEventManager(EventManager::getInstance());
                 } else {
                     throw new PhpfastcacheDriverNotFoundException(\sprintf('The driver "%s" does not exists', $driver));
                 }
@@ -157,7 +159,7 @@ class CacheManager
                         $fallback = $config->getFallback();
                         $config->setFallback('');
                         \trigger_error(\sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver,
-                          $fallback), E_USER_WARNING);
+                            $fallback), E_USER_WARNING);
                         return self::getInstance($fallback, $config->getFallbackConfig());
                     } catch (PhpfastcacheInvalidArgumentException $e) {
                         throw new PhpfastcacheInvalidConfigurationException('Invalid fallback driver configuration', 0, $e);
@@ -166,14 +168,16 @@ class CacheManager
                     throw new PhpfastcacheDriverCheckException($e->getMessage(), $e->getCode(), $e);
                 }
             }
-        } else if (self::$badPracticeOmeter[ $driver ] >= 2) {
-            \trigger_error('[' . $driver . '] Calling many times CacheManager::getInstance() for already instanced drivers is a bad practice and have a significant impact on performances.
+        } else {
+            if (self::$badPracticeOmeter[$driver] >= 2) {
+                \trigger_error('[' . $driver . '] Calling many times CacheManager::getInstance() for already instanced drivers is a bad practice and have a significant impact on performances.
            See https://github.com/PHPSocialNetwork/phpfastcache/wiki/[V5]-Why-calling-getInstance%28%29-each-time-is-a-bad-practice-%3F');
+            }
         }
 
-        self::$badPracticeOmeter[ $driver ]++;
+        self::$badPracticeOmeter[$driver]++;
 
-        return self::$instances[ $instance ];
+        return self::$instances[$instance];
     }
 
     /**
@@ -190,8 +194,8 @@ class CacheManager
             throw new PhpfastcacheInvalidArgumentException('The Instance ID must be a string');
         }
 
-        if (isset(self::$instances[ $instanceId ])) {
-            return self::$instances[ $instanceId ];
+        if (isset(self::$instances[$instanceId])) {
+            return self::$instances[$instanceId];
         }
 
         throw new PhpfastcacheInstanceNotFoundException(\sprintf('Instance ID %s not found', $instanceId));
@@ -255,7 +259,7 @@ class CacheManager
             throw new PhpfastcacheLogicException('Unable to find out a valid driver automatically');
         }
 
-        self::$badPracticeOmeter[ $autoDriver ]--;
+        self::$badPracticeOmeter[$autoDriver]--;
 
         return $autoDriver;
     }
@@ -267,7 +271,7 @@ class CacheManager
      */
     public static function __callStatic(string $name, array $arguments): ExtendedCacheItemPoolInterface
     {
-        $options = (\array_key_exists(0, $arguments) && \is_array($arguments) ? $arguments[ 0 ] : []);
+        $options = (\array_key_exists(0, $arguments) && \is_array($arguments) ? $arguments[0] : []);
 
         return self::getInstance($name, $options);
     }
@@ -332,29 +336,29 @@ class CacheManager
     public static function getStaticSystemDrivers(): array
     {
         \trigger_error(\sprintf('Method "%s" is deprecated as of the V7 and will be removed soon or later, use CacheManager::getDriverList() instead.',
-          __METHOD__), E_USER_DEPRECATED);
+            __METHOD__), E_USER_DEPRECATED);
         return [
-          'Apc',
-          'Apcu',
-          'Cassandra',
-          'Couchbase',
-          'Couchdb',
-          'Devnull',
-          'Files',
-          'Leveldb',
-          'Memcache',
-          'Memcached',
-          'Memstatic',
-          'Mongodb',
-          'Predis',
-          'Redis',
-          'Riak',
-          'Ssdb',
-          'Sqlite',
-          'Wincache',
-          'Xcache',
-          'Zenddisk',
-          'Zendshm',
+            'Apc',
+            'Apcu',
+            'Cassandra',
+            'Couchbase',
+            'Couchdb',
+            'Devnull',
+            'Files',
+            'Leveldb',
+            'Memcache',
+            'Memcached',
+            'Memstatic',
+            'Mongodb',
+            'Predis',
+            'Redis',
+            'Riak',
+            'Ssdb',
+            'Sqlite',
+            'Wincache',
+            'Xcache',
+            'Zenddisk',
+            'Zendshm',
         ];
     }
 
@@ -365,11 +369,11 @@ class CacheManager
     public static function getStaticAllDrivers(): array
     {
         \trigger_error(\sprintf('Method "%s" is deprecated as of the V7 and will be removed soon or later, use CacheManager::getDriverList() instead.',
-          __METHOD__), E_USER_DEPRECATED);
+            __METHOD__), E_USER_DEPRECATED);
         return \array_merge(self::getStaticSystemDrivers(), [
-          'Devtrue',
-          'Devfalse',
-          'Cookie',
+            'Devtrue',
+            'Devfalse',
+            'Cookie',
         ]);
     }
 
@@ -397,9 +401,9 @@ class CacheManager
 
             $driverList = \array_merge($driverList, \array_keys(self::$driverCustoms));
 
-            if($FQCNAsKey){
+            if ($FQCNAsKey) {
                 $realDriverList = [];
-                foreach ($driverList as $driverName){
+                foreach ($driverList as $driverName) {
                     $realDriverList[self::getDriverClass($driverName)] = $driverName;
                 }
                 $driverList = $realDriverList;
@@ -428,12 +432,14 @@ class CacheManager
      */
     public static function getDriverClass(string $driverName): string
     {
-        if (!empty(self::$driverCustoms[ $driverName ])) {
-            $driverClass = self::$driverCustoms[ $driverName ];
-        } else if (!empty(self::$driverOverrides[ $driverName ])) {
-            $driverClass = self::$driverOverrides[ $driverName ];
+        if (!empty(self::$driverCustoms[$driverName])) {
+            $driverClass = self::$driverCustoms[$driverName];
         } else {
-            $driverClass = self::getNamespacePath() . $driverName . '\Driver';
+            if (!empty(self::$driverOverrides[$driverName])) {
+                $driverClass = self::$driverOverrides[$driverName];
+            } else {
+                $driverClass = self::getNamespacePath() . $driverName . '\Driver';
+            }
         }
 
         return $driverClass;
@@ -457,11 +463,11 @@ class CacheManager
 
         if (!\class_exists($className)) {
             throw new PhpfastcacheInvalidArgumentException(
-              \sprintf("Can't add '%s' because the class '%s' does not exists", $driverName, $className)
+                \sprintf("Can't add '%s' because the class '%s' does not exists", $driverName, $className)
             );
         }
 
-        if (!empty(self::$driverCustoms[ $driverName ])) {
+        if (!empty(self::$driverCustoms[$driverName])) {
             throw new PhpfastcacheLogicException(\sprintf("Driver '%s' has been already added", $driverName));
         }
 
@@ -469,7 +475,7 @@ class CacheManager
             throw new PhpfastcacheLogicException(\sprintf("Driver '%s' is already a part of the PhpFastCache core", $driverName));
         }
 
-        self::$driverCustoms[ $driverName ] = $className;
+        self::$driverCustoms[$driverName] = $className;
     }
 
     /**
@@ -486,11 +492,11 @@ class CacheManager
             throw new PhpfastcacheInvalidArgumentException("Can't remove a custom driver because its name is empty");
         }
 
-        if (!isset(self::$driverCustoms[ $driverName ])) {
+        if (!isset(self::$driverCustoms[$driverName])) {
             throw new PhpfastcacheLogicException(\sprintf("Driver '%s' does not exists", $driverName));
         }
 
-        unset(self::$driverCustoms[ $driverName ]);
+        unset(self::$driverCustoms[$driverName]);
     }
 
     /**
@@ -511,11 +517,11 @@ class CacheManager
 
         if (!\class_exists($className)) {
             throw new PhpfastcacheInvalidArgumentException(
-              \sprintf("Can't override '%s' because the class '%s' does not exists", $driverName, $className)
+                \sprintf("Can't override '%s' because the class '%s' does not exists", $driverName, $className)
             );
         }
 
-        if (!empty(self::$driverOverrides[ $driverName ])) {
+        if (!empty(self::$driverOverrides[$driverName])) {
             throw new PhpfastcacheLogicException(\sprintf("Driver '%s' has been already overridden", $driverName));
         }
 
@@ -525,12 +531,12 @@ class CacheManager
 
         if (!\is_subclass_of($className, self::CORE_DRIVER_NAMESPACE . $driverName . '\\Driver', true)) {
             throw new PhpfastcacheLogicException(
-              \sprintf("Can't override '%s' because the class '%s' MUST extend '%s'", $driverName, $className,
-                self::CORE_DRIVER_NAMESPACE . $driverName . '\\Driver')
+                \sprintf("Can't override '%s' because the class '%s' MUST extend '%s'", $driverName, $className,
+                    self::CORE_DRIVER_NAMESPACE . $driverName . '\\Driver')
             );
         }
 
-        self::$driverOverrides[ $driverName ] = $className;
+        self::$driverOverrides[$driverName] = $className;
     }
 
     /**
@@ -547,10 +553,10 @@ class CacheManager
             throw new PhpfastcacheInvalidArgumentException("Can't remove a core driver override because its name is empty");
         }
 
-        if (!isset(self::$driverOverrides[ $driverName ])) {
+        if (!isset(self::$driverOverrides[$driverName])) {
             throw new PhpfastcacheLogicException(\sprintf("Driver '%s' were not overridden", $driverName));
         }
 
-        unset(self::$driverOverrides[ $driverName ]);
+        unset(self::$driverOverrides[$driverName]);
     }
 }

@@ -40,8 +40,10 @@ class Directory
              */
             if ($file->isFile()) {
                 $size += filesize($file->getRealPath());
-            } else if ($includeDirAllocSize) {
-                $size += $file->getSize();
+            } else {
+                if ($includeDirAllocSize) {
+                    $size += $file->getSize();
+                }
             }
         }
 
@@ -89,8 +91,8 @@ class Directory
 
         $files = new RecursiveIteratorIterator
         (
-          new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS),
-          RecursiveIteratorIterator::CHILD_FIRST
+            new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST
         );
 
         foreach ($files as $fileinfo) {
@@ -101,8 +103,10 @@ class Directory
                 if (self::rrmdir($fileinfo->getRealPath()) === false) {
                     return false;
                 }
-            } else if (\unlink($fileinfo->getRealPath()) === false) {
-                return false;
+            } else {
+                if (\unlink($fileinfo->getRealPath()) === false) {
+                    return false;
+                }
             }
         }
 
@@ -139,7 +143,7 @@ class Directory
          * Allows to dereference char
          */
         $__FILE__ = \preg_replace('~^(([a-z0-9\-]+)://)~', '', __FILE__);// remove file protocols such as "phar://" etc.
-        $prefix = $__FILE__[ 0 ] === \DIRECTORY_SEPARATOR ? \DIRECTORY_SEPARATOR : '';
+        $prefix = $__FILE__[0] === \DIRECTORY_SEPARATOR ? \DIRECTORY_SEPARATOR : '';
         return $prefix . \implode(\DIRECTORY_SEPARATOR, $absolutes);
     }
 }

@@ -115,10 +115,10 @@ class Config extends ConfigurationOption
     public function getPredisConfigArray(): array
     {
         return [
-          'host' => $this->getHost(),
-          'port' => $this->getPort(),
-          'password' => $this->getPassword() ?: null,
-          'database' => $this->getDatabase(),
+            'host' => $this->getHost(),
+            'port' => $this->getPort(),
+            'password' => $this->getPassword() ?: null,
+            'database' => $this->getDatabase(),
         ];
     }
 
@@ -131,7 +131,7 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @param \Predis\Client $predisClient|null
+     * @param \Predis\Client $predisClient |null
      * @return Config
      */
     public function setPredisClient(\Predis\Client $predisClient = null): Config

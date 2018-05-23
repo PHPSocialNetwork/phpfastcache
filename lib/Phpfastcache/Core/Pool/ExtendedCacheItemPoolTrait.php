@@ -18,7 +18,7 @@ namespace Phpfastcache\Core\Pool;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Event\EventInterface;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
+    PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
 };
 use Psr\Cache\CacheItemInterface;
 
@@ -99,7 +99,7 @@ trait ExtendedCacheItemPoolTrait
 
         foreach ($items as $key => $item) {
             if (\array_diff($tagNames, $item->getTags())) {
-                unset($items[ $key ]);
+                unset($items[$key]);
             }
         }
 
@@ -383,7 +383,7 @@ trait ExtendedCacheItemPoolTrait
      */
     public function detachItem(CacheItemInterface $item)
     {
-        if (isset($this->itemInstances[ $item->getKey() ])) {
+        if (isset($this->itemInstances[$item->getKey()])) {
             $this->deregisterItem($item);
         }
     }
@@ -403,11 +403,11 @@ trait ExtendedCacheItemPoolTrait
      */
     public function attachItem(CacheItemInterface $item)
     {
-        if (isset($this->itemInstances[ $item->getKey() ]) && \spl_object_hash($item) !== \spl_object_hash($this->itemInstances[ $item->getKey() ])) {
+        if (isset($this->itemInstances[$item->getKey()]) && \spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
             throw new PhpfastcacheLogicException('The item already exists and cannot be overwritten because the Spl object hash mismatches ! You probably tried to re-attach a detached item which has been already retrieved from cache.');
         }
 
-        $this->itemInstances[ $item->getKey() ] = $item;
+        $this->itemInstances[$item->getKey()] = $item;
     }
 
 
@@ -419,12 +419,14 @@ trait ExtendedCacheItemPoolTrait
     protected function deregisterItem($item)
     {
         if ($item instanceof CacheItemInterface) {
-            unset($this->itemInstances[ $item->getKey() ]);
+            unset($this->itemInstances[$item->getKey()]);
 
-        } else if (\is_string($item)) {
-            unset($this->itemInstances[ $item ]);
         } else {
-            throw new PhpfastcacheInvalidArgumentException('Invalid type for $item variable');
+            if (\is_string($item)) {
+                unset($this->itemInstances[$item]);
+            } else {
+                throw new PhpfastcacheInvalidArgumentException('Invalid type for $item variable');
+            }
         }
         if (\gc_enabled()) {
             \gc_collect_cycles();
@@ -449,8 +451,8 @@ trait ExtendedCacheItemPoolTrait
      */
     public function isAttached(CacheItemInterface $item)
     {
-        if (isset($this->itemInstances[ $item->getKey() ])) {
-            return \spl_object_hash($item) === \spl_object_hash($this->itemInstances[ $item->getKey() ]);
+        if (isset($this->itemInstances[$item->getKey()])) {
+            return \spl_object_hash($item) === \spl_object_hash($this->itemInstances[$item->getKey()]);
         }
         return null;
     }
@@ -473,8 +475,8 @@ trait ExtendedCacheItemPoolTrait
      */
     public function saveMultiple(...$items): bool
     {
-        if (isset($items[ 0 ]) && \is_array($items[ 0 ])) {
-            foreach ($items[ 0 ] as $item) {
+        if (isset($items[0]) && \is_array($items[0])) {
+            foreach ($items[0] as $item) {
                 $this->save($item);
             }
             return true;

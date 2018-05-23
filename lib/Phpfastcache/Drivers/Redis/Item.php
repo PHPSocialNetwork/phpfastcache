@@ -15,11 +15,13 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Redis;
 
-use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, ItemBaseTrait};
+use Phpfastcache\Core\Item\{
+    ExtendedCacheItemInterface, ItemBaseTrait
+};
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Drivers\Redis\Driver as RedisDriver;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidArgumentTypeException
+    PhpfastcacheInvalidArgumentException
 };
 
 /**
@@ -28,7 +30,7 @@ use Phpfastcache\Exceptions\{
  */
 class Item implements ExtendedCacheItemInterface
 {
-    use ItemBaseTrait{
+    use ItemBaseTrait {
         ItemBaseTrait::__construct as __BaseConstruct;
     }
 

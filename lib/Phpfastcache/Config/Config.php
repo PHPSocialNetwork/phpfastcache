@@ -14,4 +14,6 @@ namespace Phpfastcache\Config;
  * @package phpFastCache\Config
  * @see ConfigurationOption
  */
-class Config extends ConfigurationOption{}
+class Config extends ConfigurationOption
+{
+}

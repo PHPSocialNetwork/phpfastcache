@@ -15,9 +15,11 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Files;
 
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface, IO\IOHelperTrait};
+use Phpfastcache\Core\Pool\{
+    DriverBaseTrait, ExtendedCacheItemPoolInterface, IO\IOHelperTrait
+};
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException
+    PhpfastcacheInvalidArgumentException
 };
 use Phpfastcache\Util\Directory;
 use Psr\Cache\CacheItemInterface;

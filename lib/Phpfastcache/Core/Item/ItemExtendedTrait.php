@@ -18,7 +18,7 @@ namespace Phpfastcache\Core\Item;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventInterface;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidArgumentTypeException, PhpfastcacheLogicException
+    PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidArgumentTypeException, PhpfastcacheLogicException
 };
 
 /**
@@ -70,7 +70,7 @@ trait ItemExtendedTrait
             $this->driver = $driver;
             $this->driver->setItem($this);
             $this->expirationDate = new \DateTime();
-            if($this->driver->getConfig()->isItemDetailedDate()){
+            if ($this->driver->getConfig()->isItemDetailedDate()) {
                 $this->creationDate = new \DateTime();
                 $this->modificationDate = new \DateTime();
             }
@@ -220,14 +220,13 @@ trait ItemExtendedTrait
      */
     public function getLength(): int
     {
-        switch (\gettype($this->data))
-        {
+        switch (\gettype($this->data)) {
             case 'array':
             case 'object':
-                if(\is_array($this->data) || $this->data instanceof \Countable){
+                if (\is_array($this->data) || $this->data instanceof \Countable) {
                     return \count($this->data);
                 }
-            break;
+                break;
 
             case 'string':
                 return \strlen($this->data);
@@ -281,10 +280,12 @@ trait ItemExtendedTrait
     {
         if (\is_array($this->data)) {
             $this->data[] = $data;
-        } else if (\is_string($data)) {
-            $this->data .= (string)$data;
         } else {
-            throw new PhpfastcacheInvalidArgumentException('$data must be either array nor string.');
+            if (\is_string($data)) {
+                $this->data .= (string)$data;
+            } else {
+                throw new PhpfastcacheInvalidArgumentException('$data must be either array nor string.');
+            }
         }
 
         return $this;
@@ -300,10 +301,12 @@ trait ItemExtendedTrait
     {
         if (\is_array($this->data)) {
             \array_unshift($this->data, $data);
-        } else if (\is_string($data)) {
-            $this->data = (string)$data . $this->data;
         } else {
-            throw new PhpfastcacheInvalidArgumentException('$data must be either array nor string.');
+            if (\is_string($data)) {
+                $this->data = (string)$data . $this->data;
+            } else {
+                throw new PhpfastcacheInvalidArgumentException('$data must be either array nor string.');
+            }
         }
 
         return $this;
@@ -380,7 +383,7 @@ trait ItemExtendedTrait
     public function removeTag($tagName): ExtendedCacheItemInterface
     {
         if (($key = \array_search($tagName, $this->tags)) !== false) {
-            unset($this->tags[ $key ]);
+            unset($this->tags[$key]);
             $this->removedTags[] = $tagName;
         }
 
@@ -459,7 +462,7 @@ trait ItemExtendedTrait
     final public function __debugInfo()
     {
         $info = \get_object_vars($this);
-        $info[ 'driver' ] = 'object(' . \get_class($info[ 'driver' ]) . ')';
+        $info['driver'] = 'object(' . \get_class($info['driver']) . ')';
 
         return $info;
     }

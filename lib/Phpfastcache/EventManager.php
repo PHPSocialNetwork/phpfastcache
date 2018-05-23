@@ -78,8 +78,8 @@ class EventManager implements EventInterface
          * due to performance issue on huge
          * loop dispatching operations
          */
-        if (isset($this->events[ $eventName ])) {
-            foreach ($this->events[ $eventName ] as $event) {
+        if (isset($this->events[$eventName])) {
+            foreach ($this->events[$eventName] as $event) {
                 \call_user_func_array($event, $args);
             }
         }
@@ -95,14 +95,14 @@ class EventManager implements EventInterface
     {
         if (\strpos($name, 'on') === 0) {
             $name = \substr($name, 2);
-            if (\is_callable($arguments[ 0 ])) {
-                if (isset($arguments[ 1 ]) && \is_string($arguments[ 0 ])) {
-                    $this->events[ $name ][ $arguments[ 1 ] ] = $arguments[ 0 ];
+            if (\is_callable($arguments[0])) {
+                if (isset($arguments[1]) && \is_string($arguments[0])) {
+                    $this->events[$name][$arguments[1]] = $arguments[0];
                 } else {
-                    $this->events[ $name ][] = $arguments[ 0 ];
+                    $this->events[$name][] = $arguments[0];
                 }
             } else {
-                throw new PhpfastcacheInvalidArgumentException(\sprintf('Expected Callable, got "%s"', \gettype($arguments[ 0 ])));
+                throw new PhpfastcacheInvalidArgumentException(\sprintf('Expected Callable, got "%s"', \gettype($arguments[0])));
             }
         } else {
             throw new \BadMethodCallException('An event must start with "on" such as "onCacheGetItem"');
@@ -116,8 +116,8 @@ class EventManager implements EventInterface
      */
     public function unbindEventCallback(string $eventName, string $callbackName): bool
     {
-        $return = isset($this->events[ $eventName ][ $callbackName ]);
-        unset($this->events[ $eventName ][ $callbackName ]);
+        $return = isset($this->events[$eventName][$callbackName]);
+        unset($this->events[$eventName][$callbackName]);
 
         return $return;
     }

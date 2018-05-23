@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace Phpfastcache\Autoload;
 
 /**
@@ -15,7 +16,9 @@ namespace Phpfastcache\Autoload;
  *
  */
 
-class Autoload{}
+class Autoload
+{
+}
 
 const PFC_PHP_EXT = 'php';
 const PFC_BIN_DIR = __DIR__ . '/../../../bin/';
@@ -26,7 +29,7 @@ const PFC_LIB_DIR = __DIR__ . '/../../../lib/';
  */
 \spl_autoload_register(function ($entity) {
     $module = \explode('\\', $entity, 2);
-    if (!\in_array($module[ 0 ], ['Phpfastcache', 'Psr'])) {
+    if (!\in_array($module[0], ['Phpfastcache', 'Psr'])) {
         /**
          * Not a part of phpFastCache file
          * then we return here.
@@ -66,7 +69,7 @@ const PFC_LIB_DIR = __DIR__ . '/../../../lib/';
 
 if ((!\defined('PFC_IGNORE_COMPOSER_WARNING') || !PFC_IGNORE_COMPOSER_WARNING) && \class_exists(\Composer\Autoload\ClassLoader::class)) {
     \trigger_error(
-      'Your project already makes use of Composer. You SHOULD use the composer dependency "phpfastcache/phpfastcache" instead of hard-autoloading.',
-      \E_USER_WARNING
+        'Your project already makes use of Composer. You SHOULD use the composer dependency "phpfastcache/phpfastcache" instead of hard-autoloading.',
+        \E_USER_WARNING
     );
 }

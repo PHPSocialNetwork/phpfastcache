@@ -15,13 +15,11 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool;
 
-use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException, PhpfastcacheDriverCheckException, PhpfastcacheLogicException
+    PhpfastcacheDriverCheckException, PhpfastcacheLogicException
 };
-use Phpfastcache\Util\ArrayObject;
 
 
 /**
@@ -100,7 +98,7 @@ trait DriverBaseTrait
      */
     public function getConfigOption($optionName)
     {
-        \trigger_error(\sprintf('Method "%s" is deprecated, use "getConfig()->getOptionName()" instead', __METHOD__), E_USER_DEPRECATED);
+        \trigger_error(\sprintf('Method "%s" is deprecated, use "getConfig()->getOptionName()" instead', __METHOD__), \E_USER_DEPRECATED);
         return $this->getConfig()->getOption($optionName);
     }
 
@@ -134,7 +132,7 @@ trait DriverBaseTrait
      */
     protected function decode($value)
     {
-        return unserialize((string) $value);
+        return \unserialize((string)$value);
     }
 
     /**
@@ -143,7 +141,7 @@ trait DriverBaseTrait
      */
     protected function isPHPModule(): bool
     {
-        return (PHP_SAPI === 'apache2handler' || \strpos(PHP_SAPI, 'handler') !== false);
+        return (\PHP_SAPI === 'apache2handler' || \strpos(\PHP_SAPI, 'handler') !== false);
     }
 
     /**
@@ -153,21 +151,21 @@ trait DriverBaseTrait
     public function driverPreWrap(ExtendedCacheItemInterface $item): array
     {
         $wrap = [
-          self::DRIVER_DATA_WRAPPER_INDEX => $item->get(),
-          self::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
-          self::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),
+            self::DRIVER_DATA_WRAPPER_INDEX => $item->get(),
+            self::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
+            self::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),
         ];
 
         if ($this->getConfig()->isItemDetailedDate()) {
-            $wrap[ self::DRIVER_MDATE_WRAPPER_INDEX ] = new \DateTime();
+            $wrap[self::DRIVER_MDATE_WRAPPER_INDEX] = new \DateTime();
             /**
              * If the creation date exists
              * reuse it else set a new Date
              */
-            $wrap[ self::DRIVER_CDATE_WRAPPER_INDEX ] = $item->getCreationDate() ?: new \DateTime();
+            $wrap[self::DRIVER_CDATE_WRAPPER_INDEX] = $item->getCreationDate() ?: new \DateTime();
         } else {
-            $wrap[ self::DRIVER_MDATE_WRAPPER_INDEX ] = null;
-            $wrap[ self::DRIVER_CDATE_WRAPPER_INDEX ] = null;
+            $wrap[self::DRIVER_MDATE_WRAPPER_INDEX] = null;
+            $wrap[self::DRIVER_CDATE_WRAPPER_INDEX] = null;
         }
 
         return $wrap;
@@ -179,7 +177,7 @@ trait DriverBaseTrait
      */
     public function driverUnwrapData(array $wrapper)
     {
-        return $wrapper[ self::DRIVER_DATA_WRAPPER_INDEX ];
+        return $wrapper[self::DRIVER_DATA_WRAPPER_INDEX];
     }
 
     /**
@@ -188,7 +186,7 @@ trait DriverBaseTrait
      */
     public function driverUnwrapTags(array $wrapper)
     {
-        return $wrapper[ self::DRIVER_TAGS_WRAPPER_INDEX ];
+        return $wrapper[self::DRIVER_TAGS_WRAPPER_INDEX];
     }
 
 
@@ -198,7 +196,7 @@ trait DriverBaseTrait
      */
     public function driverUnwrapEdate(array $wrapper)
     {
-        return $wrapper[ self::DRIVER_EDATE_WRAPPER_INDEX ];
+        return $wrapper[self::DRIVER_EDATE_WRAPPER_INDEX];
     }
 
     /**
@@ -207,7 +205,7 @@ trait DriverBaseTrait
      */
     public function driverUnwrapCdate(array $wrapper)
     {
-        return $wrapper[ self::DRIVER_CDATE_WRAPPER_INDEX ];
+        return $wrapper[self::DRIVER_CDATE_WRAPPER_INDEX];
     }
 
 
@@ -217,7 +215,7 @@ trait DriverBaseTrait
      */
     public function driverUnwrapMdate(array $wrapper)
     {
-        return $wrapper[ self::DRIVER_MDATE_WRAPPER_INDEX ];
+        return $wrapper[self::DRIVER_MDATE_WRAPPER_INDEX];
     }
 
     /**
@@ -226,7 +224,7 @@ trait DriverBaseTrait
     public function getDriverName(): string
     {
         if (!$this->driverName) {
-            $this->driverName = \ucfirst(\substr(strrchr((new \ReflectionObject($this))->getNamespaceName(), '\\'), 1));
+            $this->driverName = \ucfirst(\substr(\strrchr((new \ReflectionObject($this))->getNamespaceName(), '\\'), 1));
         }
         return $this->driverName;
     }
@@ -298,7 +296,7 @@ trait DriverBaseTrait
         foreach ($tagsItems as $tagsItem) {
             $data = (array)$tagsItem->get();
 
-            unset($data[ $item->getKey() ]);
+            unset($data[$item->getKey()]);
             $tagsItem->set($data);
 
             /**
@@ -309,7 +307,7 @@ trait DriverBaseTrait
              * then remove it from tagsItems index
              */
             if (\count($data)) {
-                $tagsItem->expiresAt((new \DateTime())->setTimestamp(max($data)));
+                $tagsItem->expiresAt((new \DateTime())->setTimestamp(\max($data)));
                 $this->driverWrite($tagsItem);
                 $tagsItem->setHit(true);
             } else {
@@ -348,7 +346,7 @@ trait DriverBaseTrait
     public static function getConfigClass(): string
     {
         $localConfigClass = \substr(static::class, 0, \strrpos(static::class, '\\')) . '\Config';
-        if(\class_exists($localConfigClass) && is_a($localConfigClass, ConfigurationOption::class, true)){
+        if (\class_exists($localConfigClass) && \is_a($localConfigClass, ConfigurationOption::class, true)) {
             return $localConfigClass;
         }
         return ConfigurationOption::class;

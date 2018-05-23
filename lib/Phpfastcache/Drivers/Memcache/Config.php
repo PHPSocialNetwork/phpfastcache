@@ -16,12 +16,12 @@ class Config extends ConfigurationOption
      * @var array
      */
     protected $servers = [
-      [
-        'host' => '127.0.0.1',
-        'port' => 11211,
-        'saslUser' => false,
-        'saslPassword' => false,
-      ],
+        [
+            'host' => '127.0.0.1',
+            'port' => 11211,
+            'saslUser' => false,
+            'saslPassword' => false,
+        ],
     ];
 
     /**

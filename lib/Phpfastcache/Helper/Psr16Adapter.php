@@ -19,7 +19,7 @@ use Phpfastcache\CacheManager;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheDriverCheckException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException, PhpfastcacheRootException, PhpfastcacheSimpleCacheException
+    PhpfastcacheDriverCheckException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException, PhpfastcacheRootException, PhpfastcacheSimpleCacheException
 };
 use Psr\SimpleCache\CacheInterface;
 
@@ -43,12 +43,12 @@ class Psr16Adapter implements CacheInterface
      */
     public function __construct($driver, $config = null)
     {
-        if($driver instanceof ExtendedCacheItemPoolInterface){
-            if($config !== null){
+        if ($driver instanceof ExtendedCacheItemPoolInterface) {
+            if ($config !== null) {
                 throw new PhpfastcacheLogicException("You can't pass a config parameter along with an non-string '\$driver' parameter.");
             }
             $this->internalCacheInstance = $driver;
-        }else{
+        } else {
             $this->internalCacheInstance = CacheManager::getInstance($driver, $config);
         }
     }
@@ -84,8 +84,8 @@ class Psr16Adapter implements CacheInterface
     {
         try {
             $cacheItem = $this->internalCacheInstance
-              ->getItem($key)
-              ->set($value);
+                ->getItem($key)
+                ->set($value);
             if (\is_int($ttl) && $ttl <= 0) {
                 $cacheItem->expiresAt((new \DateTime('@0')));
             } elseif (\is_int($ttl) || $ttl instanceof \DateInterval) {

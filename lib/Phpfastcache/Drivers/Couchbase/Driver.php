@@ -17,11 +17,11 @@ namespace Phpfastcache\Drivers\Couchbase;
 
 use CouchbaseCluster as CouchbaseClient;
 use Phpfastcache\Core\Pool\{
-  DriverBaseTrait, ExtendedCacheItemPoolInterface
+    DriverBaseTrait, ExtendedCacheItemPoolInterface
 };
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
+    PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
 };
 use Psr\Cache\CacheItemInterface;
 
@@ -76,11 +76,11 @@ class Driver implements ExtendedCacheItemPoolInterface
         $authenticator->username($clientConfig->getUsername())->password($clientConfig->getPassword());
 
         $this->instance = new CouchbaseClient(
-          'couchbase://' . $clientConfig->getHost() . ($clientConfig->getPort() ? ":{$clientConfig->getPort()}" : '')
+            'couchbase://' . $clientConfig->getHost() . ($clientConfig->getPort() ? ":{$clientConfig->getPort()}" : '')
         );
 
         $this->instance->authenticate($authenticator);
-        $this->setBucket($this->instance->openBucket( $clientConfig->getBucketName()));
+        $this->setBucket($this->instance->openBucket($clientConfig->getBucketName()));
 
         return true;
     }
@@ -114,9 +114,9 @@ class Driver implements ExtendedCacheItemPoolInterface
         if ($item instanceof Item) {
             try {
                 return (bool)$this->getBucket()->upsert(
-                  $item->getEncodedKey(),
-                  $this->encode($this->driverPreWrap($item)),
-                  ['expiry' => $item->getTtl()]
+                    $item->getEncodedKey(),
+                    $this->encode($this->driverPreWrap($item)),
+                    ['expiry' => $item->getTtl()]
                 );
             } catch (\CouchbaseException $e) {
                 return false;
@@ -186,10 +186,10 @@ class Driver implements ExtendedCacheItemPoolInterface
         $info = $this->getBucket()->manager()->info();
 
         return (new DriverStatistic())
-          ->setSize($info[ 'basicStats' ][ 'diskUsed' ])
-          ->setRawData($info)
-          ->setData(\implode(', ', \array_keys($this->itemInstances)))
-          ->setInfo('CouchBase version ' . $info[ 'nodes' ][ 0 ][ 'version' ] . ', Uptime (in days): ' . round($info[ 'nodes' ][ 0 ][ 'uptime' ] / 86400,
-              1) . "\n For more information see RawData.");
+            ->setSize($info['basicStats']['diskUsed'])
+            ->setRawData($info)
+            ->setData(\implode(', ', \array_keys($this->itemInstances)))
+            ->setInfo('CouchBase version ' . $info['nodes'][0]['version'] . ', Uptime (in days): ' . round($info['nodes'][0]['uptime'] / 86400,
+                    1) . "\n For more information see RawData.");
     }
 }

@@ -18,16 +18,15 @@ namespace Phpfastcache\Drivers\Mongodb;
 
 use LogicException;
 use MongoDB\{
-  Client, Database, BSON\Binary, BSON\UTCDateTime, Collection, DeleteResult, Driver\Command, Driver\Exception\Exception as MongoDBException
+    BSON\Binary, BSON\UTCDateTime, Client, Collection, Database, DeleteResult, Driver\Command, Driver\Exception\Exception as MongoDBException
 };
 use Phpfastcache\Core\Pool\{
-  DriverBaseTrait, ExtendedCacheItemPoolInterface
+    DriverBaseTrait, ExtendedCacheItemPoolInterface
 };
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException
+    PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException
 };
-
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -78,17 +77,17 @@ class Driver implements ExtendedCacheItemPoolInterface
 
         if ($document) {
             $return = [
-              self::DRIVER_DATA_WRAPPER_INDEX => $this->decode($document[ self::DRIVER_DATA_WRAPPER_INDEX ]->getData()),
-              self::DRIVER_TAGS_WRAPPER_INDEX => $this->decode($document[ self::DRIVER_TAGS_WRAPPER_INDEX ]->getData()),
-              self::DRIVER_EDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[ self::DRIVER_EDATE_WRAPPER_INDEX ]->toDateTime()->getTimestamp()),
+                self::DRIVER_DATA_WRAPPER_INDEX => $this->decode($document[self::DRIVER_DATA_WRAPPER_INDEX]->getData()),
+                self::DRIVER_TAGS_WRAPPER_INDEX => $this->decode($document[self::DRIVER_TAGS_WRAPPER_INDEX]->getData()),
+                self::DRIVER_EDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[self::DRIVER_EDATE_WRAPPER_INDEX]->toDateTime()->getTimestamp()),
             ];
 
-            if(!empty($this->getConfig()->isItemDetailedDate())){
+            if (!empty($this->getConfig()->isItemDetailedDate())) {
                 $return += [
-                  self::DRIVER_MDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[ self::DRIVER_MDATE_WRAPPER_INDEX ]->toDateTime()
-                    ->getTimestamp()),
-                  self::DRIVER_CDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[ self::DRIVER_CDATE_WRAPPER_INDEX ]->toDateTime()
-                    ->getTimestamp()),
+                    self::DRIVER_MDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[self::DRIVER_MDATE_WRAPPER_INDEX]->toDateTime()
+                        ->getTimestamp()),
+                    self::DRIVER_CDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[self::DRIVER_CDATE_WRAPPER_INDEX]->toDateTime()
+                        ->getTimestamp()),
                 ];
             }
 
@@ -112,29 +111,31 @@ class Driver implements ExtendedCacheItemPoolInterface
         if ($item instanceof Item) {
             try {
                 $set = [
-                  self::DRIVER_DATA_WRAPPER_INDEX => new Binary($this->encode($item->get()), Binary::TYPE_GENERIC),
-                  self::DRIVER_TAGS_WRAPPER_INDEX => new Binary($this->encode($item->getTags()), Binary::TYPE_GENERIC),
-                  self::DRIVER_EDATE_WRAPPER_INDEX => ($item->getTtl() > 0 ? new UTCDateTime((\time() + $item->getTtl()) * 1000) : new UTCDateTime(\time() * 1000)),
+                    self::DRIVER_DATA_WRAPPER_INDEX => new Binary($this->encode($item->get()), Binary::TYPE_GENERIC),
+                    self::DRIVER_TAGS_WRAPPER_INDEX => new Binary($this->encode($item->getTags()), Binary::TYPE_GENERIC),
+                    self::DRIVER_EDATE_WRAPPER_INDEX => ($item->getTtl() > 0 ? new UTCDateTime((\time() + $item->getTtl()) * 1000) : new UTCDateTime(\time() * 1000)),
                 ];
 
-                if(!empty($this->getConfig()->isItemDetailedDate())){
+                if (!empty($this->getConfig()->isItemDetailedDate())) {
                     $set += [
-                      self::DRIVER_MDATE_WRAPPER_INDEX => ($item->getModificationDate() ? new UTCDateTime(($item->getModificationDate()->getTimestamp()) * 1000) : new UTCDateTime(\time() * 1000)),
-                      self::DRIVER_CDATE_WRAPPER_INDEX => ($item->getCreationDate() ? new UTCDateTime(($item->getCreationDate()->getTimestamp()) * 1000) : new UTCDateTime(\time() * 1000)),
+                        self::DRIVER_MDATE_WRAPPER_INDEX => ($item->getModificationDate() ? new UTCDateTime(($item->getModificationDate()
+                                ->getTimestamp()) * 1000) : new UTCDateTime(\time() * 1000)),
+                        self::DRIVER_CDATE_WRAPPER_INDEX => ($item->getCreationDate() ? new UTCDateTime(($item->getCreationDate()
+                                ->getTimestamp()) * 1000) : new UTCDateTime(\time() * 1000)),
                     ];
                 }
                 $result = (array)$this->getCollection()->updateOne(
-                  ['_id' => $item->getEncodedKey()],
-                  [
-                    '$set' => $set,
-                  ],
-                  ['upsert' => true, 'multiple' => false]
+                    ['_id' => $item->getEncodedKey()],
+                    [
+                        '$set' => $set,
+                    ],
+                    ['upsert' => true, 'multiple' => false]
                 );
             } catch (MongoDBException $e) {
                 throw new PhpfastcacheDriverException('Got an exception while trying to write data to MongoDB server', null, $e);
             }
 
-            return isset($result[ 'ok' ]) ? $result[ 'ok' ] == 1 : true;
+            return isset($result['ok']) ? $result['ok'] == 1 : true;
         }
 
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
@@ -226,16 +227,16 @@ class Driver implements ExtendedCacheItemPoolInterface
         $host = $this->getConfig()->getHost();
         $port = $this->getConfig()->getPort();
         $username = $this->getConfig()->getUsername();
-        $password =  $this->getConfig()->getPassword();
+        $password = $this->getConfig()->getPassword();
 
         return implode('', [
-          'mongodb://',
-          ($username ?: ''),
-          ($password ? ":{$password}" : ''),
-          ($username ? '@' : ''),
-          $host,
-          ($port !== 27017 ? ":{$port}" : ''),
-          ($databaseName ? "/{$databaseName}" : '')
+            'mongodb://',
+            ($username ?: ''),
+            ($password ? ":{$password}" : ''),
+            ($username ? '@' : ''),
+            $host,
+            ($port !== 27017 ? ":{$port}" : ''),
+            ($databaseName ? "/{$databaseName}" : ''),
         ]);
     }
 
@@ -259,16 +260,16 @@ class Driver implements ExtendedCacheItemPoolInterface
     public function getStats(): DriverStatistic
     {
         $serverStats = $this->instance->getManager()->executeCommand('phpFastCache', new Command([
-          'serverStatus' => 1,
-          'recordStats' => 0,
-          'repl' => 0,
-          'metrics' => 0,
-        ]))->toArray()[ 0 ];
+            'serverStatus' => 1,
+            'recordStats' => 0,
+            'repl' => 0,
+            'metrics' => 0,
+        ]))->toArray()[0];
 
         $collectionStats = $this->instance->getManager()->executeCommand('phpFastCache', new Command([
-          'collStats' => (isset($this->getConfig()[ 'collectionName' ]) ? $this->getConfig()[ 'collectionName' ] : 'Cache'),
-          'verbose' => true,
-        ]))->toArray()[ 0 ];
+            'collStats' => (isset($this->getConfig()['collectionName']) ? $this->getConfig()['collectionName'] : 'Cache'),
+            'verbose' => true,
+        ]))->toArray()[0];
 
         $array_filter_recursive = function ($array, callable $callback = null) use (&$array_filter_recursive) {
             $array = $callback($array);
@@ -296,14 +297,14 @@ class Driver implements ExtendedCacheItemPoolInterface
         $collectionStats = $array_filter_recursive($collectionStats, $callback);
 
         $stats = (new DriverStatistic())
-          ->setInfo('MongoDB version ' . $serverStats->version . ', Uptime (in days): ' . \round($serverStats->uptime / 86400,
-              1) . "\n For more information see RawData.")
-          ->setSize($collectionStats->size)
-          ->setData(\implode(', ', \array_keys($this->itemInstances)))
-          ->setRawData([
-            'serverStatus' => $serverStats,
-            'collStats' => $collectionStats,
-          ]);
+            ->setInfo('MongoDB version ' . $serverStats->version . ', Uptime (in days): ' . \round($serverStats->uptime / 86400,
+                    1) . "\n For more information see RawData.")
+            ->setSize($collectionStats->size)
+            ->setData(\implode(', ', \array_keys($this->itemInstances)))
+            ->setRawData([
+                'serverStatus' => $serverStats,
+                'collStats' => $collectionStats,
+            ]);
 
         return $stats;
     }

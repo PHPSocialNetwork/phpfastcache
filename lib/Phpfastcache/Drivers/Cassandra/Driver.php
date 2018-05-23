@@ -17,12 +17,13 @@ namespace Phpfastcache\Drivers\Cassandra;
 
 use Cassandra;
 use Cassandra\Session as CassandraSession;
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\{
+    DriverBaseTrait, ExtendedCacheItemPoolInterface
+};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
-  PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
+    PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
 };
-use Phpfastcache\Util\ArrayObject;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -35,7 +36,7 @@ use Psr\Cache\CacheItemInterface;
 class Driver implements ExtendedCacheItemPoolInterface
 {
     const CASSANDRA_KEY_SPACE = 'phpfastcache';
-    const CASSANDRA_TABLE     = 'cacheItems';
+    const CASSANDRA_TABLE = 'cacheItems';
 
     use DriverBaseTrait;
 
@@ -61,8 +62,8 @@ class Driver implements ExtendedCacheItemPoolInterface
         $clientConfig = $this->getConfig();
 
         $clusterBuilder = Cassandra::cluster()
-          ->withContactPoints($clientConfig->getHost())
-          ->withPort($clientConfig->getPort());
+            ->withContactPoints($clientConfig->getHost())
+            ->withPort($clientConfig->getPort());
 
         if (!empty($clientConfig->isSslEnabled())) {
             if (!empty($clientConfig->isSslVerify())) {
@@ -90,8 +91,8 @@ class Driver implements ExtendedCacheItemPoolInterface
          */
 
         $this->instance->execute(new Cassandra\SimpleStatement(\sprintf(
-          "CREATE KEYSPACE IF NOT EXISTS %s WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };",
-          self::CASSANDRA_KEY_SPACE
+            "CREATE KEYSPACE IF NOT EXISTS %s WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };",
+            self::CASSANDRA_KEY_SPACE
         )));
         $this->instance->execute(new Cassandra\SimpleStatement(\sprintf('USE %s;', self::CASSANDRA_KEY_SPACE)));
         $this->instance->execute(new Cassandra\SimpleStatement(\sprintf('
@@ -117,18 +118,18 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         try {
             $options = new Cassandra\ExecutionOptions([
-              'arguments' => ['cache_id' => $item->getKey()],
-              'page_size' => 1,
+                'arguments' => ['cache_id' => $item->getKey()],
+                'page_size' => 1,
             ]);
-            $query =\sprintf(
-              'SELECT cache_data FROM %s.%s WHERE cache_id = :cache_id;',
-              self::CASSANDRA_KEY_SPACE,
-              self::CASSANDRA_TABLE
+            $query = \sprintf(
+                'SELECT cache_data FROM %s.%s WHERE cache_id = :cache_id;',
+                self::CASSANDRA_KEY_SPACE,
+                self::CASSANDRA_TABLE
             );
             $results = $this->instance->execute(new Cassandra\SimpleStatement($query), $options);
 
             if ($results instanceof Cassandra\Rows && $results->count() === 1) {
-                return $this->decode($results->first()[ 'cache_data' ]);
+                return $this->decode($results->first()['cache_data']);
             }
 
             return null;
@@ -151,19 +152,19 @@ class Driver implements ExtendedCacheItemPoolInterface
             try {
                 $cacheData = $this->encode($this->driverPreWrap($item));
                 $options = new Cassandra\ExecutionOptions([
-                  'arguments' => [
-                    'cache_uuid' => new Cassandra\Uuid(),
-                    'cache_id' => $item->getKey(),
-                    'cache_data' => $cacheData,
-                    'cache_creation_date' => new Cassandra\Timestamp((new \DateTime())->getTimestamp()),
-                    'cache_expiration_date' => new Cassandra\Timestamp($item->getExpirationDate()->getTimestamp()),
-                    'cache_length' => strlen($cacheData),
-                  ],
-                  'consistency' => Cassandra::CONSISTENCY_ALL,
-                  'serial_consistency' => Cassandra::CONSISTENCY_SERIAL,
+                    'arguments' => [
+                        'cache_uuid' => new Cassandra\Uuid(),
+                        'cache_id' => $item->getKey(),
+                        'cache_data' => $cacheData,
+                        'cache_creation_date' => new Cassandra\Timestamp((new \DateTime())->getTimestamp()),
+                        'cache_expiration_date' => new Cassandra\Timestamp($item->getExpirationDate()->getTimestamp()),
+                        'cache_length' => strlen($cacheData),
+                    ],
+                    'consistency' => Cassandra::CONSISTENCY_ALL,
+                    'serial_consistency' => Cassandra::CONSISTENCY_SERIAL,
                 ]);
 
-                $query =\sprintf('INSERT INTO %s.%s
+                $query = \sprintf('INSERT INTO %s.%s
                     (
                       cache_uuid, 
                       cache_id, 
@@ -203,14 +204,14 @@ class Driver implements ExtendedCacheItemPoolInterface
         if ($item instanceof Item) {
             try {
                 $options = new Cassandra\ExecutionOptions([
-                  'arguments' => [
-                    'cache_id' => $item->getKey(),
-                  ],
+                    'arguments' => [
+                        'cache_id' => $item->getKey(),
+                    ],
                 ]);
                 $result = $this->instance->execute(new Cassandra\SimpleStatement(\sprintf(
-                  'DELETE FROM %s.%s WHERE cache_id = :cache_id;',
-                  self::CASSANDRA_KEY_SPACE,
-                  self::CASSANDRA_TABLE
+                    'DELETE FROM %s.%s WHERE cache_id = :cache_id;',
+                    self::CASSANDRA_KEY_SPACE,
+                    self::CASSANDRA_TABLE
                 )), $options);
 
                 /**
@@ -234,8 +235,8 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         try {
             $this->instance->execute(new Cassandra\SimpleStatement(\sprintf(
-              'TRUNCATE %s.%s;',
-              self::CASSANDRA_KEY_SPACE, self::CASSANDRA_TABLE
+                'TRUNCATE %s.%s;',
+                self::CASSANDRA_KEY_SPACE, self::CASSANDRA_TABLE
             )));
 
             return true;
@@ -272,15 +273,15 @@ HELP;
     public function getStats(): DriverStatistic
     {
         $result = $this->instance->execute(new Cassandra\SimpleStatement(\sprintf(
-          'SELECT SUM(cache_length) as cache_size FROM %s.%s',
-          self::CASSANDRA_KEY_SPACE,
-          self::CASSANDRA_TABLE
+            'SELECT SUM(cache_length) as cache_size FROM %s.%s',
+            self::CASSANDRA_KEY_SPACE,
+            self::CASSANDRA_TABLE
         )));
 
         return (new DriverStatistic())
-          ->setSize($result->first()[ 'cache_size' ])
-          ->setRawData([])
-          ->setData(\implode(', ', \array_keys($this->itemInstances)))
-          ->setInfo('The cache size represents only the cache data itself without counting data structures associated to the cache entries.');
+            ->setSize($result->first()['cache_size'])
+            ->setRawData([])
+            ->setData(\implode(', ', \array_keys($this->itemInstances)))
+            ->setInfo('The cache size represents only the cache data itself without counting data structures associated to the cache entries.');
     }
 }

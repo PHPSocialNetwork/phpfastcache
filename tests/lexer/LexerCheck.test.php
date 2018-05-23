@@ -8,7 +8,7 @@ $testHelper = new TestHelper('PHP Lexer');
 
 
 /**
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> http://www.phpfastcache.com
+ * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 

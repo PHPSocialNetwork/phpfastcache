@@ -16,8 +16,12 @@ PHPFASTCACHE's specialties
 As of the V7 your contributions MUST comply the following standards:
 
 ### PHP CORE FUNCTIONS
-- To improve opcode efficiency, you MUST prefix core function by a '\\'
+- To improve Opcode efficiency, you MUST prefix core function by a '\\'
   - E.g: `$var = \str_replace('value', '', $var);`
+  
+### PHP CORE CONSTANTS
+- To improve Opcode efficiency, you MUST prefix core constants by a '\\'
+  - E.g: `$dateFormat = \DATE_ISO8601`
 
 ### PHP CORE CLASSES
 - Do not imports non-namespaced classes, use an absolute path instead:  

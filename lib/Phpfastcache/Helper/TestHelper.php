@@ -257,6 +257,7 @@ class TestHelper
     {
         if ($exception instanceof PhpfastcacheDriverCheckException) {
             $this->printSkipText('A driver could not be initialized due to missing requirement: ' . $exception->getMessage());
+            $this->exitCode = 0;
         } else {
             $this->printFailText(\sprintf(
                 'Uncaught exception "%s" in "%s" line %d with message: "%s"',

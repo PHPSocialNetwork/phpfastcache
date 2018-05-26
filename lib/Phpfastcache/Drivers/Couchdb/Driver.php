@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Couchdb;
 
 use Doctrine\CouchDB\{
-    CouchDBClient as CouchdbClient, CouchDBException
+    CouchDBClient, CouchDBException
 };
 use Phpfastcache\Core\Pool\{
     DriverBaseTrait, ExtendedCacheItemPoolInterface
@@ -45,7 +45,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        return \class_exists('Doctrine\CouchDB\CouchDBClient');
+        return \class_exists(CouchDBClient::class);
     }
 
     /**
@@ -54,7 +54,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverConnect(): bool
     {
-        if ($this->instance instanceof CouchdbClient) {
+        if ($this->instance instanceof CouchDBClient) {
             throw new PhpfastcacheLogicException('Already connected to Couchdb server');
         }
 

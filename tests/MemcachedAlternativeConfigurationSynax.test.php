@@ -12,7 +12,7 @@ use Phpfastcache\Drivers\Memcache\Config as MemcacheConfig;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
-$testHelper = new TestHelper('Memcached altyernative configuration syntax');
+$testHelper = new TestHelper('Memcached alternative configuration syntax');
 
 $cacheInstanceDefSyntax = CacheManager::getInstance('Memcached');
 
@@ -20,7 +20,6 @@ $cacheInstanceOldSyntax = CacheManager::getInstance('Memcached', new MemcachedCo
   'servers' => [
     [
       'host' => '127.0.0.1',
-      'path' => false,
       'port' => 11211,
     ]
   ]
@@ -28,7 +27,6 @@ $cacheInstanceOldSyntax = CacheManager::getInstance('Memcached', new MemcachedCo
 
 $cacheInstanceNewSyntax = CacheManager::getInstance('Memcached', new MemcachedConfig([
   'host' => '127.0.0.1',
-  'path' => false,
   'port' => 11211,
 ]));
 

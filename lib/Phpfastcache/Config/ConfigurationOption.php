@@ -268,7 +268,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      */
     public function setDefaultKeyHashFunction($defaultKeyHashFunction)
     {
-        if (!\is_callable($defaultKeyHashFunction) && !\function_exists($defaultKeyHashFunction)) {
+        if (!\is_callable($defaultKeyHashFunction) && (\is_string($defaultKeyHashFunction) && !\function_exists($defaultKeyHashFunction))) {
             throw new PhpfastcacheInvalidConfigurationException('defaultKeyHashFunction must be a valid function name string');
         }
         $this->defaultKeyHashFunction = $defaultKeyHashFunction;
@@ -290,7 +290,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      */
     public function setDefaultFileNameHashFunction($defaultFileNameHashFunction)
     {
-        if (!\function_exists($defaultFileNameHashFunction) || !\is_callable($defaultFileNameHashFunction)) {
+        if (!\is_callable($defaultFileNameHashFunction) && (\is_string($defaultFileNameHashFunction) && !\function_exists($defaultFileNameHashFunction))) {
             throw new PhpfastcacheInvalidConfigurationException('defaultFileNameHashFunction must be a valid function name string');
         }
         $this->defaultFileNameHashFunction = $defaultFileNameHashFunction;

@@ -255,7 +255,7 @@ class TestHelper
      */
     public function exceptionHandler(\Throwable $exception)
     {
-        if ($exception instanceof PhpfastcacheDriverCheckException) {
+        if ($exception instanceof PhpfastcacheDriverCheckException || $exception->getPrevious() instanceof PhpfastcacheDriverCheckException) {
             $this->printSkipText('A driver could not be initialized due to missing requirement: ' . $exception->getMessage());
             $this->exitCode = 0;
         } else {

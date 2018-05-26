@@ -379,7 +379,7 @@ trait ExtendedCacheItemPoolTrait
     public function detachItem(CacheItemInterface $item)
     {
         if (isset($this->itemInstances[ $item->getKey() ])) {
-            $this->deregisterItem($item);
+            $this->deregisterItem($item->getKey());
         }
     }
 
@@ -408,15 +408,12 @@ trait ExtendedCacheItemPoolTrait
 
     /**
      * @internal This method de-register an item from $this->itemInstances
-     * @param CacheItemInterface|string $item
+     * @param string $item
      * @throws phpFastCacheInvalidArgumentException
      */
     protected function deregisterItem($item)
     {
-        if ($item instanceof CacheItemInterface) {
-            unset($this->itemInstances[ $item->getKey() ]);
-
-        } else if (is_string($item)) {
+        if (is_string($item)) {
             unset($this->itemInstances[ $item ]);
         } else {
             throw new phpFastCacheInvalidArgumentException('Invalid type for $item variable');

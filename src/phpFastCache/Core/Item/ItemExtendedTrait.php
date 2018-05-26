@@ -22,9 +22,9 @@ use phpFastCache\Exceptions\phpFastCacheLogicException;
 /**
  * Class ItemExtendedTrait
  * @package phpFastCache\Core\Item
- * @property \Datetime $expirationDate Expiration date of the item
- * @property \Datetime $creationDate Creation date of the item
- * @property \Datetime $modificationDate Modification date of the item
+ * @property \DateTimeInterface $expirationDate Expiration date of the item
+ * @property \DateTimeInterface $creationDate Creation date of the item
+ * @property \DateTimeInterface $modificationDate Modification date of the item
  * @property mixed $data Data of the item
  * @property bool $fetched Fetch flag status
  * @property array $tags The tags array

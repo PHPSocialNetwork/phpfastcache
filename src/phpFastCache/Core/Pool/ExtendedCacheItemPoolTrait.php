@@ -379,7 +379,7 @@ trait ExtendedCacheItemPoolTrait
     public function detachItem(CacheItemInterface $item)
     {
         if (isset($this->itemInstances[ $item->getKey() ])) {
-            $this->deregisterItem($item->get());
+            $this->deregisterItem($item->getKey());
         }
     }
 

@@ -255,16 +255,16 @@ class Driver implements ExtendedCacheItemPoolInterface
     public function indexing($keyword)
     {
         if ($this->indexing == null) {
-            $createTable = false;
+            $tableCreated = false;
             if (!\file_exists($this->SqliteDir . '/indexing')) {
-                $createTable = true;
+                $tableCreated = true;
             }
 
             $PDO = new PDO("sqlite:" . $this->SqliteDir . '/' . self::INDEXING_FILE);
             $PDO->setAttribute(PDO::ATTR_ERRMODE,
                 PDO::ERRMODE_EXCEPTION);
 
-            if ($createTable == true) {
+            if ($tableCreated) {
                 $this->initIndexing($PDO);
             }
             $this->indexing = $PDO;
@@ -318,14 +318,14 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param $keyword
+     * @param string $keyword
      * @param bool $reset
      * @return PDO
      */
-    public function getDb($keyword, $reset = false): PDO
+    public function getDb(string $keyword, bool $reset = false): PDO
     {
         /**
-         * Default is fastcache
+         * Default is phpfastcache
          */
         $instant = $this->indexing($keyword);
 
@@ -334,14 +334,14 @@ class Driver implements ExtendedCacheItemPoolInterface
          */
         if (!isset($this->instance[$instant])) {
             // check DB Files ready or not
-            $createTable = false;
-            if (!\file_exists($this->SqliteDir . '/db' . $instant) || $reset == true) {
-                $createTable = true;
+            $tableCreated = false;
+            if ($reset || !\file_exists($this->SqliteDir . '/db' . $instant)) {
+                $tableCreated = true;
             }
             $PDO = new PDO('sqlite:' . $this->SqliteDir . '/db' . $instant);
             $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            if ($createTable == true) {
+            if ($tableCreated) {
                 $this->initDB($PDO);
             }
 

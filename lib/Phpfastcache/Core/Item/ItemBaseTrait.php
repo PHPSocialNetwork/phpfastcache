@@ -41,17 +41,17 @@ trait ItemBaseTrait
     protected $data;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      */
     protected $expirationDate;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      */
     protected $creationDate;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      */
     protected $modificationDate;
 

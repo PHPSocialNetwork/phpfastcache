@@ -25,11 +25,11 @@ use Psr\Cache\CacheItemInterface;
 /**
  * Trait ExtendedCacheItemPoolTrait
  * @package Phpfastcache\Core\Pool
- * @method bool driverWriteTags() Imported from DriverBaseTrait
+ * @method bool driverWriteTags(ExtendedCacheItemInterface $item) Imported from DriverBaseTrait
  */
 trait ExtendedCacheItemPoolTrait
 {
-    use CacheItemPoolTrait;
+    use CacheItemPoolTrait, AbstractDriverPoolTrait;
 
     /**
      * @inheritdoc
@@ -384,7 +384,7 @@ trait ExtendedCacheItemPoolTrait
     public function detachItem(CacheItemInterface $item)
     {
         if (isset($this->itemInstances[$item->getKey()])) {
-            $this->deregisterItem($item);
+            $this->deregisterItem($item->getKey());
         }
     }
 
@@ -413,21 +413,12 @@ trait ExtendedCacheItemPoolTrait
 
     /**
      * @internal This method de-register an item from $this->itemInstances
-     * @param CacheItemInterface|string $item
-     * @throws PhpfastcacheInvalidArgumentException
+     * @param string $item
      */
-    protected function deregisterItem($item)
+    protected function deregisterItem(string $item)
     {
-        if ($item instanceof CacheItemInterface) {
-            unset($this->itemInstances[$item->getKey()]);
+        unset($this->itemInstances[$item]);
 
-        } else {
-            if (\is_string($item)) {
-                unset($this->itemInstances[$item]);
-            } else {
-                throw new PhpfastcacheInvalidArgumentException('Invalid type for $item variable');
-            }
-        }
         if (\gc_enabled()) {
             \gc_collect_cycles();
         }
@@ -506,46 +497,4 @@ trait ExtendedCacheItemPoolTrait
     {
         return '';
     }
-
-    /**
-     * Driver-related methods
-     */
-
-    /**
-     * @return bool
-     */
-    abstract protected function driverCheck(): bool;
-
-    /**
-     * @return bool
-     */
-    abstract protected function driverConnect(): bool;
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return null|array [
-     *      'd' => 'THE ITEM DATA'
-     *      't' => 'THE ITEM DATE EXPIRATION'
-     *      'g' => 'THE ITEM TAGS'
-     * ]
-     *
-     */
-    abstract protected function driverRead(CacheItemInterface $item);
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return bool
-     */
-    abstract protected function driverWrite(CacheItemInterface $item): bool;
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return bool
-     */
-    abstract protected function driverDelete(CacheItemInterface $item): bool;
-
-    /**
-     * @return bool
-     */
-    abstract protected function driverClear(): bool;
 }

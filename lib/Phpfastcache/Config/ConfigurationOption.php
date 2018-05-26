@@ -1,10 +1,17 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Geolim4
- * Date: 10/02/2018
- * Time: 18:45
+ *
+ * This file is part of phpFastCache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt file.
+ *
+ * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ *
  */
+declare(strict_types=1);
 
 namespace Phpfastcache\Config;
 
@@ -12,7 +19,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Util\ArrayObject;
 
-class ConfigurationOption extends ArrayObject
+class ConfigurationOption extends ArrayObject implements ConfigurationOptionInterface
 {
     /**
      * @var bool
@@ -261,7 +268,7 @@ class ConfigurationOption extends ArrayObject
      */
     public function setDefaultKeyHashFunction($defaultKeyHashFunction)
     {
-        if (!\function_exists($defaultKeyHashFunction) || !\is_callable($defaultKeyHashFunction)) {
+        if (!\is_callable($defaultKeyHashFunction) && !\function_exists($defaultKeyHashFunction)) {
             throw new PhpfastcacheInvalidConfigurationException('defaultKeyHashFunction must be a valid function name string');
         }
         $this->defaultKeyHashFunction = $defaultKeyHashFunction;

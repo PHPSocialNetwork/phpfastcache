@@ -304,7 +304,7 @@ class TestHelper
             case E_USER_DEPRECATED:
                 $errorType = '[DEPRECATED]';
                 break;
-            default :
+            default:
                 break;
         }
 

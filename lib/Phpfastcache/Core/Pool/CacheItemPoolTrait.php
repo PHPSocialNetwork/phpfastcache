@@ -19,6 +19,7 @@ use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\ItemBatch;
+use Phpfastcache\Event\EventInterface;
 use Phpfastcache\EventManager;
 use Phpfastcache\Exceptions\{
     PhpfastcacheCoreException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
@@ -52,7 +53,7 @@ trait CacheItemPoolTrait
     protected $itemInstances = [];
 
     /**
-     * @var EventManager
+     * @var EventInterface
      */
     protected $eventManager;
 

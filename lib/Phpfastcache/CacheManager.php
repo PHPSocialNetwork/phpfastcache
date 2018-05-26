@@ -18,7 +18,7 @@ namespace Phpfastcache;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\{
-    PhpfastcacheDriverCheckException, PhpfastcacheDriverException, PhpfastcacheDriverNotFoundException, PhpfastcacheInstanceNotFoundException, PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidConfigurationException, PhpfastcacheLogicException, PhpfastcacheUnsupportedOperationException
+    PhpfastcacheDriverCheckException, PhpfastcacheDriverException, PhpfastcacheDriverNotFoundException, PhpfastcacheExceptionInterface, PhpfastcacheInstanceNotFoundException, PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidConfigurationException, PhpfastcacheLogicException, PhpfastcacheRootException, PhpfastcacheUnsupportedOperationException
 };
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
 
@@ -112,61 +112,29 @@ class CacheManager
      */
     public static function getInstance(string $driver = self::AUTOMATIC_DRIVER_CLASS, $config = null, string $instanceId = null): ExtendedCacheItemPoolInterface
     {
-        if (\is_array($config)) {
-            $config = new ConfigurationOption($config);
-            \trigger_error(
-                'The CacheManager will drops the support of primitive configuration arrays, use a "\Phpfastcache\Config\ConfigurationOption" object instead',
-                E_USER_DEPRECATED
-            );
-        } elseif ($config === null) {
-            $config = self::getDefaultConfig();
-        } else {
-            if (!($config instanceof ConfigurationOption)) {
-                throw new PhpfastcacheInvalidArgumentException(\sprintf('Unsupported config type: %s', \gettype($config)));
-            }
-        }
-
+        $config = self::validateConfig($config);
         $driver = self::standardizeDriverName($driver);
 
         if (!$driver || $driver === self::AUTOMATIC_DRIVER_CLASS) {
             $driver = self::getAutoClass($config);
         }
 
-        $instance = $instanceId ?: \md5($driver . \serialize($config->toArray()));
+        $instanceId = $instanceId ?: \md5($driver . \serialize($config->toArray()));
 
-        if (!isset(self::$instances[$instance])) {
+        if (!isset(self::$instances[$instanceId])) {
             self::$badPracticeOmeter[$driver] = 1;
-            $driverClass = self::getDriverClass($driver);
+            $driverClass = self::validateDriverClass(self::getDriverClass($driver));
 
-            if (!is_a($driverClass, ExtendedCacheItemPoolInterface::class, true)) {
-                throw new PhpfastcacheDriverException(\sprintf(
-                    'Class "%s" does not implement "%s"',
-                    $driverClass,
-                    ExtendedCacheItemPoolInterface::class
-                ));
-            }
             try {
                 if (\class_exists($driverClass)) {
                     $configClass = $driverClass::getConfigClass();
-                    self::$instances[$instance] = new $driverClass(new $configClass($config->toArray()), $instance);
-                    self::$instances[$instance]->setEventManager(EventManager::getInstance());
+                    self::$instances[$instanceId] = new $driverClass(new $configClass($config->toArray()), $instanceId);
+                    self::$instances[$instanceId]->setEventManager(EventManager::getInstance());
                 } else {
                     throw new PhpfastcacheDriverNotFoundException(\sprintf('The driver "%s" does not exists', $driver));
                 }
             } catch (PhpfastcacheDriverCheckException $e) {
-                if ($config->getFallback()) {
-                    try {
-                        $fallback = $config->getFallback();
-                        $config->setFallback('');
-                        \trigger_error(\sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver,
-                            $fallback), E_USER_WARNING);
-                        return self::getInstance($fallback, $config->getFallbackConfig());
-                    } catch (PhpfastcacheInvalidArgumentException $e) {
-                        throw new PhpfastcacheInvalidConfigurationException('Invalid fallback driver configuration', 0, $e);
-                    }
-                } else {
-                    throw new PhpfastcacheDriverCheckException($e->getMessage(), $e->getCode(), $e);
-                }
+                return self::getFallbackInstance($driver, $config, $e);
             }
         } else {
             if (self::$badPracticeOmeter[$driver] >= 2) {
@@ -177,7 +145,34 @@ class CacheManager
 
         self::$badPracticeOmeter[$driver]++;
 
-        return self::$instances[$instance];
+        return self::$instances[$instanceId];
+    }
+
+    /**
+     * @param string $driver
+     * @param ConfigurationOption $config
+     * @param PhpfastcacheDriverCheckException $e
+     * @return ExtendedCacheItemPoolInterface
+     * @throws PhpfastcacheDriverCheckException
+     * @throws PhpfastcacheDriverException
+     * @throws PhpfastcacheDriverNotFoundException
+     * @throws PhpfastcacheInvalidConfigurationException
+     */
+    protected static function getFallbackInstance(string $driver, ConfigurationOption $config, PhpfastcacheDriverCheckException $e)
+    {
+        if ($config->getFallback()) {
+            try {
+                $fallback = $config->getFallback();
+                $config->setFallback('');
+                \trigger_error(\sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver,
+                    $fallback), E_USER_WARNING);
+                return self::getInstance($fallback, $config->getFallbackConfig());
+            } catch (PhpfastcacheInvalidArgumentException $e) {
+                throw new PhpfastcacheInvalidConfigurationException('Invalid fallback driver configuration', 0, $e);
+            }
+        } else {
+            throw new PhpfastcacheDriverCheckException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
@@ -190,10 +185,6 @@ class CacheManager
      */
     public static function getInstanceById(string $instanceId): ExtendedCacheItemPoolInterface
     {
-        if ($instanceId !== null && !\is_string($instanceId)) {
-            throw new PhpfastcacheInvalidArgumentException('The Instance ID must be a string');
-        }
-
         if (isset(self::$instances[$instanceId])) {
             return self::$instances[$instanceId];
         }
@@ -242,8 +233,9 @@ class CacheManager
 
         if ($autoDriver === null) {
             foreach (self::getDriverList() as $driver) {
-                /** @var ExtendedCacheItemPoolInterface $driver */
-                if ((self::CORE_DRIVER_NAMESPACE . $driver . '\Driver')::isUsableInAutoContext()) {
+                /** @var ExtendedCacheItemPoolInterface $driverClass */
+                $driverClass = self::CORE_DRIVER_NAMESPACE . $driver . '\Driver';
+                if ($driverClass::isUsableInAutoContext()) {
                     try {
                         self::getInstance($driver, $config);
                         $autoDriver = $driver;
@@ -267,7 +259,7 @@ class CacheManager
     /**
      * @param string $name
      * @param array $arguments
-     * @return \Psr\Cache\ExtendedCacheItemPoolInterface
+     * @return ExtendedCacheItemPoolInterface
      */
     public static function __callStatic(string $name, array $arguments): ExtendedCacheItemPoolInterface
     {
@@ -558,5 +550,47 @@ class CacheManager
         }
 
         unset(self::$driverOverrides[$driverName]);
+    }
+
+    /**
+     * @param array|ConfigurationOption
+     * @return ConfigurationOption
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidConfigurationException
+     */
+    protected static function validateConfig($config): ConfigurationOption
+    {
+        if (\is_array($config)) {
+            $config = new ConfigurationOption($config);
+            \trigger_error(
+                'The CacheManager will drops the support of primitive configuration arrays, use a "\Phpfastcache\Config\ConfigurationOption" object instead',
+                E_USER_DEPRECATED
+            );
+        } elseif ($config === null) {
+            $config = self::getDefaultConfig();
+        } else {
+            if (!($config instanceof ConfigurationOption)) {
+                throw new PhpfastcacheInvalidArgumentException(\sprintf('Unsupported config type: %s', \gettype($config)));
+            }
+        }
+
+        return $config;
+    }
+
+    /**
+     * @param string $driverClass
+     * @return string
+     * @throws PhpfastcacheDriverException
+     */
+    protected static function validateDriverClass(string $driverClass): string
+    {
+        if (!is_a($driverClass, ExtendedCacheItemPoolInterface::class, true)) {
+            throw new PhpfastcacheDriverException(\sprintf(
+                'Class "%s" does not implement "%s"',
+                $driverClass,
+                ExtendedCacheItemPoolInterface::class
+            ));
+        }
+        return $driverClass;
     }
 }

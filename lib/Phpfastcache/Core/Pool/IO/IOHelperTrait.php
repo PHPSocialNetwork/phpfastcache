@@ -19,7 +19,7 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Drivers\Files\Config;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\EventManager;
+use Phpfastcache\Event\EventInterface;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Util\Directory;
 
@@ -28,8 +28,10 @@ use Phpfastcache\Util\Directory;
  * @package phpFastCache\Core\Pool\IO
  * @property array $config The configuration array passed via DriverBaseTrait
  * @property ExtendedCacheItemInterface[] $itemInstances The item instance passed via CacheItemPoolTrait
- * @property EventManager $eventManager The event manager passed via CacheItemPoolTrait
+ * @property EventInterface $eventManager The event manager passed via CacheItemPoolTrait
  * @method Config getConfig() Return the config object
+ * @method bool isPHPModule() Return true if is a php module
+ * @method string getDriverName() Get the driver name
  */
 trait IOHelperTrait
 {
@@ -102,7 +104,9 @@ trait IOHelperTrait
 
         if (!isset($this->tmp[$full_path_hash]) || (!@\file_exists($full_path) || !@\is_writable($full_path))) {
             if (!@\file_exists($full_path)) {
-                @mkdir($full_path, $this->getDefaultChmod(), true);
+                if (@mkdir($full_path, $this->getDefaultChmod(), true) === false &&  !\is_dir($full_path) ) {
+                    throw new PhpfastcacheIOException('The directory '.$full_path.' could not be created.');
+                }
             } else {
                 if (!@\is_writable($full_path)) {
                     if (!@chmod($full_path, $this->getDefaultChmod()) && $this->getConfig()->isAutoTmpFallback()) {
@@ -112,7 +116,9 @@ trait IOHelperTrait
                          */
                         $full_path = $full_path_tmp;
                         if (!@\file_exists($full_path)) {
-                            @mkdir($full_path, $this->getDefaultChmod(), true);
+                            if(@mkdir($full_path, $this->getDefaultChmod(), true) &&  !\is_dir($full_path)){
+                                throw new PhpfastcacheIOException('The directory '.$full_path.' could not be created.');
+                            }
                         }
                     }
                 }
@@ -128,7 +134,7 @@ trait IOHelperTrait
             }
 
             $this->tmp[$full_path_hash] = $full_path;
-            $this->htaccessGen($full_path, \array_key_exists('htaccess', $this->getConfig()) ? $this->getConfig()->getHtaccess() : false);
+            $this->htaccessGen($full_path, $this->getConfig()->isValidOption('htaccess') ? $this->getConfig()->getHtaccess() : false);
         }
 
         return realpath($full_path);
@@ -156,7 +162,7 @@ trait IOHelperTrait
         /**
          * Skip Create Sub Folders;
          */
-        if (!$skip && !\file_exists($path) && @!\mkdir($path, $this->getDefaultChmod(), true)) {
+        if (!$skip && @!\mkdir($path, $this->getDefaultChmod(), true) && !\is_dir($path)) {
             throw new PhpfastcacheIOException('PLEASE CHMOD ' . $path . ' - ' . $this->getDefaultChmod() . ' OR ANY WRITABLE PERMISSION!');
         }
 
@@ -231,7 +237,7 @@ Deny from all
 </IfModule>
 HTACCESS;
 
-                $file = @\fopen($path . '/.htaccess', 'w+');
+                $file = @\fopen($path . '/.htaccess', 'w+b');
                 if (!$file) {
                     throw new PhpfastcacheIOException('PLEASE CHMOD ' . $path . ' - 0777 OR ANY WRITABLE PERMISSION!');
                 }
@@ -255,7 +261,7 @@ HTACCESS;
 
         $string = '';
 
-        $file_handle = @\fopen($file, 'r');
+        $file_handle = @\fopen($file, 'rb');
         if (!$file_handle) {
             throw new PhpfastcacheIOException("Cannot read file located at: {$file}");
         }
@@ -292,22 +298,26 @@ HTACCESS;
                     . \str_shuffle(\uniqid($this->getDriverName(), false))
                 ));
 
-            $f = \fopen($tmpFilename, 'w+');
-            \flock($f, \LOCK_EX);
-            $octetWritten = fwrite($f, $data);
-            \flock($f, \LOCK_UN);
-            \fclose($f);
+            $f = \fopen($tmpFilename, 'w+b');
+            if(\is_resource($f)){
+                \flock($f, \LOCK_EX);
+                $octetWritten = fwrite($f, $data);
+                \flock($f, \LOCK_UN);
+                \fclose($f);
+            }
 
             if (!\rename($tmpFilename, $file)) {
                 throw new PhpfastcacheIOException(\sprintf('Failed to rename %s to %s', $tmpFilename, $file));
             }
         } else {
-            $f = \fopen($file, 'w+');
-            $octetWritten = \fwrite($f, $data);
-            \fclose($f);
+            $f = \fopen($file, 'w+b');
+            if(\is_resource($f)){
+                $octetWritten = \fwrite($f, $data);
+                \fclose($f);
+            }
         }
 
-        return $octetWritten !== false;
+        return (bool) ($octetWritten ?? false);
     }
 
     /********************

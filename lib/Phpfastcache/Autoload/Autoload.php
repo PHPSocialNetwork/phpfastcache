@@ -16,10 +16,6 @@ namespace Phpfastcache\Autoload;
  *
  */
 
-class Autoload
-{
-}
-
 const PFC_PHP_EXT = 'php';
 const PFC_BIN_DIR = __DIR__ . '/../../../bin/';
 const PFC_LIB_DIR = __DIR__ . '/../../../lib/';

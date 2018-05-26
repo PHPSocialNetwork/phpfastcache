@@ -163,3 +163,7 @@ Therefore it way requires a Couchbase Server updated combined with an SDK update
 As of the V7, all the constant starting by _PFC\_*_ were moved into the `Phpfastcache\Autoload` namespace\ 
 to not pollute php's root namespace.
 
+### Autoload mechanism
+Although we highly recommend you to make use of composer benefits, it's however still possible\
+to use our own standalone autoloader. It is now located in `lib/autoload`
+

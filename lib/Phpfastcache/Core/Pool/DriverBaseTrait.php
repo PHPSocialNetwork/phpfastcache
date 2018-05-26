@@ -136,7 +136,7 @@ trait DriverBaseTrait
     }
 
     /**
-     * Check phpModules or CGI
+     * Check if phpModule or CGI
      * @return bool
      */
     protected function isPHPModule(): bool

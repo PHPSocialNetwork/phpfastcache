@@ -1,11 +1,17 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Geolim4
- * Date: 10/02/2018
- * Time: 18:45
+ *
+ * This file is part of phpFastCache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt file.
+ *
+ * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ *
  */
-
+declare(strict_types=1);
 namespace Phpfastcache\Config;
 
 trait IOConfigurationOptionTrait
@@ -16,7 +22,7 @@ trait IOConfigurationOptionTrait
     protected $secureFileManipulation = false;
 
     /**
-     * @var string
+     * @var bool
      */
     protected $htaccess = true;
 
@@ -37,7 +43,7 @@ trait IOConfigurationOptionTrait
      * @param string $securityKey
      * @return Config
      */
-    public function setSecurityKey(string $securityKey): self
+    public function setSecurityKey(string $securityKey): ConfigurationOptionInterface
     {
         $this->securityKey = $securityKey;
 
@@ -56,9 +62,10 @@ trait IOConfigurationOptionTrait
      * @param bool $htaccess
      * @return Config
      */
-    public function setHtaccess(bool $htaccess): self
+    public function setHtaccess(bool $htaccess): ConfigurationOptionInterface
     {
         $this->htaccess = $htaccess;
+
         return $this;
     }
 
@@ -74,7 +81,7 @@ trait IOConfigurationOptionTrait
      * @param bool $secureFileManipulation
      * @return self
      */
-    public function setSecureFileManipulation(bool $secureFileManipulation): self
+    public function setSecureFileManipulation(bool $secureFileManipulation): ConfigurationOptionInterface
     {
         $this->secureFileManipulation = $secureFileManipulation;
         return $this;

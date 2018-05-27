@@ -10,10 +10,11 @@ Also please note that the V7 requires at least PHP7 or higher to work properly.
 Simple Yet Powerful PHP Caching Class
 ---------------------------
 More information in [Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki)
-One Class uses for All Cache. You don't need to rewrite your code many times again.
+The simplicity of abstraction: One class for many backend cache. You don't need to rewrite your code many times again.
 
 ### PHP7 Strict types enforced
 As of the V7 PhpFastCache enforces the php7 strict types to make sure that it's completely php7 compatible and is type aware.
+This ensure you that the library is completely reliable when it come to manipulate variable types. 
 
 ### Supported drivers at this day *
 :bulb: Feel free to propose a driver by making a new **[Pull Request](https://github.com/PHPSocialNetwork/phpfastcache/compare)**, they are welcome !
@@ -36,16 +37,18 @@ As of the V7 PhpFastCache enforces the php7 strict types to make sure that it's 
 
 ### Symfony/Drupal developers are not forgotten !
 Starting with v5, phpFastCache comes with a [Symfony Bundle](https://github.com/PHPSocialNetwork/phpfastcache-bundle).
-It's fresh, so feel free to report any bug or contribute to the project using pull requests.
+It is now a mature project Flex -ready, so feel free to give at try and report any bug (if any).
 
 Also a [Drupal 8 Module](https://github.com/PHPSocialNetwork/phpfastcache-drupal) is currently in development, add it to your starred projects to get notified of the first public release. 
 
 ---------------------------
 Not a "Traditional" Caching
 ---------------------------
-phpFastCache is not like the traditional caching methods which keep reading and writing to files, sqlite or keeping open massive amounts of connections to memcache, redis, mongodb... 
-Also, when you use high performances drivers, your miss hits will be drastically reduced.
-Slightly different from the usual caching libraries you will find everywhere on the internet, the phpFastCache library reduces the I/O and CPU load as much as possible.
+phpFastCache is not like the traditional caching methods which keep reading and writing to 
+files, sqlite or keeping open massive amounts of connections to memcache, redis, mongodb...\
+Also, when you use high performances drivers, your miss hits will be drastically reduced.\
+Slightly different from the usual caching libraries you will find everywhere on the internet, 
+the phpFastCache library reduces the I/O and CPU load as much as possible.
 
 ```php
 <?php
@@ -61,9 +64,10 @@ CacheManager::Files($config);
 Reduce Database/Webservice Calls
 ---------------------------
 
-Your website has 10,000 visitors who are online, and your dynamic page has to send 10,000 times the same queries to database or the webservice on every page load.
-With phpFastCache, your page only sends 1 query to your DB/WS, and uses the cache to serve the 9,999 other visitors.
-You can off course decide the TTL that will matches your needs.
+Your website has 10,000 visitors who are online, and your dynamic page has to send 10,000 times the same queries 
+to database or the webservice on every page load.\
+With phpFastCache, your page only sends 1 query to your DB/WS, and uses the cache to serve the 9,999 other visitors.\
+You can obviously decide the TTL that will matches your needs.
 
 ---------------------------
 Rich Development API
@@ -274,13 +278,14 @@ composer require phpFastCache/phpFastCache
 ```php
 <?php
 use Phpfastcache\CacheManager;
+use Phpfastcache\Config\ConfigurationOption;
 
 // Setup File Path on your config files
 // Please note that as of the V6.1 the "path" config 
 // can also be used for Unix sockets (Redis, Memcache, etc)
-CacheManager::setup(array(
-    "path" => '/var/www/phpfastcache.com/dev/tmp', // or in windows "C:/tmp/"
-));
+CacheManager::setDefaultConfig(new ConfigurationOption([
+    'path' => '/var/www/phpfastcache.com/dev/tmp', // or in windows "C:/tmp/"
+]));
 
 // In your class, function, you can call the Cache
 $InstanceCache = CacheManager::getInstance('files');
@@ -296,18 +301,18 @@ $your_product_data = [
     'First product',
     'Second product',
     'Third product'
-    // etc...
+     /* ... */
 ];
 
-if (is_null($CachedString->get())) {
+if ($CachedString->isHit()) {
     $CachedString->set($your_product_data)->expiresAfter(5);//in seconds, also accepts Datetime
 	$InstanceCache->save($CachedString); // Save the cache item just like you do with doctrine and entities
 
-    echo "FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ";
+    echo 'FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ';
     echo $CachedString->get();
 
 } else {
-    echo "READ FROM CACHE // ";
+    echo 'READ FROM CACHE // ';
     echo $CachedString->get()[0];// Will print 'First product'
 }
 

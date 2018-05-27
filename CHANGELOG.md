@@ -1,3 +1,28 @@
+## 7.0.0
+#### _"We found gold !"_
+##### 27 may 2018
+- __Global__
+    - Finally achieved 8 months of development \o/ (@Geolim4)
+    - Applied one last code refactoring to enforce PSR2 compliance (@Geolim4)
+    - Fixed some mismatching annotations type hints (@Geolim4)
+    - Applied many Scrutinizer code style/optimisation/typo recommendations (@Geolim4)
+- __Core__
+    - Updated some left functions/constants namespaces that were still not absolute (@Geolim4)
+    - Autoload: Isolated _PFC\_*_ constant in their own namespace to not pollute php's root namespace (@Geolim4)
+    - Added new exception interface `Phpfastcache\Exceptions\PhpfastcacheExceptionInterface` that will handle all Phpfastcache-related exceptions (@Geolim4)
+    - Updated CacheManager code by splitting some portions of code into different methods (@Geolim4)
+- __Drivers__
+    - Upgraded Couchbase to PHP SDK 2.4 as per #599 (@git-webmaster, @Geolim4)
+    - Added Couchbase SDK update notice to migration guide (@Geolim4)
+- __Tests__
+    - Updated TestHelper to better works in Web context (if any) (@Geolim4)
+    - Force exit code 0 when getting an uncaught exception PhpfastcacheDriverCheckException (@Geolim4)
+    - Fix test helper handling PhpfastcacheDriverCheckException with HHVM (@Geolim4)
+- __Misc__
+    - Added Anton (@git-webmaster) to our "hall of fame" (@Geolim4)
+    - Added "ext-couchbase" suggestion
+    - Updated every annotations/comments/documentation links from HTTP to HTTPS (if available) (@Geolim4)
+
 ## 7.0.0-rc4
 ##### 15 may 2018
 - __Core__

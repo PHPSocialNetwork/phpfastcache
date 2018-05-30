@@ -162,7 +162,7 @@
 
 ## 5.0.0 Gold Release
 ##### 01 july 2016
-Please see [the readme](https://github.com/PHPSocialNetwork/phpfastcache/blob/final/README.md) to see what's new in V5:
+Please see [the readme](https://github.com/PHPSocialNetwork/phpfastcache/blob/v5/README.md) to see what's new in V5:
 
 ## 5.0.0-rc3
 ##### 26 june 2016

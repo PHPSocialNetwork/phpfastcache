@@ -1,5 +1,5 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Latest Stable Version](https://img.shields.io/packagist/v/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![License](https://img.shields.io/packagist/l/phpfastcache/phpfastcache.svg)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Coding Standards](https://img.shields.io/badge/CI-PSR6-orange.svg)](https://github.com/php-fig/cache)  [![Coding Standards](https://img.shields.io/badge/CS-PSR16-orange.svg)](https://github.com/php-fig/simple-cache)    
-[![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/badges/quality-score.png?b=final)](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/?branch=final) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=final)](https://travis-ci.org/PHPSocialNetwork/phpfastcache) [![Semver compliant](https://img.shields.io/badge/Semver-2.0.0-yellow.svg)](https://semver.org/spec/v2.0.0.html) [![Patreon](https://img.shields.io/badge/Support%20us%20on-Patreon-f96854.svg)](https://www.patreon.com/geolim4)
+[![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/badges/quality-score.png?b=v6)](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/?branch=v6) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=v6)](https://travis-ci.org/PHPSocialNetwork/phpfastcache) [![Semver compliant](https://img.shields.io/badge/Semver-2.0.0-yellow.svg)](https://semver.org/spec/v2.0.0.html) [![Patreon](https://img.shields.io/badge/Support%20us%20on-Patreon-f96854.svg)](https://www.patreon.com/geolim4)
 
 > :exclamation: V6 USERS, PLEASE NOTE THAT THE V6 REQUIRES PHP 5.6 AT LEAST :exclamation:\
 Also please be aware that the V7 was released on the 01 june 2018, therefore you should check\
@@ -287,7 +287,7 @@ PhpFastCache provide it's own autoload for legacy implementation.
 Please see the sample in docs/examples/withoutComposer.php for more information.
 
 #### :zap: Step 3: Enjoy ! Your website is now faster than lightning !
-For curious developers, there is a lot of other examples available  [here](https://github.com/PHPSocialNetwork/phpfastcache/tree/final/docs/examples).
+For curious developers, there is a lot of other examples available  [here](https://github.com/PHPSocialNetwork/phpfastcache/tree/v6/docs/examples).
 
 #### :boom: phpFastCache support
 Found an issue or have an idea ? Come [here](https://github.com/PHPSocialNetwork/phpfastcache/issues) and let us know !

@@ -1,8 +1,14 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Suggest an idea for Phpfastcache
 
 ---
+
+**Configuration**
+- **PhpFastCache version:** "...replace me (Can be retrieved using method `\Phpfastcache\Api::GetVersion()`)..."
+- **PhpFastCache API version:** "...replace me (Can be retrieved using method `\Phpfastcache\Api::getPhpFastCacheVersion()`)..."
+- **PHP version:** "...replace me (Can be retrieved using command line `php -v | sed -n 1p`)..."
+- **Operating system:** " ...replace me (You REALLY should know it)... "
 
 **Is your feature request related to a problem? Please describe.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]

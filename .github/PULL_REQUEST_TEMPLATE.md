@@ -12,6 +12,7 @@ _Put an `x` in the boxes that apply_
 - [ ] Deprecated third party dependency update
 - [ ] New feature (non-breaking change which adds functionality)
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Documentation/Typo/Resource update that does not involve any code modification
 
 ## Agreement
 

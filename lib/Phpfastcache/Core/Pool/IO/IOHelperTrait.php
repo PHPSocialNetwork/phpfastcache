@@ -162,7 +162,7 @@ trait IOHelperTrait
         /**
          * Skip Create Sub Folders;
          */
-        if (!$skip && @!\mkdir($path, $this->getDefaultChmod(), true) && !\is_dir($path)) {
+        if (!$skip && !\is_dir($path) && @!\mkdir($path, $this->getDefaultChmod(), true) && !\is_dir($path)) {
             throw new PhpfastcacheIOException('PLEASE CHMOD ' . $path . ' - ' . $this->getDefaultChmod() . ' OR ANY WRITABLE PERMISSION!');
         }
 

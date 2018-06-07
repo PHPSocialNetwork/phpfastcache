@@ -18,13 +18,14 @@ date_default_timezone_set("Europe/Paris");
 
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Config\Config;
 use Phpfastcache\Core\phpFastCache;
 
 // Setup File Path on your config files
-CacheManager::setDefaultConfig([
+CacheManager::setDefaultConfig(new Config([
   "path" => sys_get_temp_dir(),
   "itemDetailedDate" => false
-]);
+]));
 
 // In your class, function, you can call the Cache
 $InstanceCache = CacheManager::getInstance('files');

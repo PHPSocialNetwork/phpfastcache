@@ -13,6 +13,7 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Drivers\Cassandra\Config;
 
 // Include composer autoloader
 require __DIR__ . '/../../vendor/autoload.php';
@@ -26,7 +27,7 @@ $config['password'] = '';
 $config['sslEnabled'] = false;
 $config['sslVerify'] = false;
 
-$InstanceCache = CacheManager::getInstance('cassandra', $config);
+$InstanceCache = CacheManager::getInstance('cassandra', new Config($config));
 
 /**
  * Try to get $products from Caching First

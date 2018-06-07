@@ -13,22 +13,18 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Drivers\Couchbase\Config;
 
 // Include composer autoloader
 require __DIR__ . '/../../vendor/autoload.php';
 
-$InstanceCache = CacheManager::getInstance('couchbase', [
+$InstanceCache = CacheManager::getInstance('couchbase', new Config([
   'host' => 'your-couchbase-host',
   'port' => '8091',
   'username' => 'your-couchbase-username',
   'password' => 'your-couchbase-password',
-  'buckets' => [
-    [
-      'bucket' => 'default', // The bucket name, generally "default" by default
-      'password' => '' // The bucket password if there is
-    ],
-  ]
-]);
+  'bucketName' => 'default' // The bucket name, generally "default" by default
+]));
 
 /**
  * Try to get $products from Caching First

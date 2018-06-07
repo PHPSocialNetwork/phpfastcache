@@ -13,16 +13,17 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Drivers\Predis\Config;
 
 // Include composer autoloader
 require __DIR__ . '/../../vendor/autoload.php';
 
-$InstanceCache = CacheManager::getInstance('predis', [
+$InstanceCache = CacheManager::getInstance('predis', new Config([
     'host' => '127.0.0.1', //Default value
     'port' => 6379, //Default value
     'password' => null, //Default value
     'database' => null, //Default value
-]);
+]));
 
 /**
  * Try to get $products from Caching First

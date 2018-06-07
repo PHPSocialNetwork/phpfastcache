@@ -13,18 +13,17 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Drivers\Memcached\Config;
 
 // Include composer autoloader
 require __DIR__ . '/../../vendor/autoload.php';
 
-$InstanceCache = CacheManager::getInstance('memcached', ['servers' => [
-  [
+$InstanceCache = CacheManager::getInstance('memcached', new Config([
     'host' =>'127.0.0.1',
     'port' => 11211,
       // 'sasl_user' => false, // optional
       // 'sasl_password' => false // optional
-  ],
-]]);
+]));
 
 /**
  * In case you need SASL authentication:

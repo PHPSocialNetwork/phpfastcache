@@ -13,11 +13,12 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Drivers\Couchdb\Config;
 
 // Include composer autoloader
 require __DIR__ . '/../../vendor/autoload.php';
 
-$InstanceCache = CacheManager::getInstance('couchdb', [
+$InstanceCache = CacheManager::getInstance('couchdb', new Config([
   'host' => '127.0.0.1',
   'port' => 5984,
   'path' => '/',
@@ -25,7 +26,7 @@ $InstanceCache = CacheManager::getInstance('couchdb', [
   'password' => 'your-couchdb-password',
   'ssl' => true,
   'timeout' => 10,
-]);
+]));
 
 /**
  * Try to get $products from Caching First

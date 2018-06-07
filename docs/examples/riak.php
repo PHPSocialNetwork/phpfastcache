@@ -13,6 +13,7 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Drivers\Riak\Config;
 
 // Include composer autoloader
 require __DIR__ . '/../../vendor/autoload.php';
@@ -23,7 +24,7 @@ $config['port'] = 8098;
 $config['prefix'] = 'riak';
 $config['bucketName'] = 'phpfastcache';
 
-$InstanceCache = CacheManager::getInstance('riak', $config);
+$InstanceCache = CacheManager::getInstance('riak', new Config($config));
 
 /**
  * Try to get $products from Caching First

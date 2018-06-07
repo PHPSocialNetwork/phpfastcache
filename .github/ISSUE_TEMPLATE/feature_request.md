@@ -5,8 +5,8 @@ about: Suggest an idea for Phpfastcache
 ---
 
 **Configuration**
-- **PhpFastCache version:** "...replace me (Can be retrieved using method `\Phpfastcache\Api::GetVersion()`)..."
-- **PhpFastCache API version:** "...replace me (Can be retrieved using method `\Phpfastcache\Api::getPhpFastCacheVersion()`)..."
+- **PhpFastCache version:** "...replace me (Can be retrieved using method `\Phpfastcache\Api::getPhpFastCacheVersion()`)..."
+- **PhpFastCache API version:** "...replace me (Can be retrieved using method `\Phpfastcache\Api::GetVersion()`)..."
 - **PHP version:** "...replace me (Can be retrieved using command line `php -v | sed -n 1p`)..."
 - **Operating system:** " ...replace me (You REALLY should know it)... "
 

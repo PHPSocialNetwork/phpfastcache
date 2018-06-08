@@ -86,6 +86,7 @@ class Directory
         }
 
         if (\is_file($source) || \is_link($source)) {
+            \clearstatcache(true, $source);
             return \unlink($source);
         }
 

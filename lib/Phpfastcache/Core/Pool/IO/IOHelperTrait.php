@@ -162,8 +162,8 @@ trait IOHelperTrait
         /**
          * Skip Create Sub Folders;
          */
-        if (!$skip && @!\mkdir($path, $this->getDefaultChmod(), true) && !\is_dir($path)) {
-            throw new PhpfastcacheIOException('PLEASE CHMOD ' . $path . ' - ' . $this->getDefaultChmod() . ' OR ANY WRITABLE PERMISSION!');
+        if (!$skip && !\is_dir($path) && @!\mkdir($path, $this->getDefaultChmod(), true) && !\is_dir($path)) {
+            throw new PhpfastcacheIOException('Path "' . $path . '" is not writable, please set a chmod 0777 or any writable permission and make sure to make use of an absolute path !');
         }
 
         return $path . '/' . $filename . '.' . $this->getConfig()->getCacheFileExtension();

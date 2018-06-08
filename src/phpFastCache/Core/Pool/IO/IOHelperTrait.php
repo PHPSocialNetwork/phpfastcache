@@ -153,8 +153,8 @@ trait IOHelperTrait
          */
         if (!$skip) {
             if (!file_exists($path)) {
-                if (@!mkdir($path, $this->getDefaultChmod(), true)) {
-                    throw new phpFastCacheIOException('PLEASE CHMOD ' . $path . ' - ' . $this->getDefaultChmod() . ' OR ANY WRITABLE PERMISSION!');
+                if (@!mkdir($path, $this->getDefaultChmod(), true) && !is_dir($path)) {
+                    throw new phpFastCacheIOException('Path "' . $path . '" is not writable, please set a chmod 0777 or any writable permission and make sure to make use of an absolute path !');
                 }
             }
         }

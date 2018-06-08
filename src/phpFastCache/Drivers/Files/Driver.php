@@ -118,6 +118,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         if ($item instanceof Item) {
             $file_path = $this->getFilePath($item->getKey(), true);
             if (file_exists($file_path) && @unlink($file_path)) {
+                clearstatcache(true, $file_path);
                 $dir = dirname($file_path);
                 if (!(new \FilesystemIterator($dir))->valid()) {
                     rmdir($dir);

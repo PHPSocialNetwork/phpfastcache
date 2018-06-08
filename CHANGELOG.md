@@ -1,3 +1,23 @@
+## 6.1.3
+##### 8 june 2018
+- __Global__
+    - Added "ext-couchbase" suggestion
+    - Fixed Datetime type hints in ItemExtendedTrait
+    - Fixed Datetime type hints in ItemBaseTrait
+- __Core__
+    - Updated ExtendedCacheItemPoolTrait::deregisterItem() to now only accept string as parameter
+- __Drivers__
+    - Preventive hotfix for #614 // Files driver randomly throwing exception
+    - Cleaned up the Mongodb driver
+    - Fixed Mongodb clear() method
+- __Tests__
+    - Fixed randomly failing test Github-#560
+    - Added Mongodb test since travis now supports it
+- __Misc__
+    - Fixed broken link due to renamed "final" branch
+    - Updated README to warn users about v7 compatibility
+    - Removed mongodb extension from ini
+
 ## 6.1.2
 ##### 23 march 2018
 - __Core__

@@ -304,7 +304,7 @@ $your_product_data = [
      /* ... */
 ];
 
-if ($CachedString->isHit()) {
+if (!$CachedString->isHit()) {
     $CachedString->set($your_product_data)->expiresAfter(5);//in seconds, also accepts Datetime
 	$InstanceCache->save($CachedString); // Save the cache item just like you do with doctrine and entities
 

@@ -1,3 +1,19 @@
+## 7.0.1
+#### _"Gold is getting some rust !"_
+##### 22 june 2018
+- __Global__
+    - Updated php constraint to be more reliable over the years (@Geolim4)
+- __Core__
+    - Fixed possible notice in some contexts (@Geolim4)
+- __Drivers__
+    - IOException in `Files` driver: Preventive hotfix for #614, thanks to @hriziya (@Geolim4)
+- __Misc__
+    - Fixed typo in README & code sample mistakes (@Geolim4)
+    - Updated examples as per #612 (@Geolim4)
+    - Fixed wrong code in template issues (@Geolim4)
+    - Updated Github bytes (@Geolim4)
+    - Fixing broken badges (@Geolim4)
+    
 ## 7.0.0
 #### _"We found gold !"_
 ##### 27 may 2018

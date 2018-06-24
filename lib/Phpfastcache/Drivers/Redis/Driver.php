@@ -179,6 +179,6 @@ class Driver implements ExtendedCacheItemPoolInterface
             ->setRawData($info)
             ->setSize((int)$info['used_memory'])
             ->setInfo(\sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
-                $info['redis_version'], $date->format(DATE_RFC2822)));
+                $info['redis_version'], $date->format(\DATE_RFC2822)));
     }
 }

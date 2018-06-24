@@ -92,7 +92,7 @@ This object will contain fluent setters allowing you to make use of chained sett
 Despite the fact that this is a bad practice, this object which implements ArrayAccess interface 
 will allow you to treat the object as an array for primitive variable accesses:
 ```php
-use \phpFastCache\Config\Config;
+use Phpfastcache\Config\Config;
 
 $configArray = [];
 $config = new Config();
@@ -108,7 +108,7 @@ $cacheInstace = CacheManager::getInstance('Files', new Config([
 #### For non-global option you MUST use the specific Config object provided for each drivers 
 ```php
 // The recommanded way is to use an alias to not confuse yourself 
-use \phpFastCache\Drivers\Files\Config as FilesConfig;
+use Phpfastcache\Drivers\Files\Config as FilesConfig;
 
 $config = new FilesConfig();
 $config->setPath('/an/absolute/path');

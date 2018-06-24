@@ -370,11 +370,11 @@ class CacheManager
     }
 
     /**
-     * @param bool $FQNAsKey Describe keys with Full Qualified Class Name
+     * @param bool $FQCNAsKey Describe keys with Full Qualified Class Name
      * @return string[]
      * @throws PhpfastcacheUnsupportedOperationException
      */
-    public static function getDriverList($FQCNAsKey = false): array
+    public static function getDriverList(bool $FQCNAsKey = false): array
     {
         static $driverList;
 
@@ -584,7 +584,7 @@ class CacheManager
      */
     protected static function validateDriverClass(string $driverClass): string
     {
-        if (!is_a($driverClass, ExtendedCacheItemPoolInterface::class, true)) {
+        if (!\is_a($driverClass, ExtendedCacheItemPoolInterface::class, true)) {
             throw new PhpfastcacheDriverException(\sprintf(
                 'Class "%s" does not implement "%s"',
                 $driverClass,

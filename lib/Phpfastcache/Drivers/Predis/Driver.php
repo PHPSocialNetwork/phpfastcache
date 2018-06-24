@@ -194,6 +194,6 @@ HELP;
             ->setRawData($info)
             ->setSize((int)$size)
             ->setInfo(\sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
-                $version, $date->format(DATE_RFC2822)));
+                $version, $date->format(\DATE_RFC2822)));
     }
 }

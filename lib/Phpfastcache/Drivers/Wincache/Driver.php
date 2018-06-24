@@ -123,7 +123,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $date = (new \DateTime())->setTimestamp(\time() - $info['total_cache_uptime']);
 
         return (new DriverStatistic())
-            ->setInfo(\sprintf("The Wincache daemon is up since %s.\n For more information see RawData.", $date->format(DATE_RFC2822)))
+            ->setInfo(\sprintf("The Wincache daemon is up since %s.\n For more information see RawData.", $date->format(\DATE_RFC2822)))
             ->setSize($memInfo['memory_free'] - $memInfo['memory_total'])
             ->setData(\implode(', ', \array_keys($this->itemInstances)))
             ->setRawData($memInfo);

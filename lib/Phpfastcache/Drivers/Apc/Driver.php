@@ -136,7 +136,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
         return (new DriverStatistic())
             ->setData(\implode(', ', \array_keys($this->itemInstances)))
-            ->setInfo(\sprintf("The APC cache is up since %s, and have %d item(s) in cache.\n For more information see RawData.", $date->format(DATE_RFC2822),
+            ->setInfo(\sprintf("The APC cache is up since %s, and have %d item(s) in cache.\n For more information see RawData.", $date->format(\DATE_RFC2822),
                 $stats['num_entries']))
             ->setRawData($stats)
             ->setSize($stats['mem_size']);

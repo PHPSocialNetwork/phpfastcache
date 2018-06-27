@@ -210,8 +210,7 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * https://docs.mongodb.com/manual/reference/connection-string/#connections-connection-options
-     *
+     * @see https://docs.mongodb.com/manual/reference/connection-string/#connections-connection-options
      * @param array $options
      * @return Config
      */

@@ -233,7 +233,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $password = $this->getConfig()->getPassword();
 
         if( \count($servers) > 0 ){
-            $host = array_reduce($servers, function($carry, $data){
+            $host = \array_reduce($servers, function($carry, $data){
                 $carry .= ($carry === '' ? '' : ',').$data['host'].':'.$data['port'];
                 return $carry;
             }, '');
@@ -248,7 +248,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             $host,
             ($port !== 27017 && $port !== false ? ":{$port}" : ''),
             ($databaseName ? "/{$databaseName}" : ''),
-            (count($options) > 0 ? '?'.http_build_query($options) : ''),
+            (\count($options) > 0 ? '?'.\http_build_query($options) : ''),
         ]);
     }
 

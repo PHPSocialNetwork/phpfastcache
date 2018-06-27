@@ -224,10 +224,21 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function buildConnectionURI($databaseName = ''): string
     {
+        $servers = $this->getConfig()->getServers();
+        $options = $this->getConfig()->getOptions();
+
         $host = $this->getConfig()->getHost();
         $port = $this->getConfig()->getPort();
         $username = $this->getConfig()->getUsername();
         $password = $this->getConfig()->getPassword();
+
+        if( \count($servers) > 0 ){
+            $host = array_reduce($servers, function($carry, $data){
+                $carry .= ($carry === '' ? '' : ',').$data['host'].':'.$data['port'];
+                return $carry;
+            }, '');
+            $port = false;
+        }
 
         return implode('', [
             'mongodb://',
@@ -235,8 +246,9 @@ class Driver implements ExtendedCacheItemPoolInterface
             ($password ? ":{$password}" : ''),
             ($username ? '@' : ''),
             $host,
-            ($port !== 27017 ? ":{$port}" : ''),
+            ($port !== 27017 && $port !== false ? ":{$port}" : ''),
             ($databaseName ? "/{$databaseName}" : ''),
+            (count($options) > 0 ? '?'.http_build_query($options) : ''),
         ]);
     }
 

@@ -181,7 +181,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *   key is not found. However, if no keys are specified then an empty
      *   traversable MUST be returned instead.
      */
-    public function getItemsByTag($tagName);
+    public function getItemsByTag($tagName): array;
 
     /**
      * Returns a traversable set of cache items by one of multiple tag names.
@@ -199,7 +199,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *   key is not found. However, if no keys are specified then an empty
      *   traversable MUST be returned instead.
      */
-    public function getItemsByTags(array $tagNames);
+    public function getItemsByTags(array $tagNames): array;
 
     /**
      * Returns a traversable set of cache items by all of multiple tag names.
@@ -217,7 +217,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *   key is not found. However, if no keys are specified then an empty
      *   traversable MUST be returned instead.
      */
-    public function getItemsByTagsAll(array $tagNames);
+    public function getItemsByTagsAll(array $tagNames): array;
 
     /**
      * Returns A json string that represents an array of items by tags-based.
@@ -233,7 +233,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      *
      * @return string
      */
-    public function getItemsByTagsAsJsonString(array $tagNames, $option = 0, $depth = 512);
+    public function getItemsByTagsAsJsonString(array $tagNames, $option = 0, $depth = 512): string;
 
     /**
      * Removes the item from the pool by tag.
@@ -248,7 +248,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return bool
      *   True if the item was successfully removed. False if there was an error.
      */
-    public function deleteItemsByTag($tagName);
+    public function deleteItemsByTag($tagName): bool;
 
     /**
      * Removes the item from the pool by one of multiple tag names.
@@ -263,7 +263,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return bool
      *   True if the items were successfully removed. False if there was an error.
      */
-    public function deleteItemsByTags(array $tagNames);
+    public function deleteItemsByTags(array $tagNames): bool;
 
     /**
      * Removes the item from the pool by all of multiple tag names.
@@ -278,7 +278,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return bool
      *   True if the items were successfully removed. False if there was an error.
      */
-    public function deleteItemsByTagsAll(array $tagNames);
+    public function deleteItemsByTagsAll(array $tagNames): bool;
 
     /**
      * Increment the items from the pool by tag.
@@ -295,7 +295,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return bool
      *   True if the item was successfully incremented. False if there was an error.
      */
-    public function incrementItemsByTag($tagName, $step = 1);
+    public function incrementItemsByTag($tagName, $step = 1): bool;
 
     /**
      * Increment the items from the pool by one of multiple tag names.
@@ -312,7 +312,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return bool
      *   True if the items were successfully incremented. False if there was an error.
      */
-    public function incrementItemsByTags(array $tagNames, $step = 1);
+    public function incrementItemsByTags(array $tagNames, $step = 1): bool;
 
     /**
      * Increment the items from the pool by all of multiple tag names.
@@ -329,7 +329,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return bool
      *   True if the items were successfully incremented. False if there was an error.
      */
-    public function incrementItemsByTagsAll(array $tagNames, $step = 1);
+    public function incrementItemsByTagsAll(array $tagNames, $step = 1): bool;
 
     /**
      * Decrement the items from the pool by tag.
@@ -346,7 +346,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return bool
      *   True if the item was successfully decremented. False if there was an error.
      */
-    public function decrementItemsByTag($tagName, $step = 1);
+    public function decrementItemsByTag($tagName, $step = 1): bool;
 
     /**
      * Decrement the items from the pool by one of multiple tag names.
@@ -363,7 +363,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return bool
      *   True if the item was successfully decremented. False if there was an error.
      */
-    public function decrementItemsByTags(array $tagNames, $step = 1);
+    public function decrementItemsByTags(array $tagNames, $step = 1): bool;
 
     /**
      * Decrement the items from the pool by all of multiple tag names.
@@ -380,7 +380,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return bool
      *   True if the items were successfully decremented. False if there was an error.
      */
-    public function decrementItemsByTagsAll(array $tagNames, $step = 1);
+    public function decrementItemsByTagsAll(array $tagNames, $step = 1): bool;
 
     /**
      * Decrement the items from the pool by tag.
@@ -397,7 +397,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return bool
      *   True if the item was successfully appended. False if there was an error.
      */
-    public function appendItemsByTag($tagName, $data);
+    public function appendItemsByTag($tagName, $data): bool;
 
     /**
      * Append the items from the pool by one of multiple tag names.
@@ -414,7 +414,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return bool
      *   True if the items were successfully appended. False if there was an error.
      */
-    public function appendItemsByTags(array $tagNames, $data);
+    public function appendItemsByTags(array $tagNames, $data): bool;
 
     /**
      * Append the items from the pool by all of multiple tag names.
@@ -431,7 +431,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return bool
      *   True if the items were successfully appended. False if there was an error.
      */
-    public function appendItemsByTagsAll(array $tagNames, $data);
+    public function appendItemsByTagsAll(array $tagNames, $data): bool;
 
     /**
      * Prepend the items from the pool by tag.
@@ -448,7 +448,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return bool
      *   True if the item was successfully prepended. False if there was an error.
      */
-    public function prependItemsByTag($tagName, $data);
+    public function prependItemsByTag($tagName, $data): bool;
 
     /**
      * Prepend the items from the pool by one of multiple tag names.
@@ -465,7 +465,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return bool
      *   True if the item was successfully prepended. False if there was an error.
      */
-    public function prependItemsByTags(array $tagNames, $data);
+    public function prependItemsByTags(array $tagNames, $data): bool;
 
     /**
      * Prepend the items from the pool by all of multiple tag names.
@@ -482,7 +482,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      * @return bool
      *   True if the items were successfully prepended. False if there was an error.
      */
-    public function prependItemsByTagsAll(array $tagNames, $data);
+    public function prependItemsByTagsAll(array $tagNames, $data): bool;
 
     /**
      * @param \Psr\Cache\CacheItemInterface $item

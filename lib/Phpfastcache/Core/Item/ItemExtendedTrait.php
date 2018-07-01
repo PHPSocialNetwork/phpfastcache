@@ -382,7 +382,7 @@ trait ItemExtendedTrait
      */
     public function removeTag($tagName): ExtendedCacheItemInterface
     {
-        if (($key = \array_search($tagName, $this->tags)) !== false) {
+        if (($key = \array_search($tagName, $this->tags, true)) !== false) {
             unset($this->tags[$key]);
             $this->removedTags[] = $tagName;
         }

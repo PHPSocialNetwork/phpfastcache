@@ -395,7 +395,7 @@ trait CacheItemPoolTrait
     }
 
     /**
-     * @return mixed|null
+     * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
     public function commit()
@@ -416,6 +416,6 @@ trait CacheItemPoolTrait
             }
         }
 
-        return (bool)$return;
+        return (bool) $return;
     }
 }

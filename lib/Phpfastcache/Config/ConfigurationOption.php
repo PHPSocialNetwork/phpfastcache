@@ -110,25 +110,25 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
          * Detect unwanted keys and throw an exception.
          * No more kidding now, it's 21th century.
          */
-        if (array_diff_key($array, get_object_vars($this))) {
+        if (\array_diff_key($array, \get_object_vars($this))) {
             throw new PhpfastcacheInvalidConfigurationException(\sprintf(
                 'Invalid option(s) for the config %s: %s',
                 static::class,
-                implode(', ', array_keys(array_diff_key($array, get_object_vars($this))))
+                \implode(', ', \array_keys(\array_diff_key($array, \get_object_vars($this))))
             ));
         }
 
-        foreach (get_object_vars($this) as $property => $value) {
+        foreach (\get_object_vars($this) as $property => $value) {
 
-            if (array_key_exists($property, $array)) {
+            if (\array_key_exists($property, $array)) {
                 $this->$property = &$array[$property];
             } else {
                 $array[$property] = &$this->$property;
             }
         }
 
-        foreach (get_class_methods($this) as $method) {
-            if (strpos($method, 'set') === 0) {
+        foreach (\get_class_methods($this) as $method) {
+            if (\strpos($method, 'set') === 0) {
                 $value = null;
                 try {
                     /**
@@ -137,7 +137,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
                      * to allow us to retrieve the value
                      * in catch statement bloc
                      */
-                    $value = $this->{lcfirst(substr($method, 3))};
+                    $value = $this->{\lcfirst(\substr($method, 3))};
                     $this->{$method}($value);
                 } catch (\TypeError $e) {
                     $typeHintGot = \is_object($value) ? \get_class($value) : \gettype($value);
@@ -147,7 +147,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
 
                     throw new PhpfastcacheInvalidConfigurationException(\sprintf(
                         'Invalid type hint found for "%s", expected "%s" got "%s"',
-                        lcfirst(substr($method, 3)),
+                        \lcfirst(\substr($method, 3)),
                         $typeHintExpected,
                         $typeHintGot
                     ));
@@ -163,7 +163,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      */
     public function getOption(string $optionName)
     {
-        \trigger_error(\sprintf('Method "%s" is deprecated, use "getOptionName()" instead', __METHOD__), E_USER_DEPRECATED);
+        \trigger_error(\sprintf('Method "%s" is deprecated, use "getOptionName()" instead', __METHOD__), \E_USER_DEPRECATED);
         return $this->$optionName ?? null;
     }
 
@@ -173,7 +173,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      */
     public function isValidOption(string $optionName)
     {
-        return property_exists($this, $optionName);
+        return \property_exists($this, $optionName);
     }
 
     /**
@@ -229,7 +229,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     public function setIgnoreSymfonyNotice(bool $ignoreSymfonyNotice): self
     {
         if ($ignoreSymfonyNotice) {
-            \trigger_error('Configuration option "ignoreSymfonyNotice" is deprecated as of the V7', E_USER_DEPRECATED);
+            \trigger_error('Configuration option "ignoreSymfonyNotice" is deprecated as of the V7', \E_USER_DEPRECATED);
         }
         $this->ignoreSymfonyNotice = $ignoreSymfonyNotice;
         return $this;

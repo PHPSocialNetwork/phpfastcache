@@ -45,7 +45,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
-    public function getItemsByTag($tagName)
+    public function getItemsByTag($tagName): array
     {
         if (\is_string($tagName)) {
             $driverResponse = $this->getItem($this->getTagKey($tagName));
@@ -75,7 +75,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
-    public function getItemsByTags(array $tagNames)
+    public function getItemsByTags(array $tagNames): array
     {
         $items = [];
         foreach (\array_unique($tagNames) as $tagName) {
@@ -93,7 +93,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
-    public function getItemsByTagsAll(array $tagNames)
+    public function getItemsByTagsAll(array $tagNames): array
     {
         $items = $this->getItemsByTags($tagNames);
 
@@ -110,7 +110,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
-    public function getItemsByTagsAsJsonString(array $tagNames, $option = 0, $depth = 512)
+    public function getItemsByTagsAsJsonString(array $tagNames, $option = 0, $depth = 512): string
     {
         $callback = function (CacheItemInterface $item) {
             return $item->get();
@@ -122,7 +122,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
-    public function deleteItemsByTag($tagName)
+    public function deleteItemsByTag($tagName): bool
     {
         if (\is_string($tagName)) {
             $return = null;
@@ -133,7 +133,7 @@ trait ExtendedCacheItemPoolTrait
                 }
             }
 
-            return $return;
+            return (bool) $return;
         }
 
         throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
@@ -142,7 +142,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
-    public function deleteItemsByTags(array $tagNames)
+    public function deleteItemsByTags(array $tagNames): bool
     {
         $return = null;
         foreach ($tagNames as $tagName) {
@@ -152,13 +152,13 @@ trait ExtendedCacheItemPoolTrait
             }
         }
 
-        return $return;
+        return (bool) $return;
     }
 
     /**
      * @inheritdoc
      */
-    public function deleteItemsByTagsAll(array $tagNames)
+    public function deleteItemsByTagsAll(array $tagNames): bool
     {
         $return = null;
         $items = $this->getItemsByTagsAll($tagNames);
@@ -170,13 +170,13 @@ trait ExtendedCacheItemPoolTrait
             }
         }
 
-        return $return;
+        return (bool) $return;
     }
 
     /**
      * @inheritdoc
      */
-    public function incrementItemsByTag($tagName, $step = 1)
+    public function incrementItemsByTag($tagName, $step = 1): bool
     {
         if (\is_string($tagName) && \is_int($step)) {
             foreach ($this->getItemsByTag($tagName) as $item) {
@@ -184,7 +184,7 @@ trait ExtendedCacheItemPoolTrait
                 $this->saveDeferred($item);
             }
 
-            return $this->commit();
+            return (bool) $this->commit();
         }
 
         throw new PhpfastcacheInvalidArgumentException('$tagName must be a string and $step an integer');
@@ -193,7 +193,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
-    public function incrementItemsByTags(array $tagNames, $step = 1)
+    public function incrementItemsByTags(array $tagNames, $step = 1): bool
     {
         $return = null;
         foreach ($tagNames as $tagName) {
@@ -203,13 +203,13 @@ trait ExtendedCacheItemPoolTrait
             }
         }
 
-        return $return;
+        return (bool) $return;
     }
 
     /**
      * @inheritdoc
      */
-    public function incrementItemsByTagsAll(array $tagNames, $step = 1)
+    public function incrementItemsByTagsAll(array $tagNames, $step = 1): bool
     {
         if (\is_int($step)) {
             $items = $this->getItemsByTagsAll($tagNames);
@@ -218,7 +218,7 @@ trait ExtendedCacheItemPoolTrait
                 $item->increment($step);
                 $this->saveDeferred($item);
             }
-            return $this->commit();
+            return (bool) $this->commit();
         }
 
         throw new PhpfastcacheInvalidArgumentException('$step must be an integer');
@@ -227,7 +227,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
-    public function decrementItemsByTag($tagName, $step = 1)
+    public function decrementItemsByTag($tagName, $step = 1): bool
     {
         if (\is_string($tagName) && \is_int($step)) {
             foreach ($this->getItemsByTag($tagName) as $item) {
@@ -235,7 +235,7 @@ trait ExtendedCacheItemPoolTrait
                 $this->saveDeferred($item);
             }
 
-            return $this->commit();
+            return (bool) $this->commit();
         }
 
         throw new PhpfastcacheInvalidArgumentException('$tagName must be a string and $step an integer');
@@ -244,7 +244,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
-    public function decrementItemsByTags(array $tagNames, $step = 1)
+    public function decrementItemsByTags(array $tagNames, $step = 1): bool
     {
         $return = null;
         foreach ($tagNames as $tagName) {
@@ -254,13 +254,13 @@ trait ExtendedCacheItemPoolTrait
             }
         }
 
-        return $return;
+        return (bool) $return;
     }
 
     /**
      * @inheritdoc
      */
-    public function decrementItemsByTagsAll(array $tagNames, $step = 1)
+    public function decrementItemsByTagsAll(array $tagNames, $step = 1): bool
     {
         if (\is_int($step)) {
             $items = $this->getItemsByTagsAll($tagNames);
@@ -269,7 +269,7 @@ trait ExtendedCacheItemPoolTrait
                 $item->decrement($step);
                 $this->saveDeferred($item);
             }
-            return $this->commit();
+            return (bool) $this->commit();
         }
 
         throw new PhpfastcacheInvalidArgumentException('$step must be an integer');
@@ -278,7 +278,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
-    public function appendItemsByTag($tagName, $data)
+    public function appendItemsByTag($tagName, $data): bool
     {
         if (\is_string($tagName)) {
             foreach ($this->getItemsByTag($tagName) as $item) {
@@ -286,7 +286,7 @@ trait ExtendedCacheItemPoolTrait
                 $this->saveDeferred($item);
             }
 
-            return $this->commit();
+            return (bool) $this->commit();
         }
 
         throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
@@ -295,7 +295,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
-    public function appendItemsByTags(array $tagNames, $data)
+    public function appendItemsByTags(array $tagNames, $data): bool
     {
         $return = null;
         foreach ($tagNames as $tagName) {
@@ -305,13 +305,13 @@ trait ExtendedCacheItemPoolTrait
             }
         }
 
-        return $return;
+        return (bool) $return;
     }
 
     /**
      * @inheritdoc
      */
-    public function appendItemsByTagsAll(array $tagNames, $data)
+    public function appendItemsByTagsAll(array $tagNames, $data): bool
     {
         if (is_scalar($data)) {
             $items = $this->getItemsByTagsAll($tagNames);
@@ -320,7 +320,7 @@ trait ExtendedCacheItemPoolTrait
                 $item->append($data);
                 $this->saveDeferred($item);
             }
-            return $this->commit();
+            return (bool) $this->commit();
         }
 
         throw new PhpfastcacheInvalidArgumentException('$data must be scalar');
@@ -329,7 +329,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
-    public function prependItemsByTag($tagName, $data)
+    public function prependItemsByTag($tagName, $data): bool
     {
         if (\is_string($tagName)) {
             foreach ($this->getItemsByTag($tagName) as $item) {
@@ -337,7 +337,7 @@ trait ExtendedCacheItemPoolTrait
                 $this->saveDeferred($item);
             }
 
-            return $this->commit();
+            return (bool) $this->commit();
         }
 
         throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
@@ -346,7 +346,7 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
-    public function prependItemsByTags(array $tagNames, $data)
+    public function prependItemsByTags(array $tagNames, $data): bool
     {
         $return = null;
         foreach ($tagNames as $tagName) {
@@ -356,13 +356,13 @@ trait ExtendedCacheItemPoolTrait
             }
         }
 
-        return $return;
+        return (bool) $return;
     }
 
     /**
      * @inheritdoc
      */
-    public function prependItemsByTagsAll(array $tagNames, $data)
+    public function prependItemsByTagsAll(array $tagNames, $data): bool
     {
         if (\is_scalar($data)) {
             $items = $this->getItemsByTagsAll($tagNames);
@@ -371,7 +371,7 @@ trait ExtendedCacheItemPoolTrait
                 $item->prepend($data);
                 $this->saveDeferred($item);
             }
-            return $this->commit();
+            return (bool) $this->commit();
         }
 
         throw new PhpfastcacheInvalidArgumentException('$data must be scalar');

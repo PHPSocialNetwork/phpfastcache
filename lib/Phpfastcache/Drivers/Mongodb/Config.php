@@ -38,9 +38,9 @@ class Config extends ConfigurationOption
     protected $password = '';
 
     /**
-     * @var string
+     * @var array
      */
-    protected $servers = '';
+    protected $servers = [];
 
     /**
      * @var string
@@ -51,6 +51,11 @@ class Config extends ConfigurationOption
      * @var string
      */
     protected $databaseName = Driver::MONGODB_DEFAULT_DB_NAME;
+
+    /**
+     * @var array
+     */
+    protected $options = [];
 
     /**
      * @return string
@@ -145,7 +150,7 @@ class Config extends ConfigurationOption
     /**
      * @return string
      */
-    public function getServers(): string
+    public function getServers(): array
     {
         return $this->servers;
     }
@@ -154,7 +159,7 @@ class Config extends ConfigurationOption
      * @param string $servers
      * @return self
      */
-    public function setServers(string $servers): self
+    public function setServers(array $servers): self
     {
         $this->servers = $servers;
         return $this;
@@ -193,6 +198,25 @@ class Config extends ConfigurationOption
     public function setDatabaseName(string $databaseName): self
     {
         $this->databaseName = $databaseName;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
+    /**
+     * @see https://docs.mongodb.com/manual/reference/connection-string/#connections-connection-options
+     * @param array $options
+     * @return Config
+     */
+    public function setOptions(array $options): self
+    {
+        $this->options = $options;
         return $this;
     }
 }

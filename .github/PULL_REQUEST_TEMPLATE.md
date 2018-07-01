@@ -9,6 +9,7 @@ What types of changes does your code introduce to Phpfastcache?
 _Put an `x` in the boxes that apply_
 
 - [ ] Bugfix (non-breaking change which fixes an issue)
+- [ ] Improvement (non-breaking change which improves an existing code/behavior)
 - [ ] Deprecated third party dependency update
 - [ ] New feature (non-breaking change which adds functionality)
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)

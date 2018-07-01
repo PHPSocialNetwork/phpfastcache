@@ -242,7 +242,7 @@ trait DriverBaseTrait
      * @return bool
      * @throws PhpfastcacheLogicException
      */
-    public function driverWriteTags(ExtendedCacheItemInterface $item)
+    public function driverWriteTags(ExtendedCacheItemInterface $item): bool
     {
         /**
          * Do not attempt to write tags
@@ -322,7 +322,7 @@ trait DriverBaseTrait
      * @param $key
      * @return string
      */
-    public function getTagKey($key)
+    public function getTagKey($key):string
     {
         return self::DRIVER_TAGS_KEY_PREFIX . $key;
     }

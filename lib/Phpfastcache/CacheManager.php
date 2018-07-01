@@ -165,7 +165,7 @@ class CacheManager
                 $fallback = $config->getFallback();
                 $config->setFallback('');
                 \trigger_error(\sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver,
-                    $fallback), E_USER_WARNING);
+                    $fallback),  \E_USER_WARNING);
                 return self::getInstance($fallback, $config->getFallbackConfig());
             } catch (PhpfastcacheInvalidArgumentException $e) {
                 throw new PhpfastcacheInvalidConfigurationException('Invalid fallback driver configuration', 0, $e);
@@ -328,7 +328,7 @@ class CacheManager
     public static function getStaticSystemDrivers(): array
     {
         \trigger_error(\sprintf('Method "%s" is deprecated as of the V7 and will be removed soon or later, use CacheManager::getDriverList() instead.',
-            __METHOD__), E_USER_DEPRECATED);
+            __METHOD__), \E_USER_DEPRECATED);
         return [
             'Apc',
             'Apcu',
@@ -361,7 +361,7 @@ class CacheManager
     public static function getStaticAllDrivers(): array
     {
         \trigger_error(\sprintf('Method "%s" is deprecated as of the V7 and will be removed soon or later, use CacheManager::getDriverList() instead.',
-            __METHOD__), E_USER_DEPRECATED);
+            __METHOD__), \E_USER_DEPRECATED);
         return \array_merge(self::getStaticSystemDrivers(), [
             'Devtrue',
             'Devfalse',

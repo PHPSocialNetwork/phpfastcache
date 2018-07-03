@@ -38,6 +38,11 @@ class Config extends ConfigurationOption
     protected $predisClient;
 
     /**
+     * @var string
+     */
+    protected $optPrefix = '';
+
+    /**
      * @return string
      */
     public function getHost(): string
@@ -137,6 +142,26 @@ class Config extends ConfigurationOption
     public function setPredisClient(\Predis\Client $predisClient = null): Config
     {
         $this->predisClient = $predisClient;
+        return $this;
+    }
+
+    /**
+     * @return string
+     * @since 7.0.2
+     */
+    public function getOptPrefix(): string
+    {
+        return $this->optPrefix;
+    }
+
+    /**
+     * @param string $optPrefix
+     * @return Config
+     * @since 7.0.2
+     */
+    public function setOptPrefix(string $optPrefix): Config
+    {
+        $this->optPrefix = trim($optPrefix);
         return $this;
     }
 }

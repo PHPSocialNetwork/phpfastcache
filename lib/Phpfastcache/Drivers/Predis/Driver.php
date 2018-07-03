@@ -73,13 +73,19 @@ class Driver implements ExtendedCacheItemPoolInterface
             return true;
         }
 
+        $options = [];
+
+        if($this->getConfig()->getOptPrefix()){
+            $options['prefix'] = $this->getConfig()->getOptPrefix();
+        }
+
         if (!empty($this->getConfig()->getPath())) {
             $this->instance = new PredisClient([
                 'scheme' => 'unix',
                 'path' => $this->getConfig()->getPath(),
-            ]);
+            ], $options);
         } else {
-            $this->instance = new PredisClient($this->getConfig()->getPredisConfigArray());
+            $this->instance = new PredisClient($this->getConfig()->getPredisConfigArray(), $options);
         }
 
         try {

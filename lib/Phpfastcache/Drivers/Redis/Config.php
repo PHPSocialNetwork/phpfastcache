@@ -44,6 +44,11 @@ class Config extends ConfigurationOption
     protected $redisClient;
 
     /**
+     * @var string
+     */
+    protected $optPrefix = '';
+
+    /**
      * @return string
      */
     public function getHost(): string
@@ -148,6 +153,26 @@ class Config extends ConfigurationOption
     public function setRedisClient(RedisClient $redisClient = null): Config
     {
         $this->redisClient = $redisClient;
+        return $this;
+    }
+
+    /**
+     * @return string
+     * @since 7.0.2
+     */
+    public function getOptPrefix(): string
+    {
+        return $this->optPrefix;
+    }
+
+    /**
+     * @param string $optPrefix
+     * @return Config
+     * @since 7.0.2
+     */
+    public function setOptPrefix(string $optPrefix): Config
+    {
+        $this->optPrefix = trim($optPrefix);
         return $this;
     }
 }

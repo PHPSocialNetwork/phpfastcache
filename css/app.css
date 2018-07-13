@@ -112,7 +112,9 @@ abbr[title]
   color: #FFF;
   text-align: center;
   background-color: #159957;
-  background-image: linear-gradient(120deg, #4E00FF, #F90);
+  /*background-image: linear-gradient(120deg, #4E00FF, #F90);*/
+  background-image: url('./assets/head-bg.svg');
+  background-size: cover;
 }
 
 @media screen and (min-width: 64em)

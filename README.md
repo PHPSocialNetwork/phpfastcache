@@ -21,7 +21,7 @@ This ensure you that the library is completely reliable when it come to manipula
 
 |      Regular drivers            |     High performances drivers      |    Development drivers        |
 |---------------------------------|------------------------------------|-------------------------------|
-|  `Apc(u)` :question:            | `Cassandra`                        | `Devnull`                     |
+|  `Apc(u)`                       | `Cassandra`                        | `Devnull`                     |
 |  `Cookie`                       | `CouchBase`                        | `Devfalse`                    |
 |  `Files`                        | `Couchdb`                          | `Devtrue`                     |
 |  `Leveldb` :question:           | `Mongodb`                          | `Memstatic`                   |

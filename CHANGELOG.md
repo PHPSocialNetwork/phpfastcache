@@ -1,3 +1,19 @@
+## 7.0.2
+#### _"Rust is getting some gold !"_
+##### 23 july 2018
+- __Core__
+    - Added more Opcache/Type hint optimizations (@Geolim4)
+- __Drivers__
+    - Implemented #627 // Redis/Predis "prefix" option (@Geolim4)
+    - Fixed bug in Apcu driver with abstract getStats() method (@afdaniele)
+    - Added Mongodb cluster support and uri options (@UnRyongPark)
+- __Misc__
+    - Updated readme as we are sure that Apc(u) is ported to php7 (@Geolim4)
+    - Described clear() abstract method (@Geolim4)
+    - Added new option to PULL_REQUEST_TEMPLATE.md (@Geolim4)
+    - Fixed #620 // migration guide for v7 uses CamelCase in example (@Geolim4)
+
+
 ## 7.0.1
 #### _"Gold is getting some rust !"_
 ##### 22 june 2018
@@ -13,7 +29,7 @@
     - Fixed wrong code in template issues (@Geolim4)
     - Updated Github bytes (@Geolim4)
     - Fixing broken badges (@Geolim4)
-    
+
 ## 7.0.0
 #### _"We found gold !"_
 ##### 27 may 2018

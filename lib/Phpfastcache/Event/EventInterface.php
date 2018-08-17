@@ -14,6 +14,8 @@
 
 declare(strict_types=1);
 
+namespace Phpfastcache\Event;
+
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
 interface EventInterface

@@ -17,9 +17,7 @@ namespace Phpfastcache\Core\Pool;
 
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheDriverCheckException, PhpfastcacheLogicException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException, PhpfastcacheDriverConnectException, PhpfastcacheLogicException};
 
 
 /**
@@ -61,6 +59,7 @@ trait DriverBaseTrait
      * @param ConfigurationOption $config
      * @param string $instanceId
      * @throws PhpfastcacheDriverCheckException
+     * @throws PhpfastcacheDriverConnectException
      */
     public function __construct(ConfigurationOption $config, $instanceId)
     {
@@ -71,7 +70,17 @@ trait DriverBaseTrait
             throw new PhpfastcacheDriverCheckException(\sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
         }
 
-        $this->driverConnect();
+        try{
+            $this->driverConnect();
+        }catch(\Exception $e){
+            throw new PhpfastcacheDriverConnectException(\sprintf(
+                self::DRIVER_CONNECT_FAILURE,
+                $this->getDriverName(),
+                $e->getMessage(),
+                $e->getLine() ?: 'unknown line',
+                $e->getFile() ?: 'unknown file'
+            ));
+        }
     }
 
     /**

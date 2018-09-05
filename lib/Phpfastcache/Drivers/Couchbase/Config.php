@@ -28,7 +28,7 @@ class Config extends ConfigurationOption
     /**
      * @var int
      */
-    protected $port;
+    protected $port = 8091;// SSL: 18091
 
     /**
      * @var string

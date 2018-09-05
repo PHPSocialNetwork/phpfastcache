@@ -1,3 +1,16 @@
+## 7.0.3
+#### _"Rust is part of beauty after all !"_
+##### 5 september 2018
+- __Core__
+    - Fixed wrong copyright annotation in some file headers (@Geolim4)
+    - Added `PhpfastcacheDriverConnectException` exception in case that a driver failed to connect (@Geolim4)
+- __Drivers__
+    - Added missing option "timeout" for `Predis` oO (@Geolim4)
+    - Settings up default `Couchbase` port to 8091 (@Geolim4)
+    - Fixed #647 // Unwanted echo in exception (@Geolim4)
+- __Misc__
+    - Fixed #637 // Corrupted badges on Github readme pages
+
 ## 7.0.2
 #### _"Rust is getting some gold !"_
 ##### 23 july 2018
@@ -12,7 +25,6 @@
     - Described clear() abstract method (@Geolim4)
     - Added new option to PULL_REQUEST_TEMPLATE.md (@Geolim4)
     - Fixed #620 // migration guide for v7 uses CamelCase in example (@Geolim4)
-
 
 ## 7.0.1
 #### _"Gold is getting some rust !"_

@@ -82,6 +82,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         if (!empty($this->getConfig()->getPath())) {
             $this->instance = new PredisClient([
                 'scheme' => 'unix',
+                'timeout' =>  $this->getConfig()->getTimeout(),
                 'path' => $this->getConfig()->getPath(),
             ], $options);
         } else {

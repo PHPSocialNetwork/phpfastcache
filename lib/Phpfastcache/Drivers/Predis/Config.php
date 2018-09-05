@@ -51,6 +51,11 @@ class Config extends ConfigurationOption
     protected $optPrefix = '';
 
     /**
+     * @var int
+     */
+    protected $timeout = 5;
+
+    /**
      * @return string
      */
     public function getHost(): string
@@ -132,6 +137,7 @@ class Config extends ConfigurationOption
             'port' => $this->getPort(),
             'password' => $this->getPassword() ?: null,
             'database' => $this->getDatabase(),
+            'timeout' => $this->getTimeout(),
         ];
     }
 
@@ -170,6 +176,24 @@ class Config extends ConfigurationOption
     public function setOptPrefix(string $optPrefix): Config
     {
         $this->optPrefix = trim($optPrefix);
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTimeout(): int
+    {
+        return $this->timeout;
+    }
+
+    /**
+     * @param int $timeout
+     * @return self
+     */
+    public function setTimeout(int $timeout): self
+    {
+        $this->timeout = $timeout;
         return $this;
     }
 }

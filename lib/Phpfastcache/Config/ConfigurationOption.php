@@ -93,14 +93,12 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      */
     protected $cacheSlamsTimeout = 15;
 
-    /**
-     * @var string
-     */
-    protected $cacheFileExtension = 'txt';
 
     /**
      * @param $args
      * ArrayObject constructor.
+     * @throws PhpfastcacheInvalidConfigurationException
+     * @throws \ReflectionException
      */
     public function __construct(...$args)
     {
@@ -267,7 +265,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      * @return ConfigurationOption
      * @throws  PhpfastcacheInvalidConfigurationException
      */
-    public function setDefaultKeyHashFunction($defaultKeyHashFunction)
+    public function setDefaultKeyHashFunction($defaultKeyHashFunction): self
     {
         if (!\is_callable($defaultKeyHashFunction) && (\is_string($defaultKeyHashFunction) && !\function_exists($defaultKeyHashFunction))) {
             throw new PhpfastcacheInvalidConfigurationException('defaultKeyHashFunction must be a valid function name string');
@@ -285,11 +283,11 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     }
 
     /**
-     * @param Callable|string $defaultKeyHashFunction
+     * @param Callable|string $defaultFileNameHashFunction
      * @return ConfigurationOption
      * @throws  PhpfastcacheInvalidConfigurationException
      */
-    public function setDefaultFileNameHashFunction($defaultFileNameHashFunction)
+    public function setDefaultFileNameHashFunction($defaultFileNameHashFunction): self
     {
         if (!\is_callable($defaultFileNameHashFunction) && (\is_string($defaultFileNameHashFunction) && !\function_exists($defaultFileNameHashFunction))) {
             throw new PhpfastcacheInvalidConfigurationException('defaultFileNameHashFunction must be a valid function name string');
@@ -363,13 +361,14 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     /**
      * @param \Phpfastcache\Config\ConfigurationOption|null $fallbackConfig
      * @return ConfigurationOption
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function setFallbackConfig($fallbackConfig): self
     {
         if ($fallbackConfig !== null && !($fallbackConfig instanceof self)) {
             throw new PhpfastcacheInvalidArgumentException(\sprintf(
                 'Invalid argument "%s" for %s',
-                \gettype($fallbackConfig) === 'object' ? \get_class($fallbackConfig) : \gettype($fallbackConfig),
+                \is_object($fallbackConfig) ? \get_class($fallbackConfig) : \gettype($fallbackConfig),
                 __METHOD__
             ));
         }
@@ -446,45 +445,6 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     public function setCacheSlamsTimeout(int $cacheSlamsTimeout): self
     {
         $this->cacheSlamsTimeout = $cacheSlamsTimeout;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCacheFileExtension(): string
-    {
-        return $this->cacheFileExtension;
-    }
-
-    /**
-     * @param string $cacheFileExtension
-     * @return ConfigurationOption
-     * @throws PhpfastcacheInvalidConfigurationException
-     */
-    public function setCacheFileExtension(string $cacheFileExtension): self
-    {
-        /**
-         * Feel free to propose your own one
-         * by opening a pull request :)
-         */
-        static $safeFileExtensions = [
-            'txt',
-            'cache',
-            'db',
-            'pfc',
-        ];
-
-        if (\strpos($cacheFileExtension, '.') !== false) {
-            throw new PhpfastcacheInvalidConfigurationException('cacheFileExtension cannot contain a dot "."');
-        }
-        if (!\in_array($cacheFileExtension, $safeFileExtensions, true)) {
-            throw new PhpfastcacheInvalidConfigurationException(
-                "Extension \"{$cacheFileExtension}\" is not safe, currently allowed extension names: " . \implode(', ', $safeFileExtensions)
-            );
-        }
-
-        $this->cacheFileExtension = $cacheFileExtension;
         return $this;
     }
 }

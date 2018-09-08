@@ -370,6 +370,9 @@ class CacheManager
     }
 
     /**
+     * Return the list of available drivers Capitalized
+     * with optional FQCN as key
+     *
      * @param bool $FQCNAsKey Describe keys with Full Qualified Class Name
      * @return string[]
      * @throws PhpfastcacheUnsupportedOperationException

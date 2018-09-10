@@ -193,12 +193,8 @@ class CacheManager
     }
 
     /**
-     * This method is intended for internal
-     * use only and should not be used for
-     * any external development use the
-     * getInstances() method instead
+     * Return the list of instances
      *
-     * @internal
      * @return ExtendedCacheItemPoolInterface[]
      */
     public static function getInstances(): array
@@ -277,6 +273,25 @@ class CacheManager
 
         \gc_collect_cycles();
         return !\count(self::$instances);
+    }
+
+    /**
+     * @param ExtendedCacheItemPoolInterface $cachePoolInstance
+     * @return bool
+     * @since 7.0.4
+     */
+    public static function clearInstance(ExtendedCacheItemPoolInterface $cachePoolInstance): bool
+    {
+        $found = false;
+        self::$instances = \array_filter(\array_map(function (ExtendedCacheItemPoolInterface $cachePool) use ($cachePoolInstance, &$found){
+            if(\spl_object_hash($cachePool) === \spl_object_hash($cachePoolInstance)){
+                $found = true;
+                return null;
+            }
+            return $cachePool;
+        }, self::$instances));
+
+        return $found;
     }
 
     /**

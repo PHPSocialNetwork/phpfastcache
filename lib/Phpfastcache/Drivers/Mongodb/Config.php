@@ -156,7 +156,7 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getServers(): array
     {
@@ -164,7 +164,7 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @param string $servers
+     * @param array $servers
      * @return self
      */
     public function setServers(array $servers): self

@@ -66,6 +66,11 @@ class Config extends ConfigurationOption
     protected $options = [];
 
     /**
+     * @var array
+     */
+    protected $driverOptions = [];
+
+    /**
      * @return string
      */
     public function getHost(): string
@@ -225,6 +230,24 @@ class Config extends ConfigurationOption
     public function setOptions(array $options): self
     {
         $this->options = $options;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDriverOptions(): array
+    {
+        return $this->driverOptions;
+    }
+
+    /**
+     * @param array $driverOptions
+     * @return self
+     */
+    public function setDriverOptions(array $driverOptions): self
+    {
+        $this->driverOptions = $driverOptions;
         return $this;
     }
 }

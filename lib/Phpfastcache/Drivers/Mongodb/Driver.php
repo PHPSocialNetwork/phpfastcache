@@ -185,8 +185,9 @@ class Driver implements ExtendedCacheItemPoolInterface
         $timeout = $this->getConfig()->getTimeout() * 1000;
         $collectionName = $this->getConfig()->getCollectionName();
         $databaseName = $this->getConfig()->getDatabaseName();
+        $driverOptions = $this->getConfig()->getDriverOptions();
 
-        $this->instance = $this->instance ?: new Client($this->buildConnectionURI($databaseName), ['connectTimeoutMS' => $timeout]);
+        $this->instance = $this->instance ?: new Client($this->buildConnectionURI($databaseName), ['connectTimeoutMS' => $timeout], $driverOptions);
         $this->database = $this->database ?: $this->instance->selectDatabase($databaseName);
 
         if (!$this->collectionExists($collectionName)) {

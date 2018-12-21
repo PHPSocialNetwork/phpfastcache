@@ -1,3 +1,14 @@
+## 7.0.4
+#### _"Rust-in"_
+##### 22 december 2018
+- __Core__
+    - Moved exclusive files-related configurations keys to IOConfigurationTrait (@Geolim4)
+    - Added CacheManager::clearInstance() method (@Geolim4)
+- __Drivers__
+    - Adds drivers options parameter when building Mongo DB client (@vainj)
+- __Misc__
+    - Fixes PHPdoc issues (@vainj)
+
 ## 7.0.3
 #### _"Rust is part of beauty after all !"_
 ##### 5 september 2018

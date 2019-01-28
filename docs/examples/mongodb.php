@@ -13,16 +13,17 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Drivers\Mongodb\Config;
 
 // Include composer autoloader
 require __DIR__ . '/../../vendor/autoload.php';
 
-$InstanceCache = CacheManager::getInstance('mongodb', [
+$InstanceCache = CacheManager::getInstance('mongodb', new Config([
   'host' => '127.0.0.1',
-  'port' => '27017',
+  'port' => 27017,
   'username' => '',
   'password' => '',
-  'timeout' => '1',
+  'timeout' => 1,
     /**
      * These ones are
      * totally optional
@@ -30,7 +31,7 @@ $InstanceCache = CacheManager::getInstance('mongodb', [
   // 'collectionName' => 'Cache',
   // 'databaseName' => 'phpFastCache'
 
-]);
+]));
 
 
 /**

@@ -20,7 +20,7 @@ $cacheInstanceOldSyntax = CacheManager::getInstance('Memcached', new MemcachedCo
         [
             'host' => '127.0.0.1',
             'port' => 11211,
-            'saslUsername' => null,
+            'saslUser' => null,
             'saslPassword' => null,
         ]
     ]
@@ -29,7 +29,7 @@ $cacheInstanceOldSyntax = CacheManager::getInstance('Memcached', new MemcachedCo
 $cacheInstanceNewSyntax = CacheManager::getInstance('Memcached', new MemcachedConfig([
     'host' => '127.0.0.1',
     'port' => 11211,
-    'saslUsername' => null,
+    'saslUser' => null,
     'saslPassword' => null,
 ]));
 

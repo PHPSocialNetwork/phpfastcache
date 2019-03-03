@@ -17,20 +17,24 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Memcached;
 
 use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 
 class Config extends ConfigurationOption
 {
     /**
      * @var array
+     *
+     * Multiple server can be added this way:
+     *       $cfg->setServers([
+     *         [
+     *           'host' => '127.0.0.1',
+     *           'port' => 11211,
+     *           'saslUser' => false,
+     *           'saslPassword' => false,
+     *         ]
+     *      ]);
      */
-    protected $servers = [
-        [
-            'host' => '127.0.0.1',
-            'port' => 11211,
-            'saslUser' => false,
-            'saslPassword' => false,
-        ],
-    ];
+    protected $servers = [];
 
     /**
      * @var string
@@ -43,17 +47,17 @@ class Config extends ConfigurationOption
     protected $port = 11211;
 
     /**
-     * @var bool
+     * @var string
      */
     protected $saslUser = '';
 
     /**
-     * @var bool
+     * @var string
      */
     protected $saslPassword = '';
 
     /**
-     * @return bool
+     * @return string
      */
     public function getSaslUser(): string
     {
@@ -98,10 +102,25 @@ class Config extends ConfigurationOption
 
     /**
      * @param array $servers
+     * @throws PhpfastcacheInvalidConfigurationException
      * @return self
      */
     public function setServers(array $servers): self
     {
+        foreach ($servers as $server) {
+            if($diff = \array_diff(['host', 'port', 'saslUser', 'saslPassword'], \array_keys($server))){
+                throw new PhpfastcacheInvalidConfigurationException('Missing keys for memcached server: '. \implode(', ', $diff));
+            }
+            if($diff = \array_diff( \array_keys($server), ['host', 'port', 'saslUser', 'saslPassword'])){
+                throw new PhpfastcacheInvalidConfigurationException('Unknown keys for memcached server: '. \implode(', ', $diff));
+            }
+            if(!\is_string($server['host'])){
+                throw new PhpfastcacheInvalidConfigurationException('Host must be a valid string in "$server" configuration array');
+            }
+            if(!\is_int($server['port'])){
+                throw new PhpfastcacheInvalidConfigurationException('Port must be a valid integer in "$server" configuration array');
+            }
+        }
         $this->servers = $servers;
         return $this;
     }

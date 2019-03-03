@@ -224,7 +224,7 @@ class TestHelper
     {
         $execTime = \round(\microtime(true) - $this->timestamp, 3);
 
-        $this->printText('Test finished in ' . $execTime . 's');
+        $this->printText('Test duration: ' . $execTime . 's');
         exit($this->exitCode);
     }
 

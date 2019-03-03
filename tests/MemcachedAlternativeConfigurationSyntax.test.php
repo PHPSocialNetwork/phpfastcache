@@ -29,8 +29,6 @@ $cacheInstanceOldSyntax = CacheManager::getInstance('Memcached', new MemcachedCo
 $cacheInstanceNewSyntax = CacheManager::getInstance('Memcached', new MemcachedConfig([
     'host' => '127.0.0.1',
     'port' => 11211,
-    'saslUser' => null,
-    'saslPassword' => null,
 ]));
 
 $cacheKey = 'cacheKey';

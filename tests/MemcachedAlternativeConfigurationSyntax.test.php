@@ -6,9 +6,8 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Helper\TestHelper;
 use Phpfastcache\Drivers\Memcached\Config as MemcachedConfig;
-use Phpfastcache\Drivers\Memcache\Config as MemcacheConfig;
+use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -17,57 +16,61 @@ $testHelper = new TestHelper('Memcached alternative configuration syntax');
 $cacheInstanceDefSyntax = CacheManager::getInstance('Memcached');
 
 $cacheInstanceOldSyntax = CacheManager::getInstance('Memcached', new MemcachedConfig([
-  'servers' => [
-    [
-      'host' => '127.0.0.1',
-      'port' => 11211,
+    'servers' => [
+        [
+            'host' => '127.0.0.1',
+            'port' => 11211,
+            'saslUsername' => null,
+            'saslPassword' => null,
+        ]
     ]
-  ]
 ]));
 
 $cacheInstanceNewSyntax = CacheManager::getInstance('Memcached', new MemcachedConfig([
-  'host' => '127.0.0.1',
-  'port' => 11211,
+    'host' => '127.0.0.1',
+    'port' => 11211,
+    'saslUsername' => null,
+    'saslPassword' => null,
 ]));
 
 $cacheKey = 'cacheKey';
 $RandomCacheValue = str_shuffle(uniqid('pfc', true));
 
-$cacheItem  = $cacheInstanceDefSyntax->getItem($cacheKey);
+$cacheItem = $cacheInstanceDefSyntax->getItem($cacheKey);
 $cacheItem->set($RandomCacheValue)->expiresAfter(600);
 $cacheInstanceDefSyntax->save($cacheItem);
 unset($cacheItem);
 $cacheInstanceDefSyntax->detachAllItems();
 
 
-$cacheItem  = $cacheInstanceOldSyntax->getItem($cacheKey);
+$cacheItem = $cacheInstanceOldSyntax->getItem($cacheKey);
 $cacheItem->set($RandomCacheValue)->expiresAfter(600);
 $cacheInstanceOldSyntax->save($cacheItem);
 unset($cacheItem);
 $cacheInstanceOldSyntax->detachAllItems();
 
-$cacheItem  = $cacheInstanceNewSyntax->getItem($cacheKey);
+$cacheItem = $cacheInstanceNewSyntax->getItem($cacheKey);
 $cacheItem->set($RandomCacheValue)->expiresAfter(600);
 $cacheInstanceNewSyntax->save($cacheItem);
 unset($cacheItem);
 $cacheInstanceNewSyntax->detachAllItems();
 
 
-if($cacheInstanceDefSyntax->getItem($cacheKey)->isHit()){
+if ($cacheInstanceDefSyntax->getItem($cacheKey)->isHit()) {
     $testHelper->printPassText('The default Memcached syntax is working well');
-}else{
+} else {
     $testHelper->printFailText('The default Memcached syntax is not working');
 }
 
-if($cacheInstanceOldSyntax->getItem($cacheKey)->isHit()){
+if ($cacheInstanceOldSyntax->getItem($cacheKey)->isHit()) {
     $testHelper->printPassText('The old Memcached syntax is working well');
-}else{
+} else {
     $testHelper->printFailText('The old Memcached syntax is not working');
 }
 
-if($cacheInstanceNewSyntax->getItem($cacheKey)->isHit()){
+if ($cacheInstanceNewSyntax->getItem($cacheKey)->isHit()) {
     $testHelper->printPassText('The new Memcached syntax is working well');
-}else{
+} else {
     $testHelper->printFailText('The new Memcached syntax is not working');
 }
 

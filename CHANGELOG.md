@@ -1,3 +1,14 @@
+## 7.0.5
+#### _"Rusted"_
+##### 3 march 2019
+- __Drivers__
+    - Fixed #675 // Memcached ignores custom host/port configurations (@Geolim4)
+- __Global__
+    - Fix composer package name should be all lowercase (@jfcherng)
+- __Misc__
+    - Updated Mongodb\Config docs (@mikepsinn)
+    - Fixed "Files" example in docs (@hriziya)
+
 ## 7.0.4
 #### _"Rust-in"_
 ##### 22 december 2018

@@ -271,7 +271,7 @@ As Fast To Implement As Opening a Beer
 
 
 ```bash
-composer require phpFastCache/phpFastCache
+composer require phpfastcache/phpfastcache
 ```
 
 #### :construction: Step 2: Setup your website code to implement the phpFastCache calls (with Composer)

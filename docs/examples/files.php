@@ -48,9 +48,6 @@ if (is_null($CachedString->get())) {
     echo $CachedString->get();
 
 } else {
-    $CachedString->set("Files Cache --> Cache Enabled --> Well done !");
-    $InstanceCache->save($CachedString);
-
     echo "READ FROM CACHE // ";
     echo "\n EXPIRATION DATE: " . $CachedString->getExpirationDate()->format(DateTime::W3C);
     echo $CachedString->get();

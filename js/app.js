@@ -159,3 +159,13 @@ $(document).ready(function () {
 
   triggerTabsLoading(window.location.hash);
 });
+
+
+function supportUs() {
+    $("#supportus_tab").click();
+}
+$(function() {
+    setTimeout(function() {
+        $("a:contains('See examples')").attr("onclick","supportUs();");
+    },2000);
+});

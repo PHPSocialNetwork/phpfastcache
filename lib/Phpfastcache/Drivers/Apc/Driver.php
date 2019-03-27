@@ -117,7 +117,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverClear(): bool
     {
-        return @apc_clear_cache() && @apc_clear_cache('user');
+        return @apc_clear_cache() || @apc_clear_cache('user');
     }
 
     /********************

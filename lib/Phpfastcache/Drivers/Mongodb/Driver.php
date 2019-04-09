@@ -132,7 +132,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                     ['upsert' => true, 'multiple' => false]
                 );
             } catch (MongoDBException $e) {
-                throw new PhpfastcacheDriverException('Got an exception while trying to write data to MongoDB server', null, $e);
+                throw new PhpfastcacheDriverException('Got an exception while trying to write data to MongoDB server', 0, $e);
             }
 
             return isset($result['ok']) ? $result['ok'] == 1 : true;

@@ -93,7 +93,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         try {
             $response = $this->instance->findDocument($item->getEncodedKey());
         } catch (CouchDBException $e) {
-            throw new PhpfastcacheDriverException('Got error while trying to get a document: ' . $e->getMessage(), null, $e);
+            throw new PhpfastcacheDriverException('Got error while trying to get a document: ' . $e->getMessage(), 0, $e);
         }
 
         if ($response->status === 404 || empty($response->body['data'])) {
@@ -124,7 +124,7 @@ class Driver implements ExtendedCacheItemPoolInterface
                 $this->instance->putDocument(['data' => $this->encode($this->driverPreWrap($item))], $item->getEncodedKey(),
                     $this->getLatestDocumentRevision($item->getEncodedKey()));
             } catch (CouchDBException $e) {
-                throw new PhpfastcacheDriverException('Got error while trying to upsert a document: ' . $e->getMessage(), null, $e);
+                throw new PhpfastcacheDriverException('Got error while trying to upsert a document: ' . $e->getMessage(), 0, $e);
             }
             return true;
         }
@@ -147,7 +147,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             try {
                 $this->instance->deleteDocument($item->getEncodedKey(), $this->getLatestDocumentRevision($item->getEncodedKey()));
             } catch (CouchDBException $e) {
-                throw new PhpfastcacheDriverException('Got error while trying to delete a document: ' . $e->getMessage(), null, $e);
+                throw new PhpfastcacheDriverException('Got error while trying to delete a document: ' . $e->getMessage(), 0, $e);
             }
             return true;
         }
@@ -165,7 +165,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             $this->instance->deleteDatabase($this->getDatabaseName());
             $this->createDatabase();
         } catch (CouchDBException $e) {
-            throw new PhpfastcacheDriverException('Got error while trying to delete and recreate the database: ' . $e->getMessage(), null, $e);
+            throw new PhpfastcacheDriverException('Got error while trying to delete and recreate the database: ' . $e->getMessage(), 0, $e);
         }
 
         return true;

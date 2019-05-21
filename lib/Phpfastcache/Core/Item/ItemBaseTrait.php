@@ -148,7 +148,8 @@ trait ItemBaseTrait
      */
     public function expiresAt($expiration): ExtendedCacheItemInterface
     {
-        if ($expiration instanceof \DateTimeInterface) {
+        if ($expiration instanceof \DateTimeInterface)
+        {
             /**
              * @eventName CacheItemExpireAt
              * @param ExtendedCacheItemInterface $this
@@ -156,7 +157,17 @@ trait ItemBaseTrait
              */
             $this->eventManager->dispatch('CacheItemExpireAt', $this, $expiration);
             $this->expirationDate = $expiration;
-        } else {
+        }
+        elseif(is_array($expiration) && key_exists("date", $expiration)
+            && key_exists("timezone_type", $expiration) && key_exists("timezone", $expiration)
+        ){
+            /**
+             * Hack for Zend Server and PhpfastcacheInvalidArgumentException $expiration must be an object implementing the DateTimeInterface got: array
+             */
+            \DateTime::__set_state($expiration);
+        }
+        else
+        {
             throw new PhpfastcacheInvalidArgumentException('$expiration must be an object implementing the DateTimeInterface got: ' . \gettype($expiration));
         }
 

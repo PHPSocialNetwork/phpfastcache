@@ -129,7 +129,7 @@ PhpFastCache provides you a lot of useful APIs:
 | `deleteItemsByTag($tagName)`                           | bool                           | Deletes items by a tag                                                                           | 
 | `deleteItemsByTags(array $tagNames)`                   | bool                           | Deletes items  by one of multiple tag names                                                      | 
 | `deleteItemsByTagsAll(array $tagNames)`                | bool                           | Deletes items by all of multiple tag names                                                       | 
-| `detachAllItems($item)`                                | void                           | Detaches all items from the pool                                                                 | 
+| `detachAllItems()`                                     | void                           | Detaches all items from the pool                                                                 | 
 | `detachItem($item)`                                    | void                           | Detaches an item from the pool                                                                   | 
 | `getConfig()`                                          | ConfigurationOption            | Returns the configuration object                                                                 | 
 | `getConfigOption($optionName);`                        | mixed                          | Returns a configuration value by its key `$optionName`                                           | 

@@ -69,7 +69,7 @@ class Psr16Adapter implements CacheInterface
 
             return $default;
         } catch (PhpfastcacheInvalidArgumentException $e) {
-            throw new PhpfastcacheSimpleCacheException($e->getMessage(), null, $e);
+            throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }
     }
 
@@ -93,7 +93,7 @@ class Psr16Adapter implements CacheInterface
             }
             return $this->internalCacheInstance->save($cacheItem);
         } catch (PhpfastcacheInvalidArgumentException $e) {
-            throw new PhpfastcacheSimpleCacheException($e->getMessage(), null, $e);
+            throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }
     }
 
@@ -107,7 +107,7 @@ class Psr16Adapter implements CacheInterface
         try {
             return $this->internalCacheInstance->deleteItem($key);
         } catch (PhpfastcacheInvalidArgumentException $e) {
-            throw new PhpfastcacheSimpleCacheException($e->getMessage(), null, $e);
+            throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }
     }
 
@@ -120,7 +120,7 @@ class Psr16Adapter implements CacheInterface
         try {
             return $this->internalCacheInstance->clear();
         } catch (PhpfastcacheRootException $e) {
-            throw new PhpfastcacheSimpleCacheException($e->getMessage(), null, $e);
+            throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }
     }
 
@@ -137,7 +137,7 @@ class Psr16Adapter implements CacheInterface
                 return $item->get();
             }, $this->internalCacheInstance->getItems($keys));
         } catch (PhpfastcacheInvalidArgumentException $e) {
-            throw new PhpfastcacheSimpleCacheException($e->getMessage(), null, $e);
+            throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }
     }
 
@@ -163,7 +163,7 @@ class Psr16Adapter implements CacheInterface
             }
             return $this->internalCacheInstance->commit();
         } catch (PhpfastcacheInvalidArgumentException $e) {
-            throw new PhpfastcacheSimpleCacheException($e->getMessage(), null, $e);
+            throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }
     }
 
@@ -177,7 +177,7 @@ class Psr16Adapter implements CacheInterface
         try {
             return $this->internalCacheInstance->deleteItems($keys);
         } catch (PhpfastcacheInvalidArgumentException $e) {
-            throw new PhpfastcacheSimpleCacheException($e->getMessage(), null, $e);
+            throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }
     }
 
@@ -192,7 +192,7 @@ class Psr16Adapter implements CacheInterface
             $cacheItem = $this->internalCacheInstance->getItem($key);
             return $cacheItem->isHit() && !$cacheItem->isExpired();
         } catch (PhpfastcacheInvalidArgumentException $e) {
-            throw new PhpfastcacheSimpleCacheException($e->getMessage(), null, $e);
+            throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }
     }
 

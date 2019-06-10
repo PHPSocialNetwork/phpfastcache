@@ -129,7 +129,7 @@ phpFastCache offers you a lot of useful APIs:
 - prependItemsByTags(array $tagNames, $data) // Prepends items by one of multiple tag names
 - prependItemsByTagsAll(array $tagNames, $data) // Prepends items by all of multiple tag names
 - detachItem($item) // Detaches an item from the pool
-- detachAllItems() // Detaches all items from the pool
+- detachAllItems($item) // Detaches all items from the pool
 - attachItem($item) // (Re-)attaches an item to the pool
 - isAttached($item) // Verify if an item is (still) attached
 - setEventManager(EventManager $evtMngr) // Sets the event manager

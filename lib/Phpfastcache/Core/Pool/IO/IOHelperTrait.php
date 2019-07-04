@@ -256,7 +256,7 @@ HTACCESS;
     protected function readfile($file): string
     {
         if (\function_exists('file_get_contents')) {
-            return \file_get_contents($file);
+            return (string) \file_get_contents($file);
         }
 
         $string = '';

@@ -40,7 +40,7 @@ $CachedString = $InstanceCache->getItem($key);
 
 if (is_null($CachedString->get())) {
     //$CachedString = "Files Cache --> Cache Enabled --> Well done !";
-    // Write products to Cache in 10 minutes with same keyword
+    // Write products to Cache in 1 minutes with same keyword
     $CachedString->set("Files Cache --> Cache Enabled --> Well done !")->expiresAfter(60);
     $InstanceCache->save($CachedString);
 

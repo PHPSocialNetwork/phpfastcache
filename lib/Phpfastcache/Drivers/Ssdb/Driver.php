@@ -100,7 +100,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->instance->setx($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), $item->getTtl());
+            return (bool) $this->instance->setx($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), $item->getTtl());
         }
 
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
@@ -117,7 +117,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return $this->instance->del($item->getEncodedKey());
+            return (bool) $this->instance->del($item->getEncodedKey());
         }
 
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
@@ -128,7 +128,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverClear(): bool
     {
-        return $this->instance->flushdb('kv');
+        return (bool) $this->instance->flushdb('kv');
     }
 
     /********************

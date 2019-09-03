@@ -18,27 +18,27 @@ $Psr16Adapter = new Psr16Adapter($defaultDriver);
 $value = str_shuffle(uniqid('pfc', true));
 
 if(!$Psr16Adapter->has('test-key')){
-    $testHelper->printPassText('1/7 Psr16 hasser returned expected boolean (false)');
+    $testHelper->printPassText('1/9 Psr16 hasser returned expected boolean (false)');
 }else{
-    $testHelper->printFailText('1/7 Psr16 hasser returned unexpected boolean (true)');
+    $testHelper->printFailText('1/9 Psr16 hasser returned unexpected boolean (true)');
 }
 
 $testHelper->printNewLine()->printText('Setting up value to "test-key"...')->printNewLine();
 $Psr16Adapter->set('test-key', $value);
 
 if($Psr16Adapter->get('test-key') === $value){
-    $testHelper->printPassText('2/7 Psr16 getter returned expected value: ' . $value);
+    $testHelper->printPassText('2/9 Psr16 getter returned expected value: ' . $value);
 }else{
-    $testHelper->printFailText('2/7 Psr16 getter returned unexpected value: ' . $value);
+    $testHelper->printFailText('2/9 Psr16 getter returned unexpected value: ' . $value);
 }
 
 $testHelper->printNewLine()->printText('Deleting key "test-key"...')->printNewLine();
 $Psr16Adapter->delete('test-key');
 
 if(!$Psr16Adapter->has('test-key')){
-    $testHelper->printPassText('3/7 Psr16 hasser returned expected boolean (false)');
+    $testHelper->printPassText('3/9 Psr16 hasser returned expected boolean (false)');
 }else{
-    $testHelper->printFailText('3/7 Psr16 hasser returned unexpected boolean (true)');
+    $testHelper->printFailText('3/9 Psr16 hasser returned unexpected boolean (true)');
 }
 
 $testHelper->printNewLine()->printText('Setting up value to "test-key, test-key2, test-key3"...')->printNewLine();
@@ -51,9 +51,16 @@ $Psr16Adapter->setMultiple([
 
 $values = $Psr16Adapter->getMultiple(['test-key', 'test-key2', 'test-key3']);
 if(count(array_filter($values)) === 3){
-    $testHelper->printPassText('4/7 Psr16 multiple getters returned expected values (3)');
+    $testHelper->printPassText('4/9 Psr16 multiple getters returned expected values (3)');
 }else{
-    $testHelper->printFailText('4/7 Psr16 getters(3) returned unexpected values.');
+    $testHelper->printFailText('4/9 Psr16 getters(3) returned unexpected values.');
+}
+
+$values = $Psr16Adapter->getMultiple(new ArrayObject(['test-key', 'test-key2', 'test-key3']));
+if(count(array_filter($values)) === 3){
+    $testHelper->printPassText('5/9 Psr16 multiple getters with Traversable returned expected values (3)');
+}else{
+    $testHelper->printFailText('5/9 Psr16 getters(3) with Traversable returned unexpected values.');
 }
 
 $testHelper->printNewLine()->printText('Clearing whole cache ...')->printNewLine();
@@ -67,18 +74,34 @@ $Psr16Adapter->setMultiple([
 ]);
 
 if($Psr16Adapter->has('test-key') && $Psr16Adapter->has('test-key2') && $Psr16Adapter->has('test-key3')){
-    $testHelper->printPassText('5/7 Psr16 hasser returned expected booleans (true)');
+    $testHelper->printPassText('6/9 Psr16 hasser returned expected booleans (true)');
 }else{
-    $testHelper->printFailText('5/7 Psr16 hasser returned one or more unexpected boolean (false)');
+    $testHelper->printFailText('6/9 Psr16 hasser returned one or more unexpected boolean (false)');
+}
+
+$testHelper->printNewLine()->printText('Clearing whole cache ...')->printNewLine();
+$Psr16Adapter->clear();
+
+$testHelper->printText('Setting multiple values using a Traversable to "test-key, test-key2, test-key3"...')->printNewLine();
+$Psr16Adapter->setMultiple(new ArrayObject([
+  'test-key' => $value,
+  'test-key2' => $value,
+  'test-key3' => $value
+]));
+
+if($Psr16Adapter->has('test-key') && $Psr16Adapter->has('test-key2') && $Psr16Adapter->has('test-key3')){
+    $testHelper->printPassText('7/9 Psr16 hasser returned expected booleans (true)');
+}else{
+    $testHelper->printFailText('7/9 Psr16 hasser returned one or more unexpected boolean (false)');
 }
 
 $testHelper->printNewLine()->printText('Deleting up keys "test-key, test-key2, test-key3"...')->printNewLine();
 $Psr16Adapter->deleteMultiple(['test-key', 'test-key2', 'test-key3']);
 
 if(!$Psr16Adapter->has('test-key') && !$Psr16Adapter->has('test-key2') && !$Psr16Adapter->has('test-key3')){
-    $testHelper->printPassText('6/7 Psr16 hasser returned expected booleans (false)');
+    $testHelper->printPassText('8/9 Psr16 hasser returned expected booleans (false)');
 }else{
-    $testHelper->printFailText('6/7 Psr16 hasser returned one or more unexpected boolean (true)');
+    $testHelper->printFailText('8/9 Psr16 hasser returned one or more unexpected boolean (true)');
 }
 
 $testHelper->printNewLine()->printText('Clearing whole cache ...')->printNewLine();
@@ -95,9 +118,9 @@ $traversable = new ArrayObject(['test-key', 'test-key2', 'test-key3']);
 $Psr16Adapter->deleteMultiple($traversable);
 
 if(!$Psr16Adapter->has('test-key') && !$Psr16Adapter->has('test-key2') && !$Psr16Adapter->has('test-key3')){
-    $testHelper->printPassText('7/7 Psr16 hasser returned expected booleans (false)');
+    $testHelper->printPassText('9/9 Psr16 hasser returned expected booleans (false)');
 }else{
-    $testHelper->printFailText('7/7 Psr16 hasser returned one or more unexpected boolean (true)');
+    $testHelper->printFailText('9/9 Psr16 hasser returned one or more unexpected boolean (true)');
 }
 
 $testHelper->terminateTest();

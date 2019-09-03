@@ -124,6 +124,9 @@ class Psr16Adapter implements CacheInterface
      */
     public function getMultiple($keys, $default = null)
     {
+        if ($keys instanceof \Traversable) {
+            $keys = \iterator_to_array($keys);
+        }
         try {
             return array_map(function (ExtendedCacheItemInterface $item) {
                 return $item->get();

@@ -175,7 +175,13 @@ class Psr16Adapter implements CacheInterface
     public function deleteMultiple($keys): bool
     {
         try {
-            return $this->internalCacheInstance->deleteItems($keys);
+            if ($keys instanceof \Traversable) {
+                return $this->internalCacheInstance->deleteItems(\iterator_to_array($keys));
+            } elseif (is_array($keys)) {
+                return $this->internalCacheInstance->deleteItems($keys);
+            } else {
+                throw new phpFastCacheInvalidArgumentException('$keys must be an array/Traversable instance.');
+            }
         } catch (PhpfastcacheInvalidArgumentException $e) {
             throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }

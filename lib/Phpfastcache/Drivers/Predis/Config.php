@@ -56,6 +56,11 @@ class Config extends ConfigurationOption
     protected $timeout = 5;
 
     /**
+     * @var bool
+     */
+    protected $persistent = false;
+
+    /**
      * @return string
      */
     public function getHost(): string
@@ -194,6 +199,24 @@ class Config extends ConfigurationOption
     public function setTimeout(int $timeout): self
     {
         $this->timeout = $timeout;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPersistent(): bool
+    {
+        return $this->persistent;
+    }
+
+    /**
+     * @param bool $persistent
+     * @return Config
+     */
+    public function setPersistent(bool $persistent): Config
+    {
+        $this->persistent = $persistent;
         return $this;
     }
 }

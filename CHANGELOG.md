@@ -1,3 +1,9 @@
+## 6.1.4
+##### 15 september 2019
+- __Misc__
+    - Fixed #671 // Fix composer package name should be all lowercase (@jfcherng)
+    - Fixed typo in Readme
+
 ## 6.1.3
 ##### 8 june 2018
 - __Global__

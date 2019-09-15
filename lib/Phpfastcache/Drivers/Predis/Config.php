@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Predis;
 
 use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 
 class Config extends ConfigurationOption
 {
@@ -59,6 +60,11 @@ class Config extends ConfigurationOption
      * @var bool
      */
     protected $persistent = false;
+
+    /**
+     * @var string
+     */
+    protected $scheme = 'unix';
 
     /**
      * @return string
@@ -217,6 +223,28 @@ class Config extends ConfigurationOption
     public function setPersistent(bool $persistent): Config
     {
         $this->persistent = $persistent;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getScheme(): string
+    {
+        return $this->scheme;
+    }
+
+    /**
+     * @param string $scheme
+     * @return Config
+     * @throws PhpfastcacheInvalidConfigurationException
+     */
+    public function setScheme(string $scheme): Config
+    {
+        if(!\in_array($scheme, ['unix', 'tls'], true)){
+            throw new PhpfastcacheInvalidConfigurationException('Invalid scheme: ' . $scheme);
+        }
+        $this->scheme = $scheme;
         return $this;
     }
 }

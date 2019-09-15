@@ -228,28 +228,29 @@ class Driver implements ExtendedCacheItemPoolInterface
         $servers = $this->getConfig()->getServers();
         $options = $this->getConfig()->getOptions();
 
+        $protocol = $this->getConfig()->getProtocol();
         $host = $this->getConfig()->getHost();
         $port = $this->getConfig()->getPort();
         $username = $this->getConfig()->getUsername();
         $password = $this->getConfig()->getPassword();
 
         if( \count($servers) > 0 ){
-            $host = \array_reduce($servers, function($carry, $data){
+            $host = \array_reduce($servers, static function($carry, $data){
                 $carry .= ($carry === '' ? '' : ',').$data['host'].':'.$data['port'];
                 return $carry;
             }, '');
             $port = false;
         }
 
-        return implode('', [
-            'mongodb://',
-            ($username ?: ''),
-            ($password ? ":{$password}" : ''),
-            ($username ? '@' : ''),
+        return \implode('', [
+            "{$protocol}://",
+            $username ?: '',
+            $password ? ":{$password}" : '',
+            $username ? '@' : '',
             $host,
-            ($port !== 27017 && $port !== false ? ":{$port}" : ''),
-            ($databaseName ? "/{$databaseName}" : ''),
-            (\count($options) > 0 ? '?'.\http_build_query($options) : ''),
+            $port !== 27017 && $port !== false ? ":{$port}" : '',
+            $databaseName ? "/{$databaseName}" : '',
+            \count($options) > 0 ? '?'.\http_build_query($options) : '',
         ]);
     }
 

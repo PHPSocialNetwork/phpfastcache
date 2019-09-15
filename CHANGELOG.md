@@ -1,3 +1,23 @@
+## 7.1.0
+#### _"Wake the rust"_
+##### 15 september 2019
+- __Drivers__
+    - Fixed #692 // MongoDB driver DNS seedlist format (@Geolim4)
+    - Fixed #679 // TLS connexion for (P)Redis (@Geolim4)
+    - Fixed #689 // (P)redis persistent / pooled connections (@Geolim4)
+    - Fixed #680 // APC driverClear fails (@Geolim4)
+    - Fixed #699 // Fatal type error with ssdb-server >1.9.7  (@dmz86)
+    - Fixed #694 //  Files driver rare bug (@Geolim4)
+- __Helpers__
+    - Fixed #700 // Psr16Adapter::deleteMultiple/getMultiple converts $keys to an array (@bylexus)
+    - Fixed #685 // Minor bug - fatal error in psr16 adapter if an exception is thrown (@MaximilianKresse)
+- __Global__
+
+- __Misc__
+    - Updated "stale" policy (@geolim4)
+    - Added Security Policy (@geolim4)
+    - Fixed #695 // Typo in docs/examples/files.php (@hiroin)
+
 ## 7.0.5
 #### _"Rusted"_
 ##### 3 march 2019

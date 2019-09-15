@@ -71,6 +71,11 @@ class Config extends ConfigurationOption
     protected $driverOptions = [];
 
     /**
+     * @var string
+     */
+    protected $protocol = 'mongodb';
+
+    /**
      * @return string
      */
     public function getHost(): string
@@ -248,6 +253,24 @@ class Config extends ConfigurationOption
     public function setDriverOptions(array $driverOptions): self
     {
         $this->driverOptions = $driverOptions;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocol(): string
+    {
+        return $this->protocol;
+    }
+
+    /**
+     * @param string $protocol
+     * @return self
+     */
+    public function setProtocol(string $protocol): self
+    {
+        $this->protocol = $protocol;
         return $this;
     }
 }

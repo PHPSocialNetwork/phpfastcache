@@ -50,7 +50,7 @@ trait ExtendedCacheItemPoolTrait
         if (\is_string($tagName)) {
             $driverResponse = $this->getItem($this->getTagKey($tagName));
             if ($driverResponse->isHit()) {
-                $items = (array)$driverResponse->get();
+                $items = (array) $driverResponse->get();
 
                 /**
                  * getItems() may provides expired item(s)
@@ -80,13 +80,13 @@ trait ExtendedCacheItemPoolTrait
         $items = [];
         foreach (\array_unique($tagNames) as $tagName) {
             if (\is_string($tagName)) {
-                $items = \array_merge($items, $this->getItemsByTag($tagName));
+                $items[] = $this->getItemsByTag($tagName);
             } else {
                 throw new PhpfastcacheInvalidArgumentException('$tagName must be a a string');
             }
         }
 
-        return $items;
+        return \array_merge([], ...$items);
     }
 
 
@@ -98,7 +98,7 @@ trait ExtendedCacheItemPoolTrait
         $items = $this->getItemsByTags($tagNames);
 
         foreach ($items as $key => $item) {
-            if (\array_diff($tagNames, $item->getTags())) {
+            if (\array_diff($tagNames, $item->getTags()) || \array_diff($item->getTags(), $tagNames)) {
                 unset($items[$key]);
             }
         }

@@ -6,10 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Drivers\Memcached\Config;
 use Phpfastcache\Drivers\Files\Config as FilesConfig;
-use Phpfastcache\Exceptions\PhpfastcacheDriverException;
-use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
@@ -35,9 +32,9 @@ $cacheInstance->deleteItemsByTagsAll(['shared']);
 $item1 = $cacheInstance->getItem('item1');
 $item2 = $cacheInstance->getItem('item2');
 
-if($item1->isHit()){
+if ($item1->isHit()) {
     $testHelper->printPassText('Item #1 is still in cache as expected.');
-}else{
+} else {
     $testHelper->printFailText('Item #1 is no longer in cache and so has been unexpectedly removed.');
 }
 

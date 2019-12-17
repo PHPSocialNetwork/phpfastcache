@@ -5,7 +5,7 @@ Then feel free to contact me at the email address provided in the bottom of that
 ## Supported Versions
 | Version | End of support       | End of life        |
 | ------- | -------------------- | ------------------ |
-| 8.0     | Not yet planned      | Not yet planned    |
+| 8.x     | July 2023            | July 2024          |
 | 7.1     | July 2021            | July 2022          |
 | 7.0     | July 2019            | July 2020          |
 | 6.0     | July 2020            | July 2021          |

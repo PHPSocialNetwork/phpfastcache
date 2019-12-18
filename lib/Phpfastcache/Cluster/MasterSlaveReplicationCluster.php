@@ -22,16 +22,16 @@ use Psr\Cache\CacheItemInterface;
  *
  * @package Phpfastcache\Cluster
  */
-class MasterSlaveReplicationCluster extends ClusterAbstract {
+class MasterSlaveReplicationCluster extends ClusterPoolAbstract {
 
   /**
    * ClusterAbstract constructor.
    *
-   * @param \Phpfastcache\Cluster\ClusterInterface ...$driverPools
+   * @param \Phpfastcache\Cluster\ClusterPoolInterface ...$driverPools
    *
    * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException
    */
-  public function __construct(ClusterInterface ... $driverPools) {
+  public function __construct(ClusterPoolInterface ... $driverPools) {
     if (\count($driverPools) !== 2) {
       throw new PhpfastcacheInvalidArgumentException('Master/Slave cluster require exactly 2 pools to be working.');
     }

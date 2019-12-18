@@ -7,8 +7,8 @@
  *
  * For full copyright and license information, please see the docs/CREDITS.txt file.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
- * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author  Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ * @author  Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
 declare(strict_types=1);
@@ -17,17 +17,18 @@ namespace Phpfastcache\Core\Item;
 
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventInterface;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 
 /**
  * Interface ExtendedCacheItemInterface
+ *
  * @package phpFastCache\Cache
  */
 interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializable
 {
+
     /**
      * Returns the encoded key for the current cache item.
      * Usually as a MD5 hash
@@ -70,6 +71,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
 
     /**
      * @param $date \DateTimeInterface
+     *
      * @return self
      * @throws PhpfastcacheLogicException
      */
@@ -77,6 +79,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
 
     /**
      * @param $date \DateTimeInterface
+     *
      * @return self
      * @throws PhpfastcacheLogicException
      */
@@ -108,18 +111,21 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
      * - or the number of element if it's an array
      * - or the number returned by count() if it's an object implementing \Countable interface
      * - or -1 for anything else
+     *
      * @return int
      */
     public function getLength(): int;
 
     /**
      * @param \Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface $driver
+     *
      * @return mixed
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver);
 
     /**
      * @param bool $isHit
+     *
      * @return self
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -127,6 +133,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
 
     /**
      * @param int $step
+     *
      * @return self
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -134,6 +141,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
 
     /**
      * @param int $step
+     *
      * @return self
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -141,6 +149,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
 
     /**
      * @param array|string $data
+     *
      * @return self
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -148,6 +157,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
 
     /**
      * @param array|string $data
+     *
      * @return self
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -155,6 +165,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
 
     /**
      * @param string $tagName
+     *
      * @return self
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -162,6 +173,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
 
     /**
      * @param array $tagNames
+     *
      * @return self
      */
     public function addTags(array $tagNames): self;
@@ -169,6 +181,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
 
     /**
      * @param array $tags
+     *
      * @return self
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -181,18 +194,21 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
 
     /**
      * @param string $separator
+     *
      * @return string
      */
     public function getTagsAsString($separator = ', '): string;
 
     /**
      * @param array $tagName
+     *
      * @return self
      */
     public function removeTag($tagName): self;
 
     /**
      * @param array $tagNames
+     *
      * @return self
      */
     public function removeTags(array $tagNames): self;
@@ -205,8 +221,10 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
     /**
      * Return the data as a well-formatted string.
      * Any scalar value will be casted to an array
+     *
      * @param int $option \json_encode() options
      * @param int $depth \json_encode() depth
+     *
      * @return string
      */
     public function getDataAsJsonString($option = 0, $depth = 512): string;
@@ -215,7 +233,15 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
      * Set the EventManager instance
      *
      * @param EventInterface $em
+     *
      * @return self
      */
     public function setEventManager(EventInterface $em): self;
+
+    /**
+     * @param \Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface $driverPool
+     *
+     * @return bool
+     */
+    public function doesItemBelongToThatDriverBackend(CacheItemPoolInterface $driverPool): bool;
 }

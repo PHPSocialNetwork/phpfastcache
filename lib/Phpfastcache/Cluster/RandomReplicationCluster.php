@@ -21,7 +21,7 @@ use Psr\Cache\CacheItemInterface;
  *
  * @package Phpfastcache\Cluster
  */
-class RandomReplicationCluster extends ClusterAbstract {
+class RandomReplicationCluster extends ClusterPoolAbstract {
 
   /**
    * @inheritDoc

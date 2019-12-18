@@ -80,9 +80,9 @@ interface AggregatorInterface {
   /**
    * @param int $strategy
    *
-   * @return \Phpfastcache\Cluster\ClusterInterface
+   * @return \Phpfastcache\Cluster\ClusterPoolInterface
    */
-  public function getCluster(int $strategy): ClusterInterface;
+  public function getCluster(int $strategy): ClusterPoolInterface;
 
   /**
    * @param string                                        $driverName

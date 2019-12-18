@@ -29,7 +29,7 @@ abstract class ClusterAggregator implements AggregatorInterface {
   protected $driverPools;
 
   /**
-   * @var ClusterInterface
+   * @var ClusterPoolInterface
    */
   protected $cluster;
 
@@ -85,7 +85,7 @@ abstract class ClusterAggregator implements AggregatorInterface {
 
     $splHash = \spl_object_hash($driverPool);
     if(!isset($this->driverPools[$splHash])){
-      if($driverPool instanceof ClusterInterface){
+      if($driverPool instanceof ClusterPoolInterface){
         throw new PhpfastcacheLogicException('Recursive cluster aggregation is not allowed !');
       }
 
@@ -98,13 +98,13 @@ abstract class ClusterAggregator implements AggregatorInterface {
   /**
    * @param int $strategy
    *
-   * @return \Phpfastcache\Cluster\ClusterInterface
+   * @return \Phpfastcache\Cluster\ClusterPoolInterface
    * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException
    */
-  public function getCluster(int $strategy = AggregatorInterface::STRATEGY_FULL_REPLICATION): ClusterInterface{
-    if(isset(ClusterAbstract::STRATEGY[$strategy])){
+  public function getCluster(int $strategy = AggregatorInterface::STRATEGY_FULL_REPLICATION): ClusterPoolInterface{
+    if(isset(ClusterPoolAbstract::STRATEGY[$strategy])){
       if(!$this->cluster){
-        $this->cluster = new (ClusterAbstract::STRATEGY[$strategy])(...$this->driverPools);
+        $this->cluster = new (ClusterPoolAbstract::STRATEGY[$strategy])(...$this->driverPools);
       }
     }else{
       throw new PhpfastcacheInvalidArgumentException('Unknown cluster strategy');

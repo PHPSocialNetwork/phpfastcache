@@ -17,9 +17,10 @@ namespace Phpfastcache\Core\Item;
 
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventInterface;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidArgumentTypeException, PhpfastcacheLogicException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException,
+    PhpfastcacheInvalidArgumentTypeException,
+    PhpfastcacheLogicException};
+use Psr\Cache\CacheItemPoolInterface;
 
 /**
  * Class ItemExtendedTrait
@@ -456,6 +457,23 @@ trait ItemExtendedTrait
 
 
     /**
+     * @param CacheItemPoolInterface $driverPool
+     * @return bool
+     * @throws PhpfastcacheInvalidArgumentException
+     */
+    public function doesItemBelongToThatDriverBackend(CacheItemPoolInterface $driverPool): bool
+    {
+        try {
+            new static($driverPool, $this->getKey());
+            return true;
+        } catch (\TypeError $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @todo Is it still useful ??
+     * 
      * Prevent recursions for Debug (php 5.6+)
      * @return array
      */
@@ -466,4 +484,5 @@ trait ItemExtendedTrait
 
         return $info;
     }
+
 }

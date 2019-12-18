@@ -15,7 +15,9 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Core\Item;
 
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Psr\Cache\CacheItemPoolInterface;
 
 /**
  * Trait ItemBaseTrait

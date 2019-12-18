@@ -17,7 +17,7 @@ namespace Phpfastcache\Cluster;
 use Psr\Cache\CacheItemPoolInterface;
 
 /**
- * Interface ClusterInterface
+ * Interface ClusterInterface Aggregatable
  *
  * @package Phpfastcache\Cluster
  */

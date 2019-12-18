@@ -253,7 +253,7 @@ HTACCESS;
      * @return string
      * @throws PhpfastcacheIOException
      */
-    protected function readfile($file): string
+    protected function readFile($file): string
     {
         if (\function_exists('file_get_contents')) {
             return (string) \file_get_contents($file);
@@ -298,22 +298,22 @@ HTACCESS;
                     . \str_shuffle(\uniqid($this->getDriverName(), false))
                 ));
 
-            $f = \fopen($tmpFilename, 'w+b');
-            if(\is_resource($f)){
-                \flock($f, \LOCK_EX);
-                $octetWritten = fwrite($f, $data);
-                \flock($f, \LOCK_UN);
-                \fclose($f);
+            $handle = \fopen($tmpFilename, 'w+b');
+            if(\is_resource($handle)){
+                \flock($handle, \LOCK_EX);
+                $octetWritten = fwrite($handle, $data);
+                \flock($handle, \LOCK_UN);
+                \fclose($handle);
             }
 
             if (!\rename($tmpFilename, $file)) {
                 throw new PhpfastcacheIOException(\sprintf('Failed to rename %s to %s', $tmpFilename, $file));
             }
         } else {
-            $f = \fopen($file, 'w+b');
-            if(\is_resource($f)){
-                $octetWritten = \fwrite($f, $data);
-                \fclose($f);
+            $handle = \fopen($file, 'w+b');
+            if(\is_resource($handle)){
+                $octetWritten = \fwrite($handle, $data);
+                \fclose($handle);
             }
         }
 

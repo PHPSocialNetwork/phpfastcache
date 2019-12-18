@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Memcached;
 
 use Memcached as MemcachedSoftware;
+use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Pool\{
     DriverBaseTrait, ExtendedCacheItemPoolInterface
@@ -36,7 +37,7 @@ use Psr\Cache\CacheItemInterface;
  * @property Config $config Config object
  * @method Config getConfig() Return the config object
  */
-class Driver implements ExtendedCacheItemPoolInterface
+class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
     use DriverBaseTrait {
         __construct as protected __parentConstruct;

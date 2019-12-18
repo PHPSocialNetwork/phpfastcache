@@ -18,6 +18,7 @@ namespace Phpfastcache\Drivers\Files;
 use Phpfastcache\Core\Pool\{
     DriverBaseTrait, ExtendedCacheItemPoolInterface, IO\IOHelperTrait
 };
+use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Exceptions\{
     PhpfastcacheInvalidArgumentException
 };
@@ -30,16 +31,12 @@ use Psr\Cache\CacheItemInterface;
  * @property Config $config Config object
  * @method Config getConfig() Return the config object
  */
-class Driver implements ExtendedCacheItemPoolInterface
+class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
     use IOHelperTrait;
     use DriverBaseTrait {
         DriverBaseTrait::__construct as private __parentConstruct;
     }
-    /**
-     *
-     */
-    const FILE_DIR = 'files';
 
     /**
      * Driver constructor.
@@ -56,7 +53,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        return \is_writable($this->getPath()) || @\mkdir($this->getPath(), $this->getDefaultChmod(), true);
+        return \is_writable($this->getPath()) || \mkdir($concurrentDirectory = $this->getPath(), $this->getDefaultChmod(), TRUE) || \is_dir($concurrentDirectory);
     }
 
     /**
@@ -81,7 +78,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             return null;
         }
 
-        $content = $this->readfile($file_path);
+        $content = $this->readFile($file_path);
 
         return $this->decode($content);
 

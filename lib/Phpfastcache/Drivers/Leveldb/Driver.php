@@ -19,6 +19,7 @@ use LevelDB as LeveldbClient;
 use Phpfastcache\Core\Pool\{
     DriverBaseTrait, ExtendedCacheItemPoolInterface, IO\IOHelperTrait
 };
+use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Exceptions\{
     PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
 };
@@ -31,7 +32,7 @@ use Psr\Cache\CacheItemInterface;
  * @property Config $config Config object
  * @method Config getConfig() Return the config object
  */
-class Driver implements ExtendedCacheItemPoolInterface
+class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
     use DriverBaseTrait, IOHelperTrait;
 

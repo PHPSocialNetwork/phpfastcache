@@ -19,6 +19,7 @@ use Basho\Riak\Riak;
 use Phpfastcache\Core\Pool\{
     DriverBaseTrait, ExtendedCacheItemPoolInterface
 };
+use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
     PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
@@ -32,7 +33,7 @@ use Psr\Cache\CacheItemInterface;
  * @property Config $config Config object
  * @method Config getConfig() Return the config object
  */
-class Driver implements ExtendedCacheItemPoolInterface
+class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
     const RIAK_DEFAULT_BUCKET_NAME = 'phpfastcache';
 

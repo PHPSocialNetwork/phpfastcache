@@ -18,6 +18,7 @@ namespace Phpfastcache\Drivers\Redis;
 use Phpfastcache\Core\Pool\{
     DriverBaseTrait, ExtendedCacheItemPoolInterface
 };
+use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{
     PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
@@ -31,7 +32,7 @@ use Redis as RedisClient;
  * @property Config $config Config object
  * @method Config getConfig() Return the config object
  */
-class Driver implements ExtendedCacheItemPoolInterface
+class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
     use DriverBaseTrait;
 

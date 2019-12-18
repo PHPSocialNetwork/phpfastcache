@@ -14,6 +14,12 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Cluster;
 
-class RandomReplicationAggregator extends AggregatorAbstract {
+use Psr\Cache\CacheItemPoolInterface;
 
+/**
+ * Interface ClusterInterface
+ *
+ * @package Phpfastcache\Cluster
+ */
+interface AggregatablePoolInterface extends CacheItemPoolInterface {
 }

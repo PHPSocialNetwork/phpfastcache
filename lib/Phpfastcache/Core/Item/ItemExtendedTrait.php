@@ -17,6 +17,7 @@ namespace Phpfastcache\Core\Item;
 
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventInterface;
+use Phpfastcache\Util\ClassNamespaceResolverTrait;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException,
     PhpfastcacheInvalidArgumentTypeException,
     PhpfastcacheLogicException};
@@ -36,6 +37,8 @@ use Psr\Cache\CacheItemPoolInterface;
  */
 trait ItemExtendedTrait
 {
+    use ClassNamespaceResolverTrait;
+
     /********************
      *
      * PSR-6 Extended Methods
@@ -457,23 +460,18 @@ trait ItemExtendedTrait
 
 
     /**
-     * @param CacheItemPoolInterface $driverPool
+     * @param ExtendedCacheItemPoolInterface $driverPool
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function doesItemBelongToThatDriverBackend(CacheItemPoolInterface $driverPool): bool
+    public function doesItemBelongToThatDriverBackend(ExtendedCacheItemPoolInterface $driverPool): bool
     {
-        try {
-            new static($driverPool, $this->getKey());
-            return true;
-        } catch (\TypeError $e) {
-            return false;
-        }
+        return $driverPool->getClassNamespace() === $this->getClassNamespace();
     }
 
     /**
      * @todo Is it still useful ??
-     * 
+     *
      * Prevent recursions for Debug (php 5.6+)
      * @return array
      */

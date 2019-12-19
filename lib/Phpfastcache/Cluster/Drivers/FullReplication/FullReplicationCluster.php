@@ -12,15 +12,15 @@
  */
 declare(strict_types=1);
 
-namespace Phpfastcache\Cluster;
+namespace Phpfastcache\Cluster\Drivers\FullReplication;
 
+use Phpfastcache\Cluster\ClusterPoolAbstract;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Psr\Cache\CacheItemInterface;
 
 /**
  * Class FullReplicationCluster
- *
- * @package Phpfastcache\Cluster
+ * @package Phpfastcache\Cluster\Drivers\FullReplication
  */
 class FullReplicationCluster extends ClusterPoolAbstract
 {
@@ -37,21 +37,31 @@ class FullReplicationCluster extends ClusterPoolAbstract
 
         foreach ($this->driverPools as $driverPool) {
             $poolItem = $driverPool->getItem($key);
-            if (!$item || !$item->isHit()) {
-                $item = $poolItem;
-            }
+            if ($poolItem->isHit()) {
+                if(!$item){
+                    $item = $poolItem;
+                    continue;
+                }
 
-            if ($item !== NULL && (
-                    // Allow objects to be compared loosely
-                    (\is_object($item->get()) && $item->get() != $poolItem->get())
-                    || (!\is_object($item->get()) && $item->get() !== $poolItem->get())
-                )
-            ) {
+                $itemData = $item->get();
+                $poolItemData = $poolItem->get();
+
+                if (\is_object($itemData)
+                ) {
+                    if ($item->get() != $poolItemData) {
+                        $poolsToResync[] = $driverPool;
+                    }
+                } else {
+                    if ($item->get() !== $poolItemData) {
+                        $poolsToResync[] = $driverPool;
+                    }
+                }
+            } else {
                 $poolsToResync[] = $driverPool;
             }
         }
 
-        if ($item && $item->isHit()) {
+        if ($item && $item->isHit() && \count($poolsToResync) < \count($this->driverPools)) {
             foreach ($poolsToResync as $poolToResync) {
                 $poolItem = $poolToResync->getItem($key);
                 $poolItem->set($item->get())
@@ -60,7 +70,7 @@ class FullReplicationCluster extends ClusterPoolAbstract
             }
         }
 
-        return $item ?? new ClusterItem($this, $key);
+        return $this->getStandardizedItem($item ?? new Item($this, $key), $this);
     }
 
     /**
@@ -68,7 +78,13 @@ class FullReplicationCluster extends ClusterPoolAbstract
      */
     public function getItems(array $keys = [])
     {
-        // TODO: Implement getItems() method.
+        $items = [];
+
+        foreach ($keys as $key) {
+            $items[] = $this->getItem($key);
+        }
+
+        return $items;
     }
 
     /**
@@ -139,7 +155,8 @@ class FullReplicationCluster extends ClusterPoolAbstract
         /** @var ExtendedCacheItemInterface $item */
         $hasSavedOnce = false;
         foreach ($this->driverPools as $driverPool) {
-            $poolItem = $this->getStandardizedItem($item, $this);
+            $poolItem = $this->getStandardizedItem($item, $driverPool);
+            \var_dump(\get_class($driverPool));
             if ($result = $driverPool->save($poolItem)) {
                 $hasSavedOnce = $result;
             }
@@ -156,11 +173,7 @@ class FullReplicationCluster extends ClusterPoolAbstract
         /** @var ExtendedCacheItemInterface $item */
         $hasSavedOnce = false;
         foreach ($this->driverPools as $driverPool) {
-            $poolItem = $item;
-            if (!$poolItem->doesItemBelongToThatDriverBackend($driverPool)) {
-                $poolItem = $driverPool->getItem($item->get())
-                    ->expiresAt($poolItem->getExpirationDate());
-            }
+            $poolItem = $this->getStandardizedItem($item, $driverPool);
             if ($result = $driverPool->saveDeferred($poolItem)) {
                 $hasSavedOnce = $result;
             }
@@ -183,4 +196,6 @@ class FullReplicationCluster extends ClusterPoolAbstract
         // Return true only if at least one backend confirmed the "commit" operation
         return $hasCommitOnce;
     }
+
+
 }

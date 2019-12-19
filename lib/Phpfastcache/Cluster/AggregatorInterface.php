@@ -72,10 +72,10 @@ interface AggregatorInterface {
   /**
    * AggregatorInterface constructor.
    *
-   * @param string                                          $clusterName
+   * @param string                                          $clusterAggregatorName
    * @param \Phpfastcache\Cluster\AggregatablePoolInterface ...$driverPools
    */
-  public function __construct(string $clusterName, AggregatablePoolInterface ...$driverPools);
+  public function __construct(string $clusterAggregatorName, AggregatablePoolInterface ...$driverPools);
 
   /**
    * @param int $strategy

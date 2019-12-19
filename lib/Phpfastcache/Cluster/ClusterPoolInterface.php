@@ -22,6 +22,6 @@ use Psr\Cache\CacheItemPoolInterface;
  *
  * @package Phpfastcache\Cluster
  */
-interface ClusterPoolInterface extends CacheItemPoolInterface {
+interface ClusterPoolInterface extends ExtendedCacheItemPoolInterface {
   // TODO: Finish this interface
 }

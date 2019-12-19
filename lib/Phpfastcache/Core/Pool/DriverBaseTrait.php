@@ -31,7 +31,7 @@ trait DriverBaseTrait
     /**
      * @var ConfigurationOption the options
      */
-    protected $config = [];
+    protected $config;
 
     /**
      * @var bool

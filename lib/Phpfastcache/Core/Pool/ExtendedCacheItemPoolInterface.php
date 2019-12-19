@@ -20,6 +20,7 @@ use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Event\EventInterface;
+use Phpfastcache\Util\ClassNamespaceResolverInterface;
 use Phpfastcache\Exceptions\{
     PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
 };
@@ -40,7 +41,7 @@ use Psr\Cache\{
  *
  * @package phpFastCache\Core\Pool
  */
-interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
+interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNamespaceResolverInterface
 {
     const DRIVER_CHECK_FAILURE = '%s is not installed or is misconfigured, cannot continue. 
     Also, please verify the suggested dependencies in composer because as of the V6, 3rd party libraries are no longer required.';
@@ -515,6 +516,10 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface
      */
     public function isAttached(CacheItemInterface $item);
 
+    /**
+     * @return EventInterface
+     */
+    public function getEventManager(): EventInterface;
 
     /**
      * Set the EventManager instance

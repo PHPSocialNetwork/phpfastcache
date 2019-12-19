@@ -13,31 +13,21 @@
  */
 declare(strict_types=1);
 
-namespace Phpfastcache\Cluster;
+namespace Phpfastcache\Cluster\Drivers\FullReplication;
 
 use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, ItemBaseTrait};
+use Phpfastcache\Cluster\ClusterPoolInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 
 /**
- * Class Item
- * @package phpFastCache\Drivers\Apc
+ * Class ClusterItem
+ * @package Phpfastcache\Cluster
  */
-class ClusterItem implements ExtendedCacheItemInterface
+class Item implements ExtendedCacheItemInterface
 {
     use ItemBaseTrait {
         ItemBaseTrait::__construct as __BaseConstruct;
-    }
-
-    /**
-     * ClusterItem constructor.
-     * @param ClusterPoolInterface $driver
-     * @param $key
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public function __construct(ClusterPoolInterface $driver, $key)
-    {
-        $this->__BaseConstruct($driver, $key);
     }
 
     /**

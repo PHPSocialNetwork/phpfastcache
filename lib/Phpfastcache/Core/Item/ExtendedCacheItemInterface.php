@@ -17,6 +17,7 @@ namespace Phpfastcache\Core\Item;
 
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventInterface;
+use Phpfastcache\Util\ClassNamespaceResolverInterface;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
@@ -26,7 +27,7 @@ use Psr\Cache\CacheItemPoolInterface;
  *
  * @package phpFastCache\Cache
  */
-interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializable
+interface ExtendedCacheItemInterface extends CacheItemInterface, ClassNamespaceResolverInterface, \JsonSerializable
 {
 
     /**
@@ -229,7 +230,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
      */
     public function getDataAsJsonString($option = 0, $depth = 512): string;
 
-    /**
+    /**getClassNamespace
      * Set the EventManager instance
      *
      * @param EventInterface $em
@@ -239,9 +240,8 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, \JsonSerializab
     public function setEventManager(EventInterface $em): self;
 
     /**
-     * @param \Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface $driverPool
-     *
+     * @param ExtendedCacheItemPoolInterface $driverPool
      * @return bool
      */
-    public function doesItemBelongToThatDriverBackend(CacheItemPoolInterface $driverPool): bool;
+    public function doesItemBelongToThatDriverBackend(ExtendedCacheItemPoolInterface $driverPool): bool;
 }

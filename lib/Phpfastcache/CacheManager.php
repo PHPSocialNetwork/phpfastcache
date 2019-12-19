@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache;
 
+use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\{
@@ -102,7 +103,7 @@ class CacheManager
      * @param array|ConfigurationOption $config
      * @param string $instanceId
      *
-     * @return ExtendedCacheItemPoolInterface
+     * @return ExtendedCacheItemPoolInterface|AggregatablePoolInterface
      *
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheInvalidConfigurationException

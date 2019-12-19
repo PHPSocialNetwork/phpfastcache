@@ -123,6 +123,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
+
             $ttl = $item->getExpirationDate()->getTimestamp() - \time();
 
             /**

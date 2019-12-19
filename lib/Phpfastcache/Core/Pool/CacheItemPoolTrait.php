@@ -191,7 +191,7 @@ trait CacheItemPoolTrait
         return $this->itemInstances[$key];
     }
 
-    /**
+    /**CacheItemPoolTrait
      * @param \Psr\Cache\CacheItemInterface $item
      * @return $this
      * @throws PhpfastcacheInvalidArgumentException
@@ -204,7 +204,12 @@ trait CacheItemPoolTrait
             return $this;
         }
 
-        throw new PhpfastcacheInvalidArgumentException(\sprintf('Invalid Item Class "%s" for this driver.', \get_class($item)));
+        \debug_print_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS);
+        throw new PhpfastcacheInvalidArgumentException(\sprintf(
+            'Invalid Item Class "%s" for this driver "%s".',
+            \get_class($item),
+            \get_class($this)
+        ));
     }
 
     /**

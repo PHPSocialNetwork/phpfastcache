@@ -156,6 +156,9 @@ trait ItemBaseTrait
              * @param ExtendedCacheItemInterface $this
              * @param \DateTimeInterface $expiration
              */
+            if(!$this->eventManager){
+                debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+            }
             $this->eventManager->dispatch('CacheItemExpireAt', $this, $expiration);
             $this->expirationDate = $expiration;
         } else {

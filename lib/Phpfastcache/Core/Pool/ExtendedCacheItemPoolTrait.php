@@ -36,7 +36,7 @@ trait ExtendedCacheItemPoolTrait
      */
     public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512): string
     {
-        $callback = function (CacheItemInterface $item) {
+        $callback = static function (CacheItemInterface $item) {
             return $item->get();
         };
         return \json_encode(\array_map($callback, \array_values($this->getItems($keys))), $option, $depth);
@@ -62,7 +62,7 @@ trait ExtendedCacheItemPoolTrait
                  *
                  * #headache
                  */
-                return \array_filter($this->getItems(\array_unique(\array_keys($items))), function (ExtendedCacheItemInterface $item) {
+                return \array_filter($this->getItems(\array_unique(\array_keys($items))), static function (ExtendedCacheItemInterface $item) {
                     return $item->isHit();
                 });
             }
@@ -80,13 +80,13 @@ trait ExtendedCacheItemPoolTrait
         $items = [];
         foreach (\array_unique($tagNames) as $tagName) {
             if (\is_string($tagName)) {
-                $items = \array_merge($items, $this->getItemsByTag($tagName));
+                $items[] = $this->getItemsByTag($tagName);
             } else {
                 throw new PhpfastcacheInvalidArgumentException('$tagName must be a a string');
             }
         }
 
-        return $items;
+        return \array_merge([], ...$items);
     }
 
 

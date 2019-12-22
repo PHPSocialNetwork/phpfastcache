@@ -1,21 +1,21 @@
-name: PHP Composer
-
+name: Unit tests
 on: [push]
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup PHP Action
+      - name: Setup PHP 7.3
         uses: shivammathur/setup-php@1.6.2
         with:
           php-version: '7.3'
           coverage: none
-      - uses: niden/actions-memcached@v7
-      - uses: actions/checkout@v1
-      - uses: zhulik/redis-action@v1.0.0
+      - name: Setup Memcached server
+        uses: niden/actions-memcached@v7
+      - name: Setup Redis server
+        uses: zhulik/redis-action@v1.0.0
         with:
           redis version: '5'
+      - uses: actions/checkout@v1
 
       - name: Validate composer.json and composer.lock
         run: composer validate
@@ -25,6 +25,12 @@ jobs:
 
       # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
       # Docs: https://getcomposer.org/doc/articles/scripts.md
-      - name: Run test suite
+      - name: Run lagacy tests
         run: php -f ./bin/ci/run_tests.php
-
+      - name: Setup PHP 7.4
+        uses: shivammathur/setup-php@1.6.2
+        with:
+          php-version: '7.4'
+          coverage: none
+      - name: Run lagacy tests
+        run: php -f ./bin/ci/run_tests.php

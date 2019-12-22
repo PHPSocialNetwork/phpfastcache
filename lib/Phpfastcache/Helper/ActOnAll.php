@@ -35,10 +35,12 @@ class ActOnAll
     protected $instances = [];
 
     /**
+     * @deprecated as of 7.1.1 will be removed in 8.x (Replaced by Cluster Aggregation feature)
      * ActOnAll constructor.
      */
     public function __construct()
     {
+        @\trigger_error(\sprintf('Class "%s" is deprecated and will be removed in the next major release (8.x).', static::class), \E_USER_DEPRECATED);
         $this->instances =& CacheManager::getInternalInstances();
     }
 

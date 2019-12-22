@@ -6,7 +6,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - steps:
       - uses: niden/actions-memcached@v7
       - uses: actions/checkout@v1
       - uses: zhulik/redis-action@v1.0.0

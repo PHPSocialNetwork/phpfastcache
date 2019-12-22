@@ -10,8 +10,8 @@ jobs:
       - uses: niden/actions-memcached@v7
       - uses: actions/checkout@v1
       - uses: zhulik/redis-action@v1.0.0
-          with:
-            redis version: '5'
+        with:
+          redis version: '5'
 
       - name: Validate composer.json and composer.lock
         run: composer validate

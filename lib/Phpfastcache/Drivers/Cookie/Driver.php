@@ -49,7 +49,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverConnect(): bool
     {
-        return !(!\array_key_exists('phpFastCache', $_COOKIE) && !@setcookie('phpFastCache', 1, 10));
+        return !(!\array_key_exists('phpFastCache', $_COOKIE) && !@setcookie('phpFastCache', '1', 10));
     }
 
     /**

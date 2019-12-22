@@ -103,7 +103,7 @@ class TestHelper
      */
     public function printSkipText(string $string): self
     {
-        $this->printText($string, false, 'SKIP');
+        $this->printText($string, false, "\e[33mSKIP\e[0m");
 
         return $this;
     }
@@ -114,7 +114,7 @@ class TestHelper
      */
     public function printPassText(string $string): self
     {
-        $this->printText($string, false, 'PASS');
+        $this->printText($string, false, "\e[32mPASS\e[0m");
 
 
         return $this;
@@ -126,7 +126,7 @@ class TestHelper
      */
     public function printInfoText(string $string): self
     {
-        $this->printText($string, false, 'INFO');
+        $this->printText($string, false, "\e[34mINFO\e[0m");
 
 
         return $this;
@@ -138,7 +138,7 @@ class TestHelper
      */
     public function printDebugText(string $string): self
     {
-        $this->printText($string, false, 'DEBUG');
+        $this->printText($string, false, "\e[35mDEBUG\e[0m");
 
         return $this;
     }
@@ -149,7 +149,7 @@ class TestHelper
      */
     public function printNoteText(string $string): self
     {
-        $this->printText($string, false, 'NOTE');
+        $this->printText($string, false, "\e[34mNOTE\e[0m");
 
         return $this;
     }
@@ -160,7 +160,7 @@ class TestHelper
      */
     public function printFailText(string $string): self
     {
-        $this->printText($string, false, 'FAIL');
+        $this->printText($string, false, "\e[31mFAIL\e[0m");
         $this->exitCode = 1;
 
         return $this;

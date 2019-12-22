@@ -27,12 +27,12 @@ $status = 0;
 $driver = $argv[ 1 ] ?? 'Files';
 
 foreach (phpfastcache_glob_recursive(PFC_TEST_DIR . DIRECTORY_SEPARATOR . '*.test.php') as $filename) {
-    echo "\e[97m--\n";
+    echo "\e[97m--\e[0m\n";
     $command = "php -f {$filename} {$driver}";
-    echo "\e[33mphpfastcache@test \e[34m" . __DIR__ . " \e[92m# \e[91m" . $command . "\n";
+    echo "\e[33mphpfastcache@test \e[34m" . __DIR__ . " \e[92m# \e[91m" . $command . "\e[0m\n";
     \exec($command, $output, $return_var);
     echo "=====================================\n";
-    echo "\e[95m" . \implode("\n", $output) . "\n";
+    echo \implode("\n", $output) . "\n";
     echo "=====================================\n";
     if ($return_var === 0) {
         echo "\e[32mProcess finished with exit code $return_var";
@@ -48,9 +48,9 @@ foreach (phpfastcache_glob_recursive(PFC_TEST_DIR . DIRECTORY_SEPARATOR . '*.tes
 }
 
 if ($status === 0) {
-    echo "\e[32m[OK] The build has passed successfully";
+    echo "\e[32m[OK] The build has passed successfully\e[0m";
 } else {
-    echo "\e[31m[KO] The build has failed miserably";
+    echo "\e[31m[KO] The build has failed miserably\e[0m";
 }
 
 exit($status);

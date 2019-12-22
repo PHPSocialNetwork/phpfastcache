@@ -25,12 +25,12 @@ jobs:
 
       # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
       # Docs: https://getcomposer.org/doc/articles/scripts.md
-      - name: Run lagacy tests
+      - name: Run tests on PHP 7.3
         run: php -f ./bin/ci/run_tests.php
       - name: Setup PHP 7.4
         uses: shivammathur/setup-php@1.6.2
         with:
           php-version: '7.4'
           coverage: none
-      - name: Run lagacy tests
+      - name: Run tests on PHP 7.4
         run: php -f ./bin/ci/run_tests.php

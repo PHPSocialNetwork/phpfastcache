@@ -1,0 +1,29 @@
+name: Greetings
+
+on: [pull_request, issues]
+
+jobs:
+  greeting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: >
+              Hello curious contributor !
+              Since it seems to be your first contribution, make sure that you've been:
+              - Reading and searching out our [WIKI](https://github.com/PHPSocialNetwork/phpfastcache/wiki)
+              - Reading and agreed with our [Code Of Conduct](https://github.com/PHPSocialNetwork/phpfastcache/blob/master/CODE_OF_CONDUCT.md)
+              - Reading and understood our [Coding Guideline](https://github.com/PHPSocialNetwork/phpfastcache/blob/master/CODING_GUIDELINE.md)
+              - Reading our [README](https://github.com/PHPSocialNetwork/phpfastcache/blob/master/README.md)
+            If everything looks unclear to you, tell us what 😄
+            The Phpfastcache Team
+          pr-message: >
+              Hello curious contributor !
+              Since it seems to be your first contribution, make sure that you've been:
+              - Reading and searching out our [WIKI](https://github.com/PHPSocialNetwork/phpfastcache/wiki)
+              - Reading and agreed with our [Code Of Conduct](https://github.com/PHPSocialNetwork/phpfastcache/blob/master/CODE_OF_CONDUCT.md)
+              - Reading and understood our [Coding Guideline](https://github.com/PHPSocialNetwork/phpfastcache/blob/master/CODING_GUIDELINE.md)
+              - Reading our [README](https://github.com/PHPSocialNetwork/phpfastcache/blob/master/README.md)
+            If everything looks unclear to you, tell us what 😄
+            The Phpfastcache Team

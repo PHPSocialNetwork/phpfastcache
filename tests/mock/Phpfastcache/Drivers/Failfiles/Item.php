@@ -11,17 +11,15 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
-declare(strict_types=1);
 
-namespace Phpfastcache\Cluster\Drivers\MasterSlaveReplication;
-
-use Phpfastcache\Cluster\ItemAbstract;
+namespace Phpfastcache\Drivers\Failfiles;
+use Phpfastcache\Drivers\Files\Item as FilesItem;
 
 /**
- * Class ClusterItem
- * @package Phpfastcache\Cluster
+ * Class Item
+ * @package Phpfastcache\Drivers\Files2
  */
-class Item extends ItemAbstract
+class Item extends FilesItem
 {
 
 }

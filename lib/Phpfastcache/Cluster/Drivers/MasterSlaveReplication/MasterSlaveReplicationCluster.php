@@ -76,6 +76,11 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
             return $operation($this->getMasterPool());
         }catch(PhpfastcacheExceptionInterface $e){
             try{
+                $this->eventManager->dispatch(
+                    'CacheReplicationSlaveFallback',
+                    $this,
+                    \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']
+                );
                 return $operation($this->getSlavePool());
             }catch(PhpfastcacheExceptionInterface $e){
                 throw new PhpfastcacheReplicationException('Master and Slave thrown an exception !');
@@ -129,8 +134,8 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
      */
     public function save(CacheItemInterface $item)
     {
-        return $this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool) use ($item){
-            return $pool->save($item);
+        return $this->makeOperation(function (ExtendedCacheItemPoolInterface $pool) use ($item){
+            return $pool->save($this->getStandardizedItem($item, $pool));
         });
     }
 

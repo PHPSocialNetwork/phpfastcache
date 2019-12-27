@@ -23,7 +23,7 @@ const PFC_LIB_DIR = __DIR__ . '/../../../lib/';
 /**
  * Register Autoload
  */
-\spl_autoload_register(function ($entity) {
+\spl_autoload_register(static function ($entity) {
     $module = \explode('\\', $entity, 2);
     if (!\in_array($module[0], ['Phpfastcache', 'Psr'])) {
         /**

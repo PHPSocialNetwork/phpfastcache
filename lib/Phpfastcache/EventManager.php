@@ -31,6 +31,8 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
  * @method Void onCacheClearItem() onCacheClearItem(Callable $callable)
  * @method Void onCacheWriteFileOnDisk() onCacheWriteFileOnDisk(Callable $callable)
  * @method Void onCacheGetItemInSlamBatch() onCacheGetItemInSlamBatch(Callable $callable)
+ * == ItemPool Events (Cluster) ==
+ * @method Void onCacheReplicationSlaveFallback() onCacheReplicationSlaveFallback(Callable $callable)
  *
  * == Item Events ==
  * @method Void onCacheItemSet() onCacheItemSet(Callable $callable)

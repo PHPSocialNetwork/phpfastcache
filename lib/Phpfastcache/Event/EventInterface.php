@@ -18,6 +18,10 @@ namespace Phpfastcache\Event;
 
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
+/**
+ * Interface EventInterface
+ * @package Phpfastcache\Event
+ */
 interface EventInterface
 {
     /**

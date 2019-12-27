@@ -15,6 +15,8 @@ declare(strict_types=1);
 namespace Phpfastcache\Cluster;
 
 use Phpfastcache\Cluster\Drivers\FullReplication\FullReplicationCluster;
+use Phpfastcache\Cluster\Drivers\MasterSlaveReplication\MasterSlaveReplicationCluster;
+use Phpfastcache\Cluster\Drivers\SemiReplication\SemiReplicationCluster;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\DriverBaseTrait;
@@ -37,9 +39,9 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
 
     public const STRATEGY = [
         AggregatorInterface::STRATEGY_FULL_REPLICATION => FullReplicationCluster::class,
-        /*        AggregatorInterface::STRATEGY_SEMI_REPLICATION => SemiReplicationCluster::class,
-                AggregatorInterface::STRATEGY_MASTER_SLAVE => MasterSlaveReplicationCluster::class,
-                AggregatorInterface::STRATEGY_RANDOM_REPLICATION => RandomReplicationCluster::class,*/
+        AggregatorInterface::STRATEGY_SEMI_REPLICATION => SemiReplicationCluster::class,
+        AggregatorInterface::STRATEGY_MASTER_SLAVE => MasterSlaveReplicationCluster::class,
+        // AggregatorInterface::STRATEGY_RANDOM_REPLICATION => RandomReplicationCluster::class,
     ];
 
     /**
@@ -57,7 +59,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
      * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException
      * @throws \ReflectionException
      */
-    public function __construct(string $clusterName, ExtendedCacheItemPoolInterface ... $driverPools)
+    public function __construct(string $clusterName, ExtendedCacheItemPoolInterface ...$driverPools)
     {
         if (\count($driverPools) < 2) {
             throw new PhpfastcacheInvalidArgumentException('A cluster requires at least two pools to be working.');
@@ -65,6 +67,55 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
         $this->driverPools = $driverPools;
         $this->__parentConstruct(new ConfigurationOption(), $clusterName);
         $this->setEventManager(EventManager::getInstance());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getItems(array $keys = [])
+    {
+        $items = [];
+
+        foreach ($keys as $key) {
+            $items[] = $this->getItem($key);
+        }
+
+        return $items;
+    }
+    /**
+     * Shared method used by All Clusters
+     */
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteItems(array $keys)
+    {
+        $hasDeletedOnce = false;
+        foreach ($this->driverPools as $driverPool) {
+            if ($result = $driverPool->deleteItems($keys)) {
+                $hasDeletedOnce = $result;
+            }
+        }
+        // Return true only if at least one backend confirmed the "clear" operation
+        return $hasDeletedOnce;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function saveDeferred(CacheItemInterface $item)
+    {
+        /** @var ExtendedCacheItemInterface $item */
+        $hasSavedOnce = false;
+        foreach ($this->driverPools as $driverPool) {
+            $poolItem = $this->getStandardizedItem($item, $driverPool);
+            if ($result = $driverPool->saveDeferred($poolItem)) {
+                $hasSavedOnce = $result;
+            }
+        }
+        // Return true only if at least one backend confirmed the "commit" operation
+        return $hasSavedOnce;
     }
 
     /**
@@ -99,6 +150,19 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
     }
 
     /**
+     * Interfaced methods that needs to be faked
+     */
+
+    /**
+     * @return DriverStatistic
+     * @throws \Cassandra\Exception
+     */
+    public function getStats(): DriverStatistic
+    {
+        // @todo later :)
+    }
+
+    /**
      * @return bool
      */
     protected function driverCheck(): bool
@@ -115,16 +179,12 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return null|array [
-     *      'd' => 'THE ITEM DATA'
-     *      't' => 'THE ITEM DATE EXPIRATION'
-     *      'g' => 'THE ITEM TAGS'
-     * ]
-     *
+     * @param CacheItemInterface $item
+     * @return null
      */
     protected function driverRead(CacheItemInterface $item)
     {
+        return null;
     }
 
     /**
@@ -133,6 +193,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
      */
     protected function driverWrite(CacheItemInterface $item): bool
     {
+        return true;
     }
 
     /**
@@ -141,6 +202,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
      */
     protected function driverDelete(CacheItemInterface $item): bool
     {
+        return true;
     }
 
     /**
@@ -148,17 +210,6 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
      */
     protected function driverClear(): bool
     {
-    }
-
-    /**
-     * @return bool
-     */
-    /**
-     * @return DriverStatistic
-     * @throws \Cassandra\Exception
-     */
-    public function getStats(): DriverStatistic
-    {
-
+        return true;
     }
 }

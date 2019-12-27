@@ -7,21 +7,22 @@ ClusterFullReplication.test.php<?php
 
 use Phpfastcache\Api;
 use Phpfastcache\CacheManager;
+use Phpfastcache\Cluster\AggregatorInterface;
 use Phpfastcache\Cluster\ClusterAggregator;
 use Phpfastcache\Exceptions\PhpfastcacheRootException;
 use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
-$testHelper = new TestHelper('Full Replication Cluster');
+$testHelper = new TestHelper('Semi Replication Cluster');
 
 
 $clusterAggregator = new ClusterAggregator('test_20');
 $clusterAggregator->aggregateDriver(CacheManager::getInstance('Files'));
 $clusterAggregator->aggregateDriver(CacheManager::getInstance('Redis'));
-$clusterAggregator->aggregateDriver(CacheManager::getInstance('Memcache'));
+$clusterAggregator->aggregateDriver(CacheManager::getInstance('Sqlite'));
 
-$cluster = $clusterAggregator->getCluster();
+$cluster = $clusterAggregator->getCluster(AggregatorInterface::STRATEGY_SEMI_REPLICATION);
 $cacheItem = $cluster->getItem('test-test');
 
 /*var_dump($cacheItem->get());

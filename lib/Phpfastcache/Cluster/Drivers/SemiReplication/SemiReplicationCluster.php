@@ -12,62 +12,45 @@
  */
 declare(strict_types=1);
 
-namespace Phpfastcache\Cluster\Drivers\FullReplication;
+namespace Phpfastcache\Cluster\Drivers\SemiReplication;
 
 use Phpfastcache\Cluster\ClusterPoolAbstract;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Exceptions\PhpfastcacheExceptionInterface;
+use Phpfastcache\Exceptions\PhpfastcacheReplicationException;
 use Psr\Cache\CacheItemInterface;
 
 /**
  * Class FullReplicationCluster
  * @package Phpfastcache\Cluster\Drivers\FullReplication
  */
-class FullReplicationCluster extends ClusterPoolAbstract
+class SemiReplicationCluster extends ClusterPoolAbstract
 {
-
     /**
      * @inheritDoc
      */
     public function getItem($key)
     {
-        /** @var \Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface[] $poolsToResync */
-        $poolsToResync = [];
         /** @var \Phpfastcache\Core\Item\ExtendedCacheItemInterface $item */
-        $item = NULL;
+        $item = null;
+        $eCount = 0;
 
         foreach ($this->driverPools as $driverPool) {
-            $poolItem = $driverPool->getItem($key);
-            if ($poolItem->isHit()) {
-                if(!$item){
-                    $item = $poolItem;
-                    continue;
-                }
-
-                $itemData = $item->get();
-                $poolItemData = $poolItem->get();
-
-                if (\is_object($itemData)
-                ) {
-                    if ($item->get() != $poolItemData) {
-                        $poolsToResync[] = $driverPool;
-                    }
-                } else {
-                    if ($item->get() !== $poolItemData) {
-                        $poolsToResync[] = $driverPool;
+            try {
+                $poolItem = $driverPool->getItem($key);
+                if ($poolItem->isHit()) {
+                    if (!$item) {
+                        $item = $poolItem;
+                        break;
                     }
                 }
-            } else {
-                $poolsToResync[] = $driverPool;
+            } catch (PhpfastcacheExceptionInterface $e) {
+                $eCount++;
             }
         }
 
-        if ($item && $item->isHit() && \count($poolsToResync) < \count($this->driverPools)) {
-            foreach ($poolsToResync as $poolToResync) {
-                $poolItem = $poolToResync->getItem($key);
-                $poolItem->set($item->get())
-                    ->expiresAt($item->getExpirationDate());
-                $poolToResync->save($poolItem);
-            }
+        if (\count($this->driverPools) <= $eCount) {
+            throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
 
         return $this->getStandardizedItem($item ?? new Item($this, $key), $this);
@@ -78,11 +61,20 @@ class FullReplicationCluster extends ClusterPoolAbstract
      */
     public function hasItem($key)
     {
+        $eCount = 0;
         foreach ($this->driverPools as $driverPool) {
-            $poolItem = $driverPool->getItem($key);
-            if ($poolItem->isHit()) {
-                return true;
+            try {
+                $poolItem = $driverPool->getItem($key);
+                if ($poolItem->isHit()) {
+                    return true;
+                }
+            } catch (PhpfastcacheExceptionInterface $e) {
+                $eCount++;
             }
+        }
+
+        if (\count($this->driverPools) <= $eCount) {
+            throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
 
         return false;
@@ -94,11 +86,22 @@ class FullReplicationCluster extends ClusterPoolAbstract
     public function clear()
     {
         $hasClearedOnce = false;
+        $eCount = 0;
+
         foreach ($this->driverPools as $driverPool) {
-            if ($result = $driverPool->clear()) {
-                $hasClearedOnce = $result;
+            try {
+                if ($result = $driverPool->clear()) {
+                    $hasClearedOnce = $result;
+                }
+            } catch (PhpfastcacheExceptionInterface $e) {
+                $eCount++;
             }
         }
+
+        if (\count($this->driverPools) <= $eCount) {
+            throw new PhpfastcacheReplicationException('Every pools thrown an exception');
+        }
+
         // Return true only if at least one backend confirmed the "clear" operation
         return $hasClearedOnce;
     }
@@ -109,10 +112,20 @@ class FullReplicationCluster extends ClusterPoolAbstract
     public function deleteItem($key)
     {
         $hasDeletedOnce = false;
+        $eCount = 0;
+
         foreach ($this->driverPools as $driverPool) {
-            if ($result = $driverPool->deleteItem($key)) {
-                $hasDeletedOnce = $result;
+            try {
+                if ($result = $driverPool->deleteItem($key)) {
+                    $hasDeletedOnce = $result;
+                }
+            } catch (PhpfastcacheExceptionInterface $e) {
+                $eCount++;
             }
+        }
+
+        if (\count($this->driverPools) <= $eCount) {
+            throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
         // Return true only if at least one backend confirmed the "clear" operation
         return $hasDeletedOnce;
@@ -125,11 +138,21 @@ class FullReplicationCluster extends ClusterPoolAbstract
     {
         /** @var ExtendedCacheItemInterface $item */
         $hasSavedOnce = false;
+        $eCount = 0;
+
         foreach ($this->driverPools as $driverPool) {
-            $poolItem = $this->getStandardizedItem($item, $driverPool);
-            if ($result = $driverPool->save($poolItem)) {
-                $hasSavedOnce = $result;
+            try {
+                $poolItem = $this->getStandardizedItem($item, $driverPool);
+                if ($result = $driverPool->save($poolItem)) {
+                    $hasSavedOnce = $result;
+                }
+            } catch (PhpfastcacheExceptionInterface $e) {
+                $eCount++;
             }
+        }
+
+        if (\count($this->driverPools) <= $eCount) {
+            throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
         // Return true only if at least one backend confirmed the "commit" operation
         return $hasSavedOnce;
@@ -158,10 +181,20 @@ class FullReplicationCluster extends ClusterPoolAbstract
     public function commit()
     {
         $hasCommitOnce = false;
+        $eCount = 0;
+
         foreach ($this->driverPools as $driverPool) {
-            if ($result = $driverPool->commit()) {
-                $hasCommitOnce = $result;
+            try {
+                if ($result = $driverPool->commit()) {
+                    $hasCommitOnce = $result;
+                }
+            } catch (PhpfastcacheExceptionInterface $e) {
+                $eCount++;
             }
+        }
+
+        if (\count($this->driverPools) <= $eCount) {
+            throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
         // Return true only if at least one backend confirmed the "commit" operation
         return $hasCommitOnce;

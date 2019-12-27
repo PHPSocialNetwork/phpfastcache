@@ -93,7 +93,12 @@ interface AggregatorInterface {
   public function aggregateNewDriver(string $driverName, ConfigurationOption $driverConfig = NULL): void;
 
   /**
-   * @param \Phpfastcache\Cluster\AggregatablePoolInterface $driverName
+   * @param \Phpfastcache\Cluster\AggregatablePoolInterface $driverPool
    */
-  public function aggregateDriver(AggregatablePoolInterface $driverName): void;
+  public function aggregateDriver(AggregatablePoolInterface $driverPool): void;
+
+    /**
+     * @param \Phpfastcache\Cluster\AggregatablePoolInterface $driverPool
+     */
+    public function disaggregateDriver(AggregatablePoolInterface $driverPool): void;
 }

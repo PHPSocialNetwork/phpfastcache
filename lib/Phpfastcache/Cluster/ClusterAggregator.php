@@ -107,6 +107,25 @@ class ClusterAggregator implements AggregatorInterface
     }
 
     /**
+     * @param \Phpfastcache\Cluster\AggregatablePoolInterface $driverPool
+     *
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheLogicException
+     */
+    public function disaggregateDriver(AggregatablePoolInterface $driverPool): void
+    {
+        if ($this->cluster) {
+            throw new PhpfastcacheLogicException('The cluster has been already build, cannot disaggregate pools.');
+        }
+
+        $splHash = \spl_object_hash($driverPool);
+        if (isset($this->driverPools[$splHash])) {
+            unset($this->driverPools[$splHash]);
+        } else {
+            throw new PhpfastcacheLogicException('This pool was not aggregated !');
+        }
+    }
+
+    /**
      * @param int $strategy
      *
      * @return \Phpfastcache\Cluster\ClusterPoolInterface

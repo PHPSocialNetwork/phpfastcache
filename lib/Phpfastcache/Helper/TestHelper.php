@@ -73,7 +73,7 @@ class TestHelper
 
         $this->printText('[PhpFastCache CORE v' . Api::getPhpFastCacheVersion() . Api::getPhpFastCacheGitHeadHash() . ']', true);
         $this->printText('[PhpFastCache API v' . Api::getVersion() . ']', true);
-        $this->printText('[PHP v' . PHP_VERSION . ']', true);
+        $this->printText('[PHP v' . PHP_VERSION . ' with: ' .  \implode(', ', \get_loaded_extensions()) . ']', true);
         $this->printText("[Begin Test: '{$this->testName}']");
         $this->printText('---');
 

@@ -78,7 +78,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         if ($item instanceof Item) {
             $ttl = $item->getTtl();
 
-            return (bool) apcu_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
+            return (bool) apcu_store($item->getKey(), $this->encode($this->driverPreWrap($item)), ($ttl > 0 ? $ttl : 0));
         }
 
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
@@ -95,7 +95,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             return null;
         }
 
-        return $data;
+        return $this->decode($data);
     }
 
     /**

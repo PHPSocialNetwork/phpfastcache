@@ -9,6 +9,7 @@ jobs:
         with:
           php-version: '7.3'
           coverage: none
+          ini-values: apc.enabled=1, apc.shm_size=32M, apc.ttl=7200, apc.enable_cli=1, apc.serializer=php
       - name: Setup Memcached server
         uses: niden/actions-memcached@v7
       - name: Setup Redis server
@@ -32,5 +33,6 @@ jobs:
         with:
           php-version: '7.4'
           coverage: none
+          ini-values: apc.enabled=1, apc.shm_size=32M, apc.ttl=7200, apc.enable_cli=1, apc.serializer=php
       - name: Run tests on PHP 7.4
         run: php -f ./bin/ci/run_tests.php

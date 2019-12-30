@@ -80,7 +80,7 @@ class TestHelper
         }
 
         $loadedExtensions = get_loaded_extensions();
-        sort($loadedExtensions);
+        natcasesort($loadedExtensions);
         $this->printText('[PhpFastCache CORE v' . Api::getPhpFastCacheVersion() . Api::getPhpFastCacheGitHeadHash() . ']', true);
         $this->printText('[PhpFastCache API v' . Api::getVersion() . ']', true);
         $this->printText('[PHP v' . PHP_VERSION . ' with: ' . implode(', ', $loadedExtensions) . ']', true);

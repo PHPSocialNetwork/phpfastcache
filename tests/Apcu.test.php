@@ -24,6 +24,5 @@ require_once __DIR__ . '/mock/Autoload.php';
 $testHelper = new TestHelper('Apcu test (CRUD)');
 $pool = CacheManager::getInstance('Apcu');
 $pool->clear();
-// $testHelper->runCRUDTests($pool);
-$testHelper->printSkipText('Suspended test');
+$testHelper->runCRUDTests($pool);
 $testHelper->terminateTest();

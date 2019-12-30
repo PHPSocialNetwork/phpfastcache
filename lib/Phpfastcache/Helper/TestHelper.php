@@ -386,13 +386,13 @@ class TestHelper
         $this->printInfoText('Re-fetching item by its tag...');
         $cacheItems = $pool->getItemsByTag($cacheTag);
 
-        if (isset($cacheItems[0]) && $cacheItems[0]->getKey() === $cacheKey) {
+        if (isset($cacheItems[$cacheKey]) && $cacheItems[$cacheKey]->getKey() === $cacheKey) {
             $this->printPassText('The pool successfully retrieved the cache item.');
         } else {
             $this->printFailText('The pool failed to retrieve the cache item.');
             return;
         }
-        $cacheItem = $cacheItems[0];
+        $cacheItem = $cacheItems[$cacheKey];
 
         if ($cacheItem->get() === $cacheValue) {
             $this->printPassText('The pool successfully retrieved the expected value.');

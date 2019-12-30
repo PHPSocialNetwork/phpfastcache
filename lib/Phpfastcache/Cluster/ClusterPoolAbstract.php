@@ -89,7 +89,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
         $items = [];
 
         foreach ($keys as $key) {
-            $items[] = $this->getItem($key);
+            $items[$key] = $this->getItem($key);
         }
 
         return $items;

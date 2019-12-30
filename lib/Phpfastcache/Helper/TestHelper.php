@@ -375,7 +375,7 @@ class TestHelper
             $this->printPassText('The pool successfully saved an item.');
         } else {
             $this->printFailText('The pool failed to save an item.');
-
+            return;
         }
 
         /***

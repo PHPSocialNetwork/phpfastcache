@@ -76,7 +76,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            $ttl = $item->getExpirationDate()->getTimestamp() - time();
+            $ttl = $item->getTtl();
 
             return (bool) apcu_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
         }

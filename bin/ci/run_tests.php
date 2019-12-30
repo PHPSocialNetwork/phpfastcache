@@ -4,7 +4,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 declare(strict_types=1);
-require '../../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 define('PFC_TEST_DIR', \realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tests'));
 

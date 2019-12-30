@@ -79,9 +79,11 @@ class TestHelper
             header('Content-Type: text/plain, true');
         }
 
+        $loadedExtensions = get_loaded_extensions();
+        sort($loadedExtensions);
         $this->printText('[PhpFastCache CORE v' . Api::getPhpFastCacheVersion() . Api::getPhpFastCacheGitHeadHash() . ']', true);
         $this->printText('[PhpFastCache API v' . Api::getVersion() . ']', true);
-        $this->printText('[PHP v' . PHP_VERSION . ' with: ' . implode(', ', get_loaded_extensions()) . ']', true);
+        $this->printText('[PHP v' . PHP_VERSION . ' with: ' . implode(', ', $loadedExtensions) . ']', true);
         $this->printText("[Begin Test: '{$this->testName}']");
         $this->printText('---');
 

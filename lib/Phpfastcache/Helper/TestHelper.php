@@ -372,10 +372,10 @@ class TestHelper
             ->addTag($cacheTag);
 
         if ($pool->save($cacheItem)) {
-            $this->printPassText('The random cluster successfully saved an item.');
+            $this->printPassText('The pool successfully saved an item.');
         } else {
-            $this->printFailText('The random cluster failed to save an item.');
-            return;
+            $this->printFailText('The pool failed to save an item.');
+
         }
 
         /***

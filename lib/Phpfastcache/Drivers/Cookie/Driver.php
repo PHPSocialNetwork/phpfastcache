@@ -46,6 +46,9 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
+        if(!$this->getConfig()->isAwareOfUntrustableData()){
+            throw new PhpfastcacheDriverException('You have to setup the config "awareOfUntrustableData" to "TRUE" to confirm that you are aware that this driver does not use reliable storage as it may be corrupted by end-user.');
+        }
         return function_exists('setcookie');
     }
 
@@ -99,7 +102,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverConnect(): bool
     {
-        return !(!array_key_exists('phpFastCache', $_COOKIE) && !@setcookie('phpFastCache', '1', 10));
+        return !(!array_key_exists('_pfc', $_COOKIE) && !@setcookie('_pfc', '1', 10));
     }
 
     /**

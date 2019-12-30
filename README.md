@@ -1,10 +1,10 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Latest Stable Version](https://img.shields.io/packagist/v/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![License](https://img.shields.io/packagist/l/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Coding Standards](https://img.shields.io/badge/CI-PSR6-orange.svg?maxAge=86400)](https://github.com/php-fig/cache)  [![Coding Standards](https://img.shields.io/badge/CS-PSR16-orange.svg?maxAge=86400)](https://github.com/php-fig/simple-cache)    
 [![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/?branch=master) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=master)](https://travis-ci.org/PHPSocialNetwork/phpfastcache) [![Semver compliant](https://img.shields.io/badge/Semver-2.0.0-yellow.svg?maxAge=86400)](https://semver.org/spec/v2.0.0.html) [![Patreon](https://img.shields.io/badge/Support%20us%20on-Patreon-f96854.svg?maxAge=86400)](https://www.patreon.com/geolim4)
 
-#### :warning: Please note that the V7 is a major (BC breaking) update of PhpFastCache !
-> As the V7 is **absolutely** not compatible with previous versions, please read carefully the [migration guide](./docs/migration/MigratingFromV6ToV7.md) to ensure you the smoothest migration possible.
+#### :warning: Please note that the V8 is an important (with small BC breaking) update of PhpFastCache !
+> As the V8 is **relatively** not compatible with previous versions, please read carefully the [migration guide](./docs/migration/MigratingFromV7ToV8.md) to ensure you the smoothest migration possible.
 One of the biggest change is the configuration system which is now an object that replace the primitive array that we used to implement back then. 
-Also please note that the V7 requires at least PHP7 or higher to work properly.
+Also please note that the V8 requires at least PHP7.3 or higher to work properly.
 
 ---------------------------
 Simple Yet Powerful PHP Caching Class
@@ -19,25 +19,27 @@ This ensure you that the library is completely reliable when it come to manipula
 ### Supported drivers at this day *
 :bulb: Feel free to propose a driver by making a new **[Pull Request](https://github.com/PHPSocialNetwork/phpfastcache/compare)**, they are welcome !
 
-|      Regular drivers            |     High performances drivers      |    Development drivers        |
-|---------------------------------|------------------------------------|-------------------------------|
-|  `Apc(u)`                       | `Cassandra`                        | `Devnull`                     |
-|  `Cookie`                       | `CouchBase`                        | `Devfalse`                    |
-|  `Files`                        | `Couchdb`                          | `Devtrue`                     |
-|  `Leveldb` :question:           | `Mongodb`                          | `Memstatic`                   |
-|  `Memcache(d)`                  | `Predis`                           |                               |
-|  `Sqlite`                       | `Redis`                            |                               |
-|  `Wincache` :question:          | `Riak`                             |                               |
-|  `Xcache` :question:            | `Ssdb`                             |                               |
-|  `Zend Disk Cache`              | `Zend Memory Cache`                |                               |
+|      Regular drivers            |     High performances drivers      |    Development drivers        |    Cluster-Aggregated drivers     |
+|---------------------------------|------------------------------------|-------------------------------|-----------------------------------|
+|  `Apcu` *(APC support removed)* | `Cassandra`                        | `Devnull`                     | `FullReplicationCluster`          |
+|  `Cookie`                       | `CouchBase`                        | `Devfalse`                    | `SemiReplicationCluster`          |
+|  `Files`                        | `Couchdb`                          | `Devtrue`                     | `MasterSlaveReplicationCluster`   |
+|  `Leveldb`                      | `Mongodb`                          | `Memstatic`                   | `RandomReplicationCluster`        |
+|  `Memcache(d)`                  | `Predis`                           |                               |                                   |
+|  `Sqlite`                       | `Redis`                            |                               |                                   |
+|  `Wincache`                     | `Riak`                             |                               |                                   |
+|  `Zend Disk Cache`              | `Ssdb`                             |                               |                                   |
+|                                 | `Zend Memory Cache`                |                               |                                   |
 
 \* Driver descriptions available in DOCS/DRIVERS.md
 
-:question: Please note that as of PHP7 some php extensions were not yet updated (and will may not), we keep the code here but there's no guarantee that they are still working especially due to the cores changes introduced by Opcache.
+Please note that as of PHP7 some php extensions were not yet updated (and will may not), we keep the code here but there's no guarantee that they are still working especially due to the cores changes introduced by Opcache.
+As of the **V8** every abandoned backend drivers have been removed definitely from Phpfastcache.
 
 ### Symfony/Drupal developers are not forgotten !
-Starting with v5, phpFastCache comes with a [Symfony Bundle](https://github.com/PHPSocialNetwork/phpfastcache-bundle).
+Starting with v5, Phpfastcache comes with a [Symfony Bundle](https://github.com/PHPSocialNetwork/phpfastcache-bundle).
 It is now a mature project Flex -ready, so feel free to give at try and report any bug (if any).
+The Phpfastcache **V8** is compatible as of the v4 of the phpfastcache bundle.
 
 Also a [Drupal 8 Module](https://github.com/PHPSocialNetwork/phpfastcache-drupal) is currently in development, add it to your starred projects to get notified of the first public release. 
 
@@ -248,6 +250,7 @@ EventManager::getInstance()->onCacheGetItem(function(ExtendedCacheItemPoolInterf
 EventManager::getInstance()->unbindEventCallback('onCacheGetItem', 'myCallbackName');
 
 ```
+:new: As of the **V8** you can simply subscribe to **every** events of Phpfastcache.
 
 More information about the implementation and the events are available on the [Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Introducing-to-events)
 
@@ -258,9 +261,16 @@ Introducing new helpers
 
 - The [ActOnAll Helper](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Act-on-all-instances) to help you to act on multiple instance at once.
 - The [CacheConditional Helper](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Cache-Conditional) to help you to make the basic conditional statement more easier.
-- The [Psr16 adapter](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Psr16-adapter) to keep it simple as explained above.
+
+#### Important note:
+- The [Psr16 adapter](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Psr16-adapter) previously introduced in **V6** have been removed in **V8** in profit of aggregated cluster support.
 
 May more will come in the future, feel free to contribute !
+
+---------------------------
+Introducing aggregated cluster support
+---------------------------
+`//@todo here`
 
 ---------------------------
 As Fast To Implement As Opening a Beer
@@ -329,5 +339,5 @@ echo implode('<br />', $CachedString->get());// Will echo your product list
 #### :zap: Step 3: Enjoy ! Your website is now faster than lightning !
 For curious developers, there is a lot of other examples available [here](./docs/examples).
 
-#### :boom: phpFastCache support
+#### :boom: Phpfastcache support
 Found an issue or have an idea ? Come **[here](https://github.com/PHPSocialNetwork/phpfastcache/issues)** and let us know !

@@ -24,7 +24,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  */
 class Api
 {
-    protected static $version = '2.0.4';
+    protected static $version = '3.0.0-rc';
 
     /**
      * Api constructor.
@@ -40,6 +40,10 @@ class Api
      * based on changes of:
      * - ExtendedCacheItemPoolInterface
      * - ExtendedCacheItemInterface
+     * - AggregatablePoolInterface
+     * - AggregatorInterface
+     * - ClusterPoolInterface
+     * - EventManagerInterface
      *
      * @see  https://semver.org/
      * @return string

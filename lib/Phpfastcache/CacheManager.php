@@ -62,7 +62,6 @@ use Phpfastcache\Util\ClassNamespaceResolverTrait;
  * Class CacheManager
  * @package phpFastCache
  *
- * @method static ExtendedCacheItemPoolInterface Apc() Apc($config = []) Return a driver "Apc" instance
  * @method static ExtendedCacheItemPoolInterface Apcu() Apcu($config = []) Return a driver "Apcu" instance
  * @method static ExtendedCacheItemPoolInterface Cassandra() Cassandra($config = []) Return a driver "Cassandra" instance
  * @method static ExtendedCacheItemPoolInterface Cookie() Cookie($config = []) Return a driver "Cookie" instance
@@ -81,7 +80,6 @@ use Phpfastcache\Util\ClassNamespaceResolverTrait;
  * @method static ExtendedCacheItemPoolInterface Sqlite() Sqlite($config = []) Return a driver "Sqlite" instance
  * @method static ExtendedCacheItemPoolInterface Ssdb() Ssdb($config = []) Return a driver "Ssdb" instance
  * @method static ExtendedCacheItemPoolInterface Wincache() Wincache($config = []) Return a driver "Wincache" instance
- * @method static ExtendedCacheItemPoolInterface Xcache() Xcache($config = []) Return a driver "Xcache" instance
  * @method static ExtendedCacheItemPoolInterface Zenddisk() Zenddisk($config = []) Return a driver "Zend disk cache" instance
  * @method static ExtendedCacheItemPoolInterface Zendshm() Zendshm($config = []) Return a driver "Zend memory cache" instance
  *
@@ -494,39 +492,6 @@ class CacheManager
             'Devfalse',
             'Cookie',
         ]);
-    }
-
-    /**
-     * @return array
-     * @deprecated As of V7 will be removed soon or later, use CacheManager::getDriverList() instead
-     */
-    public static function getStaticSystemDrivers(): array
-    {
-        trigger_error(sprintf('Method "%s" is deprecated as of the V7 and will be removed soon or later, use CacheManager::getDriverList() instead.',
-            __METHOD__), E_USER_DEPRECATED);
-        return [
-            'Apc',
-            'Apcu',
-            'Cassandra',
-            'Couchbase',
-            'Couchdb',
-            'Devnull',
-            'Files',
-            'Leveldb',
-            'Memcache',
-            'Memcached',
-            'Memstatic',
-            'Mongodb',
-            'Predis',
-            'Redis',
-            'Riak',
-            'Ssdb',
-            'Sqlite',
-            'Wincache',
-            'Xcache',
-            'Zenddisk',
-            'Zendshm',
-        ];
     }
 
     /**

@@ -24,24 +24,23 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
  * @package phpFastCache
  *
  * == ItemPool Events ==
- * @method Void onCacheGetItem() onCacheGetItem(Callable $callable)
- * @method Void onCacheDeleteItem() onCacheDeleteItem(Callable $callable)
- * @method Void onCacheSaveItem() onCacheSaveItem(Callable $callable)
- * @method Void onCacheSaveDeferredItem() onCacheSaveDeferredItem(Callable $callable)
- * @method Void onCacheCommitItem() onCacheCommitItem(Callable $callable)
- * @method Void onCacheClearItem() onCacheClearItem(Callable $callable)
- * @method Void onCacheWriteFileOnDisk() onCacheWriteFileOnDisk(Callable $callable)
- * @method Void onCacheGetItemInSlamBatch() onCacheGetItemInSlamBatch(Callable $callable)
+ * @method Void onCacheGetItem() onCacheGetItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheDeleteItem() onCacheDeleteItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheSaveItem() onCacheSaveItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheSaveDeferredItem() onCacheSaveDeferredItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheCommitItem() onCacheCommitItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheClearItem() onCacheClearItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheWriteFileOnDisk() onCacheWriteFileOnDisk(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheGetItemInSlamBatch() onCacheGetItemInSlamBatch(Callable $callable, ?string $callbackName = null)
  *
  * == ItemPool Events (Cluster) ==
- * @method Void onCacheReplicationSlaveFallback() onCacheReplicationSlaveFallback(Callable $callable)
- * @method Void onCacheReplicationRandomPoolChosen() onCacheReplicationRandomPoolChosen(Callable $callable)
+ * @method Void onCacheReplicationSlaveFallback() onCacheReplicationSlaveFallback(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheReplicationRandomPoolChosen() onCacheReplicationRandomPoolChosen(Callable $callable, ?string $callbackName = null)
  *
  * == Item Events ==
- * @method Void onCacheItemSet() onCacheItemSet(Callable $callable)
- * @method Void onCacheItemExpireAt() onCacheItemExpireAt(Callable $callable)
- * @method Void onCacheItemExpireAfter() onCacheItemExpireAfter(Callable $callable)
- *
+ * @method Void onCacheItemSet() onCacheItemSet(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheItemExpireAt() onCacheItemExpireAt(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheItemExpireAfter() onCacheItemExpireAfter(Callable $callable, ?string $callbackName = null)
  *
  */
 class EventManager implements EventManagerInterface

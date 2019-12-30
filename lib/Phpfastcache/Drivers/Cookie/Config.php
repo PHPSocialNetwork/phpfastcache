@@ -19,5 +19,23 @@ use Phpfastcache\Config\ConfigurationOption;
 
 class Config extends ConfigurationOption
 {
+    protected $awareOfUntrustableData = false;
 
+    /**
+     * @return bool
+     */
+    public function isAwareOfUntrustableData(): bool
+    {
+        return $this->awareOfUntrustableData;
+    }
+
+    /**
+     * @param bool $awareOfUntrustableData
+     * @return Config
+     */
+    public function setAwareOfUntrustableData(bool $awareOfUntrustableData): Config
+    {
+        $this->awareOfUntrustableData = $awareOfUntrustableData;
+        return $this;
+    }
 }

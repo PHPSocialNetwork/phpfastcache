@@ -48,6 +48,11 @@ class TestHelper
     protected $timestamp;
 
     /**
+     * @var \League\CLImate\CLImate
+     */
+    protected $climate;
+
+    /**
      * TestHelper constructor.
      *
      * @param string $testName
@@ -58,6 +63,8 @@ class TestHelper
     {
         $this->timestamp = microtime(true);
         $this->testName = $testName;
+        $this->climate = new \League\CLImate\CLImate;
+        $this->climate->forceAnsiOn();
 
         /**
          * Catch all uncaught exception
@@ -130,9 +137,9 @@ class TestHelper
             $string = "[{$prefix}] {$string}";
         }
         if (!$strtoupper) {
-            print trim($string) . PHP_EOL;
+            $this->climate->out(trim($string));
         } else {
-            print strtoupper(trim($string) . PHP_EOL);
+            $this->climate->out(strtoupper(trim($string)));
         }
 
         return $this;
@@ -162,7 +169,7 @@ class TestHelper
      */
     public function printNoteText(string $string): self
     {
-        $this->printText($string, false, "\e[34mNOTE\e[0m");
+        $this->printText($string, false, '<blue>NOTE</blue>');
 
         return $this;
     }
@@ -173,7 +180,7 @@ class TestHelper
      */
     public function printNewLine(int $count = 1): self
     {
-        print str_repeat(PHP_EOL, $count);
+        $this->climate->out(str_repeat(PHP_EOL, $count));
         return $this;
     }
 
@@ -246,7 +253,7 @@ class TestHelper
      */
     public function printSkipText(string $string): self
     {
-        $this->printText($string, false, "\e[33mSKIP\e[0m");
+        $this->printText($string, false, '<yellow>SKIP</yellow>');
 
         return $this;
     }
@@ -258,7 +265,7 @@ class TestHelper
      */
     public function printFailText(string $string, bool $failsTest = true): self
     {
-        $this->printText($string, false, "\e[31mFAIL\e[0m");
+        $this->printText($string, false, '<red>FAIL</red>');
         if ($failsTest) {
             $this->exitCode = 1;
         }
@@ -318,14 +325,14 @@ class TestHelper
 
         if ($errorType === '[FATAL ERROR]') {
             $this->printFailText(sprintf(
-                "A critical error has been caught: \"%s\" in %s line %d",
+                "<red>A critical error has been caught: \"%s\" in %s line %d</red>",
                 "$errorType $errstr",
                 $errfile,
                 $errline
             ));
         } else {
             $this->printDebugText(sprintf(
-                "A non-critical error has been caught: \"%s\" in %s line %d",
+                "<yellow>A non-critical error has been caught: \"%s\" in %s line %d</yellow>",
                 "$errorType $errstr",
                 $errfile,
                 $errline

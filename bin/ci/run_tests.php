@@ -9,6 +9,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 define('PFC_TEST_DIR', \realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tests'));
 
 $climate = new League\CLImate\CLImate;
+$climate->forceAnsiOn();
 $status = 0;
 $dir = __DIR__;
 $driver = $argv[ 1 ] ?? 'Files';
@@ -30,21 +31,22 @@ $globCallback = static function (string $pattern, int $flags = 0) use (&$globCal
 };
 
 foreach ($globCallback(PFC_TEST_DIR . DIRECTORY_SEPARATOR . '*.test.php') as $filename) {
-    $climate->out('---');
+    $climate->backgroundLightYellow()->blue()->out('---');
     $command = "php -f {$filename} {$driver}";
-   // echo "\e[33mphpfastcache@test \e[34m" . __DIR__ . " \e[92m# \e[91m" . $command . "\e[0m\n";
     $climate->out("<yellow>phpfastcache@unit-test</yellow> <blue>{$dir}</blue> <green>#</green> <red>$command</red>");
+
     \exec($command, $output, $return_var);
-    echo "=====================================\n";
-    echo \implode("\n", $output) . "\n";
-    echo "=====================================\n";
+    $climate->out('=====================================');
+    $climate->out(\implode("\n", $output));
+    $climate->out('=====================================');
     if ($return_var === 0) {
-        echo "\e[32mProcess finished with exit code $return_var";
+        $climate->green("Process finished with exit code $return_var");
     } else {
-        echo "\e[31mProcess finished with exit code $return_var";
+        $climate->red("Process finished with exit code $return_var");
         $status = 255;
     }
-    echo \str_repeat(PHP_EOL, 3);
+
+    $climate->out('');
     /**
      * Reset $output to prevent override effects
      */
@@ -52,9 +54,9 @@ foreach ($globCallback(PFC_TEST_DIR . DIRECTORY_SEPARATOR . '*.test.php') as $fi
 }
 
 if ($status === 0) {
-    echo "\e[32m[OK] The build has passed successfully\e[0m\n\n";
+    $climate->green('[OK] The build has passed successfully');
 } else {
-    echo "\e[31m[KO] The build has failed miserably\e[0m\n\n";
+    $climate->red('[KO] The build has failed miserably');
 }
 
 exit($status);

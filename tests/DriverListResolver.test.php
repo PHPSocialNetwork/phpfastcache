@@ -9,7 +9,7 @@ use Phpfastcache\CacheManager;
 use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
-require_once __DIR__ . '/../lib/Phpfastcache/Autoload/Autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Driver list resolver');
 
 $subClasses = [

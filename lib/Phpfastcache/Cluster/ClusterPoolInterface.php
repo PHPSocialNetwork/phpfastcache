@@ -15,13 +15,16 @@ declare(strict_types=1);
 namespace Phpfastcache\Cluster;
 
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Psr\Cache\CacheItemPoolInterface;
 
 /**
  * Interface ClusterInterface
  *
  * @package Phpfastcache\Cluster
  */
-interface ClusterPoolInterface extends ExtendedCacheItemPoolInterface {
-  // TODO: Finish this interface
+interface ClusterPoolInterface extends ExtendedCacheItemPoolInterface
+{
+    /**
+     * @return ExtendedCacheItemPoolInterface[]
+     */
+    public function getClusterPools(): array;
 }

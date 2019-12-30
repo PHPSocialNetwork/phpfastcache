@@ -16,14 +16,11 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Leveldb;
 
 use LevelDB as LeveldbClient;
-use Phpfastcache\Core\Pool\{
-    DriverBaseTrait, ExtendedCacheItemPoolInterface, IO\IOHelperTrait
-};
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
-};
+use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface, IO\IOHelperTrait};
+use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Psr\Cache\CacheItemInterface;
+
 
 /**
  * Class Driver
@@ -43,27 +40,22 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     public function driverCheck(): bool
     {
-        return \extension_loaded('Leveldb');
+        return extension_loaded('Leveldb');
     }
 
     /**
-     * @return bool
-     * @throws PhpfastcacheLogicException
+     * Close connection on destruct
      */
-    protected function driverConnect(): bool
+    public function __destruct()
     {
         if ($this->instance instanceof LeveldbClient) {
-            throw new PhpfastcacheLogicException('Already connected to Leveldb database');
+            $this->instance->close();
+            $this->instance = null;
         }
-
-        $this->instance = $this->instance ?: new LeveldbClient($this->getLeveldbFile());
-
-        return true;
     }
 
-
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
@@ -77,7 +69,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -94,7 +86,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -127,7 +119,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @return string
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheCoreException
+     * @throws PhpfastcacheCoreException
      */
     public function getLeveldbFile(): string
     {
@@ -135,13 +127,17 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * Close connection on destruct
+     * @return bool
+     * @throws PhpfastcacheLogicException
      */
-    public function __destruct()
+    protected function driverConnect(): bool
     {
         if ($this->instance instanceof LeveldbClient) {
-            $this->instance->close();
-            $this->instance = null;
+            throw new PhpfastcacheLogicException('Already connected to Leveldb database');
         }
+
+        $this->instance = $this->instance ?: new LeveldbClient($this->getLeveldbFile());
+
+        return true;
     }
 }

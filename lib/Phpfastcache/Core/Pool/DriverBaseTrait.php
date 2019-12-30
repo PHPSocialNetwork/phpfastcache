@@ -15,9 +15,12 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool;
 
+use DateTime;
+use Exception;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException, PhpfastcacheDriverConnectException, PhpfastcacheLogicException};
+use ReflectionObject;
 
 
 /**
@@ -67,13 +70,13 @@ trait DriverBaseTrait
         $this->instanceId = $instanceId;
 
         if (!$this->driverCheck()) {
-            throw new PhpfastcacheDriverCheckException(\sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
+            throw new PhpfastcacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
         }
 
-        try{
+        try {
             $this->driverConnect();
-        }catch(\Exception $e){
-            throw new PhpfastcacheDriverConnectException(\sprintf(
+        } catch (Exception $e) {
+            throw new PhpfastcacheDriverConnectException(sprintf(
                 self::DRIVER_CONNECT_FAILURE,
                 $this->getDriverName(),
                 $e->getMessage(),
@@ -81,6 +84,36 @@ trait DriverBaseTrait
                 $e->getFile() ?: 'unknown file'
             ));
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getDriverName(): string
+    {
+        if (!$this->driverName) {
+            $this->driverName = ucfirst(substr(strrchr((new ReflectionObject($this))->getNamespaceName(), '\\'), 1));
+        }
+        return $this->driverName;
+    }
+
+    /**
+     * @param $optionName
+     * @return mixed
+     * @deprecated Use getConfig()->getOptionName() instead
+     */
+    public function getConfigOption($optionName)
+    {
+        trigger_error(sprintf('Method "%s" is deprecated, use "getConfig()->getOptionName()" instead', __METHOD__), E_USER_DEPRECATED);
+        return $this->getConfig()->getOption($optionName);
+    }
+
+    /**
+     * @return ConfigurationOption
+     */
+    public function getConfig(): ConfigurationOption
+    {
+        return $this->config;
     }
 
     /**
@@ -94,26 +127,6 @@ trait DriverBaseTrait
     /**
      * @return ConfigurationOption
      */
-    public function getConfig(): ConfigurationOption
-    {
-        return $this->config;
-    }
-
-
-    /**
-     * @param $optionName
-     * @return mixed
-     * @deprecated Use getConfig()->getOptionName() instead
-     */
-    public function getConfigOption($optionName)
-    {
-        \trigger_error(\sprintf('Method "%s" is deprecated, use "getConfig()->getOptionName()" instead', __METHOD__), \E_USER_DEPRECATED);
-        return $this->getConfig()->getOption($optionName);
-    }
-
-    /**
-     * @return ConfigurationOption
-     */
     public function getDefaultConfig(): ConfigurationOption
     {
         $className = self::getConfigClass();
@@ -121,40 +134,19 @@ trait DriverBaseTrait
     }
 
     /**
-     * Encode data types such as object/array
-     * for driver that does not support
-     * non-scalar value
-     * @param $data
      * @return string
      */
-    protected function encode($data): string
+    public static function getConfigClass(): string
     {
-        return \serialize($data);
+        $localConfigClass = substr(static::class, 0, strrpos(static::class, '\\')) . '\Config';
+        if (class_exists($localConfigClass) && is_a($localConfigClass, ConfigurationOption::class, true)) {
+            return $localConfigClass;
+        }
+        return ConfigurationOption::class;
     }
 
     /**
-     * Decode data types such as object/array
-     * for driver that does not support
-     * non-scalar value
-     * @param string|null $value
-     * @return mixed
-     */
-    protected function decode($value)
-    {
-        return \unserialize((string)$value);
-    }
-
-    /**
-     * Check if phpModule or CGI
-     * @return bool
-     */
-    protected function isPHPModule(): bool
-    {
-        return (\PHP_SAPI === 'apache2handler' || \strpos(\PHP_SAPI, 'handler') !== false);
-    }
-
-    /**
-     * @param \Phpfastcache\Core\Item\ExtendedCacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return array
      */
     public function driverPreWrap(ExtendedCacheItemInterface $item): array
@@ -166,12 +158,12 @@ trait DriverBaseTrait
         ];
 
         if ($this->getConfig()->isItemDetailedDate()) {
-            $wrap[self::DRIVER_MDATE_WRAPPER_INDEX] = new \DateTime();
+            $wrap[self::DRIVER_MDATE_WRAPPER_INDEX] = new DateTime();
             /**
              * If the creation date exists
              * reuse it else set a new Date
              */
-            $wrap[self::DRIVER_CDATE_WRAPPER_INDEX] = $item->getCreationDate() ?: new \DateTime();
+            $wrap[self::DRIVER_CDATE_WRAPPER_INDEX] = $item->getCreationDate() ?: new DateTime();
         } else {
             $wrap[self::DRIVER_MDATE_WRAPPER_INDEX] = null;
             $wrap[self::DRIVER_CDATE_WRAPPER_INDEX] = null;
@@ -198,10 +190,9 @@ trait DriverBaseTrait
         return $wrapper[self::DRIVER_TAGS_WRAPPER_INDEX];
     }
 
-
     /**
      * @param array $wrapper
-     * @return \DateTime
+     * @return DateTime
      */
     public function driverUnwrapEdate(array $wrapper)
     {
@@ -210,32 +201,20 @@ trait DriverBaseTrait
 
     /**
      * @param array $wrapper
-     * @return \DateTime
+     * @return DateTime
      */
     public function driverUnwrapCdate(array $wrapper)
     {
         return $wrapper[self::DRIVER_CDATE_WRAPPER_INDEX];
     }
 
-
     /**
      * @param array $wrapper
-     * @return \DateTime
+     * @return DateTime
      */
     public function driverUnwrapMdate(array $wrapper)
     {
         return $wrapper[self::DRIVER_MDATE_WRAPPER_INDEX];
-    }
-
-    /**
-     * @return string
-     */
-    public function getDriverName(): string
-    {
-        if (!$this->driverName) {
-            $this->driverName = \ucfirst(\substr(\strrchr((new \ReflectionObject($this))->getNamespaceName(), '\\'), 1));
-        }
-        return $this->driverName;
     }
 
     /**
@@ -247,7 +226,7 @@ trait DriverBaseTrait
     }
 
     /**
-     * @param \Phpfastcache\Core\Item\ExtendedCacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheLogicException
      */
@@ -258,7 +237,7 @@ trait DriverBaseTrait
          * on tags item, it can leads
          * to an infinite recursive calls
          */
-        if (\strpos($item->getKey(), self::DRIVER_TAGS_KEY_PREFIX) === 0) {
+        if (strpos($item->getKey(), self::DRIVER_TAGS_KEY_PREFIX) === 0) {
             throw new PhpfastcacheLogicException('Trying to set tag(s) to an Tag item index: ' . $item->getKey());
         }
 
@@ -281,7 +260,7 @@ trait DriverBaseTrait
              * that has slow performances
              */
 
-            $tagsItem->set(\array_merge((array)$data, [$item->getKey() => $expTimestamp]));
+            $tagsItem->set(array_merge((array)$data, [$item->getKey() => $expTimestamp]));
 
             /**
              * Set the expiration date
@@ -315,8 +294,8 @@ trait DriverBaseTrait
              * any cache item references left
              * then remove it from tagsItems index
              */
-            if (\count($data)) {
-                $tagsItem->expiresAt((new \DateTime())->setTimestamp(\max($data)));
+            if (count($data)) {
+                $tagsItem->expiresAt((new DateTime())->setTimestamp(max($data)));
                 $this->driverWrite($tagsItem);
                 $tagsItem->setHit(true);
             } else {
@@ -325,15 +304,6 @@ trait DriverBaseTrait
         }
 
         return true;
-    }
-
-    /**
-     * @param $key
-     * @return string
-     */
-    public function getTagKey($key):string
-    {
-        return self::DRIVER_TAGS_KEY_PREFIX . $key;
     }
 
     /**
@@ -350,14 +320,44 @@ trait DriverBaseTrait
     }
 
     /**
+     * @param $key
      * @return string
      */
-    public static function getConfigClass(): string
+    public function getTagKey($key): string
     {
-        $localConfigClass = \substr(static::class, 0, \strrpos(static::class, '\\')) . '\Config';
-        if (\class_exists($localConfigClass) && \is_a($localConfigClass, ConfigurationOption::class, true)) {
-            return $localConfigClass;
-        }
-        return ConfigurationOption::class;
+        return self::DRIVER_TAGS_KEY_PREFIX . $key;
+    }
+
+    /**
+     * Encode data types such as object/array
+     * for driver that does not support
+     * non-scalar value
+     * @param $data
+     * @return string
+     */
+    protected function encode($data): string
+    {
+        return serialize($data);
+    }
+
+    /**
+     * Decode data types such as object/array
+     * for driver that does not support
+     * non-scalar value
+     * @param string|null $value
+     * @return mixed
+     */
+    protected function decode($value)
+    {
+        return unserialize((string)$value);
+    }
+
+    /**
+     * Check if phpModule or CGI
+     * @return bool
+     */
+    protected function isPHPModule(): bool
+    {
+        return (PHP_SAPI === 'apache2handler' || strpos(PHP_SAPI, 'handler') !== false);
     }
 }

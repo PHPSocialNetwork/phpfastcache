@@ -15,15 +15,12 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Xcache;
 
-use Phpfastcache\Core\Pool\{
-    DriverBaseTrait, ExtendedCacheItemPoolInterface
-};
 use Phpfastcache\Cluster\AggregatablePoolInterface;
+use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheInvalidArgumentException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 use Psr\Cache\CacheItemInterface;
+use RuntimeException;
 
 /**
  * Class Driver
@@ -44,6 +41,26 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
+     * @return DriverStatistic
+     */
+    public function getStats(): DriverStatistic
+    {
+        if (!ini_get('xcache.admin.enable_auth')) {
+            $info = xcache_info(XC_TYPE_VAR, 0);
+
+            return (new DriverStatistic())
+                ->setSize(abs($info['size'] - $info['avail']))
+                ->setData(implode(', ', array_keys($this->itemInstances)))
+                ->setInfo(sprintf("Xcache v%s with following modules loaded:\n %s", XCACHE_VERSION, str_replace(' ', ', ', XCACHE_MODULES)))
+                ->setRawData($info);
+        }
+        throw new RuntimeException("PhpFastCache is not able to read Xcache configuration. Please put this to your php.ini:\n
+            [xcache.admin]
+            xcache.admin.enable_auth = Off\n
+            Then reboot your webserver and make sure that the native Xcache ini configuration file does not override your setting.");
+    }
+
+    /**
      * @return bool
      */
     protected function driverConnect(): bool
@@ -52,7 +69,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
@@ -66,7 +83,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return mixed
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -84,7 +101,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -100,6 +117,12 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
+    /********************
+     *
+     * PSR-6 Extended Methods
+     *
+     *******************/
+
     /**
      * @return bool
      */
@@ -111,31 +134,5 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         }
 
         return true;
-    }
-
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
-
-    /**
-     * @return DriverStatistic
-     */
-    public function getStats(): DriverStatistic
-    {
-        if (!ini_get('xcache.admin.enable_auth')) {
-            $info = xcache_info(XC_TYPE_VAR, 0);
-
-            return (new DriverStatistic())
-                ->setSize(abs($info['size'] - $info['avail']))
-                ->setData(\implode(', ', \array_keys($this->itemInstances)))
-                ->setInfo(\sprintf("Xcache v%s with following modules loaded:\n %s", XCACHE_VERSION, \str_replace(' ', ', ', XCACHE_MODULES)))
-                ->setRawData($info);
-        }
-        throw new \RuntimeException("PhpFastCache is not able to read Xcache configuration. Please put this to your php.ini:\n
-            [xcache.admin]
-            xcache.admin.enable_auth = Off\n
-            Then reboot your webserver and make sure that the native Xcache ini configuration file does not override your setting.");
     }
 }

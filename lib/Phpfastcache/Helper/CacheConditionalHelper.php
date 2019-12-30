@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Helper;
 
+use DateInterval;
 use Psr\Cache\CacheItemPoolInterface;
 
 /**
@@ -40,7 +41,7 @@ class CacheConditionalHelper
     /**
      * @param string $cacheKey
      * @param callable $callback
-     * @param int|\DateInterval $expiresAfter
+     * @param int|DateInterval $expiresAfter
      * @return mixed
      */
     public function get(string $cacheKey, callable $callback, $expiresAfter = null)

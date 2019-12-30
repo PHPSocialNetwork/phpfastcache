@@ -13,14 +13,15 @@
  */
 declare(strict_types=1);
 
-namespace Phpfastcache\Config;
+namespace Phpfastcache\Cluster\Drivers\RandomReplication;
+
+use Phpfastcache\Cluster\ItemAbstract;
 
 /**
- * Class Config
- * Alias of ConfigurationOption
- * @package phpFastCache\Config
- * @see ConfigurationOption
+ * Class ClusterItem
+ * @package Phpfastcache\Cluster
  */
-class Config extends ConfigurationOption
+class Item extends ItemAbstract
 {
+
 }

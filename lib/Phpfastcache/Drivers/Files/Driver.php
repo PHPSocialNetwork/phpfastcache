@@ -15,15 +15,14 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Files;
 
-use Phpfastcache\Core\Pool\{
-    DriverBaseTrait, ExtendedCacheItemPoolInterface, IO\IOHelperTrait
-};
+use Exception;
+use FilesystemIterator;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheInvalidArgumentException
-};
+use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface, IO\IOHelperTrait};
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 use Phpfastcache\Util\Directory;
 use Psr\Cache\CacheItemInterface;
+
 
 /**
  * Class Driver
@@ -53,7 +52,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     public function driverCheck(): bool
     {
-        return \is_writable($this->getPath()) || \mkdir($concurrentDirectory = $this->getPath(), $this->getDefaultChmod(), TRUE) || \is_dir($concurrentDirectory);
+        return is_writable($this->getPath()) || mkdir($concurrentDirectory = $this->getPath(), $this->getDefaultChmod(), true) || is_dir($concurrentDirectory);
     }
 
     /**
@@ -65,7 +64,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
@@ -74,7 +73,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
          * Check for Cross-Driver type confusion
          */
         $file_path = $this->getFilePath($item->getKey(), true);
-        if (!\file_exists($file_path)) {
+        if (!file_exists($file_path)) {
             return null;
         }
 
@@ -85,7 +84,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -103,7 +102,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
              */
             try {
                 return $this->writefile($file_path, $data, $this->getConfig()->isSecureFileManipulation());
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 return false;
             }
         }
@@ -112,7 +111,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -123,11 +122,11 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
          */
         if ($item instanceof Item) {
             $file_path = $this->getFilePath($item->getKey(), true);
-            if (\file_exists($file_path) && @\unlink($file_path)) {
-                \clearstatcache(true, $file_path);
-                $dir = \dirname($file_path);
-                if (!(new \FilesystemIterator($dir))->valid()) {
-                    \rmdir($dir);
+            if (file_exists($file_path) && @unlink($file_path)) {
+                clearstatcache(true, $file_path);
+                $dir = dirname($file_path);
+                if (!(new FilesystemIterator($dir))->valid()) {
+                    rmdir($dir);
                 }
                 return true;
             }

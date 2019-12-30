@@ -16,11 +16,9 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Pool;
 
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Event\EventInterface;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Psr\Cache\CacheItemInterface;
+
 
 /**
  * Trait ExtendedCacheItemPoolTrait
@@ -34,12 +32,49 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @inheritdoc
      */
+    public static function isUsableInAutoContext(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512): string
     {
         $callback = static function (CacheItemInterface $item) {
             return $item->get();
         };
-        return \json_encode(\array_map($callback, \array_values($this->getItems($keys))), $option, $depth);
+        return json_encode(array_map($callback, array_values($this->getItems($keys))), $option, $depth);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getItemsByTagsAsJsonString(array $tagNames, $option = 0, $depth = 512): string
+    {
+        $callback = function (CacheItemInterface $item) {
+            return $item->get();
+        };
+
+        return json_encode(array_map($callback, array_values($this->getItemsByTags($tagNames))), $option, $depth);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getItemsByTags(array $tagNames): array
+    {
+        $items = [];
+        foreach (array_unique($tagNames) as $tagName) {
+            if (is_string($tagName)) {
+                $items[] = $this->getItemsByTag($tagName);
+            } else {
+                throw new PhpfastcacheInvalidArgumentException('$tagName must be a a string');
+            }
+        }
+
+        return array_merge([], ...$items);
     }
 
     /**
@@ -47,7 +82,7 @@ trait ExtendedCacheItemPoolTrait
      */
     public function getItemsByTag($tagName): array
     {
-        if (\is_string($tagName)) {
+        if (is_string($tagName)) {
             $driverResponse = $this->getItem($this->getTagKey($tagName));
             if ($driverResponse->isHit()) {
                 $items = (array)$driverResponse->get();
@@ -62,78 +97,12 @@ trait ExtendedCacheItemPoolTrait
                  *
                  * #headache
                  */
-                return \array_filter($this->getItems(\array_unique(\array_keys($items))), static function (ExtendedCacheItemInterface $item) {
+
+                return array_filter($this->getItems(array_unique(array_keys($items))), static function (ExtendedCacheItemInterface $item) {
                     return $item->isHit();
                 });
             }
             return [];
-        }
-
-        throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getItemsByTags(array $tagNames): array
-    {
-        $items = [];
-        foreach (\array_unique($tagNames) as $tagName) {
-            if (\is_string($tagName)) {
-                $items[] = $this->getItemsByTag($tagName);
-            } else {
-                throw new PhpfastcacheInvalidArgumentException('$tagName must be a a string');
-            }
-        }
-
-        return \array_merge([], ...$items);
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getItemsByTagsAll(array $tagNames): array
-    {
-        $items = $this->getItemsByTags($tagNames);
-
-        foreach ($items as $key => $item) {
-            if (\array_diff($tagNames, $item->getTags())) {
-                unset($items[$key]);
-            }
-        }
-
-        return $items;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getItemsByTagsAsJsonString(array $tagNames, $option = 0, $depth = 512): string
-    {
-        $callback = function (CacheItemInterface $item) {
-            return $item->get();
-        };
-
-        return \json_encode(\array_map($callback, \array_values($this->getItemsByTags($tagNames))), $option, $depth);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function deleteItemsByTag($tagName): bool
-    {
-        if (\is_string($tagName)) {
-            $return = null;
-            foreach ($this->getItemsByTag($tagName) as $item) {
-                $result = $this->deleteItem($item->getKey());
-                if ($return !== false) {
-                    $return = $result;
-                }
-            }
-
-            return (bool) $return;
         }
 
         throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
@@ -152,7 +121,27 @@ trait ExtendedCacheItemPoolTrait
             }
         }
 
-        return (bool) $return;
+        return (bool)$return;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function deleteItemsByTag($tagName): bool
+    {
+        if (is_string($tagName)) {
+            $return = null;
+            foreach ($this->getItemsByTag($tagName) as $item) {
+                $result = $this->deleteItem($item->getKey());
+                if ($return !== false) {
+                    $return = $result;
+                }
+            }
+
+            return (bool)$return;
+        }
+
+        throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
     }
 
     /**
@@ -170,24 +159,23 @@ trait ExtendedCacheItemPoolTrait
             }
         }
 
-        return (bool) $return;
+        return (bool)$return;
     }
 
     /**
      * @inheritdoc
      */
-    public function incrementItemsByTag($tagName, $step = 1): bool
+    public function getItemsByTagsAll(array $tagNames): array
     {
-        if (\is_string($tagName) && \is_int($step)) {
-            foreach ($this->getItemsByTag($tagName) as $item) {
-                $item->increment($step);
-                $this->saveDeferred($item);
-            }
+        $items = $this->getItemsByTags($tagNames);
 
-            return (bool) $this->commit();
+        foreach ($items as $key => $item) {
+            if (array_diff($tagNames, $item->getTags())) {
+                unset($items[$key]);
+            }
         }
 
-        throw new PhpfastcacheInvalidArgumentException('$tagName must be a string and $step an integer');
+        return $items;
     }
 
     /**
@@ -203,7 +191,24 @@ trait ExtendedCacheItemPoolTrait
             }
         }
 
-        return (bool) $return;
+        return (bool)$return;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function incrementItemsByTag($tagName, $step = 1): bool
+    {
+        if (is_string($tagName) && is_int($step)) {
+            foreach ($this->getItemsByTag($tagName) as $item) {
+                $item->increment($step);
+                $this->saveDeferred($item);
+            }
+
+            return (bool)$this->commit();
+        }
+
+        throw new PhpfastcacheInvalidArgumentException('$tagName must be a string and $step an integer');
     }
 
     /**
@@ -211,34 +216,17 @@ trait ExtendedCacheItemPoolTrait
      */
     public function incrementItemsByTagsAll(array $tagNames, $step = 1): bool
     {
-        if (\is_int($step)) {
+        if (is_int($step)) {
             $items = $this->getItemsByTagsAll($tagNames);
 
             foreach ($items as $key => $item) {
                 $item->increment($step);
                 $this->saveDeferred($item);
             }
-            return (bool) $this->commit();
+            return (bool)$this->commit();
         }
 
         throw new PhpfastcacheInvalidArgumentException('$step must be an integer');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function decrementItemsByTag($tagName, $step = 1): bool
-    {
-        if (\is_string($tagName) && \is_int($step)) {
-            foreach ($this->getItemsByTag($tagName) as $item) {
-                $item->decrement($step);
-                $this->saveDeferred($item);
-            }
-
-            return (bool) $this->commit();
-        }
-
-        throw new PhpfastcacheInvalidArgumentException('$tagName must be a string and $step an integer');
     }
 
     /**
@@ -254,7 +242,24 @@ trait ExtendedCacheItemPoolTrait
             }
         }
 
-        return (bool) $return;
+        return (bool)$return;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function decrementItemsByTag($tagName, $step = 1): bool
+    {
+        if (is_string($tagName) && is_int($step)) {
+            foreach ($this->getItemsByTag($tagName) as $item) {
+                $item->decrement($step);
+                $this->saveDeferred($item);
+            }
+
+            return (bool)$this->commit();
+        }
+
+        throw new PhpfastcacheInvalidArgumentException('$tagName must be a string and $step an integer');
     }
 
     /**
@@ -262,34 +267,17 @@ trait ExtendedCacheItemPoolTrait
      */
     public function decrementItemsByTagsAll(array $tagNames, $step = 1): bool
     {
-        if (\is_int($step)) {
+        if (is_int($step)) {
             $items = $this->getItemsByTagsAll($tagNames);
 
             foreach ($items as $key => $item) {
                 $item->decrement($step);
                 $this->saveDeferred($item);
             }
-            return (bool) $this->commit();
+            return (bool)$this->commit();
         }
 
         throw new PhpfastcacheInvalidArgumentException('$step must be an integer');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function appendItemsByTag($tagName, $data): bool
-    {
-        if (\is_string($tagName)) {
-            foreach ($this->getItemsByTag($tagName) as $item) {
-                $item->append($data);
-                $this->saveDeferred($item);
-            }
-
-            return (bool) $this->commit();
-        }
-
-        throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
     }
 
     /**
@@ -305,7 +293,24 @@ trait ExtendedCacheItemPoolTrait
             }
         }
 
-        return (bool) $return;
+        return (bool)$return;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function appendItemsByTag($tagName, $data): bool
+    {
+        if (is_string($tagName)) {
+            foreach ($this->getItemsByTag($tagName) as $item) {
+                $item->append($data);
+                $this->saveDeferred($item);
+            }
+
+            return (bool)$this->commit();
+        }
+
+        throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
     }
 
     /**
@@ -320,27 +325,10 @@ trait ExtendedCacheItemPoolTrait
                 $item->append($data);
                 $this->saveDeferred($item);
             }
-            return (bool) $this->commit();
+            return (bool)$this->commit();
         }
 
         throw new PhpfastcacheInvalidArgumentException('$data must be scalar');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function prependItemsByTag($tagName, $data): bool
-    {
-        if (\is_string($tagName)) {
-            foreach ($this->getItemsByTag($tagName) as $item) {
-                $item->prepend($data);
-                $this->saveDeferred($item);
-            }
-
-            return (bool) $this->commit();
-        }
-
-        throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
     }
 
     /**
@@ -356,7 +344,24 @@ trait ExtendedCacheItemPoolTrait
             }
         }
 
-        return (bool) $return;
+        return (bool)$return;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function prependItemsByTag($tagName, $data): bool
+    {
+        if (is_string($tagName)) {
+            foreach ($this->getItemsByTag($tagName) as $item) {
+                $item->prepend($data);
+                $this->saveDeferred($item);
+            }
+
+            return (bool)$this->commit();
+        }
+
+        throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
     }
 
     /**
@@ -364,28 +369,17 @@ trait ExtendedCacheItemPoolTrait
      */
     public function prependItemsByTagsAll(array $tagNames, $data): bool
     {
-        if (\is_scalar($data)) {
+        if (is_scalar($data)) {
             $items = $this->getItemsByTagsAll($tagNames);
 
             foreach ($items as $key => $item) {
                 $item->prepend($data);
                 $this->saveDeferred($item);
             }
-            return (bool) $this->commit();
+            return (bool)$this->commit();
         }
 
         throw new PhpfastcacheInvalidArgumentException('$data must be scalar');
-    }
-
-    /**
-     * @param \Psr\Cache\CacheItemInterface $item
-     * @return void
-     */
-    public function detachItem(CacheItemInterface $item)
-    {
-        if (isset($this->itemInstances[$item->getKey()])) {
-            $this->deregisterItem($item->getKey());
-        }
     }
 
     /**
@@ -399,37 +393,39 @@ trait ExtendedCacheItemPoolTrait
     }
 
     /**
-     * @inheritdoc
+     * @param CacheItemInterface $item
+     * @return void
      */
-    public function attachItem(CacheItemInterface $item)
+    public function detachItem(CacheItemInterface $item)
     {
-        if (isset($this->itemInstances[$item->getKey()]) && \spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
-            throw new PhpfastcacheLogicException('The item already exists and cannot be overwritten because the Spl object hash mismatches ! You probably tried to re-attach a detached item which has been already retrieved from cache.');
+        if (isset($this->itemInstances[$item->getKey()])) {
+            $this->deregisterItem($item->getKey());
         }
-
-        $this->itemInstances[$item->getKey()] = $item;
     }
 
-
     /**
-     * @internal This method de-register an item from $this->itemInstances
      * @param string $item
+     * @internal This method de-register an item from $this->itemInstances
      */
     protected function deregisterItem(string $item)
     {
         unset($this->itemInstances[$item]);
 
-        if (\gc_enabled()) {
-            \gc_collect_cycles();
+        if (gc_enabled()) {
+            gc_collect_cycles();
         }
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @inheritdoc
      */
-    protected function cleanItemTags(ExtendedCacheItemInterface $item)
+    public function attachItem(CacheItemInterface $item)
     {
-        $this->driverWriteTags($item->removeTags($item->getTags()));
+        if (isset($this->itemInstances[$item->getKey()]) && spl_object_hash($item) !== spl_object_hash($this->itemInstances[$item->getKey()])) {
+            throw new PhpfastcacheLogicException('The item already exists and cannot be overwritten because the Spl object hash mismatches ! You probably tried to re-attach a detached item which has been already retrieved from cache.');
+        }
+
+        $this->itemInstances[$item->getKey()] = $item;
     }
 
     /**
@@ -437,36 +433,15 @@ trait ExtendedCacheItemPoolTrait
      * Returns false if the item exists, is attached and the Spl Hash mismatches
      * Returns null if the item does not exists
      *
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool|null
      */
     public function isAttached(CacheItemInterface $item)
     {
         if (isset($this->itemInstances[$item->getKey()])) {
-            return \spl_object_hash($item) === \spl_object_hash($this->itemInstances[$item->getKey()]);
+            return spl_object_hash($item) === spl_object_hash($this->itemInstances[$item->getKey()]);
         }
         return null;
-    }
-
-    /**
-     * @return EventInterface
-     */
-    public function getEventManager(): EventInterface
-    {
-        return $this->eventManager;
-    }
-
-    /**
-     * Set the EventManager instance
-     *
-     * @param EventInterface $em
-     * @return ExtendedCacheItemPoolInterface
-     */
-    public function setEventManager(EventInterface $em): ExtendedCacheItemPoolInterface
-    {
-        $this->eventManager = $em;
-
-        return $this;
     }
 
     /**
@@ -474,14 +449,14 @@ trait ExtendedCacheItemPoolTrait
      */
     public function saveMultiple(...$items): bool
     {
-        if (isset($items[0]) && \is_array($items[0])) {
+        if (isset($items[0]) && is_array($items[0])) {
             foreach ($items[0] as $item) {
                 $this->save($item);
             }
             return true;
         }
 
-        if (\is_array($items)) {
+        if (is_array($items)) {
             foreach ($items as $item) {
                 $this->save($item);
             }
@@ -491,18 +466,18 @@ trait ExtendedCacheItemPoolTrait
     }
 
     /**
-     * @inheritdoc
-     */
-    public static function isUsableInAutoContext(): bool
-    {
-        return true;
-    }
-
-    /**
      * @return string
      */
     public function getHelp(): string
     {
         return '';
+    }
+
+    /**
+     * @param ExtendedCacheItemInterface $item
+     */
+    protected function cleanItemTags(ExtendedCacheItemInterface $item)
+    {
+        $this->driverWriteTags($item->removeTags($item->getTags()));
     }
 }

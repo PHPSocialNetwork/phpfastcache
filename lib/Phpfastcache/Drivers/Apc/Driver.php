@@ -15,15 +15,13 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Apc;
 
-use Phpfastcache\Core\Pool\{
-    DriverBaseTrait, ExtendedCacheItemPoolInterface
-};
+use DateTime;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
+use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheInvalidArgumentException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 use Psr\Cache\CacheItemInterface;
+
 
 /**
  * Class Driver
@@ -56,6 +54,22 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
+     * @return DriverStatistic
+     */
+    public function getStats(): DriverStatistic
+    {
+        $stats = (array)apc_cache_info('user');
+        $date = (new DateTime())->setTimestamp($stats['start_time']);
+
+        return (new DriverStatistic())
+            ->setData(implode(', ', array_keys($this->itemInstances)))
+            ->setInfo(sprintf("The APC cache is up since %s, and have %d item(s) in cache.\n For more information see RawData.", $date->format(DATE_RFC2822),
+                $stats['num_entries']))
+            ->setRawData($stats)
+            ->setSize($stats['mem_size']);
+    }
+
+    /**
      * @return bool
      */
     protected function driverConnect(): bool
@@ -64,7 +78,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
@@ -78,7 +92,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -88,7 +102,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            $ttl = $item->getExpirationDate()->getTimestamp() - \time();
+            $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
             return (bool)apc_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
         }
@@ -97,7 +111,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -113,14 +127,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
-    /**
-     * @return bool
-     */
-    protected function driverClear(): bool
-    {
-        return @apc_clear_cache() || @apc_clear_cache('user');
-    }
-
     /********************
      *
      * PSR-6 Extended Methods
@@ -128,18 +134,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      *******************/
 
     /**
-     * @return DriverStatistic
+     * @return bool
      */
-    public function getStats(): DriverStatistic
+    protected function driverClear(): bool
     {
-        $stats = (array)apc_cache_info('user');
-        $date = (new \DateTime())->setTimestamp($stats['start_time']);
-
-        return (new DriverStatistic())
-            ->setData(\implode(', ', \array_keys($this->itemInstances)))
-            ->setInfo(\sprintf("The APC cache is up since %s, and have %d item(s) in cache.\n For more information see RawData.", $date->format(\DATE_RFC2822),
-                $stats['num_entries']))
-            ->setRawData($stats)
-            ->setSize($stats['mem_size']);
+        return @apc_clear_cache() || @apc_clear_cache('user');
     }
 }

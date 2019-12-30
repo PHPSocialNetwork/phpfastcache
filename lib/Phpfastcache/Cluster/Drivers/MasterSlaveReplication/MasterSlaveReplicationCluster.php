@@ -15,14 +15,16 @@ declare(strict_types=1);
 namespace Phpfastcache\Cluster\Drivers\MasterSlaveReplication;
 
 use Phpfastcache\Cluster\ClusterPoolAbstract;
-use Phpfastcache\Config\ConfigurationOption;
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\EventManager;
+use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheExceptionInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Exceptions\PhpfastcacheReplicationException;
 use Psr\Cache\CacheItemInterface;
+use ReflectionException;
+
 
 /**
  * Class MasterSlaveReplicationCluster
@@ -35,14 +37,14 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
      * @param string $clusterName
      * @param ExtendedCacheItemPoolInterface ...$driverPools
      * @throws PhpfastcacheInvalidArgumentException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverCheckException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverConnectException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException
-     * @throws \ReflectionException
+     * @throws PhpfastcacheDriverCheckException
+     * @throws PhpfastcacheDriverConnectException
+     * @throws PhpfastcacheInvalidConfigurationException
+     * @throws ReflectionException
      */
-    public function __construct(string $clusterName, ExtendedCacheItemPoolInterface ... $driverPools)
+    public function __construct(string $clusterName, ExtendedCacheItemPoolInterface ...$driverPools)
     {
-        if (\count($driverPools) !== 2) {
+        if (count($driverPools) !== 2) {
             throw new PhpfastcacheInvalidArgumentException('A "master/slave" cluster requires exactly two pools to be working.');
         }
 
@@ -50,19 +52,13 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
     }
 
     /**
-     * @return ExtendedCacheItemPoolInterface
+     * @inheritDoc
      */
-    protected function getMasterPool(): ExtendedCacheItemPoolInterface
+    public function getItem($key)
     {
-        return $this->driverPools[0];
-    }
-
-    /**
-     * @return ExtendedCacheItemPoolInterface
-     */
-    protected function getSlavePool(): ExtendedCacheItemPoolInterface
-    {
-        return $this->driverPools[1];
+        return $this->getStandardizedItem($this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool) use ($key) {
+                return $pool->getItem($key);
+            }) ?? new Item($this, $key), $this);
     }
 
     /**
@@ -72,31 +68,36 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
      */
     protected function makeOperation(callable $operation)
     {
-        try{
+        try {
             return $operation($this->getMasterPool());
-        }catch(PhpfastcacheExceptionInterface $e){
-            try{
+        } catch (PhpfastcacheExceptionInterface $e) {
+            try {
                 $this->eventManager->dispatch(
                     'CacheReplicationSlaveFallback',
                     $this,
-                    \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']
+                    debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']
                 );
                 return $operation($this->getSlavePool());
-            }catch(PhpfastcacheExceptionInterface $e){
+            } catch (PhpfastcacheExceptionInterface $e) {
                 throw new PhpfastcacheReplicationException('Master and Slave thrown an exception !');
             }
         }
     }
 
+    /**
+     * @return ExtendedCacheItemPoolInterface
+     */
+    protected function getMasterPool(): ExtendedCacheItemPoolInterface
+    {
+        return $this->clusterPools[0];
+    }
 
     /**
-     * @inheritDoc
+     * @return ExtendedCacheItemPoolInterface
      */
-    public function getItem($key)
+    protected function getSlavePool(): ExtendedCacheItemPoolInterface
     {
-        return $this->getStandardizedItem($this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool) use ($key){
-                return $pool->getItem($key);
-            }) ?? new Item($this, $key), $this);
+        return $this->clusterPools[1];
     }
 
     /**
@@ -104,7 +105,7 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
      */
     public function hasItem($key)
     {
-        return $this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool) use ($key){
+        return $this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool) use ($key) {
             return $pool->hasItem($key);
         });
     }
@@ -114,7 +115,7 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
      */
     public function clear()
     {
-        return $this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool){
+        return $this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool) {
             return $pool->clear();
         });
     }
@@ -124,7 +125,7 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
      */
     public function deleteItem($key)
     {
-        return $this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool) use ($key){
+        return $this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool) use ($key) {
             return $pool->deleteItem($key);
         });
     }
@@ -134,7 +135,8 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
      */
     public function save(CacheItemInterface $item)
     {
-        return $this->makeOperation(function (ExtendedCacheItemPoolInterface $pool) use ($item){
+        return $this->makeOperation(function (ExtendedCacheItemPoolInterface $pool) use ($item) {
+            $item->setHit(true);
             return $pool->save($this->getStandardizedItem($item, $pool));
         });
     }
@@ -145,7 +147,7 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
      */
     public function commit()
     {
-        return $this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool){
+        return $this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool) {
             return $pool->commit();
         });
     }

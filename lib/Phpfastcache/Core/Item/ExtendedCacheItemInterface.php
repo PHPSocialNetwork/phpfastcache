@@ -15,19 +15,20 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Core\Item;
 
+use DateTimeInterface;
+use JsonSerializable;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Event\EventInterface;
-use Phpfastcache\Util\ClassNamespaceResolverInterface;
+use Phpfastcache\Event\EventManagerDispatcherInterface;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
+use Phpfastcache\Util\ClassNamespaceResolverInterface;
 use Psr\Cache\CacheItemInterface;
-use Psr\Cache\CacheItemPoolInterface;
 
 /**
  * Interface ExtendedCacheItemInterface
  *
  * @package phpFastCache\Cache
  */
-interface ExtendedCacheItemInterface extends CacheItemInterface, ClassNamespaceResolverInterface, \JsonSerializable
+interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDispatcherInterface, ClassNamespaceResolverInterface, JsonSerializable
 {
 
     /**
@@ -40,14 +41,14 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, ClassNamespaceR
     public function getEncodedKey(): string;
 
     /**
-     * @return \DateTimeInterface
+     * @return DateTimeInterface
      */
-    public function getExpirationDate(): \DateTimeInterface;
+    public function getExpirationDate(): DateTimeInterface;
 
     /**
      * Alias of expireAt() with forced $expiration param
      *
-     * @param \DateTimeInterface $expiration
+     * @param DateTimeInterface $expiration
      *   The point in time after which the item MUST be considered expired.
      *   If null is passed explicitly, a default value MAY be used. If none is set,
      *   the value should be stored permanently or for as long as the
@@ -56,35 +57,35 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, ClassNamespaceR
      * @return self
      *   The called object.
      */
-    public function setExpirationDate(\DateTimeInterface $expiration): self;
+    public function setExpirationDate(DateTimeInterface $expiration): self;
 
     /**
-     * @return \DateTimeInterface
+     * @return DateTimeInterface
      * @throws PhpfastcacheLogicException
      */
-    public function getCreationDate(): \DateTimeInterface;
+    public function getCreationDate(): DateTimeInterface;
 
     /**
-     * @return \DateTimeInterface
+     * @return DateTimeInterface
      * @throws PhpfastcacheLogicException
      */
-    public function getModificationDate(): \DateTimeInterface;
+    public function getModificationDate(): DateTimeInterface;
 
     /**
-     * @param $date \DateTimeInterface
+     * @param $date DateTimeInterface
      *
      * @return self
      * @throws PhpfastcacheLogicException
      */
-    public function setCreationDate(\DateTimeInterface $date): self;
+    public function setCreationDate(DateTimeInterface $date): self;
 
     /**
-     * @param $date \DateTimeInterface
+     * @param $date DateTimeInterface
      *
      * @return self
      * @throws PhpfastcacheLogicException
      */
-    public function setModificationDate(\DateTimeInterface $date): self;
+    public function setModificationDate(DateTimeInterface $date): self;
 
     /**
      * @return int
@@ -118,7 +119,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, ClassNamespaceR
     public function getLength(): int;
 
     /**
-     * @param \Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface $driver
+     * @param ExtendedCacheItemPoolInterface $driver
      *
      * @return mixed
      */
@@ -229,15 +230,6 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, ClassNamespaceR
      * @return string
      */
     public function getDataAsJsonString($option = 0, $depth = 512): string;
-
-    /**getClassNamespace
-     * Set the EventManager instance
-     *
-     * @param EventInterface $em
-     *
-     * @return self
-     */
-    public function setEventManager(EventInterface $em): self;
 
     /**
      * @param ExtendedCacheItemPoolInterface $driverPool

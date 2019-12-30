@@ -15,8 +15,11 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Proxy;
 
+use BadMethodCallException;
 use Phpfastcache\CacheManager;
+use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Entities\DriverStatistic;
 use Psr\Cache\CacheItemInterface;
 
@@ -54,14 +57,14 @@ use Psr\Cache\CacheItemInterface;
 abstract class PhpfastcacheAbstractProxy
 {
     /**
-     * @var \Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface
+     * @var ExtendedCacheItemPoolInterface
      */
     protected $instance;
 
     /**
      * PhpfastcacheAbstractProxy constructor.
      * @param string $driver
-     * @param array|\Phpfastcache\Config\ConfigurationOption $config
+     * @param array|ConfigurationOption $config
      */
     public function __construct(string $driver = CacheManager::AUTOMATIC_DRIVER_CLASS, $config = null)
     {
@@ -72,14 +75,14 @@ abstract class PhpfastcacheAbstractProxy
      * @param string $name
      * @param array $args
      * @return mixed
-     * @throws \BadMethodCallException
+     * @throws BadMethodCallException
      */
     public function __call(string $name, array $args)
     {
-        if (\method_exists($this->instance, $name)) {
-            return \call_user_func_array([$this->instance, $name], $args);
+        if (method_exists($this->instance, $name)) {
+            return call_user_func_array([$this->instance, $name], $args);
         }
 
-        throw new \BadMethodCallException(\sprintf('Method %s does not exists', $name));
+        throw new BadMethodCallException(sprintf('Method %s does not exists', $name));
     }
 }

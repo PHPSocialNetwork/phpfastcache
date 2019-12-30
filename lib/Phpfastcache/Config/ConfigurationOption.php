@@ -19,6 +19,10 @@ namespace Phpfastcache\Config;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Util\ArrayObject;
+use ReflectionException;
+use ReflectionMethod;
+use ReflectionParameter;
+use TypeError;
 
 class ConfigurationOption extends ArrayObject implements ConfigurationOptionInterface
 {
@@ -69,7 +73,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     protected $fallback = '';
 
     /**
-     * @var \Phpfastcache\Config\ConfigurationOption
+     * @var ConfigurationOption
      */
     protected $fallbackConfig;
 
@@ -98,7 +102,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      * @param $args
      * ArrayObject constructor.
      * @throws PhpfastcacheInvalidConfigurationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function __construct(...$args)
     {
@@ -109,25 +113,25 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
          * Detect unwanted keys and throw an exception.
          * No more kidding now, it's 21th century.
          */
-        if (\array_diff_key($array, \get_object_vars($this))) {
-            throw new PhpfastcacheInvalidConfigurationException(\sprintf(
+        if (array_diff_key($array, get_object_vars($this))) {
+            throw new PhpfastcacheInvalidConfigurationException(sprintf(
                 'Invalid option(s) for the config %s: %s',
                 static::class,
-                \implode(', ', \array_keys(\array_diff_key($array, \get_object_vars($this))))
+                implode(', ', array_keys(array_diff_key($array, get_object_vars($this))))
             ));
         }
 
-        foreach (\get_object_vars($this) as $property => $value) {
+        foreach (get_object_vars($this) as $property => $value) {
 
-            if (\array_key_exists($property, $array)) {
+            if (array_key_exists($property, $array)) {
                 $this->$property = &$array[$property];
             } else {
                 $array[$property] = &$this->$property;
             }
         }
 
-        foreach (\get_class_methods($this) as $method) {
-            if (\strpos($method, 'set') === 0) {
+        foreach (get_class_methods($this) as $method) {
+            if (strpos($method, 'set') === 0) {
                 $value = null;
                 try {
                     /**
@@ -136,17 +140,17 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
                      * to allow us to retrieve the value
                      * in catch statement bloc
                      */
-                    $value = $this->{\lcfirst(\substr($method, 3))};
+                    $value = $this->{lcfirst(substr($method, 3))};
                     $this->{$method}($value);
-                } catch (\TypeError $e) {
-                    $typeHintGot = \is_object($value) ? \get_class($value) : \gettype($value);
-                    $reflectionMethod = new \ReflectionMethod($this, $method);
+                } catch (TypeError $e) {
+                    $typeHintGot = is_object($value) ? get_class($value) : gettype($value);
+                    $reflectionMethod = new ReflectionMethod($this, $method);
                     $parameter = $reflectionMethod->getParameters()[0] ?? null;
-                    $typeHintExpected = ($parameter instanceof \ReflectionParameter ? ($parameter->getType() === 'object' ? $parameter->getClass() : $parameter->getType()) : 'Unknown type');
+                    $typeHintExpected = ($parameter instanceof ReflectionParameter ? ($parameter->getType() === 'object' ? $parameter->getClass() : $parameter->getType()) : 'Unknown type');
 
-                    throw new PhpfastcacheInvalidConfigurationException(\sprintf(
+                    throw new PhpfastcacheInvalidConfigurationException(sprintf(
                         'Invalid type hint found for "%s", expected "%s" got "%s"',
-                        \lcfirst(\substr($method, 3)),
+                        lcfirst(substr($method, 3)),
                         $typeHintExpected,
                         $typeHintGot
                     ));
@@ -162,7 +166,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      */
     public function getOption(string $optionName)
     {
-        \trigger_error(\sprintf('Method "%s" is deprecated, use "getOptionName()" instead', __METHOD__), \E_USER_DEPRECATED);
+        trigger_error(sprintf('Method "%s" is deprecated, use "getOptionName()" instead', __METHOD__), E_USER_DEPRECATED);
         return $this->$optionName ?? null;
     }
 
@@ -172,7 +176,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      */
     public function isValidOption(string $optionName)
     {
-        return \property_exists($this, $optionName);
+        return property_exists($this, $optionName);
     }
 
     /**
@@ -228,7 +232,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     public function setIgnoreSymfonyNotice(bool $ignoreSymfonyNotice): self
     {
         if ($ignoreSymfonyNotice) {
-            \trigger_error('Configuration option "ignoreSymfonyNotice" is deprecated as of the V7', \E_USER_DEPRECATED);
+            trigger_error('Configuration option "ignoreSymfonyNotice" is deprecated as of the V7', E_USER_DEPRECATED);
         }
         $this->ignoreSymfonyNotice = $ignoreSymfonyNotice;
         return $this;
@@ -267,7 +271,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      */
     public function setDefaultKeyHashFunction($defaultKeyHashFunction): self
     {
-        if (!\is_callable($defaultKeyHashFunction) && (\is_string($defaultKeyHashFunction) && !\function_exists($defaultKeyHashFunction))) {
+        if (!is_callable($defaultKeyHashFunction) && (is_string($defaultKeyHashFunction) && !function_exists($defaultKeyHashFunction))) {
             throw new PhpfastcacheInvalidConfigurationException('defaultKeyHashFunction must be a valid function name string');
         }
         $this->defaultKeyHashFunction = $defaultKeyHashFunction;
@@ -289,7 +293,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      */
     public function setDefaultFileNameHashFunction($defaultFileNameHashFunction): self
     {
-        if (!\is_callable($defaultFileNameHashFunction) && (\is_string($defaultFileNameHashFunction) && !\function_exists($defaultFileNameHashFunction))) {
+        if (!is_callable($defaultFileNameHashFunction) && (is_string($defaultFileNameHashFunction) && !function_exists($defaultFileNameHashFunction))) {
             throw new PhpfastcacheInvalidConfigurationException('defaultFileNameHashFunction must be a valid function name string');
         }
         $this->defaultFileNameHashFunction = $defaultFileNameHashFunction;
@@ -351,7 +355,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     }
 
     /**
-     * @return \Phpfastcache\Config\ConfigurationOption|null
+     * @return ConfigurationOption|null
      */
     public function getFallbackConfig()
     {
@@ -359,16 +363,16 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     }
 
     /**
-     * @param \Phpfastcache\Config\ConfigurationOption|null $fallbackConfig
+     * @param ConfigurationOption|null $fallbackConfig
      * @return ConfigurationOption
      * @throws PhpfastcacheInvalidArgumentException
      */
     public function setFallbackConfig($fallbackConfig): self
     {
         if ($fallbackConfig !== null && !($fallbackConfig instanceof self)) {
-            throw new PhpfastcacheInvalidArgumentException(\sprintf(
+            throw new PhpfastcacheInvalidArgumentException(sprintf(
                 'Invalid argument "%s" for %s',
-                \is_object($fallbackConfig) ? \get_class($fallbackConfig) : \gettype($fallbackConfig),
+                is_object($fallbackConfig) ? get_class($fallbackConfig) : gettype($fallbackConfig),
                 __METHOD__
             ));
         }

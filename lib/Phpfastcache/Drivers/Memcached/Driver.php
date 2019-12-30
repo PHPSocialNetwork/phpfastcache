@@ -15,20 +15,17 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Memcached;
 
+use DateTime;
+use Exception;
 use Memcached as MemcachedSoftware;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Config\ConfigurationOption;
-use Phpfastcache\Core\Pool\{
-    DriverBaseTrait, ExtendedCacheItemPoolInterface
-};
+use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException
-};
-use Phpfastcache\Util\{
-    MemcacheDriverCollisionDetectorTrait
-};
+use Phpfastcache\Exceptions\{PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException};
+use Phpfastcache\Util\{MemcacheDriverCollisionDetectorTrait};
 use Psr\Cache\CacheItemInterface;
+
 
 /**
  * Class Driver
@@ -61,7 +58,26 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     public function driverCheck(): bool
     {
-        return \class_exists('Memcached');
+        return class_exists('Memcached');
+    }
+
+    /**
+     * @return DriverStatistic
+     */
+    public function getStats(): DriverStatistic
+    {
+        $stats = current($this->instance->getStats());
+        $stats['uptime'] = (isset($stats['uptime']) ? $stats['uptime'] : 0);
+        $stats['version'] = (isset($stats['version']) ? $stats['version'] : $this->instance->getVersion());
+        $stats['bytes'] = (isset($stats['bytes']) ? $stats['version'] : 0);
+
+        $date = (new DateTime())->setTimestamp(time() - $stats['uptime']);
+
+        return (new DriverStatistic())
+            ->setData(implode(', ', array_keys($this->itemInstances)))
+            ->setInfo(sprintf("The memcache daemon v%s is up since %s.\n For more information see RawData.", $stats['version'], $date->format(DATE_RFC2822)))
+            ->setRawData($stats)
+            ->setSize((int)$stats['bytes']);
     }
 
     /**
@@ -70,10 +86,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function driverConnect(): bool
     {
         $this->instance = new MemcachedSoftware();
-        $this->instance->setOption(\Memcached::OPT_BINARY_PROTOCOL, true);
+        $this->instance->setOption(MemcachedSoftware::OPT_BINARY_PROTOCOL, true);
         $servers = $this->getConfig()->getServers();
 
-        if (\count($servers) < 1) {
+        if (count($servers) < 1) {
             $servers = [
                 [
                     'host' => $this->getConfig()->getHost(),
@@ -102,7 +118,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                     $this->instance->setSaslAuthData($server['saslUser'], $server['saslPassword']);
                 }
 
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->fallback = true;
             }
         }
@@ -119,7 +135,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
@@ -134,7 +150,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -144,12 +160,12 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            $ttl = $item->getExpirationDate()->getTimestamp() - \time();
+            $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
             // Memcache will only allow a expiration timer less than 2592000 seconds,
             // otherwise, it will assume you're giving it a UNIX timestamp.
             if ($ttl > 2592000) {
-                $ttl = \time() + $ttl;
+                $ttl = time() + $ttl;
             }
 
             return $this->instance->set($item->getKey(), $this->driverPreWrap($item), $ttl);
@@ -159,7 +175,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -175,14 +191,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
-    /**
-     * @return bool
-     */
-    protected function driverClear(): bool
-    {
-        return $this->instance->flush();
-    }
-
     /********************
      *
      * PSR-6 Extended Methods
@@ -190,21 +198,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      *******************/
 
     /**
-     * @return DriverStatistic
+     * @return bool
      */
-    public function getStats(): DriverStatistic
+    protected function driverClear(): bool
     {
-        $stats = current($this->instance->getStats());
-        $stats['uptime'] = (isset($stats['uptime']) ? $stats['uptime'] : 0);
-        $stats['version'] = (isset($stats['version']) ? $stats['version'] : $this->instance->getVersion());
-        $stats['bytes'] = (isset($stats['bytes']) ? $stats['version'] : 0);
-
-        $date = (new \DateTime())->setTimestamp(\time() - $stats['uptime']);
-
-        return (new DriverStatistic())
-            ->setData(\implode(', ', \array_keys($this->itemInstances)))
-            ->setInfo(\sprintf("The memcache daemon v%s is up since %s.\n For more information see RawData.", $stats['version'], $date->format(\DATE_RFC2822)))
-            ->setRawData($stats)
-            ->setSize((int)$stats['bytes']);
+        return $this->instance->flush();
     }
 }

@@ -15,7 +15,8 @@ declare(strict_types=1);
 
 namespace Phpfastcache;
 
-use Phpfastcache\Event\EventInterface;
+use BadMethodCallException;
+use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
 /**
@@ -31,8 +32,10 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
  * @method Void onCacheClearItem() onCacheClearItem(Callable $callable)
  * @method Void onCacheWriteFileOnDisk() onCacheWriteFileOnDisk(Callable $callable)
  * @method Void onCacheGetItemInSlamBatch() onCacheGetItemInSlamBatch(Callable $callable)
+ *
  * == ItemPool Events (Cluster) ==
  * @method Void onCacheReplicationSlaveFallback() onCacheReplicationSlaveFallback(Callable $callable)
+ * @method Void onCacheReplicationRandomPoolChosen() onCacheReplicationRandomPoolChosen(Callable $callable)
  *
  * == Item Events ==
  * @method Void onCacheItemSet() onCacheItemSet(Callable $callable)
@@ -41,8 +44,10 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
  *
  *
  */
-class EventManager implements EventInterface
+class EventManager implements EventManagerInterface
 {
+    public const ON_EVERY_EVENT = '__every';
+
     /**
      * @var $this
      */
@@ -51,15 +56,9 @@ class EventManager implements EventInterface
     /**
      * @var array
      */
-    protected $events = [];
-
-    /**
-     * @return EventInterface
-     */
-    public static function getInstance(): EventInterface
-    {
-        return (self::$instance ?: self::$instance = new self);
-    }
+    protected $events = [
+        self::ON_EVERY_EVENT => []
+    ];
 
     /**
      * EventManager constructor.
@@ -70,20 +69,31 @@ class EventManager implements EventInterface
     }
 
     /**
+     * @return EventManagerInterface
+     */
+    public static function getInstance(): EventManagerInterface
+    {
+        return (self::$instance ?: self::$instance = new self);
+    }
+
+    /**
      * @param string $eventName
      * @param array ...$args
      */
-    public function dispatch(string $eventName, ...$args)
+    public function dispatch(string $eventName, ...$args): void
     {
         /**
          * Replace array_key_exists by isset
          * due to performance issue on huge
          * loop dispatching operations
          */
-        if (isset($this->events[$eventName])) {
+        if (isset($this->events[$eventName]) && $eventName !== self::ON_EVERY_EVENT) {
             foreach ($this->events[$eventName] as $event) {
-                \call_user_func_array($event, $args);
+                $event(... $args);
             }
+        }
+        foreach ($this->events[self::ON_EVERY_EVENT] as $event) {
+            $event($eventName, ...$args);
         }
     }
 
@@ -91,24 +101,33 @@ class EventManager implements EventInterface
      * @param string $name
      * @param array $arguments
      * @throws PhpfastcacheInvalidArgumentException
-     * @throws \BadMethodCallException
+     * @throws BadMethodCallException
      */
-    public function __call(string $name, array $arguments)
+    public function __call(string $name, array $arguments): void
     {
-        if (\strpos($name, 'on') === 0) {
-            $name = \substr($name, 2);
-            if (\is_callable($arguments[0])) {
-                if (isset($arguments[1]) && \is_string($arguments[0])) {
+        if (strpos($name, 'on') === 0) {
+            $name = substr($name, 2);
+            if (is_callable($arguments[0])) {
+                if (isset($arguments[1]) && is_string($arguments[0])) {
                     $this->events[$name][$arguments[1]] = $arguments[0];
                 } else {
                     $this->events[$name][] = $arguments[0];
                 }
             } else {
-                throw new PhpfastcacheInvalidArgumentException(\sprintf('Expected Callable, got "%s"', \gettype($arguments[0])));
+                throw new PhpfastcacheInvalidArgumentException(sprintf('Expected Callable, got "%s"', gettype($arguments[0])));
             }
         } else {
-            throw new \BadMethodCallException('An event must start with "on" such as "onCacheGetItem"');
+            throw new BadMethodCallException('An event must start with "on" such as "onCacheGetItem"');
         }
+    }
+
+    /**
+     * @param callable $callback
+     * @param string $callbackName
+     */
+    public function onEveryEvents(callable $callback, string $callbackName): void
+    {
+        $this->events[self::ON_EVERY_EVENT][$callbackName] = $callback;
     }
 
     /**

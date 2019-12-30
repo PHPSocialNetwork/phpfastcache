@@ -15,18 +15,13 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Couchdb;
 
-use Doctrine\CouchDB\{
-    CouchDBClient, CouchDBException
-};
-use Phpfastcache\Core\Pool\{
-    DriverBaseTrait, ExtendedCacheItemPoolInterface
-};
+use Doctrine\CouchDB\{CouchDBClient, CouchDBException};
 use Phpfastcache\Cluster\AggregatablePoolInterface;
+use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Psr\Cache\CacheItemInterface;
+
 
 /**
  * Class Driver
@@ -46,7 +41,34 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     public function driverCheck(): bool
     {
-        return \class_exists(CouchDBClient::class);
+        return class_exists(CouchDBClient::class);
+    }
+
+    /**
+     * @return string
+     */
+    public function getHelp(): string
+    {
+        return <<<HELP
+<p>
+To install the Couchdb HTTP client library via Composer:
+<code>composer require "doctrine/couchdb" "@dev"</code>
+</p>
+HELP;
+    }
+
+    /**
+     * @return DriverStatistic
+     */
+    public function getStats(): DriverStatistic
+    {
+        $info = $this->instance->getDatabaseInfo();
+
+        return (new DriverStatistic())
+            ->setSize($info['sizes']['active'])
+            ->setRawData($info)
+            ->setData(implode(', ', array_keys($this->itemInstances)))
+            ->setInfo('Couchdb version ' . $this->instance->getVersion() . "\n For more information see RawData.");
     }
 
     /**
@@ -85,7 +107,25 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @return string
+     */
+    protected function getDatabaseName(): string
+    {
+        return $this->getConfig()->getDatabase() ?: self::COUCHDB_DEFAULT_DB_NAME;
+    }
+
+    /**
+     * @return void
+     */
+    protected function createDatabase()
+    {
+        if (!in_array($this->instance->getDatabase(), $this->instance->getAllDatabases(), true)) {
+            $this->instance->createDatabase($this->instance->getDatabase());
+        }
+    }
+
+    /**
+     * @param CacheItemInterface $item
      * @return null|array
      * @throws PhpfastcacheDriverException
      */
@@ -108,9 +148,8 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         throw new PhpfastcacheDriverException('Got unexpected HTTP status: ' . $response->status);
     }
 
-
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -134,7 +173,33 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @return string|null
+     */
+    protected function getLatestDocumentRevision($docId)
+    {
+        $path = '/' . $this->getDatabaseName() . '/' . urlencode($docId);
+
+        $response = $this->instance->getHttpClient()->request(
+            'HEAD',
+            $path,
+            null,
+            false
+        );
+        if (!empty($response->headers['etag'])) {
+            return trim($response->headers['etag'], " '\"\t\n\r\0\x0B");
+        }
+
+        return null;
+    }
+
+    /********************
+     *
+     * PSR-6 Extended Methods
+     *
+     *******************/
+
+    /**
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -170,76 +235,5 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         }
 
         return true;
-    }
-
-    /**
-     * @return string|null
-     */
-    protected function getLatestDocumentRevision($docId)
-    {
-        $path = '/' . $this->getDatabaseName() . '/' . urlencode($docId);
-
-        $response = $this->instance->getHttpClient()->request(
-            'HEAD',
-            $path,
-            null,
-            false
-        );
-        if (!empty($response->headers['etag'])) {
-            return \trim($response->headers['etag'], " '\"\t\n\r\0\x0B");
-        }
-
-        return null;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getDatabaseName(): string
-    {
-        return $this->getConfig()->getDatabase() ?: self::COUCHDB_DEFAULT_DB_NAME;
-    }
-
-    /**
-     * @return void
-     */
-    protected function createDatabase()
-    {
-        if (!\in_array($this->instance->getDatabase(), $this->instance->getAllDatabases(), true)) {
-            $this->instance->createDatabase($this->instance->getDatabase());
-        }
-    }
-
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
-
-    /**
-     * @return string
-     */
-    public function getHelp(): string
-    {
-        return <<<HELP
-<p>
-To install the Couchdb HTTP client library via Composer:
-<code>composer require "doctrine/couchdb" "@dev"</code>
-</p>
-HELP;
-    }
-
-    /**
-     * @return DriverStatistic
-     */
-    public function getStats(): DriverStatistic
-    {
-        $info = $this->instance->getDatabaseInfo();
-
-        return (new DriverStatistic())
-            ->setSize($info['sizes']['active'])
-            ->setRawData($info)
-            ->setData(\implode(', ', \array_keys($this->itemInstances)))
-            ->setInfo('Couchdb version ' . $this->instance->getVersion() . "\n For more information see RawData.");
     }
 }

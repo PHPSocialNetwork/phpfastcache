@@ -15,15 +15,13 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Apcu;
 
-use Phpfastcache\Core\Pool\{
-    DriverBaseTrait, ExtendedCacheItemPoolInterface
-};
+use DateTime;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
+use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheInvalidArgumentException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 use Psr\Cache\CacheItemInterface;
+
 
 /**
  * Class Driver
@@ -40,7 +38,23 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     public function driverCheck(): bool
     {
-        return \extension_loaded('apcu') && ini_get('apc.enabled');
+        return extension_loaded('apcu') && ini_get('apc.enabled');
+    }
+
+    /**
+     * @return DriverStatistic
+     */
+    public function getStats(): DriverStatistic
+    {
+        $stats = (array)apcu_cache_info();
+        $date = (new DateTime())->setTimestamp($stats['start_time']);
+
+        return (new DriverStatistic())
+            ->setData(implode(', ', array_keys($this->itemInstances)))
+            ->setInfo(sprintf("The APCU cache is up since %s, and have %d item(s) in cache.\n For more information see RawData.", $date->format(DATE_RFC2822),
+                $stats['num_entries']))
+            ->setRawData($stats)
+            ->setSize((int)$stats['mem_size']);
     }
 
     /**
@@ -52,7 +66,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -62,7 +76,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            $ttl = $item->getExpirationDate()->getTimestamp() - \time();
+            $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
             return (bool)apcu_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
         }
@@ -71,7 +85,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
@@ -85,7 +99,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -101,14 +115,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
-    /**
-     * @return bool
-     */
-    protected function driverClear(): bool
-    {
-        return @apcu_clear_cache();
-    }
-
     /********************
      *
      * PSR-6 Extended Methods
@@ -116,18 +122,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      *******************/
 
     /**
-     * @return DriverStatistic
+     * @return bool
      */
-    public function getStats(): DriverStatistic
+    protected function driverClear(): bool
     {
-        $stats = (array)apcu_cache_info();
-        $date = (new \DateTime())->setTimestamp($stats['start_time']);
-
-        return (new DriverStatistic())
-            ->setData(\implode(', ', \array_keys($this->itemInstances)))
-            ->setInfo(\sprintf("The APCU cache is up since %s, and have %d item(s) in cache.\n For more information see RawData.", $date->format(\DATE_RFC2822),
-                $stats['num_entries']))
-            ->setRawData($stats)
-            ->setSize((int)$stats['mem_size']);
+        return @apcu_clear_cache();
     }
 }

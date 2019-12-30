@@ -15,14 +15,11 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Cookie;
 
-use Phpfastcache\Core\Pool\{
-    DriverBaseTrait, ExtendedCacheItemPoolInterface
-};
+use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException};
 use Psr\Cache\CacheItemInterface;
+
 
 /**
  * Class Driver
@@ -37,31 +34,54 @@ class Driver implements ExtendedCacheItemPoolInterface
     const PREFIX = 'PFC_';
 
     /**
+     * @inheritdoc
+     */
+    public static function isUsableInAutoContext(): bool
+    {
+        return false;
+    }
+
+    /**
      * @return bool
      */
     public function driverCheck(): bool
     {
-        return \function_exists('setcookie');
+        return function_exists('setcookie');
     }
 
     /**
-     * @return bool
+     * @return DriverStatistic
      */
-    protected function driverConnect(): bool
+    public function getStats(): DriverStatistic
     {
-        return !(!\array_key_exists('phpFastCache', $_COOKIE) && !@setcookie('phpFastCache', '1', 10));
+        $size = 0;
+        $stat = new DriverStatistic();
+        $stat->setData($_COOKIE);
+
+        /**
+         * Only count PFC Cookie
+         */
+        foreach ($_COOKIE as $key => $value) {
+            if (strpos($key, self::PREFIX) === 0) {
+                $size += strlen($value);
+            }
+        }
+
+        $stat->setSize($size);
+
+        return $stat;
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return null|array
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverException
+     * @throws PhpfastcacheDriverException
      */
     protected function driverRead(CacheItemInterface $item)
     {
         $this->driverConnect();
         $keyword = self::PREFIX . $item->getKey();
-        $x = isset($_COOKIE[$keyword]) ? \json_decode($_COOKIE[$keyword], true) : false;
+        $x = isset($_COOKIE[$keyword]) ? json_decode($_COOKIE[$keyword], true) : false;
 
         if ($x == false) {
             return null;
@@ -75,7 +95,15 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @return bool
+     */
+    protected function driverConnect(): bool
+    {
+        return !(!array_key_exists('phpFastCache', $_COOKIE) && !@setcookie('phpFastCache', '1', 10));
+    }
+
+    /**
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -87,9 +115,9 @@ class Driver implements ExtendedCacheItemPoolInterface
         if ($item instanceof Item) {
             $this->driverConnect();
             $keyword = self::PREFIX . $item->getKey();
-            $v = \json_encode($this->driverPreWrap($item));
+            $v = json_encode($this->driverPreWrap($item));
 
-            if ($this->getConfig()->getLimitedMemoryByObject() !== null && \strlen($v) > $this->getConfig()->getLimitedMemoryByObject()) {
+            if ($this->getConfig()->getLimitedMemoryByObject() !== null && strlen($v) > $this->getConfig()->getLimitedMemoryByObject()) {
                 return false;
             }
 
@@ -106,13 +134,13 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         $this->driverConnect();
         $keyword = self::PREFIX . $key;
-        $x = isset($_COOKIE[$keyword]) ? $this->decode(\json_decode($_COOKIE[$keyword])->t) : 0;
+        $x = isset($_COOKIE[$keyword]) ? $this->decode(json_decode($_COOKIE[$keyword])->t) : 0;
 
-        return $x ? $x - \time() : $x;
+        return $x ? $x - time() : $x;
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -132,6 +160,12 @@ class Driver implements ExtendedCacheItemPoolInterface
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
+    /********************
+     *
+     * PSR-6 Extended Methods
+     *
+     *******************/
+
     /**
      * @return bool
      */
@@ -140,7 +174,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $return = null;
         $this->driverConnect();
         foreach ($_COOKIE as $keyword => $value) {
-            if (\strpos($keyword, self::PREFIX) !== false) {
+            if (strpos($keyword, self::PREFIX) !== false) {
                 $_COOKIE[$keyword] = null;
                 $result = @setcookie($keyword, null, -10);
                 if ($return !== false) {
@@ -150,42 +184,5 @@ class Driver implements ExtendedCacheItemPoolInterface
         }
 
         return $return;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function isUsableInAutoContext(): bool
-    {
-        return false;
-    }
-
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
-
-    /**
-     * @return DriverStatistic
-     */
-    public function getStats(): DriverStatistic
-    {
-        $size = 0;
-        $stat = new DriverStatistic();
-        $stat->setData($_COOKIE);
-
-        /**
-         * Only count PFC Cookie
-         */
-        foreach ($_COOKIE as $key => $value) {
-            if (\strpos($key, self::PREFIX) === 0) {
-                $size += \strlen($value);
-            }
-        }
-
-        $stat->setSize($size);
-
-        return $stat;
     }
 }

@@ -78,14 +78,8 @@ $clusterAggregator = new ClusterAggregator('test_20');
 $clusterAggregator->aggregateDriver(CacheManager::getInstance('Redis'));
 $clusterAggregator->aggregateDriver(CacheManager::getInstance('Files'));
 $cluster = $clusterAggregator->getCluster(AggregatorInterface::STRATEGY_MASTER_SLAVE);
+$cluster->clear();
 
-$cacheKey = 'cache_' .  \bin2hex(\random_bytes(12));
-$cacheItem = $cluster->getItem($cacheKey);
-
-if($cacheItem->get() === $cacheValue){
-    $testHelper->printPassText('The Master/Slave cluster successfully retrieved the expected value.');
-}else{
-    $testHelper->printPassText('The Master/Slave cluster failed to retrieve the expected value.');
-}
+$testHelper->runCRUDTests($cluster);
 
 $testHelper->terminateTest();

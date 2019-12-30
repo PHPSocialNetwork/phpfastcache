@@ -16,7 +16,11 @@ namespace Phpfastcache\Cluster;
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverNotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
@@ -43,16 +47,16 @@ class ClusterAggregator implements AggregatorInterface
      * ClusterAggregator constructor.
      *
      * @param string $clusterAggregatorName
-     * @param \Phpfastcache\Cluster\AggregatablePoolInterface ...$driverPools
+     * @param AggregatablePoolInterface ...$driverPools
      *
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheLogicException
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
     public function __construct(string $clusterAggregatorName = '', AggregatablePoolInterface ...$driverPools)
     {
-        $clusterAggregatorName = \trim($clusterAggregatorName);
+        $clusterAggregatorName = trim($clusterAggregatorName);
         if (empty($clusterAggregatorName)) {
-            $clusterAggregatorName = 'cluster_' . \bin2hex(\random_bytes(15));
+            $clusterAggregatorName = 'cluster_' . bin2hex(random_bytes(15));
         }
 
         $this->clusterAggregatorName = $clusterAggregatorName;
@@ -63,30 +67,9 @@ class ClusterAggregator implements AggregatorInterface
     }
 
     /**
-     * @param string $driverName
-     * @param \Phpfastcache\Config\ConfigurationOption|NULL $driverConfig
+     * @param AggregatablePoolInterface $driverPool
      *
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverCheckException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverNotFoundException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheLogicException
-     */
-    public function aggregateNewDriver(string $driverName, ConfigurationOption $driverConfig = NULL): void
-    {
-        if ($this->cluster) {
-            throw new PhpfastcacheLogicException('The cluster has been already build, cannot aggregate more pools.');
-        }
-        $this->aggregateDriver(
-            CacheManager::getInstance($driverName, $driverConfig)
-        );
-    }
-
-    /**
-     * @param \Phpfastcache\Cluster\AggregatablePoolInterface $driverPool
-     *
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheLogicException
+     * @throws PhpfastcacheLogicException
      */
     public function aggregateDriver(AggregatablePoolInterface $driverPool): void
     {
@@ -94,7 +77,7 @@ class ClusterAggregator implements AggregatorInterface
             throw new PhpfastcacheLogicException('The cluster has been already build, cannot aggregate more pools.');
         }
 
-        $splHash = \spl_object_hash($driverPool);
+        $splHash = spl_object_hash($driverPool);
         if (!isset($this->driverPools[$splHash])) {
             if ($driverPool instanceof ClusterPoolInterface) {
                 throw new PhpfastcacheLogicException('Recursive cluster aggregation is not allowed !');
@@ -107,9 +90,30 @@ class ClusterAggregator implements AggregatorInterface
     }
 
     /**
-     * @param \Phpfastcache\Cluster\AggregatablePoolInterface $driverPool
+     * @param string $driverName
+     * @param ConfigurationOption|NULL $driverConfig
      *
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheLogicException
+     * @throws PhpfastcacheDriverCheckException
+     * @throws PhpfastcacheDriverException
+     * @throws PhpfastcacheDriverNotFoundException
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidConfigurationException
+     * @throws PhpfastcacheLogicException
+     */
+    public function aggregateNewDriver(string $driverName, ConfigurationOption $driverConfig = null): void
+    {
+        if ($this->cluster) {
+            throw new PhpfastcacheLogicException('The cluster has been already build, cannot aggregate more pools.');
+        }
+        $this->aggregateDriver(
+            CacheManager::getInstance($driverName, $driverConfig)
+        );
+    }
+
+    /**
+     * @param AggregatablePoolInterface $driverPool
+     *
+     * @throws PhpfastcacheLogicException
      */
     public function disaggregateDriver(AggregatablePoolInterface $driverPool): void
     {
@@ -117,7 +121,7 @@ class ClusterAggregator implements AggregatorInterface
             throw new PhpfastcacheLogicException('The cluster has been already build, cannot disaggregate pools.');
         }
 
-        $splHash = \spl_object_hash($driverPool);
+        $splHash = spl_object_hash($driverPool);
         if (isset($this->driverPools[$splHash])) {
             unset($this->driverPools[$splHash]);
         } else {
@@ -128,8 +132,8 @@ class ClusterAggregator implements AggregatorInterface
     /**
      * @param int $strategy
      *
-     * @return \Phpfastcache\Cluster\ClusterPoolInterface
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException
+     * @return ClusterPoolInterface
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function getCluster(int $strategy = AggregatorInterface::STRATEGY_FULL_REPLICATION): ClusterPoolInterface
     {
@@ -138,7 +142,7 @@ class ClusterAggregator implements AggregatorInterface
                 $clusterClass = ClusterPoolAbstract::STRATEGY[$strategy];
                 $this->cluster = new $clusterClass(
                     $this->getClusterAggregatorName(),
-                    ...\array_values($this->driverPools)
+                    ...array_values($this->driverPools)
                 );
             }
         } else {

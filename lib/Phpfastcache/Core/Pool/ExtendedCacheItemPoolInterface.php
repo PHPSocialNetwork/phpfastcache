@@ -19,14 +19,10 @@ use InvalidArgumentException;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Event\EventInterface;
+use Phpfastcache\Event\EventManagerDispatcherInterface;
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Phpfastcache\Util\ClassNamespaceResolverInterface;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
-};
-use Psr\Cache\{
-    CacheItemInterface, CacheItemPoolInterface
-};
+use Psr\Cache\{CacheItemInterface, CacheItemPoolInterface};
 
 
 /**
@@ -41,7 +37,7 @@ use Psr\Cache\{
  *
  * @package phpFastCache\Core\Pool
  */
-interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNamespaceResolverInterface
+interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventManagerDispatcherInterface, ClassNamespaceResolverInterface
 {
     const DRIVER_CHECK_FAILURE = '%s is not installed or is misconfigured, cannot continue. 
     Also, please verify the suggested dependencies in composer because as of the V6, 3rd party libraries are no longer required.';
@@ -67,6 +63,19 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      */
     const DRIVER_MDATE_WRAPPER_INDEX = 'm';
 
+    /**
+     * Defines if the driver is allowed
+     * to be used in "Auto" driver.
+     *
+     * @return bool
+     */
+    public static function isUsableInAutoContext(): bool;
+
+    /**
+     * Return the config class name
+     * @return string
+     */
+    public static function getConfigClass(): string;
 
     /**
      * @return ConfigurationOption
@@ -104,12 +113,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      * @param string $key
      *   The key for which to return the corresponding Cache Item.
      *
+     * @return ExtendedCacheItemInterface
+     *   The corresponding Cache Item.
      * @throws PhpfastcacheInvalidArgumentException
      *   If the $key string is not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return ExtendedCacheItemInterface
-     *   The corresponding Cache Item.
      */
     public function getItem($key);
 
@@ -120,15 +129,15 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      * @param array $keys
      * An indexed array of keys of items to retrieve.
      *
-     * @throws InvalidArgumentException
-     *   If any of the keys in $keys are not a legal value a phpfastcacheInvalidArgumentException
-     *   MUST be thrown.
-     *
      * @return ExtendedCacheItemInterface[]
      *   A traversable collection of Cache Items keyed by the cache keys of
      *   each item. A Cache item will be returned for each key, even if that
      *   key is not found. However, if no keys are specified then an empty
      *   traversable MUST be returned instead.
+     * @throws InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a phpfastcacheInvalidArgumentException
+     *   MUST be thrown.
+     *
      */
     public function getItems(array $keys = []);
 
@@ -140,16 +149,16 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      * @param int $option \json_encode() options
      * @param int $depth \json_encode() depth
      *
+     * @return string
      * @throws InvalidArgumentException
      *   If any of the keys in $keys are not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return string
      */
     public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512): string;
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return mixed
      */
     public function setItem(CacheItemInterface $item);
@@ -158,7 +167,6 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      * @return DriverStatistic
      */
     public function getStats(): DriverStatistic;
-
 
     /**
      * Get a quick help guide
@@ -174,15 +182,15 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      * @param string $tagName
      * An indexed array of keys of items to retrieve.
      *
-     * @throws InvalidArgumentException
-     *   If any of the keys in $keys are not a legal value a phpfastcacheInvalidArgumentException
-     *   MUST be thrown.
-     *
      * @return ExtendedCacheItemInterface[]
      *   A traversable collection of Cache Items keyed by the cache keys of
      *   each item. A Cache item will be returned for each key, even if that
      *   key is not found. However, if no keys are specified then an empty
      *   traversable MUST be returned instead.
+     * @throws InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a phpfastcacheInvalidArgumentException
+     *   MUST be thrown.
+     *
      */
     public function getItemsByTag($tagName): array;
 
@@ -192,15 +200,15 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      * @param string[] $tagNames
      * An indexed array of keys of items to retrieve.
      *
-     * @throws InvalidArgumentException
-     *   If any of the keys in $keys are not a legal value a phpfastcacheInvalidArgumentException
-     *   MUST be thrown.
-     *
      * @return ExtendedCacheItemInterface[]
      *   A traversable collection of Cache Items keyed by the cache keys of
      *   each item. A Cache item will be returned for each key, even if that
      *   key is not found. However, if no keys are specified then an empty
      *   traversable MUST be returned instead.
+     * @throws InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a phpfastcacheInvalidArgumentException
+     *   MUST be thrown.
+     *
      */
     public function getItemsByTags(array $tagNames): array;
 
@@ -210,15 +218,15 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      * @param string[] $tagNames
      * An indexed array of keys of items to retrieve.
      *
-     * @throws InvalidArgumentException
-     *   If any of the keys in $keys are not a legal value a phpfastcacheInvalidArgumentException
-     *   MUST be thrown.
-     *
      * @return ExtendedCacheItemInterface[]
      *   A traversable collection of Cache Items keyed by the cache keys of
      *   each item. A Cache item will be returned for each key, even if that
      *   key is not found. However, if no keys are specified then an empty
      *   traversable MUST be returned instead.
+     * @throws InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a phpfastcacheInvalidArgumentException
+     *   MUST be thrown.
+     *
      */
     public function getItemsByTagsAll(array $tagNames): array;
 
@@ -230,11 +238,11 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      * @param int $option \json_encode() options
      * @param int $depth \json_encode() depth
      *
+     * @return string
      * @throws InvalidArgumentException
      *   If any of the keys in $keys are not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return string
      */
     public function getItemsByTagsAsJsonString(array $tagNames, $option = 0, $depth = 512): string;
 
@@ -244,12 +252,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      * @param string $tagName
      *   The tag for which to delete
      *
+     * @return bool
+     *   True if the item was successfully removed. False if there was an error.
      * @throws InvalidArgumentException
      *   If the $key string is not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return bool
-     *   True if the item was successfully removed. False if there was an error.
      */
     public function deleteItemsByTag($tagName): bool;
 
@@ -259,12 +267,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      * @param string[] $tagNames
      *   The tag for which to delete
      *
+     * @return bool
+     *   True if the items were successfully removed. False if there was an error.
      * @throws InvalidArgumentException
      *   If the $key string is not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return bool
-     *   True if the items were successfully removed. False if there was an error.
      */
     public function deleteItemsByTags(array $tagNames): bool;
 
@@ -274,12 +282,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      * @param string[] $tagNames
      * An indexed array of keys of items to retrieve.
      *
+     * @return bool
+     *   True if the items were successfully removed. False if there was an error.
      * @throws InvalidArgumentException
      *   If any of the keys in $keys are not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return bool
-     *   True if the items were successfully removed. False if there was an error.
      */
     public function deleteItemsByTagsAll(array $tagNames): bool;
 
@@ -291,12 +299,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      *
      * @param int $step
      *
+     * @return bool
+     *   True if the item was successfully incremented. False if there was an error.
      * @throws InvalidArgumentException
      *   If the $key string is not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return bool
-     *   True if the item was successfully incremented. False if there was an error.
      */
     public function incrementItemsByTag($tagName, $step = 1): bool;
 
@@ -308,12 +316,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      *
      * @param int $step
      *
+     * @return bool
+     *   True if the items were successfully incremented. False if there was an error.
      * @throws InvalidArgumentException
      *   If the $key string is not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return bool
-     *   True if the items were successfully incremented. False if there was an error.
      */
     public function incrementItemsByTags(array $tagNames, $step = 1): bool;
 
@@ -325,12 +333,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      *
      * @param int $step
      *
+     * @return bool
+     *   True if the items were successfully incremented. False if there was an error.
      * @throws InvalidArgumentException
      *   If the $key string is not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return bool
-     *   True if the items were successfully incremented. False if there was an error.
      */
     public function incrementItemsByTagsAll(array $tagNames, $step = 1): bool;
 
@@ -342,12 +350,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      *
      * @param int $step
      *
+     * @return bool
+     *   True if the item was successfully decremented. False if there was an error.
      * @throws InvalidArgumentException
      *   If the $key string is not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return bool
-     *   True if the item was successfully decremented. False if there was an error.
      */
     public function decrementItemsByTag($tagName, $step = 1): bool;
 
@@ -359,12 +367,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      *
      * @param int $step
      *
+     * @return bool
+     *   True if the item was successfully decremented. False if there was an error.
      * @throws InvalidArgumentException
      *   If the $key string is not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return bool
-     *   True if the item was successfully decremented. False if there was an error.
      */
     public function decrementItemsByTags(array $tagNames, $step = 1): bool;
 
@@ -376,12 +384,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      *
      * @param int $step
      *
+     * @return bool
+     *   True if the items were successfully decremented. False if there was an error.
      * @throws InvalidArgumentException
      *   If the $key string is not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return bool
-     *   True if the items were successfully decremented. False if there was an error.
      */
     public function decrementItemsByTagsAll(array $tagNames, $step = 1): bool;
 
@@ -393,12 +401,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      *
      * @param array|string $data
      *
+     * @return bool
+     *   True if the item was successfully appended. False if there was an error.
      * @throws InvalidArgumentException
      *   If the $key string is not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return bool
-     *   True if the item was successfully appended. False if there was an error.
      */
     public function appendItemsByTag($tagName, $data): bool;
 
@@ -410,12 +418,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      *
      * @param array|string $data
      *
+     * @return bool
+     *   True if the items were successfully appended. False if there was an error.
      * @throws InvalidArgumentException
      *   If the $key string is not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return bool
-     *   True if the items were successfully appended. False if there was an error.
      */
     public function appendItemsByTags(array $tagNames, $data): bool;
 
@@ -427,12 +435,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      *
      * @param array|string $data
      *
+     * @return bool
+     *   True if the items were successfully appended. False if there was an error.
      * @throws InvalidArgumentException
      *   If the $key string is not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return bool
-     *   True if the items were successfully appended. False if there was an error.
      */
     public function appendItemsByTagsAll(array $tagNames, $data): bool;
 
@@ -444,12 +452,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      *
      * @param array|string $data
      *
+     * @return bool
+     *   True if the item was successfully prepended. False if there was an error.
      * @throws InvalidArgumentException
      *   If the $key string is not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return bool
-     *   True if the item was successfully prepended. False if there was an error.
      */
     public function prependItemsByTag($tagName, $data): bool;
 
@@ -461,12 +469,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      *
      * @param array|string $data
      *
+     * @return bool
+     *   True if the item was successfully prepended. False if there was an error.
      * @throws InvalidArgumentException
      *   If the $key string is not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return bool
-     *   True if the item was successfully prepended. False if there was an error.
      */
     public function prependItemsByTags(array $tagNames, $data): bool;
 
@@ -478,17 +486,17 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      *
      * @param array|string $data
      *
+     * @return bool
+     *   True if the items were successfully prepended. False if there was an error.
      * @throws InvalidArgumentException
      *   If the $key string is not a legal value a phpfastcacheInvalidArgumentException
      *   MUST be thrown.
      *
-     * @return bool
-     *   True if the items were successfully prepended. False if there was an error.
      */
     public function prependItemsByTagsAll(array $tagNames, $data): bool;
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return void
      */
     public function detachItem(CacheItemInterface $item);
@@ -499,7 +507,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
     public function detachAllItems();
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return void
      * @throws PhpfastcacheLogicException
      */
@@ -510,24 +518,11 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      * Returns false if the item exists, is attached and the Spl Hash mismatches
      * Returns null if the item does not exists
      *
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool|null
      * @throws PhpfastcacheLogicException
      */
     public function isAttached(CacheItemInterface $item);
-
-    /**
-     * @return EventInterface
-     */
-    public function getEventManager(): EventInterface;
-
-    /**
-     * Set the EventManager instance
-     *
-     * @param EventInterface $em
-     * @return self
-     */
-    public function setEventManager(EventInterface $em): self;
 
     /**
      * Save multiple items, possible uses:
@@ -538,18 +533,4 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, ClassNa
      * @return bool
      */
     public function saveMultiple(...$items): bool;
-
-    /**
-     * Defines if the driver is allowed
-     * to be used in "Auto" driver.
-     *
-     * @return bool
-     */
-    public static function isUsableInAutoContext(): bool;
-
-    /**
-     * Return the config class name
-     * @return string
-     */
-    public static function getConfigClass(): string;
 }

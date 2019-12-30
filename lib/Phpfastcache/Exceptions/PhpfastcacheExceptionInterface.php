@@ -16,12 +16,13 @@ declare(strict_types=1);
 namespace Phpfastcache\Exceptions;
 
 use Psr\Cache\CacheException;
+use Throwable;
 
 /**
  * Interface PhpfastcacheExceptionInterface
  * @package Phpfastcache\Exceptions
  */
-interface PhpfastcacheExceptionInterface extends CacheException, \Throwable
+interface PhpfastcacheExceptionInterface extends CacheException, Throwable
 {
 
 }

@@ -15,18 +15,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool;
 
-use InvalidArgumentException;
-use Phpfastcache\Config\ConfigurationOption;
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Event\EventInterface;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
-};
-use Psr\Cache\{
-    CacheItemInterface, CacheItemPoolInterface
-};
-
 
 /**
  * Interface ExtendedCacheItemPoolInterface

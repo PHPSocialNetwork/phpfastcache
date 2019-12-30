@@ -31,11 +31,11 @@ class SemiReplicationCluster extends ClusterPoolAbstract
      */
     public function getItem($key)
     {
-        /** @var \Phpfastcache\Core\Item\ExtendedCacheItemInterface $item */
+        /** @var ExtendedCacheItemInterface $item */
         $item = null;
         $eCount = 0;
 
-        foreach ($this->driverPools as $driverPool) {
+        foreach ($this->clusterPools as $driverPool) {
             try {
                 $poolItem = $driverPool->getItem($key);
                 if ($poolItem->isHit()) {
@@ -49,7 +49,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
             }
         }
 
-        if (\count($this->driverPools) <= $eCount) {
+        if (count($this->clusterPools) <= $eCount) {
             throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
 
@@ -62,7 +62,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
     public function hasItem($key)
     {
         $eCount = 0;
-        foreach ($this->driverPools as $driverPool) {
+        foreach ($this->clusterPools as $driverPool) {
             try {
                 $poolItem = $driverPool->getItem($key);
                 if ($poolItem->isHit()) {
@@ -73,7 +73,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
             }
         }
 
-        if (\count($this->driverPools) <= $eCount) {
+        if (count($this->clusterPools) <= $eCount) {
             throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
 
@@ -88,7 +88,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
         $hasClearedOnce = false;
         $eCount = 0;
 
-        foreach ($this->driverPools as $driverPool) {
+        foreach ($this->clusterPools as $driverPool) {
             try {
                 if ($result = $driverPool->clear()) {
                     $hasClearedOnce = $result;
@@ -98,7 +98,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
             }
         }
 
-        if (\count($this->driverPools) <= $eCount) {
+        if (count($this->clusterPools) <= $eCount) {
             throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
 
@@ -114,7 +114,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
         $hasDeletedOnce = false;
         $eCount = 0;
 
-        foreach ($this->driverPools as $driverPool) {
+        foreach ($this->clusterPools as $driverPool) {
             try {
                 if ($result = $driverPool->deleteItem($key)) {
                     $hasDeletedOnce = $result;
@@ -124,7 +124,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
             }
         }
 
-        if (\count($this->driverPools) <= $eCount) {
+        if (count($this->clusterPools) <= $eCount) {
             throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
         // Return true only if at least one backend confirmed the "clear" operation
@@ -140,7 +140,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
         $hasSavedOnce = false;
         $eCount = 0;
 
-        foreach ($this->driverPools as $driverPool) {
+        foreach ($this->clusterPools as $driverPool) {
             try {
                 $poolItem = $this->getStandardizedItem($item, $driverPool);
                 if ($result = $driverPool->save($poolItem)) {
@@ -151,7 +151,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
             }
         }
 
-        if (\count($this->driverPools) <= $eCount) {
+        if (count($this->clusterPools) <= $eCount) {
             throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
         // Return true only if at least one backend confirmed the "commit" operation
@@ -165,7 +165,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
     {
         /** @var ExtendedCacheItemInterface $item */
         $hasSavedOnce = false;
-        foreach ($this->driverPools as $driverPool) {
+        foreach ($this->clusterPools as $driverPool) {
             $poolItem = $this->getStandardizedItem($item, $driverPool);
             if ($result = $driverPool->saveDeferred($poolItem)) {
                 $hasSavedOnce = $result;
@@ -183,7 +183,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
         $hasCommitOnce = false;
         $eCount = 0;
 
-        foreach ($this->driverPools as $driverPool) {
+        foreach ($this->clusterPools as $driverPool) {
             try {
                 if ($result = $driverPool->commit()) {
                     $hasCommitOnce = $result;
@@ -193,7 +193,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
             }
         }
 
-        if (\count($this->driverPools) <= $eCount) {
+        if (count($this->clusterPools) <= $eCount) {
             throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
         // Return true only if at least one backend confirmed the "commit" operation

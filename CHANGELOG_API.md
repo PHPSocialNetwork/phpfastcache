@@ -1,9 +1,17 @@
+## 3.0.0-rc
+- **[BC]** Moved `\Phpfastcache\Event\EventInterface` to`\Phpfastcache\Event\EventManagerInterface`
+- Moved (by extends) ExtendedCacheItemPoolInterface::setEventManager() in `\Phpfastcache\Event\EventManagerDispatcherInterface:setEventManager()`
+- Moved (by extends) ExtendedCacheItemInterface::doesItemBelongToThatDriverBackend() in `\Phpfastcache\Event\EventManagerDispatcherInterface::setEventManager()`
+- Added `\Phpfastcache\Event\EventManagerDispatcherInterface`
+- Added `ExtendedCacheItemInterface::doesItemBelongToThatDriverBackend()`
+- Added `\Phpfastcache\Event\EventManagerInterface:onEveryEvents()`
+
 ## 2.0.4
 - Added ExtendedCacheItemPoolInterface::getConfigClass() that returns the config class name
 
 ## 2.0.3
-- Updated ExtendedCacheItemPoolInterface::setEventManager() first argument that now MUSt implement `\Phpfastcache\Event\EventInterface`
-- Updated ExtendedCacheItemInterface::setEventManager() first argument that now MUSt implement `\Phpfastcache\Event\EventInterface`
+- Updated ExtendedCacheItemPoolInterface::setEventManager() first argument that now MUST implement `\Phpfastcache\Event\EventInterface`
+- Updated ExtendedCacheItemInterface::setEventManager() first argument that now MUST implement `\Phpfastcache\Event\EventInterface`
 
 ## 2.0.2
 - Added ExtendedCacheItemPoolInterface::isUsableInAutoContext() to check if the driver is allowed to be used in 'Auto' context.

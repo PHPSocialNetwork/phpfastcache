@@ -16,7 +16,6 @@ declare(strict_types=1);
 namespace Phpfastcache\Cluster;
 
 use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, ItemBaseTrait};
-use Phpfastcache\Cluster\ClusterPoolInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 

@@ -14,14 +14,10 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Zendshm;
 
-use Phpfastcache\Core\Item\{
-    ExtendedCacheItemInterface, ItemBaseTrait
-};
+use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, ItemBaseTrait};
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Drivers\Zendshm\Driver as ZendSHMDriver;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheInvalidArgumentException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 
 /**
  * Class Item
@@ -35,7 +31,7 @@ class Item implements ExtendedCacheItemInterface
 
     /**
      * Item constructor.
-     * @param \Phpfastcache\Drivers\Zendshm\Driver $driver
+     * @param Driver $driver
      * @param $key
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -46,8 +42,8 @@ class Item implements ExtendedCacheItemInterface
 
     /**
      * @param ExtendedCacheItemPoolInterface $driver
-     * @throws PhpfastcacheInvalidArgumentException
      * @return static
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver)
     {

@@ -16,6 +16,7 @@ namespace Phpfastcache\Cluster\Drivers\FullReplication;
 
 use Phpfastcache\Cluster\ClusterPoolAbstract;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -24,21 +25,20 @@ use Psr\Cache\CacheItemInterface;
  */
 class FullReplicationCluster extends ClusterPoolAbstract
 {
-
     /**
      * @inheritDoc
      */
     public function getItem($key)
     {
-        /** @var \Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface[] $poolsToResync */
+        /** @var ExtendedCacheItemPoolInterface[] $poolsToResync */
         $poolsToResync = [];
-        /** @var \Phpfastcache\Core\Item\ExtendedCacheItemInterface $item */
-        $item = NULL;
+        /** @var ExtendedCacheItemInterface $item */
+        $item = null;
 
-        foreach ($this->driverPools as $driverPool) {
+        foreach ($this->clusterPools as $driverPool) {
             $poolItem = $driverPool->getItem($key);
             if ($poolItem->isHit()) {
-                if(!$item){
+                if (!$item) {
                     $item = $poolItem;
                     continue;
                 }
@@ -46,7 +46,7 @@ class FullReplicationCluster extends ClusterPoolAbstract
                 $itemData = $item->get();
                 $poolItemData = $poolItem->get();
 
-                if (\is_object($itemData)
+                if (is_object($itemData)
                 ) {
                     if ($item->get() != $poolItemData) {
                         $poolsToResync[] = $driverPool;
@@ -61,11 +61,15 @@ class FullReplicationCluster extends ClusterPoolAbstract
             }
         }
 
-        if ($item && $item->isHit() && \count($poolsToResync) < \count($this->driverPools)) {
+        if ($item && $item->isHit() && count($poolsToResync) < count($this->clusterPools)) {
             foreach ($poolsToResync as $poolToResync) {
                 $poolItem = $poolToResync->getItem($key);
-                $poolItem->set($item->get())
-                    ->expiresAt($item->getExpirationDate());
+                $poolItem->setEventManager($this->getEventManager())
+                    ->set($item->get())
+                    ->setHit($item->isHit())
+                    ->setTags($item->getTags())
+                    ->expiresAt($item->getExpirationDate())
+                    ->setDriver($poolToResync);
                 $poolToResync->save($poolItem);
             }
         }
@@ -78,7 +82,7 @@ class FullReplicationCluster extends ClusterPoolAbstract
      */
     public function hasItem($key)
     {
-        foreach ($this->driverPools as $driverPool) {
+        foreach ($this->clusterPools as $driverPool) {
             $poolItem = $driverPool->getItem($key);
             if ($poolItem->isHit()) {
                 return true;
@@ -94,7 +98,7 @@ class FullReplicationCluster extends ClusterPoolAbstract
     public function clear()
     {
         $hasClearedOnce = false;
-        foreach ($this->driverPools as $driverPool) {
+        foreach ($this->clusterPools as $driverPool) {
             if ($result = $driverPool->clear()) {
                 $hasClearedOnce = $result;
             }
@@ -109,7 +113,7 @@ class FullReplicationCluster extends ClusterPoolAbstract
     public function deleteItem($key)
     {
         $hasDeletedOnce = false;
-        foreach ($this->driverPools as $driverPool) {
+        foreach ($this->clusterPools as $driverPool) {
             if ($result = $driverPool->deleteItem($key)) {
                 $hasDeletedOnce = $result;
             }
@@ -125,7 +129,7 @@ class FullReplicationCluster extends ClusterPoolAbstract
     {
         /** @var ExtendedCacheItemInterface $item */
         $hasSavedOnce = false;
-        foreach ($this->driverPools as $driverPool) {
+        foreach ($this->clusterPools as $driverPool) {
             $poolItem = $this->getStandardizedItem($item, $driverPool);
             if ($result = $driverPool->save($poolItem)) {
                 $hasSavedOnce = $result;
@@ -142,7 +146,7 @@ class FullReplicationCluster extends ClusterPoolAbstract
     {
         /** @var ExtendedCacheItemInterface $item */
         $hasSavedOnce = false;
-        foreach ($this->driverPools as $driverPool) {
+        foreach ($this->clusterPools as $driverPool) {
             $poolItem = $this->getStandardizedItem($item, $driverPool);
             if ($result = $driverPool->saveDeferred($poolItem)) {
                 $hasSavedOnce = $result;
@@ -158,7 +162,7 @@ class FullReplicationCluster extends ClusterPoolAbstract
     public function commit()
     {
         $hasCommitOnce = false;
-        foreach ($this->driverPools as $driverPool) {
+        foreach ($this->clusterPools as $driverPool) {
             if ($result = $driverPool->commit()) {
                 $hasCommitOnce = $result;
             }

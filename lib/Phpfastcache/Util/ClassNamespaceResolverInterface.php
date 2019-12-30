@@ -25,4 +25,9 @@ interface ClassNamespaceResolverInterface
      * @return string
      */
     public function getClassNamespace(): string;
+
+    /**
+     * @return string
+     */
+    public function getClassName(): string;
 }

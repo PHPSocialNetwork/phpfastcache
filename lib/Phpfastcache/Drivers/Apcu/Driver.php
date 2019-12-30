@@ -76,9 +76,9 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            $ttl = $item->getTtl();
+            $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
-            return (bool) apcu_store($item->getKey(), $this->encode($this->driverPreWrap($item)), ($ttl > 0 ? $ttl : 0));
+            return (bool)apcu_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
         }
 
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
@@ -95,7 +95,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             return null;
         }
 
-        return $this->decode($data);
+        return $data;
     }
 
     /**

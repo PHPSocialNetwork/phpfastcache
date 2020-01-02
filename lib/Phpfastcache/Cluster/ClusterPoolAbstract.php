@@ -20,6 +20,7 @@ use Phpfastcache\Cluster\Drivers\{FullReplication\FullReplicationCluster,
     SemiReplication\SemiReplicationCluster};
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\{Item\ExtendedCacheItemInterface, Pool\DriverBaseTrait, Pool\ExtendedCacheItemPoolInterface};
+use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\EventManager;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
@@ -71,6 +72,20 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
         $this->clusterPools = $driverPools;
         $this->__parentConstruct(new ConfigurationOption(), $clusterName);
         $this->setEventManager(EventManager::getInstance());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getIO(): DriverIO
+    {
+        $IO = new DriverIO();
+        foreach ($this->clusterPools as $clusterPool) {
+            $IO->setReadHit($IO->getReadHit() + $clusterPool->getIO()->getReadHit())
+                ->setReadMiss($IO->getReadMiss() + $clusterPool->getIO()->getReadMiss())
+                ->setWriteHit($IO->getWriteHit() + $clusterPool->getIO()->getWriteHit());
+        }
+        return $IO;
     }
 
     /**

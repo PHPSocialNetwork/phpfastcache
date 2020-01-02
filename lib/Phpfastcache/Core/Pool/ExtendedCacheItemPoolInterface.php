@@ -18,6 +18,7 @@ namespace Phpfastcache\Core\Pool;
 use InvalidArgumentException;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Event\EventManagerDispatcherInterface;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
@@ -212,4 +213,10 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      * @return bool
      */
     public function saveMultiple(...$items): bool;
+
+
+    /**
+     * @return DriverIO
+     */
+    public function getIO(): DriverIO;
 }

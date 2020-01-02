@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Pool;
 
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Psr\Cache\CacheItemInterface;
 
@@ -27,6 +28,12 @@ use Psr\Cache\CacheItemInterface;
 trait ExtendedCacheItemPoolTrait
 {
     use CacheItemPoolTrait, AbstractDriverPoolTrait;
+
+    /**
+     * @var DriverIO
+     */
+    protected $IO;
+
 
     /**
      * @inheritdoc
@@ -128,6 +135,14 @@ trait ExtendedCacheItemPoolTrait
             return true;
         }
         return false;
+    }
+
+    /**
+     * @return DriverIO
+     */
+    public function getIO(): DriverIO
+    {
+        return $this->IO;
     }
 
     /**

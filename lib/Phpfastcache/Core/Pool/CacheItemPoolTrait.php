@@ -19,6 +19,7 @@ use DateTime;
 use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\ItemBatch;
 use Phpfastcache\Event\EventManagerDispatcherTrait;
 use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
@@ -34,6 +35,7 @@ use RuntimeException;
  * @package phpFastCache\Core
  * @property ConfigurationOption $config The config array
  * @method ConfigurationOption getConfig() Return the config object
+ * @method DriverIO getIO() Return the IO object
  */
 trait CacheItemPoolTrait
 {
@@ -110,7 +112,6 @@ trait CacheItemPoolTrait
                     throw new PhpfastcacheInvalidArgumentException('Unsupported key character detected: "' . $matches[1] . '". Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers');
                 }
 
-                CacheManager::$ReadHits++;
                 $cacheSlamsSpendSeconds = 0;
                 $class = $this->getClassNamespace() . '\Item';
                 /** @var $item ExtendedCacheItemInterface */
@@ -221,6 +222,8 @@ trait CacheItemPoolTrait
          */
         $this->eventManager->dispatch('CacheGetItem', $this, $this->itemInstances[$key]);
 
+        $this->itemInstances[$key]->isHit() ? $this->getIO()->incReadHit() : $this->getIO()->incReadMiss();
+
         return $this->itemInstances[$key];
     }
 
@@ -246,7 +249,7 @@ trait CacheItemPoolTrait
          */
         $this->eventManager->dispatch('CacheClearItem', $this, $this->itemInstances);
 
-        CacheManager::$WriteHits++;
+        $this->getIO()->incWriteHit();
         // Faster than detachAllItems()
         $this->itemInstances = [];
 
@@ -281,7 +284,7 @@ trait CacheItemPoolTrait
         $item = $this->getItem($key);
         if ($item->isHit() && $this->driverDelete($item)) {
             $item->setHit(false);
-            CacheManager::$WriteHits++;
+            $this->getIO()->incWriteHit();
 
             /**
              * @eventName CacheCommitItem
@@ -413,7 +416,7 @@ trait CacheItemPoolTrait
 
         if ($this->driverWrite($item) && $this->driverWriteTags($item)) {
             $item->setHit(true);
-            CacheManager::$WriteHits++;
+            $this->getIO()->incWriteHit();
 
             return true;
         }

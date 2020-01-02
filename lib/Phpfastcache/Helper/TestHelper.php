@@ -367,6 +367,7 @@ class TestHelper
     public function runCRUDTests(ExtendedCacheItemPoolInterface $pool)
     {
         $this->printInfoText('Running CRUD tests on the following backend: ' . get_class($pool));
+        $pool->clear();
 
         $cacheKey = 'cache_key_' . bin2hex(random_bytes(12) . '_' . random_int(100, 999));
         $cacheValue = 'cache_data_' . random_int(1000, 999999);
@@ -448,6 +449,8 @@ class TestHelper
         } else {
             $this->printFailText('The cluster failed to clear.');
         }
+
+        $this->printInfoText(sprintf('I/O stats: %d HIT, %s MISS, %d WRITE', $pool->getIO()->getReadHit(),  $pool->getIO()->getReadMiss(),  $pool->getIO()->getWriteHit()));
     }
 
     /**

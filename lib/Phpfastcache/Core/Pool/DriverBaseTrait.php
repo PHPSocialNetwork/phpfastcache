@@ -19,6 +19,7 @@ use DateTime;
 use Exception;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException, PhpfastcacheDriverConnectException, PhpfastcacheLogicException};
 use ReflectionObject;
 
@@ -68,6 +69,7 @@ trait DriverBaseTrait
     {
         $this->setConfig($config);
         $this->instanceId = $instanceId;
+        $this->IO = new DriverIO();
 
         if (!$this->driverCheck()) {
             throw new PhpfastcacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));

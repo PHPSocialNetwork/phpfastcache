@@ -360,5 +360,4 @@ trait ItemExtendedTrait
 
         return $info;
     }
-
 }

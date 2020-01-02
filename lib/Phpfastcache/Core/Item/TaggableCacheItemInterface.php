@@ -27,27 +27,27 @@ interface TaggableCacheItemInterface
     /**
      * @param string $tagName
      *
-     * @return self
+     * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function addTag(string $tagName): self;
+    public function addTag(string $tagName): ExtendedCacheItemInterface;
 
     /**
      * @param array $tagNames
      *
-     * @return self
+     * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function addTags(array $tagNames): self;
+    public function addTags(array $tagNames): ExtendedCacheItemInterface;
 
 
     /**
      * @param array $tags
      *
-     * @return self
+     * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function setTags(array $tags): self;
+    public function setTags(array $tags): ExtendedCacheItemInterface;
 
     /**
      * @return array
@@ -62,19 +62,19 @@ interface TaggableCacheItemInterface
     public function getTagsAsString(string $separator = ', '): string;
 
     /**
-     * @param array $tagName
+     * @param string $tagName
      *
-     * @return self
+     * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function removeTag(string $tagName): self;
+    public function removeTag(string $tagName): ExtendedCacheItemInterface;
 
     /**
      * @param array $tagNames
      *
-     * @return self
+     * @return ExtendedCacheItemInterface
      */
-    public function removeTags(array $tagNames): self;
+    public function removeTags(array $tagNames): ExtendedCacheItemInterface;
 
     /**
      * @return array

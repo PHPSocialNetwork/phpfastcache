@@ -280,7 +280,7 @@ class TestHelper
     {
         $execTime = round(microtime(true) - $this->timestamp, 3);
 
-        $this->printText('Test duration: ' . $execTime . 's');
+        $this->printText('<yellow>Test duration: </yellow><light_green>' . $execTime . 's</light_green>');
         exit($this->exitCode);
     }
 
@@ -412,8 +412,9 @@ class TestHelper
         $cacheItem->append('_appended');
         $cacheValue .= '_appended';
         $pool->saveDeferred($cacheItem);
-        $this->printInfoText('Deferring saving operation then sleeping 3 seconds...');
-        sleep(3);
+        $pause = random_int(0, 3);
+        $this->printInfoText(sprintf('Deferring saving operation then sleeping %d seconds...', $pause));
+        sleep($pause);
         $this->printInfoText('Deferred item is being committed...');
         if ($pool->commit()) {
             $this->printPassText('The pool successfully committed deferred cache item.');

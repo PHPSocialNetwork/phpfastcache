@@ -181,14 +181,6 @@ trait DriverBaseTrait
         return $wrapper[self::DRIVER_DATA_WRAPPER_INDEX];
     }
 
-    /**
-     * @param array $wrapper
-     * @return mixed
-     */
-    public function driverUnwrapTags(array $wrapper)
-    {
-        return $wrapper[self::DRIVER_TAGS_WRAPPER_INDEX];
-    }
 
     /**
      * @param array $wrapper
@@ -225,108 +217,6 @@ trait DriverBaseTrait
         return $this->instanceId;
     }
 
-    /**
-     * @param ExtendedCacheItemInterface $item
-     * @return bool
-     * @throws PhpfastcacheLogicException
-     */
-    public function driverWriteTags(ExtendedCacheItemInterface $item): bool
-    {
-        /**
-         * Do not attempt to write tags
-         * on tags item, it can leads
-         * to an infinite recursive calls
-         */
-        if (strpos($item->getKey(), self::DRIVER_TAGS_KEY_PREFIX) === 0) {
-            throw new PhpfastcacheLogicException('Trying to set tag(s) to an Tag item index: ' . $item->getKey());
-        }
-
-        if (!$item->getTags() && !$item->getRemovedTags()) {
-            return true;
-        }
-
-        /**
-         * @var $tagsItems ExtendedCacheItemInterface[]
-         */
-        $tagsItems = $this->getItems($this->getTagKeys($item->getTags()));
-
-        foreach ($tagsItems as $tagsItem) {
-            $data = $tagsItem->get();
-            $expTimestamp = $item->getExpirationDate()->getTimestamp();
-
-            /**
-             * Using the key will
-             * avoid to use array_unique
-             * that has slow performances
-             */
-
-            $tagsItem->set(array_merge((array)$data, [$item->getKey() => $expTimestamp]));
-
-            /**
-             * Set the expiration date
-             * of the $tagsItem based
-             * on the older $item
-             * expiration date
-             */
-            if ($expTimestamp > $tagsItem->getExpirationDate()->getTimestamp()) {
-                $tagsItem->expiresAt($item->getExpirationDate());
-            }
-            $this->driverWrite($tagsItem);
-            $tagsItem->setHit(true);
-        }
-
-        /**
-         * Also update removed tags to
-         * keep the index up to date
-         */
-        $tagsItems = $this->getItems($this->getTagKeys($item->getRemovedTags()));
-
-        foreach ($tagsItems as $tagsItem) {
-            $data = (array)$tagsItem->get();
-
-            unset($data[$item->getKey()]);
-            $tagsItem->set($data);
-
-            /**
-             * Recalculate the expiration date
-             *
-             * If the $tagsItem does not have
-             * any cache item references left
-             * then remove it from tagsItems index
-             */
-            if (count($data)) {
-                $tagsItem->expiresAt((new DateTime())->setTimestamp(max($data)));
-                $this->driverWrite($tagsItem);
-                $tagsItem->setHit(true);
-            } else {
-                $this->deleteItem($tagsItem->getKey());
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param array $keys
-     * @return array
-     */
-    public function getTagKeys(array $keys): array
-    {
-        foreach ($keys as &$key) {
-            $key = $this->getTagKey($key);
-        }
-
-        return $keys;
-    }
-
-    /**
-     * @param $key
-     * @return string
-     */
-    public function getTagKey($key): string
-    {
-        return self::DRIVER_TAGS_KEY_PREFIX . $key;
-    }
 
     /**
      * Encode data types such as object/array

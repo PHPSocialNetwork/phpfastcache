@@ -28,7 +28,7 @@ use Psr\Cache\CacheItemInterface;
  *
  * @package phpFastCache\Cache
  */
-interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDispatcherInterface, ClassNamespaceResolverInterface, JsonSerializable
+interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDispatcherInterface, ClassNamespaceResolverInterface, JsonSerializable, TaggableCacheItemInterface
 {
 
     /**
@@ -164,61 +164,6 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      * @throws PhpfastcacheInvalidArgumentException
      */
     public function prepend($data): self;
-
-    /**
-     * @param string $tagName
-     *
-     * @return self
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public function addTag($tagName): self;
-
-    /**
-     * @param array $tagNames
-     *
-     * @return self
-     */
-    public function addTags(array $tagNames): self;
-
-
-    /**
-     * @param array $tags
-     *
-     * @return self
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public function setTags(array $tags): self;
-
-    /**
-     * @return array
-     */
-    public function getTags(): array;
-
-    /**
-     * @param string $separator
-     *
-     * @return string
-     */
-    public function getTagsAsString($separator = ', '): string;
-
-    /**
-     * @param array $tagName
-     *
-     * @return self
-     */
-    public function removeTag($tagName): self;
-
-    /**
-     * @param array $tagNames
-     *
-     * @return self
-     */
-    public function removeTags(array $tagNames): self;
-
-    /**
-     * @return array
-     */
-    public function getRemovedTags(): array;
 
     /**
      * Return the data as a well-formatted string.

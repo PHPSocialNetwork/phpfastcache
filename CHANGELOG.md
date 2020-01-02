@@ -7,4 +7,5 @@
 - Removed Apc (**but not APCu**) support which is now [completely abandoned](https://pecl.php.net/package/APC) (latest update: 2012)
 - Removed `CacheManager::getStaticSystemDrivers()` (use `CacheManager::getDriverList()` instead)
 - Added (required) cookie driver option `awareOfUntrustableData` to enforce developer awareness of non-reliable data storage
-- The "ActOnAll Helper" have been remove in profit of aggregated cluster support
+- The "ActOnAll Helper" have been removed in profit of aggregated cluster support
+- Implemented #713 // Reworked "tags" feature by adding 3 strategies: `TAG_STRATEGY_ONE`, `TAG_STRATEGY_ALL`, `TAG_STRATEGY_ONLY`

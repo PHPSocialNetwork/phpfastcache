@@ -37,7 +37,7 @@ use RuntimeException;
  */
 trait CacheItemPoolTrait
 {
-    use ClassNamespaceResolverTrait, EventManagerDispatcherTrait;
+    use ClassNamespaceResolverTrait, EventManagerDispatcherTrait, TaggableCacheItemPoolTrait;
 
     /**
      * @var string

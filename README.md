@@ -115,50 +115,50 @@ PhpFastCache provides you a lot of useful APIs:
 \* Require configuration directive "itemDetailedDate" to be enabled, else a \LogicException will be thrown
 
 ### ItemPool API (ExtendedCacheItemPoolInterface)
-| Method                                                 | Return                         | Description                                                                                      | 
-|--------------------------------------------------------|--------------------------------|--------------------------------------------------------------------------------------------------| 
-| `appendItemsByTag($tagName, $data)`                    | bool                           | Appends items by a tag                                                                           | 
-| `appendItemsByTags(array $tagNames, $data)`            | bool                           | Appends items by one of multiple tag names                                                       | 
-| `appendItemsByTagsAll(array $tagNames, $data)`         | bool                           | Appends items by all of multiple tag names                                                       | 
-| `attachItem($item)`                                    | void                           | (Re-)attaches an item to the pool                                                                | 
-| `clear()`                                              | bool                           | Allows you to completely empty the cache and restart from the beginning                          | 
-| `commit()`                                             | bool                           | Persists any deferred cache items                                                                | 
-| `decrementItemsByTag($tagName, $step = 1)`             | bool                           | Decrements items by a tag                                                                        | 
-| `decrementItemsByTags(array $tagNames, $step = 1)`     | bool                           | Decrements items by one of multiple tag names                                                    | 
-| `decrementItemsByTagsAll(array $tagNames, $step = 1)`  | bool                           | Decrements items by all of multiple tag names                                                    | 
-| `deleteItem($key)`                                     | bool                           | Deletes an item                                                                                  | 
-| `deleteItems(array $keys)`                             | bool                           | Deletes one or more items                                                                        | 
-| `deleteItemsByTag($tagName)`                           | bool                           | Deletes items by a tag                                                                           | 
-| `deleteItemsByTags(array $tagNames)`                   | bool                           | Deletes items  by one of multiple tag names                                                      | 
-| `deleteItemsByTagsAll(array $tagNames)`                | bool                           | Deletes items by all of multiple tag names                                                       | 
-| `detachAllItems()`                                     | void                           | Detaches all items from the pool                                                                 | 
-| `detachItem($item)`                                    | void                           | Detaches an item from the pool                                                                   | 
-| `getConfig()`                                          | ConfigurationOption            | Returns the configuration object                                                                 | 
-| `getConfigOption($optionName);`                        | mixed                          | Returns a configuration value by its key `$optionName`                                           | 
-| `getDefaultConfig()`                                   | ConfigurationOption            | Returns the default configuration object (not altered by the object instance)                    | 
-| `getDriverName()`                                      | string                         | Returns the current driver name (without the namespace)                                          | 
-| `getHelp()`                                            | string                         | Provides a very basic help for a specific driver                                                 | 
-| `getInstanceId()`                                      | string                         | Returns the instance ID                                                                          | 
-| `getItem($key)`                                        | ExtendedCacheItemInterface     | Retrieves an item and returns an empty item if not found                                         | 
-| `getItems(array $keys)`                                | ExtendedCacheItemInterface[]   | Retrieves one or more item and returns an array of items                                         | 
-| `getItemsAsJsonString(array $keys)`                    | string                         | Returns A json string that represents an array of items                                          | 
-| `getItemsByTag($tagName)`                              | ExtendedCacheItemInterface[]   | Returns items by a tag                                                                           | 
-| `getItemsByTags(array $tagNames)`                      | ExtendedCacheItemInterface[]   | Returns items by one of multiple tag names                                                       | 
-| `getItemsByTagsAll(array $tagNames)`                   | ExtendedCacheItemInterface[]   | Returns items by all of multiple tag names                                                       | 
-| `getItemsByTagsAsJsonString(array $tagNames)`          | string                         | Returns A json string that represents an array of items corresponding                            | 
-| `getStats()`                                           | DriverStatistic                | Returns the cache statistics as an object, useful for checking disk space used by the cache etc. | 
-| `hasItem($key)`                                        | bool                           | Tests if an item exists                                                                          | 
-| `incrementItemsByTag($tagName, $step = 1)`             | bool                           | Increments items by a tag                                                                        | 
-| `incrementItemsByTags(array $tagNames, $step = 1)`     | bool                           | Increments items by one of multiple tag names                                                    | 
-| `incrementItemsByTagsAll(array $tagNames, $step = 1)`  | bool                           | Increments items by all of multiple tag names                                                    | 
-| `isAttached($item)`                                    | bool                           | Verify if an item is (still) attached                                                            | 
-| `prependItemsByTag($tagName, $data)`                   | bool                           | Prepends items by a tag                                                                          | 
-| `prependItemsByTags(array $tagNames, $data)`           | bool                           | Prepends items by one of multiple tag names                                                      | 
-| `prependItemsByTagsAll(array $tagNames, $data)`        | bool                           | Prepends items by all of multiple tag names                                                      | 
-| `save(CacheItemInterface $item)`                       | bool                           | Persists a cache item immediately                                                                | 
-| `saveDeferred(CacheItemInterface $item)`               | bool                           | Sets a cache item to be persisted later                                                          | 
-| `saveMultiple(...$items)`                              | bool                           | Persists multiple cache items immediately                                                        | 
-| `setEventManager(EventManager $evtMngr)`               | ExtendedCacheItemPoolInterface | Sets the event manager                                                                           |
+| Methods (By Alphabetic Order)                                   | Return                         | Description                                                                                      | 
+|-----------------------------------------------------------------|--------------------------------|--------------------------------------------------------------------------------------------------| 
+| `appendItemsByTag($tagName, $data)`                             | bool                           | Appends items by a tag                                                                           | 
+| `appendItemsByTags(array $tagNames, $data)`                     | bool                           | Appends items by one of multiple tag names                                                       | 
+| `attachItem($item)`                                             | void                           | (Re-)attaches an item to the pool                                                                | 
+| `clear()`                                                       | bool                           | Allows you to completely empty the cache and restart from the beginning                          | 
+| `commit()`                                                      | bool                           | Persists any deferred cache items                                                                | 
+| `decrementItemsByTag($tagName, $step = 1)`                      | bool                           | Decrements items by a tag                                                                        | 
+| `decrementItemsByTags(array $tagNames, $step = 1)`              | bool                           | Decrements items by one of multiple tag names                                                    | 
+| `deleteItem($key)`                                              | bool                           | Deletes an item                                                                                  | 
+| `deleteItems(array $keys)`                                      | bool                           | Deletes one or more items                                                                        | 
+| `deleteItemsByTag($tagName)`                                    | bool                           | Deletes items by a tag                                                                           | 
+| `deleteItemsByTags(array $tagNames)`                            | bool                           | Deletes items  by one of multiple tag names                                                      | 
+| `detachItem($item)`                                             | void                           | Detaches an item from the pool                                                                   | 
+| `getConfig()`                                                   | ConfigurationOption            | Returns the configuration object                                                                 | 
+| `getConfigOption($optionName);`                                 | mixed                          | Returns a configuration value by its key `$optionName`                                           | 
+| `getDefaultConfig()`                                            | ConfigurationOption            | Returns the default configuration object (not altered by the object instance)                    | 
+| `getDriverName()`                                               | string                         | Returns the current driver name (without the namespace)                                          | 
+| `getEventManager()`                                             | EventManagerInterface          | Gets the event manager                                                                           |
+| `getHelp()`                                                     | string                         | Provides a very basic help for a specific driver                                                 | 
+| `getInstanceId()`                                               | string                         | Returns the instance ID                                                                          | 
+| `getItem($key)`                                                 | ExtendedCacheItemInterface     | Retrieves an item and returns an empty item if not found                                         | 
+| `getItems(array $keys)`                                         | ExtendedCacheItemInterface[]   | Retrieves one or more item and returns an array of items                                         | 
+| `getItemsAsJsonString(array $keys)`                             | string                         | Returns A json string that represents an array of items                                          | 
+| `getItemsByTag($tagName, $strategy)`                            | ExtendedCacheItemInterface[]   | Returns items by a tag                                                                           | 
+| `getItemsByTags(array $tagNames, $strategy)`                    | ExtendedCacheItemInterface[]   | Returns items by one of multiple tag names                                                       | 
+| `getItemsByTagsAsJsonString(array $tagNames, $strategy)`        | string                         | Returns A json string that represents an array of items corresponding                            | 
+| `getStats()`                                                    | DriverStatistic                | Returns the cache statistics as an object, useful for checking disk space used by the cache etc. | 
+| `hasEventManager()`                                             | bool                           | Check the event manager                                                                          |
+| `hasItem($key)`                                                 | bool                           | Tests if an item exists                                                                          | 
+| `incrementItemsByTag($tagName, $step = 1, $strategy)`           | bool                           | Increments items by a tag                                                                        | 
+| `incrementItemsByTags(array $tagNames, $step = 1, $strategy)`   | bool                           | Increments items by one of multiple tag names                                                    | 
+| `isAttached($item)`                                             | bool                           | Verify if an item is (still) attached                                                            | 
+| `prependItemsByTag($tagName, $data, $strategy)`                 | bool                           | Prepends items by a tag                                                                          | 
+| `prependItemsByTags(array $tagNames, $data, $strategy)`         | bool                           | Prepends items by one of multiple tag names                                                      | 
+| `save(CacheItemInterface $item)`                                | bool                           | Persists a cache item immediately                                                                | 
+| `saveDeferred(CacheItemInterface $item)`                        | bool                           | Sets a cache item to be persisted later                                                          | 
+| `saveMultiple(...$items)`                                       | bool                           | Persists multiple cache items immediately                                                        | 
+| `setEventManager(EventManagerInterface $evtMngr)`               | ExtendedCacheItemPoolInterface | Sets the event manager                                                                           |
+
+:new: in **V8**: Multiple strategies (`$strategy`) are now supported for tagging:
+- `TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE` allows you to get cache item(s) by at least **ONE** of the specified matching tag(s). **Default behavior.**
+- `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL` allows you to get cache item(s) by **ALL** of the specified matching tag(s) (the cache item *can* have additional tag(s))
+- `TaggableCacheItemPoolInterface::TAG_STRATEGY_ONLY` allows you to get cache item(s) by **ONLY** the specified matching tag(s) (the cache item *cannot* have additional tag(s))
  
 It also supports multiple calls, Tagging, Setup Folder for caching. Look at our examples folders for more information.
 

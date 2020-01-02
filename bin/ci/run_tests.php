@@ -54,9 +54,9 @@ foreach ($globCallback(PFC_TEST_DIR . DIRECTORY_SEPARATOR . '*.test.php') as $fi
 }
 
 if ($status === 0) {
-    $climate->green('[OK] The build has passed successfully');
+    $climate->backgroundGreen()->white()->flank('[OK] The build has passed successfully', '#')->out('');
 } else {
-    $climate->red('[KO] The build has failed miserably');
+    $climate->backgroundRed()->white()->flank('[KO] The build has failed miserably', '~')->out('');
 }
 
 exit($status);

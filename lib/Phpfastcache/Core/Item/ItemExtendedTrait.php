@@ -31,13 +31,11 @@ use Phpfastcache\Util\ClassNamespaceResolverTrait;
  * @property DateTimeInterface $modificationDate Modification date of the item
  * @property mixed $data Data of the item
  * @property bool $fetched Fetch flag status
- * @property array $tags The tags array
- * @property array $removedTags The removed tags array
  * @property string $key The item key
  */
 trait ItemExtendedTrait
 {
-    use ClassNamespaceResolverTrait;
+    use ClassNamespaceResolverTrait, TaggableCacheItemTrait;
 
     /********************
      *
@@ -308,105 +306,6 @@ trait ItemExtendedTrait
         }
 
         return $this;
-    }
-
-    /**
-     * @param array $tagNames
-     * @return ExtendedCacheItemInterface
-     */
-    public function addTags(array $tagNames): ExtendedCacheItemInterface
-    {
-        foreach ($tagNames as $tagName) {
-            $this->addTag($tagName);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param $tagName
-     * @return ExtendedCacheItemInterface
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public function addTag($tagName): ExtendedCacheItemInterface
-    {
-        if (is_string($tagName)) {
-            $this->tags = array_unique(array_merge($this->tags, [$tagName]));
-
-            return $this;
-        }
-
-        throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
-    }
-
-    /**
-     * @param array $tags
-     * @return ExtendedCacheItemInterface
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public function setTags(array $tags): ExtendedCacheItemInterface
-    {
-        if (count($tags)) {
-            if (array_filter($tags, 'is_string')) {
-                $this->tags = $tags;
-            } else {
-                throw new PhpfastcacheInvalidArgumentException('$tagName must be an array of string');
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTags(): array
-    {
-        return $this->tags;
-    }
-
-    /**
-     * @param string $separator
-     * @return string
-     */
-    public function getTagsAsString($separator = ', '): string
-    {
-        return implode($separator, $this->tags);
-    }
-
-    /**
-     * @param array $tagNames
-     * @return ExtendedCacheItemInterface
-     */
-    public function removeTags(array $tagNames): ExtendedCacheItemInterface
-    {
-        foreach ($tagNames as $tagName) {
-            $this->removeTag($tagName);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param $tagName
-     * @return ExtendedCacheItemInterface
-     */
-    public function removeTag($tagName): ExtendedCacheItemInterface
-    {
-        if (($key = array_search($tagName, $this->tags, true)) !== false) {
-            unset($this->tags[$key]);
-            $this->removedTags[] = $tagName;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getRemovedTags(): array
-    {
-        return array_diff($this->removedTags, $this->tags);
     }
 
     /**

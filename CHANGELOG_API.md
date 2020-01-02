@@ -1,3 +1,14 @@
+## 3.0.0-rc2
+- **[BC]** Removed `ExtendedCacheItemPoolInterface::appendItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC]** Removed `ExtendedCacheItemPoolInterface::decrementItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC]** Removed `ExtendedCacheItemPoolInterface::deleteItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC]** Removed `ExtendedCacheItemPoolInterface::getItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC]** Removed `ExtendedCacheItemPoolInterface::incrementItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC]** Removed `ExtendedCacheItemPoolInterface::prependItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- Added strategy`TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE` usable in every `**byTags**` methods.
+- Added strategy`TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL` usable in every `**byTags**` methods.
+- Added strategy`TaggableCacheItemPoolInterface::TAG_STRATEGY_ONLY` usable in every `**byTags**` methods.
+
 ## 3.0.0-rc
 - **[BC]** Moved `\Phpfastcache\Event\EventInterface` to`\Phpfastcache\Event\EventManagerInterface`
 - Moved (by extends) ExtendedCacheItemPoolInterface::setEventManager() in `\Phpfastcache\Event\EventManagerDispatcherInterface:setEventManager()`

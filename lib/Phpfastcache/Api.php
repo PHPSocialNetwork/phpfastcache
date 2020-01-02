@@ -24,7 +24,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  */
 class Api
 {
-    protected static $version = '3.0.0-rc';
+    protected static $version = '3.0.0-rc2';
 
     /**
      * Api constructor.
@@ -60,7 +60,7 @@ class Api
      * @throws PhpfastcacheLogicException
      * @throws PhpfastcacheIOException
      */
-    public static function getPhpFastCacheVersion($fallbackOnChangelog = true, $cacheable = true): string
+    public static function getPhpFastCacheVersion(bool $fallbackOnChangelog = true, $cacheable = true): string
     {
         /**
          * Cache the version statically to improve
@@ -126,7 +126,7 @@ class Api
      * @param bool $cacheable
      * @return string
      */
-    public static function getPhpFastCacheGitHeadHash($cacheable = true): string
+    public static function getPhpFastCacheGitHeadHash(bool $cacheable = true): string
     {
         static $hash;
 

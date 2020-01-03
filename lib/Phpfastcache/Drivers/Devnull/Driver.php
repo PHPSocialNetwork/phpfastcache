@@ -32,14 +32,6 @@ class Driver implements ExtendedCacheItemPoolInterface
     use DriverBaseTrait;
 
     /**
-     * @inheritdoc
-     */
-    public static function isUsableInAutoContext(): bool
-    {
-        return false;
-    }
-
-    /**
      * @return bool
      */
     public function driverCheck(): bool

@@ -63,14 +63,12 @@ trait CacheItemPoolTrait
      */
     public function setItem(CacheItemInterface $item)
     {
-        if ($this->getClassNamespace() . '\\Item' === get_class($item)) {
+        if ($this->getClassNamespace() . '\\Item' === \get_class($item)) {
             $this->itemInstances[$item->getKey()] = $item;
 
             return $this;
         }
-
-        debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-        throw new PhpfastcacheInvalidArgumentException(sprintf(
+        throw new PhpfastcacheInvalidArgumentException(\sprintf(
             'Invalid Item Class "%s" for this driver "%s".',
             get_class($item),
             get_class($this)
@@ -79,8 +77,10 @@ trait CacheItemPoolTrait
 
     /**
      * @param array $keys
-     * @return CacheItemInterface[]
+     * @return array
+     * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
     public function getItems(array $keys = [])
     {
@@ -101,14 +101,14 @@ trait CacheItemPoolTrait
      */
     public function getItem($key)
     {
-        if (is_string($key)) {
+        if (\is_string($key)) {
             /**
              * Replace array_key_exists by isset
              * due to performance issue on huge
              * loop dispatching operations
              */
             if (!isset($this->itemInstances[$key])) {
-                if (preg_match('~([' . preg_quote(self::$unsupportedKeyChars, '~') . ']+)~', $key, $matches)) {
+                if (\preg_match('~([' . \preg_quote(self::$unsupportedKeyChars, '~') . ']+)~', $key, $matches)) {
                     throw new PhpfastcacheInvalidArgumentException('Unsupported key character detected: "' . $matches[1] . '". Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers');
                 }
 
@@ -123,15 +123,15 @@ trait CacheItemPoolTrait
                     $driverArray = $this->driverRead($item);
 
                     if ($driverArray) {
-                        if (!is_array($driverArray)) {
+                        if (!\is_array($driverArray)) {
                             throw new PhpfastcacheCoreException(sprintf('The driverRead method returned an unexpected variable type: %s',
-                                gettype($driverArray)));
+                                \gettype($driverArray)));
                         }
                         $driverData = $this->driverUnwrapData($driverArray);
 
                         if ($this->getConfig()['preventCacheSlams']) {
                             while ($driverData instanceof ItemBatch) {
-                                if ($driverData->getItemDate()->getTimestamp() + $this->getConfig()->getCacheSlamsTimeout() < time()) {
+                                if ($driverData->getItemDate()->getTimestamp() + $this->getConfig()->getCacheSlamsTimeout() < \time()) {
                                     /**
                                      * The timeout has been reached
                                      * Consider that the batch has
@@ -154,7 +154,7 @@ trait CacheItemPoolTrait
                                  * attempting to get exit
                                  * the current batch process
                                  */
-                                sleep(1);
+                                \sleep(1);
                                 $cacheSlamsSpendSeconds++;
                                 goto getItemDriverRead;
                             }
@@ -212,7 +212,7 @@ trait CacheItemPoolTrait
                 }
             }
         } else {
-            throw new PhpfastcacheInvalidArgumentException(sprintf('$key must be a string, got type "%s" instead.', gettype($key)));
+            throw new PhpfastcacheInvalidArgumentException(\sprintf('$key must be a string, got type "%s" instead.', \gettype($key)));
         }
 
         /**
@@ -302,7 +302,7 @@ trait CacheItemPoolTrait
             /**
              * Perform a tag cleanup to avoid memory leaks
              */
-            if (strpos($key, self::DRIVER_TAGS_KEY_PREFIX) !== 0) {
+            if (\strpos($key, self::DRIVER_TAGS_KEY_PREFIX) !== 0) {
                 $this->cleanItemTags($item);
             }
 
@@ -319,10 +319,10 @@ trait CacheItemPoolTrait
      */
     public function saveDeferred(CacheItemInterface $item)
     {
-        if (!array_key_exists($item->getKey(), $this->itemInstances)) {
+        if (!\array_key_exists($item->getKey(), $this->itemInstances)) {
             $this->itemInstances[$item->getKey()] = $item;
         } else {
-            if (spl_object_hash($item) !== spl_object_hash($this->itemInstances[$item->getKey()])) {
+            if (\spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
                 throw new RuntimeException('Spl object hash mismatches ! You probably tried to save a detached item which has been already retrieved from cache.');
             }
         }
@@ -364,9 +364,10 @@ trait CacheItemPoolTrait
 
     /**
      * @param CacheItemInterface $item
-     * @return mixed
+     * @return bool
      * @throws PhpfastcacheInvalidArgumentException
-     * @throws RuntimeException
+     * @throws PhpfastcacheLogicException
+     * @throws \ReflectionException
      */
     public function save(CacheItemInterface $item)
     {
@@ -380,7 +381,7 @@ trait CacheItemPoolTrait
         if (!isset($this->itemInstances[$item->getKey()])) {
             $this->itemInstances[$item->getKey()] = $item;
         } else {
-            if (spl_object_hash($item) !== spl_object_hash($this->itemInstances[$item->getKey()])) {
+            if (\spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
                 throw new RuntimeException('Spl object hash mismatches ! You probably tried to save a detached item which has been already retrieved from cache.');
             }
         }

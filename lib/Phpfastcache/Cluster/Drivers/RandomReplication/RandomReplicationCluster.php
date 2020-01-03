@@ -24,7 +24,6 @@ use ReflectionException;
 use ReflectionMethod;
 
 
-
 /**
  * Class MasterSlaveReplicationCluster
  * @package Phpfastcache\Cluster\Drivers\MasterSlaveReplication

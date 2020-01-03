@@ -20,7 +20,7 @@ use Exception;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
-use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException, PhpfastcacheDriverConnectException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException, PhpfastcacheDriverConnectException};
 use ReflectionObject;
 
 
@@ -72,7 +72,7 @@ trait DriverBaseTrait
         $this->IO = new DriverIO();
 
         if (!$this->driverCheck()) {
-            throw new PhpfastcacheDriverCheckException(sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
+            throw new PhpfastcacheDriverCheckException(\sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
         }
 
         try {
@@ -94,36 +94,9 @@ trait DriverBaseTrait
     public function getDriverName(): string
     {
         if (!$this->driverName) {
-            $this->driverName = ucfirst(substr(strrchr((new ReflectionObject($this))->getNamespaceName(), '\\'), 1));
+            $this->driverName = \ucfirst(\substr(\strrchr((new ReflectionObject($this))->getNamespaceName(), '\\'), 1));
         }
         return $this->driverName;
-    }
-
-    /**
-     * @param $optionName
-     * @return mixed
-     * @deprecated Use getConfig()->getOptionName() instead
-     */
-    public function getConfigOption($optionName)
-    {
-        trigger_error(sprintf('Method "%s" is deprecated, use "getConfig()->getOptionName()" instead', __METHOD__), E_USER_DEPRECATED);
-        return $this->getConfig()->getOption($optionName);
-    }
-
-    /**
-     * @return ConfigurationOption
-     */
-    public function getConfig(): ConfigurationOption
-    {
-        return $this->config;
-    }
-
-    /**
-     * @param ConfigurationOption $config
-     */
-    public function setConfig(ConfigurationOption $config)
-    {
-        $this->config = $config;
     }
 
     /**
@@ -140,8 +113,8 @@ trait DriverBaseTrait
      */
     public static function getConfigClass(): string
     {
-        $localConfigClass = substr(static::class, 0, strrpos(static::class, '\\')) . '\Config';
-        if (class_exists($localConfigClass) && is_a($localConfigClass, ConfigurationOption::class, true)) {
+        $localConfigClass = \substr(static::class, 0, \strrpos(static::class, '\\')) . '\Config';
+        if (\class_exists($localConfigClass) && \is_a($localConfigClass, ConfigurationOption::class, true)) {
             return $localConfigClass;
         }
         return ConfigurationOption::class;
@@ -172,6 +145,22 @@ trait DriverBaseTrait
         }
 
         return $wrap;
+    }
+
+    /**
+     * @return ConfigurationOption
+     */
+    public function getConfig(): ConfigurationOption
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param ConfigurationOption $config
+     */
+    public function setConfig(ConfigurationOption $config)
+    {
+        $this->config = $config;
     }
 
     /**
@@ -229,7 +218,7 @@ trait DriverBaseTrait
      */
     protected function encode($data): string
     {
-        return serialize($data);
+        return \serialize($data);
     }
 
     /**
@@ -241,7 +230,7 @@ trait DriverBaseTrait
      */
     protected function decode($value)
     {
-        return unserialize((string)$value);
+        return \unserialize((string)$value, ['allowed_classes' => true]);
     }
 
     /**
@@ -250,6 +239,6 @@ trait DriverBaseTrait
      */
     protected function isPHPModule(): bool
     {
-        return (PHP_SAPI === 'apache2handler' || strpos(PHP_SAPI, 'handler') !== false);
+        return (\PHP_SAPI === 'apache2handler' || \strpos(\PHP_SAPI, 'handler') !== false);
     }
 }

@@ -63,14 +63,6 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
     const DRIVER_MDATE_WRAPPER_INDEX = 'm';
 
     /**
-     * Defines if the driver is allowed
-     * to be used in "Auto" driver.
-     *
-     * @return bool
-     */
-    public static function isUsableInAutoContext(): bool;
-
-    /**
      * Return the config class name
      * @return string
      */
@@ -85,12 +77,6 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      * @return ConfigurationOption
      */
     public function getDefaultConfig(): ConfigurationOption;
-
-    /**
-     * @param string $optionName
-     * @return mixed
-     */
-    public function getConfigOption($optionName);
 
     /**
      * @return string
@@ -154,7 +140,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      *   MUST be thrown.
      *
      */
-    public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512): string;
+    public function getItemsAsJsonString(array $keys = [], int $option = 0, int $depth = 512): string;
 
     /**
      * @param CacheItemInterface $item

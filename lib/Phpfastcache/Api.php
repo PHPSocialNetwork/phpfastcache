@@ -60,7 +60,7 @@ class Api
      * @throws PhpfastcacheLogicException
      * @throws PhpfastcacheIOException
      */
-    public static function getPhpFastCacheVersion(bool $fallbackOnChangelog = true, $cacheable = true): string
+    public static function getPhpFastCacheVersion(bool $fallbackOnChangelog = true, bool $cacheable = true): string
     {
         /**
          * Cache the version statically to improve

@@ -54,10 +54,10 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      *   the value should be stored permanently or for as long as the
      *   implementation allows.
      *
-     * @return self
+     * @return ExtendedCacheItemInterface
      *   The called object.
      */
-    public function setExpirationDate(DateTimeInterface $expiration): self;
+    public function setExpirationDate(DateTimeInterface $expiration): ExtendedCacheItemInterface;
 
     /**
      * @return DateTimeInterface
@@ -74,18 +74,18 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
     /**
      * @param $date DateTimeInterface
      *
-     * @return self
+     * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheLogicException
      */
-    public function setCreationDate(DateTimeInterface $date): self;
+    public function setCreationDate(DateTimeInterface $date): ExtendedCacheItemInterface;
 
     /**
      * @param $date DateTimeInterface
      *
-     * @return self
+     * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheLogicException
      */
-    public function setModificationDate(DateTimeInterface $date): self;
+    public function setModificationDate(DateTimeInterface $date): ExtendedCacheItemInterface;
 
     /**
      * @return int
@@ -128,42 +128,42 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
     /**
      * @param bool $isHit
      *
-     * @return self
+     * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function setHit($isHit): self;
+    public function setHit($isHit): ExtendedCacheItemInterface;
 
     /**
      * @param int $step
      *
-     * @return self
+     * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function increment($step = 1): self;
+    public function increment($step = 1): ExtendedCacheItemInterface;
 
     /**
      * @param int $step
      *
-     * @return self
+     * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function decrement($step = 1): self;
+    public function decrement($step = 1): ExtendedCacheItemInterface;
 
     /**
      * @param array|string $data
      *
-     * @return self
+     * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function append($data): self;
+    public function append($data): ExtendedCacheItemInterface;
 
     /**
      * @param array|string $data
      *
-     * @return self
+     * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function prepend($data): self;
+    public function prepend($data): ExtendedCacheItemInterface;
 
     /**
      * Return the data as a well-formatted string.
@@ -174,7 +174,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      *
      * @return string
      */
-    public function getDataAsJsonString($option = 0, $depth = 512): string;
+    public function getDataAsJsonString(int $option = 0,int $depth = 512): string;
 
     /**
      * @param ExtendedCacheItemPoolInterface $driverPool

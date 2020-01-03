@@ -64,9 +64,16 @@ abstract class PhpfastcacheAbstractProxy
     /**
      * PhpfastcacheAbstractProxy constructor.
      * @param string $driver
-     * @param array|ConfigurationOption $config
+     * @param null $config
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverCheckException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverNotFoundException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheLogicException
+     * @throws \ReflectionException
      */
-    public function __construct(string $driver = CacheManager::AUTOMATIC_DRIVER_CLASS, $config = null)
+    public function __construct(string $driver, $config = null)
     {
         $this->instance = CacheManager::getInstance($driver, $config);
     }

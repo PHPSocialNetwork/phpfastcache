@@ -117,10 +117,6 @@ trait ItemBaseTrait
          * @param mixed $value
          *
          */
-        if (!$this->eventManager) {
-            debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-            /*            \var_dump($this);*/
-        }
         $this->eventManager->dispatch('CacheItemSet', $this, $value);
 
         return $this;
@@ -141,7 +137,7 @@ trait ItemBaseTrait
      */
     public function setHit($isHit): ExtendedCacheItemInterface
     {
-        if (is_bool($isHit)) {
+        if (\is_bool($isHit)) {
             $this->isHit = $isHit;
 
             return $this;
@@ -163,13 +159,10 @@ trait ItemBaseTrait
              * @param ExtendedCacheItemInterface $this
              * @param DateTimeInterface $expiration
              */
-            if (!$this->eventManager) {
-                debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-            }
             $this->eventManager->dispatch('CacheItemExpireAt', $this, $expiration);
             $this->expirationDate = $expiration;
         } else {
-            throw new PhpfastcacheInvalidArgumentException('$expiration must be an object implementing the DateTimeInterface got: ' . gettype($expiration));
+            throw new PhpfastcacheInvalidArgumentException('$expiration must be an object implementing the DateTimeInterface got: ' . \gettype($expiration));
         }
 
         return $this;
@@ -182,7 +175,7 @@ trait ItemBaseTrait
      */
     public function expiresAfter($time)
     {
-        if (is_numeric($time)) {
+        if (\is_numeric($time)) {
             if ($time <= 0) {
                 /**
                  * 5 years, however memcached or memory cached will gone when u restart it
@@ -198,7 +191,7 @@ trait ItemBaseTrait
              */
             $this->eventManager->dispatch('CacheItemExpireAfter', $this, $time);
 
-            $this->expirationDate = (new DateTime())->add(new DateInterval(sprintf('PT%dS', $time)));
+            $this->expirationDate = (new DateTime())->add(new DateInterval(\sprintf('PT%dS', $time)));
         } else {
             if ($time instanceof DateInterval) {
                 /**
@@ -210,7 +203,7 @@ trait ItemBaseTrait
 
                 $this->expirationDate = (new DateTime())->add($time);
             } else {
-                throw new PhpfastcacheInvalidArgumentException(sprintf('Invalid date format, got "%s"', gettype($time)));
+                throw new PhpfastcacheInvalidArgumentException(\sprintf('Invalid date format, got "%s"', \gettype($time)));
             }
         }
 

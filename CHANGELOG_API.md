@@ -5,6 +5,8 @@
 - **[BC]** Removed `ExtendedCacheItemPoolInterface::getItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
 - **[BC]** Removed `ExtendedCacheItemPoolInterface::incrementItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
 - **[BC]** Removed `ExtendedCacheItemPoolInterface::prependItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC]** Removed deprecated method `ExtendedCacheItemPoolInterface::getConfigOption()` (Use getConfig()->getOptionName() instead)
+- **[BC]** Removed deprecated method `ExtendedCacheItemPoolInterface::isUsableInAutoContext()` (Since "Auto" driver has been removed)
 - Added strategy`TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE` usable in every `**byTags**` methods.
 - Added strategy`TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL` usable in every `**byTags**` methods.
 - Added strategy`TaggableCacheItemPoolInterface::TAG_STRATEGY_ONLY` usable in every `**byTags**` methods.

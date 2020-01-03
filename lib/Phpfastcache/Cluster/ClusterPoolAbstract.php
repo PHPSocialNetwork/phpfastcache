@@ -17,7 +17,8 @@ namespace Phpfastcache\Cluster;
 use Phpfastcache\Cluster\Drivers\{FullReplication\FullReplicationCluster,
     MasterSlaveReplication\MasterSlaveReplicationCluster,
     RandomReplication\RandomReplicationCluster,
-    SemiReplication\SemiReplicationCluster};
+    SemiReplication\SemiReplicationCluster
+};
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\{Item\ExtendedCacheItemInterface, Pool\DriverBaseTrait, Pool\ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverIO;
@@ -27,8 +28,7 @@ use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
-use Psr\Cache\CacheItemInterface;
-use Psr\Cache\InvalidArgumentException;
+use Psr\Cache\{CacheItemInterface, InvalidArgumentException};
 use ReflectionException;
 
 /**
@@ -190,7 +190,19 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
      */
     public function getStats(): DriverStatistic
     {
-        // @todo later :)
-    }
+        $stats = new DriverStatistic();
+        $stats->setInfo(sprintf('Using %d pool(s): %s', \count($this->clusterPools), \implode(', ', \array_map(static function (ExtendedCacheItemPoolInterface $pool) {
+            return \get_class($pool);
+        }, $this->clusterPools))));
 
+        $stats->setSize((int) \array_sum(\array_map(static function (ExtendedCacheItemPoolInterface $pool) {
+            return $pool->getStats()->getSize();
+        }, $this->clusterPools)));
+
+        $stats->setData((int) \array_map(static function (ExtendedCacheItemPoolInterface $pool) {
+            return $pool->getStats()->getData();
+        }, $this->clusterPools));
+
+        return $stats;
+    }
 }

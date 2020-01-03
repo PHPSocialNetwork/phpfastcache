@@ -28,6 +28,7 @@ trait TaggableCacheItemTrait
     /**
      * @param array $tagNames
      * @return ExtendedCacheItemInterface
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function addTags(array $tagNames): ExtendedCacheItemInterface
     {
@@ -45,8 +46,8 @@ trait TaggableCacheItemTrait
      */
     public function addTag(string $tagName): ExtendedCacheItemInterface
     {
-        if (is_string($tagName)) {
-            $this->tags = array_unique(array_merge($this->tags, [$tagName]));
+        if (\is_string($tagName)) {
+            $this->tags = \array_unique(\array_merge($this->tags, [$tagName]));
 
             return $this;
         }
@@ -61,8 +62,8 @@ trait TaggableCacheItemTrait
      */
     public function setTags(array $tags): ExtendedCacheItemInterface
     {
-        if (count($tags)) {
-            if (array_filter($tags, 'is_string')) {
+        if (\count($tags)) {
+            if (\array_filter($tags, 'is_string')) {
                 $this->tags = $tags;
             } else {
                 throw new PhpfastcacheInvalidArgumentException('$tagName must be an array of string');
@@ -86,7 +87,7 @@ trait TaggableCacheItemTrait
      */
     public function getTagsAsString(string $separator = ', '): string
     {
-        return implode($separator, $this->tags);
+        return \implode($separator, $this->tags);
     }
 
     /**
@@ -108,7 +109,7 @@ trait TaggableCacheItemTrait
      */
     public function removeTag(string $tagName): ExtendedCacheItemInterface
     {
-        if (($key = array_search($tagName, $this->tags, true)) !== false) {
+        if (($key = \array_search($tagName, $this->tags, true)) !== false) {
             unset($this->tags[$key]);
             $this->removedTags[] = $tagName;
         }
@@ -121,7 +122,6 @@ trait TaggableCacheItemTrait
      */
     public function getRemovedTags(): array
     {
-        return array_diff($this->removedTags, $this->tags);
+        return \array_diff($this->removedTags, $this->tags);
     }
-
 }

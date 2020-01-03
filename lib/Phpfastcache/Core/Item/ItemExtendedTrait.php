@@ -61,7 +61,7 @@ trait ItemExtendedTrait
      */
     public function __construct(ExtendedCacheItemPoolInterface $driver, $key)
     {
-        if (is_string($key)) {
+        if (\is_string($key)) {
             $this->key = $key;
             $this->driver = $driver;
             $this->driver->setItem($this);
@@ -86,7 +86,7 @@ trait ItemExtendedTrait
             if ($keyHashFunction) {
                 $this->encodedKey = $keyHashFunction($this->getKey());
             } else {
-                $this->encodedKey = md5($this->getKey());
+                $this->encodedKey = \md5($this->getKey());
             }
         }
 
@@ -179,7 +179,7 @@ trait ItemExtendedTrait
      */
     public function getTtl(): int
     {
-        return max(0, $this->expirationDate->getTimestamp() - time());
+        return \max(0, $this->expirationDate->getTimestamp() - \time());
     }
 
     /**
@@ -216,16 +216,16 @@ trait ItemExtendedTrait
      */
     public function getLength(): int
     {
-        switch (gettype($this->data)) {
+        switch (\gettype($this->data)) {
             case 'array':
             case 'object':
-                if (is_array($this->data) || $this->data instanceof Countable) {
-                    return count($this->data);
+                if (\is_array($this->data) || $this->data instanceof Countable) {
+                    return \count($this->data);
                 }
                 break;
 
             case 'string':
-                return strlen($this->data);
+                return \strlen($this->data);
                 break;
         }
 
@@ -240,7 +240,7 @@ trait ItemExtendedTrait
      */
     public function increment($step = 1): ExtendedCacheItemInterface
     {
-        if (is_int($step)) {
+        if (\is_int($step)) {
             $this->fetched = true;
             $this->data += $step;
         } else {
@@ -257,7 +257,7 @@ trait ItemExtendedTrait
      */
     public function decrement($step = 1): ExtendedCacheItemInterface
     {
-        if (is_int($step)) {
+        if (\is_int($step)) {
             $this->fetched = true;
             $this->data -= $step;
         } else {
@@ -274,10 +274,10 @@ trait ItemExtendedTrait
      */
     public function append($data): ExtendedCacheItemInterface
     {
-        if (is_array($this->data)) {
+        if (\is_array($this->data)) {
             $this->data[] = $data;
         } else {
-            if (is_string($data)) {
+            if (\is_string($data)) {
                 $this->data .= (string)$data;
             } else {
                 throw new PhpfastcacheInvalidArgumentException('$data must be either array nor string.');
@@ -295,10 +295,10 @@ trait ItemExtendedTrait
      */
     public function prepend($data): ExtendedCacheItemInterface
     {
-        if (is_array($this->data)) {
-            array_unshift($this->data, $data);
+        if (\is_array($this->data)) {
+            \array_unshift($this->data, $data);
         } else {
-            if (is_string($data)) {
+            if (\is_string($data)) {
                 $this->data = (string)$data . $this->data;
             } else {
                 throw new PhpfastcacheInvalidArgumentException('$data must be either array nor string.');
@@ -315,17 +315,17 @@ trait ItemExtendedTrait
      * @param int $depth \json_encode() depth
      * @return string
      */
-    public function getDataAsJsonString($option = 0, $depth = 512): string
+    public function getDataAsJsonString(int $option = 0,int $depth = 512): string
     {
         $data = $this->get();
 
-        if (is_object($data) || is_array($data)) {
-            $data = json_encode($data, $option, $depth);
+        if (\is_object($data) || \is_array($data)) {
+            $data = \json_encode($data, $option, $depth);
         } else {
-            $data = json_encode([$data], $option, $depth);
+            $data = \json_encode([$data], $option, $depth);
         }
 
-        return json_encode($data, $option, $depth);
+        return \json_encode($data, $option, $depth);
     }
 
     /**
@@ -355,8 +355,8 @@ trait ItemExtendedTrait
      */
     final public function __debugInfo()
     {
-        $info = get_object_vars($this);
-        $info['driver'] = 'object(' . get_class($info['driver']) . ')';
+        $info = \get_object_vars($this);
+        $info['driver'] = 'object(' . \get_class($info['driver']) . ')';
 
         return $info;
     }

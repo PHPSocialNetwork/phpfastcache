@@ -33,11 +33,11 @@ trait TaggableCacheItemPoolTrait
      */
     public function getItemsByTagsAsJsonString(array $tagNames, int $option = 0, int $depth = 512, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): string
     {
-        $callback = function (CacheItemInterface $item) {
+        $callback = static function (CacheItemInterface $item) {
             return $item->get();
         };
 
-        return json_encode(array_map($callback, array_values($this->getItemsByTags($tagNames, $strategy))), $option, $depth);
+        return \json_encode(\array_map($callback, \array_values($this->getItemsByTags($tagNames, $strategy))), $option, $depth);
     }
 
     /**
@@ -46,20 +46,20 @@ trait TaggableCacheItemPoolTrait
     public function getItemsByTags(array $tagNames, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): array
     {
         $items = [];
-        foreach (array_unique($tagNames) as $tagName) {
-            if (is_string($tagName)) {
+        foreach (\array_unique($tagNames) as $tagName) {
+            if (\is_string($tagName)) {
                 $items[] = $this->fetchItemsByTagFromBackend($tagName);
             } else {
                 throw new PhpfastcacheInvalidArgumentException('$tagName must be a a string');
             }
         }
 
-        $items = array_merge([], ...$items);
+        $items = \array_merge([], ...$items);
 
         switch ($strategy) {
             case TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL:
                 foreach ($items as $key => $item) {
-                    if (array_diff($tagNames, $item->getTags())) {
+                    if (\array_diff($tagNames, $item->getTags())) {
                         unset($items[$key]);
                     }
                 }
@@ -67,7 +67,7 @@ trait TaggableCacheItemPoolTrait
 
             case TaggableCacheItemPoolInterface::TAG_STRATEGY_ONLY:
                 foreach ($items as $key => $item) {
-                    if (array_diff($tagNames, $item->getTags()) || array_diff($item->getTags(), $tagNames)) {
+                    if (\array_diff($tagNames, $item->getTags()) || \array_diff($item->getTags(), $tagNames)) {
                         unset($items[$key]);
                     }
                 }
@@ -83,7 +83,7 @@ trait TaggableCacheItemPoolTrait
      */
     protected function fetchItemsByTagFromBackend(string $tagName): array
     {
-        if (is_string($tagName)) {
+        if (\is_string($tagName)) {
             $driverResponse = $this->getItem($this->getTagKey($tagName));
             if ($driverResponse->isHit()) {
                 $tagsItems = (array)$driverResponse->get();
@@ -98,7 +98,7 @@ trait TaggableCacheItemPoolTrait
                  *
                  * #headache
                  */
-                return array_filter($this->getItems(array_unique(array_keys($tagsItems))), static function (ExtendedCacheItemInterface $item) {
+                return \array_filter($this->getItems(\array_unique(\array_keys($tagsItems))), static function (ExtendedCacheItemInterface $item) {
                     return $item->isHit();
                 });
             }
@@ -129,7 +129,7 @@ trait TaggableCacheItemPoolTrait
      */
     public function deleteItemsByTag(string $tagName, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
-        if (is_string($tagName)) {
+        if (\is_string($tagName)) {
             $return = null;
             foreach ($this->getItemsByTag($tagName, $strategy) as $item) {
                 $result = $this->deleteItem($item->getKey());
@@ -152,7 +152,7 @@ trait TaggableCacheItemPoolTrait
         $items = $this->fetchItemsByTagFromBackend($tagName);
         if ($strategy === TaggableCacheItemPoolInterface::TAG_STRATEGY_ONLY) {
             foreach ($items as $key => $item) {
-                if (array_diff($item->getTags(), $tagName)) {
+                if (\array_diff($item->getTags(), $tagName)) {
                     unset($items[$key]);
                 }
             }
@@ -181,7 +181,7 @@ trait TaggableCacheItemPoolTrait
      */
     public function incrementItemsByTag(string $tagName, int $step = 1, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
-        if (is_string($tagName) && is_int($step)) {
+        if (\is_string($tagName) && \is_int($step)) {
             foreach ($this->getItemsByTag($tagName, $strategy) as $item) {
                 $item->increment($step);
                 $this->saveDeferred($item);
@@ -214,7 +214,7 @@ trait TaggableCacheItemPoolTrait
      */
     public function decrementItemsByTag(string $tagName, int $step = 1, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
-        if (is_string($tagName) && is_int($step)) {
+        if (\is_string($tagName) && \is_int($step)) {
             foreach ($this->getItemsByTag($tagName, $strategy) as $item) {
                 $item->decrement($step);
                 $this->saveDeferred($item);
@@ -247,7 +247,7 @@ trait TaggableCacheItemPoolTrait
      */
     public function appendItemsByTag(string $tagName, $data, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
-        if (is_string($tagName)) {
+        if (\is_string($tagName)) {
             foreach ($this->getItemsByTag($tagName, $strategy) as $item) {
                 $item->append($data);
                 $this->saveDeferred($item);
@@ -280,7 +280,7 @@ trait TaggableCacheItemPoolTrait
      */
     public function prependItemsByTag(string $tagName, $data, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
-        if (is_string($tagName)) {
+        if (\is_string($tagName)) {
             foreach ($this->getItemsByTag($tagName, $strategy) as $item) {
                 $item->prepend($data);
                 $this->saveDeferred($item);
@@ -324,7 +324,7 @@ trait TaggableCacheItemPoolTrait
          * on tags item, it can leads
          * to an infinite recursive calls
          */
-        if (strpos($item->getKey(), self::DRIVER_TAGS_KEY_PREFIX) === 0) {
+        if (\strpos($item->getKey(), self::DRIVER_TAGS_KEY_PREFIX) === 0) {
             throw new PhpfastcacheLogicException('Trying to set tag(s) to an Tag item index: ' . $item->getKey());
         }
 
@@ -347,7 +347,7 @@ trait TaggableCacheItemPoolTrait
              * that has slow performances
              */
 
-            $tagsItem->set(array_merge((array)$data, [$item->getKey() => $expTimestamp]));
+            $tagsItem->set(\array_merge((array)$data, [$item->getKey() => $expTimestamp]));
 
             /**
              * Set the expiration date
@@ -381,7 +381,7 @@ trait TaggableCacheItemPoolTrait
              * any cache item references left
              * then remove it from tagsItems index
              */
-            if (count($data)) {
+            if (\count($data)) {
                 $tagsItem->expiresAt((new DateTime())->setTimestamp(max($data)));
                 $this->driverWrite($tagsItem);
                 $tagsItem->setHit(true);
@@ -408,7 +408,7 @@ trait TaggableCacheItemPoolTrait
      */
     protected function getTagKeys(array $keys): array
     {
-        return array_map(function(string $key){
+        return \array_map(function(string $key){
             return $this->getTagKey($key);
         }, $keys);
     }

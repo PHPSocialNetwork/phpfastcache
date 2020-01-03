@@ -17,6 +17,8 @@ namespace Phpfastcache;
 
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Config\ConfigurationOptionInterface;
+use Phpfastcache\Core\Pool\AggregablePoolInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException,
     PhpfastcacheDriverException,
@@ -25,37 +27,9 @@ use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException,
     PhpfastcacheInvalidArgumentException,
     PhpfastcacheInvalidConfigurationException,
     PhpfastcacheLogicException,
-    PhpfastcacheUnsupportedOperationException};
+    PhpfastcacheUnsupportedOperationException
+};
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /**
@@ -86,8 +60,8 @@ use Phpfastcache\Util\ClassNamespaceResolverTrait;
  */
 class CacheManager
 {
-    const AUTOMATIC_DRIVER_CLASS = 'Auto';
-    const CORE_DRIVER_NAMESPACE = 'Phpfastcache\Drivers\\';
+    public const AUTOMATIC_DRIVER_CLASS = 'Auto';
+    public const CORE_DRIVER_NAMESPACE = 'Phpfastcache\Drivers\\';
 
     use ClassNamespaceResolverTrait;
 
@@ -181,26 +155,21 @@ class CacheManager
 
     /**
      * @param string $driver
-     * @param null $config
+     * @param ConfigurationOptionInterface $config
      * @param string|null $instanceId
-     * @return ExtendedCacheItemPoolInterface
+     * @return ExtendedCacheItemPoolInterface|AggregatablePoolInterface
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheDriverNotFoundException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheInvalidConfigurationException
      * @throws PhpfastcacheLogicException
-     * @throws PhpfastcacheUnsupportedOperationException
      * @throws \ReflectionException
      */
-    public static function getInstance(string $driver = self::AUTOMATIC_DRIVER_CLASS, $config = null, string $instanceId = null): ExtendedCacheItemPoolInterface
+    public static function getInstance(string $driver, ?ConfigurationOptionInterface $config = null, ?string $instanceId = null): ExtendedCacheItemPoolInterface
     {
         $config = self::validateConfig($config);
         $driver = self::standardizeDriverName($driver);
-
-        if (!$driver || $driver === self::AUTOMATIC_DRIVER_CLASS) {
-            $driver = self::getAutoClass($config);
-        }
 
         $instanceId = $instanceId ?: md5($driver . serialize($config->toArray()));
 
@@ -232,26 +201,18 @@ class CacheManager
     }
 
     /**
-     * @param $config
+     * @param ConfigurationOption|null $config
      * @return ConfigurationOption
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheInvalidConfigurationException
      * @throws \ReflectionException
      */
-    protected static function validateConfig($config): ConfigurationOption
+    protected static function validateConfig(?ConfigurationOption $config): ConfigurationOption
     {
-        if (is_array($config)) {
-            $config = new ConfigurationOption($config);
-            trigger_error(
-                'The CacheManager will drops the support of primitive configuration arrays, use a "\Phpfastcache\Config\ConfigurationOption" object instead',
-                E_USER_DEPRECATED
-            );
-        } elseif ($config === null) {
+        if ($config === null) {
             $config = self::getDefaultConfig();
-        } else {
-            if (!($config instanceof ConfigurationOption)) {
-                throw new PhpfastcacheInvalidArgumentException(sprintf('Unsupported config type: %s', gettype($config)));
-            }
+        } else if (!($config instanceof ConfigurationOption)) {
+            throw new PhpfastcacheInvalidArgumentException(sprintf('Unsupported config type: %s', gettype($config)));
         }
 
         return $config;
@@ -274,45 +235,6 @@ class CacheManager
     public static function standardizeDriverName(string $driverName): string
     {
         return ucfirst(strtolower(trim($driverName)));
-    }
-
-    /**
-     * @param ConfigurationOption $config
-     * @return string
-     * @throws PhpfastcacheDriverException
-     * @throws PhpfastcacheDriverNotFoundException
-     * @throws PhpfastcacheInvalidArgumentException
-     * @throws PhpfastcacheInvalidConfigurationException
-     * @throws PhpfastcacheLogicException
-     * @throws PhpfastcacheUnsupportedOperationException
-     */
-    public static function getAutoClass(ConfigurationOption $config): string
-    {
-        static $autoDriver;
-
-        if ($autoDriver === null) {
-            foreach (self::getDriverList() as $driver) {
-                /** @var ExtendedCacheItemPoolInterface $driverClass */
-                $driverClass = self::CORE_DRIVER_NAMESPACE . $driver . '\Driver';
-                if ($driverClass::isUsableInAutoContext()) {
-                    try {
-                        self::getInstance($driver, $config);
-                        $autoDriver = $driver;
-                        break;
-                    } catch (PhpfastcacheDriverCheckException $e) {
-                        continue;
-                    }
-                }
-            }
-        }
-
-        if (!$autoDriver || !is_string($autoDriver)) {
-            throw new PhpfastcacheLogicException('Unable to find out a valid driver automatically');
-        }
-
-        self::$badPracticeOmeter[$autoDriver]--;
-
-        return $autoDriver;
     }
 
     /**
@@ -375,16 +297,6 @@ class CacheManager
     }
 
     /**
-     * @param string $path
-     * @deprecated This method has been deprecated as of V7, please use driver override feature instead
-     */
-    public static function setNamespacePath($path): void
-    {
-        trigger_error('This method has been deprecated as of V7, please use cache manager "override" or "custom driver" features instead', E_USER_DEPRECATED);
-        self::$namespacePath = trim($path, "\\") . '\\';
-    }
-
-    /**
      * @param string $driverName
      * @return string
      */
@@ -430,6 +342,7 @@ class CacheManager
      * @throws PhpfastcacheDriverNotFoundException
      * @throws PhpfastcacheInvalidConfigurationException
      * @throws PhpfastcacheLogicException
+     * @throws \ReflectionException
      */
     protected static function getFallbackInstance(string $driver, ConfigurationOption $config, PhpfastcacheDriverCheckException $e): ExtendedCacheItemPoolInterface
     {

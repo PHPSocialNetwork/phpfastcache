@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Cluster;
 
+use Exception;
 use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
@@ -22,6 +23,8 @@ use Phpfastcache\Exceptions\PhpfastcacheDriverNotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
+use ReflectionException;
+use stdClass;
 
 /**
  * Class ClusterAggregator
@@ -45,18 +48,19 @@ class ClusterAggregator implements AggregatorInterface
 
     /**
      * ClusterAggregator constructor.
-     *
      * @param string $clusterAggregatorName
      * @param AggregatablePoolInterface ...$driverPools
-     *
-     * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
      */
     public function __construct(string $clusterAggregatorName = '', AggregatablePoolInterface ...$driverPools)
     {
         $clusterAggregatorName = trim($clusterAggregatorName);
         if (empty($clusterAggregatorName)) {
-            $clusterAggregatorName = 'cluster_' . bin2hex(random_bytes(15));
+            try {
+                $clusterAggregatorName = 'cluster_' . bin2hex(random_bytes(15));
+            } catch (Exception $e) {
+                $clusterAggregatorName = 'cluster_' . str_shuffle(spl_object_hash(new stdClass()));
+            }
         }
 
         $this->clusterAggregatorName = $clusterAggregatorName;
@@ -91,14 +95,14 @@ class ClusterAggregator implements AggregatorInterface
 
     /**
      * @param string $driverName
-     * @param ConfigurationOption|NULL $driverConfig
-     *
+     * @param ConfigurationOption|null $driverConfig
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheDriverNotFoundException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheInvalidConfigurationException
      * @throws PhpfastcacheLogicException
+     * @throws ReflectionException
      */
     public function aggregateNewDriver(string $driverName, ConfigurationOption $driverConfig = null): void
     {

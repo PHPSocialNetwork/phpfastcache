@@ -34,14 +34,6 @@ class Driver implements ExtendedCacheItemPoolInterface
     const PREFIX = 'PFC_';
 
     /**
-     * @inheritdoc
-     */
-    public static function isUsableInAutoContext(): bool
-    {
-        return false;
-    }
-
-    /**
      * @return bool
      */
     public function driverCheck(): bool

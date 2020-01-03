@@ -14,7 +14,8 @@ chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('"Auto" driver');
 
-try{
+$testHelper->printSkipText('This feature has been removed as of phpfastcache V8');
+/*try{
     $driverInstance = CacheManager::getInstance('Auto');
     if($driverInstance instanceof ExtendedCacheItemPoolInterface){
         $testHelper->printPassText(sprintf('Found "%s" driver in "Auto" context', get_class($driverInstance)));
@@ -25,6 +26,6 @@ try{
 }catch (PhpfastcacheRootException $e){
     $testHelper->printFailText('Got an exception while trying to find a driver in "Auto" context: ' . $e->getMessage());
 }
-
+*/
 
 $testHelper->terminateTest();

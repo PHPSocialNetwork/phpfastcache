@@ -15,9 +15,8 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool;
 
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\{PhpfastcacheLogicException};
 use Psr\Cache\CacheItemInterface;
 
 
@@ -34,24 +33,15 @@ trait ExtendedCacheItemPoolTrait
      */
     protected $IO;
 
-
     /**
      * @inheritdoc
      */
-    public static function isUsableInAutoContext(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getItemsAsJsonString(array $keys = [], $option = 0, $depth = 512): string
+    public function getItemsAsJsonString(array $keys = [], int $option = 0, int $depth = 512): string
     {
         $callback = static function (CacheItemInterface $item) {
             return $item->get();
         };
-        return json_encode(array_map($callback, array_values($this->getItems($keys))), $option, $depth);
+        return \json_encode(\array_map($callback, \array_values($this->getItems($keys))), $option, $depth);
     }
 
     /**
@@ -83,8 +73,8 @@ trait ExtendedCacheItemPoolTrait
     {
         unset($this->itemInstances[$item]);
 
-        if (gc_enabled()) {
-            gc_collect_cycles();
+        if (\gc_enabled()) {
+            \gc_collect_cycles();
         }
     }
 
@@ -93,7 +83,7 @@ trait ExtendedCacheItemPoolTrait
      */
     public function attachItem(CacheItemInterface $item)
     {
-        if (isset($this->itemInstances[$item->getKey()]) && spl_object_hash($item) !== spl_object_hash($this->itemInstances[$item->getKey()])) {
+        if (isset($this->itemInstances[$item->getKey()]) && \spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
             throw new PhpfastcacheLogicException('The item already exists and cannot be overwritten because the Spl object hash mismatches ! You probably tried to re-attach a detached item which has been already retrieved from cache.');
         }
 
@@ -111,7 +101,7 @@ trait ExtendedCacheItemPoolTrait
     public function isAttached(CacheItemInterface $item)
     {
         if (isset($this->itemInstances[$item->getKey()])) {
-            return spl_object_hash($item) === spl_object_hash($this->itemInstances[$item->getKey()]);
+            return \spl_object_hash($item) === \spl_object_hash($this->itemInstances[$item->getKey()]);
         }
         return null;
     }
@@ -121,14 +111,14 @@ trait ExtendedCacheItemPoolTrait
      */
     public function saveMultiple(...$items): bool
     {
-        if (isset($items[0]) && is_array($items[0])) {
+        if (isset($items[0]) && \is_array($items[0])) {
             foreach ($items[0] as $item) {
                 $this->save($item);
             }
             return true;
         }
 
-        if (is_array($items)) {
+        if (\is_array($items)) {
             foreach ($items as $item) {
                 $this->save($item);
             }

@@ -36,6 +36,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
  * == ItemPool Events (Cluster) ==
  * @method Void onCacheReplicationSlaveFallback() onCacheReplicationSlaveFallback(Callable $callable, ?string $callbackName = null)
  * @method Void onCacheReplicationRandomPoolChosen() onCacheReplicationRandomPoolChosen(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheClusterBuilt() onCacheClusterBuilt(Callable $callable, ?string $callbackName = null)
  *
  * == Item Events ==
  * @method Void onCacheItemSet() onCacheItemSet(Callable $callable, ?string $callbackName = null)

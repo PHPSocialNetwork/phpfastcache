@@ -413,9 +413,6 @@ class TestHelper
         $cacheItem->append('_appended');
         $cacheValue .= '_appended';
         $pool->saveDeferred($cacheItem);
-        $pause = random_int(0, 3);
-        $this->printInfoText(sprintf('Deferring saving operation then sleeping %d seconds...', $pause));
-        sleep($pause);
         $this->printInfoText('Deferred item is being committed...');
         if ($pool->commit()) {
             $this->printPassText('The pool successfully committed deferred cache item.');

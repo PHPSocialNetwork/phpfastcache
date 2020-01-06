@@ -31,20 +31,16 @@ use ReflectionMethod;
 class RandomReplicationCluster extends MasterSlaveReplicationCluster
 {
     /**
-     * MasterSlaveReplicationCluster constructor.
+     * RandomReplicationCluster constructor.
      * @param string $clusterName
      * @param ExtendedCacheItemPoolInterface ...$driverPools
-     * @throws PhpfastcacheInvalidArgumentException
-     * @throws PhpfastcacheDriverCheckException
-     * @throws PhpfastcacheDriverConnectException
-     * @throws PhpfastcacheInvalidConfigurationException
      * @throws ReflectionException
      */
     public function __construct(string $clusterName, ExtendedCacheItemPoolInterface ...$driverPools)
     {
-        (new ReflectionMethod(get_parent_class(get_parent_class($this)), __FUNCTION__))
+        (new ReflectionMethod(\get_parent_class(\get_parent_class($this)), __FUNCTION__))
             ->invoke($this, $clusterName, ...$driverPools);
-        $randomPool = $driverPools[random_int(0, count($driverPools) - 1)];
+        $randomPool = $driverPools[\random_int(0, \count($driverPools) - 1)];
         $this->clusterPools = [$randomPool];
     }
 

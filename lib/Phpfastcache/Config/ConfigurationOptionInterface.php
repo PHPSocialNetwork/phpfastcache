@@ -27,13 +27,6 @@ interface ConfigurationOptionInterface
     /**
      * @param string $optionName
      * @return mixed|null
-     * @deprecated Use ->getOptionName() instead
-     */
-    public function getOption(string $optionName);
-
-    /**
-     * @param string $optionName
-     * @return mixed|null
      */
     public function isValidOption(string $optionName);
 }

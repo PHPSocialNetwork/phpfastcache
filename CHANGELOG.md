@@ -12,3 +12,6 @@
 - The "ActOnAll Helper" have been removed in profit of aggregated cluster support
 - Implemented #713 // Reworked "tags" feature by adding 3 strategies: `TAG_STRATEGY_ONE`, `TAG_STRATEGY_ALL`, `TAG_STRATEGY_ONLY`
 - Removed *global static* properties `CacheManager::$ReadHits`, `CacheManager::$WriteHits` replaced by`\Phpfastcache\Entities\DriverIO` callable in`\Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface::getIO`
+- Removed deprecated method `ConfigurationOption::getOption()` use `getOptionName()` instead
+- Removed deprecated config option `$ignoreSymfonyNotice`
+- Removed "fallback" feature (use aggregated cluster Master/Slave instead)

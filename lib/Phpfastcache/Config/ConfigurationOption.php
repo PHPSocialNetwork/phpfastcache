@@ -41,12 +41,6 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     protected $autoTmpFallback = false;
 
     /**
-     * @var bool
-     * @deprecated Do not use this option anymore
-     */
-    protected $ignoreSymfonyNotice = false;
-
-    /**
      * @var int
      */
     protected $defaultTtl = 900;
@@ -70,16 +64,6 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      * @var string
      */
     protected $path = '';
-
-    /**
-     * @var string
-     */
-    protected $fallback = '';
-
-    /**
-     * @var ConfigurationOption
-     */
-    protected $fallbackConfig;
 
     /**
      * @var int
@@ -166,17 +150,6 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     /**
      * @param string $optionName
      * @return mixed|null
-     * @deprecated Use ->getOptionName() instead
-     */
-    public function getOption(string $optionName)
-    {
-        trigger_error(sprintf('Method "%s" is deprecated, use "getOptionName()" instead', __METHOD__), E_USER_DEPRECATED);
-        return $this->$optionName ?? null;
-    }
-
-    /**
-     * @param string $optionName
-     * @return mixed|null
      */
     public function isValidOption(string $optionName)
     {
@@ -216,29 +189,6 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     public function setAutoTmpFallback(bool $autoTmpFallback): self
     {
         $this->autoTmpFallback = $autoTmpFallback;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     * @deprecated As of V7
-     */
-    public function isIgnoreSymfonyNotice(): bool
-    {
-        return $this->ignoreSymfonyNotice;
-    }
-
-    /**
-     * @param bool $ignoreSymfonyNotice
-     * @return ConfigurationOption
-     * @deprecated As of V7
-     */
-    public function setIgnoreSymfonyNotice(bool $ignoreSymfonyNotice): self
-    {
-        if ($ignoreSymfonyNotice) {
-            trigger_error('Configuration option "ignoreSymfonyNotice" is deprecated as of the V7', E_USER_DEPRECATED);
-        }
-        $this->ignoreSymfonyNotice = $ignoreSymfonyNotice;
         return $this;
     }
 
@@ -337,50 +287,6 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     public function setPath(string $path): self
     {
         $this->path = $path;
-        return $this;
-    }
-
-    /**
-     * @return bool|string
-     */
-    public function getFallback()
-    {
-        return $this->fallback;
-    }
-
-    /**
-     * @param string $fallback
-     * @return ConfigurationOption
-     */
-    public function setFallback(string $fallback): self
-    {
-        $this->fallback = $fallback;
-        return $this;
-    }
-
-    /**
-     * @return ConfigurationOption|null
-     */
-    public function getFallbackConfig()
-    {
-        return $this->fallbackConfig;
-    }
-
-    /**
-     * @param ConfigurationOption|null $fallbackConfig
-     * @return ConfigurationOption
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public function setFallbackConfig($fallbackConfig): self
-    {
-        if ($fallbackConfig !== null && !($fallbackConfig instanceof self)) {
-            throw new PhpfastcacheInvalidArgumentException(sprintf(
-                'Invalid argument "%s" for %s',
-                is_object($fallbackConfig) ? get_class($fallbackConfig) : gettype($fallbackConfig),
-                __METHOD__
-            ));
-        }
-        $this->fallbackConfig = $fallbackConfig;
         return $this;
     }
 

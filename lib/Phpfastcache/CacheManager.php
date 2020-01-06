@@ -177,16 +177,12 @@ class CacheManager
             self::$badPracticeOmeter[$driver] = 1;
             $driverClass = self::validateDriverClass(self::getDriverClass($driver));
 
-            try {
-                if (class_exists($driverClass)) {
-                    $configClass = $driverClass::getConfigClass();
-                    self::$instances[$instanceId] = new $driverClass(new $configClass($config->toArray()), $instanceId);
-                    self::$instances[$instanceId]->setEventManager(EventManager::getInstance());
-                } else {
-                    throw new PhpfastcacheDriverNotFoundException(sprintf('The driver "%s" does not exists', $driver));
-                }
-            } catch (PhpfastcacheDriverCheckException $e) {
-                return self::getFallbackInstance($driver, $config, $e);
+            if (class_exists($driverClass)) {
+                $configClass = $driverClass::getConfigClass();
+                self::$instances[$instanceId] = new $driverClass(new $configClass($config->toArray()), $instanceId);
+                self::$instances[$instanceId]->setEventManager(EventManager::getInstance());
+            } else {
+                throw new PhpfastcacheDriverNotFoundException(sprintf('The driver "%s" does not exists', $driver));
             }
         } else {
             if (self::$badPracticeOmeter[$driver] >= 2) {
@@ -330,35 +326,6 @@ class CacheManager
             ));
         }
         return $driverClass;
-    }
-
-    /**
-     * @param string $driver
-     * @param ConfigurationOption $config
-     * @param PhpfastcacheDriverCheckException $e
-     * @return ExtendedCacheItemPoolInterface
-     * @throws PhpfastcacheDriverCheckException
-     * @throws PhpfastcacheDriverException
-     * @throws PhpfastcacheDriverNotFoundException
-     * @throws PhpfastcacheInvalidConfigurationException
-     * @throws PhpfastcacheLogicException
-     * @throws \ReflectionException
-     */
-    protected static function getFallbackInstance(string $driver, ConfigurationOption $config, PhpfastcacheDriverCheckException $e): ExtendedCacheItemPoolInterface
-    {
-        if ($config->getFallback()) {
-            try {
-                $fallback = $config->getFallback();
-                $config->setFallback('');
-                trigger_error(sprintf('The "%s" driver is unavailable at the moment, the fallback driver "%s" has been used instead.', $driver,
-                    $fallback), E_USER_WARNING);
-                return self::getInstance($fallback, $config->getFallbackConfig());
-            } catch (PhpfastcacheInvalidArgumentException $e) {
-                throw new PhpfastcacheInvalidConfigurationException('Invalid fallback driver configuration', 0, $e);
-            }
-        } else {
-            throw new PhpfastcacheDriverCheckException($e->getMessage(), $e->getCode(), $e);
-        }
     }
 
     /**

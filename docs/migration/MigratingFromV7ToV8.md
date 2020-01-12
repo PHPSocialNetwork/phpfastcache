@@ -35,10 +35,7 @@ Use alternative memory cache such as Redis, Memcache, Ssdb, etc.
 `CacheManager::getInstance('Apcu')`
 
 ### Phpfastcache API has been upgraded to 3.0.0
-Check `CHANGELOG_API.md` to see the changes
-
-### Phpfastcache API has been upgraded to 3.0.0
-Check `CHANGELOG_API.md` to see the changes
+Check the [CHANGELOG_API.md](./../../CHANGELOG_API.md) to see the changes.
 
 ### Removal of static counters
 As of the V8 the static I/O counter have been removed

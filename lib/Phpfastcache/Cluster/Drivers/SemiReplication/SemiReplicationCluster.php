@@ -49,7 +49,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
             }
         }
 
-        if (count($this->clusterPools) <= $eCount) {
+        if (\count($this->clusterPools) <= $eCount) {
             throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
 
@@ -73,7 +73,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
             }
         }
 
-        if (count($this->clusterPools) <= $eCount) {
+        if (\count($this->clusterPools) <= $eCount) {
             throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
 
@@ -98,7 +98,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
             }
         }
 
-        if (count($this->clusterPools) <= $eCount) {
+        if (\count($this->clusterPools) <= $eCount) {
             throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
 
@@ -124,7 +124,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
             }
         }
 
-        if (count($this->clusterPools) <= $eCount) {
+        if (\count($this->clusterPools) <= $eCount) {
             throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
         // Return true only if at least one backend confirmed the "clear" operation
@@ -151,7 +151,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
             }
         }
 
-        if (count($this->clusterPools) <= $eCount) {
+        if (\count($this->clusterPools) <= $eCount) {
             throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
         // Return true only if at least one backend confirmed the "commit" operation
@@ -193,12 +193,10 @@ class SemiReplicationCluster extends ClusterPoolAbstract
             }
         }
 
-        if (count($this->clusterPools) <= $eCount) {
+        if (\count($this->clusterPools) <= $eCount) {
             throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
         // Return true only if at least one backend confirmed the "commit" operation
         return $hasCommitOnce;
     }
-
-
 }

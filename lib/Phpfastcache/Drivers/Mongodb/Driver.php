@@ -82,19 +82,19 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             'verbose' => true,
         ]))->toArray()[0];
 
-        $array_filter_recursive = function ($array, callable $callback = null) use (&$array_filter_recursive) {
+        $array_filter_recursive = static function ($array, callable $callback = null) use (&$array_filter_recursive) {
             $array = $callback($array);
 
-            if (is_object($array) || is_array($array)) {
+            if (\is_object($array) || \is_array($array)) {
                 foreach ($array as &$value) {
-                    $value = call_user_func($array_filter_recursive, $value, $callback);
+                    $value =  $array_filter_recursive($value, $callback);
                 }
             }
 
             return $array;
         };
 
-        $callback = function ($item) {
+        $callback = static function ($item) {
             /**
              * Remove unserializable properties
              */

@@ -46,7 +46,7 @@ class FullReplicationCluster extends ClusterPoolAbstract
                 $itemData = $item->get();
                 $poolItemData = $poolItem->get();
 
-                if (is_object($itemData)
+                if (\is_object($itemData)
                 ) {
                     if ($item->get() != $poolItemData) {
                         $poolsToResync[] = $driverPool;
@@ -61,7 +61,7 @@ class FullReplicationCluster extends ClusterPoolAbstract
             }
         }
 
-        if ($item && $item->isHit() && count($poolsToResync) < count($this->clusterPools)) {
+        if ($item && $item->isHit() && \count($poolsToResync) < \count($this->clusterPools)) {
             foreach ($poolsToResync as $poolToResync) {
                 $poolItem = $poolToResync->getItem($key);
                 $poolItem->setEventManager($this->getEventManager())

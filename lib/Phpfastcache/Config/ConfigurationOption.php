@@ -101,25 +101,24 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
          * Detect unwanted keys and throw an exception.
          * No more kidding now, it's 21th century.
          */
-        if (array_diff_key($array, get_object_vars($this))) {
+        if (\array_diff_key($array, \get_object_vars($this))) {
             throw new PhpfastcacheInvalidConfigurationException(sprintf(
                 'Invalid option(s) for the config %s: %s',
                 static::class,
-                implode(', ', array_keys(array_diff_key($array, get_object_vars($this))))
+                \implode(', ', \array_keys(\array_diff_key($array, \get_object_vars($this))))
             ));
         }
 
-        foreach (get_object_vars($this) as $property => $value) {
-
-            if (array_key_exists($property, $array)) {
+        foreach (\get_object_vars($this) as $property => $value) {
+            if (\array_key_exists($property, $array)) {
                 $this->$property = &$array[$property];
             } else {
                 $array[$property] = &$this->$property;
             }
         }
 
-        foreach (get_class_methods($this) as $method) {
-            if (strpos($method, 'set') === 0) {
+        foreach (\get_class_methods($this) as $method) {
+            if (\strpos($method, 'set') === 0) {
                 $value = null;
                 try {
                     /**
@@ -128,17 +127,17 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
                      * to allow us to retrieve the value
                      * in catch statement bloc
                      */
-                    $value = $this->{lcfirst(substr($method, 3))};
+                    $value = $this->{\lcfirst(\substr($method, 3))};
                     $this->{$method}($value);
                 } catch (TypeError $e) {
-                    $typeHintGot = is_object($value) ? get_class($value) : gettype($value);
+                    $typeHintGot = \is_object($value) ? \get_class($value) : \gettype($value);
                     $reflectionMethod = new ReflectionMethod($this, $method);
                     $parameter = $reflectionMethod->getParameters()[0] ?? null;
                     $typeHintExpected = ($parameter instanceof ReflectionParameter ? ($parameter->getType() === 'object' ? $parameter->getClass() : $parameter->getType()) : 'Unknown type');
 
-                    throw new PhpfastcacheInvalidConfigurationException(sprintf(
+                    throw new PhpfastcacheInvalidConfigurationException(\sprintf(
                         'Invalid type hint found for "%s", expected "%s" got "%s"',
-                        lcfirst(substr($method, 3)),
+                        \lcfirst(\substr($method, 3)),
                         $typeHintExpected,
                         $typeHintGot
                     ));
@@ -225,7 +224,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      */
     public function setDefaultKeyHashFunction($defaultKeyHashFunction): self
     {
-        if (!is_callable($defaultKeyHashFunction) && (is_string($defaultKeyHashFunction) && !function_exists($defaultKeyHashFunction))) {
+        if (!\is_callable($defaultKeyHashFunction) && (\is_string($defaultKeyHashFunction) && !\function_exists($defaultKeyHashFunction))) {
             throw new PhpfastcacheInvalidConfigurationException('defaultKeyHashFunction must be a valid function name string');
         }
         $this->defaultKeyHashFunction = $defaultKeyHashFunction;
@@ -247,7 +246,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      */
     public function setDefaultFileNameHashFunction($defaultFileNameHashFunction): self
     {
-        if (!is_callable($defaultFileNameHashFunction) && (is_string($defaultFileNameHashFunction) && !function_exists($defaultFileNameHashFunction))) {
+        if (!\is_callable($defaultFileNameHashFunction) && (\is_string($defaultFileNameHashFunction) && !\function_exists($defaultFileNameHashFunction))) {
             throw new PhpfastcacheInvalidConfigurationException('defaultFileNameHashFunction must be a valid function name string');
         }
         $this->defaultFileNameHashFunction = $defaultFileNameHashFunction;

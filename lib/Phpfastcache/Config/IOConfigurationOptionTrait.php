@@ -117,14 +117,14 @@ trait IOConfigurationOptionTrait
          * Feel free to propose your own one
          * by opening a pull request :)
          */
-        $safeFileExtensions = explode('|', SAFE_FILE_EXTENSIONS);
+        $safeFileExtensions = \explode('|', SAFE_FILE_EXTENSIONS);
 
-        if (strpos($cacheFileExtension, '.') !== false) {
+        if (\strpos($cacheFileExtension, '.') !== false) {
             throw new PhpfastcacheInvalidConfigurationException('cacheFileExtension cannot contain a dot "."');
         }
-        if (!in_array($cacheFileExtension, $safeFileExtensions, true)) {
+        if (!\in_array($cacheFileExtension, $safeFileExtensions, true)) {
             throw new PhpfastcacheInvalidConfigurationException(
-                "Extension \"{$cacheFileExtension}\" is not safe, currently allowed extension names: " . implode(', ', $safeFileExtensions)
+                "Extension \"{$cacheFileExtension}\" is not safe, currently allowed extension names: " . \implode(', ', $safeFileExtensions)
             );
         }
 

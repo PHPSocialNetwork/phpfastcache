@@ -105,16 +105,16 @@ class EventManager implements EventManagerInterface
      */
     public function __call(string $name, array $arguments): void
     {
-        if (strpos($name, 'on') === 0) {
-            $name = substr($name, 2);
-            if (is_callable($arguments[0])) {
-                if (isset($arguments[1]) && is_string($arguments[0])) {
+        if (\strpos($name, 'on') === 0) {
+            $name = \substr($name, 2);
+            if (\is_callable($arguments[0])) {
+                if (isset($arguments[1]) && \is_string($arguments[0])) {
                     $this->events[$name][$arguments[1]] = $arguments[0];
                 } else {
                     $this->events[$name][] = $arguments[0];
                 }
             } else {
-                throw new PhpfastcacheInvalidArgumentException(sprintf('Expected Callable, got "%s"', gettype($arguments[0])));
+                throw new PhpfastcacheInvalidArgumentException(\sprintf('Expected Callable, got "%s"', \gettype($arguments[0])));
             }
         } else {
             throw new BadMethodCallException('An event must start with "on" such as "onCacheGetItem"');

@@ -44,7 +44,7 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
      */
     public function __construct(string $clusterName, ExtendedCacheItemPoolInterface ...$driverPools)
     {
-        if (count($driverPools) !== 2) {
+        if (\count($driverPools) !== 2) {
             throw new PhpfastcacheInvalidArgumentException('A "master/slave" cluster requires exactly two pools to be working.');
         }
 
@@ -75,7 +75,7 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
                 $this->eventManager->dispatch(
                     'CacheReplicationSlaveFallback',
                     $this,
-                    debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']
+                    \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']
                 );
                 return $operation($this->getSlavePool());
             } catch (PhpfastcacheExceptionInterface $e) {

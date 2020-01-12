@@ -43,10 +43,15 @@ class Psr16Adapter implements CacheInterface
 
     /**
      * Psr16Adapter constructor.
-     * @param string|ExtendedCacheItemPoolInterface $driver
-     * @param array|ConfigurationOption|null $config
+     * @param $driver
+     * @param null $config
      * @throws PhpfastcacheDriverCheckException
+     * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverNotFoundException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException
+     * @throws \ReflectionException
      */
     public function __construct($driver, $config = null)
     {
@@ -65,6 +70,7 @@ class Psr16Adapter implements CacheInterface
      * @param null $default
      * @return mixed|null
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function get($key, $default = null)
     {
@@ -86,6 +92,7 @@ class Psr16Adapter implements CacheInterface
      * @param null $ttl
      * @return bool
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function set($key, $value, $ttl = null): bool
     {
@@ -93,9 +100,9 @@ class Psr16Adapter implements CacheInterface
             $cacheItem = $this->internalCacheInstance
                 ->getItem($key)
                 ->set($value);
-            if (is_int($ttl) && $ttl <= 0) {
+            if (\is_int($ttl) && $ttl <= 0) {
                 $cacheItem->expiresAt((new DateTime('@0')));
-            } elseif (is_int($ttl) || $ttl instanceof DateInterval) {
+            } elseif (\is_int($ttl) || $ttl instanceof DateInterval) {
                 $cacheItem->expiresAfter($ttl);
             }
             return $this->internalCacheInstance->save($cacheItem);
@@ -132,18 +139,19 @@ class Psr16Adapter implements CacheInterface
     }
 
     /**
-     * @param string[] $keys
+     * @param iterable $keys
      * @param null $default
-     * @return iterable
+     * @return array|iterable
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function getMultiple($keys, $default = null)
     {
         if ($keys instanceof Traversable) {
-            $keys = iterator_to_array($keys);
+            $keys = \iterator_to_array($keys);
         }
         try {
-            return array_map(function (ExtendedCacheItemInterface $item) {
+            return \array_map(function (ExtendedCacheItemInterface $item) {
                 return $item->get();
             }, $this->internalCacheInstance->getItems($keys));
         } catch (PhpfastcacheInvalidArgumentException $e) {
@@ -163,9 +171,9 @@ class Psr16Adapter implements CacheInterface
             foreach ($values as $key => $value) {
                 $cacheItem = $this->internalCacheInstance->getItem($key)->set($value);
 
-                if (is_int($ttl) && $ttl <= 0) {
+                if (\is_int($ttl) && $ttl <= 0) {
                     $cacheItem->expiresAt((new DateTime('@0')));
-                } elseif (is_int($ttl) || $ttl instanceof DateInterval) {
+                } elseif (\is_int($ttl) || $ttl instanceof DateInterval) {
                     $cacheItem->expiresAfter($ttl);
                 }
                 $this->internalCacheInstance->saveDeferred($cacheItem);
@@ -178,16 +186,17 @@ class Psr16Adapter implements CacheInterface
     }
 
     /**
-     * @param string[] $keys
+     * @param iterable $keys
      * @return bool
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function deleteMultiple($keys): bool
     {
         try {
             if ($keys instanceof Traversable) {
                 return $this->internalCacheInstance->deleteItems(iterator_to_array($keys));
-            } elseif (is_array($keys)) {
+            } elseif (\is_array($keys)) {
                 return $this->internalCacheInstance->deleteItems($keys);
             } else {
                 throw new phpFastCacheInvalidArgumentException('$keys must be an array/Traversable instance.');

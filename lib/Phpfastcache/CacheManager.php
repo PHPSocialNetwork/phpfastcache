@@ -18,7 +18,6 @@ namespace Phpfastcache;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Config\ConfigurationOptionInterface;
-use Phpfastcache\Core\Pool\AggregablePoolInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException,
     PhpfastcacheDriverException,
@@ -60,7 +59,6 @@ use Phpfastcache\Util\ClassNamespaceResolverTrait;
  */
 class CacheManager
 {
-    public const AUTOMATIC_DRIVER_CLASS = 'Auto';
     public const CORE_DRIVER_NAMESPACE = 'Phpfastcache\Drivers\\';
 
     use ClassNamespaceResolverTrait;
@@ -143,12 +141,11 @@ class CacheManager
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheInvalidConfigurationException
      * @throws PhpfastcacheLogicException
-     * @throws PhpfastcacheUnsupportedOperationException
      * @throws \ReflectionException
      */
     public static function __callStatic(string $name, array $arguments): ExtendedCacheItemPoolInterface
     {
-        $options = (array_key_exists(0, $arguments) && is_array($arguments) ? $arguments[0] : []);
+        $options = (\array_key_exists(0, $arguments) && \is_array($arguments) ? $arguments[0] : []);
 
         return self::getInstance($name, $options);
     }
@@ -197,29 +194,31 @@ class CacheManager
     }
 
     /**
-     * @param ConfigurationOption|null $config
+     * @param ConfigurationOptionInterface|null $config
      * @return ConfigurationOption
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheInvalidConfigurationException
      * @throws \ReflectionException
      */
-    protected static function validateConfig(?ConfigurationOption $config): ConfigurationOption
+    protected static function validateConfig(?ConfigurationOptionInterface $config): ConfigurationOption
     {
         if ($config === null) {
             $config = self::getDefaultConfig();
-        } else if (!($config instanceof ConfigurationOption)) {
-            throw new PhpfastcacheInvalidArgumentException(sprintf('Unsupported config type: %s', gettype($config)));
+        } else {
+            if (!($config instanceof ConfigurationOption)) {
+                throw new PhpfastcacheInvalidArgumentException(sprintf('Unsupported config type: %s', gettype($config)));
+            }
         }
 
         return $config;
     }
 
     /**
-     * @return ConfigurationOption
+     * @return ConfigurationOptionInterface
      * @throws PhpfastcacheInvalidConfigurationException
      * @throws \ReflectionException
      */
-    public static function getDefaultConfig(): ConfigurationOption
+    public static function getDefaultConfig(): ConfigurationOptionInterface
     {
         return self::$config ?: self::$config = new ConfigurationOption();
     }
@@ -234,62 +233,20 @@ class CacheManager
     }
 
     /**
-     * Return the list of available drivers Capitalized
-     * with optional FQCN as key
-     *
-     * @param bool $FQCNAsKey Describe keys with Full Qualified Class Name
-     * @return string[]
-     * @throws PhpfastcacheUnsupportedOperationException
+     * @param string $driverClass
+     * @return string|ExtendedCacheItemPoolInterface
+     * @throws PhpfastcacheDriverException
      */
-    public static function getDriverList(bool $FQCNAsKey = false): array
+    protected static function validateDriverClass(string $driverClass): string
     {
-        static $driverList;
-
-        if (self::getDefaultNamespacePath() === self::getNamespacePath()) {
-            if ($driverList === null) {
-                $prefix = self::CORE_DRIVER_NAMESPACE;
-                $classMap = self::createClassMap(__DIR__ . '/Drivers');
-                $driverList = [];
-
-                foreach ($classMap as $class => $file) {
-                    $driverList[] = str_replace($prefix, '', substr($class, 0, strrpos($class, '\\')));
-                }
-
-                $driverList = array_values(array_unique($driverList));
-            }
-
-            $driverList = array_merge($driverList, array_keys(self::$driverCustoms));
-
-            if ($FQCNAsKey) {
-                $realDriverList = [];
-                foreach ($driverList as $driverName) {
-                    $realDriverList[self::getDriverClass($driverName)] = $driverName;
-                }
-                $driverList = $realDriverList;
-            }
-
-            asort($driverList);
-
-            return $driverList;
+        if (!\is_a($driverClass, ExtendedCacheItemPoolInterface::class, true)) {
+            throw new PhpfastcacheDriverException(\sprintf(
+                'Class "%s" does not implement "%s"',
+                $driverClass,
+                ExtendedCacheItemPoolInterface::class
+            ));
         }
-
-        throw new PhpfastcacheUnsupportedOperationException('Cannot get the driver list if the default namespace path has changed.');
-    }
-
-    /**
-     * @return string
-     */
-    public static function getDefaultNamespacePath(): string
-    {
-        return self::CORE_DRIVER_NAMESPACE;
-    }
-
-    /**
-     * @return string
-     */
-    public static function getNamespacePath(): string
-    {
-        return self::$namespacePath ?: self::getDefaultNamespacePath();
+        return $driverClass;
     }
 
     /**
@@ -312,20 +269,19 @@ class CacheManager
     }
 
     /**
-     * @param string $driverClass
-     * @return string|ExtendedCacheItemPoolInterface
-     * @throws PhpfastcacheDriverException
+     * @return string
      */
-    protected static function validateDriverClass(string $driverClass): string
+    public static function getNamespacePath(): string
     {
-        if (!is_a($driverClass, ExtendedCacheItemPoolInterface::class, true)) {
-            throw new PhpfastcacheDriverException(sprintf(
-                'Class "%s" does not implement "%s"',
-                $driverClass,
-                ExtendedCacheItemPoolInterface::class
-            ));
-        }
-        return $driverClass;
+        return self::$namespacePath ?: self::getDefaultNamespacePath();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getDefaultNamespacePath(): string
+    {
+        return self::CORE_DRIVER_NAMESPACE;
     }
 
     /**
@@ -335,8 +291,8 @@ class CacheManager
     {
         self::$instances = [];
 
-        gc_collect_cycles();
-        return !count(self::$instances);
+        \gc_collect_cycles();
+        return !\count(self::$instances);
     }
 
     /**
@@ -347,8 +303,8 @@ class CacheManager
     public static function clearInstance(ExtendedCacheItemPoolInterface $cachePoolInstance): bool
     {
         $found = false;
-        self::$instances = array_filter(array_map(static function (ExtendedCacheItemPoolInterface $cachePool) use ($cachePoolInstance, &$found) {
-            if (spl_object_hash($cachePool) === spl_object_hash($cachePoolInstance)) {
+        self::$instances = \array_filter(\array_map(static function (ExtendedCacheItemPoolInterface $cachePool) use ($cachePoolInstance, &$found) {
+            if (\spl_object_hash($cachePool) === \spl_object_hash($cachePoolInstance)) {
                 $found = true;
                 return null;
             }
@@ -382,21 +338,64 @@ class CacheManager
             throw new PhpfastcacheInvalidArgumentException("Can't add a custom driver because its name is empty");
         }
 
-        if (!class_exists($className)) {
+        if (!\class_exists($className)) {
             throw new PhpfastcacheInvalidArgumentException(
-                sprintf("Can't add '%s' because the class '%s' does not exists", $driverName, $className)
+                \sprintf("Can't add '%s' because the class '%s' does not exists", $driverName, $className)
             );
         }
 
         if (!empty(self::$driverCustoms[$driverName])) {
-            throw new PhpfastcacheLogicException(sprintf("Driver '%s' has been already added", $driverName));
+            throw new PhpfastcacheLogicException(\sprintf("Driver '%s' has been already added", $driverName));
         }
 
-        if (in_array($driverName, self::getDriverList(), true)) {
-            throw new PhpfastcacheLogicException(sprintf("Driver '%s' is already a part of the PhpFastCache core", $driverName));
+        if (\in_array($driverName, self::getDriverList(), true)) {
+            throw new PhpfastcacheLogicException(\sprintf("Driver '%s' is already a part of the PhpFastCache core", $driverName));
         }
 
         self::$driverCustoms[$driverName] = $className;
+    }
+
+    /**
+     * Return the list of available drivers Capitalized
+     * with optional FQCN as key
+     *
+     * @param bool $FQCNAsKey Describe keys with Full Qualified Class Name
+     * @return string[]
+     * @throws PhpfastcacheUnsupportedOperationException
+     */
+    public static function getDriverList(bool $FQCNAsKey = false): array
+    {
+        static $driverList;
+
+        if (self::getDefaultNamespacePath() === self::getNamespacePath()) {
+            if ($driverList === null) {
+                $prefix = self::CORE_DRIVER_NAMESPACE;
+                $classMap = self::createClassMap(__DIR__ . '/Drivers');
+                $driverList = [];
+
+                foreach ($classMap as $class => $file) {
+                    $driverList[] = \str_replace($prefix, '', \substr($class, 0, \strrpos($class, '\\')));
+                }
+
+                $driverList = \array_values(\array_unique($driverList));
+            }
+
+            $driverList = \array_merge($driverList, \array_keys(self::$driverCustoms));
+
+            if ($FQCNAsKey) {
+                $realDriverList = [];
+                foreach ($driverList as $driverName) {
+                    $realDriverList[self::getDriverClass($driverName)] = $driverName;
+                }
+                $driverList = $realDriverList;
+            }
+
+            \asort($driverList);
+
+            return $driverList;
+        }
+
+        throw new PhpfastcacheUnsupportedOperationException('Cannot get the driver list if the default namespace path has changed.');
     }
 
     /**
@@ -414,7 +413,7 @@ class CacheManager
         }
 
         if (!isset(self::$driverCustoms[$driverName])) {
-            throw new PhpfastcacheLogicException(sprintf("Driver '%s' does not exists", $driverName));
+            throw new PhpfastcacheLogicException(\sprintf("Driver '%s' does not exists", $driverName));
         }
 
         unset(self::$driverCustoms[$driverName]);
@@ -436,23 +435,23 @@ class CacheManager
             throw new PhpfastcacheInvalidArgumentException("Can't add a core driver override because its name is empty");
         }
 
-        if (!class_exists($className)) {
+        if (!\class_exists($className)) {
             throw new PhpfastcacheInvalidArgumentException(
-                sprintf("Can't override '%s' because the class '%s' does not exists", $driverName, $className)
+                \sprintf("Can't override '%s' because the class '%s' does not exists", $driverName, $className)
             );
         }
 
         if (!empty(self::$driverOverrides[$driverName])) {
-            throw new PhpfastcacheLogicException(sprintf("Driver '%s' has been already overridden", $driverName));
+            throw new PhpfastcacheLogicException(\sprintf("Driver '%s' has been already overridden", $driverName));
         }
 
-        if (!in_array($driverName, self::getDriverList(), true)) {
-            throw new PhpfastcacheLogicException(sprintf("Driver '%s' can't be overridden since its not a part of the PhpFastCache core", $driverName));
+        if (!\in_array($driverName, self::getDriverList(), true)) {
+            throw new PhpfastcacheLogicException(\sprintf("Driver '%s' can't be overridden since its not a part of the PhpFastCache core", $driverName));
         }
 
-        if (!is_subclass_of($className, self::CORE_DRIVER_NAMESPACE . $driverName . '\\Driver', true)) {
+        if (!\is_subclass_of($className, self::CORE_DRIVER_NAMESPACE . $driverName . '\\Driver', true)) {
             throw new PhpfastcacheLogicException(
-                sprintf("Can't override '%s' because the class '%s' MUST extend '%s'", $driverName, $className,
+                \sprintf("Can't override '%s' because the class '%s' MUST extend '%s'", $driverName, $className,
                     self::CORE_DRIVER_NAMESPACE . $driverName . '\\Driver')
             );
         }
@@ -475,7 +474,7 @@ class CacheManager
         }
 
         if (!isset(self::$driverOverrides[$driverName])) {
-            throw new PhpfastcacheLogicException(sprintf("Driver '%s' were not overridden", $driverName));
+            throw new PhpfastcacheLogicException(\sprintf("Driver '%s' were not overridden", $driverName));
         }
 
         unset(self::$driverOverrides[$driverName]);

@@ -35,8 +35,8 @@ EventManager::getInstance()->unbindEventCallback('onCacheGetItem', 'myCallbackNa
 ```
 
 
-List of active events:
-
+## List of active events:
+### ItemPool Events
 - onCacheGetItem(*Callable* **$callback**)
     - **Callback arguments**
       - *ExtendedCacheItemPoolInterface* **$itemPool**
@@ -139,7 +139,40 @@ List of active events:
         - *ExtendedCacheItemPoolInterface::getItems()*
         - *ExtendedCacheItemPoolInterface::getItemsByTag()*
         - *ExtendedCacheItemPoolInterface::getItemsAsJsonString()*
+### ItemPool Events (Cluster) 
+- onCacheReplicationSlaveFallback(*Callable* **$callback**)
+    - **Callback arguments**
+        - *ClusterPoolInterface* **$self**
+        - *string* **$caller**
+    - **Scope**
+        - Cluster pool
+    - **Description**
+        - Allow you to get notified when a Master/Slave cluster switches on slave
+    - **Risky Circular Methods**
+        - N/A
 
+- onCacheReplicationRandomPoolChosen(*Callable* **$callback**)
+    - **Callback arguments**
+        - *ClusterPoolInterface* **$self**
+        - *ExtendedCacheItemPoolInterface* **$randomPool**
+    - **Scope**
+        - Cluster pool
+    - **Description**
+        - Allow you to get notified when a Random Replication cluster choose a cluster
+    - **Risky Circular Methods**
+        - N/A
+
+- onCacheClusterBuilt(*Callable* **$callback**)
+    - **Callback arguments**
+        - *AggregatorInterface* **$clusterAggregator**
+        - *ClusterPoolInterface* **$cluster**
+    - **Scope**
+        - Cluster aggregator
+    - **Description**
+        - Allow you to get notified when a cluster is being built
+    - **Risky Circular Methods**
+        - *$clusterAggregator::getCluster()*
+### ItemPool Events
 - onCacheItemSet(*Callable* **$callback**)
     - **Callback arguments**
         - *ExtendedCacheItemInterface* **$item**

@@ -151,9 +151,10 @@ class ClusterAggregator implements AggregatorInterface
 
                 /**
                  * @eventName CacheClusterBuilt
-                 * @param $_ AggregatablePoolInterface
+                 * @param $clusterAggregator AggregatorInterface
+                 * @param $cluster ClusterPoolInterface
                  */
-                $this->cluster->getEventManager()->dispatch('CacheClusterBuilt', $this->cluster);
+                $this->cluster->getEventManager()->dispatch('CacheClusterBuilt', $this, $this->cluster);
             }
         } else {
             throw new PhpfastcacheInvalidArgumentException('Unknown cluster strategy');

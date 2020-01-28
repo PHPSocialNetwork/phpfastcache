@@ -41,6 +41,13 @@ class RandomReplicationCluster extends MasterSlaveReplicationCluster
         (new ReflectionMethod(\get_parent_class(\get_parent_class($this)), __FUNCTION__))
             ->invoke($this, $clusterName, ...$driverPools);
         $randomPool = $driverPools[\random_int(0, \count($driverPools) - 1)];
+
+        $this->eventManager->dispatch(
+            'CacheReplicationRandomPoolChosen',
+            $this,
+            $randomPool
+        );
+
         $this->clusterPools = [$randomPool];
     }
 

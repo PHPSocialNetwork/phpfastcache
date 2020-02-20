@@ -64,6 +64,22 @@ Calling `CacheManager::getStaticSystemDrivers()`
 #### :alarm_clock: Now:
 Replaced by `CacheManager::getDriverList()`
 
+### Removal of `ActOnAll` helper
+
+#### :clock1: Then:
+The helper `ActOnAll` used to be useful to act on all instance 
+
+#### :alarm_clock: Now:
+The "ActOnAll Helper" have been removed in profit of aggregated cluster support
+
+### Removal of `fallback` feature
+
+#### :clock1: Then:
+The `fallback` features used to be useful when a backend failed to initialize
+
+#### :alarm_clock: Now:
+Use aggregated cluster Master/Slave instead
+
 ------
 More infos in our comprehensive [changelog](./../../CHANGELOG.md).
 

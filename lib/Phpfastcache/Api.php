@@ -24,13 +24,14 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  */
 class Api
 {
-    protected static $version = '3.0.0-rc2';
+    protected static $version = '3.0.0-rc3';
 
     /**
      * Api constructor.
      */
-    final private function __construct()
+    final protected function __construct()
     {
+        // The Api is not meant to be instantiated
     }
 
     /**

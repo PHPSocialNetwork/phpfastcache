@@ -93,6 +93,14 @@ class CacheManager
     protected static $badPracticeOmeter = [];
 
     /**
+     * CacheManager constructor.
+     */
+    final protected function __construct()
+    {
+        // The cache manager is not meant to be instantiated
+    }
+
+    /**
      * @param string $instanceId
      * @return ExtendedCacheItemPoolInterface
      * @throws PhpfastcacheInstanceNotFoundException

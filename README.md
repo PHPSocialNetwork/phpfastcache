@@ -252,7 +252,7 @@ EventManager::getInstance()->unbindEventCallback('onCacheGetItem', 'myCallbackNa
 ```
 :new: As of the **V8** you can simply subscribe to **every** events of Phpfastcache.
 
-More information about the implementation and the events are available on the [Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Introducing-to-events)
+More information about the implementation and the events are available on the [Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Introducing-to-events)
 
 ---------------------------
 Introducing new helpers
@@ -261,9 +261,7 @@ Introducing new helpers
 
 - (:warning: Removed in v8, [why ?](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Act-on-all-instances)) ~~The [ActOnAll Helper](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Act-on-all-instances) to help you to act on multiple instance at once.~~
 - The [CacheConditional Helper](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Cache-Conditional) to help you to make the basic conditional statement more easier.
-
-#### Important note:
-- The [Psr16 adapter](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Psr16-adapter) previously introduced in **V6** have been removed in **V8** in profit of aggregated cluster support.
+- The [Psr16 adapter](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Psr16-adapter) 
 
 May more will come in the future, feel free to contribute !
 

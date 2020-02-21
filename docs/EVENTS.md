@@ -206,4 +206,14 @@ EventManager::getInstance()->unbindEventCallback('onCacheGetItem', 'myCallbackNa
     - **Risky Circular Methods**
         - *ExtendedCacheItemInterface::expiresAt()*
 
+:new: As of the **V8** you can simply subscribe to **every** events at once of Phpfastcache.
+```php
+<?php
+use Phpfastcache\EventManager;
+
+EventManager::getInstance()->onEveryEvents(static function (string $eventName, ...$args) {
+    echo sprintf("Triggered event '{$eventName}' with %d arguments provided", count($args));
+}, 'debugCallback');
+```
+
 This is an exhaustive list and it will be updated as soon as new events will be added to the Core.

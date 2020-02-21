@@ -46,11 +46,11 @@ Also a [Drupal 8 Module](https://github.com/PHPSocialNetwork/phpfastcache-drupal
 ---------------------------
 Not a "Traditional" Caching
 ---------------------------
-phpFastCache is not like the traditional caching methods which keep reading and writing to 
+Phpfastcache is not like the traditional caching methods which keep reading and writing to 
 files, sqlite or keeping open massive amounts of connections to memcache, redis, mongodb...\
 Also, when you use high performances drivers, your miss hits will be drastically reduced.\
 Slightly different from the usual caching libraries you will find everywhere on the internet, 
-the phpFastCache library reduces the I/O and CPU load as much as possible.
+the Phpfastcache library reduces the I/O and CPU load as much as possible.
 
 ```php
 <?php
@@ -259,7 +259,7 @@ Introducing new helpers
 ---------------------------
 :books: As of the V6, PhpFastCache provides some helpers to make your code easier.
 
-- The [ActOnAll Helper](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Act-on-all-instances) to help you to act on multiple instance at once.
+- (:warning: Removed in v8, [why ?](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Act-on-all-instances)) ~~The [ActOnAll Helper](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Act-on-all-instances) to help you to act on multiple instance at once.~~
 - The [CacheConditional Helper](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Cache-Conditional) to help you to make the basic conditional statement more easier.
 
 #### Important note:
@@ -270,7 +270,7 @@ May more will come in the future, feel free to contribute !
 ---------------------------
 Introducing aggregated cluster support
 ---------------------------
-`//@todo here`
+Check out the [WIKI](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV8%CB%96%5D-Aggregated-cache-cluster) to learn how to implement aggregated cache clustering feature.
 
 ---------------------------
 As Fast To Implement As Opening a Beer

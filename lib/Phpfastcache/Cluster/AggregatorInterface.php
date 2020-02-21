@@ -31,7 +31,7 @@ interface AggregatorInterface
      * Write on all (no failure allowed),
      * Delete on all (no failure allowed)
      *
-     * Conflict on multiple reads: Exception
+     * Conflict on multiple reads: Keep first found item (but sync the others)
      * Cluster size: 2 minimum, unlimited
      */
     public const STRATEGY_FULL_REPLICATION = 1;
@@ -40,7 +40,7 @@ interface AggregatorInterface
      * Semi replication mechanism
      *
      * Read first working (but do not synchronize, with partial failure allowed),
-     * Write on all (with partial failure allowed),
+     * Write on all (with partial failure allowed)
      * Delete on all (with partial failure allowed)
      *
      * Conflict on multiple reads: Keep first found item

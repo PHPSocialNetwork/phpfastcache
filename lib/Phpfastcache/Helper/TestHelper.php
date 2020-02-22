@@ -369,9 +369,9 @@ class TestHelper
         $this->printInfoText('Running CRUD tests on the following backend: ' . get_class($pool));
         $pool->clear();
 
-        $cacheKey = 'cache_key_' . bin2hex(random_bytes(12) . '_' . random_int(100, 999));
+        $cacheKey = 'cache_key_' . bin2hex(random_bytes(8) . '_' . random_int(100, 999));
         $cacheValue = 'cache_data_' . random_int(1000, 999999);
-        $cacheTag = 'cache_tag_' . bin2hex(random_bytes(12) . '_' . random_int(100, 999));
+        $cacheTag = 'cache_tag_' . bin2hex(random_bytes(8) . '_' . random_int(100, 999));
         $cacheItem = $pool->getItem($cacheKey);
         $this->printInfoText('Using cache key: ' . $cacheKey);
 

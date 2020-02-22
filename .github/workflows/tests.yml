@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup PHP 7.3
-        uses: shivammathur/setup-php@1.6.2
+        uses: shivammathur/setup-php@v2
         with:
           php-version: '7.3'
           coverage: none
@@ -30,7 +30,7 @@ jobs:
       - name: Run tests on PHP 7.3
         run: php -f ./bin/ci/run_tests.php
       - name: Setup PHP 7.4
-        uses: shivammathur/setup-php@1.6.2
+        uses: shivammathur/setup-php@v2
         with:
           php-version: '7.4'
           coverage: none

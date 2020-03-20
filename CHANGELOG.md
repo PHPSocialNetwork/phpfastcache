@@ -16,3 +16,4 @@
 - Removed deprecated method `ConfigurationOption::getOption()` use `getOptionName()` instead
 - Removed deprecated config option `$ignoreSymfonyNotice`
 - Removed "fallback" feature (use aggregated cluster Master/Slave instead)
+- Enforced PSR-12 compliance

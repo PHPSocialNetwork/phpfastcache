@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -56,9 +57,14 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
      */
     public function getItem($key)
     {
-        return $this->getStandardizedItem($this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool) use ($key) {
-                return $pool->getItem($key);
-            }) ?? new Item($this, $key), $this);
+        return $this->getStandardizedItem(
+            $this->makeOperation(
+                static function (ExtendedCacheItemPoolInterface $pool) use ($key) {
+                    return $pool->getItem($key);
+                }
+            ) ?? new Item($this, $key),
+            $this
+        );
     }
 
     /**
@@ -105,9 +111,11 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
      */
     public function hasItem($key)
     {
-        return $this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool) use ($key) {
-            return $pool->hasItem($key);
-        });
+        return $this->makeOperation(
+            static function (ExtendedCacheItemPoolInterface $pool) use ($key) {
+                return $pool->hasItem($key);
+            }
+        );
     }
 
     /**
@@ -115,9 +123,11 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
      */
     public function clear()
     {
-        return $this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool) {
-            return $pool->clear();
-        });
+        return $this->makeOperation(
+            static function (ExtendedCacheItemPoolInterface $pool) {
+                return $pool->clear();
+            }
+        );
     }
 
     /**
@@ -125,9 +135,11 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
      */
     public function deleteItem($key)
     {
-        return $this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool) use ($key) {
-            return $pool->deleteItem($key);
-        });
+        return $this->makeOperation(
+            static function (ExtendedCacheItemPoolInterface $pool) use ($key) {
+                return $pool->deleteItem($key);
+            }
+        );
     }
 
     /**
@@ -135,10 +147,12 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
      */
     public function save(CacheItemInterface $item)
     {
-        return $this->makeOperation(function (ExtendedCacheItemPoolInterface $pool) use ($item) {
-            $item->setHit(true);
-            return $pool->save($this->getStandardizedItem($item, $pool));
-        });
+        return $this->makeOperation(
+            function (ExtendedCacheItemPoolInterface $pool) use ($item) {
+                $item->setHit(true);
+                return $pool->save($this->getStandardizedItem($item, $pool));
+            }
+        );
     }
 
 
@@ -147,8 +161,10 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
      */
     public function commit()
     {
-        return $this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool) {
-            return $pool->commit();
-        });
+        return $this->makeOperation(
+            static function (ExtendedCacheItemPoolInterface $pool) {
+                return $pool->commit();
+            }
+        );
     }
 }

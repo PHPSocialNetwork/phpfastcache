@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -191,8 +192,10 @@ class CacheManager
             }
         } else {
             if (self::$badPracticeOmeter[$driver] >= 2) {
-                trigger_error('[' . $driver . '] Calling many times CacheManager::getInstance() for already instanced drivers is a bad practice and have a significant impact on performances.
-           See https://github.com/PHPSocialNetwork/phpfastcache/wiki/[V5]-Why-calling-getInstance%28%29-each-time-is-a-bad-practice-%3F');
+                trigger_error(
+                    '[' . $driver . '] Calling many times CacheManager::getInstance() for already instanced drivers is a bad practice and have a significant impact on performances.
+           See https://github.com/PHPSocialNetwork/phpfastcache/wiki/[V5]-Why-calling-getInstance%28%29-each-time-is-a-bad-practice-%3F'
+                );
             }
         }
 
@@ -248,11 +251,13 @@ class CacheManager
     protected static function validateDriverClass(string $driverClass): string
     {
         if (!\is_a($driverClass, ExtendedCacheItemPoolInterface::class, true)) {
-            throw new PhpfastcacheDriverException(\sprintf(
-                'Class "%s" does not implement "%s"',
-                $driverClass,
-                ExtendedCacheItemPoolInterface::class
-            ));
+            throw new PhpfastcacheDriverException(
+                \sprintf(
+                    'Class "%s" does not implement "%s"',
+                    $driverClass,
+                    ExtendedCacheItemPoolInterface::class
+                )
+            );
         }
         return $driverClass;
     }
@@ -311,13 +316,18 @@ class CacheManager
     public static function clearInstance(ExtendedCacheItemPoolInterface $cachePoolInstance): bool
     {
         $found = false;
-        self::$instances = \array_filter(\array_map(static function (ExtendedCacheItemPoolInterface $cachePool) use ($cachePoolInstance, &$found) {
-            if (\spl_object_hash($cachePool) === \spl_object_hash($cachePoolInstance)) {
-                $found = true;
-                return null;
-            }
-            return $cachePool;
-        }, self::$instances));
+        self::$instances = \array_filter(
+            \array_map(
+                static function (ExtendedCacheItemPoolInterface $cachePool) use ($cachePoolInstance, &$found) {
+                    if (\spl_object_hash($cachePool) === \spl_object_hash($cachePoolInstance)) {
+                        $found = true;
+                        return null;
+                    }
+                    return $cachePool;
+                },
+                self::$instances
+            )
+        );
 
         return $found;
     }
@@ -459,8 +469,12 @@ class CacheManager
 
         if (!\is_subclass_of($className, self::CORE_DRIVER_NAMESPACE . $driverName . '\\Driver', true)) {
             throw new PhpfastcacheLogicException(
-                \sprintf("Can't override '%s' because the class '%s' MUST extend '%s'", $driverName, $className,
-                    self::CORE_DRIVER_NAMESPACE . $driverName . '\\Driver')
+                \sprintf(
+                    "Can't override '%s' because the class '%s' MUST extend '%s'",
+                    $driverName,
+                    $className,
+                    self::CORE_DRIVER_NAMESPACE . $driverName . '\\Driver'
+                )
             );
         }
 

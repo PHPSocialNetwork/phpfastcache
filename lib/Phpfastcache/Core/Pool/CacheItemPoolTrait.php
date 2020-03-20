@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -16,7 +17,6 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Pool;
 
 use DateTime;
-use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
@@ -39,7 +39,9 @@ use RuntimeException;
  */
 trait CacheItemPoolTrait
 {
-    use ClassNamespaceResolverTrait, EventManagerDispatcherTrait, TaggableCacheItemPoolTrait;
+    use ClassNamespaceResolverTrait;
+    use EventManagerDispatcherTrait;
+    use TaggableCacheItemPoolTrait;
 
     /**
      * @var string
@@ -68,11 +70,13 @@ trait CacheItemPoolTrait
 
             return $this;
         }
-        throw new PhpfastcacheInvalidArgumentException(\sprintf(
-            'Invalid Item Class "%s" for this driver "%s".',
-            get_class($item),
-            get_class($this)
-        ));
+        throw new PhpfastcacheInvalidArgumentException(
+            \sprintf(
+                'Invalid Item Class "%s" for this driver "%s".',
+                get_class($item),
+                get_class($this)
+            )
+        );
     }
 
     /**
@@ -109,7 +113,9 @@ trait CacheItemPoolTrait
              */
             if (!isset($this->itemInstances[$key])) {
                 if (\preg_match('~([' . \preg_quote(self::$unsupportedKeyChars, '~') . ']+)~', $key, $matches)) {
-                    throw new PhpfastcacheInvalidArgumentException('Unsupported key character detected: "' . $matches[1] . '". Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers');
+                    throw new PhpfastcacheInvalidArgumentException(
+                        'Unsupported key character detected: "' . $matches[1] . '". Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers'
+                    );
                 }
 
                 $cacheSlamsSpendSeconds = 0;
@@ -124,8 +130,12 @@ trait CacheItemPoolTrait
 
                     if ($driverArray) {
                         if (!\is_array($driverArray)) {
-                            throw new PhpfastcacheCoreException(sprintf('The driverRead method returned an unexpected variable type: %s',
-                                \gettype($driverArray)));
+                            throw new PhpfastcacheCoreException(
+                                sprintf(
+                                    'The driverRead method returned an unexpected variable type: %s',
+                                    \gettype($driverArray)
+                                )
+                            );
                         }
                         $driverData = $this->driverUnwrapData($driverArray);
 
@@ -194,7 +204,6 @@ trait CacheItemPoolTrait
                                 ->setHit(false)
                                 ->setTags([]);
                             if ($this->getConfig()->isItemDetailedDate()) {
-
                                 /**
                                  * If the itemDetailedDate has been
                                  * set after caching, we MUST inject

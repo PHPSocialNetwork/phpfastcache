@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -18,14 +19,14 @@ namespace Phpfastcache\Helper;
 use DateInterval;
 use DateTime;
 use Phpfastcache\CacheManager;
-use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException,
     PhpfastcacheInvalidArgumentException,
     PhpfastcacheLogicException,
     PhpfastcacheRootException,
-    PhpfastcacheSimpleCacheException};
+    PhpfastcacheSimpleCacheException
+};
 use Psr\SimpleCache\CacheInterface;
 use Traversable;
 
@@ -151,9 +152,12 @@ class Psr16Adapter implements CacheInterface
             $keys = \iterator_to_array($keys);
         }
         try {
-            return \array_map(function (ExtendedCacheItemInterface $item) {
-                return $item->get();
-            }, $this->internalCacheInstance->getItems($keys));
+            return \array_map(
+                function (ExtendedCacheItemInterface $item) {
+                    return $item->get();
+                },
+                $this->internalCacheInstance->getItems($keys)
+            );
         } catch (PhpfastcacheInvalidArgumentException $e) {
             throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }

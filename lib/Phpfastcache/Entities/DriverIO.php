@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -45,6 +46,16 @@ class DriverIO
     }
 
     /**
+     * @param int $writeHit
+     * @return DriverIO
+     */
+    public function setWriteHit(int $writeHit): DriverIO
+    {
+        $this->writeHit = $writeHit;
+        return $this;
+    }
+
+    /**
      * @return DriverIO
      */
     public function incWriteHit(): DriverIO
@@ -59,6 +70,16 @@ class DriverIO
     public function getReadHit(): int
     {
         return $this->readHit;
+    }
+
+    /**
+     * @param int $readHit
+     * @return DriverIO
+     */
+    public function setReadHit(int $readHit): DriverIO
+    {
+        $this->readHit = $readHit;
+        return $this;
     }
 
     /**
@@ -79,41 +100,21 @@ class DriverIO
     }
 
     /**
-     * @return DriverIO
-     */
-    public function incReadMiss(): DriverIO
-    {
-        $this->readMiss++;
-        return $this;
-    }
-
-    /**
-     * @param int $writeHit
-     * @return DriverIO
-     */
-    public function setWriteHit(int $writeHit): DriverIO
-    {
-        $this->writeHit = $writeHit;
-        return $this;
-    }
-
-    /**
-     * @param int $readHit
-     * @return DriverIO
-     */
-    public function setReadHit(int $readHit): DriverIO
-    {
-        $this->readHit = $readHit;
-        return $this;
-    }
-
-    /**
      * @param int $readMiss
      * @return DriverIO
      */
     public function setReadMiss(int $readMiss): DriverIO
     {
         $this->readMiss = $readMiss;
+        return $this;
+    }
+
+    /**
+     * @return DriverIO
+     */
+    public function incReadMiss(): DriverIO
+    {
+        $this->readMiss++;
         return $this;
     }
 }

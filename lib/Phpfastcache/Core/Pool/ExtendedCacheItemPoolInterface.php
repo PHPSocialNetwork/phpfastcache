@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -40,27 +41,27 @@ use Psr\Cache\{CacheItemInterface, CacheItemPoolInterface};
  */
 interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventManagerDispatcherInterface, ClassNamespaceResolverInterface, TaggableCacheItemPoolInterface
 {
-    const DRIVER_CHECK_FAILURE = '%s is not installed or is misconfigured, cannot continue. 
+    public const DRIVER_CHECK_FAILURE = '%s is not installed or is misconfigured, cannot continue. 
     Also, please verify the suggested dependencies in composer because as of the V6, 3rd party libraries are no longer required.';
 
-    const DRIVER_CONNECT_FAILURE = '%s failed to connect with the following error message: "%s" line %d in %s';
+    public const DRIVER_CONNECT_FAILURE = '%s failed to connect with the following error message: "%s" line %d in %s';
 
-    const DRIVER_DATA_WRAPPER_INDEX = 'd';
+    public const DRIVER_DATA_WRAPPER_INDEX = 'd';
 
     /**
      * Expiration date Index
      */
-    const DRIVER_EDATE_WRAPPER_INDEX = 'e';
+    public const DRIVER_EDATE_WRAPPER_INDEX = 'e';
 
     /**
      * Creation date Index
      */
-    const DRIVER_CDATE_WRAPPER_INDEX = 'c';
+    public const DRIVER_CDATE_WRAPPER_INDEX = 'c';
 
     /**
      * Modification date Index
      */
-    const DRIVER_MDATE_WRAPPER_INDEX = 'm';
+    public const DRIVER_MDATE_WRAPPER_INDEX = 'm';
 
     /**
      * Return the config class name

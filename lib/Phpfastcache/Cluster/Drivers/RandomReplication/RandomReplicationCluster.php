@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -16,10 +17,6 @@ namespace Phpfastcache\Cluster\Drivers\RandomReplication;
 
 use Phpfastcache\Cluster\Drivers\MasterSlaveReplication\MasterSlaveReplicationCluster;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
-use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
-use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
-use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use ReflectionException;
 use ReflectionMethod;
 

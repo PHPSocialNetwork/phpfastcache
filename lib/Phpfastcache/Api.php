@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -101,7 +102,9 @@ class Api
             }
             throw new PhpfastcacheLogicException('Unable to retrieve the PhpFastCache version through the CHANGELOG.md as no valid string were found in it.');
         }
-        throw new PhpfastcacheLogicException('shell_exec being disabled we attempted to retrieve the PhpFastCache version through the CHANGELOG.md file but it is not readable or has been removed.');
+        throw new PhpfastcacheLogicException(
+            'shell_exec being disabled we attempted to retrieve the PhpFastCache version through the CHANGELOG.md file but it is not readable or has been removed.'
+        );
     }
 
     /**

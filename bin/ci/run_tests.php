@@ -8,6 +8,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 define('PFC_TEST_DIR', \realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tests'));
 
+$timestamp = microtime(true);
 $climate = new League\CLImate\CLImate;
 $climate->forceAnsiOn();
 $status = 0;
@@ -52,6 +53,9 @@ foreach ($globCallback(PFC_TEST_DIR . DIRECTORY_SEPARATOR . '*.test.php') as $fi
      */
     unset($output);
 }
+
+$execTime = gmdate('i\m s\s', (int) round(microtime(true) - $timestamp, 3));
+$climate->out('<yellow>Total tests duration: </yellow><light_green>' . $execTime . '</light_green>');
 
 if ($status === 0) {
     $climate->backgroundGreen()->white()->flank('[OK] The build has passed successfully', '#')->out('');

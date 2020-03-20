@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -80,7 +81,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $content = $this->readFile($file_path);
 
         return $this->decode($content);
-
     }
 
     /**

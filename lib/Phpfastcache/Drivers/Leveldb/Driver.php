@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -31,9 +32,10 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    use DriverBaseTrait, IOHelperTrait;
+    use DriverBaseTrait;
+    use IOHelperTrait;
 
-    const LEVELDB_FILENAME = '.database';
+    protected const LEVELDB_FILENAME = '.database';
 
     /**
      * @return bool

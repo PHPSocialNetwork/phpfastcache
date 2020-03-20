@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -38,7 +39,8 @@ use ReflectionException;
  */
 abstract class ClusterPoolAbstract implements ClusterPoolInterface
 {
-    use DriverBaseTrait, ClusterPoolTrait {
+    use DriverBaseTrait;
+    use ClusterPoolTrait {
         DriverBaseTrait::__construct as private __parentConstruct;
     }
 
@@ -191,17 +193,41 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
     public function getStats(): DriverStatistic
     {
         $stats = new DriverStatistic();
-        $stats->setInfo(sprintf('Using %d pool(s): %s', \count($this->clusterPools), \implode(', ', \array_map(static function (ExtendedCacheItemPoolInterface $pool) {
-            return \get_class($pool);
-        }, $this->clusterPools))));
+        $stats->setInfo(
+            sprintf(
+                'Using %d pool(s): %s',
+                \count($this->clusterPools),
+                \implode(
+                    ', ',
+                    \array_map(
+                        static function (ExtendedCacheItemPoolInterface $pool) {
+                            return \get_class($pool);
+                        },
+                        $this->clusterPools
+                    )
+                )
+            )
+        );
 
-        $stats->setSize((int) \array_sum(\array_map(static function (ExtendedCacheItemPoolInterface $pool) {
-            return $pool->getStats()->getSize();
-        }, $this->clusterPools)));
+        $stats->setSize(
+            (int)\array_sum(
+                \array_map(
+                    static function (ExtendedCacheItemPoolInterface $pool) {
+                        return $pool->getStats()->getSize();
+                    },
+                    $this->clusterPools
+                )
+            )
+        );
 
-        $stats->setData((int) \array_map(static function (ExtendedCacheItemPoolInterface $pool) {
-            return $pool->getStats()->getData();
-        }, $this->clusterPools));
+        $stats->setData(
+            (int)\array_map(
+                static function (ExtendedCacheItemPoolInterface $pool) {
+                    return $pool->getStats()->getData();
+                },
+                $this->clusterPools
+            )
+        );
 
         return $stats;
     }

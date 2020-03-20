@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -32,7 +33,7 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    const COUCHDB_DEFAULT_DB_NAME = 'phpfastcache';
+    public const COUCHDB_DEFAULT_DB_NAME = 'phpfastcache'; // Public because used in config
 
     use DriverBaseTrait;
 
@@ -95,11 +96,13 @@ HELP;
         $url .= ":{$clientConfig->getPort()}";
         $url .= $clientConfig->getPath();
 
-        $this->instance = CouchDBClient::create([
-            'dbname' => $this->getDatabaseName(),
-            'url' => $url,
-            'timeout' => $clientConfig->getTimeout(),
-        ]);
+        $this->instance = CouchDBClient::create(
+            [
+                'dbname' => $this->getDatabaseName(),
+                'url' => $url,
+                'timeout' => $clientConfig->getTimeout(),
+            ]
+        );
 
         $this->createDatabase();
 
@@ -161,8 +164,11 @@ HELP;
          */
         if ($item instanceof Item) {
             try {
-                $this->instance->putDocument(['data' => $this->encode($this->driverPreWrap($item))], $item->getEncodedKey(),
-                    $this->getLatestDocumentRevision($item->getEncodedKey()));
+                $this->instance->putDocument(
+                    ['data' => $this->encode($this->driverPreWrap($item))],
+                    $item->getEncodedKey(),
+                    $this->getLatestDocumentRevision($item->getEncodedKey())
+                );
             } catch (CouchDBException $e) {
                 throw new PhpfastcacheDriverException('Got error while trying to upsert a document: ' . $e->getMessage(), 0, $e);
             }

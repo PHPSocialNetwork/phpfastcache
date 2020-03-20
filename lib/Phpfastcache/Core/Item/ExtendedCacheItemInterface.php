@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -174,7 +175,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      *
      * @return string
      */
-    public function getDataAsJsonString(int $option = 0,int $depth = 512): string;
+    public function getDataAsJsonString(int $option = 0, int $depth = 512): string;
 
     /**
      * @param ExtendedCacheItemPoolInterface $driverPool

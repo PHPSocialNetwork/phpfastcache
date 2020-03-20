@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -16,13 +17,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Pool;
 
 use InvalidArgumentException;
-use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Event\EventManagerDispatcherInterface;
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
-use Phpfastcache\Util\ClassNamespaceResolverInterface;
-use Psr\Cache\{CacheItemInterface, CacheItemPoolInterface};
 
 
 /**

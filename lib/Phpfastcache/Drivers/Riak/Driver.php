@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -32,7 +33,7 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    const RIAK_DEFAULT_BUCKET_NAME = 'phpfastcache';
+    public const RIAK_DEFAULT_BUCKET_NAME = 'phpfastcache'; // Public because used in config
 
     /**
      * @var string

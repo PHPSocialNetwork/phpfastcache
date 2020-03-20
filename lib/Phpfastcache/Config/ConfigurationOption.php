@@ -16,7 +16,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Config;
 
-use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Util\ArrayObject;
 use ReflectionException;
@@ -102,11 +101,13 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
          * No more kidding now, it's 21th century.
          */
         if (\array_diff_key($array, \get_object_vars($this))) {
-            throw new PhpfastcacheInvalidConfigurationException(sprintf(
-                'Invalid option(s) for the config %s: %s',
-                static::class,
-                \implode(', ', \array_keys(\array_diff_key($array, \get_object_vars($this))))
-            ));
+            throw new PhpfastcacheInvalidConfigurationException(
+                sprintf(
+                    'Invalid option(s) for the config %s: %s',
+                    static::class,
+                    \implode(', ', \array_keys(\array_diff_key($array, \get_object_vars($this))))
+                )
+            );
         }
 
         foreach (\get_object_vars($this) as $property => $value) {
@@ -133,14 +134,17 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
                     $typeHintGot = \is_object($value) ? \get_class($value) : \gettype($value);
                     $reflectionMethod = new ReflectionMethod($this, $method);
                     $parameter = $reflectionMethod->getParameters()[0] ?? null;
-                    $typeHintExpected = ($parameter instanceof ReflectionParameter ? ($parameter->getType() === 'object' ? $parameter->getClass() : $parameter->getType()) : 'Unknown type');
+                    $typeHintExpected = ($parameter instanceof ReflectionParameter ? ($parameter->getType() === 'object' ? $parameter->getClass() : $parameter->getType(
+                    )) : 'Unknown type');
 
-                    throw new PhpfastcacheInvalidConfigurationException(\sprintf(
-                        'Invalid type hint found for "%s", expected "%s" got "%s"',
-                        \lcfirst(\substr($method, 3)),
-                        $typeHintExpected,
-                        $typeHintGot
-                    ));
+                    throw new PhpfastcacheInvalidConfigurationException(
+                        \sprintf(
+                            'Invalid type hint found for "%s", expected "%s" got "%s"',
+                            \lcfirst(\substr($method, 3)),
+                            $typeHintExpected,
+                            $typeHintGot
+                        )
+                    );
                 }
             }
         }

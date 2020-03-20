@@ -20,7 +20,6 @@ use ArrayAccess;
 use Countable;
 use Iterator;
 
-
 /**
  * Class ArrayObject
  * @package phpFastCache\Util

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -98,14 +99,26 @@ trait TaggableCacheItemPoolTrait
                  *
                  * #headache
                  */
-                return \array_filter($this->getItems(\array_unique(\array_keys($tagsItems))), static function (ExtendedCacheItemInterface $item) {
-                    return $item->isHit();
-                });
+                return \array_filter(
+                    $this->getItems(\array_unique(\array_keys($tagsItems))),
+                    static function (ExtendedCacheItemInterface $item) {
+                        return $item->isHit();
+                    }
+                );
             }
             return [];
         }
 
         throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    protected function getTagKey(string $key): string
+    {
+        return self::DRIVER_TAGS_KEY_PREFIX . $key;
     }
 
     /**
@@ -394,22 +407,16 @@ trait TaggableCacheItemPoolTrait
     }
 
     /**
-     * @param string $key
-     * @return string
-     */
-    protected function getTagKey(string $key): string
-    {
-        return self::DRIVER_TAGS_KEY_PREFIX . $key;
-    }
-
-    /**
      * @param array $keys
      * @return array
      */
     protected function getTagKeys(array $keys): array
     {
-        return \array_map(function(string $key){
-            return $this->getTagKey($key);
-        }, $keys);
+        return \array_map(
+            function (string $key) {
+                return $this->getTagKey($key);
+            },
+            $keys
+        );
     }
 }

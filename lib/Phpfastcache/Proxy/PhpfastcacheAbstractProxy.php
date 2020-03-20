@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -17,7 +18,6 @@ namespace Phpfastcache\Proxy;
 
 use BadMethodCallException;
 use Phpfastcache\CacheManager;
-use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Entities\DriverStatistic;

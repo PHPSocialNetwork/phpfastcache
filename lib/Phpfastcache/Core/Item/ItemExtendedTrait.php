@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -35,7 +36,8 @@ use Phpfastcache\Util\ClassNamespaceResolverTrait;
  */
 trait ItemExtendedTrait
 {
-    use ClassNamespaceResolverTrait, TaggableCacheItemTrait;
+    use ClassNamespaceResolverTrait;
+    use TaggableCacheItemTrait;
 
     /********************
      *
@@ -315,7 +317,7 @@ trait ItemExtendedTrait
      * @param int $depth \json_encode() depth
      * @return string
      */
-    public function getDataAsJsonString(int $option = 0,int $depth = 512): string
+    public function getDataAsJsonString(int $option = 0, int $depth = 512): string
     {
         $data = $this->get();
 

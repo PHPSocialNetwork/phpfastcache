@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -31,15 +32,17 @@ class Driver implements ExtendedCacheItemPoolInterface
 {
     use DriverBaseTrait;
 
-    const PREFIX = 'PFC_';
+    protected const PREFIX = 'PFC_';
 
     /**
      * @return bool
      */
     public function driverCheck(): bool
     {
-        if(!$this->getConfig()->isAwareOfUntrustableData()){
-            throw new PhpfastcacheDriverException('You have to setup the config "awareOfUntrustableData" to "TRUE" to confirm that you are aware that this driver does not use reliable storage as it may be corrupted by end-user.');
+        if (!$this->getConfig()->isAwareOfUntrustableData()) {
+            throw new PhpfastcacheDriverException(
+                'You have to setup the config "awareOfUntrustableData" to "TRUE" to confirm that you are aware that this driver does not use reliable storage as it may be corrupted by end-user.'
+            );
         }
         return function_exists('setcookie');
     }

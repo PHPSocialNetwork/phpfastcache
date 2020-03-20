@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -78,13 +79,15 @@ trait DriverBaseTrait
         try {
             $this->driverConnect();
         } catch (Exception $e) {
-            throw new PhpfastcacheDriverConnectException(sprintf(
-                self::DRIVER_CONNECT_FAILURE,
-                $this->getDriverName(),
-                $e->getMessage(),
-                $e->getLine() ?: 'unknown line',
-                $e->getFile() ?: 'unknown file'
-            ));
+            throw new PhpfastcacheDriverConnectException(
+                sprintf(
+                    self::DRIVER_CONNECT_FAILURE,
+                    $this->getDriverName(),
+                    $e->getMessage(),
+                    $e->getLine() ?: 'unknown line',
+                    $e->getFile() ?: 'unknown file'
+                )
+            );
         }
     }
 

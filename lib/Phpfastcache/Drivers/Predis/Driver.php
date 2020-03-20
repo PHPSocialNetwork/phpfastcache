@@ -76,8 +76,13 @@ HELP;
             ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setRawData($info)
             ->setSize((int)$size)
-            ->setInfo(sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
-                $version, $date->format(DATE_RFC2822)));
+            ->setInfo(
+                sprintf(
+                    "The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
+                    $version,
+                    $date->format(DATE_RFC2822)
+                )
+            );
     }
 
     /**
@@ -110,12 +115,14 @@ HELP;
         }
 
         if (!empty($this->getConfig()->getPath())) {
-            $this->instance = new PredisClient([
-                'scheme' => $this->getConfig()->getScheme(),
-                'persistent' => $this->getConfig()->isPersistent(),
-                'timeout' => $this->getConfig()->getTimeout(),
-                'path' => $this->getConfig()->getPath(),
-            ], $options);
+            $this->instance = new PredisClient(
+                [
+                    'scheme' => $this->getConfig()->getScheme(),
+                    'persistent' => $this->getConfig()->isPersistent(),
+                    'timeout' => $this->getConfig()->getTimeout(),
+                    'path' => $this->getConfig()->getPath(),
+                ], $options
+            );
         } else {
             $this->instance = new PredisClient($this->getConfig()->getPredisConfigArray(), $options);
         }

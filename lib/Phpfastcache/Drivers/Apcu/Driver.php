@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -51,8 +52,13 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
         return (new DriverStatistic())
             ->setData(implode(', ', array_keys($this->itemInstances)))
-            ->setInfo(sprintf("The APCU cache is up since %s, and have %d item(s) in cache.\n For more information see RawData.", $date->format(DATE_RFC2822),
-                $stats['num_entries']))
+            ->setInfo(
+                sprintf(
+                    "The APCU cache is up since %s, and have %d item(s) in cache.\n For more information see RawData.",
+                    $date->format(DATE_RFC2822),
+                    $stats['num_entries']
+                )
+            )
             ->setRawData($stats)
             ->setSize((int)$stats['mem_size']);
     }
@@ -76,7 +82,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return (bool) apcu_store($item->getKey(), $this->driverPreWrap($item), $item->getTtl());
+            return (bool)apcu_store($item->getKey(), $this->driverPreWrap($item), $item->getTtl());
         }
 
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');

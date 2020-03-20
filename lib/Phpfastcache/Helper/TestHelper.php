@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -93,7 +94,6 @@ class TestHelper
         $this->printText('[PHP v' . PHP_VERSION . ' with: ' . implode(', ', $loadedExtensions) . ']', true);
         $this->printText("[Begin Test: '{$this->testName}']");
         $this->printText('---');
-
     }
 
     /**
@@ -236,13 +236,15 @@ class TestHelper
             $this->printSkipText('A driver could not be initialized due to missing requirement: ' . $exception->getMessage());
             $this->exitCode = 0;
         } else {
-            $this->printFailText(sprintf(
-                'Uncaught exception "%s" in "%s" line %d with message: "%s"',
-                get_class($exception),
-                $exception->getFile(),
-                $exception->getLine(),
-                $exception->getMessage()
-            ));
+            $this->printFailText(
+                sprintf(
+                    'Uncaught exception "%s" in "%s" line %d with message: "%s"',
+                    get_class($exception),
+                    $exception->getFile(),
+                    $exception->getLine(),
+                    $exception->getMessage()
+                )
+            );
         }
         $this->terminateTest();
     }
@@ -324,19 +326,23 @@ class TestHelper
         }
 
         if ($errorType === '[FATAL ERROR]') {
-            $this->printFailText(sprintf(
-                "<red>A critical error has been caught: \"%s\" in %s line %d</red>",
-                "$errorType $errstr",
-                $errfile,
-                $errline
-            ));
+            $this->printFailText(
+                sprintf(
+                    "<red>A critical error has been caught: \"%s\" in %s line %d</red>",
+                    "$errorType $errstr",
+                    $errfile,
+                    $errline
+                )
+            );
         } else {
-            $this->printDebugText(sprintf(
-                "<yellow>A non-critical error has been caught: \"%s\" in %s line %d</yellow>",
-                "$errorType $errstr",
-                $errfile,
-                $errline
-            ));
+            $this->printDebugText(
+                sprintf(
+                    "<yellow>A non-critical error has been caught: \"%s\" in %s line %d</yellow>",
+                    "$errorType $errstr",
+                    $errfile,
+                    $errline
+                )
+            );
         }
     }
 
@@ -356,9 +362,12 @@ class TestHelper
      */
     public function debugEvents(EventManagerInterface $eventManager)
     {
-        $eventManager->onEveryEvents(function (string $eventName) {
-            $this->printDebugText("Triggered event '{$eventName}'");
-        }, 'debugCallback');
+        $eventManager->onEveryEvents(
+            function (string $eventName) {
+                $this->printDebugText("Triggered event '{$eventName}'");
+            },
+            'debugCallback'
+        );
     }
 
     /**
@@ -447,7 +456,7 @@ class TestHelper
             $this->printFailText('The cluster failed to clear.');
         }
 
-        $this->printInfoText(sprintf('I/O stats: %d HIT, %s MISS, %d WRITE', $pool->getIO()->getReadHit(),  $pool->getIO()->getReadMiss(),  $pool->getIO()->getWriteHit()));
+        $this->printInfoText(sprintf('I/O stats: %d HIT, %s MISS, %d WRITE', $pool->getIO()->getReadHit(), $pool->getIO()->getReadMiss(), $pool->getIO()->getWriteHit()));
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -36,11 +37,11 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     /**
      *
      */
-    const FILE_DIR = 'sqlite';
+    protected const FILE_DIR = 'sqlite';
     /**
      *
      */
-    const INDEXING_FILE = 'indexing';
+    protected const INDEXING_FILE = 'indexing';
 
     /**
      * @var int
@@ -116,18 +117,21 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         try {
             $stm = $this->getDb($item->getKey())
                 ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
-            $stm->execute([
-                ':keyword' => $item->getKey(),
-            ]);
+            $stm->execute(
+                [
+                    ':keyword' => $item->getKey(),
+                ]
+            );
             $row = $stm->fetch(PDO::FETCH_ASSOC);
-
         } catch (PDOException $e) {
             try {
                 $stm = $this->getDb($item->getKey(), true)
                     ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
-                $stm->execute([
-                    ':keyword' => $item->getKey(),
-                ]);
+                $stm->execute(
+                    [
+                        ':keyword' => $item->getKey(),
+                    ]
+                );
                 $row = $stm->fetch(PDO::FETCH_ASSOC);
             } catch (PDOException $e) {
                 return null;
@@ -171,7 +175,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
             $this->instance[$instant] = $PDO;
             unset($PDO);
-
         }
 
         return $this->instance[$instant];
@@ -192,8 +195,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             }
 
             $PDO = new PDO("sqlite:" . $this->SqliteDir . '/' . self::INDEXING_FILE);
-            $PDO->setAttribute(PDO::ATTR_ERRMODE,
-                PDO::ERRMODE_EXCEPTION);
+            $PDO->setAttribute(
+                PDO::ATTR_ERRMODE,
+                PDO::ERRMODE_EXCEPTION
+            );
 
             if ($tableCreated) {
                 $this->initIndexing($PDO);
@@ -222,14 +227,15 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                 $db++;
             }
             $this->currentDB = $db;
-
         }
 
         // look for keyword
         $stm = $this->indexing->prepare("SELECT * FROM `balancing` WHERE `keyword`=:keyword LIMIT 1");
-        $stm->execute([
-            ':keyword' => $keyword,
-        ]);
+        $stm->execute(
+            [
+                ':keyword' => $keyword,
+            ]
+        );
         $row = $stm->fetch(PDO::FETCH_ASSOC);
         if (isset($row['db']) && $row['db'] != '') {
             $db = $row['db'];
@@ -239,10 +245,12 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
              */
             $db = $this->currentDB;
             $stm = $this->indexing->prepare("INSERT INTO `balancing` (`keyword`,`db`) VALUES(:keyword, :db)");
-            $stm->execute([
-                ':keyword' => $keyword,
-                ':db' => $db,
-            ]);
+            $stm->execute(
+                [
+                    ':keyword' => $keyword,
+                    ':db' => $db,
+                ]
+            );
         }
 
         return $db;
@@ -254,7 +262,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     public function initIndexing(PDO $db)
     {
-
         // delete everything before reset indexing
         $dir = opendir($this->SqliteDir);
         while ($file = readdir($dir)) {
@@ -267,7 +274,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $db->exec('CREATE TABLE "balancing" ("keyword" VARCHAR PRIMARY KEY NOT NULL UNIQUE, "db" INTEGER)');
         $db->exec('CREATE INDEX "db" ON "balancing" ("db")');
         $db->exec('CREATE UNIQUE INDEX "lookup" ON "balancing" ("keyword")');
-
     }
 
     /**
@@ -297,11 +303,13 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             try {
                 $stm = $this->getDb($item->getKey())
                     ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
-                $stm->execute([
-                    ':keyword' => $item->getKey(),
-                    ':object' => $this->encode($this->driverPreWrap($item)),
-                    ':exp' => $item->getExpirationDate()->getTimestamp(),
-                ]);
+                $stm->execute(
+                    [
+                        ':keyword' => $item->getKey(),
+                        ':object' => $this->encode($this->driverPreWrap($item)),
+                        ':exp' => $item->getExpirationDate()->getTimestamp(),
+                    ]
+                );
 
                 return true;
             } catch (PDOException $e) {
@@ -327,10 +335,12 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                 $stm = $this->getDb($item->getKey())
                     ->prepare("DELETE FROM `caching` WHERE (`exp` <= :U) OR (`keyword`=:keyword) ");
 
-                return $stm->execute([
-                    ':keyword' => $item->getKey(),
-                    ':U' => time(),
-                ]);
+                return $stm->execute(
+                    [
+                        ':keyword' => $item->getKey(),
+                        ':U' => time(),
+                    ]
+                );
             } catch (PDOException $e) {
                 return false;
             }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -36,7 +37,7 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    const MONGODB_DEFAULT_DB_NAME = 'phpfastcache';
+    public const MONGODB_DEFAULT_DB_NAME = 'phpfastcache'; // Public because used in config
 
     use DriverBaseTrait;
 
@@ -58,8 +59,11 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $mongoExtensionExists = class_exists(Manager::class);
 
         if (!$mongoExtensionExists && class_exists(MongoClient::class)) {
-            trigger_error('This driver is used to support the pecl MongoDb extension with mongo-php-library.
-            For MongoDb with Mongo PECL support use Mongo Driver.', E_USER_ERROR);
+            trigger_error(
+                'This driver is used to support the pecl MongoDb extension with mongo-php-library.
+            For MongoDb with Mongo PECL support use Mongo Driver.',
+                E_USER_ERROR
+            );
         }
 
         return $mongoExtensionExists && class_exists(Collection::class);
@@ -70,24 +74,34 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     public function getStats(): DriverStatistic
     {
-        $serverStats = $this->instance->getManager()->executeCommand('phpFastCache', new Command([
-            'serverStatus' => 1,
-            'recordStats' => 0,
-            'repl' => 0,
-            'metrics' => 0,
-        ]))->toArray()[0];
+        $serverStats = $this->instance->getManager()->executeCommand(
+            'phpFastCache',
+            new Command(
+                [
+                    'serverStatus' => 1,
+                    'recordStats' => 0,
+                    'repl' => 0,
+                    'metrics' => 0,
+                ]
+            )
+        )->toArray()[0];
 
-        $collectionStats = $this->instance->getManager()->executeCommand('phpFastCache', new Command([
-            'collStats' => (isset($this->getConfig()['collectionName']) ? $this->getConfig()['collectionName'] : 'Cache'),
-            'verbose' => true,
-        ]))->toArray()[0];
+        $collectionStats = $this->instance->getManager()->executeCommand(
+            'phpFastCache',
+            new Command(
+                [
+                    'collStats' => (isset($this->getConfig()['collectionName']) ? $this->getConfig()['collectionName'] : 'Cache'),
+                    'verbose' => true,
+                ]
+            )
+        )->toArray()[0];
 
         $array_filter_recursive = static function ($array, callable $callback = null) use (&$array_filter_recursive) {
             $array = $callback($array);
 
             if (\is_object($array) || \is_array($array)) {
                 foreach ($array as &$value) {
-                    $value =  $array_filter_recursive($value, $callback);
+                    $value = $array_filter_recursive($value, $callback);
                 }
             }
 
@@ -108,14 +122,20 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $collectionStats = $array_filter_recursive($collectionStats, $callback);
 
         $stats = (new DriverStatistic())
-            ->setInfo('MongoDB version ' . $serverStats->version . ', Uptime (in days): ' . round($serverStats->uptime / 86400,
-                    1) . "\n For more information see RawData.")
+            ->setInfo(
+                'MongoDB version ' . $serverStats->version . ', Uptime (in days): ' . round(
+                    $serverStats->uptime / 86400,
+                    1
+                ) . "\n For more information see RawData."
+            )
             ->setSize($collectionStats->size)
             ->setData(implode(', ', array_keys($this->itemInstances)))
-            ->setRawData([
-                'serverStatus' => $serverStats,
-                'collStats' => $collectionStats,
-            ]);
+            ->setRawData(
+                [
+                    'serverStatus' => $serverStats,
+                    'collStats' => $collectionStats,
+                ]
+            );
 
         return $stats;
     }
@@ -137,10 +157,14 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
             if (!empty($this->getConfig()->isItemDetailedDate())) {
                 $return += [
-                    self::DRIVER_MDATE_WRAPPER_INDEX => (new DateTime())->setTimestamp($document[self::DRIVER_MDATE_WRAPPER_INDEX]->toDateTime()
-                        ->getTimestamp()),
-                    self::DRIVER_CDATE_WRAPPER_INDEX => (new DateTime())->setTimestamp($document[self::DRIVER_CDATE_WRAPPER_INDEX]->toDateTime()
-                        ->getTimestamp()),
+                    self::DRIVER_MDATE_WRAPPER_INDEX => (new DateTime())->setTimestamp(
+                        $document[self::DRIVER_MDATE_WRAPPER_INDEX]->toDateTime()
+                            ->getTimestamp()
+                    ),
+                    self::DRIVER_CDATE_WRAPPER_INDEX => (new DateTime())->setTimestamp(
+                        $document[self::DRIVER_CDATE_WRAPPER_INDEX]->toDateTime()
+                            ->getTimestamp()
+                    ),
                 ];
             }
 
@@ -179,10 +203,14 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
                 if (!empty($this->getConfig()->isItemDetailedDate())) {
                     $set += [
-                        self::DRIVER_MDATE_WRAPPER_INDEX => ($item->getModificationDate() ? new UTCDateTime(($item->getModificationDate()
-                                ->getTimestamp()) * 1000) : new UTCDateTime(time() * 1000)),
-                        self::DRIVER_CDATE_WRAPPER_INDEX => ($item->getCreationDate() ? new UTCDateTime(($item->getCreationDate()
-                                ->getTimestamp()) * 1000) : new UTCDateTime(time() * 1000)),
+                        self::DRIVER_MDATE_WRAPPER_INDEX => ($item->getModificationDate() ? new UTCDateTime(
+                            ($item->getModificationDate()
+                                ->getTimestamp()) * 1000
+                        ) : new UTCDateTime(time() * 1000)),
+                        self::DRIVER_CDATE_WRAPPER_INDEX => ($item->getCreationDate() ? new UTCDateTime(
+                            ($item->getCreationDate()
+                                ->getTimestamp()) * 1000
+                        ) : new UTCDateTime(time() * 1000)),
                     ];
                 }
                 $result = (array)$this->getCollection()->updateOne(
@@ -278,23 +306,30 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $password = $this->getConfig()->getPassword();
 
         if (count($servers) > 0) {
-            $host = array_reduce($servers, static function ($carry, $data) {
-                $carry .= ($carry === '' ? '' : ',') . $data['host'] . ':' . $data['port'];
-                return $carry;
-            }, '');
+            $host = array_reduce(
+                $servers,
+                static function ($carry, $data) {
+                    $carry .= ($carry === '' ? '' : ',') . $data['host'] . ':' . $data['port'];
+                    return $carry;
+                },
+                ''
+            );
             $port = false;
         }
 
-        return implode('', [
-            "{$protocol}://",
-            $username ?: '',
-            $password ? ":{$password}" : '',
-            $username ? '@' : '',
-            $host,
-            $port !== 27017 && $port !== false ? ":{$port}" : '',
-            $databaseName ? "/{$databaseName}" : '',
-            count($options) > 0 ? '?' . http_build_query($options) : '',
-        ]);
+        return implode(
+            '',
+            [
+                "{$protocol}://",
+                $username ?: '',
+                $password ? ":{$password}" : '',
+                $username ? '@' : '',
+                $host,
+                $port !== 27017 && $port !== false ? ":{$port}" : '',
+                $databaseName ? "/{$databaseName}" : '',
+                count($options) > 0 ? '?' . http_build_query($options) : '',
+            ]
+        );
     }
 
     /********************

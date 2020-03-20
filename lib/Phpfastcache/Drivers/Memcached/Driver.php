@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -117,7 +118,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                 if (!empty($server['saslUser']) && !empty($server['saslPassword'])) {
                     $this->instance->setSaslAuthData($server['saslUser'], $server['saslPassword']);
                 }
-
             } catch (Exception $e) {
                 $this->fallback = true;
             }

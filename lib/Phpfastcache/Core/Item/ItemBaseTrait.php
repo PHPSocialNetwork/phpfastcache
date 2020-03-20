@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -28,7 +29,8 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
  */
 trait ItemBaseTrait
 {
-    use ItemExtendedTrait, EventManagerDispatcherTrait;
+    use ItemExtendedTrait;
+    use EventManagerDispatcherTrait;
 
     /**
      * @var bool

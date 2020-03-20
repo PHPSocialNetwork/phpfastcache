@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -26,7 +27,8 @@ use Psr\Cache\CacheItemInterface;
  */
 trait ExtendedCacheItemPoolTrait
 {
-    use CacheItemPoolTrait, AbstractDriverPoolTrait;
+    use CacheItemPoolTrait;
+    use AbstractDriverPoolTrait;
 
     /**
      * @var DriverIO
@@ -84,7 +86,9 @@ trait ExtendedCacheItemPoolTrait
     public function attachItem(CacheItemInterface $item)
     {
         if (isset($this->itemInstances[$item->getKey()]) && \spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
-            throw new PhpfastcacheLogicException('The item already exists and cannot be overwritten because the Spl object hash mismatches ! You probably tried to re-attach a detached item which has been already retrieved from cache.');
+            throw new PhpfastcacheLogicException(
+                'The item already exists and cannot be overwritten because the Spl object hash mismatches ! You probably tried to re-attach a detached item which has been already retrieved from cache.'
+            );
         }
 
         $this->itemInstances[$item->getKey()] = $item;

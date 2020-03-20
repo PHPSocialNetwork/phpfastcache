@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -55,8 +56,13 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setRawData($info)
             ->setSize((int)$info['used_memory'])
-            ->setInfo(sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
-                $info['redis_version'], $date->format(DATE_RFC2822)));
+            ->setInfo(
+                sprintf(
+                    "The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
+                    $info['redis_version'],
+                    $date->format(DATE_RFC2822)
+                )
+            );
     }
 
     /**
@@ -138,7 +144,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-
             $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
             /**

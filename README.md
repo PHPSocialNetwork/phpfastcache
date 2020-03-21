@@ -6,6 +6,8 @@
 One of the biggest change is the configuration system which is now an object that replace the primitive array that we used to implement back then. 
 Also please note that the V8 requires at least PHP7.3 or higher to work properly.
 
+:exclamation: Be aware that the V8 is an **LTS** release, this means this version will be supported and maintained for at least 4 years.
+
 ---------------------------
 Simple Yet Powerful PHP Caching Class
 ---------------------------

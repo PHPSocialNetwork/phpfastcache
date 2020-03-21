@@ -41,7 +41,7 @@ Starting with v5, Phpfastcache comes with a [Symfony Bundle](https://github.com/
 It is now a mature project Flex -ready, so feel free to give at try and report any bug (if any).
 The Phpfastcache **V8** is compatible as of the v4 of the phpfastcache bundle.
 
-Also a [Drupal 8 Module](https://github.com/PHPSocialNetwork/phpfastcache-drupal) is currently in development, add it to your starred projects to get notified of the first public release. 
+Also a [Drupal 8 Module](https://github.com/PHPSocialNetwork/phpfastcache-drupal) is currently in (a slow) development, add it to your starred projects to get notified of the first public release. 
 
 ---------------------------
 Not a "Traditional" Caching

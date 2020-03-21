@@ -44,33 +44,13 @@ The Phpfastcache **V8** is compatible as of the v4 of the phpfastcache bundle.
 Also a [Drupal 8 Module](https://github.com/PHPSocialNetwork/phpfastcache-drupal) is currently in (a slow) development, add it to your starred projects to get notified of the first public release. 
 
 ---------------------------
-Not a "Traditional" Caching
+Because caching does not means weaken your code
 ---------------------------
-Phpfastcache is not like the traditional caching methods which keep reading and writing to 
-files, sqlite or keeping open massive amounts of connections to memcache, redis, mongodb...\
-Also, when you use high performances drivers, your miss hits will be drastically reduced.\
-Slightly different from the usual caching libraries you will find everywhere on the internet, 
-the Phpfastcache library reduces the I/O and CPU load as much as possible.
+Phpfastcache has been developed over the years with 3 main goals:
 
-```php
-<?php
-use Phpfastcache\CacheManager;
-
-CacheManager::getInstance('files', $config);
-// An alternative exists:
-CacheManager::Files($config);
-
-```
-
----------------------------
-Reduce Database/Webservice Calls
----------------------------
-
-Your website has 10,000 visitors who are online, and your dynamic page has to send 10,000 times the same queries 
-to database or the webservice on every page load.\
-With phpFastCache, your page only sends 1 query to your DB/WS, and uses the cache to serve the 9,999 other visitors.\
-You can obviously decide the TTL that will matches your needs.
-
+- Performance: We optimized and still optimize the code to provide you the lightest library as possible
+- Security: Because caching strategies can sometimes comes with unwanted vulnerabilities, we do our best to provide you a sage & strong library as possible 
+- Portability: No matter what operating system you're working on, we did our best to provide you the most cross-platform code as possible
 ---------------------------
 Rich Development API
 ---------------------------

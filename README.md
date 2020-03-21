@@ -332,7 +332,9 @@ echo implode('<br />', $CachedString->get());// Will echo your product list
 ```
 
 ##### :floppy_disk: Legacy support (Without Composer)
-* See the file examples/withoutComposer.php for more information.
+~~* See the file examples/withoutComposer.php for more information.~~
+:warning: The legacy autoload will be removed in the next major release :warning:
+Please include Phpfastcache through composer by running `composer require phpfastcache/phpfastcache`.
 
 #### :zap: Step 3: Enjoy ! Your website is now faster than lightning !
 For curious developers, there is a lot of other examples available [here](./docs/examples).

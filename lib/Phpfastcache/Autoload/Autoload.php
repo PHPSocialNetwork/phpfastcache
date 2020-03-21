@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Autoload;
 
+use Composer\Autoload\ClassLoader;
 /**
  *
  * This file is part of phpFastCache.
@@ -21,13 +22,14 @@ const PFC_PHP_EXT = 'php';
 const PFC_BIN_DIR = __DIR__ . '/../../../bin/';
 const PFC_LIB_DIR = __DIR__ . '/../../../lib/';
 
+\trigger_error('The legacy autoload will be removed in the next major release. Please include Phpfastcache through composer by running `composer require phpfastcache/phpfastcache`.', \E_USER_DEPRECATED);
 /**
  * Register Autoload
  */
 spl_autoload_register(
     static function ($entity): void {
         $module = explode('\\', $entity, 2);
-        if (!in_array($module[0], ['Phpfastcache', 'Psr'])) {
+        if (!\in_array($module[0], ['Phpfastcache', 'Psr'])) {
             /**
              * Not a part of phpFastCache file
              * then we return here.
@@ -35,24 +37,24 @@ spl_autoload_register(
             return;
         }
 
-        if (strpos($entity, 'Psr\Cache') === 0) {
+        if (\strpos($entity, 'Psr\Cache') === 0) {
             $path = PFC_BIN_DIR . 'dependencies/Psr/Cache/src/' . substr(strrchr($entity, '\\'), 1) . '.' . PFC_PHP_EXT;
 
-            if (is_readable($path)) {
+            if (\is_readable($path)) {
                 require_once $path;
             } else {
-                trigger_error('Cannot locate the Psr/Cache files', E_USER_ERROR);
+                \trigger_error('Cannot locate the Psr/Cache files', E_USER_ERROR);
             }
             return;
         }
 
-        if (strpos($entity, 'Psr\SimpleCache') === 0) {
-            $path = PFC_BIN_DIR . 'dependencies/Psr/SimpleCache/src/' . substr(strrchr($entity, '\\'), 1) . '.' . PFC_PHP_EXT;
+        if (\strpos($entity, 'Psr\SimpleCache') === 0) {
+            $path = PFC_BIN_DIR . 'dependencies/Psr/SimpleCache/src/' . \substr(\strrchr($entity, '\\'), 1) . '.' . PFC_PHP_EXT;
 
-            if (is_readable($path)) {
+            if (\is_readable($path)) {
                 require_once $path;
             } else {
-                trigger_error('Cannot locate the Psr/SimpleCache files', E_USER_ERROR);
+                \trigger_error('Cannot locate the Psr/SimpleCache files', E_USER_ERROR);
             }
             return;
         }
@@ -60,13 +62,13 @@ spl_autoload_register(
         $entity = str_replace('\\', '/', $entity);
         $path = PFC_LIB_DIR . $entity . '.' . PFC_PHP_EXT;
 
-        if (is_readable($path)) {
+        if (\is_readable($path)) {
             require_once $path;
         }
     }
 );
 
-if ((!defined('PFC_IGNORE_COMPOSER_WARNING') || !PFC_IGNORE_COMPOSER_WARNING) && class_exists(ClassLoader::class)) {
+if ((!\defined('PFC_IGNORE_COMPOSER_WARNING') || !PFC_IGNORE_COMPOSER_WARNING) && \class_exists(ClassLoader::class)) {
     trigger_error(
         'Your project already makes use of Composer. You SHOULD use the composer dependency "phpfastcache/phpfastcache" instead of hard-autoloading.',
         E_USER_WARNING

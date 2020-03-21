@@ -17,3 +17,4 @@
 - Removed deprecated config option `$ignoreSymfonyNotice`
 - Removed "fallback" feature (use aggregated cluster Master/Slave instead)
 - Enforced PSR-12 compliance
+- Deprecated legacy autoload for removal in next major release

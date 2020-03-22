@@ -6,6 +6,7 @@
 One of the biggest change is the configuration system which is now an object that replace the primitive array that we used to implement back then. 
 Also please note that the V7 requires at least PHP7 or higher to work properly.
 
+>:new: The V8 is now released, upgrade Phpfastcache by following our migration guide in `docs/migration` 
 ---------------------------
 Simple Yet Powerful PHP Caching Class
 ---------------------------

@@ -25,7 +25,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  */
 class Api
 {
-    protected static $version = '3.0.0-rc3';
+    protected static $version = '3.0.0';
 
     /**
      * Api constructor.

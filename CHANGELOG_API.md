@@ -1,4 +1,4 @@
-## 3.0.0-rc2
+## 3.0.0
 - **[BC]** Removed `ExtendedCacheItemPoolInterface::appendItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
 - **[BC]** Removed `ExtendedCacheItemPoolInterface::decrementItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
 - **[BC]** Removed `ExtendedCacheItemPoolInterface::deleteItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)

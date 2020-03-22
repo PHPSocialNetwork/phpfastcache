@@ -1,5 +1,6 @@
-## 8.0.0-dev
-##### 17 december 2019
+## 8.0.0
+#### _"The quarantine"_
+##### 01 january 2020
 - Removed "Auto" driver in `CacheManager::getInstance()` you will now be mandatory to specify the driver to use.
 - Removed deprecated feature `CacheManager::setNamespacePath()`  (replaced by cache manager "override" or "custom driver" features)
 - Upgraded minimum php version support: `7.3+`

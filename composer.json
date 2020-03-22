@@ -21,11 +21,14 @@
             }
         ],
     "require": {
-        "php": ">=7.0",
+        "php": ">=7.3",
         "psr/cache": "~1.0.0",
         "psr/simple-cache": "~1.0.0",
         "ext-mbstring": "*",
         "ext-json": "*"
+    },
+    "require-dev": {
+        "league/climate": "^3.5"
     },
     "suggest": {
         "ext-apc": "*",

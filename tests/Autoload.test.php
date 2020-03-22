@@ -5,28 +5,31 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
 
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\CacheManager;
+use Psr\Cache\CacheItemInterface;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../lib/Phpfastcache/Autoload/Autoload.php';
-$testHelper = new TestHelper('Autoload');
+$exitCode = 0;
 
 /**
  * Testing PhpFastCache autoload
  */
-if (!class_exists('Phpfastcache\CacheManager')) {
-    $testHelper->printFailText('Autoload failed to find the CacheManager');
-}else{
-    $testHelper->printPassText('Autoload successfully found the CacheManager');
+if (!class_exists(CacheManager::class)) {
+    print '[FAIL] Autoload failed to find the CacheManager' . PHP_EOL;
+    $exitCode = 255;
+} else {
+    print '[PASS] Autoload successfully found the CacheManager' . PHP_EOL;
 }
 
 /**
  * Testing Psr autoload
  */
-if (!interface_exists('Psr\Cache\CacheItemInterface')) {
-    $testHelper->printFailText('Autoload failed to find the Psr CacheItemInterface');
-}else{
-    $testHelper->printPassText('Autoload successfully found the Psr CacheItemInterface');
+if (!interface_exists(CacheItemInterface::class)) {
+    print '[FAIL] Autoload failed to find the Psr CacheItemInterface' . PHP_EOL;
+    $exitCode = 255;
+} else {
+    print '[PASS] Autoload successfully found the Psr CacheItemInterface' . PHP_EOL;
 }
 
-$testHelper->terminateTest();
+exit($exitCode);

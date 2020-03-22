@@ -16,16 +16,15 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Predis;
 
-use Phpfastcache\Core\Pool\{
-    DriverBaseTrait, ExtendedCacheItemPoolInterface
-};
+use DateTime;
+use Phpfastcache\Cluster\AggregatablePoolInterface;
+use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Predis\Client as PredisClient;
 use Predis\Connection\ConnectionException as PredisConnectionException;
 use Psr\Cache\CacheItemInterface;
+
 
 /**
  * Class Driver
@@ -34,7 +33,7 @@ use Psr\Cache\CacheItemInterface;
  * @property Config $config Config object
  * @method Config getConfig() Return the config object
  */
-class Driver implements ExtendedCacheItemPoolInterface
+class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
     use DriverBaseTrait;
 
@@ -44,10 +43,46 @@ class Driver implements ExtendedCacheItemPoolInterface
     public function driverCheck(): bool
     {
         if (extension_loaded('Redis')) {
-            \trigger_error('The native Redis extension is installed, you should use Redis instead of Predis to increase performances', \E_USER_NOTICE);
+            trigger_error('The native Redis extension is installed, you should use Redis instead of Predis to increase performances', E_USER_NOTICE);
         }
 
-        return \class_exists('Predis\Client');
+        return class_exists('Predis\Client');
+    }
+
+    /**
+     * @return string
+     */
+    public function getHelp(): string
+    {
+        return <<<HELP
+<p>
+To install the Predis library via Composer:
+<code>composer require "predis/predis" "~1.1.0"</code>
+</p>
+HELP;
+    }
+
+    /**
+     * @return DriverStatistic
+     */
+    public function getStats(): DriverStatistic
+    {
+        $info = $this->instance->info();
+        $size = (isset($info['Memory']['used_memory']) ? $info['Memory']['used_memory'] : 0);
+        $version = (isset($info['Server']['redis_version']) ? $info['Server']['redis_version'] : 0);
+        $date = (isset($info['Server']['uptime_in_seconds']) ? (new DateTime())->setTimestamp(time() - $info['Server']['uptime_in_seconds']) : 'unknown date');
+
+        return (new DriverStatistic())
+            ->setData(implode(', ', array_keys($this->itemInstances)))
+            ->setRawData($info)
+            ->setSize((int)$size)
+            ->setInfo(
+                sprintf(
+                    "The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
+                    $version,
+                    $date->format(DATE_RFC2822)
+                )
+            );
     }
 
     /**
@@ -75,17 +110,19 @@ class Driver implements ExtendedCacheItemPoolInterface
 
         $options = [];
 
-        if($this->getConfig()->getOptPrefix()){
+        if ($this->getConfig()->getOptPrefix()) {
             $options['prefix'] = $this->getConfig()->getOptPrefix();
         }
 
         if (!empty($this->getConfig()->getPath())) {
-            $this->instance = new PredisClient([
-                'scheme' =>  $this->getConfig()->getScheme(),
-                'persistent' => $this->getConfig()->isPersistent(),
-                'timeout' =>  $this->getConfig()->getTimeout(),
-                'path' => $this->getConfig()->getPath(),
-            ], $options);
+            $this->instance = new PredisClient(
+                [
+                    'scheme' => $this->getConfig()->getScheme(),
+                    'persistent' => $this->getConfig()->isPersistent(),
+                    'timeout' => $this->getConfig()->getTimeout(),
+                    'path' => $this->getConfig()->getPath(),
+                ], $options
+            );
         } else {
             $this->instance = new PredisClient($this->getConfig()->getPredisConfigArray(), $options);
         }
@@ -104,7 +141,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
@@ -118,7 +155,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return mixed
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -128,7 +165,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            $ttl = $item->getExpirationDate()->getTimestamp() - \time();
+            $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
             /**
              * @see https://redis.io/commands/setex
@@ -144,8 +181,14 @@ class Driver implements ExtendedCacheItemPoolInterface
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
+    /********************
+     *
+     * PSR-6 Extended Methods
+     *
+     *******************/
+
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -167,43 +210,5 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected function driverClear(): bool
     {
         return $this->instance->flushdb()->getPayload() === 'OK';
-    }
-
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
-
-
-    /**
-     * @return string
-     */
-    public function getHelp(): string
-    {
-        return <<<HELP
-<p>
-To install the Predis library via Composer:
-<code>composer require "predis/predis" "~1.1.0"</code>
-</p>
-HELP;
-    }
-
-    /**
-     * @return DriverStatistic
-     */
-    public function getStats(): DriverStatistic
-    {
-        $info = $this->instance->info();
-        $size = (isset($info['Memory']['used_memory']) ? $info['Memory']['used_memory'] : 0);
-        $version = (isset($info['Server']['redis_version']) ? $info['Server']['redis_version'] : 0);
-        $date = (isset($info['Server']['uptime_in_seconds']) ? (new \DateTime())->setTimestamp(\time() - $info['Server']['uptime_in_seconds']) : 'unknown date');
-
-        return (new DriverStatistic())
-            ->setData(\implode(', ', \array_keys($this->itemInstances)))
-            ->setRawData($info)
-            ->setSize((int)$size)
-            ->setInfo(\sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
-                $version, $date->format(\DATE_RFC2822)));
     }
 }

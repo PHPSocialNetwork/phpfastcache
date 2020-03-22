@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -15,17 +16,13 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Ssdb;
 
-use Phpfastcache\Core\Pool\{
-    DriverBaseTrait, ExtendedCacheItemPoolInterface
-};
+use Phpfastcache\Cluster\AggregatablePoolInterface;
+use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheDriverCheckException, PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException
-};
-use phpssdb\Core\{
-    SimpleSSDB, SSDBException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException, PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException};
+use phpssdb\Core\{SimpleSSDB, SSDBException};
 use Psr\Cache\CacheItemInterface;
+
 
 /**
  * Class Driver
@@ -34,7 +31,7 @@ use Psr\Cache\CacheItemInterface;
  * @property Config $config Config object
  * @method Config getConfig() Return the config object
  */
-class Driver implements ExtendedCacheItemPoolInterface
+class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
     use DriverBaseTrait;
 
@@ -45,10 +42,30 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         static $driverCheck;
         if ($driverCheck === null) {
-            return ($driverCheck = \class_exists('phpssdb\Core\SSDB'));
+            return ($driverCheck = class_exists('phpssdb\Core\SSDB'));
         }
 
         return $driverCheck;
+    }
+
+    /**
+     * @return DriverStatistic
+     */
+    public function getStats(): DriverStatistic
+    {
+        $stat = new DriverStatistic();
+        $info = $this->instance->info();
+
+        /**
+         * Data returned by Ssdb are very poorly formatted
+         * using hardcoded offset of pair key-value :-(
+         */
+        $stat->setInfo(sprintf("Ssdb-server v%s with a total of %s call(s).\n For more information see RawData.", $info[2], $info[6]))
+            ->setRawData($info)
+            ->setData(implode(', ', array_keys($this->itemInstances)))
+            ->setSize($this->instance->dbsize());
+
+        return $stat;
     }
 
     /**
@@ -76,7 +93,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
@@ -90,7 +107,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return mixed
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -100,14 +117,14 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return (bool) $this->instance->setx($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), $item->getTtl());
+            return (bool)$this->instance->setx($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), $item->getTtl());
         }
 
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -117,18 +134,10 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            return (bool) $this->instance->del($item->getEncodedKey());
+            return (bool)$this->instance->del($item->getEncodedKey());
         }
 
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
-    }
-
-    /**
-     * @return bool
-     */
-    protected function driverClear(): bool
-    {
-        return (bool) $this->instance->flushdb('kv');
     }
 
     /********************
@@ -138,22 +147,10 @@ class Driver implements ExtendedCacheItemPoolInterface
      *******************/
 
     /**
-     * @return DriverStatistic
+     * @return bool
      */
-    public function getStats(): DriverStatistic
+    protected function driverClear(): bool
     {
-        $stat = new DriverStatistic();
-        $info = $this->instance->info();
-
-        /**
-         * Data returned by Ssdb are very poorly formatted
-         * using hardcoded offset of pair key-value :-(
-         */
-        $stat->setInfo(\sprintf("Ssdb-server v%s with a total of %s call(s).\n For more information see RawData.", $info[2], $info[6]))
-            ->setRawData($info)
-            ->setData(\implode(', ', \array_keys($this->itemInstances)))
-            ->setSize($this->instance->dbsize());
-
-        return $stat;
+        return (bool)$this->instance->flushdb('kv');
     }
 }

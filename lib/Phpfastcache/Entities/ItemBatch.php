@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -15,6 +16,8 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Entities;
 
+use DateTimeInterface;
+
 /**
  * Class ItemBatch
  * @package phpFastCache\Entities
@@ -27,16 +30,16 @@ class ItemBatch
     protected $itemKey;
 
     /**
-     * @var \DateTimeInterface
+     * @var DateTimeInterface
      */
     protected $itemDate;
 
     /**
      * ItemBatch constructor.
      * @param string $itemKey
-     * @param \DateTimeInterface $itemDate
+     * @param DateTimeInterface $itemDate
      */
-    public function __construct(string $itemKey, \DateTimeInterface $itemDate)
+    public function __construct(string $itemKey, DateTimeInterface $itemDate)
     {
         $this->itemKey = $itemKey;
         $this->itemDate = $itemDate;
@@ -51,9 +54,9 @@ class ItemBatch
     }
 
     /**
-     * @return \DateTimeInterface
+     * @return DateTimeInterface
      */
-    public function getItemDate(): \DateTimeInterface
+    public function getItemDate(): DateTimeInterface
     {
         return $this->itemDate;
     }

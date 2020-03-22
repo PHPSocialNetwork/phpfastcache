@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -36,7 +37,7 @@ class Directory
         $size = 0;
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)) as $file) {
             /**
-             * @var \SplFileInfo $file
+             * @var SplFileInfo $file
              */
             if ($file->isFile()) {
                 $size += filesize($file->getRealPath());
@@ -57,10 +58,10 @@ class Directory
     public static function getFileCount(string $path): int
     {
         $count = 0;
-        $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::SELF_FIRST);
+        $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::SELF_FIRST);
         foreach ($objects as $object) {
             /**
-             * @var \SplFileInfo $object
+             * @var SplFileInfo $object
              */
             if ($object->isFile()) {
                 $count++;
@@ -81,13 +82,13 @@ class Directory
      */
     public static function rrmdir(string $source, bool $removeOnlyChildren = false): bool
     {
-        if (empty($source) || \file_exists($source) === false) {
+        if (empty($source) || file_exists($source) === false) {
             return false;
         }
 
-        if (\is_file($source) || \is_link($source)) {
-            \clearstatcache(true, $source);
-            return \unlink($source);
+        if (is_file($source) || is_link($source)) {
+            clearstatcache(true, $source);
+            return unlink($source);
         }
 
         $files = new RecursiveIteratorIterator
@@ -105,14 +106,14 @@ class Directory
                     return false;
                 }
             } else {
-                if (\unlink($fileinfo->getRealPath()) === false) {
+                if (unlink($fileinfo->getRealPath()) === false) {
                     return false;
                 }
             }
         }
 
         if ($removeOnlyChildren === false) {
-            return \rmdir($source);
+            return rmdir($source);
         }
 
         return true;
@@ -127,14 +128,14 @@ class Directory
      */
     public static function getAbsolutePath(string $path): string
     {
-        $parts = \preg_split('~[/\\\\]+~', $path, 0, \PREG_SPLIT_NO_EMPTY);
+        $parts = preg_split('~[/\\\\]+~', $path, 0, PREG_SPLIT_NO_EMPTY);
         $absolutes = [];
         foreach ($parts as $part) {
             if ('.' === $part) {
                 continue;
             }
             if ('..' === $part) {
-                \array_pop($absolutes);
+                array_pop($absolutes);
             } else {
                 $absolutes[] = $part;
             }
@@ -143,8 +144,8 @@ class Directory
         /**
          * Allows to dereference char
          */
-        $__FILE__ = \preg_replace('~^(([a-z0-9\-]+)://)~', '', __FILE__);// remove file protocols such as "phar://" etc.
-        $prefix = $__FILE__[0] === \DIRECTORY_SEPARATOR ? \DIRECTORY_SEPARATOR : '';
-        return $prefix . \implode(\DIRECTORY_SEPARATOR, $absolutes);
+        $__FILE__ = preg_replace('~^(([a-z0-9\-]+)://)~', '', __FILE__);// remove file protocols such as "phar://" etc.
+        $prefix = $__FILE__[0] === DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
+        return $prefix . implode(DIRECTORY_SEPARATOR, $absolutes);
     }
 }

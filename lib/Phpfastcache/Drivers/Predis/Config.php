@@ -18,6 +18,8 @@ namespace Phpfastcache\Drivers\Predis;
 
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
+use Predis\Client;
+
 
 class Config extends ConfigurationOption
 {
@@ -42,7 +44,7 @@ class Config extends ConfigurationOption
     protected $database = 0;
 
     /**
-     * @var \Predis\Client
+     * @var Client
      */
     protected $predisClient;
 
@@ -65,6 +67,20 @@ class Config extends ConfigurationOption
      * @var string
      */
     protected $scheme = 'unix';
+
+    /**
+     * @return array
+     */
+    public function getPredisConfigArray(): array
+    {
+        return [
+            'host' => $this->getHost(),
+            'port' => $this->getPort(),
+            'password' => $this->getPassword() ?: null,
+            'database' => $this->getDatabase(),
+            'timeout' => $this->getTimeout(),
+        ];
+    }
 
     /**
      * @return string
@@ -139,21 +155,25 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @return array
+     * @return int
      */
-    public function getPredisConfigArray(): array
+    public function getTimeout(): int
     {
-        return [
-            'host' => $this->getHost(),
-            'port' => $this->getPort(),
-            'password' => $this->getPassword() ?: null,
-            'database' => $this->getDatabase(),
-            'timeout' => $this->getTimeout(),
-        ];
+        return $this->timeout;
     }
 
     /**
-     * @return \Predis\Client|null
+     * @param int $timeout
+     * @return self
+     */
+    public function setTimeout(int $timeout): self
+    {
+        $this->timeout = $timeout;
+        return $this;
+    }
+
+    /**
+     * @return Client|null
      */
     public function getPredisClient()
     {
@@ -161,10 +181,10 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @param \Predis\Client $predisClient |null
+     * @param Client $predisClient |null
      * @return Config
      */
-    public function setPredisClient(\Predis\Client $predisClient = null): Config
+    public function setPredisClient(Client $predisClient = null): Config
     {
         $this->predisClient = $predisClient;
         return $this;
@@ -187,24 +207,6 @@ class Config extends ConfigurationOption
     public function setOptPrefix(string $optPrefix): Config
     {
         $this->optPrefix = trim($optPrefix);
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTimeout(): int
-    {
-        return $this->timeout;
-    }
-
-    /**
-     * @param int $timeout
-     * @return self
-     */
-    public function setTimeout(int $timeout): self
-    {
-        $this->timeout = $timeout;
         return $this;
     }
 
@@ -241,7 +243,7 @@ class Config extends ConfigurationOption
      */
     public function setScheme(string $scheme): Config
     {
-        if(!\in_array($scheme, ['unix', 'tls'], true)){
+        if (!in_array($scheme, ['unix', 'tls'], true)) {
             throw new PhpfastcacheInvalidConfigurationException('Invalid scheme: ' . $scheme);
         }
         $this->scheme = $scheme;

@@ -16,9 +16,14 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Event;
 
+use BadMethodCallException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
-interface EventInterface
+/**
+ * Interface EventManagerInterface
+ * @package Phpfastcache\Event
+ */
+interface EventManagerInterface
 {
     /**
      * @return self
@@ -29,15 +34,21 @@ interface EventInterface
      * @param string $eventName
      * @param array ...$args
      */
-    public function dispatch(string $eventName, ...$args);
+    public function dispatch(string $eventName, ...$args): void;
 
     /**
      * @param string $name
      * @param array $arguments
      * @throws PhpfastcacheInvalidArgumentException
-     * @throws \BadMethodCallException
+     * @throws BadMethodCallException
      */
-    public function __call(string $name, array $arguments);
+    public function __call(string $name, array $arguments): void;
+
+    /**
+     * @param callable $callback
+     * @param string $callbackName
+     */
+    public function onEveryEvents(callable $callback, string $callbackName): void;
 
     /**
      * @param string $eventName

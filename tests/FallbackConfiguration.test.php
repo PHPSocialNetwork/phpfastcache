@@ -13,9 +13,9 @@ use Phpfastcache\Helper\TestHelper;
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/mock/Autoload.php';
-$testHelper = new TestHelper('Custom namespaces');
+$testHelper = new TestHelper('Fallback configuration');
 
-if(!class_exists(Phpfastcache\Drivers\Fakefiles\Item::class)
+/*if(!class_exists(Phpfastcache\Drivers\Fakefiles\Item::class)
   || !class_exists(Phpfastcache\Drivers\Fakefiles\Driver::class)
   || !class_exists(Phpfastcache\Drivers\Fakefiles\Config::class)
 ){
@@ -36,6 +36,7 @@ if($cacheInstance instanceof Phpfastcache\Drivers\Files\Driver){
     $testHelper->printPassText('The fallback "Files" has been used when the driver Fakefiles was unavailable');
 }else{
     $testHelper->printPassText('The fallback "Files" has not been used when the driver Fakefiles was unavailable');
-}
+}*/
 
+$testHelper->printSkipText('This test has been disabled since fallback feature has been removed');
 $testHelper->terminateTest();

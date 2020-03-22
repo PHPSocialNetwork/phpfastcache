@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -14,6 +15,7 @@
 declare(strict_types=1);
 
 namespace Phpfastcache\Util;
+
 
 /**
  * Trait MemcacheDriverCollisionDetectorTrait
@@ -34,15 +36,17 @@ trait MemcacheDriverCollisionDetectorTrait
     {
         $CONSTANT_NAME = __NAMESPACE__ . '\MEMCACHE_DRIVER_USED';
 
-        if ($driverName && \is_string($driverName)) {
-            if (!\defined($CONSTANT_NAME)) {
-                \define($CONSTANT_NAME, $driverName);
+        if ($driverName && is_string($driverName)) {
+            if (!defined($CONSTANT_NAME)) {
+                define($CONSTANT_NAME, $driverName);
 
                 return true;
             } else {
-                if (\constant($CONSTANT_NAME) !== $driverName) {
-                    \trigger_error('Memcache collision detected, you used both Memcache and Memcached driver in your script, this may leads to unexpected behaviours',
-                        \E_USER_WARNING);
+                if (constant($CONSTANT_NAME) !== $driverName) {
+                    trigger_error(
+                        'Memcache collision detected, you used both Memcache and Memcached driver in your script, this may leads to unexpected behaviours',
+                        E_USER_WARNING
+                    );
 
                     return false;
                 }

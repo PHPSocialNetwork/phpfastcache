@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -15,15 +16,14 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Redis;
 
-use Phpfastcache\Core\Pool\{
-    DriverBaseTrait, ExtendedCacheItemPoolInterface
-};
+use DateTime;
+use Phpfastcache\Cluster\AggregatablePoolInterface;
+use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Psr\Cache\CacheItemInterface;
 use Redis as RedisClient;
+
 
 /**
  * Class Driver
@@ -31,7 +31,7 @@ use Redis as RedisClient;
  * @property Config $config Config object
  * @method Config getConfig() Return the config object
  */
-class Driver implements ExtendedCacheItemPoolInterface
+class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
     use DriverBaseTrait;
 
@@ -40,7 +40,29 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        return \extension_loaded('Redis');
+        return extension_loaded('Redis');
+    }
+
+    /**
+     * @return DriverStatistic
+     */
+    public function getStats(): DriverStatistic
+    {
+        // used_memory
+        $info = $this->instance->info();
+        $date = (new DateTime())->setTimestamp(time() - $info['uptime_in_seconds']);
+
+        return (new DriverStatistic())
+            ->setData(implode(', ', array_keys($this->itemInstances)))
+            ->setRawData($info)
+            ->setSize((int)$info['used_memory'])
+            ->setInfo(
+                sprintf(
+                    "The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
+                    $info['redis_version'],
+                    $date->format(DATE_RFC2822)
+                )
+            );
     }
 
     /**
@@ -81,7 +103,7 @@ class Driver implements ExtendedCacheItemPoolInterface
             return false;
         }
 
-        if($this->getConfig()->getOptPrefix()){
+        if ($this->getConfig()->getOptPrefix()) {
             $this->instance->setOption(RedisClient::OPT_PREFIX, $this->getConfig()->getOptPrefix());
         }
 
@@ -98,7 +120,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
@@ -112,7 +134,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return mixed
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -122,7 +144,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            $ttl = $item->getExpirationDate()->getTimestamp() - \time();
+            $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
             /**
              * @see https://redis.io/commands/setex
@@ -139,7 +161,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -155,14 +177,6 @@ class Driver implements ExtendedCacheItemPoolInterface
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
-    /**
-     * @return bool
-     */
-    protected function driverClear(): bool
-    {
-        return $this->instance->flushDB();
-    }
-
     /********************
      *
      * PSR-6 Extended Methods
@@ -170,19 +184,10 @@ class Driver implements ExtendedCacheItemPoolInterface
      *******************/
 
     /**
-     * @return DriverStatistic
+     * @return bool
      */
-    public function getStats(): DriverStatistic
+    protected function driverClear(): bool
     {
-        // used_memory
-        $info = $this->instance->info();
-        $date = (new \DateTime())->setTimestamp(\time() - $info['uptime_in_seconds']);
-
-        return (new DriverStatistic())
-            ->setData(\implode(', ', \array_keys($this->itemInstances)))
-            ->setRawData($info)
-            ->setSize((int)$info['used_memory'])
-            ->setInfo(\sprintf("The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
-                $info['redis_version'], $date->format(\DATE_RFC2822)));
+        return $this->instance->flushDB();
     }
 }

@@ -1,5 +1,5 @@
 ### Drivers descriptions
-* Apc
+* Apc **(REMOVED in V8)**
   * The Alternative Php Cache (APC) driver. A memory cache for regular performances.
 * Apcu
   * The Alternative Php User Cache (APCU) driver. A memory cache for regular performances.
@@ -41,7 +41,7 @@
   * A very high-performance NoSQL driver using a key-value pair system
 * Wincache
   * The Wincache driver. A memory cache for regular performances on Windows platforms.
-* Xcache
+* Xcache **(REMOVED in V8)**
   * The Xcache driver. A memory cache for regular performances.
 * Zend Disk Cache ( * Requires ZendServer Version 4 or higher * )
   * The Zend Data Cache is a by ZendServer supported file cache. The cache is for regular performance.

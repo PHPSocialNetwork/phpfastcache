@@ -6,6 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Helper\TestHelper;
 use Phpfastcache\Drivers\Predis\Config as PredisConfig;
 use Predis\Client as PredisClient;
@@ -15,6 +16,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Predis custom client');
 
 try{
+    if(!class_exists(PredisClient::class)){
+      throw new PhpfastcacheDriverCheckException('Predis library is not installed');
+    }
+
     $predisClient = new PredisClient([
       'host' => '127.0.0.1',
       'port' =>  6379,

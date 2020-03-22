@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -13,46 +14,30 @@
  */
 declare(strict_types=1);
 
-namespace Phpfastcache\Drivers\Xcache;
+namespace Phpfastcache\Cluster;
 
-use Phpfastcache\Core\Item\{
-    ExtendedCacheItemInterface, ItemBaseTrait
-};
+use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, ItemBaseTrait};
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Drivers\Xcache\Driver as XcacheDriver;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheInvalidArgumentException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 
 /**
- * Class Item
- * @package phpFastCache\Drivers\Xcache
+ * Class ClusterItem
+ * @package Phpfastcache\Cluster
  */
-class Item implements ExtendedCacheItemInterface
+abstract class ItemAbstract implements ExtendedCacheItemInterface
 {
     use ItemBaseTrait {
         ItemBaseTrait::__construct as __BaseConstruct;
     }
 
     /**
-     * Item constructor.
-     * @param \Phpfastcache\Drivers\Xcache\Driver $driver
-     * @param $key
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public function __construct(XcacheDriver $driver, $key)
-    {
-        $this->__BaseConstruct($driver, $key);
-    }
-
-    /**
      * @param ExtendedCacheItemPoolInterface $driver
-     * @throws PhpfastcacheInvalidArgumentException
      * @return static
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver)
     {
-        if ($driver instanceof XcacheDriver) {
+        if ($driver instanceof ClusterPoolInterface) {
             $this->driver = $driver;
 
             return $this;

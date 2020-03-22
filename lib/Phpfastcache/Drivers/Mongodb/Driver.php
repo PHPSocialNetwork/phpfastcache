@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -16,18 +17,16 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Mongodb;
 
+use DateTime;
 use LogicException;
-use MongoDB\{
-    BSON\Binary, BSON\UTCDateTime, Client, Collection, Database, DeleteResult, Driver\Command, Driver\Exception\Exception as MongoDBException
-};
-use Phpfastcache\Core\Pool\{
-    DriverBaseTrait, ExtendedCacheItemPoolInterface
-};
+use MongoClient;
+use MongoDB\{BSON\Binary, BSON\UTCDateTime, Client, Collection, Database, DeleteResult, Driver\Command, Driver\Exception\Exception as MongoDBException, Driver\Manager};
+use Phpfastcache\Cluster\AggregatablePoolInterface;
+use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException};
 use Psr\Cache\CacheItemInterface;
+
 
 /**
  * Class Driver
@@ -36,9 +35,9 @@ use Psr\Cache\CacheItemInterface;
  * @property Config $config Config object
  * @method Config getConfig() Return the config object
  */
-class Driver implements ExtendedCacheItemPoolInterface
+class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    const MONGODB_DEFAULT_DB_NAME = 'phpfastcache';
+    public const MONGODB_DEFAULT_DB_NAME = 'phpfastcache'; // Public because used in config
 
     use DriverBaseTrait;
 
@@ -57,18 +56,92 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        $mongoExtensionExists = class_exists(\MongoDB\Driver\Manager::class);
+        $mongoExtensionExists = class_exists(Manager::class);
 
-        if (!$mongoExtensionExists && class_exists(\MongoClient::class)) {
-            \trigger_error('This driver is used to support the pecl MongoDb extension with mongo-php-library.
-            For MongoDb with Mongo PECL support use Mongo Driver.', \E_USER_ERROR);
+        if (!$mongoExtensionExists && class_exists(MongoClient::class)) {
+            trigger_error(
+                'This driver is used to support the pecl MongoDb extension with mongo-php-library.
+            For MongoDb with Mongo PECL support use Mongo Driver.',
+                E_USER_ERROR
+            );
         }
 
-        return $mongoExtensionExists && class_exists(\MongoDB\Collection::class);
+        return $mongoExtensionExists && class_exists(Collection::class);
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @return DriverStatistic
+     */
+    public function getStats(): DriverStatistic
+    {
+        $serverStats = $this->instance->getManager()->executeCommand(
+            'phpFastCache',
+            new Command(
+                [
+                    'serverStatus' => 1,
+                    'recordStats' => 0,
+                    'repl' => 0,
+                    'metrics' => 0,
+                ]
+            )
+        )->toArray()[0];
+
+        $collectionStats = $this->instance->getManager()->executeCommand(
+            'phpFastCache',
+            new Command(
+                [
+                    'collStats' => (isset($this->getConfig()['collectionName']) ? $this->getConfig()['collectionName'] : 'Cache'),
+                    'verbose' => true,
+                ]
+            )
+        )->toArray()[0];
+
+        $array_filter_recursive = static function ($array, callable $callback = null) use (&$array_filter_recursive) {
+            $array = $callback($array);
+
+            if (\is_object($array) || \is_array($array)) {
+                foreach ($array as &$value) {
+                    $value = $array_filter_recursive($value, $callback);
+                }
+            }
+
+            return $array;
+        };
+
+        $callback = static function ($item) {
+            /**
+             * Remove unserializable properties
+             */
+            if ($item instanceof UTCDateTime) {
+                return (string)$item;
+            }
+            return $item;
+        };
+
+        $serverStats = $array_filter_recursive($serverStats, $callback);
+        $collectionStats = $array_filter_recursive($collectionStats, $callback);
+
+        $stats = (new DriverStatistic())
+            ->setInfo(
+                'MongoDB version ' . $serverStats->version . ', Uptime (in days): ' . round(
+                    $serverStats->uptime / 86400,
+                    1
+                ) . "\n For more information see RawData."
+            )
+            ->setSize($collectionStats->size)
+            ->setData(implode(', ', array_keys($this->itemInstances)))
+            ->setRawData(
+                [
+                    'serverStatus' => $serverStats,
+                    'collStats' => $collectionStats,
+                ]
+            );
+
+        return $stats;
+    }
+
+    /**
+     * @param CacheItemInterface $item
      * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
@@ -79,15 +152,19 @@ class Driver implements ExtendedCacheItemPoolInterface
             $return = [
                 self::DRIVER_DATA_WRAPPER_INDEX => $this->decode($document[self::DRIVER_DATA_WRAPPER_INDEX]->getData()),
                 self::DRIVER_TAGS_WRAPPER_INDEX => $this->decode($document[self::DRIVER_TAGS_WRAPPER_INDEX]->getData()),
-                self::DRIVER_EDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[self::DRIVER_EDATE_WRAPPER_INDEX]->toDateTime()->getTimestamp()),
+                self::DRIVER_EDATE_WRAPPER_INDEX => (new DateTime())->setTimestamp($document[self::DRIVER_EDATE_WRAPPER_INDEX]->toDateTime()->getTimestamp()),
             ];
 
             if (!empty($this->getConfig()->isItemDetailedDate())) {
                 $return += [
-                    self::DRIVER_MDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[self::DRIVER_MDATE_WRAPPER_INDEX]->toDateTime()
-                        ->getTimestamp()),
-                    self::DRIVER_CDATE_WRAPPER_INDEX => (new \DateTime())->setTimestamp($document[self::DRIVER_CDATE_WRAPPER_INDEX]->toDateTime()
-                        ->getTimestamp()),
+                    self::DRIVER_MDATE_WRAPPER_INDEX => (new DateTime())->setTimestamp(
+                        $document[self::DRIVER_MDATE_WRAPPER_INDEX]->toDateTime()
+                            ->getTimestamp()
+                    ),
+                    self::DRIVER_CDATE_WRAPPER_INDEX => (new DateTime())->setTimestamp(
+                        $document[self::DRIVER_CDATE_WRAPPER_INDEX]->toDateTime()
+                            ->getTimestamp()
+                    ),
                 ];
             }
 
@@ -98,7 +175,15 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @return Collection
+     */
+    protected function getCollection(): Collection
+    {
+        return $this->collection;
+    }
+
+    /**
+     * @param CacheItemInterface $item
      * @return mixed
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheDriverException
@@ -113,15 +198,19 @@ class Driver implements ExtendedCacheItemPoolInterface
                 $set = [
                     self::DRIVER_DATA_WRAPPER_INDEX => new Binary($this->encode($item->get()), Binary::TYPE_GENERIC),
                     self::DRIVER_TAGS_WRAPPER_INDEX => new Binary($this->encode($item->getTags()), Binary::TYPE_GENERIC),
-                    self::DRIVER_EDATE_WRAPPER_INDEX => ($item->getTtl() > 0 ? new UTCDateTime((\time() + $item->getTtl()) * 1000) : new UTCDateTime(\time() * 1000)),
+                    self::DRIVER_EDATE_WRAPPER_INDEX => ($item->getTtl() > 0 ? new UTCDateTime((time() + $item->getTtl()) * 1000) : new UTCDateTime(time() * 1000)),
                 ];
 
                 if (!empty($this->getConfig()->isItemDetailedDate())) {
                     $set += [
-                        self::DRIVER_MDATE_WRAPPER_INDEX => ($item->getModificationDate() ? new UTCDateTime(($item->getModificationDate()
-                                ->getTimestamp()) * 1000) : new UTCDateTime(\time() * 1000)),
-                        self::DRIVER_CDATE_WRAPPER_INDEX => ($item->getCreationDate() ? new UTCDateTime(($item->getCreationDate()
-                                ->getTimestamp()) * 1000) : new UTCDateTime(\time() * 1000)),
+                        self::DRIVER_MDATE_WRAPPER_INDEX => ($item->getModificationDate() ? new UTCDateTime(
+                            ($item->getModificationDate()
+                                ->getTimestamp()) * 1000
+                        ) : new UTCDateTime(time() * 1000)),
+                        self::DRIVER_CDATE_WRAPPER_INDEX => ($item->getCreationDate() ? new UTCDateTime(
+                            ($item->getCreationDate()
+                                ->getTimestamp()) * 1000
+                        ) : new UTCDateTime(time() * 1000)),
                     ];
                 }
                 $result = (array)$this->getCollection()->updateOne(
@@ -142,7 +231,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -200,24 +289,6 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * Checks if a collection name exists on the Mongo database.
-     *
-     * @param string $collectionName The collection name to check.
-     *
-     * @return bool True if the collection exists, false if not.
-     */
-    protected function collectionExists($collectionName): bool
-    {
-        foreach ($this->database->listCollections() as $collection) {
-            if ($collection->getName() === $collectionName) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Builds the connection URI from the given parameters.
      *
      * @param string $databaseName
@@ -234,32 +305,31 @@ class Driver implements ExtendedCacheItemPoolInterface
         $username = $this->getConfig()->getUsername();
         $password = $this->getConfig()->getPassword();
 
-        if( \count($servers) > 0 ){
-            $host = \array_reduce($servers, static function($carry, $data){
-                $carry .= ($carry === '' ? '' : ',').$data['host'].':'.$data['port'];
-                return $carry;
-            }, '');
+        if (count($servers) > 0) {
+            $host = array_reduce(
+                $servers,
+                static function ($carry, $data) {
+                    $carry .= ($carry === '' ? '' : ',') . $data['host'] . ':' . $data['port'];
+                    return $carry;
+                },
+                ''
+            );
             $port = false;
         }
 
-        return \implode('', [
-            "{$protocol}://",
-            $username ?: '',
-            $password ? ":{$password}" : '',
-            $username ? '@' : '',
-            $host,
-            $port !== 27017 && $port !== false ? ":{$port}" : '',
-            $databaseName ? "/{$databaseName}" : '',
-            \count($options) > 0 ? '?'.\http_build_query($options) : '',
-        ]);
-    }
-
-    /**
-     * @return Collection
-     */
-    protected function getCollection(): Collection
-    {
-        return $this->collection;
+        return implode(
+            '',
+            [
+                "{$protocol}://",
+                $username ?: '',
+                $password ? ":{$password}" : '',
+                $username ? '@' : '',
+                $host,
+                $port !== 27017 && $port !== false ? ":{$port}" : '',
+                $databaseName ? "/{$databaseName}" : '',
+                count($options) > 0 ? '?' . http_build_query($options) : '',
+            ]
+        );
     }
 
     /********************
@@ -269,57 +339,20 @@ class Driver implements ExtendedCacheItemPoolInterface
      *******************/
 
     /**
-     * @return DriverStatistic
+     * Checks if a collection name exists on the Mongo database.
+     *
+     * @param string $collectionName The collection name to check.
+     *
+     * @return bool True if the collection exists, false if not.
      */
-    public function getStats(): DriverStatistic
+    protected function collectionExists($collectionName): bool
     {
-        $serverStats = $this->instance->getManager()->executeCommand('phpFastCache', new Command([
-            'serverStatus' => 1,
-            'recordStats' => 0,
-            'repl' => 0,
-            'metrics' => 0,
-        ]))->toArray()[0];
-
-        $collectionStats = $this->instance->getManager()->executeCommand('phpFastCache', new Command([
-            'collStats' => (isset($this->getConfig()['collectionName']) ? $this->getConfig()['collectionName'] : 'Cache'),
-            'verbose' => true,
-        ]))->toArray()[0];
-
-        $array_filter_recursive = function ($array, callable $callback = null) use (&$array_filter_recursive) {
-            $array = $callback($array);
-
-            if (\is_object($array) || \is_array($array)) {
-                foreach ($array as &$value) {
-                    $value = \call_user_func($array_filter_recursive, $value, $callback);
-                }
+        foreach ($this->database->listCollections() as $collection) {
+            if ($collection->getName() === $collectionName) {
+                return true;
             }
+        }
 
-            return $array;
-        };
-
-        $callback = function ($item) {
-            /**
-             * Remove unserializable properties
-             */
-            if ($item instanceof \MongoDB\BSON\UTCDateTime) {
-                return (string)$item;
-            }
-            return $item;
-        };
-
-        $serverStats = $array_filter_recursive($serverStats, $callback);
-        $collectionStats = $array_filter_recursive($collectionStats, $callback);
-
-        $stats = (new DriverStatistic())
-            ->setInfo('MongoDB version ' . $serverStats->version . ', Uptime (in days): ' . \round($serverStats->uptime / 86400,
-                    1) . "\n For more information see RawData.")
-            ->setSize($collectionStats->size)
-            ->setData(\implode(', ', \array_keys($this->itemInstances)))
-            ->setRawData([
-                'serverStatus' => $serverStats,
-                'collStats' => $collectionStats,
-            ]);
-
-        return $stats;
+        return false;
     }
 }

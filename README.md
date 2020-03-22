@@ -1,10 +1,12 @@
-[![Total Downloads](https://img.shields.io/packagist/dt/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Latest Stable Version](https://img.shields.io/packagist/v/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![License](https://img.shields.io/packagist/l/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Coding Standards](https://img.shields.io/badge/CI-PSR6-orange.svg?maxAge=86400)](https://github.com/php-fig/cache)  [![Coding Standards](https://img.shields.io/badge/CS-PSR16-orange.svg?maxAge=86400)](https://github.com/php-fig/simple-cache)    
+[![Total Downloads](https://img.shields.io/packagist/dt/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Latest Stable Version](https://img.shields.io/packagist/v/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![License](https://img.shields.io/packagist/l/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Cache Interface](https://img.shields.io/badge/CI-PSR6-orange.svg?maxAge=86400)](https://github.com/php-fig/cache) [![Extended Coding Style](https://img.shields.io/badge/ECS-PSR12-orange.svg?maxAge=86400)](https://www.php-fig.org/psr/psr-12/)  [![Simple Cache](https://img.shields.io/badge/SC-PSR16-orange.svg?maxAge=86400)](https://github.com/php-fig/simple-cache) 
 [![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/?branch=master) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=master)](https://travis-ci.org/PHPSocialNetwork/phpfastcache) [![Semver compliant](https://img.shields.io/badge/Semver-2.0.0-yellow.svg?maxAge=86400)](https://semver.org/spec/v2.0.0.html) [![Patreon](https://img.shields.io/badge/Support%20us%20on-Patreon-f96854.svg?maxAge=86400)](https://www.patreon.com/geolim4)
 
-#### :warning: Please note that the V7 is a major (BC breaking) update of PhpFastCache !
-> As the V7 is **absolutely** not compatible with previous versions, please read carefully the [migration guide](./docs/migration/MigratingFromV6ToV7.md) to ensure you the smoothest migration possible.
+#### :warning: Please note that the V8 is an important (with small BC breaking) update of PhpFastCache !
+> As the V8 is **relatively** not compatible with previous versions, please read carefully the [migration guide](./docs/migration/MigratingFromV7ToV8.md) to ensure you the smoothest migration possible.
 One of the biggest change is the configuration system which is now an object that replace the primitive array that we used to implement back then. 
-Also please note that the V7 requires at least PHP7 or higher to work properly.
+Also please note that the V8 requires at least PHP7.3 or higher to work properly.
+
+:exclamation: Be aware that the V8 is an **LTS** release, this means this version will be supported and maintained for at least 4 years.
 
 ---------------------------
 Simple Yet Powerful PHP Caching Class
@@ -19,56 +21,38 @@ This ensure you that the library is completely reliable when it come to manipula
 ### Supported drivers at this day *
 :bulb: Feel free to propose a driver by making a new **[Pull Request](https://github.com/PHPSocialNetwork/phpfastcache/compare)**, they are welcome !
 
-|      Regular drivers            |     High performances drivers      |    Development drivers        |
-|---------------------------------|------------------------------------|-------------------------------|
-|  `Apc(u)`                       | `Cassandra`                        | `Devnull`                     |
-|  `Cookie`                       | `CouchBase`                        | `Devfalse`                    |
-|  `Files`                        | `Couchdb`                          | `Devtrue`                     |
-|  `Leveldb` :question:           | `Mongodb`                          | `Memstatic`                   |
-|  `Memcache(d)`                  | `Predis`                           |                               |
-|  `Sqlite`                       | `Redis`                            |                               |
-|  `Wincache` :question:          | `Riak`                             |                               |
-|  `Xcache` :question:            | `Ssdb`                             |                               |
-|  `Zend Disk Cache`              | `Zend Memory Cache`                |                               |
+|      Regular drivers            |     High performances drivers      |    Development drivers        |    Cluster-Aggregated drivers     |
+|---------------------------------|------------------------------------|-------------------------------|-----------------------------------|
+|  `Apcu` *(APC support removed)* | `Cassandra`                        | `Devnull`                     | `FullReplicationCluster`          |
+|  `Cookie`                       | `CouchBase`                        | `Devfalse`                    | `SemiReplicationCluster`          |
+|  `Files`                        | `Couchdb`                          | `Devtrue`                     | `MasterSlaveReplicationCluster`   |
+|  `Leveldb`                      | `Mongodb`                          | `Memstatic`                   | `RandomReplicationCluster`        |
+|  `Memcache(d)`                  | `Predis`                           |                               |                                   |
+|  `Sqlite`                       | `Redis`                            |                               |                                   |
+|  `Wincache`                     | `Riak`                             |                               |                                   |
+|  `Zend Disk Cache`              | `Ssdb`                             |                               |                                   |
+|                                 | `Zend Memory Cache`                |                               |                                   |
 
 \* Driver descriptions available in DOCS/DRIVERS.md
 
-:question: Please note that as of PHP7 some php extensions were not yet updated (and will may not), we keep the code here but there's no guarantee that they are still working especially due to the cores changes introduced by Opcache.
+Please note that as of PHP7 some php extensions were not yet updated (and will may not), we keep the code here but there's no guarantee that they are still working especially due to the cores changes introduced by Opcache.
+As of the **V8** every abandoned backend drivers have been removed definitely from Phpfastcache.
 
 ### Symfony/Drupal developers are not forgotten !
-Starting with v5, phpFastCache comes with a [Symfony Bundle](https://github.com/PHPSocialNetwork/phpfastcache-bundle).
+Starting with v5, Phpfastcache comes with a [Symfony Bundle](https://github.com/PHPSocialNetwork/phpfastcache-bundle).
 It is now a mature project Flex -ready, so feel free to give at try and report any bug (if any).
+The Phpfastcache **V8** is compatible as of the v4 of the phpfastcache bundle.
 
-Also a [Drupal 8 Module](https://github.com/PHPSocialNetwork/phpfastcache-drupal) is currently in development, add it to your starred projects to get notified of the first public release. 
-
----------------------------
-Not a "Traditional" Caching
----------------------------
-phpFastCache is not like the traditional caching methods which keep reading and writing to 
-files, sqlite or keeping open massive amounts of connections to memcache, redis, mongodb...\
-Also, when you use high performances drivers, your miss hits will be drastically reduced.\
-Slightly different from the usual caching libraries you will find everywhere on the internet, 
-the phpFastCache library reduces the I/O and CPU load as much as possible.
-
-```php
-<?php
-use Phpfastcache\CacheManager;
-
-CacheManager::getInstance('files', $config);
-// An alternative exists:
-CacheManager::Files($config);
-
-```
+Also a [Drupal 8 Module](https://github.com/PHPSocialNetwork/phpfastcache-drupal) is currently in (a slow) development, add it to your starred projects to get notified of the first public release. 
 
 ---------------------------
-Reduce Database/Webservice Calls
+Because caching does not means weaken your code
 ---------------------------
+Phpfastcache has been developed over the years with 3 main goals:
 
-Your website has 10,000 visitors who are online, and your dynamic page has to send 10,000 times the same queries 
-to database or the webservice on every page load.\
-With phpFastCache, your page only sends 1 query to your DB/WS, and uses the cache to serve the 9,999 other visitors.\
-You can obviously decide the TTL that will matches your needs.
-
+- Performance: We optimized and still optimize the code to provide you the lightest library as possible
+- Security: Because caching strategies can sometimes comes with unwanted vulnerabilities, we do our best to provide you a sage & strong library as possible 
+- Portability: No matter what operating system you're working on, we did our best to provide you the most cross-platform code as possible
 ---------------------------
 Rich Development API
 ---------------------------
@@ -113,50 +97,50 @@ PhpFastCache provides you a lot of useful APIs:
 \* Require configuration directive "itemDetailedDate" to be enabled, else a \LogicException will be thrown
 
 ### ItemPool API (ExtendedCacheItemPoolInterface)
-| Method                                                 | Return                         | Description                                                                                      | 
-|--------------------------------------------------------|--------------------------------|--------------------------------------------------------------------------------------------------| 
-| `appendItemsByTag($tagName, $data)`                    | bool                           | Appends items by a tag                                                                           | 
-| `appendItemsByTags(array $tagNames, $data)`            | bool                           | Appends items by one of multiple tag names                                                       | 
-| `appendItemsByTagsAll(array $tagNames, $data)`         | bool                           | Appends items by all of multiple tag names                                                       | 
-| `attachItem($item)`                                    | void                           | (Re-)attaches an item to the pool                                                                | 
-| `clear()`                                              | bool                           | Allows you to completely empty the cache and restart from the beginning                          | 
-| `commit()`                                             | bool                           | Persists any deferred cache items                                                                | 
-| `decrementItemsByTag($tagName, $step = 1)`             | bool                           | Decrements items by a tag                                                                        | 
-| `decrementItemsByTags(array $tagNames, $step = 1)`     | bool                           | Decrements items by one of multiple tag names                                                    | 
-| `decrementItemsByTagsAll(array $tagNames, $step = 1)`  | bool                           | Decrements items by all of multiple tag names                                                    | 
-| `deleteItem($key)`                                     | bool                           | Deletes an item                                                                                  | 
-| `deleteItems(array $keys)`                             | bool                           | Deletes one or more items                                                                        | 
-| `deleteItemsByTag($tagName)`                           | bool                           | Deletes items by a tag                                                                           | 
-| `deleteItemsByTags(array $tagNames)`                   | bool                           | Deletes items  by one of multiple tag names                                                      | 
-| `deleteItemsByTagsAll(array $tagNames)`                | bool                           | Deletes items by all of multiple tag names                                                       | 
-| `detachAllItems()`                                     | void                           | Detaches all items from the pool                                                                 | 
-| `detachItem($item)`                                    | void                           | Detaches an item from the pool                                                                   | 
-| `getConfig()`                                          | ConfigurationOption            | Returns the configuration object                                                                 | 
-| `getConfigOption($optionName);`                        | mixed                          | Returns a configuration value by its key `$optionName`                                           | 
-| `getDefaultConfig()`                                   | ConfigurationOption            | Returns the default configuration object (not altered by the object instance)                    | 
-| `getDriverName()`                                      | string                         | Returns the current driver name (without the namespace)                                          | 
-| `getHelp()`                                            | string                         | Provides a very basic help for a specific driver                                                 | 
-| `getInstanceId()`                                      | string                         | Returns the instance ID                                                                          | 
-| `getItem($key)`                                        | ExtendedCacheItemInterface     | Retrieves an item and returns an empty item if not found                                         | 
-| `getItems(array $keys)`                                | ExtendedCacheItemInterface[]   | Retrieves one or more item and returns an array of items                                         | 
-| `getItemsAsJsonString(array $keys)`                    | string                         | Returns A json string that represents an array of items                                          | 
-| `getItemsByTag($tagName)`                              | ExtendedCacheItemInterface[]   | Returns items by a tag                                                                           | 
-| `getItemsByTags(array $tagNames)`                      | ExtendedCacheItemInterface[]   | Returns items by one of multiple tag names                                                       | 
-| `getItemsByTagsAll(array $tagNames)`                   | ExtendedCacheItemInterface[]   | Returns items by all of multiple tag names                                                       | 
-| `getItemsByTagsAsJsonString(array $tagNames)`          | string                         | Returns A json string that represents an array of items corresponding                            | 
-| `getStats()`                                           | DriverStatistic                | Returns the cache statistics as an object, useful for checking disk space used by the cache etc. | 
-| `hasItem($key)`                                        | bool                           | Tests if an item exists                                                                          | 
-| `incrementItemsByTag($tagName, $step = 1)`             | bool                           | Increments items by a tag                                                                        | 
-| `incrementItemsByTags(array $tagNames, $step = 1)`     | bool                           | Increments items by one of multiple tag names                                                    | 
-| `incrementItemsByTagsAll(array $tagNames, $step = 1)`  | bool                           | Increments items by all of multiple tag names                                                    | 
-| `isAttached($item)`                                    | bool                           | Verify if an item is (still) attached                                                            | 
-| `prependItemsByTag($tagName, $data)`                   | bool                           | Prepends items by a tag                                                                          | 
-| `prependItemsByTags(array $tagNames, $data)`           | bool                           | Prepends items by one of multiple tag names                                                      | 
-| `prependItemsByTagsAll(array $tagNames, $data)`        | bool                           | Prepends items by all of multiple tag names                                                      | 
-| `save(CacheItemInterface $item)`                       | bool                           | Persists a cache item immediately                                                                | 
-| `saveDeferred(CacheItemInterface $item)`               | bool                           | Sets a cache item to be persisted later                                                          | 
-| `saveMultiple(...$items)`                              | bool                           | Persists multiple cache items immediately                                                        | 
-| `setEventManager(EventManager $evtMngr)`               | ExtendedCacheItemPoolInterface | Sets the event manager                                                                           |
+| Methods (By Alphabetic Order)                                   | Return                         | Description                                                                                      | 
+|-----------------------------------------------------------------|--------------------------------|--------------------------------------------------------------------------------------------------| 
+| `appendItemsByTag($tagName, $data)`                             | bool                           | Appends items by a tag                                                                           | 
+| `appendItemsByTags(array $tagNames, $data)`                     | bool                           | Appends items by one of multiple tag names                                                       | 
+| `attachItem($item)`                                             | void                           | (Re-)attaches an item to the pool                                                                | 
+| `clear()`                                                       | bool                           | Allows you to completely empty the cache and restart from the beginning                          | 
+| `commit()`                                                      | bool                           | Persists any deferred cache items                                                                | 
+| `decrementItemsByTag($tagName, $step = 1)`                      | bool                           | Decrements items by a tag                                                                        | 
+| `decrementItemsByTags(array $tagNames, $step = 1)`              | bool                           | Decrements items by one of multiple tag names                                                    | 
+| `deleteItem($key)`                                              | bool                           | Deletes an item                                                                                  | 
+| `deleteItems(array $keys)`                                      | bool                           | Deletes one or more items                                                                        | 
+| `deleteItemsByTag($tagName)`                                    | bool                           | Deletes items by a tag                                                                           | 
+| `deleteItemsByTags(array $tagNames)`                            | bool                           | Deletes items  by one of multiple tag names                                                      | 
+| `detachItem($item)`                                             | void                           | Detaches an item from the pool                                                                   | 
+| `getConfig()`                                                   | ConfigurationOption            | Returns the configuration object                                                                 | 
+| `getConfigOption($optionName);`                                 | mixed                          | Returns a configuration value by its key `$optionName`                                           | 
+| `getDefaultConfig()`                                            | ConfigurationOption            | Returns the default configuration object (not altered by the object instance)                    | 
+| `getDriverName()`                                               | string                         | Returns the current driver name (without the namespace)                                          | 
+| `getEventManager()`                                             | EventManagerInterface          | Gets the event manager                                                                           |
+| `getHelp()`                                                     | string                         | Provides a very basic help for a specific driver                                                 | 
+| `getInstanceId()`                                               | string                         | Returns the instance ID                                                                          | 
+| `getItem($key)`                                                 | ExtendedCacheItemInterface     | Retrieves an item and returns an empty item if not found                                         | 
+| `getItems(array $keys)`                                         | ExtendedCacheItemInterface[]   | Retrieves one or more item and returns an array of items                                         | 
+| `getItemsAsJsonString(array $keys)`                             | string                         | Returns A json string that represents an array of items                                          | 
+| `getItemsByTag($tagName, $strategy)`                            | ExtendedCacheItemInterface[]   | Returns items by a tag                                                                           | 
+| `getItemsByTags(array $tagNames, $strategy)`                    | ExtendedCacheItemInterface[]   | Returns items by one of multiple tag names                                                       | 
+| `getItemsByTagsAsJsonString(array $tagNames, $strategy)`        | string                         | Returns A json string that represents an array of items corresponding                            | 
+| `getStats()`                                                    | DriverStatistic                | Returns the cache statistics as an object, useful for checking disk space used by the cache etc. | 
+| `hasEventManager()`                                             | bool                           | Check the event manager                                                                          |
+| `hasItem($key)`                                                 | bool                           | Tests if an item exists                                                                          | 
+| `incrementItemsByTag($tagName, $step = 1, $strategy)`           | bool                           | Increments items by a tag                                                                        | 
+| `incrementItemsByTags(array $tagNames, $step = 1, $strategy)`   | bool                           | Increments items by one of multiple tag names                                                    | 
+| `isAttached($item)`                                             | bool                           | Verify if an item is (still) attached                                                            | 
+| `prependItemsByTag($tagName, $data, $strategy)`                 | bool                           | Prepends items by a tag                                                                          | 
+| `prependItemsByTags(array $tagNames, $data, $strategy)`         | bool                           | Prepends items by one of multiple tag names                                                      | 
+| `save(CacheItemInterface $item)`                                | bool                           | Persists a cache item immediately                                                                | 
+| `saveDeferred(CacheItemInterface $item)`                        | bool                           | Sets a cache item to be persisted later                                                          | 
+| `saveMultiple(...$items)`                                       | bool                           | Persists multiple cache items immediately                                                        | 
+| `setEventManager(EventManagerInterface $evtMngr)`               | ExtendedCacheItemPoolInterface | Sets the event manager                                                                           |
+
+:new: in **V8**: Multiple strategies (`$strategy`) are now supported for tagging:
+- `TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE` allows you to get cache item(s) by at least **ONE** of the specified matching tag(s). **Default behavior.**
+- `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL` allows you to get cache item(s) by **ALL** of the specified matching tag(s) (the cache item *can* have additional tag(s))
+- `TaggableCacheItemPoolInterface::TAG_STRATEGY_ONLY` allows you to get cache item(s) by **ONLY** the specified matching tag(s) (the cache item *cannot* have additional tag(s))
  
 It also supports multiple calls, Tagging, Setup Folder for caching. Look at our examples folders for more information.
 
@@ -248,19 +232,25 @@ EventManager::getInstance()->onCacheGetItem(function(ExtendedCacheItemPoolInterf
 EventManager::getInstance()->unbindEventCallback('onCacheGetItem', 'myCallbackName');
 
 ```
+:new: As of the **V8** you can simply subscribe to **every** events of Phpfastcache.
 
-More information about the implementation and the events are available on the [Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Introducing-to-events)
+More information about the implementation and the events are available on the [Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Introducing-to-events)
 
 ---------------------------
 Introducing new helpers
 ---------------------------
 :books: As of the V6, PhpFastCache provides some helpers to make your code easier.
 
-- The [ActOnAll Helper](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Act-on-all-instances) to help you to act on multiple instance at once.
+- (:warning: Removed in v8, [why ?](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Act-on-all-instances)) ~~The [ActOnAll Helper](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Act-on-all-instances) to help you to act on multiple instance at once.~~
 - The [CacheConditional Helper](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Cache-Conditional) to help you to make the basic conditional statement more easier.
-- The [Psr16 adapter](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Psr16-adapter) to keep it simple as explained above.
+- The [Psr16 adapter](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Psr16-adapter) 
 
 May more will come in the future, feel free to contribute !
+
+---------------------------
+Introducing aggregated cluster support
+---------------------------
+Check out the [WIKI](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV8%CB%96%5D-Aggregated-cache-cluster) to learn how to implement aggregated cache clustering feature.
 
 ---------------------------
 As Fast To Implement As Opening a Beer
@@ -324,10 +314,12 @@ echo implode('<br />', $CachedString->get());// Will echo your product list
 ```
 
 ##### :floppy_disk: Legacy support (Without Composer)
-* See the file examples/withoutComposer.php for more information.
+~~* See the file examples/withoutComposer.php for more information.~~
+:warning: The legacy autoload will be removed in the next major release :warning:
+Please include Phpfastcache through composer by running `composer require phpfastcache/phpfastcache`.
 
 #### :zap: Step 3: Enjoy ! Your website is now faster than lightning !
 For curious developers, there is a lot of other examples available [here](./docs/examples).
 
-#### :boom: phpFastCache support
+#### :boom: Phpfastcache support
 Found an issue or have an idea ? Come **[here](https://github.com/PHPSocialNetwork/phpfastcache/issues)** and let us know !

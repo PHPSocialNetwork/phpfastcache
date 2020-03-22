@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -15,14 +16,11 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Devnull;
 
-use Phpfastcache\Core\Pool\{
-    DriverBaseTrait, ExtendedCacheItemPoolInterface
-};
+use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheInvalidArgumentException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 use Psr\Cache\CacheItemInterface;
+
 
 /**
  * Class Driver
@@ -43,7 +41,21 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @return DriverStatistic
+     */
+    public function getStats(): DriverStatistic
+    {
+        $stat = new DriverStatistic();
+        $stat->setInfo('[Devnull] A void info string')
+            ->setSize(0)
+            ->setData(implode(', ', array_keys($this->itemInstances)))
+            ->setRawData(null);
+
+        return $stat;
+    }
+
+    /**
+     * @param CacheItemInterface $item
      * @return mixed
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -60,7 +72,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return null
      */
     protected function driverRead(CacheItemInterface $item)
@@ -69,7 +81,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -93,22 +105,6 @@ class Driver implements ExtendedCacheItemPoolInterface
         return true;
     }
 
-    /**
-     * @return bool
-     */
-    protected function driverConnect(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function isUsableInAutoContext(): bool
-    {
-        return false;
-    }
-
     /********************
      *
      * PSR-6 Extended Methods
@@ -116,16 +112,10 @@ class Driver implements ExtendedCacheItemPoolInterface
      *******************/
 
     /**
-     * @return DriverStatistic
+     * @return bool
      */
-    public function getStats(): DriverStatistic
+    protected function driverConnect(): bool
     {
-        $stat = new DriverStatistic();
-        $stat->setInfo('[Devnull] A void info string')
-            ->setSize(0)
-            ->setData(\implode(', ', \array_keys($this->itemInstances)))
-            ->setRawData(null);
-
-        return $stat;
+        return true;
     }
 }

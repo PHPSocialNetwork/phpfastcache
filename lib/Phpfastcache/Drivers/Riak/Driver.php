@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -16,14 +17,12 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Riak;
 
 use Basho\Riak\Riak;
-use Phpfastcache\Core\Pool\{
-    DriverBaseTrait, ExtendedCacheItemPoolInterface
-};
+use Phpfastcache\Cluster\AggregatablePoolInterface;
+use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Psr\Cache\CacheItemInterface;
+
 
 /**
  * Class Driver
@@ -32,9 +31,9 @@ use Psr\Cache\CacheItemInterface;
  * @property Config $config Config object
  * @method Config getConfig() Return the config object
  */
-class Driver implements ExtendedCacheItemPoolInterface
+class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    const RIAK_DEFAULT_BUCKET_NAME = 'phpfastcache';
+    public const RIAK_DEFAULT_BUCKET_NAME = 'phpfastcache'; // Public because used in config
 
     /**
      * @var string
@@ -48,9 +47,22 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     public function driverCheck(): bool
     {
-        return \class_exists('Basho\Riak\Riak');
+        return class_exists('Basho\Riak\Riak');
     }
 
+    /**
+     * @return DriverStatistic
+     */
+    public function getStats(): DriverStatistic
+    {
+        $info = $this->instance->bucket($this->bucketName)->getProperties();
+
+        return (new DriverStatistic())
+            ->setData(implode(', ', array_keys($this->itemInstances)))
+            ->setRawData($info)
+            ->setSize(false)
+            ->setInfo('Riak does not provide size/date information att all :(');
+    }
 
     /**
      * @return bool
@@ -70,7 +82,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return null|array
      */
     protected function driverRead(CacheItemInterface $item)
@@ -79,7 +91,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return mixed
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -100,7 +112,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -117,6 +129,12 @@ class Driver implements ExtendedCacheItemPoolInterface
         throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
+    /********************
+     *
+     * PSR-6 Extended Methods
+     *
+     *******************/
+
     /**
      * @return bool
      */
@@ -127,25 +145,5 @@ class Driver implements ExtendedCacheItemPoolInterface
             $bucket->get($key)->delete();
         }
         return true;
-    }
-
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
-
-    /**
-     * @return DriverStatistic
-     */
-    public function getStats(): DriverStatistic
-    {
-        $info = $this->instance->bucket($this->bucketName)->getProperties();
-
-        return (new DriverStatistic())
-            ->setData(\implode(', ', \array_keys($this->itemInstances)))
-            ->setRawData($info)
-            ->setSize(false)
-            ->setInfo('Riak does not provide size/date information att all :(');
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -11,14 +12,17 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
-
 declare(strict_types=1);
 
-namespace Phpfastcache\Drivers\Xcache;
+namespace Phpfastcache\Cluster\Drivers\FullReplication;
 
-use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Cluster\ItemAbstract;
 
-class Config extends ConfigurationOption
+/**
+ * Class ClusterItem
+ * @package Phpfastcache\Cluster
+ */
+class Item extends ItemAbstract
 {
 
 }

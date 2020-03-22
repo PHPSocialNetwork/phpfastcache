@@ -1,9 +1,30 @@
+## 3.0.0
+- **[BC]** Removed `ExtendedCacheItemPoolInterface::appendItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC]** Removed `ExtendedCacheItemPoolInterface::decrementItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC]** Removed `ExtendedCacheItemPoolInterface::deleteItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC]** Removed `ExtendedCacheItemPoolInterface::getItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC]** Removed `ExtendedCacheItemPoolInterface::incrementItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC]** Removed `ExtendedCacheItemPoolInterface::prependItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC]** Removed deprecated method `ExtendedCacheItemPoolInterface::getConfigOption()` (Use getConfig()->getOptionName() instead)
+- **[BC]** Removed deprecated method `ExtendedCacheItemPoolInterface::isUsableInAutoContext()` (Since "Auto" driver has been removed)
+- Added strategy`TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE` usable in every `**byTags**` methods.
+- Added strategy`TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL` usable in every `**byTags**` methods.
+- Added strategy`TaggableCacheItemPoolInterface::TAG_STRATEGY_ONLY` usable in every `**byTags**` methods.
+
+## 3.0.0-rc
+- **[BC]** Moved `\Phpfastcache\Event\EventInterface` to`\Phpfastcache\Event\EventManagerInterface`
+- Moved (by extends) ExtendedCacheItemPoolInterface::setEventManager() in `\Phpfastcache\Event\EventManagerDispatcherInterface:setEventManager()`
+- Moved (by extends) ExtendedCacheItemInterface::doesItemBelongToThatDriverBackend() in `\Phpfastcache\Event\EventManagerDispatcherInterface::setEventManager()`
+- Added `\Phpfastcache\Event\EventManagerDispatcherInterface`
+- Added `ExtendedCacheItemInterface::doesItemBelongToThatDriverBackend()`
+- Added `\Phpfastcache\Event\EventManagerInterface:onEveryEvents()`
+
 ## 2.0.4
 - Added ExtendedCacheItemPoolInterface::getConfigClass() that returns the config class name
 
 ## 2.0.3
-- Updated ExtendedCacheItemPoolInterface::setEventManager() first argument that now MUSt implement `\Phpfastcache\Event\EventInterface`
-- Updated ExtendedCacheItemInterface::setEventManager() first argument that now MUSt implement `\Phpfastcache\Event\EventInterface`
+- Updated ExtendedCacheItemPoolInterface::setEventManager() first argument that now MUST implement `\Phpfastcache\Event\EventInterface`
+- Updated ExtendedCacheItemInterface::setEventManager() first argument that now MUST implement `\Phpfastcache\Event\EventInterface`
 
 ## 2.0.2
 - Added ExtendedCacheItemPoolInterface::isUsableInAutoContext() to check if the driver is allowed to be used in 'Auto' context.

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -15,6 +16,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Exceptions;
 
+
 /**
  * Class PhpfastcacheInvalidArgumentTypeException
  * @package Phpfastcache\Exceptions
@@ -28,7 +30,7 @@ class PhpfastcacheInvalidArgumentTypeException extends PhpfastcacheInvalidArgume
      */
     public function __construct($expectedType, $unexpectedData)
     {
-        $type = \gettype($unexpectedData);
-        parent::__construct("Expecting '{$expectedType}', got '" . ($type === 'object' ? $type . '(' . \get_class($type) . ')' : $type) . "'");
+        $type = gettype($unexpectedData);
+        parent::__construct("Expecting '{$expectedType}', got '" . ($type === 'object' ? $type . '(' . get_class($type) . ')' : $type) . "'");
     }
 }

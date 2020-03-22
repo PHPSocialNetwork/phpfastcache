@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -15,7 +16,8 @@ declare(strict_types=1);
 
 namespace Phpfastcache;
 
-use Phpfastcache\Event\EventInterface;
+use BadMethodCallException;
+use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
 /**
@@ -23,24 +25,30 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
  * @package phpFastCache
  *
  * == ItemPool Events ==
- * @method Void onCacheGetItem() onCacheGetItem(Callable $callable)
- * @method Void onCacheDeleteItem() onCacheDeleteItem(Callable $callable)
- * @method Void onCacheSaveItem() onCacheSaveItem(Callable $callable)
- * @method Void onCacheSaveDeferredItem() onCacheSaveDeferredItem(Callable $callable)
- * @method Void onCacheCommitItem() onCacheCommitItem(Callable $callable)
- * @method Void onCacheClearItem() onCacheClearItem(Callable $callable)
- * @method Void onCacheWriteFileOnDisk() onCacheWriteFileOnDisk(Callable $callable)
- * @method Void onCacheGetItemInSlamBatch() onCacheGetItemInSlamBatch(Callable $callable)
+ * @method Void onCacheGetItem() onCacheGetItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheDeleteItem() onCacheDeleteItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheSaveItem() onCacheSaveItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheSaveDeferredItem() onCacheSaveDeferredItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheCommitItem() onCacheCommitItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheClearItem() onCacheClearItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheWriteFileOnDisk() onCacheWriteFileOnDisk(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheGetItemInSlamBatch() onCacheGetItemInSlamBatch(Callable $callable, ?string $callbackName = null)
+ *
+ * == ItemPool Events (Cluster) ==
+ * @method Void onCacheReplicationSlaveFallback() onCacheReplicationSlaveFallback(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheReplicationRandomPoolChosen() onCacheReplicationRandomPoolChosen(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheClusterBuilt() onCacheClusterBuilt(Callable $callable, ?string $callbackName = null)
  *
  * == Item Events ==
- * @method Void onCacheItemSet() onCacheItemSet(Callable $callable)
- * @method Void onCacheItemExpireAt() onCacheItemExpireAt(Callable $callable)
- * @method Void onCacheItemExpireAfter() onCacheItemExpireAfter(Callable $callable)
- *
+ * @method Void onCacheItemSet() onCacheItemSet(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheItemExpireAt() onCacheItemExpireAt(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheItemExpireAfter() onCacheItemExpireAfter(Callable $callable, ?string $callbackName = null)
  *
  */
-class EventManager implements EventInterface
+class EventManager implements EventManagerInterface
 {
+    public const ON_EVERY_EVENT = '__every';
+
     /**
      * @var $this
      */
@@ -49,15 +57,9 @@ class EventManager implements EventInterface
     /**
      * @var array
      */
-    protected $events = [];
-
-    /**
-     * @return EventInterface
-     */
-    public static function getInstance(): EventInterface
-    {
-        return (self::$instance ?: self::$instance = new self);
-    }
+    protected $events = [
+        self::ON_EVERY_EVENT => []
+    ];
 
     /**
      * EventManager constructor.
@@ -68,20 +70,31 @@ class EventManager implements EventInterface
     }
 
     /**
+     * @return EventManagerInterface
+     */
+    public static function getInstance(): EventManagerInterface
+    {
+        return (self::$instance ?: self::$instance = new self);
+    }
+
+    /**
      * @param string $eventName
      * @param array ...$args
      */
-    public function dispatch(string $eventName, ...$args)
+    public function dispatch(string $eventName, ...$args): void
     {
         /**
          * Replace array_key_exists by isset
          * due to performance issue on huge
          * loop dispatching operations
          */
-        if (isset($this->events[$eventName])) {
+        if (isset($this->events[$eventName]) && $eventName !== self::ON_EVERY_EVENT) {
             foreach ($this->events[$eventName] as $event) {
-                \call_user_func_array($event, $args);
+                $event(... $args);
             }
+        }
+        foreach ($this->events[self::ON_EVERY_EVENT] as $event) {
+            $event($eventName, ...$args);
         }
     }
 
@@ -89,9 +102,9 @@ class EventManager implements EventInterface
      * @param string $name
      * @param array $arguments
      * @throws PhpfastcacheInvalidArgumentException
-     * @throws \BadMethodCallException
+     * @throws BadMethodCallException
      */
-    public function __call(string $name, array $arguments)
+    public function __call(string $name, array $arguments): void
     {
         if (\strpos($name, 'on') === 0) {
             $name = \substr($name, 2);
@@ -105,8 +118,17 @@ class EventManager implements EventInterface
                 throw new PhpfastcacheInvalidArgumentException(\sprintf('Expected Callable, got "%s"', \gettype($arguments[0])));
             }
         } else {
-            throw new \BadMethodCallException('An event must start with "on" such as "onCacheGetItem"');
+            throw new BadMethodCallException('An event must start with "on" such as "onCacheGetItem"');
         }
+    }
+
+    /**
+     * @param callable $callback
+     * @param string $callbackName
+     */
+    public function onEveryEvents(callable $callback, string $callbackName): void
+    {
+        $this->events[self::ON_EVERY_EVENT][$callbackName] = $callback;
     }
 
     /**

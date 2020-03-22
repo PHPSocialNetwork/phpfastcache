@@ -16,10 +16,17 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Config;
 
-use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Util\ArrayObject;
+use ReflectionException;
+use ReflectionMethod;
+use ReflectionParameter;
+use TypeError;
 
+/**
+ * Class ConfigurationOption
+ * @package Phpfastcache\Config
+ */
 class ConfigurationOption extends ArrayObject implements ConfigurationOptionInterface
 {
     /**
@@ -31,12 +38,6 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      * @var bool
      */
     protected $autoTmpFallback = false;
-
-    /**
-     * @var bool
-     * @deprecated Do not use this option anymore
-     */
-    protected $ignoreSymfonyNotice = false;
 
     /**
      * @var int
@@ -64,16 +65,6 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     protected $path = '';
 
     /**
-     * @var string
-     */
-    protected $fallback = '';
-
-    /**
-     * @var \Phpfastcache\Config\ConfigurationOption
-     */
-    protected $fallbackConfig;
-
-    /**
      * @var int
      */
     protected $limitedMemoryByObject = 4096;
@@ -98,7 +89,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      * @param $args
      * ArrayObject constructor.
      * @throws PhpfastcacheInvalidConfigurationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function __construct(...$args)
     {
@@ -110,15 +101,16 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
          * No more kidding now, it's 21th century.
          */
         if (\array_diff_key($array, \get_object_vars($this))) {
-            throw new PhpfastcacheInvalidConfigurationException(\sprintf(
-                'Invalid option(s) for the config %s: %s',
-                static::class,
-                \implode(', ', \array_keys(\array_diff_key($array, \get_object_vars($this))))
-            ));
+            throw new PhpfastcacheInvalidConfigurationException(
+                sprintf(
+                    'Invalid option(s) for the config %s: %s',
+                    static::class,
+                    \implode(', ', \array_keys(\array_diff_key($array, \get_object_vars($this))))
+                )
+            );
         }
 
         foreach (\get_object_vars($this) as $property => $value) {
-
             if (\array_key_exists($property, $array)) {
                 $this->$property = &$array[$property];
             } else {
@@ -138,18 +130,21 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
                      */
                     $value = $this->{\lcfirst(\substr($method, 3))};
                     $this->{$method}($value);
-                } catch (\TypeError $e) {
+                } catch (TypeError $e) {
                     $typeHintGot = \is_object($value) ? \get_class($value) : \gettype($value);
-                    $reflectionMethod = new \ReflectionMethod($this, $method);
+                    $reflectionMethod = new ReflectionMethod($this, $method);
                     $parameter = $reflectionMethod->getParameters()[0] ?? null;
-                    $typeHintExpected = ($parameter instanceof \ReflectionParameter ? ($parameter->getType() === 'object' ? $parameter->getClass() : $parameter->getType()) : 'Unknown type');
+                    $typeHintExpected = ($parameter instanceof ReflectionParameter ? ($parameter->getType() === 'object' ? $parameter->getClass() : $parameter->getType(
+                    )) : 'Unknown type');
 
-                    throw new PhpfastcacheInvalidConfigurationException(\sprintf(
-                        'Invalid type hint found for "%s", expected "%s" got "%s"',
-                        \lcfirst(\substr($method, 3)),
-                        $typeHintExpected,
-                        $typeHintGot
-                    ));
+                    throw new PhpfastcacheInvalidConfigurationException(
+                        \sprintf(
+                            'Invalid type hint found for "%s", expected "%s" got "%s"',
+                            \lcfirst(\substr($method, 3)),
+                            $typeHintExpected,
+                            $typeHintGot
+                        )
+                    );
                 }
             }
         }
@@ -158,21 +153,10 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     /**
      * @param string $optionName
      * @return mixed|null
-     * @deprecated Use ->getOptionName() instead
-     */
-    public function getOption(string $optionName)
-    {
-        \trigger_error(\sprintf('Method "%s" is deprecated, use "getOptionName()" instead', __METHOD__), \E_USER_DEPRECATED);
-        return $this->$optionName ?? null;
-    }
-
-    /**
-     * @param string $optionName
-     * @return mixed|null
      */
     public function isValidOption(string $optionName)
     {
-        return \property_exists($this, $optionName);
+        return property_exists($this, $optionName);
     }
 
     /**
@@ -208,29 +192,6 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     public function setAutoTmpFallback(bool $autoTmpFallback): self
     {
         $this->autoTmpFallback = $autoTmpFallback;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     * @deprecated As of V7
-     */
-    public function isIgnoreSymfonyNotice(): bool
-    {
-        return $this->ignoreSymfonyNotice;
-    }
-
-    /**
-     * @param bool $ignoreSymfonyNotice
-     * @return ConfigurationOption
-     * @deprecated As of V7
-     */
-    public function setIgnoreSymfonyNotice(bool $ignoreSymfonyNotice): self
-    {
-        if ($ignoreSymfonyNotice) {
-            \trigger_error('Configuration option "ignoreSymfonyNotice" is deprecated as of the V7', \E_USER_DEPRECATED);
-        }
-        $this->ignoreSymfonyNotice = $ignoreSymfonyNotice;
         return $this;
     }
 
@@ -329,50 +290,6 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     public function setPath(string $path): self
     {
         $this->path = $path;
-        return $this;
-    }
-
-    /**
-     * @return bool|string
-     */
-    public function getFallback()
-    {
-        return $this->fallback;
-    }
-
-    /**
-     * @param string $fallback
-     * @return ConfigurationOption
-     */
-    public function setFallback(string $fallback): self
-    {
-        $this->fallback = $fallback;
-        return $this;
-    }
-
-    /**
-     * @return \Phpfastcache\Config\ConfigurationOption|null
-     */
-    public function getFallbackConfig()
-    {
-        return $this->fallbackConfig;
-    }
-
-    /**
-     * @param \Phpfastcache\Config\ConfigurationOption|null $fallbackConfig
-     * @return ConfigurationOption
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public function setFallbackConfig($fallbackConfig): self
-    {
-        if ($fallbackConfig !== null && !($fallbackConfig instanceof self)) {
-            throw new PhpfastcacheInvalidArgumentException(\sprintf(
-                'Invalid argument "%s" for %s',
-                \is_object($fallbackConfig) ? \get_class($fallbackConfig) : \gettype($fallbackConfig),
-                __METHOD__
-            ));
-        }
-        $this->fallbackConfig = $fallbackConfig;
         return $this;
     }
 

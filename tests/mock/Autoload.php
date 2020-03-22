@@ -18,7 +18,7 @@ namespace Phpfastcache\Autoload;
 /**
  * Register Mock Autoload
  */
-spl_autoload_register(function ($entity) {
+\spl_autoload_register(function ($entity) {
     $module = \explode('\\', $entity, 2);
     if ($module[ 0 ] !== 'Phpfastcache') {
         /**

@@ -23,17 +23,7 @@ try{
     $redisClient->connect('127.0.0.1', 6379, 5);
     $redisClient->select(0);
     $cacheInstance = CacheManager::getInstance('Redis', (new RedisConfig())->setRedisClient($redisClient));
-    $cacheKey = 'redisCustomClient';
-    $cacheItem = $cacheInstance->getItem($cacheKey);
-    $cacheItem->set(1337);
-    $cacheInstance->save($cacheItem);
-    $cacheInstance->detachAllItems();
-    unset($cacheItem);
-    if($cacheInstance->getItem($cacheKey)->get() === 1337){
-        $testHelper->printPassText('Successfully written and read data from outside Redis client');
-    }else{
-        $testHelper->printFailText('Error writing or reading data from outside Redis client');
-    }
+    $testHelper->runCRUDTests($cacheInstance);
 }catch (\RedisException $e){
     $testHelper->printFailText('A Redis exception occurred: ' . $e->getMessage());
 }

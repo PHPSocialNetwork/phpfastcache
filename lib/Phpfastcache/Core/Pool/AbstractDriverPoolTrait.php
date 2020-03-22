@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -34,7 +35,7 @@ trait AbstractDriverPoolTrait
     abstract protected function driverConnect(): bool;
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return null|array [
      *      'd' => 'THE ITEM DATA'
      *      't' => 'THE ITEM DATE EXPIRATION'
@@ -45,13 +46,13 @@ trait AbstractDriverPoolTrait
     abstract protected function driverRead(CacheItemInterface $item);
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      */
     abstract protected function driverWrite(CacheItemInterface $item): bool;
 
     /**
-     * @param \Psr\Cache\CacheItemInterface $item
+     * @param CacheItemInterface $item
      * @return bool
      */
     abstract protected function driverDelete(CacheItemInterface $item): bool;

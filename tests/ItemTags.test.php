@@ -6,6 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Core\Pool\TaggableCacheItemPoolInterface;
 use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
@@ -18,7 +19,7 @@ $driverInstance = CacheManager::getInstance($defaultDriver);
  * Item tag test // Init tags/items
  */
 
-$createItemsCallback = function() use ($driverInstance)
+$createItemsCallback = static function() use ($driverInstance)
 {
     $item1 = $driverInstance->getItem('tag-test1');
     $item2 = $driverInstance->getItem('tag-test2');
@@ -61,7 +62,7 @@ $createItemsCallback = function() use ($driverInstance)
 /**
  * Item tag test // Step 1
  */
-$testHelper->printNewLine()->printText('#1 Testing getter: getItemsByTag() // Expecting 3 results');
+$testHelper->printNewLine()->printText('#1 Testing getter: getItemsByTag() with strategy TAG_STRATEGY_ONE // Expecting 3 results');
 $createItemsCallback();
 
 $tagsItems = $driverInstance->getItemsByTag('tag-test_all');
@@ -94,11 +95,11 @@ else
  * Item tag test // Step 2
  */
 itemTagTest2:
-$testHelper->printNewLine()->printText('#2 Testing getter: getItemsByTagsAll() // Expecting 3 results');
+$testHelper->printNewLine()->printText('#2 Testing getter: getItemsByTags() with strategy TAG_STRATEGY_ALL // Expecting 3 results');
 $driverInstance->deleteItems(['item-test_1', 'item-test_2', 'item-test_3']);
 $createItemsCallback();
 
-$tagsItems = $driverInstance->getItemsByTagsAll(['tag-test_all', 'tag-test_all2', 'tag-test_all3']);
+$tagsItems = $driverInstance->getItemsByTags(['tag-test_all', 'tag-test_all2', 'tag-test_all3'], TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL);
 
 if(is_array($tagsItems))
 {
@@ -129,11 +130,11 @@ else
  * Item tag test // Step 3
  */
 itemTagTest3:
-$testHelper->printNewLine()->printText('#3 Testing getter: getItemsByTagsAll() // Expecting 1 result');
+$testHelper->printNewLine()->printText('#3 Testing getter: getItemsByTags() with strategy TAG_STRATEGY_ALL // Expecting 1 result');
 $driverInstance->deleteItems(['item-test_1', 'item-test_2', 'item-test_3']);
 $createItemsCallback();
 
-$tagsItems = $driverInstance->getItemsByTagsAll(['tag-test_all', 'tag-test_all2', 'tag-test_all3', 'tag-test_all4']);
+$tagsItems = $driverInstance->getItemsByTags(['tag-test_all', 'tag-test_all2', 'tag-test_all3', 'tag-test_all4'], TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL);
 
 if(is_array($tagsItems))
 {
@@ -200,11 +201,11 @@ while(++$i <= 3)
  * Item tag test // Step 5
  */
 itemTagTest5:
-$testHelper->printNewLine()->printText('#5 Testing deleter: deleteItemsByTagsAll() // Expecting no item left');
+$testHelper->printNewLine()->printText('#5 Testing deleter: deleteItemsByTags() with strategy TAG_STRATEGY_ALL // Expecting no item left');
 $driverInstance->deleteItems(['item-test_1', 'item-test_2', 'item-test_3']);
 $createItemsCallback();
 
-$driverInstance->deleteItemsByTagsAll(['tag-test_all', 'tag-test_all2', 'tag-test_all3']);
+$driverInstance->deleteItemsByTags(['tag-test_all', 'tag-test_all2', 'tag-test_all3'], TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL);
 
 if(count($driverInstance->getItemsByTag('tag-test_all')) > 0)
 {
@@ -232,14 +233,14 @@ while(++$i <= 3)
  * Item tag test // Step 6
  */
 itemTagTest6:
-$testHelper->printNewLine()->printText('#6 Testing deleter: deleteItemsByTagsAll() // Expecting a specific item to be deleted');
+$testHelper->printNewLine()->printText('#6 Testing deleter: deleteItemsByTags() with strategy TAG_STRATEGY_ALL // Expecting a specific item to be deleted');
 $driverInstance->deleteItems(['item-test_1', 'item-test_2', 'item-test_3']);
 $createItemsCallback();
 
 /**
  *  Only item 'item-test_3' got all those tags
  */
-$driverInstance->deleteItemsByTagsAll(['tag-test_all', 'tag-test_all2', 'tag-test_all3', 'tag-test_all4']);
+$driverInstance->deleteItemsByTags(['tag-test_all', 'tag-test_all2', 'tag-test_all3', 'tag-test_all4'], TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL);
 
 if($driverInstance->getItem('item-test_3')->isHit())
 {
@@ -254,11 +255,11 @@ else
  * Item tag test // Step 7
  */
 itemTagTest7:
-$testHelper->printNewLine()->printText('#7 Testing appender: appendItemsByTagsAll() // Expecting items value to get an appended part of string');
+$testHelper->printNewLine()->printText('#7 Testing appender: appendItemsByTags() with strategy TAG_STRATEGY_ALL // Expecting items value to get an appended part of string');
 $driverInstance->deleteItems(['item-test_1', 'item-test_2', 'item-test_3']);
 $createItemsCallback();
 $appendStr = '$*#*$';
-$driverInstance->appendItemsByTagsAll(['tag-test_all', 'tag-test_all2', 'tag-test_all3'], $appendStr);
+$driverInstance->appendItemsByTags(['tag-test_all', 'tag-test_all2', 'tag-test_all3'], $appendStr, TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL);
 
 foreach($driverInstance->getItems(['tag-test1', 'tag-test2', 'tag-test3']) as $item)
 {
@@ -276,11 +277,11 @@ foreach($driverInstance->getItems(['tag-test1', 'tag-test2', 'tag-test3']) as $i
  * Item tag test // Step 7
  */
 itemTagTest8:
-$testHelper->printNewLine()->printText('#8 Testing prepender: prependItemsByTagsAll() // Expecting items value to get a prepended part of string');
+$testHelper->printNewLine()->printText('#8 Testing prepender: prependItemsByTags() with strategy TAG_STRATEGY_ALL // Expecting items value to get a prepended part of string');
 $driverInstance->deleteItems(['item-test_1', 'item-test_2', 'item-test_3']);
 $createItemsCallback();
 $prependStr = '&+_+&';
-$driverInstance->prependItemsByTagsAll(['tag-test_all', 'tag-test_all2', 'tag-test_all3'], $prependStr);
+$driverInstance->prependItemsByTags(['tag-test_all', 'tag-test_all2', 'tag-test_all3'], $prependStr, TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL);
 
 foreach($driverInstance->getItems(['tag-test1', 'tag-test2', 'tag-test3']) as $item)
 {
@@ -294,4 +295,75 @@ foreach($driverInstance->getItems(['tag-test1', 'tag-test2', 'tag-test3']) as $i
     }
 }
 
+
+
+/**
+ * Item tag test // Step 9
+ */
+itemTagTest9:
+$testHelper->printNewLine()->printText('#9 Testing getter: getItemsByTags() with strategy TAG_STRATEGY_ONLY // Expecting 1 result');
+$driverInstance->clear();
+$createItemsCallback();
+
+$tagsItems = $driverInstance->getItemsByTags(['tag-test_1', 'tag-test_all', 'tag-test_all2', 'tag-test_all3'], TaggableCacheItemPoolInterface::TAG_STRATEGY_ONLY);
+
+if(is_array($tagsItems))
+{
+    if(count($tagsItems) === 1)
+    {
+        if(isset($tagsItems['tag-test1']))
+        {
+            if($tagsItems['tag-test1']->getKey() !== 'tag-test1'){
+                $testHelper->printFailText('STEP#9 // Got unexpected tagged item key:' . $tagsItems['tag-test1']->getKey());
+                goto itemTagTest10;
+            }
+            $testHelper->printPassText('STEP#9 // Successfully retrieved 1 tagged item keys');
+        }
+        else
+        {
+            $testHelper->printFailText('STEP#9 // Got wrong array key, expected "tag-test3", got "' . key($tagsItems) . '"');
+            goto itemTagTest10;
+        }
+    }
+    else
+    {
+        $testHelper->printFailText('STEP#9 // Got wrong count of item:' . count($tagsItems));
+        goto itemTagTest10;
+    }
+}
+else
+{
+    $testHelper->printFailText('STEP#9 // Expected $tagsItems to be an array, got: ' . gettype($tagsItems));
+    goto itemTagTest10;
+}
+
+/**
+ * Item tag test // Step 10
+ */
+itemTagTest10:
+$testHelper->printNewLine()->printText('#10 Testing getter: getItemsByTags() with strategy TAG_STRATEGY_ONLY // Expecting 0 result');
+$driverInstance->clear();
+$createItemsCallback();
+
+$tagsItems = $driverInstance->getItemsByTags(['tag-test_1', 'tag-test_all', 'tag-test_all2', /*'tag-test_all3'*/], TaggableCacheItemPoolInterface::TAG_STRATEGY_ONLY);
+
+if(is_array($tagsItems))
+{
+    if(count($tagsItems) === 0)
+    {
+        $testHelper->printPassText('STEP#10 // Successfully retrieved 0 tagged item keys');
+    }
+    else
+    {
+        $testHelper->printFailText('STEP#10 // Got wrong count of item:' . count($tagsItems));
+        goto itemTagTest11;
+    }
+}
+else
+{
+    $testHelper->printFailText('STEP#10 // Expected $tagsItems to be an array, got: ' . gettype($tagsItems));
+    goto itemTagTest11;
+}
+
+itemTagTest11:
 $testHelper->terminateTest();

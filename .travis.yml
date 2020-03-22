@@ -26,9 +26,10 @@ before_script:
     if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
       cat bin/ci/hhvm_phpfastcache.ini >> /etc/hhvm/php.ini
     else
-      phpenv config-add bin/ci/php_phpfastcache.ini
-      pecl channel-update pecl.php.net
-      pecl install -f mongodb-stable
+      pecl channel-update pecl.php.net;
+      yes | pecl install -f mongodb-stable;
+      yes | pecl install -f apcu-stable || true;
+      phpenv config-add bin/ci/php_phpfastcache.ini;
     fi
   - sleep 15
   - mongo pfc_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
@@ -38,9 +39,9 @@ php:
   # - 5.4
   # - 5.5
   # - 5.6
-  - 7.0
-  - 7.1
-  - 7.2
+  #- 7.0
+  # - 7.1
+  # - 7.2
   - 7.3
   - 7.4
   - nightly

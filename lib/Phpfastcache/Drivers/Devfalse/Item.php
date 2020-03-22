@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of phpFastCache.
@@ -19,9 +20,7 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Item\ItemBaseTrait;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Drivers\Devfalse\Driver as DevfalseDriver;
-use Phpfastcache\Exceptions\{
-    PhpfastcacheInvalidArgumentException
-};
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 
 /**
  * Class Item
@@ -35,7 +34,7 @@ class Item implements ExtendedCacheItemInterface
 
     /**
      * Item constructor.
-     * @param \Phpfastcache\Drivers\Devfalse\Driver $driver
+     * @param Driver $driver
      * @param $key
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -46,8 +45,8 @@ class Item implements ExtendedCacheItemInterface
 
     /**
      * @param ExtendedCacheItemPoolInterface $driver
-     * @throws PhpfastcacheInvalidArgumentException
      * @return static
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver)
     {

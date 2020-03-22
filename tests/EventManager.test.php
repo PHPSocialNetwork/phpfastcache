@@ -17,7 +17,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('EventManager');
 $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 
-EventManager::getInstance()->onCacheSaveItem(function(ExtendedCacheItemPoolInterface $itemPool, ExtendedCacheItemInterface $item){
+$testHelper->debugEvents(EventManager::getInstance());
+EventManager::getInstance()->onCacheSaveItem(static function(ExtendedCacheItemPoolInterface $itemPool, ExtendedCacheItemInterface $item){
     if($item->get() === 1000){
         $item->increment(337);
     }
@@ -36,5 +37,8 @@ if($cacheInstance->getItem($cacheKey)->get() === 1337){
 }else{
     $testHelper->printFailText("The dispatched event is not working properly, the expected value '1337', got '" . (int) $cacheInstance->getItem($cacheKey)->get() . "'");
 }
+
+
+$cacheInstance->clear();
 
 $testHelper->terminateTest();

@@ -18,7 +18,7 @@ CacheManager::setDefaultConfig(new ConfigurationOption(['path' => __DIR__ . '/..
 /**
  * Catch the E_USER_WARNING for the tests
  */
-set_error_handler(function($errno, $errstr, $errfile, $errline, array $errcontext) use($testHelper) {
+/*set_error_handler(function($errno, $errstr, $errfile, $errline, array $errcontext) use($testHelper) {
     if (0 === error_reporting()) {
         return false;
     }
@@ -49,6 +49,7 @@ if($cacheInstance instanceof FilesDriver){
     $testHelper->printFailText(sprintf('The variable $cacheInstance is an expected instance of "%s"', get_class($cacheInstance)));
 }else{
     $testHelper->printFailText(sprintf('The variable $cacheInstance is an expected variable type "%s"', gettype($cacheInstance)));
-}
+}*/
 
+$testHelper->printSkipText('This test has been disabled since fallback feature has been removed');
 $testHelper->terminateTest();

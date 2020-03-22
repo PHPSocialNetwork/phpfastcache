@@ -1,0 +1,40 @@
+name: Unit tests
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup PHP 7.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.3'
+          coverage: none
+          extensions: mbstring, intl, pdo_sqlite
+          ini-values: apc.enabled=1, apc.shm_size=32M, apc.ttl=7200, apc.enable_cli=1, apc.serializer=php
+      - name: Setup Memcached server
+        uses: niden/actions-memcached@v7
+      - name: Setup Redis server
+        uses: zhulik/redis-action@v1.0.0
+        with:
+          redis version: '5'
+      - uses: actions/checkout@v1
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
+      # Docs: https://getcomposer.org/doc/articles/scripts.md
+      - name: Run tests on PHP 7.3
+        run: php -f ./bin/ci/run_tests.php
+      - name: Setup PHP 7.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          coverage: none
+          extensions: mbstring, intl, pdo_sqlite, json
+          ini-values: apc.enabled=1, apc.shm_size=32M, apc.ttl=7200, apc.enable_cli=1, apc.serializer=php
+      - name: Run tests on PHP 7.4
+        run: php -f ./bin/ci/run_tests.php

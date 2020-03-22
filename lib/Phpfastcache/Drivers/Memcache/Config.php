@@ -19,6 +19,7 @@ namespace Phpfastcache\Drivers\Memcache;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 
+
 class Config extends ConfigurationOption
 {
     /**
@@ -102,22 +103,22 @@ class Config extends ConfigurationOption
 
     /**
      * @param array $servers
-     * @throws PhpfastcacheInvalidConfigurationException
      * @return self
+     * @throws PhpfastcacheInvalidConfigurationException
      */
     public function setServers(array $servers): self
     {
         foreach ($servers as $server) {
-            if($diff = \array_diff(['host', 'port', 'saslUser', 'saslPassword'], \array_keys($server))){
-                throw new PhpfastcacheInvalidConfigurationException('Missing keys for memcached server: '. \implode(', ', $diff));
+            if ($diff = array_diff(['host', 'port', 'saslUser', 'saslPassword'], array_keys($server))) {
+                throw new PhpfastcacheInvalidConfigurationException('Missing keys for memcached server: ' . implode(', ', $diff));
             }
-            if($diff = \array_diff( \array_keys($server), ['host', 'port', 'saslUser', 'saslPassword'])){
-                throw new PhpfastcacheInvalidConfigurationException('Unknown keys for memcached server: '. \implode(', ', $diff));
+            if ($diff = array_diff(array_keys($server), ['host', 'port', 'saslUser', 'saslPassword'])) {
+                throw new PhpfastcacheInvalidConfigurationException('Unknown keys for memcached server: ' . implode(', ', $diff));
             }
-            if(!\is_string($server['host'])){
+            if (!is_string($server['host'])) {
                 throw new PhpfastcacheInvalidConfigurationException('Host must be a valid string in "$server" configuration array');
             }
-            if(!\is_int($server['port'])){
+            if (!is_int($server['port'])) {
                 throw new PhpfastcacheInvalidConfigurationException('Port must be a valid integer in "$server" configuration array');
             }
         }

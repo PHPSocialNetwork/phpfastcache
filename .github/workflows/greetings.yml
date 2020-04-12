@@ -1,6 +1,7 @@
 name: Greetings
 
-on: [pull_request, issues]
+# on: [pull_request, issues] Not working ATM due to lack of permissions error: https://github.com/actions/first-interaction/issues/10
+on: [issues]
 
 jobs:
   greeting:

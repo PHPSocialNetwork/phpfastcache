@@ -85,10 +85,9 @@ class Driver implements ExtendedCacheItemPoolInterface
             $this->instance->setOption(RedisClient::OPT_PREFIX, $this->getConfig()->getOptPrefix());
         }
 
-        if (!$this->getConfig()->getPath()) {
-            if ($this->getConfig()->getPassword() && !$this->instance->auth($this->getConfig()->getPassword())) {
-                return false;
-            }
+        
+        if ($this->getConfig()->getPassword() && !$this->instance->auth($this->getConfig()->getPassword())) {
+            return false;
         }
 
         if ($this->getConfig()->getDatabase() !== null) {

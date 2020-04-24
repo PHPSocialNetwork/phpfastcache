@@ -1,3 +1,11 @@
+## 8.0.1
+#### _"Still confined"_
+##### 24 april 2020
+- __Drivers__
+    - Fixed #731 // Removing path check in Redis driver before auth. (@gillytech)
+- __Misc__
+    - Fixed some doc typo (@geolim4)
+
 ## 8.0.0
 #### _"The quarantine"_
 ##### 01 january 2020

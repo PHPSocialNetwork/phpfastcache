@@ -29,10 +29,10 @@ It is [completely abandoned](https://xcache.lighttpd.net/) (latest update: 2014)
 Use alternative memory cache such as Redis, Memcache, Ssdb, etc.
 
 #### :clock1: Then:
-`CacheManager::getInstance('Apc')`
+`CacheManager::getInstance('Xcache')`
 
 #### :alarm_clock: Now:
-`CacheManager::getInstance('Apcu')`
+Find an alternative :)
 
 ### Phpfastcache API has been upgraded to 3.0.0
 Check the [CHANGELOG_API.md](./../../CHANGELOG_API.md) to see the changes.

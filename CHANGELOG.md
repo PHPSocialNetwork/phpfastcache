@@ -1,3 +1,15 @@
+## 7.1.1
+#### _"Rust-out"_
+##### 24 april 2020
+- __Drivers__
+    - Fixed #716 // TypeError in lib/Phpfastcache/Drivers/Cookie/Driver.php (@motikan2010)
+    - Fixed #733 // Removing path check in Redis driver before auth. (@gillytech)
+- __Helpers__
+    - Fixed #717 // Deprecate "ActOnAll" to remove it in v8 (@geolim4)
+- __Misc__
+    - Added v8 mention in Readme (@geolim4)
+    - Added Github Funding option (@geolim4)
+
 ## 7.1.0
 #### _"Wake the rust"_
 ##### 15 september 2019

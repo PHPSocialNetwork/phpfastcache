@@ -87,7 +87,13 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function driverConnect(): bool
     {
         $this->instance = new MemcachedSoftware();
+        $optPrefix = $this->getConfig()->getOptPrefix();
         $this->instance->setOption(MemcachedSoftware::OPT_BINARY_PROTOCOL, true);
+
+        if ($optPrefix) {
+            $this->instance->setOption(MemcachedSoftware::OPT_PREFIX_KEY, $optPrefix);
+        }
+
         $servers = $this->getConfig()->getServers();
 
         if (count($servers) < 1) {

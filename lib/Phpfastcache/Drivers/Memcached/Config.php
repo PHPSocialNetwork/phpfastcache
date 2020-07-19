@@ -58,6 +58,11 @@ class Config extends ConfigurationOption
     protected $saslPassword = '';
 
     /**
+     * @var string
+     */
+    protected $optPrefix = '';
+
+    /**
      * @return string
      */
     public function getSaslUser(): string
@@ -159,6 +164,26 @@ class Config extends ConfigurationOption
     public function setPort(int $port): self
     {
         $this->port = $port;
+        return $this;
+    }
+
+    /**
+     * @return string
+     * @since 8.0.2
+     */
+    public function getOptPrefix(): string
+    {
+        return $this->optPrefix;
+    }
+
+    /**
+     * @param string $optPrefix
+     * @return Config
+     * @since 8.0.2
+     */
+    public function setOptPrefix(string $optPrefix): Config
+    {
+        $this->optPrefix = trim($optPrefix);
         return $this;
     }
 }

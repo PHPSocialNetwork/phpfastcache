@@ -142,7 +142,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
                     $typeHintGot = \is_object($value) ? \get_class($value) : \gettype($value);
                     $reflectionMethod = new \ReflectionMethod($this, $method);
                     $parameter = $reflectionMethod->getParameters()[0] ?? null;
-                    $typeHintExpected = ($parameter instanceof \ReflectionParameter ? ($parameter->getType() === 'object' ? $parameter->getClass() : $parameter->getType()) : 'Unknown type');
+                    $typeHintExpected = ($parameter instanceof \ReflectionParameter ? ($parameter->getType()->getName() === 'object' ? $parameter->getClass() : $parameter->getType()->getName()) : 'Unknown type');
 
                     throw new PhpfastcacheInvalidConfigurationException(\sprintf(
                         'Invalid type hint found for "%s", expected "%s" got "%s"',

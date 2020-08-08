@@ -142,14 +142,24 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
                     $typeHintGot = \is_object($value) ? \get_class($value) : \gettype($value);
                     $reflectionMethod = new \ReflectionMethod($this, $method);
                     $parameter = $reflectionMethod->getParameters()[0] ?? null;
-                    $typeHintExpected = ($parameter instanceof \ReflectionParameter ? ($parameter->getType()->getName() === 'object' ? $parameter->getClass() : $parameter->getType()->getName()) : 'Unknown type');
-
-                    throw new PhpfastcacheInvalidConfigurationException(\sprintf(
-                        'Invalid type hint found for "%s", expected "%s" got "%s"',
-                        \lcfirst(\substr($method, 3)),
-                        $typeHintExpected,
-                        $typeHintGot
-                    ));
+                    $paraReflectionType = $parameter->getType();
+                    if(method_exists($paraReflectionType, "getName")) {
+                        $typeHintExpected = ($parameter instanceof \ReflectionParameter ? ($paraReflectionType->getName() === 'object' ? $parameter->getClass() : $paraReflectionType->getName()) : 'Unknown type');
+                        throw new PhpfastcacheInvalidConfigurationException(\sprintf(
+                            'Invalid type hint found for "%s", expected "%s" got "%s"',
+                            \lcfirst(\substr($method, 3)),
+                            $typeHintExpected,
+                            $typeHintGot
+                        ));
+                    } else {
+                        $typeHintExpected = ($parameter instanceof \ReflectionParameter ? ($paraReflectionType === 'object' ? $parameter->getClass() : $paraReflectionType) : 'Unknown type');
+                        throw new PhpfastcacheInvalidConfigurationException(\sprintf(
+                            'Invalid type hint found for "%s", expected "%s" got "%s"',
+                            \lcfirst(\substr($method, 3)),
+                            $typeHintExpected,
+                            $typeHintGot
+                        ));
+                    }
                 }
             }
         }

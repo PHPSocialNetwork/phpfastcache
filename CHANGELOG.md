@@ -1,3 +1,9 @@
+## 8.0.2
+#### _"End of first wave"_
+##### 28 august 2020
+- __Drivers__
+    - Fixed #744 // Added Memcached::OPT_PREFIX_KEY option support (@geolim4)
+
 ## 8.0.1
 #### _"Still confined"_
 ##### 24 april 2020

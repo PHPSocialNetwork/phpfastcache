@@ -66,7 +66,9 @@ trait ItemExtendedTrait
         if (\is_string($key)) {
             $this->key = $key;
             $this->driver = $driver;
-            $this->driver->setItem($this);
+            if($driver->getConfig()->isUseStaticItemCaching()){
+                $this->driver->setItem($this);
+            }
             $this->expirationDate = new DateTime();
             if ($this->driver->getConfig()->isItemDetailedDate()) {
                 $this->creationDate = new DateTime();

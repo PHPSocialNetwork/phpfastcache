@@ -91,6 +91,12 @@ trait ExtendedCacheItemPoolTrait
             );
         }
 
+        if(!$this->getConfig()->isUseStaticItemCaching()){
+            throw new PhpfastcacheLogicException(
+                'The static item caching option (useStaticItemCaching) is disabled so you cannot attach an item.'
+            );
+        }
+
         $this->itemInstances[$item->getKey()] = $item;
     }
 

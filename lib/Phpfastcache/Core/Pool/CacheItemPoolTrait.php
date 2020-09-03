@@ -66,6 +66,12 @@ trait CacheItemPoolTrait
     public function setItem(CacheItemInterface $item)
     {
         if ($this->getClassNamespace() . '\\Item' === \get_class($item)) {
+            if(!$this->getConfig()->isUseStaticItemCaching()){
+                throw new PhpfastcacheLogicException(
+                    'The static item caching option (useStaticItemCaching) is disabled so you cannot attach an item.'
+                );
+            }
+
             $this->itemInstances[$item->getKey()] = $item;
 
             return $this;
@@ -106,12 +112,14 @@ trait CacheItemPoolTrait
     public function getItem($key)
     {
         if (\is_string($key)) {
+            $item = null;
+
             /**
              * Replace array_key_exists by isset
              * due to performance issue on huge
              * loop dispatching operations
              */
-            if (!isset($this->itemInstances[$key])) {
+            if (!isset($this->itemInstances[$key]) || !$this->getConfig()->isUseStaticItemCaching()) {
                 if (\preg_match('~([' . \preg_quote(self::$unsupportedKeyChars, '~') . ']+)~', $key, $matches)) {
                     throw new PhpfastcacheInvalidArgumentException(
                         'Unsupported key character detected: "' . $matches[1] . '". Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers'
@@ -219,21 +227,26 @@ trait CacheItemPoolTrait
                         $item->expiresAfter(abs((int)$this->getConfig()['defaultTtl']));
                     }
                 }
+            }else{
+                $item = $this->itemInstances[$key];
             }
-        } else {
-            throw new PhpfastcacheInvalidArgumentException(\sprintf('$key must be a string, got type "%s" instead.', \gettype($key)));
+
+
+            if($item !== null){
+                /**
+                 * @eventName CacheGetItem
+                 * @param $this ExtendedCacheItemPoolInterface
+                 * @param $this ExtendedCacheItemInterface
+                 */
+                $this->eventManager->dispatch('CacheGetItem', $this, $item);
+
+                $item->isHit() ? $this->getIO()->incReadHit() : $this->getIO()->incReadMiss();
+
+                return $item;
+            }
+            throw new PhpfastcacheInvalidArgumentException(\sprintf('Item %s was not build due to an unknown error', \gettype($key)));
         }
-
-        /**
-         * @eventName CacheGetItem
-         * @param $this ExtendedCacheItemPoolInterface
-         * @param $this ExtendedCacheItemInterface
-         */
-        $this->eventManager->dispatch('CacheGetItem', $this, $this->itemInstances[$key]);
-
-        $this->itemInstances[$key]->isHit() ? $this->getIO()->incReadHit() : $this->getIO()->incReadMiss();
-
-        return $this->itemInstances[$key];
+        throw new PhpfastcacheInvalidArgumentException(\sprintf('$key must be a string, got type "%s" instead.', \gettype($key)));
     }
 
     /**
@@ -388,7 +401,9 @@ trait CacheItemPoolTrait
          * loop dispatching operations
          */
         if (!isset($this->itemInstances[$item->getKey()])) {
-            $this->itemInstances[$item->getKey()] = $item;
+            if($this->getConfig()->isUseStaticItemCaching()){
+                $this->itemInstances[$item->getKey()] = $item;
+            }
         } else {
             if (\spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
                 throw new RuntimeException('Spl object hash mismatches ! You probably tried to save a detached item which has been already retrieved from cache.');

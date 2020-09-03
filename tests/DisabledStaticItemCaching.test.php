@@ -15,7 +15,7 @@ use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
-$testHelper = new TestHelper('qsdqd');
+$testHelper = new TestHelper('Testing disabling static item caching');
 $defaultDriver = (!empty($argv[ 1 ]) ? ucfirst($argv[ 1 ]) : 'Files');
 $driverInstance = CacheManager::getInstance($defaultDriver, new ConfigurationOption([
     'useStaticItemCaching' => false,

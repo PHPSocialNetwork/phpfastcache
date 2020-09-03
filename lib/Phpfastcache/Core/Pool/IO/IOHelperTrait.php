@@ -56,15 +56,19 @@ trait IOHelperTrait
         if (!is_dir($path)) {
             throw new PhpfastcacheIOException("Can't read PATH:" . $path);
         }
-
-        $stat->setData(implode(', ', \array_keys($this->itemInstances)))
-            ->setRawData(
+        $stat->setRawData(
                 [
                     'tmp' => $this->tmp,
                 ]
             )
             ->setSize(Directory::dirSize($path))
             ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($path));
+
+        if($this->getConfig()->isUseStaticItemCaching()){
+            $stat->setData(implode(', ', \array_keys($this->itemInstances)));
+        }else{
+            $stat->setData('No data available since static item caching option (useStaticItemCaching) is disabled.');
+        }
 
         return $stat;
     }

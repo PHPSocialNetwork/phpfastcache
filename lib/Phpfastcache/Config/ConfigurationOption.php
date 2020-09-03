@@ -84,6 +84,10 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      */
     protected $cacheSlamsTimeout = 15;
 
+    /**
+     * @var bool
+     */
+    protected $useStaticItemCaching = true;
 
     /**
      * @param $args
@@ -362,6 +366,24 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     public function setCacheSlamsTimeout(int $cacheSlamsTimeout): self
     {
         $this->cacheSlamsTimeout = $cacheSlamsTimeout;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUseStaticItemCaching(): bool
+    {
+        return $this->useStaticItemCaching;
+    }
+
+    /**
+     * @param bool $useStaticItemCaching
+     * @return ConfigurationOption
+     */
+    public function setUseStaticItemCaching(bool $useStaticItemCaching): self
+    {
+        $this->useStaticItemCaching = $useStaticItemCaching;
         return $this;
     }
 }

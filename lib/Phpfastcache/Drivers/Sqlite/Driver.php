@@ -115,21 +115,21 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function driverRead(CacheItemInterface $item)
     {
         try {
-            $stm = $this->getDb($item->getKey())
+            $stm = $this->getDb($item->getEncodedKey())
                 ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
             $stm->execute(
                 [
-                    ':keyword' => $item->getKey(),
+                    ':keyword' => $item->getEncodedKey(),
                 ]
             );
             $row = $stm->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             try {
-                $stm = $this->getDb($item->getKey(), true)
+                $stm = $this->getDb($item->getEncodedKey(), true)
                     ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
                 $stm->execute(
                     [
-                        ':keyword' => $item->getKey(),
+                        ':keyword' => $item->getEncodedKey(),
                     ]
                 );
                 $row = $stm->fetch(PDO::FETCH_ASSOC);
@@ -301,11 +301,11 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
          */
         if ($item instanceof Item) {
             try {
-                $stm = $this->getDb($item->getKey())
+                $stm = $this->getDb($item->getEncodedKey())
                     ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
                 $stm->execute(
                     [
-                        ':keyword' => $item->getKey(),
+                        ':keyword' => $item->getEncodedKey(),
                         ':object' => $this->encode($this->driverPreWrap($item)),
                         ':exp' => $item->getExpirationDate()->getTimestamp(),
                     ]
@@ -332,12 +332,12 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
          */
         if ($item instanceof Item) {
             try {
-                $stm = $this->getDb($item->getKey())
+                $stm = $this->getDb($item->getEncodedKey())
                     ->prepare("DELETE FROM `caching` WHERE (`exp` <= :U) OR (`keyword`=:keyword) ");
 
                 return $stm->execute(
                     [
-                        ':keyword' => $item->getKey(),
+                        ':keyword' => $item->getEncodedKey(),
                         ':U' => time(),
                     ]
                 );

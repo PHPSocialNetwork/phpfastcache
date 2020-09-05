@@ -46,6 +46,8 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
 
     public const DRIVER_CONNECT_FAILURE = '%s failed to connect with the following error message: "%s" line %d in %s';
 
+    public const DRIVER_KEY_WRAPPER_INDEX = 'k';
+
     public const DRIVER_DATA_WRAPPER_INDEX = 'd';
 
     /**

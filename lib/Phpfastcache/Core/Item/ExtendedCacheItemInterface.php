@@ -34,7 +34,8 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
 
     /**
      * Returns the encoded key for the current cache item.
-     * Usually as a MD5 hash
+     * Is a MD5 (default),SHA1,SHA256 hash if "defaultKeyHashFunction" config option is configured
+     * Else return the plain cache item key "defaultKeyHashFunction" config option is emptied
      *
      * @return string
      *   The encoded key string for this cache item.

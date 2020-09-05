@@ -30,6 +30,10 @@ use Psr\Cache\CacheItemInterface;
  * @package phpFastCache\Drivers
  * @property Config $config Config object
  * @method Config getConfig() Return the config object
+ *
+ * Important NOTE:
+ * We are using getKey instead of getEncodedKey since this backend create filename that are
+ * managed by defaultFileNameHashFunction and not defaultKeyHashFunction
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -74,7 +78,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
          * Check for Cross-Driver type confusion
          */
         $file_path = $this->getFilePath($item->getKey(), true);
-        if (!file_exists($file_path)) {
+        if (!\file_exists($file_path)) {
             return null;
         }
 
@@ -122,11 +126,11 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
          */
         if ($item instanceof Item) {
             $file_path = $this->getFilePath($item->getKey(), true);
-            if (file_exists($file_path) && @unlink($file_path)) {
-                clearstatcache(true, $file_path);
-                $dir = dirname($file_path);
+            if (\file_exists($file_path) && @\unlink($file_path)) {
+                \clearstatcache(true, $file_path);
+                $dir = \dirname($file_path);
                 if (!(new FilesystemIterator($dir))->valid()) {
-                    rmdir($dir);
+                    \rmdir($dir);
                 }
                 return true;
             }
@@ -139,6 +143,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @return bool
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheIOException
      */
     protected function driverClear(): bool
     {

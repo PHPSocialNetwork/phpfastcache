@@ -177,7 +177,9 @@ class CacheManager
         $config = self::validateConfig($config);
         $driver = self::standardizeDriverName($driver);
 
-        $instanceId = $instanceId ?: md5($driver . serialize($config->toArray()));
+        $instanceId = $instanceId ?: md5($driver . serialize(\array_filter($config->toArray(), static function ($val){
+            return !\is_callable($val);
+        })));
 
         if (!isset(self::$instances[$instanceId])) {
             self::$badPracticeOmeter[$driver] = 1;

@@ -90,7 +90,7 @@ trait ItemExtendedTrait
             if ($keyHashFunction) {
                 $this->encodedKey = $keyHashFunction($this->getKey());
             } else {
-                $this->encodedKey = \md5($this->getKey());
+                $this->encodedKey = $this->getKey();
             }
         }
 

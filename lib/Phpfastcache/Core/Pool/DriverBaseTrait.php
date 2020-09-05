@@ -130,6 +130,7 @@ trait DriverBaseTrait
     public function driverPreWrap(ExtendedCacheItemInterface $item): array
     {
         $wrap = [
+            self::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(), // Stored but not really used, allow you to quickly identify the cache key
             self::DRIVER_DATA_WRAPPER_INDEX => $item->get(),
             self::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
             self::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),

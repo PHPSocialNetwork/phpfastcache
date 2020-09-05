@@ -232,7 +232,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      */
     public function setDefaultKeyHashFunction($defaultKeyHashFunction): self
     {
-        if (!\is_callable($defaultKeyHashFunction) && (\is_string($defaultKeyHashFunction) && !\function_exists($defaultKeyHashFunction))) {
+        if ($defaultKeyHashFunction && !\is_callable($defaultKeyHashFunction) && (\is_string($defaultKeyHashFunction) && !\function_exists($defaultKeyHashFunction))) {
             throw new PhpfastcacheInvalidConfigurationException('defaultKeyHashFunction must be a valid function name string');
         }
         $this->defaultKeyHashFunction = $defaultKeyHashFunction;

@@ -194,9 +194,9 @@ class Driver implements ExtendedCacheItemPoolInterface
     public function getStats(): DriverStatistic
     {
         $stats = current($this->instance->getStats());
-        $stats['uptime'] = (isset($stats['uptime']) ? $stats['uptime'] : 0);
-        $stats['version'] = (isset($stats['version']) ? $stats['version'] : $this->instance->getVersion());
-        $stats['bytes'] = (isset($stats['bytes']) ? $stats['version'] : 0);
+        $stats['uptime'] = $stats['uptime'] ?? 0;
+        $stats['version'] = $stats['version'] ?? $this->instance->getVersion();
+        $stats['bytes'] = $stats['bytes'] ?? 0;
 
         $date = (new \DateTime())->setTimestamp(\time() - $stats['uptime']);
 

@@ -13,7 +13,7 @@
  */
 declare(strict_types=1);
 
-namespace Phpfastcache\Cluster\Drivers\MasterSlaveReplication;
+namespace Phpfastcache\Cluster\Drivers\PrimaryReplicaReplication;
 
 use Phpfastcache\Cluster\ClusterPoolAbstract;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
@@ -28,13 +28,13 @@ use ReflectionException;
 
 
 /**
- * Class MasterSlaveReplicationCluster
- * @package Phpfastcache\Cluster\Drivers\MasterSlaveReplication
+ * Class PrimaryReplicaReplicationCluster
+ * @package Phpfastcache\Cluster\Drivers\PrimaryReplicaReplication
  */
-class MasterSlaveReplicationCluster extends ClusterPoolAbstract
+class PrimaryReplicaReplicationCluster extends ClusterPoolAbstract
 {
     /**
-     * MasterSlaveReplicationCluster constructor.
+     * PrimaryReplicaReplicationCluster constructor.
      * @param string $clusterName
      * @param ExtendedCacheItemPoolInterface ...$driverPools
      * @throws PhpfastcacheInvalidArgumentException
@@ -46,7 +46,7 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
     public function __construct(string $clusterName, ExtendedCacheItemPoolInterface ...$driverPools)
     {
         if (\count($driverPools) !== 2) {
-            throw new PhpfastcacheInvalidArgumentException('A "master/slave" cluster requires exactly two pools to be working.');
+            throw new PhpfastcacheInvalidArgumentException('A "primary/replica" cluster requires exactly two pools to be working.');
         }
 
         parent::__construct($clusterName, ...$driverPools);
@@ -75,17 +75,17 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
     protected function makeOperation(callable $operation)
     {
         try {
-            return $operation($this->getMasterPool());
+            return $operation($this->getPrimaryPool());
         } catch (PhpfastcacheExceptionInterface $e) {
             try {
                 $this->eventManager->dispatch(
-                    'CacheReplicationSlaveFallback',
+                    'CacheReplicationReplicaFallback',
                     $this,
                     \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']
                 );
-                return $operation($this->getSlavePool());
+                return $operation($this->getReplicaPool());
             } catch (PhpfastcacheExceptionInterface $e) {
-                throw new PhpfastcacheReplicationException('Master and Slave thrown an exception !');
+                throw new PhpfastcacheReplicationException('Primary and Replica thrown an exception !');
             }
         }
     }
@@ -93,7 +93,7 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
     /**
      * @return ExtendedCacheItemPoolInterface
      */
-    protected function getMasterPool(): ExtendedCacheItemPoolInterface
+    protected function getPrimaryPool(): ExtendedCacheItemPoolInterface
     {
         return $this->clusterPools[0];
     }
@@ -101,7 +101,7 @@ class MasterSlaveReplicationCluster extends ClusterPoolAbstract
     /**
      * @return ExtendedCacheItemPoolInterface
      */
-    protected function getSlavePool(): ExtendedCacheItemPoolInterface
+    protected function getReplicaPool(): ExtendedCacheItemPoolInterface
     {
         return $this->clusterPools[1];
     }

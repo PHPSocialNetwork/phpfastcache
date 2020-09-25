@@ -14,7 +14,7 @@
  */
 declare(strict_types=1);
 
-namespace Phpfastcache\Cluster\Drivers\MasterSlaveReplication;
+namespace Phpfastcache\Cluster\Drivers\PrimaryReplicaReplication;
 
 use Phpfastcache\Cluster\ItemAbstract;
 

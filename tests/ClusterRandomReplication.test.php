@@ -15,7 +15,7 @@ use Phpfastcache\Helper\TestHelper;
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/mock/Autoload.php';
-$testHelper = new TestHelper('Master/Slave Replication Cluster');
+$testHelper = new TestHelper('Primary/Replica Replication Cluster');
 
 CacheManager::clearInstances();
 

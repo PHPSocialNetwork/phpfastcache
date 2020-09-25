@@ -15,17 +15,17 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Cluster\Drivers\RandomReplication;
 
-use Phpfastcache\Cluster\Drivers\MasterSlaveReplication\MasterSlaveReplicationCluster;
+use Phpfastcache\Cluster\Drivers\PrimaryReplicaReplication\PrimaryReplicaReplicationCluster;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use ReflectionException;
 use ReflectionMethod;
 
 
 /**
- * Class MasterSlaveReplicationCluster
- * @package Phpfastcache\Cluster\Drivers\MasterSlaveReplication
+ * Class PrimaryReplicaReplicationCluster
+ * @package Phpfastcache\Cluster\Drivers\PrimaryReplicaReplication
  */
-class RandomReplicationCluster extends MasterSlaveReplicationCluster
+class RandomReplicationCluster extends PrimaryReplicaReplicationCluster
 {
     /**
      * RandomReplicationCluster constructor.
@@ -54,6 +54,6 @@ class RandomReplicationCluster extends MasterSlaveReplicationCluster
      */
     protected function makeOperation(callable $operation)
     {
-        return $operation($this->getMasterPool());
+        return $operation($this->getPrimaryPool());
     }
 }

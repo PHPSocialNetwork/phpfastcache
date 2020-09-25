@@ -139,15 +139,15 @@ EventManager::getInstance()->unbindEventCallback('onCacheGetItem', 'myCallbackNa
         - *ExtendedCacheItemPoolInterface::getItems()*
         - *ExtendedCacheItemPoolInterface::getItemsByTag()*
         - *ExtendedCacheItemPoolInterface::getItemsAsJsonString()*
-### ItemPool Events (Cluster) 
-- onCacheReplicationSlaveFallback(*Callable* **$callback**)
+### ItemPool Events (Cluster)
+- onCacheReplicationReplicaFallback(*Callable* **$callback**)
     - **Callback arguments**
         - *ClusterPoolInterface* **$self**
         - *string* **$caller**
     - **Scope**
         - Cluster pool
     - **Description**
-        - Allow you to get notified when a Master/Slave cluster switches on slave
+        - Allow you to get notified when a Primary/Replica cluster switches on replica
     - **Risky Circular Methods**
         - N/A
 

@@ -30,6 +30,6 @@
 - Removed *global static* properties `CacheManager::$ReadHits`, `CacheManager::$WriteHits` replaced by`\Phpfastcache\Entities\DriverIO` callable in`\Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface::getIO`
 - Removed deprecated method `ConfigurationOption::getOption()` use `getOptionName()` instead
 - Removed deprecated config option `$ignoreSymfonyNotice`
-- Removed "fallback" feature (use aggregated cluster Master/Slave instead)
+- Removed "fallback" feature (use aggregated cluster Primary/Replica instead)
 - Enforced PSR-12 compliance
 - Deprecated legacy autoload for removal in next major release

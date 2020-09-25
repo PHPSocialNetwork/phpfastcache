@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Cluster;
 
 use Phpfastcache\Cluster\Drivers\{FullReplication\FullReplicationCluster,
-    MasterSlaveReplication\MasterSlaveReplicationCluster,
+    PrimaryReplicaReplication\PrimaryReplicaReplicationCluster,
     RandomReplication\RandomReplicationCluster,
     SemiReplication\SemiReplicationCluster
 };
@@ -47,7 +47,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
     public const STRATEGY = [
         AggregatorInterface::STRATEGY_FULL_REPLICATION => FullReplicationCluster::class,
         AggregatorInterface::STRATEGY_SEMI_REPLICATION => SemiReplicationCluster::class,
-        AggregatorInterface::STRATEGY_MASTER_SLAVE => MasterSlaveReplicationCluster::class,
+        AggregatorInterface::STRATEGY_PRIMARY_REPLICA => PrimaryReplicaReplicationCluster::class,
         AggregatorInterface::STRATEGY_RANDOM_REPLICATION => RandomReplicationCluster::class,
     ];
 

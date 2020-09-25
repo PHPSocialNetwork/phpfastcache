@@ -50,16 +50,16 @@ interface AggregatorInterface
     public const STRATEGY_SEMI_REPLICATION = 2;
 
     /**
-     * First pool is master, second is slave
+     * First pool is primary, second is replica
      *
-     * Read from master (but do not synchronize, with master failure only allowed)
-     * Write on all (with master failure only allowed)
-     * Delete on all (with master failure only allowed)
+     * Read from primary (but do not synchronize, with primary failure only allowed)
+     * Write on all (with primary failure only allowed)
+     * Delete on all (with primary failure only allowed)
      *
-     * Conflict on multiple reads: No, master is exclusive source except if it fails
-     * Cluster size: 2 exactly: Master & Slave (Exception if more or less)
+     * Conflict on multiple reads: No, primary is exclusive source except if it fails
+     * Cluster size: 2 exactly: Primary & Replica (Exception if more or less)
      */
-    public const STRATEGY_MASTER_SLAVE = 4;
+    public const STRATEGY_PRIMARY_REPLICA = 4;
 
     /**
      * Mostly used for development testing

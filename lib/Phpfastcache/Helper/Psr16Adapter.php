@@ -19,17 +19,16 @@ namespace Phpfastcache\Helper;
 use DateInterval;
 use DateTime;
 use Phpfastcache\CacheManager;
+use Phpfastcache\Config\ConfigurationOptionInterface;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException,
     PhpfastcacheInvalidArgumentException,
     PhpfastcacheLogicException,
     PhpfastcacheRootException,
-    PhpfastcacheSimpleCacheException
-};
+    PhpfastcacheSimpleCacheException};
 use Psr\SimpleCache\CacheInterface;
 use Traversable;
-
 
 /**
  * Class Psr16Adapter
@@ -45,7 +44,7 @@ class Psr16Adapter implements CacheInterface
     /**
      * Psr16Adapter constructor.
      * @param $driver
-     * @param null $config
+     * @param null|ConfigurationOptionInterface $config
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
@@ -54,7 +53,7 @@ class Psr16Adapter implements CacheInterface
      * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException
      * @throws \ReflectionException
      */
-    public function __construct($driver, $config = null)
+    public function __construct($driver, ConfigurationOptionInterface $config = null)
     {
         if ($driver instanceof ExtendedCacheItemPoolInterface) {
             if ($config !== null) {
@@ -68,7 +67,7 @@ class Psr16Adapter implements CacheInterface
 
     /**
      * @param string $key
-     * @param null $default
+     * @param mixed|null $default
      * @return mixed|null
      * @throws PhpfastcacheSimpleCacheException
      * @throws \Psr\Cache\InvalidArgumentException
@@ -90,7 +89,7 @@ class Psr16Adapter implements CacheInterface
     /**
      * @param string $key
      * @param mixed $value
-     * @param null $ttl
+     * @param null|int|DateInterval $ttl
      * @return bool
      * @throws PhpfastcacheSimpleCacheException
      * @throws \Psr\Cache\InvalidArgumentException
@@ -103,7 +102,7 @@ class Psr16Adapter implements CacheInterface
                 ->set($value);
             if (\is_int($ttl) && $ttl <= 0) {
                 $cacheItem->expiresAt((new DateTime('@0')));
-            } elseif (\is_int($ttl) || $ttl instanceof DateInterval) {
+            } elseif ($ttl !== null) {
                 $cacheItem->expiresAfter($ttl);
             }
             return $this->internalCacheInstance->save($cacheItem);
@@ -142,7 +141,7 @@ class Psr16Adapter implements CacheInterface
     /**
      * @param iterable $keys
      * @param null $default
-     * @return array|iterable
+     * @return ExtendedCacheItemInterface[]|iterable
      * @throws PhpfastcacheSimpleCacheException
      * @throws \Psr\Cache\InvalidArgumentException
      */
@@ -153,7 +152,7 @@ class Psr16Adapter implements CacheInterface
         }
         try {
             return \array_map(
-                function (ExtendedCacheItemInterface $item) {
+                static function (ExtendedCacheItemInterface $item) {
                     return $item->get();
                 },
                 $this->internalCacheInstance->getItems($keys)
@@ -168,6 +167,7 @@ class Psr16Adapter implements CacheInterface
      * @param null|int|DateInterval $ttl
      * @return bool
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function setMultiple($values, $ttl = null): bool
     {
@@ -177,7 +177,7 @@ class Psr16Adapter implements CacheInterface
 
                 if (\is_int($ttl) && $ttl <= 0) {
                     $cacheItem->expiresAt((new DateTime('@0')));
-                } elseif (\is_int($ttl) || $ttl instanceof DateInterval) {
+                } elseif ($ttl !== null) {
                     $cacheItem->expiresAfter($ttl);
                 }
                 $this->internalCacheInstance->saveDeferred($cacheItem);
@@ -190,7 +190,7 @@ class Psr16Adapter implements CacheInterface
     }
 
     /**
-     * @param iterable $keys
+     * @param iterable|array $keys
      * @return bool
      * @throws PhpfastcacheSimpleCacheException
      * @throws \Psr\Cache\InvalidArgumentException
@@ -199,7 +199,7 @@ class Psr16Adapter implements CacheInterface
     {
         try {
             if ($keys instanceof Traversable) {
-                return $this->internalCacheInstance->deleteItems(iterator_to_array($keys));
+                return $this->internalCacheInstance->deleteItems(\iterator_to_array($keys));
             } elseif (\is_array($keys)) {
                 return $this->internalCacheInstance->deleteItems($keys);
             } else {

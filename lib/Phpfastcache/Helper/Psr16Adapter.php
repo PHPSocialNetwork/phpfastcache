@@ -76,7 +76,7 @@ class Psr16Adapter implements CacheInterface
     /**
      * @param string $key
      * @param mixed $value
-     * @param null $ttl
+     * @param null|int|\DateInterval $ttl
      * @return bool
      * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */

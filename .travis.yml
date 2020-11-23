@@ -8,15 +8,12 @@
 # @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
 # @author Georges.L (Geolim4)  <contact@geolim4.com>
 #
-sudo: false
-
+os: linux
 dist: trusty
-
 language: php
-
 services:
   - memcached
-  - redis-server
+  - redis
   - couchdb
   - riak
   - mongodb
@@ -47,7 +44,7 @@ php:
   - nightly
   - hhvm
 
-matrix:
+jobs:
   fast_finish: true
   allow_failures:
     - php: nightly

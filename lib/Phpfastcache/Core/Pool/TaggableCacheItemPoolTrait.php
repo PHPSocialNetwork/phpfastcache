@@ -127,8 +127,9 @@ trait TaggableCacheItemPoolTrait
     public function deleteItemsByTags(array $tagNames, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
         $return = null;
-        foreach ($tagNames as $tagName) {
-            $result = $this->deleteItemsByTag($tagName, $strategy);
+
+        foreach ($this->getItemsByTags($tagNames, $strategy) as $item) {
+            $result = $this->deleteItem($item->getKey());
             if ($return !== false) {
                 $return = $result;
             }

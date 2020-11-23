@@ -1,3 +1,16 @@
+## 8.0.3
+#### _"Reconfined"_
+##### 23 november 2020
+- __Core__
+    - Fixed #768 // Psalm issue with the 3rd parameter of Psr16Adapter::set has to be null (@geolim4)
+    - Fixed #771 // DeleteItemsByTags was ignoring strategy #772  (@GeoSot)
+    - Fixed inconsistent behavior of "defaultKeyHashFunction" and "defaultFileNameHashFunction" + added tests for them (@geolim4)
+    - Implemented #754 // Added deactivatable static item caching support (@geolim4)
+- __Tests__
+    - Fixed test title for "DisabledStaticItemCaching.test.php"
+- __Drivers__
+    - Fixed #759 // Memcached Bytes Replaced with Version (@geolim4)
+    
 ## 8.0.2
 #### _"End of first wave"_
 ##### 28 august 2020

@@ -101,10 +101,11 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @param string $password
+     * @param string|null $password
+     *
      * @return self
      */
-    public function setPassword(string $password): self
+    public function setPassword(string $password = null): self
     {
         $this->password = $password;
         return $this;
@@ -113,16 +114,17 @@ class Config extends ConfigurationOption
     /**
      * @return int
      */
-    public function getDatabase(): int
+    public function getDatabase(): ?int
     {
         return $this->database;
     }
 
     /**
-     * @param int $database
+     * @param int|null $database
+     *
      * @return self
      */
-    public function setDatabase(int $database): self
+    public function setDatabase(int $database = null): self
     {
         $this->database = $database;
         return $this;

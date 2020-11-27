@@ -32,12 +32,12 @@ class Config extends ConfigurationOption
     protected $port = 6379;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $password = '';
 
     /**
-     * @var int
+     * @var null|int
      */
     protected $database = 0;
 
@@ -93,7 +93,7 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @return mixed
+     * @return null|mixed
      */
     public function getPassword()
     {
@@ -112,7 +112,7 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @return int
+     * @return null|int
      */
     public function getDatabase(): ?int
     {

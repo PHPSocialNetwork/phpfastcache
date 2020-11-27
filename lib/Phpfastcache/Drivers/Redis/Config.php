@@ -93,7 +93,7 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @return null|mixed
+     * @return null|string
      */
     public function getPassword()
     {

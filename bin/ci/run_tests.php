@@ -11,9 +11,11 @@ define('PFC_TEST_DIR', \realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTOR
 $timestamp = microtime(true);
 $climate = new League\CLImate\CLImate;
 $climate->forceAnsiOn();
+$phpBinPath = 'php ';
 $status = 0;
 $dir = __DIR__;
 $driver = $argv[ 1 ] ?? 'Files';
+$phpBinPath = $_SERVER['PHP_BIN_PATH'] ?? 'php';
 
 /**
  * @param string $pattern
@@ -23,17 +25,18 @@ $driver = $argv[ 1 ] ?? 'Files';
 $globCallback = static function (string $pattern, int $flags = 0) use (&$globCallback): array
 {
     $files = \glob($pattern, $flags);
+    $subFiles = [];
 
     foreach (\glob(\dirname($pattern) . '/*', GLOB_ONLYDIR | GLOB_NOSORT) as $dir) {
-        $files = \array_merge($files, $globCallback($dir . '/' . \basename($pattern), $flags));
+        $subFiles[] = $globCallback($dir . '/' . \basename($pattern), $flags);
     }
 
-    return $files;
+    return \array_merge($files, ...$subFiles);
 };
 
 foreach ($globCallback(PFC_TEST_DIR . DIRECTORY_SEPARATOR . '*.test.php') as $filename) {
     $climate->backgroundLightYellow()->blue()->out('---');
-    $command = "php -f {$filename} {$driver}";
+    $command = "{$phpBinPath} -f {$filename} {$driver}";
     $climate->out("<yellow>phpfastcache@unit-test</yellow> <blue>{$dir}</blue> <green>#</green> <red>$command</red>");
 
     \exec($command, $output, $return_var);

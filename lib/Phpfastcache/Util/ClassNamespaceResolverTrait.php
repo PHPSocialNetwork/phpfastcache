@@ -45,12 +45,12 @@ trait ClassNamespaceResolverTrait
      */
     protected static function createClassMap($dir): array
     {
-        if (is_string($dir)) {
+        if (\is_string($dir)) {
             $dir = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
         }
         $map = [];
 
-        if (is_array($dir) || $dir instanceof Traversable) {
+        if (\is_iterable($dir)) {
             foreach ($dir as $file) {
                 if (!$file->isFile()) {
                     continue;
@@ -98,10 +98,19 @@ trait ClassNamespaceResolverTrait
             switch ($token[0]) {
                 case T_NAMESPACE:
                     $namespace = '';
-                    // If there is a namespace, extract it
-                    while (isset($tokens[++$i][1])) {
-                        if (in_array($tokens[$i][0], [T_STRING, T_NS_SEPARATOR])) {
-                            $namespace .= $tokens[$i][1];
+                    // If there is a namespace, extract it (PHP 8 test)
+                    if(\defined('T_NAME_QUALIFIED')){
+                        while (isset($tokens[++$i][1])) {
+                            if ($tokens[$i][0] === T_NAME_QUALIFIED) {
+                                $namespace = $tokens[$i][1];
+                                break;
+                            }
+                        }
+                    }else{
+                        while (isset($tokens[++$i][1])) {
+                            if (\in_array($tokens[$i][0], [T_STRING, T_NS_SEPARATOR], true)) {
+                                $namespace .= $tokens[$i][1];
+                            }
                         }
                     }
                     $namespace .= '\\';
@@ -118,7 +127,7 @@ trait ClassNamespaceResolverTrait
                         if (T_DOUBLE_COLON === $tokens[$j][0]) {
                             $isClassConstant = true;
                             break;
-                        } elseif (!in_array($tokens[$j][0], [T_WHITESPACE, T_DOC_COMMENT, T_COMMENT], false)) {
+                        } elseif (!\in_array($tokens[$j][0], [T_WHITESPACE, T_DOC_COMMENT, T_COMMENT], false)) {
                             break;
                         }
                     }
@@ -140,6 +149,7 @@ trait ClassNamespaceResolverTrait
                     break;
             }
         }
+
         return $classes;
     }
 

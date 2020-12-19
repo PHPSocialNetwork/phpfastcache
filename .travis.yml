@@ -41,13 +41,14 @@ php:
   # - 7.2
   - 7.3
   - 7.4
-  - nightly
+  - 8.0
+  # - nightly # crashes on almost every builds, very unstable
   - hhvm
 
 jobs:
   fast_finish: true
   allow_failures:
-    - php: nightly
+    # - php: nightly
     - php: hhvm
 
 install:

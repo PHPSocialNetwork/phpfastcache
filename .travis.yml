@@ -50,6 +50,7 @@ jobs:
   allow_failures:
     # - php: nightly
     - php: hhvm
+    - php: 8.0
 
 install:
   - ./bin/ci/install_dependencies.sh

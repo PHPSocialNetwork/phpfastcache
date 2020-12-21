@@ -1,3 +1,15 @@
+## 8.0.4
+#### _"Confined Xmas"_
+##### 21 december 2020
+- __Core__
+  - Added full PHP8 compatibility
+- __Tests__
+  - Added PHP8 test suite
+- __Drivers__
+  - Fixed #774 // Redis config cannot accept null values as the given example (@GeoSot)
+- __Misc__
+  - Small optimizations
+
 ## 8.0.3
 #### _"Reconfined"_
 ##### 23 november 2020
@@ -10,7 +22,7 @@
     - Fixed test title for "DisabledStaticItemCaching.test.php"
 - __Drivers__
     - Fixed #759 // Memcached Bytes Replaced with Version (@geolim4)
-    
+
 ## 8.0.2
 #### _"End of first wave"_
 ##### 28 august 2020

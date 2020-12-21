@@ -74,10 +74,10 @@ class Api
             return $version;
         }
 
-        if (function_exists('shell_exec')) {
+        if (\function_exists('shell_exec')) {
             $command = 'git -C "' . __DIR__ . '" describe --abbrev=0 --tags';
-            $stdout = shell_exec($command);
-            if (is_string($stdout)) {
+            $stdout = \shell_exec($command);
+            if (\is_string($stdout)) {
                 $version = trim($stdout);
                 return $version;
             }
@@ -91,12 +91,12 @@ class Api
         }
 
         $changelogFilename = __DIR__ . '/../../CHANGELOG.md';
-        if (file_exists($changelogFilename)) {
+        if (\file_exists($changelogFilename)) {
             $versionPrefix = '## ';
-            $changelog = explode("\n", self::getPhpFastCacheChangelog());
+            $changelog = \explode("\n", self::getPhpFastCacheChangelog());
             foreach ($changelog as $line) {
-                if (strpos($line, $versionPrefix) === 0) {
-                    $version = trim(str_replace($versionPrefix, '', $line));
+                if (\strpos($line, $versionPrefix) === 0) {
+                    $version = \trim(\str_replace($versionPrefix, '', $line));
                     return $version;
                 }
             }
@@ -116,8 +116,8 @@ class Api
     public static function getPhpFastCacheChangelog(): string
     {
         $changelogFilename = __DIR__ . '/../../CHANGELOG.md';
-        if (file_exists($changelogFilename)) {
-            $string = str_replace(["\r\n", "\r"], "\n", trim(file_get_contents($changelogFilename)));
+        if (\file_exists($changelogFilename)) {
+            $string = \str_replace(["\r\n", "\r"], "\n", \trim(\file_get_contents($changelogFilename)));
             if ($string) {
                 return $string;
             }
@@ -138,10 +138,10 @@ class Api
             return $hash;
         }
 
-        if (function_exists('shell_exec')) {
-            $stdout = shell_exec('git rev-parse --short HEAD');
-            if (is_string($stdout)) {
-                $hash = trim($stdout);
+        if (\function_exists('shell_exec')) {
+            $stdout = \shell_exec('git rev-parse --short HEAD');
+            if (\is_string($stdout)) {
+                $hash = \trim($stdout);
                 return "#{$hash}";
             }
         }
@@ -157,8 +157,8 @@ class Api
     public static function getChangelog(): string
     {
         $changelogFilename = __DIR__ . '/../../CHANGELOG_API.md';
-        if (file_exists($changelogFilename)) {
-            $string = str_replace(["\r\n", "\r"], "\n", trim(file_get_contents($changelogFilename)));
+        if (\file_exists($changelogFilename)) {
+            $string = \str_replace(["\r\n", "\r"], "\n", \trim(\file_get_contents($changelogFilename)));
             if ($string) {
                 return $string;
             }

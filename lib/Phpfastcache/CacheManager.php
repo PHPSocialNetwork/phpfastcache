@@ -177,7 +177,7 @@ class CacheManager
         $config = self::validateConfig($config);
         $driver = self::standardizeDriverName($driver);
 
-        $instanceId = $instanceId ?: md5($driver . serialize(\array_filter($config->toArray(), static function ($val){
+        $instanceId = $instanceId ?: md5($driver . \serialize(\array_filter($config->toArray(), static function ($val){
             return !\is_callable($val);
         })));
 
@@ -185,7 +185,7 @@ class CacheManager
             self::$badPracticeOmeter[$driver] = 1;
             $driverClass = self::validateDriverClass(self::getDriverClass($driver));
 
-            if (class_exists($driverClass)) {
+            if (\class_exists($driverClass)) {
                 $configClass = $driverClass::getConfigClass();
                 self::$instances[$instanceId] = new $driverClass(new $configClass($config->toArray()), $instanceId);
                 self::$instances[$instanceId]->setEventManager(EventManager::getInstance());
@@ -194,7 +194,7 @@ class CacheManager
             }
         } else {
             if (self::$badPracticeOmeter[$driver] >= 2) {
-                trigger_error(
+                \trigger_error(
                     '[' . $driver . '] Calling many times CacheManager::getInstance() for already instanced drivers is a bad practice and have a significant impact on performances.
            See https://github.com/PHPSocialNetwork/phpfastcache/wiki/[V5]-Why-calling-getInstance%28%29-each-time-is-a-bad-practice-%3F'
                 );
@@ -219,7 +219,7 @@ class CacheManager
             $config = self::getDefaultConfig();
         } else {
             if (!($config instanceof ConfigurationOption)) {
-                throw new PhpfastcacheInvalidArgumentException(sprintf('Unsupported config type: %s', gettype($config)));
+                throw new PhpfastcacheInvalidArgumentException(\sprintf('Unsupported config type: %s', \gettype($config)));
             }
         }
 
@@ -242,7 +242,7 @@ class CacheManager
      */
     public static function standardizeDriverName(string $driverName): string
     {
-        return ucfirst(strtolower(trim($driverName)));
+        return \ucfirst(\strtolower(\trim($driverName)));
     }
 
     /**

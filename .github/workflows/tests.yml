@@ -38,7 +38,6 @@ jobs:
           ini-values: apc.enabled=1, apc.shm_size=32M, apc.ttl=7200, apc.enable_cli=1, apc.serializer=php
       - name: Run tests on PHP 7.4
         run: php -f ./bin/ci/run_tests.php
-
       # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
       # Docs: https://getcomposer.org/doc/articles/scripts.md
       - name: Run tests on PHP 8.0

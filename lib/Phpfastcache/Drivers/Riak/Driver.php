@@ -60,7 +60,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return (new DriverStatistic())
             ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setRawData($info)
-            ->setSize(false)
+            ->setSize(0)
             ->setInfo('Riak does not provide size/date information att all :(');
     }
 

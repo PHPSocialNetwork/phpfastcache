@@ -12,6 +12,7 @@ $(document).ready(function () {
 
 
   var hydrateElementAsynchronously = function (source, target, format) {
+    var baseMarkupRelativeUrls = 'https://github.com/PHPSocialNetwork/phpfastcache/blob/master/'
     if (!target.hasClass('hydrated'))
     {
       target.addClass('hydrated', true);
@@ -25,7 +26,7 @@ $(document).ready(function () {
         switch (format)
         {
           case 'markdown':
-            $(target).html(ShowdownConverter.makeHtml(data));
+            $(target).html(ShowdownConverter.makeHtml(data.replace(/\](\(\.\/)(.*)\)/, "](" + baseMarkupRelativeUrls + "$2)")));
             break;
 
           case 'html':

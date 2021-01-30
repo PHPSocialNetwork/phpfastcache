@@ -290,6 +290,9 @@ HTACCESS
      */
     protected function readFile($file): string
     {
+        if (!\is_readable($file)) {
+            throw new PhpfastcacheIOException("Cannot read file located at: {$file}");
+        }
         if (\function_exists('file_get_contents')) {
             return (string)\file_get_contents($file);
         }
@@ -297,9 +300,6 @@ HTACCESS
         $string = '';
 
         $file_handle = @\fopen($file, 'rb');
-        if (!$file_handle) {
-            throw new PhpfastcacheIOException("Cannot read file located at: {$file}");
-        }
         while (!\feof($file_handle)) {
             $line = \fgets($file_handle);
             $string .= $line;

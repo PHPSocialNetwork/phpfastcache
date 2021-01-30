@@ -20,7 +20,7 @@ use Exception;
 use FilesystemIterator;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface, IO\IOHelperTrait};
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheIOException};
 use Phpfastcache\Util\Directory;
 use Psr\Cache\CacheItemInterface;
 
@@ -74,15 +74,13 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     protected function driverRead(CacheItemInterface $item)
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
         $file_path = $this->getFilePath($item->getKey(), true);
-        if (!\file_exists($file_path)) {
+
+        try{
+            $content = $this->readFile($file_path);
+        }catch (PhpfastcacheIOException $e){
             return null;
         }
-
-        $content = $this->readFile($file_path);
 
         return $this->decode($content);
     }

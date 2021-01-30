@@ -101,14 +101,18 @@ class Directory
             /**
              * @var SplFileInfo $fileinfo
              */
-            if ($fileinfo->isDir()) {
-                if (self::rrmdir($fileinfo->getRealPath()) === false) {
+            $realpath = $fileinfo->getRealPath();
+            if($realpath){
+                if ($fileinfo->isDir()) {
+                    if (self::rrmdir($fileinfo->getRealPath()) === false) {
+                        return false;
+                    }
+                } elseif (unlink($realpath) === false) {
                     return false;
                 }
-            } else {
-                if (unlink($fileinfo->getRealPath()) === false) {
-                    return false;
-                }
+            }
+            else{
+                return false;
             }
         }
 

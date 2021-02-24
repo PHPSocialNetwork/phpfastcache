@@ -100,7 +100,7 @@ trait IOHelperTrait
             );
         }
 
-        return $path . '/' . $filename . '.' . $this->getConfig()->getCacheFileExtension();
+        return $path . \DIRECTORY_SEPARATOR . $filename . '.' . $this->getConfig()->getCacheFileExtension();
     }
 
     /**
@@ -322,7 +322,7 @@ HTACCESS
      * @return bool
      * @throws PhpfastcacheIOException
      */
-    protected function writefile($file, $data, $secureFileManipulation = false): bool
+    protected function writefile(string $file, string $data, bool $secureFileManipulation = false): bool
     {
         /**
          * @eventName CacheWriteFileOnDisk
@@ -335,11 +335,10 @@ HTACCESS
 
         if ($secureFileManipulation) {
             $tmpFilename = Directory::getAbsolutePath(
-                dirname($file) . '/tmp_' . $this->getConfig()->getDefaultFileNameHashFunction()(
-                    \str_shuffle(\uniqid($this->getDriverName(), false))
-                    . \str_shuffle(\uniqid($this->getDriverName(), false))
+                dirname($file) . \DIRECTORY_SEPARATOR . 'tmp_' . $this->getConfig()->getDefaultFileNameHashFunction()(
+                    \bin2hex(\random_bytes(16))
                 )
-            );
+            ) . '.' .  $this->getConfig()->getCacheFileExtension() . \random_int(1000, 9999);
 
             $handle = \fopen($tmpFilename, 'w+b');
             if (\is_resource($handle)) {

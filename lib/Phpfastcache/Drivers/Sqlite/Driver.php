@@ -37,10 +37,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     /**
      *
      */
-    protected const FILE_DIR = 'sqlite';
-    /**
-     *
-     */
     protected const INDEXING_FILE = 'indexing';
 
     /**
@@ -77,7 +73,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     public function getSqliteDir(): string
     {
-        return $this->SqliteDir ?: $this->getPath() . DIRECTORY_SEPARATOR . self::FILE_DIR;
+        return $this->SqliteDir ?: $this->getPath();
     }
 
     /**
@@ -97,13 +93,13 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         if (!file_exists($this->getSqliteDir()) && !@mkdir($this->getSqliteDir(), $this->getDefaultChmod(), true)) {
             throw new PhpfastcacheIOException(sprintf('Sqlite cannot write in "%s", aborting...', $this->getPath()));
         }
-        if (!file_exists($this->getPath() . '/' . self::FILE_DIR)) {
-            if (!mkdir($this->getPath() . '/' . self::FILE_DIR, $this->getDefaultChmod(), true)
+        if (!file_exists($this->getPath())) {
+            if (!mkdir($this->getPath(), $this->getDefaultChmod(), true)
             ) {
                 $this->fallback = true;
             }
         }
-        $this->SqliteDir = $this->getPath() . '/' . self::FILE_DIR;
+        $this->SqliteDir = $this->getPath();
 
         return true;
     }

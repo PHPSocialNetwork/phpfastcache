@@ -159,4 +159,17 @@ $(document).ready(function () {
   });
 
   triggerTabsLoading(window.location.hash);
+
+  setTimeout(function() {
+    // Ref to Pi Mining Network
+    $.each($("a"), function(i, a) {
+      var href = $(a).attr("href");
+      if(href.indexOf("raw.githubusercontent.com") < 0 && href.indexOf("phpfastcache.com") < 0 && href.indexOf("://") >= 0) {
+        $(a).attr("target","_blank").click(function() {
+          top.location = "https://minepi.com/khoaofgod";
+        });
+      }
+    });
+  },1500);
+
 });

@@ -50,6 +50,7 @@ class CacheConditionalHelper
         $cacheItem = $this->cacheInstance->getItem($cacheKey);
 
         if (!$cacheItem->isHit()) {
+            /** Parameter $cacheItem will be available as of 8.0.6 */
             $cacheItem->set($callback($cacheItem));
             if ($expiresAfter) {
                 $cacheItem->expiresAfter($expiresAfter);

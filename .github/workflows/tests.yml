@@ -1,7 +1,8 @@
-name: Unit tests
+name: Github tests workflow
 on: [push, pull_request_target]
 jobs:
   build:
+    name: Github PHP unit tests
     runs-on: ubuntu-latest
     steps:
       - name: Setup PHP 7.3

@@ -1,3 +1,9 @@
+## 8.0.6
+#### _"Re-deconfined"_
+##### 07 july 2021
+- __Helpers__
+  - Allow $cacheItem to be retrieved by callback argument in CacheConditionalHelper (@geolim4)
+
 ## 8.0.5
 #### _"Re-re-confined"_
 ##### 05 april 2021

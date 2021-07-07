@@ -6,6 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Helper\CacheConditionalHelper as CacheConditional;
 use Phpfastcache\Helper\TestHelper;
 use Psr\Cache\CacheItemPoolInterface;
@@ -22,7 +23,12 @@ $RandomCacheValue = str_shuffle(uniqid('pfc', true));
 /**
  * Missing cache item test
  */
-$cacheValue = (new CacheConditional($cacheInstance))->get($cacheKey, function() use ($cacheKey, $testHelper, $RandomCacheValue){
+$cacheValue = (new CacheConditional($cacheInstance))->get($cacheKey, static function() use ($cacheKey, $testHelper, $RandomCacheValue){
+    if(func_get_arg(0) instanceof ExtendedCacheItemInterface){
+        $testHelper->printPassText('The callback has been received the cache item as a parameter (introduced in 8.0.6).');
+    }else{
+        $testHelper->printFailText('The callback has not received the cache item as a parameter (introduced in 8.0.6).');
+    }
     /**
      * No parameter are passed
      * to this closure

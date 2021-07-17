@@ -94,7 +94,7 @@ HELP;
         }
         $url .= $clientConfig->getHost();
         $url .= ":{$clientConfig->getPort()}";
-        $url .= $clientConfig->getPath();
+        $url .= '/' . $this->getDatabaseName();
 
         $this->instance = CouchDBClient::create(
             [
@@ -122,9 +122,14 @@ HELP;
      */
     protected function createDatabase()
     {
-        if (!in_array($this->instance->getDatabase(), $this->instance->getAllDatabases(), true)) {
-            $this->instance->createDatabase($this->instance->getDatabase());
+        if (!in_array($this->getDatabaseName(), $this->instance->getAllDatabases(), true)) {
+            $this->instance->createDatabase($this->getDatabaseName());
         }
+    }
+
+    protected function getCouchDbItemKey(CacheItemInterface $item)
+    {
+        return 'pfc_' . $item->getEncodedKey();
     }
 
     /**
@@ -135,7 +140,7 @@ HELP;
     protected function driverRead(CacheItemInterface $item)
     {
         try {
-            $response = $this->instance->findDocument($item->getEncodedKey());
+            $response = $this->instance->findDocument($this->getCouchDbItemKey($item));
         } catch (CouchDBException $e) {
             throw new PhpfastcacheDriverException('Got error while trying to get a document: ' . $e->getMessage(), 0, $e);
         }
@@ -166,8 +171,8 @@ HELP;
             try {
                 $this->instance->putDocument(
                     ['data' => $this->encode($this->driverPreWrap($item))],
-                    $item->getEncodedKey(),
-                    $this->getLatestDocumentRevision($item->getEncodedKey())
+                    $this->getCouchDbItemKey($item),
+                    $this->getLatestDocumentRevision($this->getCouchDbItemKey($item))
                 );
             } catch (CouchDBException $e) {
                 throw new PhpfastcacheDriverException('Got error while trying to upsert a document: ' . $e->getMessage(), 0, $e);
@@ -217,7 +222,7 @@ HELP;
          */
         if ($item instanceof Item) {
             try {
-                $this->instance->deleteDocument($item->getEncodedKey(), $this->getLatestDocumentRevision($item->getEncodedKey()));
+                $this->instance->deleteDocument($this->getCouchDbItemKey($item), $this->getLatestDocumentRevision($this->getCouchDbItemKey($item)));
             } catch (CouchDBException $e) {
                 throw new PhpfastcacheDriverException('Got error while trying to delete a document: ' . $e->getMessage(), 0, $e);
             }

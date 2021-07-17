@@ -25,6 +25,7 @@ before_script:
     else
       pecl channel-update pecl.php.net;
       yes | pecl install -f mongodb-stable;
+      yes | pecl install -f memcached;
       yes | pecl install -f apcu-stable || true;
       phpenv config-add bin/ci/php_phpfastcache.ini;
     fi

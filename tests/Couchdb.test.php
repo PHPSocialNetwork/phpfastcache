@@ -17,8 +17,6 @@ $testHelper = new TestHelper('Couchdb driver');
 $config = new CouchdbConfig();
 
 try{
-    $config->setUsername('admin');
-    $config->setPassword('travis');
     $cacheInstance = CacheManager::getInstance('Couchdb', $config);
 } catch (PhpfastcacheDriverConnectException $e){
     $config->setUsername('admin');

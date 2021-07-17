@@ -36,14 +36,22 @@ php:
   - 7.3
   - 7.4
   - 8.0
-  - hhvm
 
 jobs:
   fast_finish: true
   allow_failures:
-    # - php: nightly
-    - php: hhvm
-
+    - php: nightly
+    # - php: hhvm
+  include:
+    - dist: trusty
+      php: 7.3
+    - dist: trusty
+      php: 7.4
+  exclude:
+    - dist: bionic
+      php: 7.3
+    - dist: bionic
+      php: 7.4
 install:
   - ./bin/ci/install_dependencies.sh
 

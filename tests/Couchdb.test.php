@@ -6,14 +6,23 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Drivers\Couchdb\Config as CouchdbConfig;
+use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Couchdb driver');
-$cacheInstance = CacheManager::getInstance('Couchdb');
+$config = new CouchdbConfig();
 
+try{
+    $cacheInstance = CacheManager::getInstance('Couchdb', $config);
+} catch (PhpfastcacheDriverConnectException $e){
+    $config->setUsername('admin');
+    $config->setPassword('travis');
+    $cacheInstance = CacheManager::getInstance('Couchdb', $config);
+}
 
 $cacheKey = str_shuffle(uniqid('pfc', true));
 $cacheValue = str_shuffle(uniqid('pfc', true));

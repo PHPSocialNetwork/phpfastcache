@@ -12,7 +12,19 @@ use Phpfastcache\Helper\TestHelper;
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Riak driver');
-$cacheInstance = CacheManager::getInstance('Riak');
+
+try{
+    $cacheInstance = CacheManager::getInstance('Riak');
+} catch (\Basho\Riak\Exception $e){
+    /**
+     * Riak is only available on Trusty dist.
+     * @see https://docs.travis-ci.com/user/database-setup/#riak
+     */
+    if(stripos($e->getMessage(), 'Could not contact Riak Server') !== false){
+        $testHelper->printSkipText('Riak server unavailable: ' . $e->getMessage());
+        $testHelper->terminateTest();
+    }
+}
 
 
 $cacheKey = str_shuffle(uniqid('pfc', true));

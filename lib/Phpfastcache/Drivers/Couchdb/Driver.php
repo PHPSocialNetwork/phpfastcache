@@ -145,12 +145,12 @@ HELP;
             throw new PhpfastcacheDriverException('Got error while trying to get a document: ' . $e->getMessage(), 0, $e);
         }
 
-        if ($response->status === 404 || empty($response->body['data'])) {
+        if ($response->status === 404 || empty($response->body[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX])) {
             return null;
         }
 
         if ($response->status === 200) {
-            return $this->decode($response->body['data']);
+            return $this->decode($response->body);
         }
 
         throw new PhpfastcacheDriverException('Got unexpected HTTP status: ' . $response->status);
@@ -170,7 +170,7 @@ HELP;
         if ($item instanceof Item) {
             try {
                 $this->instance->putDocument(
-                    ['data' => $this->encode($this->driverPreWrap($item))],
+                    $this->encodeDocument($this->driverPreWrap($item)),
                     $this->getCouchDbItemKey($item),
                     $this->getLatestDocumentRevision($this->getCouchDbItemKey($item))
                 );
@@ -246,5 +246,51 @@ HELP;
         }
 
         return true;
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    protected function encodeDocument(array $data): array
+    {
+        $data[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX] = $this->encode($data[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX]);
+
+        return $data;
+    }
+
+    /**
+     * Specific document decoder for Couchdb
+     * since we dont store encoded version
+     * for performance purposes
+     *
+     * @param $value
+     * @return mixed
+     * @throws \Exception
+     */
+    protected function decode($value)
+    {
+        $value[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX] = \unserialize($value[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX], ['allowed_classes' => true]);
+
+        $value[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX] = new \DateTime(
+            $value[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX]['date'],
+            new \DateTimeZone($value[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX]['timezone'])
+        );
+
+        if(isset($value[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX])){
+            $value[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX] = new \DateTime(
+                $value[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX]['date'],
+                new \DateTimeZone($value[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX]['timezone'])
+            );
+        }
+
+        if(isset($value[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX])){
+            $value[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX] = new \DateTime(
+                $value[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX]['date'],
+                new \DateTimeZone($value[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX]['timezone'])
+            );
+        }
+
+        return $value;
     }
 }

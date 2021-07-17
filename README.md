@@ -30,9 +30,9 @@ This ensure you that the library is completely reliable when it come to manipula
 |  `Leveldb`                      | `Mongodb`                          | `Memstatic`                   | `RandomReplicationCluster`        |
 |  `Memcache(d)`                  | `Predis`                           |                               |                                   |
 |  `Sqlite`                       | `Redis`                            |                               |                                   |
-|  `Wincache`                     | `Riak`                             |                               |                                   |
-|  `Zend Disk Cache`              | `Ssdb`                             |                               |                                   |
-|                                 | `Zend Memory Cache`                |                               |                                   |
+|  `Wincache`                     | `Ssdb`                             |                               |                                   |
+|  `Zend Disk Cache`              | `Zend Memory Cache`                |                               |                                   |
+|                                 |                                    |                               |                                   |
 
 \* Driver descriptions available in DOCS/DRIVERS.md
 

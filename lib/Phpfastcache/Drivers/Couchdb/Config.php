@@ -24,15 +24,11 @@ class Config extends ConfigurationOption
      * @var string
      */
     protected $host = '127.0.0.1';
+
     /**
      * @var int
      */
     protected $port = 5984;
-
-    /**
-     * @var string
-     */
-    protected $path = '/';
 
     /**
      * @var string

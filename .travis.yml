@@ -15,7 +15,6 @@ services:
   - memcached
   - redis
   - couchdb
-  - riak
   - mongodb
 
 before_script:

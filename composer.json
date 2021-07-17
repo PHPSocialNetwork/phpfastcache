@@ -44,12 +44,10 @@
         "predis/predis": "~1.1.0",
         "mongodb/mongodb": "^1.1",
         "phpfastcache/phpssdb": "~1.0.0",
-        "phpfastcache/couchdb": "~1.0.0",
-        "phpfastcache/riak-client": "~1.4.4"
+        "phpfastcache/couchdb": "~1.0.0"
     },
     "conflict": {
-        "doctrine/couchdb": "*",
-        "basho/riak": "*"
+        "doctrine/couchdb": "*"
     },
     "autoload": {
         "psr-4": {

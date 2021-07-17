@@ -8,7 +8,7 @@
 use Phpfastcache\CacheManager;
 use Phpfastcache\Drivers\Files\Config as FilesConfig;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -17,23 +17,23 @@ CacheManager::setDefaultConfig(new FilesConfig(['path' => __DIR__ . '/../../cach
 
 try{
     $cacheInstance = CacheManager::getInstance('Files', new FilesConfig(['cacheFileExtension' => 'php']));
-    $testHelper->printFailText('No error thrown while trying to setup a dangerous file extension');
+    $testHelper->assertFail('No error thrown while trying to setup a dangerous file extension');
 }catch(PhpfastcacheInvalidConfigurationException $e){
-    $testHelper->printPassText('An error has been thrown while trying to setup a dangerous file extension');
+    $testHelper->assertPass('An error has been thrown while trying to setup a dangerous file extension');
 }
 
 try{
     $cacheInstance = CacheManager::getInstance('Files', new FilesConfig(['cacheFileExtension' => '.cache']));
-    $testHelper->printFailText('No error thrown while trying to setup a dotted file extension');
+    $testHelper->assertFail('No error thrown while trying to setup a dotted file extension');
 }catch(PhpfastcacheInvalidConfigurationException $e){
-    $testHelper->printPassText('An error has been thrown while trying to setup a dotted file extension');
+    $testHelper->assertPass('An error has been thrown while trying to setup a dotted file extension');
 }
 
 try{
     $cacheInstance = CacheManager::getInstance('Files', new FilesConfig(['cacheFileExtension' => 'cache']));
-    $testHelper->printPassText('No error thrown while trying to setup a safe file extension');
+    $testHelper->assertPass('No error thrown while trying to setup a safe file extension');
 }catch(PhpfastcacheInvalidConfigurationException $e){
-    $testHelper->printFailText('An error has been thrown while trying to setup a safe file extension');
+    $testHelper->assertFail('An error has been thrown while trying to setup a safe file extension');
 }
 
 $testHelper->terminateTest();

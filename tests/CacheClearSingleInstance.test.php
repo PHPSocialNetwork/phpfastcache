@@ -8,7 +8,7 @@
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\CacheManager;
 use Phpfastcache\Exceptions\PhpfastcacheInstanceNotFoundException;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -28,17 +28,17 @@ CacheManager::clearInstance($driverInstance2);
 
 $cacheInstances = CacheManager::getInstances();
 if(\count($cacheInstances) === 3){
-    $testHelper->printPassText('A single cache instance have been cleared');
+    $testHelper->assertPass('A single cache instance have been cleared');
 }else{
-    $testHelper->printFailText('A single cache instance have NOT been cleared');
+    $testHelper->assertFail('A single cache instance have NOT been cleared');
 }
 
 $driverInstance2Hash = spl_object_hash($driverInstance2);
 foreach ($cacheInstances as $cacheInstance) {
     $driverInstanceHash = spl_object_hash($cacheInstance);
     if($driverInstanceHash !== $driverInstance2Hash){
-        $testHelper->printPassText("Compared cache instance #{$driverInstanceHash} does not match with previously cleared cache instance #" . $driverInstance2Hash);
+        $testHelper->assertPass("Compared cache instance #{$driverInstanceHash} does not match with previously cleared cache instance #" . $driverInstance2Hash);
     }else{
-        $testHelper->printFailText("Compared cache instance  #{$driverInstanceHash} unfortunately match with previously cleared cache instance #" . $driverInstance2Hash);
+        $testHelper->assertFail("Compared cache instance  #{$driverInstanceHash} unfortunately match with previously cleared cache instance #" . $driverInstance2Hash);
     }
 }

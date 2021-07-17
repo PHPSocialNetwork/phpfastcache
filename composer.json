@@ -25,10 +25,12 @@
         "psr/cache": "~1.0.0",
         "psr/simple-cache": "~1.0.0",
         "ext-mbstring": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "phpfastcache/couchdb": "^1.0"
     },
     "require-dev": {
-        "league/climate": "^3.5"
+        "league/climate": "^3.5",
+        "ext-gettext": "*"
     },
     "suggest": {
         "ext-apc": "*",
@@ -51,7 +53,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Phpfastcache\\": "lib/Phpfastcache/"
+            "Phpfastcache\\": "lib/Phpfastcache/",
+            "Phpfastcache\\Tests\\": "tests/lib/"
         }
     }
 }

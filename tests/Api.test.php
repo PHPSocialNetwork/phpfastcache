@@ -7,7 +7,7 @@
 
 use Phpfastcache\Api;
 use Phpfastcache\Exceptions\PhpfastcacheRootException;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -18,9 +18,9 @@ $testHelper = new TestHelper('API class');
  */
 try {
     $version = Api::getVersion();
-    $testHelper->printPassText(sprintf('Successfully retrieved the API version: %s', $version));
+    $testHelper->assertPass(sprintf('Successfully retrieved the API version: %s', $version));
 } catch (PhpfastcacheRootException $e) {
-    $testHelper->printFailText(sprintf('Failed to retrieve the API version with the following error error: %s', $e->getMessage()));
+    $testHelper->assertFail(sprintf('Failed to retrieve the API version with the following error error: %s', $e->getMessage()));
 }
 
 /**
@@ -28,9 +28,9 @@ try {
  */
 try {
     $version = Api::getPhpFastCacheVersion();
-    $testHelper->printPassText(sprintf('Successfully retrieved PhpFastCache version: %s', $version));
+    $testHelper->assertPass(sprintf('Successfully retrieved PhpFastCache version: %s', $version));
 } catch (PhpfastcacheRootException $e) {
-    $testHelper->printFailText(sprintf('Failed to retrieve the PhpFastCache version with the following error error: %s', $e->getMessage()));
+    $testHelper->assertFail(sprintf('Failed to retrieve the PhpFastCache version with the following error error: %s', $e->getMessage()));
 }
 
 /**
@@ -38,9 +38,9 @@ try {
  */
 try {
     $changelog = Api::getChangelog();
-    $testHelper->printPassText(sprintf("Successfully retrieved API changelog:\n%s", $changelog));
+    $testHelper->assertPass(sprintf("Successfully retrieved API changelog:\n%s", $changelog));
 } catch (PhpfastcacheRootException $e) {
-    $testHelper->printFailText(sprintf('Failed to retrieve the API changelog with the following error error: %s', $e->getMessage()));
+    $testHelper->assertFail(sprintf('Failed to retrieve the API changelog with the following error error: %s', $e->getMessage()));
 }
 
 /**
@@ -48,9 +48,9 @@ try {
  */
 try {
     $changelog = Api::getPhpFastCacheChangelog();
-    $testHelper->printPassText(sprintf("Successfully retrieved PhpFastCache changelog:\n%s", $changelog));
+    $testHelper->assertPass(sprintf("Successfully retrieved PhpFastCache changelog:\n%s", $changelog));
 } catch (PhpfastcacheRootException $e) {
-    $testHelper->printFailText(sprintf('Failed to retrieve the PhpFastCache changelog with the following error error: %s', $e->getMessage()));
+    $testHelper->assertFail(sprintf('Failed to retrieve the PhpFastCache changelog with the following error error: %s', $e->getMessage()));
 }
 
 $testHelper->terminateTest();

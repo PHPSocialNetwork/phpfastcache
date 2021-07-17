@@ -8,7 +8,7 @@
 use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Drivers\Files\Driver as FilesDriver;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -51,5 +51,5 @@ if($cacheInstance instanceof FilesDriver){
     $testHelper->printFailText(sprintf('The variable $cacheInstance is an expected variable type "%s"', gettype($cacheInstance)));
 }*/
 
-$testHelper->printSkipText('This test has been disabled since fallback feature has been removed');
+$testHelper->assertSkip('This test has been disabled since fallback feature has been removed');
 $testHelper->terminateTest();

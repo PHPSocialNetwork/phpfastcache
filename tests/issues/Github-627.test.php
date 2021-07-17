@@ -6,7 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 use Phpfastcache\Drivers\Redis\Config as RedisConfig;
 use Phpfastcache\Drivers\Predis\Config as PredisConfig;
 
@@ -39,9 +39,9 @@ unset($cacheItem);
 $redisInstance->detachAllItems();
 
 if($redisInstance->getItem($cacheKey)->isHit()){
-    $testHelper->printPassText('The cache item has been found in cache');
+    $testHelper->assertPass('The cache item has been found in cache');
 }else{
-    $testHelper->printFailText('The cache item was not found in cache');
+    $testHelper->assertFail('The cache item was not found in cache');
 }
 
 $testHelper->printInfoText('Testing Predis 2/2');
@@ -66,9 +66,9 @@ unset($cacheItem);
 $predisInstance->detachAllItems();
 
 if($predisInstance->getItem($cacheKey)->isHit()){
-    $testHelper->printPassText('The cache item has been found in cache');
+    $testHelper->assertPass('The cache item has been found in cache');
 }else{
-    $testHelper->printFailText('The cache item was not found in cache');
+    $testHelper->assertFail('The cache item was not found in cache');
 }
 
 

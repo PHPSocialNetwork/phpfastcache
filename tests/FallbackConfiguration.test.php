@@ -8,7 +8,7 @@
 use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Helper\CacheConditionalHelper as CacheConditional;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -38,5 +38,5 @@ if($cacheInstance instanceof Phpfastcache\Drivers\Files\Driver){
     $testHelper->printPassText('The fallback "Files" has not been used when the driver Fakefiles was unavailable');
 }*/
 
-$testHelper->printSkipText('This test has been disabled since fallback feature has been removed');
+$testHelper->assertSkip('This test has been disabled since fallback feature has been removed');
 $testHelper->terminateTest();

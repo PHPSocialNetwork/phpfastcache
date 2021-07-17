@@ -7,7 +7,7 @@
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolInterface;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -73,21 +73,21 @@ if(is_array($tagsItems))
         foreach($tagsItems as $tagsItem)
         {
             if(!in_array($tagsItem->getKey(), ['tag-test1', 'tag-test2', 'tag-test3'])){
-                $testHelper->printFailText('STEP#1 // Got unexpected tagged item key:' . $tagsItem->getKey());
+                $testHelper->assertFail('STEP#1 // Got unexpected tagged item key:' . $tagsItem->getKey());
                 goto itemTagTest2;
             }
         }
-        $testHelper->printPassText('STEP#1 // Successfully retrieved 3 tagged item keys');
+        $testHelper->assertPass('STEP#1 // Successfully retrieved 3 tagged item keys');
     }
     else
     {
-        $testHelper->printFailText('STEP#1 //Got wrong count of item:' . count($tagsItems));
+        $testHelper->assertFail('STEP#1 //Got wrong count of item:' . count($tagsItems));
         goto itemTagTest2;
     }
 }
 else
 {
-    $testHelper->printFailText('STEP#1 // Expected $tagsItems to be an array, got: ' . gettype($tagsItems));
+    $testHelper->assertFail('STEP#1 // Expected $tagsItems to be an array, got: ' . gettype($tagsItems));
     goto itemTagTest2;
 }
 
@@ -108,21 +108,21 @@ if(is_array($tagsItems))
         foreach($tagsItems as $tagsItem)
         {
             if(!in_array($tagsItem->getKey(), ['tag-test1', 'tag-test2', 'tag-test3'])){
-                $testHelper->printFailText('STEP#2 // Got unexpected tagged item key:' . $tagsItem->getKey());
+                $testHelper->assertFail('STEP#2 // Got unexpected tagged item key:' . $tagsItem->getKey());
                 goto itemTagTest3;
             }
         }
-        $testHelper->printPassText('STEP#2 // Successfully retrieved 3 tagged item key');
+        $testHelper->assertPass('STEP#2 // Successfully retrieved 3 tagged item key');
     }
     else
     {
-        $testHelper->printFailText('STEP#2 // Got wrong count of item:' . count($tagsItems) );
+        $testHelper->assertFail('STEP#2 // Got wrong count of item:' . count($tagsItems) );
         goto itemTagTest3;
     }
 }
 else
 {
-    $testHelper->printFailText('STEP#2 // Expected $tagsItems to be an array, got: ' . gettype($tagsItems));
+    $testHelper->assertFail('STEP#2 // Expected $tagsItems to be an array, got: ' . gettype($tagsItems));
     goto itemTagTest3;
 }
 
@@ -143,26 +143,26 @@ if(is_array($tagsItems))
         if(isset($tagsItems['tag-test3']))
         {
             if($tagsItems['tag-test3']->getKey() !== 'tag-test3'){
-                $testHelper->printFailText('STEP#3 // Got unexpected tagged item key:' . $tagsItems['tag-test3']->getKey());
+                $testHelper->assertFail('STEP#3 // Got unexpected tagged item key:' . $tagsItems['tag-test3']->getKey());
                 goto itemTagTest4;
             }
-            $testHelper->printPassText('STEP#3 // Successfully retrieved 1 tagged item keys');
+            $testHelper->assertPass('STEP#3 // Successfully retrieved 1 tagged item keys');
         }
         else
         {
-            $testHelper->printFailText('STEP#3 // Got wrong array key, expected "tag-test3", got "' . key($tagsItems) . '"');
+            $testHelper->assertFail('STEP#3 // Got wrong array key, expected "tag-test3", got "' . key($tagsItems) . '"');
             goto itemTagTest4;
         }
     }
     else
     {
-        $testHelper->printFailText('STEP#3 // Got wrong count of item:' . count($tagsItems));
+        $testHelper->assertFail('STEP#3 // Got wrong count of item:' . count($tagsItems));
         goto itemTagTest4;
     }
 }
 else
 {
-    $testHelper->printFailText('STEP#3 // Expected $tagsItems to be an array, got: ' . gettype($tagsItems));
+    $testHelper->assertFail('STEP#3 // Expected $tagsItems to be an array, got: ' . gettype($tagsItems));
     goto itemTagTest4;
 }
 
@@ -177,11 +177,11 @@ $driverInstance->deleteItemsByTag('tag-test_all');
 
 if(count($driverInstance->getItemsByTag('tag-test_all')) > 0)
 {
-    $testHelper->printFailText('[FAIL] STEP#4 // Getter getItemsByTag() found item(s), possible memory leak');
+    $testHelper->assertFail('[FAIL] STEP#4 // Getter getItemsByTag() found item(s), possible memory leak');
 }
 else
 {
-    $testHelper->printPassText('STEP#4 // Getter getItemsByTag() found no item');
+    $testHelper->assertPass('STEP#4 // Getter getItemsByTag() found no item');
 }
 
 $i = 0;
@@ -189,11 +189,11 @@ while(++$i <= 3)
 {
     if($driverInstance->getItem("tag-test{$i}")->isHit())
     {
-        $testHelper->printFailText("STEP#4 // Item 'tag-test{$i}' should've been deleted and is still in cache storage");
+        $testHelper->assertFail("STEP#4 // Item 'tag-test{$i}' should've been deleted and is still in cache storage");
     }
     else
     {
-        $testHelper->printPassText("STEP#4 // Item 'tag-test{$i}' have been deleted and is no longer in cache storage");
+        $testHelper->assertPass("STEP#4 // Item 'tag-test{$i}' have been deleted and is no longer in cache storage");
     }
 }
 
@@ -209,11 +209,11 @@ $driverInstance->deleteItemsByTags(['tag-test_all', 'tag-test_all2', 'tag-test_a
 
 if(count($driverInstance->getItemsByTag('tag-test_all')) > 0)
 {
-    $testHelper->printFailText('STEP#5 // Getter getItemsByTag() found item(s), possible memory leak');
+    $testHelper->assertFail('STEP#5 // Getter getItemsByTag() found item(s), possible memory leak');
 }
 else
 {
-    $testHelper->printPassText('STEP#5 // Getter getItemsByTag() found no item');
+    $testHelper->assertPass('STEP#5 // Getter getItemsByTag() found no item');
 }
 
 $i = 0;
@@ -221,11 +221,11 @@ while(++$i <= 3)
 {
     if($driverInstance->getItem("tag-test{$i}")->isHit())
     {
-        $testHelper->printFailText("STEP#5 // Item 'tag-test{$i}' should've been deleted and is still in cache storage");
+        $testHelper->assertFail("STEP#5 // Item 'tag-test{$i}' should've been deleted and is still in cache storage");
     }
     else
     {
-        $testHelper->printPassText("STEP#5 // Item 'tag-test{$i}' have been deleted and is no longer in cache storage");
+        $testHelper->assertPass("STEP#5 // Item 'tag-test{$i}' have been deleted and is no longer in cache storage");
     }
 }
 
@@ -244,11 +244,11 @@ $driverInstance->deleteItemsByTags(['tag-test_all', 'tag-test_all2', 'tag-test_a
 
 if($driverInstance->getItem('item-test_3')->isHit())
 {
-    $testHelper->printFailText('STEP#6 // Getter getItem() found item \'item-test_3\', possible memory leak');
+    $testHelper->assertFail('STEP#6 // Getter getItem() found item \'item-test_3\', possible memory leak');
 }
 else
 {
-    $testHelper->printPassText('STEP#6 // Getter getItem() did not found item \'item-test_3\'');
+    $testHelper->assertPass('STEP#6 // Getter getItem() did not found item \'item-test_3\'');
 }
 
 /**
@@ -265,11 +265,11 @@ foreach($driverInstance->getItems(['tag-test1', 'tag-test2', 'tag-test3']) as $i
 {
     if(strpos($item->get(), $appendStr) === false)
     {
-        $testHelper->printFailText("STEP#7 // Item '{$item->getKey()}' does not have the string part '{$appendStr}' in it's value");
+        $testHelper->assertFail("STEP#7 // Item '{$item->getKey()}' does not have the string part '{$appendStr}' in it's value");
     }
     else
     {
-        $testHelper->printPassText("STEP#7 // Item 'tag-test{$item->getKey()}' does have the string part '{$appendStr}' in it's value");
+        $testHelper->assertPass("STEP#7 // Item 'tag-test{$item->getKey()}' does have the string part '{$appendStr}' in it's value");
     }
 }
 
@@ -287,11 +287,11 @@ foreach($driverInstance->getItems(['tag-test1', 'tag-test2', 'tag-test3']) as $i
 {
     if(strpos($item->get(), $prependStr) === false)
     {
-        $testHelper->printFailText("STEP#8 // Item '{$item->getKey()}' does not have the string part '{$prependStr}' in it's value");
+        $testHelper->assertFail("STEP#8 // Item '{$item->getKey()}' does not have the string part '{$prependStr}' in it's value");
     }
     else
     {
-        $testHelper->printPassText("STEP#8 // Item 'tag-test{$item->getKey()}' does have the string part '{$prependStr}' in it's value");
+        $testHelper->assertPass("STEP#8 // Item 'tag-test{$item->getKey()}' does have the string part '{$prependStr}' in it's value");
     }
 }
 
@@ -314,26 +314,26 @@ if(is_array($tagsItems))
         if(isset($tagsItems['tag-test1']))
         {
             if($tagsItems['tag-test1']->getKey() !== 'tag-test1'){
-                $testHelper->printFailText('STEP#9 // Got unexpected tagged item key:' . $tagsItems['tag-test1']->getKey());
+                $testHelper->assertFail('STEP#9 // Got unexpected tagged item key:' . $tagsItems['tag-test1']->getKey());
                 goto itemTagTest10;
             }
-            $testHelper->printPassText('STEP#9 // Successfully retrieved 1 tagged item keys');
+            $testHelper->assertPass('STEP#9 // Successfully retrieved 1 tagged item keys');
         }
         else
         {
-            $testHelper->printFailText('STEP#9 // Got wrong array key, expected "tag-test3", got "' . key($tagsItems) . '"');
+            $testHelper->assertFail('STEP#9 // Got wrong array key, expected "tag-test3", got "' . key($tagsItems) . '"');
             goto itemTagTest10;
         }
     }
     else
     {
-        $testHelper->printFailText('STEP#9 // Got wrong count of item:' . count($tagsItems));
+        $testHelper->assertFail('STEP#9 // Got wrong count of item:' . count($tagsItems));
         goto itemTagTest10;
     }
 }
 else
 {
-    $testHelper->printFailText('STEP#9 // Expected $tagsItems to be an array, got: ' . gettype($tagsItems));
+    $testHelper->assertFail('STEP#9 // Expected $tagsItems to be an array, got: ' . gettype($tagsItems));
     goto itemTagTest10;
 }
 
@@ -351,17 +351,17 @@ if(is_array($tagsItems))
 {
     if(count($tagsItems) === 0)
     {
-        $testHelper->printPassText('STEP#10 // Successfully retrieved 0 tagged item keys');
+        $testHelper->assertPass('STEP#10 // Successfully retrieved 0 tagged item keys');
     }
     else
     {
-        $testHelper->printFailText('STEP#10 // Got wrong count of item:' . count($tagsItems));
+        $testHelper->assertFail('STEP#10 // Got wrong count of item:' . count($tagsItems));
         goto itemTagTest11;
     }
 }
 else
 {
-    $testHelper->printFailText('STEP#10 // Expected $tagsItems to be an array, got: ' . gettype($tagsItems));
+    $testHelper->assertFail('STEP#10 // Expected $tagsItems to be an array, got: ' . gettype($tagsItems));
     goto itemTagTest11;
 }
 

@@ -7,7 +7,7 @@
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -25,9 +25,9 @@ $cacheInstance->clear();
 
 try {
     $has = $cacheInstance->hasItem($key);
-    $testHelper->printPassText('No error thrown while trying to test if an item exists after clearing');
+    $testHelper->assertPass('No error thrown while trying to test if an item exists after clearing');
 } catch (Exception $e) {
-    $testHelper->printFailText('An error has been thrown while trying to test if an item exists after clearing');
+    $testHelper->assertFail('An error has been thrown while trying to test if an item exists after clearing');
 }
 
 $testHelper->terminateTest();

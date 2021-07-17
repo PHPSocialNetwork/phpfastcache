@@ -4,8 +4,68 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4fe608cabcf0e54e8ea92b16e694a1b2",
+    "content-hash": "ea7437b06b7c59440b524f81397fe9c6",
     "packages": [
+        {
+            "name": "phpfastcache/couchdb",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPSocialNetwork/couchdb-client.git",
+                "reference": "4d4978b6825445f301d358f0a4117664d25bc5b0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPSocialNetwork/couchdb-client/zipball/4d4978b6825445f301d358f0a4117664d25bc5b0",
+                "reference": "4d4978b6825445f301d358f0a4117664d25bc5b0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "conflict": {
+                "doctrine/couchdb": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\CouchDB": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Lukas Kahwe Smith",
+                    "email": "smith@pooteeweet.org"
+                },
+                {
+                    "name": "Georges.L",
+                    "email": "contact@geolim4.com"
+                }
+            ],
+            "description": "CouchDB Client (PhpFastCache fork)",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "couchdb",
+                "persistence"
+            ],
+            "time": "2017-04-21T18:52:02+00:00"
+        },
         {
             "name": "psr/cache",
             "version": "1.0.1",

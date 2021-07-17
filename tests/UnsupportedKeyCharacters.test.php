@@ -7,7 +7,7 @@
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 use Psr\Cache\CacheItemPoolInterface;
 
 chdir(__DIR__);
@@ -18,30 +18,30 @@ $driverInstance = CacheManager::getInstance($defaultDriver);
 
 try {
     $driverInstance->getItem('test{test');
-    $testHelper->printFailText('1/4 An unsupported key character did not get caught by regular expression');
+    $testHelper->assertFail('1/4 An unsupported key character did not get caught by regular expression');
 }catch(PhpfastcacheInvalidArgumentException $e){
-    $testHelper->printPassText('1/4 An unsupported key character has been caught by regular expression');
+    $testHelper->assertPass('1/4 An unsupported key character has been caught by regular expression');
 }
 
 try {
     $driverInstance->getItem(':testtest');
-    $testHelper->printFailText('2/4 An unsupported key character did not get caught by regular expression');
+    $testHelper->assertFail('2/4 An unsupported key character did not get caught by regular expression');
 }catch(PhpfastcacheInvalidArgumentException $e){
-    $testHelper->printPassText('2/4 An unsupported key character has been caught by regular expression');
+    $testHelper->assertPass('2/4 An unsupported key character has been caught by regular expression');
 }
 
 try {
     $driverInstance->getItem('testtest}');
-    $testHelper->printFailText('3/4 An unsupported key character did not get caught by regular expression');
+    $testHelper->assertFail('3/4 An unsupported key character did not get caught by regular expression');
 }catch(PhpfastcacheInvalidArgumentException $e){
-    $testHelper->printPassText('3/4 An unsupported key character has been caught by regular expression');
+    $testHelper->assertPass('3/4 An unsupported key character has been caught by regular expression');
 }
 
 try {
     $driverInstance->getItem('testtest');
-    $testHelper->printPassText('4/4 No exception caught while trying with a key without unsupported character');
+    $testHelper->assertPass('4/4 No exception caught while trying with a key without unsupported character');
 }catch(PhpfastcacheInvalidArgumentException $e){
-    $testHelper->printFailText('4/4 An exception has been caught while trying with a key without unsupported character');
+    $testHelper->assertFail('4/4 An exception has been caught while trying with a key without unsupported character');
 }
 
 $testHelper->terminateTest();

@@ -6,7 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 
 chdir(__DIR__);
@@ -40,9 +40,9 @@ unset($cacheItem);
 $cacheInstance->detachAllItems();
 
 if(strpos($cacheInstance->getPath(), 'phpfastcache' . DIRECTORY_SEPARATOR . $_SERVER[ 'HTTP_HOST' ]) !== false){
-    $testHelper->printPassText('The "securityKey" option in automatic mode writes the HTTP_HOST directory as expected.');
+    $testHelper->assertPass('The "securityKey" option in automatic mode writes the HTTP_HOST directory as expected.');
 }else{
-    $testHelper->printFailText('The "securityKey" option in automatic mode leads to the following path: ' . $cacheInstance->getPath());
+    $testHelper->assertFail('The "securityKey" option in automatic mode leads to the following path: ' . $cacheInstance->getPath());
 }
 
 $testHelper->terminateTest();

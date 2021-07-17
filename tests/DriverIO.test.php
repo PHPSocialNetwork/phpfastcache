@@ -7,7 +7,7 @@
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Entities\DriverIO;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -22,9 +22,9 @@ for ($i=0; $i<10; $i++){
 $driverIO = $cache->getIO();
 
 if($driverIO instanceof DriverIO && $driverIO->getReadHit() && $driverIO->getReadMiss() && $driverIO->getWriteHit()){
-    $testHelper->printPassText('Driver IO entity returned some hit info.');
+    $testHelper->assertPass('Driver IO entity returned some hit info.');
 }else{
-    $testHelper->printFailText('Driver IO entity did not returned some hit info as expected.');
+    $testHelper->assertFail('Driver IO entity did not returned some hit info as expected.');
 }
 
 $testHelper->terminateTest();

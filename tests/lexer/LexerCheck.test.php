@@ -1,6 +1,6 @@
 <?php
 
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__ . '/../../');
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -46,9 +46,9 @@ foreach (array_map('realpath', $list) as $file) {
     $output = trim(implode("\n", $output));
 
     if ($status !== 0) {
-        $testHelper->printFailText($output ?: "Syntax error found in {$file}");
+        $testHelper->assertFail($output ?: "Syntax error found in {$file}");
     } else {
-        $testHelper->printPassText($output ?: "No syntax errors detected in {$file}");
+        $testHelper->assertPass($output ?: "No syntax errors detected in {$file}");
     }
 }
 $testHelper->terminateTest();

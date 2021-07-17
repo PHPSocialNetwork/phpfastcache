@@ -10,7 +10,7 @@ use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Drivers\Files\Driver;
 use Phpfastcache\EventManager;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -39,9 +39,9 @@ $item->set(bin2hex(random_bytes(random_int(10, 100))));
 $driverInstance->save($item);
 
 if ($testPasses) {
-    $testHelper->printPassText('Custom filename function returned expected hash length');
+    $testHelper->assertPass('Custom filename function returned expected hash length');
 }else{
-    $testHelper->printFailText('Custom filename function did not returned expected hash length');
+    $testHelper->assertFail('Custom filename function did not returned expected hash length');
 }
 
 $testHelper->terminateTest();

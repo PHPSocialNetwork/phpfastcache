@@ -6,7 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -31,12 +31,12 @@ for ($i = 0; $i <= $loops; $i++)
 
 try{
     $cacheInstance->commit();
-    $testHelper->printPassText('The COMMIT operation has finished successfully');
+    $testHelper->assertPass('The COMMIT operation has finished successfully');
 }catch (Predis\Response\ServerException $e){
     if(strpos($e->getMessage(), 'setex')){
-        $testHelper->printFailText('The COMMIT operation has failed due to to an invalid time detection.');
+        $testHelper->assertFail('The COMMIT operation has failed due to to an invalid time detection.');
     }else{
-        $testHelper->printFailText('The COMMIT operation has failed due to to an unexpected error: ' . $e->getMessage());
+        $testHelper->assertFail('The COMMIT operation has failed due to to an unexpected error: ' . $e->getMessage());
     }
 }
 $cacheInstance->detachAllItems();
@@ -51,9 +51,9 @@ for ($i = 0; $i <= $loops; $i++)
     $cacheItem =  $cacheInstance->getItem("{$cacheKey}-{$i}");
 
     if($cacheItem->isHit()){
-        $testHelper->printFailText(sprintf('The cache item "%s" is considered as HIT with the following value: %s', $cacheItem->getKey(), $cacheItem->get()));
+        $testHelper->assertFail(sprintf('The cache item "%s" is considered as HIT with the following value: %s', $cacheItem->getKey(), $cacheItem->get()));
     }else{
-        $testHelper->printPassText(sprintf('The cache item "%s" is not considered as HIT.',  $cacheItem->getKey()));
+        $testHelper->assertPass(sprintf('The cache item "%s" is not considered as HIT.', $cacheItem->getKey()));
     }
 }
 

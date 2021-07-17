@@ -6,7 +6,7 @@
  */
 
 use Phpfastcache\Helper\Psr16Adapter;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 
 chdir(__DIR__);
@@ -24,15 +24,15 @@ $testHelper->printText(sprintf('Sleeping for %d seconds...', $ttl + 1));
 sleep($ttl + 1);
 
 if(!$Psr16Adapter->has('test-key')){
-    $testHelper->printPassText('1/2 [Testing has()] Psr16 adapter does not return an expired cache item anymore');
+    $testHelper->assertPass('1/2 [Testing has()] Psr16 adapter does not return an expired cache item anymore');
 }else{
-    $testHelper->printFailText('1/2 [Testing has()] Psr16 adapter returned an expired cache item');
+    $testHelper->assertFail('1/2 [Testing has()] Psr16 adapter returned an expired cache item');
 }
 
 if(!$Psr16Adapter->has('test-key')){
-    $testHelper->printPassText('2/2 [Testing get()] Psr16 adapter does not return an expired cache item anymore');
+    $testHelper->assertPass('2/2 [Testing get()] Psr16 adapter does not return an expired cache item anymore');
 }else{
-    $testHelper->printFailText('2/2 [Testing get()] Psr16 adapter returned an expired cache item');
+    $testHelper->assertFail('2/2 [Testing get()] Psr16 adapter returned an expired cache item');
 }
 
 $testHelper->terminateTest();

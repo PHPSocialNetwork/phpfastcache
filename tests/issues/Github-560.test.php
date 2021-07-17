@@ -7,7 +7,7 @@
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 
 chdir(__DIR__);
@@ -50,9 +50,9 @@ $cacheItem = $cacheInstance->getItem($cacheKey);
  * loss 1 second to the cache ttl :/
  */
 if((int) ceil($cacheItem->getTtl() / 10) * 10 === $defaultTTl){
-    $testHelper->printPassText('The cache Item TTL matches the default TTL after 30 days.');
+    $testHelper->assertPass('The cache Item TTL matches the default TTL after 30 days.');
 }else{
-    $testHelper->printFailText('The cache Item TTL des not matches the default TTL after 30 days, got the following value: ' . ceil($cacheItem->getTtl() / 10) * 10);
+    $testHelper->assertFail('The cache Item TTL des not matches the default TTL after 30 days, got the following value: ' . ceil($cacheItem->getTtl() / 10) * 10);
 }
 
 $testHelper->terminateTest();

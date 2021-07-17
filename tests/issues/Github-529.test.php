@@ -6,7 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -18,7 +18,7 @@ $string = uniqid('pfc', true);
 /**
  * Populate the cache with some data
  */
-list($item, $item2) = array_values($cacheInstance->getItems(['item1', 'item2']));
+[$item, $item2] = array_values($cacheInstance->getItems(['item1', 'item2']));
 
 $item->set($string)
   ->addTags(['tag-all', 'tag1'])
@@ -42,18 +42,18 @@ $cacheInstance->deleteItemsByTag('tag-all');
  */
 $itemInstances = $testHelper->accessInaccessibleMember($cacheInstance, 'itemInstances');
 if (isset($itemInstances[$cacheInstance::DRIVER_TAGS_KEY_PREFIX . 'tag-all'])) {
-    $testHelper->printFailText('The internal cache item tag is still stored in memory');
+    $testHelper->assertFail('The internal cache item tag is still stored in memory');
 } else {
-    $testHelper->printPassText('The internal cache item tag is no longer stored in memory');
+    $testHelper->assertPass('The internal cache item tag is no longer stored in memory');
 }
 
 /**
  * Then test disk to see if the item is still there
  */
 if ($cacheInstance->getItem($cacheInstance::DRIVER_TAGS_KEY_PREFIX . 'tag-all')->isHit()) {
-    $testHelper->printFailText('The internal cache item tag is still stored on disk');
+    $testHelper->assertFail('The internal cache item tag is still stored on disk');
 } else {
-    $testHelper->printPassText('The internal cache item tag is no longer stored on disk');
+    $testHelper->assertPass('The internal cache item tag is no longer stored on disk');
 }
 
 $testHelper->terminateTest();

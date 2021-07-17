@@ -8,13 +8,13 @@
 use Phpfastcache\CacheManager;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\PhpfastcacheRootException;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('"Auto" driver');
 
-$testHelper->printSkipText('This feature has been removed as of phpfastcache V8');
+$testHelper->assertSkip('This feature has been removed as of phpfastcache V8');
 /*try{
     $driverInstance = CacheManager::getInstance('Auto');
     if($driverInstance instanceof ExtendedCacheItemPoolInterface){

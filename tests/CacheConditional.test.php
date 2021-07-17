@@ -8,7 +8,7 @@
 use Phpfastcache\CacheManager;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Helper\CacheConditionalHelper as CacheConditional;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 use Psr\Cache\CacheItemPoolInterface;
 
 chdir(__DIR__);
@@ -25,9 +25,9 @@ $RandomCacheValue = str_shuffle(uniqid('pfc', true));
  */
 $cacheValue = (new CacheConditional($cacheInstance))->get($cacheKey, static function() use ($cacheKey, $testHelper, $RandomCacheValue){
     if(func_get_arg(0) instanceof ExtendedCacheItemInterface){
-        $testHelper->printPassText('The callback has been received the cache item as a parameter (introduced in 8.0.6).');
+        $testHelper->assertPass('The callback has been received the cache item as a parameter (introduced in 8.0.6).');
     }else{
-        $testHelper->printFailText('The callback has not received the cache item as a parameter (introduced in 8.0.6).');
+        $testHelper->assertFail('The callback has not received the cache item as a parameter (introduced in 8.0.6).');
     }
     /**
      * No parameter are passed
@@ -43,9 +43,9 @@ $cacheValue = (new CacheConditional($cacheInstance))->get($cacheKey, static func
 });
 
 if($cacheValue === $RandomCacheValue . '-1337'){
-    $testHelper->printPassText(sprintf('The cache promise successfully returned expected value "%s".', $cacheValue));
+    $testHelper->assertPass(sprintf('The cache promise successfully returned expected value "%s".', $cacheValue));
 }else{
-    $testHelper->printFailText(sprintf('The cache promise returned an unexpected value "%s".', $cacheValue));
+    $testHelper->assertFail(sprintf('The cache promise returned an unexpected value "%s".', $cacheValue));
 }
 
 /**
@@ -67,14 +67,14 @@ $cacheValue = (new CacheConditional($cacheInstance))->get($cacheKey, function() 
      * No parameter are passed
      * to this closure
      */
-    $testHelper->printFailText('Unexpected closure call.');
+    $testHelper->assertFail('Unexpected closure call.');
     return $RandomCacheValue . '-1337';
 });
 
 if($cacheValue === $RandomCacheValue){
-    $testHelper->printPassText(sprintf('The cache promise successfully returned expected value "%s".', $cacheValue));
+    $testHelper->assertPass(sprintf('The cache promise successfully returned expected value "%s".', $cacheValue));
 }else{
-    $testHelper->printFailText(sprintf('The cache promise returned an unexpected value "%s".', $cacheValue));
+    $testHelper->assertFail(sprintf('The cache promise returned an unexpected value "%s".', $cacheValue));
 }
 
 $cacheInstance->clear();
@@ -98,9 +98,9 @@ $cacheInstance->detachAllItems();
 $cacheItem = $cacheInstance->getItem($cacheKey);
 
 if(!$cacheItem->isHit()){
-    $testHelper->printPassText(sprintf('The cache promise ttl successfully expired the cache after %d seconds', $ttl));
+    $testHelper->assertPass(sprintf('The cache promise ttl successfully expired the cache after %d seconds', $ttl));
 }else{
-    $testHelper->printFailText(sprintf('The cache promise ttl does not expired the cache after %d seconds', $ttl));
+    $testHelper->assertFail(sprintf('The cache promise ttl does not expired the cache after %d seconds', $ttl));
 }
 
 $cacheInstance->clear();

@@ -10,7 +10,7 @@ use Phpfastcache\CacheManager;
 use Phpfastcache\Cluster\AggregatorInterface;
 use Phpfastcache\Cluster\ClusterAggregator;
 use Phpfastcache\Exceptions\PhpfastcacheRootException;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';

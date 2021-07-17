@@ -8,7 +8,7 @@
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\CacheManager;
 use Phpfastcache\Exceptions\PhpfastcacheInstanceNotFoundException;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -27,21 +27,21 @@ $driverInstance->detachAllItems();
 $testItem = $driverInstance->getItem('test-item');
 
 if ($testItem->getLength() === \strlen($cacheTestData)) {
-    $testHelper->printPassText('Atomic method getLength() returned the exact length');
+    $testHelper->assertPass('Atomic method getLength() returned the exact length');
 }else{
-    $testHelper->printPassText('Atomic method getLength() returned an unexpected length' . $testItem->getLength());
+    $testHelper->assertPass('Atomic method getLength() returned an unexpected length' . $testItem->getLength());
 }
 
 if (!$testItem->isNull()) {
-    $testHelper->printPassText('Atomic method isNull() returned FALSE');
+    $testHelper->assertPass('Atomic method isNull() returned FALSE');
 }else{
-    $testHelper->printPassText('Atomic method isNull() returned TRUE');
+    $testHelper->assertPass('Atomic method isNull() returned TRUE');
 }
 
 if (!$testItem->isEmpty()) {
-    $testHelper->printPassText('Atomic method isEmpty() returned FALSE');
+    $testHelper->assertPass('Atomic method isEmpty() returned FALSE');
 }else{
-    $testHelper->printPassText('Atomic method isEmpty() returned TRUE');
+    $testHelper->assertPass('Atomic method isEmpty() returned TRUE');
 }
 
 

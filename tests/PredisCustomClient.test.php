@@ -7,7 +7,7 @@
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 use Phpfastcache\Drivers\Predis\Config as PredisConfig;
 use Predis\Client as PredisClient;
 
@@ -36,12 +36,12 @@ try{
     $cacheInstance->detachAllItems();
     unset($cacheItem);
     if($cacheInstance->getItem($cacheKey)->get() === 1337){
-        $testHelper->printPassText('Successfully written and read data from outside Predis client');
+        $testHelper->assertPass('Successfully written and read data from outside Predis client');
     }else{
-        $testHelper->printFailText('Error writing or reading data from outside Predis client');
+        $testHelper->assertFail('Error writing or reading data from outside Predis client');
     }
 }catch (\RedisException $e){
-    $testHelper->printFailText('A Predis exception occurred: ' . $e->getMessage());
+    $testHelper->assertFail('A Predis exception occurred: ' . $e->getMessage());
 }
 
 $testHelper->terminateTest();

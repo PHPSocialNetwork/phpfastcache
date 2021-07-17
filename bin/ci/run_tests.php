@@ -16,6 +16,7 @@ $status = 0;
 $dir = __DIR__;
 $driver = $argv[ 1 ] ?? 'Files';
 $phpBinPath = $_SERVER['PHP_BIN_PATH'] ?? 'php';
+$failedTests = [];
 
 /**
  * @param string $pattern
@@ -37,7 +38,7 @@ $globCallback = static function (string $pattern, int $flags = 0) use (&$globCal
 foreach ($globCallback(PFC_TEST_DIR . DIRECTORY_SEPARATOR . '*.test.php') as $filename) {
     $climate->backgroundLightYellow()->blue()->out('---');
     $command = "{$phpBinPath} -f {$filename} {$driver}";
-    $climate->out("<yellow>phpfastcache@unit-test</yellow> <blue>{$dir}</blue> <green>#</green> <red>$command</red>");
+    $climate->out("<yellow>phpfastcache@unit-tests</yellow> <blue>{$dir}</blue> <green>#</green> <red>$command</red>");
 
     \exec($command, $output, $return_var);
     $climate->out('=====================================');
@@ -48,6 +49,7 @@ foreach ($globCallback(PFC_TEST_DIR . DIRECTORY_SEPARATOR . '*.test.php') as $fi
     } else {
         $climate->red("Process finished with exit code $return_var");
         $status = 255;
+        $failedTests[] = basename($filename);
     }
 
     $climate->out('');
@@ -64,6 +66,7 @@ if ($status === 0) {
     $climate->backgroundGreen()->white()->flank('[OK] The build has passed successfully', '#')->out('');
 } else {
     $climate->backgroundRed()->white()->flank('[KO] The build has failed miserably', '~')->out('');
+    $climate->red()->out('Tests failed: ' . implode(', ', $failedTests))->out('');
 }
 
 exit($status);

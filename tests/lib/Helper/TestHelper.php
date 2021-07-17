@@ -14,8 +14,9 @@
  */
 declare(strict_types=1);
 
-namespace Phpfastcache\Helper;
+namespace Phpfastcache\Tests\Helper;
 
+use League\CLImate\CLImate;
 use Phpfastcache\Api;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventManagerInterface;
@@ -26,6 +27,8 @@ use ReflectionClass;
 use ReflectionException;
 use Throwable;
 
+use function sprintf;
+
 
 /**
  * Class TestHelper
@@ -33,6 +36,21 @@ use Throwable;
  */
 class TestHelper
 {
+    /***
+     * @var int
+     */
+    protected $numOfFailedTests = 0;
+
+    /**
+     * @var int
+     */
+    protected $numOfPassedTests = 0;
+
+    /**
+     * @var int
+     */
+    protected $numOfSkippedTests = 0;
+
     /**
      * @var string
      */
@@ -41,15 +59,10 @@ class TestHelper
     /**
      * @var int
      */
-    protected $exitCode = 0;
-
-    /**
-     * @var int
-     */
     protected $timestamp;
 
     /**
-     * @var \League\CLImate\CLImate
+     * @var CLImate
      */
     protected $climate;
 
@@ -64,7 +77,7 @@ class TestHelper
     {
         $this->timestamp = microtime(true);
         $this->testName = $testName;
-        $this->climate = new \League\CLImate\CLImate;
+        $this->climate = new CLImate;
         $this->climate->forceAnsiOn();
 
         /**
@@ -75,25 +88,6 @@ class TestHelper
         set_error_handler([$this, 'errorHandler']);
 
         $this->printHeaders();
-    }
-
-    /**
-     * @throws PhpfastcacheIOException
-     * @throws PhpfastcacheLogicException
-     */
-    public function printHeaders()
-    {
-        if (!$this->isCli() && !headers_sent()) {
-            header('Content-Type: text/plain, true');
-        }
-
-        $loadedExtensions = get_loaded_extensions();
-        natcasesort($loadedExtensions);
-        $this->printText('[PhpFastCache CORE v' . Api::getPhpFastCacheVersion() . Api::getPhpFastCacheGitHeadHash() . ']', true);
-        $this->printText('[PhpFastCache API v' . Api::getVersion() . ']', true);
-        $this->printText('[PHP v' . PHP_VERSION . ' with: ' . implode(', ', $loadedExtensions) . ']', true);
-        $this->printText("[Begin Test: '{$this->testName}']");
-        $this->printText('---');
     }
 
     /**
@@ -126,6 +120,33 @@ class TestHelper
     }
 
     /**
+     * @return bool
+     */
+    public function isHHVM(): bool
+    {
+        return defined('HHVM_VERSION');
+    }
+
+    /**
+     * @throws PhpfastcacheIOException
+     * @throws PhpfastcacheLogicException
+     */
+    public function printHeaders()
+    {
+        if (!$this->isCli() && !headers_sent()) {
+            header('Content-Type: text/plain, true');
+        }
+
+        $loadedExtensions = get_loaded_extensions();
+        natcasesort($loadedExtensions);
+        $this->printText('[PhpFastCache CORE v' . Api::getPhpFastCacheVersion() . Api::getPhpFastCacheGitHeadHash() . ']', true);
+        $this->printText('[PhpFastCache API v' . Api::getVersion() . ']', true);
+        $this->printText('[PHP v' . PHP_VERSION . ' with: ' . implode(', ', $loadedExtensions) . ']', true);
+        $this->printText("[Begin Test: '{$this->testName}']");
+        $this->printText('---');
+    }
+
+    /**
      * @param string $string
      * @param bool $strtoupper
      * @param string $prefix
@@ -141,24 +162,6 @@ class TestHelper
         } else {
             $this->climate->out(strtoupper(trim($string)));
         }
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getExitCode(): int
-    {
-        return $this->exitCode;
-    }
-
-    /**
-     * @return $this
-     */
-    public function resetExitCode(): self
-    {
-        $this->exitCode = 0;
 
         return $this;
     }
@@ -184,6 +187,29 @@ class TestHelper
         return $this;
     }
 
+
+    /**
+     * @param string $string
+     * @return $this
+     */
+    public function printDebugText(string $string): self
+    {
+        $this->printText($string, false, "\e[35mDEBUG\e[0m");
+
+        return $this;
+    }
+
+    /**
+     * @param string printFailText
+     * @return $this
+     */
+    public function printInfoText(string $string): self
+    {
+        $this->printText($string, false, "\e[34mINFO\e[0m");
+
+        return $this;
+    }
+
     /**
      * @param string $file
      * @param string $ext
@@ -191,6 +217,74 @@ class TestHelper
     public function runSubProcess(string $file, string $ext = '.php')
     {
         $this->runAsyncProcess(($this->isHHVM() ? 'hhvm ' : 'php ') . getcwd() . DIRECTORY_SEPARATOR . 'subprocess' . DIRECTORY_SEPARATOR . $file . '.subprocess' . $ext);
+    }
+
+    /**
+     * @param string $string
+     * @param bool $failsTest
+     * @return $this
+     */
+    public function assertFail(string $string, bool $failsTest = true): self
+    {
+        $this->printText($string, false, '<red>FAIL</red>');
+        if ($failsTest) {
+            $this->numOfFailedTests++;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $string
+     * @return $this
+     */
+    public function assertPass(string $string): self
+    {
+        $this->printText($string, false, "\e[32mPASS\e[0m");
+        $this->numOfPassedTests++;
+
+        return $this;
+    }
+
+    /**
+     * @param string $string
+     * @return $this
+     */
+    public function assertSkip(string $string): self
+    {
+        $this->printText($string, false, '<yellow>SKIP</yellow>');
+        $this->numOfSkippedTests++;
+
+        return $this;
+    }
+
+
+    /**
+     * @return void
+     */
+    public function terminateTest()
+    {
+        $execTime = round(microtime(true) - $this->timestamp, 3);
+        $totalCount = $this->numOfFailedTests + $this->numOfSkippedTests + $this->numOfPassedTests;
+
+        $this->printText(
+            sprintf(
+                '<blue>Test results:</blue> <%1$s> %2$s %3$s failed</%1$s>, <%4$s>%5$s %6$s skipped</%4$s> and <%7$s>%8$s %9$s passed</%7$s> out of a total of %10$s %11$s.',
+                $this->numOfFailedTests ? 'red' : 'green',
+                $this->numOfFailedTests,
+                ngettext('assertion', 'assertions', $this->numOfFailedTests),
+                $this->numOfSkippedTests ? 'yellow' : 'green',
+                $this->numOfSkippedTests,
+                ngettext('assertion', 'assertions', $this->numOfSkippedTests),
+                !$this->numOfPassedTests && $totalCount ? 'red' : 'green',
+                $this->numOfPassedTests,
+                ngettext('assertion', 'assertions', $this->numOfPassedTests),
+                "<cyan>{$totalCount}</cyan>",
+                ngettext('assertion', 'assertions', $totalCount),
+            )
+        );
+        $this->printText('<blue>Test duration: </blue><yellow>' . $execTime . 's</yellow>');
+        exit($this->numOfFailedTests ? 1 : 0);
     }
 
     /**
@@ -206,14 +300,6 @@ class TestHelper
     }
 
     /**
-     * @return bool
-     */
-    public function isHHVM(): bool
-    {
-        return defined('HHVM_VERSION');
-    }
-
-    /**
      * @param $obj
      * @param $prop
      * @return mixed
@@ -225,65 +311,6 @@ class TestHelper
         $property = $reflection->getProperty($prop);
         $property->setAccessible(true);
         return $property->getValue($obj);
-    }
-
-    /**
-     * @param Throwable $exception
-     */
-    public function exceptionHandler(Throwable $exception)
-    {
-        if ($exception instanceof PhpfastcacheDriverCheckException) {
-            $this->printSkipText('A driver could not be initialized due to missing requirement: ' . $exception->getMessage());
-            $this->exitCode = 0;
-        } else {
-            $this->printFailText(
-                sprintf(
-                    'Uncaught exception "%s" in "%s" line %d with message: "%s"',
-                    get_class($exception),
-                    $exception->getFile(),
-                    $exception->getLine(),
-                    $exception->getMessage()
-                )
-            );
-        }
-        $this->terminateTest();
-    }
-
-    /**
-     * @param string $string
-     * @return $this
-     */
-    public function printSkipText(string $string): self
-    {
-        $this->printText($string, false, '<yellow>SKIP</yellow>');
-
-        return $this;
-    }
-
-    /**
-     * @param string $string
-     * @param bool $failsTest
-     * @return $this
-     */
-    public function printFailText(string $string, bool $failsTest = true): self
-    {
-        $this->printText($string, false, '<red>FAIL</red>');
-        if ($failsTest) {
-            $this->exitCode = 1;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return void
-     */
-    public function terminateTest()
-    {
-        $execTime = round(microtime(true) - $this->timestamp, 3);
-
-        $this->printText('<yellow>Test duration: </yellow><light_green>' . $execTime . 's</light_green>');
-        exit($this->exitCode);
     }
 
     /**
@@ -326,7 +353,7 @@ class TestHelper
         }
 
         if ($errorType === '[FATAL ERROR]') {
-            $this->printFailText(
+            $this->assertFail(
                 sprintf(
                     "<red>A critical error has been caught: \"%s\" in %s line %d</red>",
                     "$errorType $errstr",
@@ -344,17 +371,6 @@ class TestHelper
                 )
             );
         }
-    }
-
-    /**
-     * @param string $string
-     * @return $this
-     */
-    public function printDebugText(string $string): self
-    {
-        $this->printText($string, false, "\e[35mDEBUG\e[0m");
-
-        return $this;
     }
 
     /**
@@ -389,9 +405,9 @@ class TestHelper
             ->addTag($cacheTag);
 
         if ($pool->save($cacheItem)) {
-            $this->printPassText('The pool successfully saved an item.');
+            $this->assertPass('The pool successfully saved an item.');
         } else {
-            $this->printFailText('The pool failed to save an item.');
+            $this->assertFail('The pool failed to save an item.');
             return;
         }
 
@@ -404,17 +420,17 @@ class TestHelper
         $cacheItems = $pool->getItemsByTag($cacheTag);
 
         if (isset($cacheItems[$cacheKey]) && $cacheItems[$cacheKey]->getKey() === $cacheKey) {
-            $this->printPassText('The pool successfully retrieved the cache item.');
+            $this->assertPass('The pool successfully retrieved the cache item.');
         } else {
-            $this->printFailText('The pool failed to retrieve the cache item.');
+            $this->assertFail('The pool failed to retrieve the cache item.');
             return;
         }
         $cacheItem = $cacheItems[$cacheKey];
 
         if ($cacheItem->get() === $cacheValue) {
-            $this->printPassText('The pool successfully retrieved the expected value.');
+            $this->assertPass('The pool successfully retrieved the expected value.');
         } else {
-            $this->printFailText('The pool failed to retrieve the expected value.');
+            $this->assertFail('The pool failed to retrieve the expected value.');
             return;
         }
 
@@ -424,9 +440,9 @@ class TestHelper
         $pool->saveDeferred($cacheItem);
         $this->printInfoText('Deferred item is being committed...');
         if ($pool->commit()) {
-            $this->printPassText('The pool successfully committed deferred cache item.');
+            $this->assertPass('The pool successfully committed deferred cache item.');
         } else {
-            $this->printFailText('The pool failed to commit deferred cache item.');
+            $this->assertFail('The pool failed to commit deferred cache item.');
         }
 
         /***
@@ -437,49 +453,47 @@ class TestHelper
         $cacheItem = $pool->getItem($cacheKey);
 
         if ($cacheItem->get() === $cacheValue) {
-            $this->printPassText('The pool successfully retrieved the expected new value.');
+            $this->assertPass('The pool successfully retrieved the expected new value.');
         } else {
-            $this->printFailText('The pool failed to retrieve the expected new value.');
+            $this->assertFail('The pool failed to retrieve the expected new value.');
             return;
         }
 
 
         if ($pool->deleteItem($cacheKey)) {
-            $this->printPassText('The pool successfully deleted the cache item.');
+            $this->assertPass('The pool successfully deleted the cache item.');
         } else {
-            $this->printFailText('The pool failed to delete the cache item.');
+            $this->assertFail('The pool failed to delete the cache item.');
         }
 
         if ($pool->clear()) {
-            $this->printPassText('The pool successfully cleared.');
+            $this->assertPass('The pool successfully cleared.');
         } else {
-            $this->printFailText('The cluster failed to clear.');
+            $this->assertFail('The cluster failed to clear.');
         }
 
         $this->printInfoText(sprintf('I/O stats: %d HIT, %s MISS, %d WRITE', $pool->getIO()->getReadHit(), $pool->getIO()->getReadMiss(), $pool->getIO()->getWriteHit()));
     }
 
-    /**
-     * @param string printFailText
-     * @return $this
-     */
-    public function printInfoText(string $string): self
-    {
-        $this->printText($string, false, "\e[34mINFO\e[0m");
-
-
-        return $this;
-    }
 
     /**
-     * @param string $string
-     * @return $this
+     * @param Throwable $exception
      */
-    public function printPassText(string $string): self
+    public function exceptionHandler(Throwable $exception)
     {
-        $this->printText($string, false, "\e[32mPASS\e[0m");
-
-
-        return $this;
+        if ($exception instanceof PhpfastcacheDriverCheckException) {
+            $this->assertSkip('A driver could not be initialized due to missing requirement: ' . $exception->getMessage());
+        } else {
+            $this->assertFail(
+                sprintf(
+                    'Uncaught exception "%s" in "%s" line %d with message: "%s"',
+                    get_class($exception),
+                    $exception->getFile(),
+                    $exception->getLine(),
+                    $exception->getMessage()
+                )
+            );
+        }
+        $this->terminateTest();
     }
 }

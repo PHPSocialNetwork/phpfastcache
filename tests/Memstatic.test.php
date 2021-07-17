@@ -6,7 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -27,18 +27,18 @@ $item = $cacheInstance->getItem($cacheKey);
 $cacheResult = $cacheInstance->getItem($cacheKey)->get();
 
 if ($cacheResult === $randomStr) {
-    $testHelper->printPassText("The cache key value match, got expected value '{$cacheResult}'");
+    $testHelper->assertPass("The cache key value match, got expected value '{$cacheResult}'");
 } else {
-    $testHelper->printFailText("The cache key value match expected value '{$randomStr}', got '{$cacheResult}'");
+    $testHelper->assertFail("The cache key value match expected value '{$randomStr}', got '{$cacheResult}'");
 }
 $testHelper->printText('Clearing the whole cache to test item cleaning...');
 $cacheInstance->clear();
 $cacheResult = ($cacheInstance->getItem($cacheKey)->isHit() === false && $cacheInstance->getItem($cacheKey)->get() === null);
 
 if ($cacheResult === true) {
-    $testHelper->printPassText('The cache item is null as expected');
+    $testHelper->assertPass('The cache item is null as expected');
 } else {
-    $testHelper->printFailText('The cache is not null');
+    $testHelper->assertFail('The cache is not null');
 }
 
 $testHelper->terminateTest();

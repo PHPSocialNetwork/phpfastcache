@@ -6,7 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 use Psr\Cache\CacheItemPoolInterface;
 
 chdir(__DIR__);
@@ -20,11 +20,11 @@ $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 $driverInstance = CacheManager::getInstance($defaultDriver);
 
 if (!is_object($driverInstance)) {
-    $testHelper->printFailText('CacheManager::getInstance() returned an invalid variable type:' . gettype($driverInstance));
+    $testHelper->assertFail('CacheManager::getInstance() returned an invalid variable type:' . gettype($driverInstance));
 }else if(!($driverInstance instanceof CacheItemPoolInterface)){
-    $testHelper->printFailText('CacheManager::getInstance() returned an invalid class:' . get_class($driverInstance));
+    $testHelper->assertFail('CacheManager::getInstance() returned an invalid class:' . get_class($driverInstance));
 }else{
-    $testHelper->printPassText('CacheManager::getInstance() returned a valid CacheItemPoolInterface object: ' . get_class($driverInstance));
+    $testHelper->assertPass('CacheManager::getInstance() returned a valid CacheItemPoolInterface object: ' . get_class($driverInstance));
 }
 
 $testHelper->terminateTest();

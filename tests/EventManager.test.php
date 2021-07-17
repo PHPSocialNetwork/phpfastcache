@@ -9,7 +9,7 @@ use Phpfastcache\CacheManager;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\EventManager;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 
 chdir(__DIR__);
@@ -33,9 +33,9 @@ $cacheInstance->save($item);
 
 
 if($cacheInstance->getItem($cacheKey)->get() === 1337){
-    $testHelper->printPassText('The dispatched event executed the custom callback to alter the item');
+    $testHelper->assertPass('The dispatched event executed the custom callback to alter the item');
 }else{
-    $testHelper->printFailText("The dispatched event is not working properly, the expected value '1337', got '" . (int) $cacheInstance->getItem($cacheKey)->get() . "'");
+    $testHelper->assertFail("The dispatched event is not working properly, the expected value '1337', got '" . (int) $cacheInstance->getItem($cacheKey)->get() . "'");
 }
 
 

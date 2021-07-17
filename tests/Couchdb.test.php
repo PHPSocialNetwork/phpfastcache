@@ -8,65 +8,24 @@
 use Phpfastcache\CacheManager;
 use Phpfastcache\Drivers\Couchdb\Config as CouchdbConfig;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
-use Phpfastcache\Exceptions\PhpfastcacheDriverException;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Couchdb driver');
 $config = new CouchdbConfig();
-
+$config->setItemDetailedDate(true);
 try{
     $cacheInstance = CacheManager::getInstance('Couchdb', $config);
 } catch (PhpfastcacheDriverConnectException $e){
+    $testHelper->printDebugText('Unable to connect to Couchdb as an anynymous, trying with default credential...');
     $config->setUsername('admin');
     $config->setPassword('travis');
     $cacheInstance = CacheManager::getInstance('Couchdb', $config);
 } catch(PhpfastcacheDriverConnectException $e){
-    $testHelper->printSkipText('Couchdb server unavailable: ' . $e->getMessage());
+    $testHelper->assertSkip('Couchdb server unavailable: ' . $e->getMessage());
     $testHelper->terminateTest();
 }
 
-$cacheKey = str_shuffle(uniqid('pfc', true));
-$cacheValue = str_shuffle(uniqid('pfc', true));
-
-try{
-    $item = $cacheInstance->getItem($cacheKey);
-    $item->set($cacheValue)->expiresAfter(300);
-    $cacheInstance->save($item);
-    $testHelper->printPassText('Successfully saved a new cache item into Couchdb server');
-}catch(PhpfastcacheDriverException $e){
-    $testHelper->printFailText('Failed to save a new cache item into Couchdb server with exception: ' . $e->getMessage());
-}
-
-
-try{
-    unset($item);
-    $cacheInstance->detachAllItems();
-    $item = $cacheInstance->getItem($cacheKey);
-
-    if($item->get() === $cacheValue){
-        $testHelper->printPassText('Getter returned expected value: ' . $cacheValue);
-    }else{
-        $testHelper->printFailText('Getter returned unexpected value, expecting "' . $cacheValue . '", got "' . $item->get() . '"');
-    }
-}catch(PhpfastcacheDriverException $e){
-    $testHelper->printFailText('Failed to save a new cache item into Couchdb server with exception: ' . $e->getMessage());
-}
-
-try{
-    unset($item);
-    $cacheInstance->detachAllItems();
-    $cacheInstance->clear();
-    $item = $cacheInstance->getItem($cacheKey);
-
-    if(!$item->isHit()){
-        $testHelper->printPassText('Successfully cleared the Couchdb server, no cache item found');
-    }else{
-        $testHelper->printFailText('Failed to clear the Couchdb server, a cache item has been found');
-    }
-}catch(PhpfastcacheDriverException $e){
-    $testHelper->printFailText('Failed to clear the Couchdb server with exception: ' . $e->getMessage());
-}
-
+$testHelper->runCRUDTests($cacheInstance);
 $testHelper->terminateTest();

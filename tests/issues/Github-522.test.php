@@ -6,7 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -46,26 +46,26 @@ try {
     unset($item1, $item2, $item3);
 
     if($cacheInstance->getItem('item1')->isHit() && $cacheInstance->getItem('item1')->get()->test === $stringObject->test){
-        $testHelper->printPassText('The cache item "item1" returned the expected value.');
+        $testHelper->assertPass('The cache item "item1" returned the expected value.');
     }else{
-        $testHelper->printFailText('The cache item "item1" returned an expected value: ' . gettype($stringObject));
+        $testHelper->assertFail('The cache item "item1" returned an expected value: ' . gettype($stringObject));
     }
 
     if(!$cacheInstance->getItem('item2')->isHit() && !$cacheInstance->getItem('item2')->isHit()){
-        $testHelper->printPassText('The cache items "item2, item3" are not stored in cache as expected.');
+        $testHelper->assertPass('The cache items "item2, item3" are not stored in cache as expected.');
     }else{
-        $testHelper->printFailText('The cache items "item2, item3" are unexpectedly stored in cache.');
+        $testHelper->assertFail('The cache items "item2, item3" are unexpectedly stored in cache.');
     }
 
     $cacheInstance->clear();
 
     if(!$cacheInstance->getItem('item1')->isHit() && $cacheInstance->getItem('item1')->get() === null){
-        $testHelper->printPassText('After a cache clear the cache item "item1" is not stored in cache as expected.');
+        $testHelper->assertPass('After a cache clear the cache item "item1" is not stored in cache as expected.');
     }else{
-        $testHelper->printFailText('After a cache clear the cache item "item1" is still unexpectedly stored in cache.');
+        $testHelper->assertFail('After a cache clear the cache item "item1" is still unexpectedly stored in cache.');
     }
 } catch (\Throwable $e) {
-    $testHelper->printFailText('The test did not ended well, an error occurred: ' . $e->getMessage());
+    $testHelper->assertFail('The test did not ended well, an error occurred: ' . $e->getMessage());
 }
 
 $testHelper->terminateTest();

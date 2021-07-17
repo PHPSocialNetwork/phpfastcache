@@ -6,7 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -37,9 +37,9 @@ $CachedElement1->removeTag('tag_12');
  */
 try {
     $InstanceCache->save($CachedElement1);
-    $testHelper->printPassText('Save after removing a non existing tag: works as expected');
+    $testHelper->assertPass('Save after removing a non existing tag: works as expected');
 } catch (Exception $e) {
-    $testHelper->printFailText('Save after removing a non existing tag failed with message: ' . $e->getMessage() . ' in ' . $e->getFile() . ' at line ' . $e->getLine());
+    $testHelper->assertFail('Save after removing a non existing tag failed with message: ' . $e->getMessage() . ' in ' . $e->getFile() . ' at line ' . $e->getLine());
 }
 /**
  * var_dump($CachedElement1->getTags()); Outputs: tag_34
@@ -53,9 +53,9 @@ $CachedElement1->removeTags(array('tag_34'));
  */
 try {
     $InstanceCache->save($CachedElement1);
-    $testHelper->printPassText('Save after removing an existing tag');
+    $testHelper->assertPass('Save after removing an existing tag');
 } catch (Exception $e) {
-    $testHelper->printFailText('Save after removing an existing tag failed with message: ' . $e->getMessage() . ' in ' . $e->getFile() . ' at line ' . $e->getLine());
+    $testHelper->assertFail('Save after removing an existing tag failed with message: ' . $e->getMessage() . ' in ' . $e->getFile() . ' at line ' . $e->getLine());
 }
 /**
  * var_dump($CachedElement1->getTags()); Outputs: empty

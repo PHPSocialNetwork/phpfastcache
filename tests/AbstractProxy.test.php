@@ -6,7 +6,7 @@
  */
 
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 use Phpfastcache\Proxy\PhpfastcacheAbstractProxy;
 
 
@@ -41,11 +41,11 @@ class CustomMemcachedCacheClass extends PhpfastcacheAbstractProxy
 $driverInstance = new CustomMemcachedCacheClass();
 
 if (!is_object($driverInstance->getItem('test'))) {
-    $testHelper->printFailText('$driverInstance->getItem() returned an invalid var type:' . gettype($driverInstance));
+    $testHelper->assertFail('$driverInstance->getItem() returned an invalid var type:' . gettype($driverInstance));
 }else if(!($driverInstance->getItem('test') instanceof ExtendedCacheItemInterface)){
-    $testHelper->printFailText('$driverInstance->getItem() returned an invalid class that does not implements ExtendedCacheItemInterface: ' . get_class($driverInstance));
+    $testHelper->assertFail('$driverInstance->getItem() returned an invalid class that does not implements ExtendedCacheItemInterface: ' . get_class($driverInstance));
 }else{
-    $testHelper->printPassText('$driverInstance->getItem() returned a valid class that implements ExtendedCacheItemInterface: ' . get_class($driverInstance));
+    $testHelper->assertPass('$driverInstance->getItem() returned a valid class that implements ExtendedCacheItemInterface: ' . get_class($driverInstance));
 }
 
 $testHelper->terminateTest();

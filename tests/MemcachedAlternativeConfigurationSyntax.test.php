@@ -7,7 +7,7 @@
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Drivers\Memcached\Config as MemcachedConfig;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -55,21 +55,21 @@ $cacheInstanceNewSyntax->detachAllItems();
 
 
 if ($cacheInstanceDefSyntax->getItem($cacheKey)->isHit()) {
-    $testHelper->printPassText('The default Memcached syntax is working well');
+    $testHelper->assertPass('The default Memcached syntax is working well');
 } else {
-    $testHelper->printFailText('The default Memcached syntax is not working');
+    $testHelper->assertFail('The default Memcached syntax is not working');
 }
 
 if ($cacheInstanceOldSyntax->getItem($cacheKey)->isHit()) {
-    $testHelper->printPassText('The old Memcached syntax is working well');
+    $testHelper->assertPass('The old Memcached syntax is working well');
 } else {
-    $testHelper->printFailText('The old Memcached syntax is not working');
+    $testHelper->assertFail('The old Memcached syntax is not working');
 }
 
 if ($cacheInstanceNewSyntax->getItem($cacheKey)->isHit()) {
-    $testHelper->printPassText('The new Memcached syntax is working well');
+    $testHelper->assertPass('The new Memcached syntax is working well');
 } else {
-    $testHelper->printFailText('The new Memcached syntax is not working');
+    $testHelper->assertFail('The new Memcached syntax is not working');
 }
 
 $cacheInstanceDefSyntax->clear();

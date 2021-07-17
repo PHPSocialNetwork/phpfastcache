@@ -6,6 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Tests\Helper\TestHelper;
 use Psr\Cache\CacheItemInterface;
 
 chdir(__DIR__);
@@ -30,6 +31,16 @@ if (!interface_exists(CacheItemInterface::class)) {
     $exitCode = 255;
 } else {
     print '[PASS] Autoload successfully found the Psr CacheItemInterface' . PHP_EOL;
+}
+
+/**
+ * Testing Psr autoload
+ */
+if (!class_exists(TestHelper::class)) {
+    print '[FAIL] Autoload failed to find the TestHelper' . PHP_EOL;
+    $exitCode = 255;
+} else {
+    print '[PASS] Autoload successfully found the TestHelper' . PHP_EOL;
 }
 
 exit($exitCode);

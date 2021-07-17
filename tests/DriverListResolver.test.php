@@ -6,7 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -25,9 +25,9 @@ foreach ($driverList as $driver) {
     foreach ($subClasses as $subClass) {
         $className = "Phpfastcache\\Drivers\\{$driver}\\{$subClass}";
         if(class_exists($className)){
-            $testHelper->printPassText(sprintf('Found the %s %s class: "%s"', $driver, $subClass, $className));
+            $testHelper->assertPass(sprintf('Found the %s %s class: "%s"', $driver, $subClass, $className));
         }else{
-            $testHelper->printFailText(sprintf('Class "%s" not found', $className));
+            $testHelper->assertFail(sprintf('Class "%s" not found', $className));
         }
     }
 }

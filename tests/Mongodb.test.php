@@ -9,7 +9,7 @@ use Phpfastcache\CacheManager;
 use Phpfastcache\Drivers\Mongodb\Config;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\phpFastCacheDriverException;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -34,9 +34,9 @@ try{
     $item = $cacheInstance->getItem($cacheKey);
     $item->set($cacheValue)->expiresAfter(300);
     $cacheInstance->save($item);
-    $testHelper->printPassText('Successfully saved a new cache item into Mongodb server');
+    $testHelper->assertPass('Successfully saved a new cache item into Mongodb server');
 }catch(phpFastCacheDriverException $e){
-    $testHelper->printFailText('Failed to save a new cache item into Mongodb server with exception: ' . $e->getMessage());
+    $testHelper->assertFail('Failed to save a new cache item into Mongodb server with exception: ' . $e->getMessage());
 }
 
 try{
@@ -45,12 +45,12 @@ try{
     $item = $cacheInstance->getItem($cacheKey);
 
     if($item->get() === $cacheValue){
-        $testHelper->printPassText('Getter returned expected value: ' . $cacheValue);
+        $testHelper->assertPass('Getter returned expected value: ' . $cacheValue);
     }else{
-        $testHelper->printFailText('Getter returned unexpected value, expecting "' . $cacheValue . '", got "' . $item->get() . '"');
+        $testHelper->assertFail('Getter returned unexpected value, expecting "' . $cacheValue . '", got "' . $item->get() . '"');
     }
 }catch(phpFastCacheDriverException $e){
-    $testHelper->printFailText('Failed to save a new cache item into Mongodb server with exception: ' . $e->getMessage());
+    $testHelper->assertFail('Failed to save a new cache item into Mongodb server with exception: ' . $e->getMessage());
 }
 
 try{
@@ -60,12 +60,12 @@ try{
     $item = $cacheInstance->getItem($cacheKey);
 
     if(!$item->isHit()){
-        $testHelper->printPassText('Successfully cleared the Mongodb server, no cache item found');
+        $testHelper->assertPass('Successfully cleared the Mongodb server, no cache item found');
     }else{
-        $testHelper->printFailText('Failed to clear the Mongodb server, a cache item has been found');
+        $testHelper->assertFail('Failed to clear the Mongodb server, a cache item has been found');
     }
 }catch(phpFastCacheDriverException $e){
-    $testHelper->printFailText('Failed to clear the Mongodb server with exception: ' . $e->getMessage());
+    $testHelper->assertFail('Failed to clear the Mongodb server with exception: ' . $e->getMessage());
 }
 
 try{
@@ -74,12 +74,12 @@ try{
     $cacheInstance->save($item);
 
     if($cacheInstance->deleteItem($item->getKey())){
-        $testHelper->printPassText('Deleter successfully removed the item from cache');
+        $testHelper->assertPass('Deleter successfully removed the item from cache');
     }else{
-        $testHelper->printFailText('Deleter failed to remove the item from cache');
+        $testHelper->assertFail('Deleter failed to remove the item from cache');
     }
 }catch(phpFastCacheDriverException $e){
-    $testHelper->printFailText('Failed to remove a cache item from Mongodb server with exception: ' . $e->getMessage());
+    $testHelper->assertFail('Failed to remove a cache item from Mongodb server with exception: ' . $e->getMessage());
 }
 
 $testHelper->terminateTest();

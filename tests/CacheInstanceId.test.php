@@ -8,7 +8,7 @@
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\CacheManager;
 use Phpfastcache\Exceptions\PhpfastcacheInstanceNotFoundException;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -19,16 +19,16 @@ $instanceId = str_shuffle(md5(time() - mt_rand(0, 86400)));
 $driverInstance = CacheManager::getInstance($defaultDriver, null, $instanceId);
 
 if ($driverInstance->getInstanceId() !== $instanceId) {
-    $testHelper->printFailText('Unexpected instance ID: ' . $driverInstance->getInstanceId());
+    $testHelper->assertFail('Unexpected instance ID: ' . $driverInstance->getInstanceId());
 }else{
-    $testHelper->printPassText('Got expected instance ID: ' . $instanceId);
+    $testHelper->assertPass('Got expected instance ID: ' . $instanceId);
 }
 
 try{
     CacheManager::getInstanceById(str_shuffle($instanceId));
-    $testHelper->printFailText('Non-existing instance ID has thrown no exception');
+    $testHelper->assertFail('Non-existing instance ID has thrown no exception');
 }catch(PhpfastcacheInstanceNotFoundException $e){
-    $testHelper->printPassText('Non-existing instance ID has thrown an exception');
+    $testHelper->assertPass('Non-existing instance ID has thrown an exception');
 }
 
 $testHelper->terminateTest();

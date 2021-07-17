@@ -7,7 +7,7 @@
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 use Psr\Cache\CacheItemPoolInterface;
 
 
@@ -22,9 +22,9 @@ $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 $driverInstance = CacheManager::getInstance($defaultDriver);
 
 if (!is_object($driverInstance)) {
-    $testHelper->printFailText('CacheManager::getInstance() returned an invalid variable type:' . gettype($driverInstance));
+    $testHelper->assertFail('CacheManager::getInstance() returned an invalid variable type:' . gettype($driverInstance));
 }else if(!($driverInstance instanceof CacheItemPoolInterface)){
-    $testHelper->printFailText('CacheManager::getInstance() returned an invalid class:' . get_class($driverInstance));
+    $testHelper->assertFail('CacheManager::getInstance() returned an invalid class:' . get_class($driverInstance));
 }else{
     $key = 'test_attaching_detaching';
 
@@ -34,18 +34,18 @@ if (!is_object($driverInstance)) {
 
     if($driverInstance->isAttached($itemDetached) !== true)
     {
-        $testHelper->printPassText('ExtendedCacheItemPoolInterface::isAttached() identified $itemDetached as being detached.');
+        $testHelper->assertPass('ExtendedCacheItemPoolInterface::isAttached() identified $itemDetached as being detached.');
     }
     else
     {
-        $testHelper->printFailText('ExtendedCacheItemPoolInterface::isAttached() failed to identify $itemDetached as to be detached.');
+        $testHelper->assertFail('ExtendedCacheItemPoolInterface::isAttached() failed to identify $itemDetached as to be detached.');
     }
 
     try{
         $driverInstance->attachItem($itemDetached);
-        $testHelper->printFailText('ExtendedCacheItemPoolInterface::attachItem() attached $itemDetached without trowing an error.');
+        $testHelper->assertFail('ExtendedCacheItemPoolInterface::attachItem() attached $itemDetached without trowing an error.');
     }catch(PhpfastcacheLogicException $e){
-        $testHelper->printPassText('ExtendedCacheItemPoolInterface::attachItem() failed to attach $itemDetached by trowing a phpfastcacheLogicException exception.');
+        $testHelper->assertPass('ExtendedCacheItemPoolInterface::attachItem() failed to attach $itemDetached by trowing a phpfastcacheLogicException exception.');
     }
 }
 

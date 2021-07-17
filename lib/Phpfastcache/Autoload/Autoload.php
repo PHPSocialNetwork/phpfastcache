@@ -21,6 +21,9 @@ use Composer\Autoload\ClassLoader;
 const PFC_PHP_EXT = 'php';
 const PFC_BIN_DIR = __DIR__ . '/../../../bin/';
 const PFC_LIB_DIR = __DIR__ . '/../../../lib/';
+const PFC_TESTS_DIR = __DIR__ . '/../../../tests/lib/';
+const PFC_TESTS_NS = 'Phpfastcache\\Tests\\';
+
 
 \trigger_error('The legacy autoload will be removed in the next major release. Please include Phpfastcache through composer by running `composer require phpfastcache/phpfastcache`.', \E_USER_DEPRECATED);
 /**
@@ -59,9 +62,15 @@ spl_autoload_register(
             return;
         }
 
-        $entity = str_replace('\\', '/', $entity);
-        $path = PFC_LIB_DIR . $entity . '.' . PFC_PHP_EXT;
+        $entityPath = str_replace('\\', '/', $entity);
 
+        if(\strpos($entity, PFC_TESTS_NS) === 0){
+            $path = PFC_TESTS_DIR . \str_replace(str_replace('\\', '/', PFC_TESTS_NS), '', $entityPath) . '.' . PFC_PHP_EXT;
+        }else{
+            $path = PFC_LIB_DIR . $entityPath . '.' . PFC_PHP_EXT;
+        }
+
+        $path = \realpath($path);
         if (\is_readable($path)) {
             require_once $path;
         }

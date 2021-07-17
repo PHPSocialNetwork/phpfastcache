@@ -11,7 +11,7 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Entities\ItemBatch;
 use Phpfastcache\EventManager;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -42,9 +42,9 @@ if(!$testHelper->isHHVM()){
      * @see CacheSlamsProtection.subprocess.php:28
      */
     if($item->isHit() && $item->get() === 'abcdef-123456'){
-        $testHelper->printPassText('The static item caching being disabled, the cache item has been fetched straight from backend.' . $item->get());
+        $testHelper->assertPass('The static item caching being disabled, the cache item has been fetched straight from backend.' . $item->get());
     }else{
-        $testHelper->printFailText('The static item caching may not have been disabled since the cache item value does not match the expected value.');
+        $testHelper->assertFail('The static item caching may not have been disabled since the cache item value does not match the expected value.');
     }
 
     /**
@@ -53,7 +53,7 @@ if(!$testHelper->isHHVM()){
     $driverInstance->deleteItem($item->getKey());
 
 }else{
-    $testHelper->printSkipText('Test ignored on HHVM builds due to sub-process issues with C.I.');
+    $testHelper->assertSkip('Test ignored on HHVM builds due to sub-process issues with C.I.');
 }
 
 $testHelper->terminateTest();

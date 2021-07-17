@@ -11,7 +11,7 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Entities\ItemBatch;
 use Phpfastcache\EventManager;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -43,9 +43,9 @@ if(!$testHelper->isHHVM()){
      * @see CacheSlamsProtection.subprocess.php:28
      */
     if($item->isHit() && $item->get() === 1337){
-        $testHelper->printPassText('The batch has expired and returned a non-empty item with expected value: ' . $item->get());
+        $testHelper->assertPass('The batch has expired and returned a non-empty item with expected value: ' . $item->get());
     }else{
-        $testHelper->printFailText('The batch has expired and returned an empty item with expected value: ' . print_r($item->get(), true));
+        $testHelper->assertFail('The batch has expired and returned an empty item with expected value: ' . print_r($item->get(), true));
     }
 
     /**
@@ -54,7 +54,7 @@ if(!$testHelper->isHHVM()){
     $driverInstance->deleteItem($item->getKey());
 
 }else{
-    $testHelper->printSkipText('Test ignored on HHVM builds due to sub-process issues with C.I.');
+    $testHelper->assertSkip('Test ignored on HHVM builds due to sub-process issues with C.I.');
 }
 
 $testHelper->terminateTest();

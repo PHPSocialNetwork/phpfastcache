@@ -9,7 +9,7 @@ use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Drivers\Files\Config as FilesConfig;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -56,9 +56,9 @@ foreach ($dirs as $dirIndex => $dir) {
     foreach ($instances[ $dirIndex ] as $cacheInstanceName => $instance) {
         foreach ($keys[ $dirIndex ] as $index => $key) {
             if ($instances[ $dirIndex ][ $cacheInstanceName ]->getItem($key)->get() === "test-$dirIndex-$index") {
-                $testHelper->printPassText("Item #{$key} of instance #{$cacheInstanceName} of dir #{$dirIndex} has returned the expected value (" . gettype("test-$dirIndex-$index") . ":'" . "test-$dirIndex-$index" . "')");
+                $testHelper->assertPass("Item #{$key} of instance #{$cacheInstanceName} of dir #{$dirIndex} has returned the expected value (" . gettype("test-$dirIndex-$index") . ":'" . "test-$dirIndex-$index" . "')");
             } else {
-                $testHelper->printFailText("Item #{$key} of instance #{$cacheInstanceName} of dir #{$dirIndex} returned an unexpected value (" . gettype($instances[ $dirIndex ][ $cacheInstanceName ]->getItem($key)
+                $testHelper->assertFail("Item #{$key} of instance #{$cacheInstanceName} of dir #{$dirIndex} returned an unexpected value (" . gettype($instances[ $dirIndex ][ $cacheInstanceName ]->getItem($key)
                     ->get()) . ":'" . $instances[ $dirIndex ][ $cacheInstanceName ]->getItem($key)
                     ->get() . "') expected (" . gettype("test-$dirIndex-$index") . ":'" . "test-$dirIndex-$index" . "') \n");
             }

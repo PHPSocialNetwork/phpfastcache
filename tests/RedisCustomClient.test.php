@@ -7,7 +7,7 @@
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
-use Phpfastcache\Helper\TestHelper;
+use Phpfastcache\Tests\Helper\TestHelper;
 use Phpfastcache\Drivers\Redis\Config as RedisConfig;
 use Redis as RedisClient;
 
@@ -25,7 +25,7 @@ try{
     $cacheInstance = CacheManager::getInstance('Redis', (new RedisConfig())->setRedisClient($redisClient));
     $testHelper->runCRUDTests($cacheInstance);
 }catch (\RedisException $e){
-    $testHelper->printFailText('A Redis exception occurred: ' . $e->getMessage());
+    $testHelper->assertFail('A Redis exception occurred: ' . $e->getMessage());
 }
 
 $testHelper->terminateTest();

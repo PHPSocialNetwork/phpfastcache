@@ -13,7 +13,6 @@ use Phpfastcache\Proxy\PhpfastcacheAbstractProxy;
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('phpfastcacheAbstractProxy class');
-var_dump(getopt('d:p:', []));exit;
 $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 
 

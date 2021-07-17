@@ -18,13 +18,15 @@ $config->setItemDetailedDate(true);
 try{
     $cacheInstance = CacheManager::getInstance('Couchdb', $config);
 } catch (PhpfastcacheDriverConnectException $e){
-    $testHelper->printDebugText('Unable to connect to Couchdb as an anynymous, trying with default credential...');
-    $config->setUsername('admin');
-    $config->setPassword('travis');
-    $cacheInstance = CacheManager::getInstance('Couchdb', $config);
-} catch(PhpfastcacheDriverConnectException $e){
-    $testHelper->assertSkip('Couchdb server unavailable: ' . $e->getMessage());
-    $testHelper->terminateTest();
+    try{
+        $testHelper->printDebugText('Unable to connect to Couchdb as an anynymous, trying with default credential...');
+        $config->setUsername('admin');
+        $config->setPassword('travis');
+        $cacheInstance = CacheManager::getInstance('Couchdb', $config);
+    } catch(PhpfastcacheDriverConnectException $e){
+        $testHelper->assertSkip('Couchdb server unavailable: ' . $e->getMessage());
+        $testHelper->terminateTest();
+    }
 }
 
 $testHelper->runCRUDTests($cacheInstance);

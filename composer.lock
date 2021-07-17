@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ea7437b06b7c59440b524f81397fe9c6",
+    "content-hash": "3f349b32cddd15b0fd168657208f0800",
     "packages": [
         {
             "name": "phpfastcache/couchdb",
@@ -332,5 +332,7 @@
         "ext-mbstring": "*",
         "ext-json": "*"
     },
-    "platform-dev": []
+    "platform-dev": {
+        "ext-gettext": "*"
+    }
 }

@@ -1,5 +1,5 @@
 name: Github tests workflow
-on: [push, pull_request_target]
+on: [push, pull_request]
 jobs:
   build:
     name: Github PHP unit tests

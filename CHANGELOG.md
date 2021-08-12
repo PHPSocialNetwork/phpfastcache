@@ -1,3 +1,8 @@
+## 6.1.5
+##### 12 august 2021
+- __Docs__
+  - Fixed vulnerability issue that cause exposed phpinfo() in some situations (@geolim4)
+
 ## 6.1.4
 ##### 15 september 2019
 - __Misc__

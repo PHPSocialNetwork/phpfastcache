@@ -16,7 +16,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Couchdb;
 
-use Doctrine\CouchDB\{CouchDBClient, CouchDBException};
+use Doctrine\CouchDB\{CouchDBClient, CouchDBException, HTTP\HTTPException};
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
 use Phpfastcache\Entities\DriverStatistic;
@@ -94,7 +94,7 @@ HELP;
         }
         $url .= $clientConfig->getHost();
         $url .= ":{$clientConfig->getPort()}";
-        $url .= '/' . $this->getDatabaseName();
+        $url .= '/' . \urlencode($this->getDatabaseName());
 
         $this->instance = CouchDBClient::create(
             [
@@ -122,7 +122,9 @@ HELP;
      */
     protected function createDatabase()
     {
-        if (!in_array($this->getDatabaseName(), $this->instance->getAllDatabases(), true)) {
+        try{
+            $this->instance->getDatabaseInfo($this->getDatabaseName());
+        } catch(HTTPException $e){
             $this->instance->createDatabase($this->getDatabaseName());
         }
     }
@@ -188,7 +190,7 @@ HELP;
      */
     protected function getLatestDocumentRevision($docId)
     {
-        $path = '/' . $this->getDatabaseName() . '/' . urlencode($docId);
+        $path = '/' . \urlencode($this->getDatabaseName()) . '/' . urlencode($docId);
 
         $response = $this->instance->getHttpClient()->request(
             'HEAD',

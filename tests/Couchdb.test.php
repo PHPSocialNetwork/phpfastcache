@@ -13,7 +13,9 @@ use Phpfastcache\Tests\Helper\TestHelper;
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Couchdb driver');
+
 $config = new CouchdbConfig();
+$config->setDatabase('phpfastcache($test/-)+1337');
 $config->setItemDetailedDate(true);
 try{
     $cacheInstance = CacheManager::getInstance('Couchdb', $config);

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Couchdb;
 
 use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
 class Config extends ConfigurationOption
 {
@@ -66,8 +67,16 @@ class Config extends ConfigurationOption
      */
     public function setDatabase(string $database): Config
     {
-        $this->database = $database;
-        return $this;
+        /** @see https://docs.couchdb.org/en/latest/api/database/common.html#put--db */
+        if(\preg_match('#^[a-z][a-z0-9_\-+\$()/]+$#', $database)){
+            $this->database = $database;
+            return $this;
+        }
+
+        throw new PhpfastcacheInvalidArgumentException(sprintf(
+            "Error: illegal_database_name Name: '%s'. Only lowercase characters (a-z), digits (0-9), and any of the characters _, $, (, ), +, -, and / are allowed. Must begin with a letter.",
+            $database
+        ));
     }
 
     /**

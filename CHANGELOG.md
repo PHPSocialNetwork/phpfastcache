@@ -1,3 +1,15 @@
+## 7.1.2
+#### _"Rust-weak"_
+##### 12 august 2021
+- __Global__
+  - Improved PHP 7.4 support
+  - Fixed #768 // Psalm issue with the 3rd parameter of Psr16Adapter::set has to be null (@geolim4)
+  - Fixed #781 // Type issue (@geolim4)
+- __Docs__
+  - Fixed vulnerability issue that cause exposed phpinfo() in some situations (@geolim4)
+- __Drivers__
+  - Fixed #759 // Memcached Bytes Replaced with Version (@geolim4)
+  
 ## 7.1.1
 #### _"Rust-out"_
 ##### 24 april 2020

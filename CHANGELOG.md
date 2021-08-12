@@ -1,3 +1,12 @@
+## 8.0.7
+#### _"Vaccinated"_
+##### 12 august 2021
+- __Drivers__
+  - Improved Couchdb driver code and tests
+  - Dropped Riak support permanently (unmaintainable)
+- __Docs__
+  - Fixed vulnerability issue that cause exposed phpinfo() in some situations (@geolim4)
+  
 ## 8.0.6
 #### _"Re-deconfined"_
 ##### 07 july 2021

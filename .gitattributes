@@ -1,4 +1,5 @@
 /tests export-ignore
+/docs/examples export-ignore
 /bin/ci export-ignore
 /bin/stubs export-ignore
 /.github export-ignore

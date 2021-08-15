@@ -402,7 +402,7 @@ class TestHelper
         $this->printInfoText('Using cache key: ' . $cacheKey);
 
         $cacheItem->set($cacheValue)
-            ->expiresAfter(600)
+            ->expiresAfter(60)
             ->addTags([$cacheTag, $cacheTag2]);
 
         if ($pool->save($cacheItem)) {

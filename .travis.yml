@@ -21,18 +21,6 @@ services:
   - riak
   - mongodb
 
-before_script:
-  - |
-    if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
-      cat bin/ci/hhvm_phpfastcache.ini >> /etc/hhvm/php.ini
-    else
-      phpenv config-add bin/ci/php_phpfastcache.ini
-      pecl channel-update pecl.php.net
-      pecl install -f mongodb-1.9.2
-    fi
-  - sleep 15
-  - mongo pfc_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
-
 php:
   # - 5.3
   # - 5.4
@@ -51,6 +39,18 @@ matrix:
   allow_failures:
     - php: nightly
     - php: hhvm
+
+before_install:
+  - |
+    if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
+      cat bin/ci/hhvm_phpfastcache.ini >> /etc/hhvm/php.ini
+    else
+      phpenv config-add bin/ci/php_phpfastcache.ini
+      pecl channel-update pecl.php.net
+      pecl install -f mongodb-1.9.2
+    fi
+  - sleep 15
+  - mongo pfc_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
 
 install:
   - ./bin/ci/install_dependencies.sh

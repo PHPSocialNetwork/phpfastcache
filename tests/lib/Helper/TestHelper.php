@@ -397,12 +397,13 @@ class TestHelper
         $cacheKey = 'cache_key_' . bin2hex(random_bytes(8) . '_' . random_int(100, 999));
         $cacheValue = 'cache_data_' . random_int(1000, 999999);
         $cacheTag = 'cache_tag_' . bin2hex(random_bytes(8) . '_' . random_int(100, 999));
+        $cacheTag2 = 'cache_tag_' . bin2hex(random_bytes(8) . '_' . random_int(100, 999));
         $cacheItem = $pool->getItem($cacheKey);
         $this->printInfoText('Using cache key: ' . $cacheKey);
 
         $cacheItem->set($cacheValue)
             ->expiresAfter(600)
-            ->addTag($cacheTag);
+            ->addTags([$cacheTag, $cacheTag2]);
 
         if ($pool->save($cacheItem)) {
             $this->assertPass('The pool successfully saved an item.');
@@ -410,14 +411,69 @@ class TestHelper
             $this->assertFail('The pool failed to save an item.');
             return;
         }
-
-        /***
-         * Detach the items to force "re-pull" from the backend
-         */
+        unset($cacheItem);
         $pool->detachAllItems();
 
-        $this->printInfoText('Re-fetching item by its tag...');
-        $cacheItems = $pool->getItemsByTag($cacheTag);
+        /**
+         * Tag strategy ALL success and fail
+         */
+
+        $this->printInfoText('Re-fetching item <green>by its tags</green> <red>and an unknown tag</red> (tag strategy "<yellow>ALL</yellow>")...');
+        $cacheItems = $pool->getItemsByTags([$cacheTag, $cacheTag2, 'unknown_tag'], $pool::TAG_STRATEGY_ALL);
+
+        if (!isset($cacheItems[$cacheKey])) {
+            $this->assertPass('The pool expectedly failed to retrieve the cache item.');
+        } else {
+            $this->assertFail('The pool unexpectedly retrieved the cache item.');
+            return;
+        }
+        unset($cacheItems);
+        $pool->detachAllItems();
+
+        $this->printInfoText('Re-fetching item <green>by its tags</green> (tag strategy "<yellow>ALL</yellow>")...');
+        $cacheItems = $pool->getItemsByTags([$cacheTag, $cacheTag2], $pool::TAG_STRATEGY_ALL);
+
+        if (isset($cacheItems[$cacheKey])) {
+            $this->assertPass('The pool successfully retrieved the cache item.');
+        } else {
+            $this->assertFail('The pool failed to retrieve the cache item.');
+            return;
+        }
+        unset($cacheItems);
+        $pool->detachAllItems();
+
+        /**
+         * Tag strategy ONLY success and fail
+         */
+        $this->printInfoText('Re-fetching item <green>by its tags</green> <red>and an unknown tag</red> (tag strategy "<yellow>ONLY</yellow>")...');
+        $cacheItems = $pool->getItemsByTags([$cacheTag, $cacheTag2, 'unknown_tag'], $pool::TAG_STRATEGY_ONLY);
+
+        if (!isset($cacheItems[$cacheKey])) {
+            $this->assertPass('The pool expectedly failed to retrieve the cache item.');
+        } else {
+            $this->assertFail('The pool unexpectedly retrieved the cache item.');
+            return;
+        }
+        unset($cacheItems);
+        $pool->detachAllItems();
+
+        $this->printInfoText('Re-fetching item <green>by one of its tags</green> (tag strategy "<yellow>ONLY</yellow>")...');
+        $cacheItems = $pool->getItemsByTags([$cacheTag, $cacheTag2], $pool::TAG_STRATEGY_ONLY);
+
+        if (isset($cacheItems[$cacheKey])) {
+            $this->assertPass('The pool successfully retrieved the cache item.');
+        } else {
+            $this->assertFail('The pool failed to retrieve the cache item.');
+            return;
+        }
+        unset($cacheItems);
+        $pool->detachAllItems();
+
+        /**
+         * Tag strategy ONE success and fail
+         */
+        $this->printInfoText('Re-fetching item by one of its tags <red>and an unknown tag</red> (tag strategy "<yellow>ONE</yellow>")...');
+        $cacheItems = $pool->getItemsByTags([$cacheTag, 'unknown_tag'], $pool::TAG_STRATEGY_ONE);
 
         if (isset($cacheItems[$cacheKey]) && $cacheItems[$cacheKey]->getKey() === $cacheKey) {
             $this->assertPass('The pool successfully retrieved the cache item.');
@@ -444,21 +500,16 @@ class TestHelper
         } else {
             $this->assertFail('The pool failed to commit deferred cache item.');
         }
-
-        /***
-         * Detach the items to force "re-pull" from the backend
-         */
         $pool->detachAllItems();
         unset($cacheItem);
-        $cacheItem = $pool->getItem($cacheKey);
 
+        $cacheItem = $pool->getItem($cacheKey);
         if ($cacheItem->get() === $cacheValue) {
             $this->assertPass('The pool successfully retrieved the expected new value.');
         } else {
             $this->assertFail('The pool failed to retrieve the expected new value.');
             return;
         }
-
 
         if ($pool->deleteItem($cacheKey)) {
             $this->assertPass('The pool successfully deleted the cache item.');
@@ -471,8 +522,19 @@ class TestHelper
         } else {
             $this->assertFail('The cluster failed to clear.');
         }
+        $pool->detachAllItems();
+        unset($cacheItem);
+
+        $cacheItem = $pool->getItem($cacheKey);
+        if (!$cacheItem->isHit()) {
+            $this->assertPass('The cache item does no longer exists in pool.');
+        } else {
+            $this->assertFail('The cache item still exists in pool.');
+            return;
+        }
 
         $this->printInfoText(sprintf('I/O stats: %d HIT, %s MISS, %d WRITE', $pool->getIO()->getReadHit(), $pool->getIO()->getReadMiss(), $pool->getIO()->getWriteHit()));
+        $this->printInfoText('<yellow>Driver info</yellow>: <magenta>' . $pool->getStats()->getInfo() . '</magenta>');
     }
 
 

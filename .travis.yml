@@ -17,20 +17,6 @@ services:
   - couchdb
   - mongodb
 
-before_script:
-  - |
-    if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
-      cat bin/ci/hhvm_phpfastcache.ini >> /etc/hhvm/php.ini
-    else
-      pecl channel-update pecl.php.net;
-      yes | pecl install -f mongodb-stable;
-      yes | pecl install -f memcached;
-      yes | pecl install -f apcu-stable || true;
-      phpenv config-add bin/ci/php_phpfastcache.ini;
-    fi
-  - sleep 15
-  - mongo pfc_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
-
 php:
   - 7.3
   - 7.4
@@ -51,6 +37,21 @@ jobs:
       php: 7.3
     - dist: bionic
       php: 7.4
+
+before_install:
+  - |
+    if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
+      cat bin/ci/hhvm_phpfastcache.ini >> /etc/hhvm/php.ini
+    else
+      pecl channel-update pecl.php.net;
+      yes | pecl install -f mongodb-stable;
+      yes | pecl install -f memcached;
+      yes | pecl install -f apcu-stable || true;
+      phpenv config-add bin/ci/php_phpfastcache.ini;
+    fi
+  - sleep 15
+  - mongo pfc_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
+
 install:
   - ./bin/ci/install_dependencies.sh
 

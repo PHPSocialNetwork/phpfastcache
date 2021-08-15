@@ -66,7 +66,7 @@ HELP;
         $info = $this->instance->getDatabaseInfo();
 
         return (new DriverStatistic())
-            ->setSize($info['sizes']['active'])
+            ->setSize($info['sizes']['active'] ?? 0)
             ->setRawData($info)
             ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setInfo('Couchdb version ' . $this->instance->getVersion() . "\n For more information see RawData.");

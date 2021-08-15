@@ -17,8 +17,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Mongodb;
 
-use DateTime;
-use Exception;
 use LogicException;
 use MongoClient;
 use MongoDB\{BSON\Binary, BSON\UTCDateTime, Client, Collection, Database, DeleteResult, Driver\Command, Driver\Exception\Exception as MongoDBException, Driver\Manager};
@@ -152,7 +150,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         if ($document) {
             $return = [
                 self::DRIVER_DATA_WRAPPER_INDEX => $this->decode($document[self::DRIVER_DATA_WRAPPER_INDEX]->getData()),
-                self::DRIVER_TAGS_WRAPPER_INDEX => $this->decode($document[self::DRIVER_TAGS_WRAPPER_INDEX]->getData()),
+                self::DRIVER_TAGS_WRAPPER_INDEX => $document[self::DRIVER_TAGS_WRAPPER_INDEX]->jsonSerialize(),
                 self::DRIVER_EDATE_WRAPPER_INDEX => $document[self::DRIVER_EDATE_WRAPPER_INDEX]->toDateTime(),
             ];
 
@@ -193,20 +191,14 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                 $set = [
                     self::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(),
                     self::DRIVER_DATA_WRAPPER_INDEX => new Binary($this->encode($item->get()), Binary::TYPE_GENERIC),
-                    self::DRIVER_TAGS_WRAPPER_INDEX => new Binary($this->encode($item->getTags()), Binary::TYPE_GENERIC),
-                    self::DRIVER_EDATE_WRAPPER_INDEX => ($item->getTtl() > 0 ? new UTCDateTime((time() + $item->getTtl()) * 1000) : new UTCDateTime(time() * 1000)),
+                    self::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
+                    self::DRIVER_EDATE_WRAPPER_INDEX => new UTCDateTime($item->getExpirationDate()),
                 ];
 
                 if (!empty($this->getConfig()->isItemDetailedDate())) {
                     $set += [
-                        self::DRIVER_MDATE_WRAPPER_INDEX => ($item->getModificationDate() ? new UTCDateTime(
-                            ($item->getModificationDate()
-                                ->getTimestamp()) * 1000
-                        ) : new UTCDateTime(time() * 1000)),
-                        self::DRIVER_CDATE_WRAPPER_INDEX => ($item->getCreationDate() ? new UTCDateTime(
-                            ($item->getCreationDate()
-                                ->getTimestamp()) * 1000
-                        ) : new UTCDateTime(time() * 1000)),
+                        self::DRIVER_MDATE_WRAPPER_INDEX =>  new UTCDateTime($item->getModificationDate()),
+                        self::DRIVER_CDATE_WRAPPER_INDEX =>  new UTCDateTime($item->getCreationDate()),
                     ];
                 }
                 $result = (array)$this->getCollection()->updateOne(
@@ -217,7 +209,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                     ['upsert' => true, 'multiple' => false]
                 );
             } catch (MongoDBException $e) {
-                throw new PhpfastcacheDriverException('Got an exception while trying to write data to MongoDB server', 0, $e);
+                throw new PhpfastcacheDriverException('Got an exception while trying to write data to MongoDB server: ' . $e->getMessage(), 0, $e);
             }
 
             return isset($result['ok']) ? $result['ok'] == 1 : true;
@@ -281,6 +273,16 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
         if (!$this->collectionExists($collectionName)) {
             $this->database->createCollection($collectionName);
+            $this->database->selectCollection($collectionName)
+                ->createIndex(
+                    [self::DRIVER_KEY_WRAPPER_INDEX => 1],
+                    ['unique' => true, 'name' => 'unique_key_index']
+                );
+            $this->database->selectCollection($collectionName)
+                ->createIndex(
+                    [self::DRIVER_EDATE_WRAPPER_INDEX => 1],
+                    ['expireAfterSeconds' => 0,  'name' => 'auto_expire_index']
+                );
         }
 
         $this->collection = $this->database->selectCollection($collectionName);

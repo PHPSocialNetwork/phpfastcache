@@ -16,12 +16,8 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Couchbasev3;
 
-use Couchbase\DocumentNotFoundException;
-use Couchbase\Cluster as CouchbaseClient;
-use Couchbase\Collection as CouchbaseCollection;
-use Couchbase\Scope as CouchbaseScope;
-use Couchbase\UpsertOptions;
-use CouchbaseException;
+use Couchbase\{BaseException as CouchbaseException, Cluster, ClusterOptions, Collection, DocumentNotFoundException, Scope, UpsertOptions};
+use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Drivers\Couchbase\Driver as CoubaseV2Driver;
 use Phpfastcache\Drivers\Couchbase\Item;
 use Phpfastcache\Entities\DriverStatistic;
@@ -31,21 +27,26 @@ use Psr\Cache\CacheItemInterface;
 /**
  * Class Driver
  * @package phpFastCache\Drivers
- * @property CouchbaseClient $instance Instance of driver service
+ * @property Cluster $instance Instance of driver service
  * @property Config $config Config object
  * @method Config getConfig() Return the config object
  */
 class Driver extends CoubaseV2Driver
 {
     /**
-     * @var CouchbaseScope
+     * @var Scope
      */
     protected $scope;
 
     /**
-     * @var CouchbaseCollection
+     * @var Collection
      */
     protected $collection;
+
+    public function __construct(ConfigurationOption $config, $instanceId)
+    {
+        $this->__baseConstruct($config, $instanceId);
+    }
 
     /**
      * @return bool
@@ -53,19 +54,15 @@ class Driver extends CoubaseV2Driver
      */
     protected function driverConnect(): bool
     {
-        if (!\class_exists(\Couchbase\ClusterOptions::class)) {
+        if (!\class_exists(ClusterOptions::class)) {
             throw new PhpfastcacheDriverCheckException('You are using the Couchbase PHP SDK 2.x so please use driver Couchbasev3');
         }
 
-        if ($this->instance instanceof CouchbaseClient) {
-            throw new PhpfastcacheLogicException('Already connected to Couchbase server');
-        }
+        $connectionString = "couchbase://{$this->getConfig()->getHost()}:{$this->getConfig()->getPort()}";
 
-        $connectionString = "couchbase://localhost";
-
-        $options = new \Couchbase\ClusterOptions();
+        $options = new ClusterOptions();
         $options->credentials($this->getConfig()->getUsername(), $this->getConfig()->getPassword());
-        $this->instance = new \Couchbase\Cluster($connectionString, $options);
+        $this->instance = new Cluster($connectionString, $options);
 
         $this->setBucket($this->instance->bucket($this->getConfig()->getBucketName()));
         $this->setScope($this->getBucket()->scope($this->getConfig()->getScopeName()));
@@ -102,11 +99,12 @@ class Driver extends CoubaseV2Driver
          */
         if ($item instanceof Item) {
             try {
-                return (bool)$this->getCollection()->upsert(
+                $this->getCollection()->upsert(
                     $item->getEncodedKey(),
                     $this->encodeDocument($this->driverPreWrap($item)),
                     (new UpsertOptions())->expiry($item->getTtl())
                 );
+                return true;
             } catch (CouchbaseException $e) {
                 return false;
             }
@@ -167,36 +165,36 @@ class Driver extends CoubaseV2Driver
     }
 
     /**
-     * @return CouchbaseCollection
+     * @return Collection
      */
-    public function getCollection(): CouchbaseCollection
+    public function getCollection(): Collection
     {
         return $this->collection;
     }
 
     /**
-     * @param CouchbaseCollection $collection
+     * @param Collection $collection
      * @return Driver
      */
-    public function setCollection(CouchbaseCollection $collection): Driver
+    public function setCollection(Collection $collection): Driver
     {
         $this->collection = $collection;
         return $this;
     }
 
     /**
-     * @return CouchbaseScope
+     * @return Scope
      */
-    public function getScope(): CouchbaseScope
+    public function getScope(): Scope
     {
         return $this->scope;
     }
 
     /**
-     * @param CouchbaseScope $scope
+     * @param Scope $scope
      * @return Driver
      */
-    public function setScope(CouchbaseScope $scope): Driver
+    public function setScope(Scope $scope): Driver
     {
         $this->scope = $scope;
         return $this;

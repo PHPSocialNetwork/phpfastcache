@@ -24,9 +24,9 @@ try{
     $config->setScopeName('_default');
     $config->setCollectionName('_default');
     $cacheInstance = CacheManager::getInstance('Couchbasev3', $config);
+    $testHelper->runCRUDTests($cacheInstance);
 } catch(PhpfastcacheDriverConnectException $e){
     $testHelper->assertSkip('Couchdb server unavailable: ' . $e->getMessage());
     $testHelper->terminateTest();
 }
-$testHelper->runCRUDTests($cacheInstance);
 $testHelper->terminateTest();

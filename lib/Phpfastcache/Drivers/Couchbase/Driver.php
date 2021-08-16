@@ -23,6 +23,7 @@ use Couchbase\Cluster as CouchbaseClient;
 use DateTime;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Psr\Cache\CacheItemInterface;
@@ -37,7 +38,9 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    use DriverBaseTrait;
+    use DriverBaseTrait {
+        __construct as __baseConstruct;
+    }
 
     /**
      * @var CouchbaseBucket[]
@@ -53,6 +56,13 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      * @var string
      */
     protected $currentBucket = '';
+
+    public function __construct(ConfigurationOption $config, $instanceId)
+    {
+        // @todo Deprecation to enable in v8.1
+        // \trigger_error('Couchbase driver is now deprecated and will be removed in the V9, use Couchbasev3 instead which will support SDK 3.', \E_USER_DEPRECATED);
+        $this->__baseConstruct($config, $instanceId);
+    }
 
     /**
      * @return bool

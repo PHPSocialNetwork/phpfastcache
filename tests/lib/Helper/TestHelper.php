@@ -90,6 +90,7 @@ class TestHelper
         $this->printHeaders();
     }
 
+
     /**
      * @see https://stackoverflow.com/questions/933367/php-how-to-best-determine-if-the-current-invocation-is-from-cli-or-web-server
      * @return bool
@@ -389,10 +390,14 @@ class TestHelper
     /**
      * @param ExtendedCacheItemPoolInterface $pool
      */
-    public function runCRUDTests(ExtendedCacheItemPoolInterface $pool)
+    public function runCRUDTests(ExtendedCacheItemPoolInterface $pool, bool $poolClear = true)
     {
         $this->printInfoText('Running CRUD tests on the following backend: ' . get_class($pool));
-        $pool->clear();
+
+        if($poolClear){
+            $this->printDebugText('Clearing backend before running test...');
+            $pool->clear();
+        }
 
         $cacheKey = 'cache_key_' . bin2hex(random_bytes(8) . '_' . random_int(100, 999));
         $cacheValue = 'cache_data_' . random_int(1000, 999999);
@@ -510,27 +515,28 @@ class TestHelper
             $this->assertFail('The pool failed to retrieve the expected new value.');
             return;
         }
+        if($poolClear){
+            if ($pool->deleteItem($cacheKey)) {
+                $this->assertPass('The pool successfully deleted the cache item.');
+            } else {
+                $this->assertFail('The pool failed to delete the cache item.');
+            }
 
-        if ($pool->deleteItem($cacheKey)) {
-            $this->assertPass('The pool successfully deleted the cache item.');
-        } else {
-            $this->assertFail('The pool failed to delete the cache item.');
-        }
+            if ($pool->clear()) {
+                $this->assertPass('The pool successfully cleared.');
+            } else {
+                $this->assertFail('The cluster failed to clear.');
+            }
+            $pool->detachAllItems();
+            unset($cacheItem);
 
-        if ($pool->clear()) {
-            $this->assertPass('The pool successfully cleared.');
-        } else {
-            $this->assertFail('The cluster failed to clear.');
-        }
-        $pool->detachAllItems();
-        unset($cacheItem);
-
-        $cacheItem = $pool->getItem($cacheKey);
-        if (!$cacheItem->isHit()) {
-            $this->assertPass('The cache item does no longer exists in pool.');
-        } else {
-            $this->assertFail('The cache item still exists in pool.');
-            return;
+            $cacheItem = $pool->getItem($cacheKey);
+            if (!$cacheItem->isHit()) {
+                $this->assertPass('The cache item does no longer exists in pool.');
+            } else {
+                $this->assertFail('The cache item still exists in pool.');
+                return;
+            }
         }
 
         $this->printInfoText(sprintf('I/O stats: %d HIT, %s MISS, %d WRITE', $pool->getIO()->getReadHit(), $pool->getIO()->getReadMiss(), $pool->getIO()->getWriteHit()));

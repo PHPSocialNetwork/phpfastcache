@@ -20,6 +20,7 @@ use Phpfastcache\Config\ConfigurationOption;
 
 class Config extends ConfigurationOption
 {
+    protected const DEFAULT_VALUE = '_default';
     /**
      * @var string
      */
@@ -43,7 +44,7 @@ class Config extends ConfigurationOption
     /**
      * @var string
      */
-    protected $bucketName = 'default';
+    protected $bucketName = self::DEFAULT_VALUE;
 
     /**
      * @return string

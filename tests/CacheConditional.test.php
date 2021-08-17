@@ -62,7 +62,7 @@ $cacheInstance->save($cacheItem);
 $cacheInstance->detachAllItems();
 unset($cacheItem);
 
-$cacheValue = (new CacheConditional($cacheInstance))->get($cacheKey, function() use ($cacheKey, $testHelper, $RandomCacheValue){
+$cacheValue = (new CacheConditional($cacheInstance))->get($cacheKey, static function() use ($cacheKey, $testHelper, $RandomCacheValue){
     /**
      * No parameter are passed
      * to this closure
@@ -88,7 +88,7 @@ $RandomCacheValue = str_shuffle(uniqid('pfc', true));
 $cacheInstance->detachAllItems();
 unset($cacheItem);
 
-$cacheValue = (new CacheConditional($cacheInstance))->get($cacheKey, function() use ($cacheKey, $testHelper, $RandomCacheValue){
+$cacheValue = (new CacheConditional($cacheInstance))->get($cacheKey, static function() use ($cacheKey, $testHelper, $RandomCacheValue){
     return $RandomCacheValue;
 }, $ttl);
 

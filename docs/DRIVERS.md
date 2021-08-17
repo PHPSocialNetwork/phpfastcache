@@ -9,6 +9,8 @@
   * A cookie driver to store non-sensitive scalar (only) data. Limited storage up to 4Ko.
 * Couchbase
   * A very high-performance NoSQL driver using a key-value pair system
+* Couchbasev3 **(Added in V8.0.8)**
+  * Same as Couchbase but for Couchbase PHP-SDK 3.0 support
 * Couchdb
   * A very high-performance NoSQL driver using a key-value pair system
 * Devfalse

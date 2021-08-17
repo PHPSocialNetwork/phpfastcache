@@ -26,7 +26,6 @@ jobs:
   fast_finish: true
   allow_failures:
     - php: nightly
-    # - php: hhvm
   include:
     - dist: trusty
       php: 7.3
@@ -39,21 +38,28 @@ jobs:
       php: 7.4
 
 before_install:
+# Memcached is not yet available for PHP8 (hasn't been updated since 2019): https://pecl.php.net/package/memcached
+# Memcache however seems to be compatible with PHP 7 and 8: https://pecl.php.net/package/memcache
+#
   - |
-    if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
-      cat bin/ci/hhvm_phpfastcache.ini >> /etc/hhvm/php.ini
+    echo "\$TRAVIS_PHP_VERSION set to: $TRAVIS_PHP_VERSION";
+    pecl channel-update pecl.php.net;
+    yes | pecl install -f mongodb-stable;
+    yes | pecl install -f apcu-stable || true;
+  - |
+    if [[ $TRAVIS_PHP_VERSION == "8."* || $TRAVIS_PHP_VERSION == "nightly" ]]; then
+        ./bin/ci/scripts/setup_couchbase.sh;
+        yes | pecl install -f couchbase-stable;
+        yes | pecl install -f memcache;
+        phpenv config-add bin/ci/php8_phpfastcache.ini;
     else
-      pecl channel-update pecl.php.net;
-      yes | pecl install -f mongodb-stable;
-      yes | pecl install -f memcached;
-      yes | pecl install -f apcu-stable || true;
-      phpenv config-add bin/ci/php_phpfastcache.ini;
+        phpenv config-add bin/ci/php7_phpfastcache.ini;
     fi
-  - sleep 15
-  - mongo pfc_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
+  - phpenv config-add bin/ci/php_common.ini;
+  - phpenv config-rm xdebug.ini
+  - ./bin/ci/scripts/setup_mongodb.sh
 
 install:
-  - ./bin/ci/install_dependencies.sh
-
+  - ./bin/ci/scripts/install_dependencies.sh
 script:
   - php -f ./bin/ci/run_tests.php

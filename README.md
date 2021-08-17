@@ -25,7 +25,7 @@ This ensure you that the library is completely reliable when it come to manipula
 |      Regular drivers            |     High performances drivers      |    Development drivers        |    Cluster-Aggregated drivers     |
 |---------------------------------|------------------------------------|-------------------------------|-----------------------------------|
 |  `Apcu` *(APC support removed)* | `Cassandra`                        | `Devnull`                     | `FullReplicationCluster`          |
-|  `Cookie`                       | `CouchBase`                        | `Devfalse`                    | `SemiReplicationCluster`          |
+|  `Cookie`                       | `CouchBase(v3)`                    | `Devfalse`                    | `SemiReplicationCluster`          |
 |  `Files`                        | `Couchdb`                          | `Devtrue`                     | `MasterSlaveReplicationCluster`   |
 |  `Leveldb`                      | `Mongodb`                          | `Memstatic`                   | `RandomReplicationCluster`        |
 |  `Memcache(d)`                  | `Predis`                           |                               |                                   |

@@ -26,16 +26,6 @@ jobs:
   fast_finish: true
   allow_failures:
     - php: nightly
-  include:
-    - dist: trusty
-      php: 7.3
-    - dist: trusty
-      php: 7.4
-  exclude:
-    - dist: bionic
-      php: 7.3
-    - dist: bionic
-      php: 7.4
 
 before_install:
 # Memcached is not yet available for PHP8 (hasn't been updated since 2019): https://pecl.php.net/package/memcached
@@ -53,6 +43,7 @@ before_install:
         yes | pecl install -f memcache;
         phpenv config-add bin/ci/php8_phpfastcache.ini;
     else
+        yes | pecl install -f memcached;
         phpenv config-add bin/ci/php7_phpfastcache.ini;
     fi
   - phpenv config-add bin/ci/php_common.ini;

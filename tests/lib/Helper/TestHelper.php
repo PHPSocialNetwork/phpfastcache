@@ -85,11 +85,29 @@ class TestHelper
          * to our own exception handler
          */
         set_exception_handler([$this, 'exceptionHandler']);
-        set_error_handler([$this, 'errorHandler']);
+        $this->setErrorHandler();
 
         $this->printHeaders();
     }
 
+    protected function setErrorHandler($errorLevels = E_ALL)
+    {
+        set_error_handler([$this, 'errorHandler'], $errorLevels);
+    }
+
+    public function mutePhpNotices()
+    {
+        $errorLevels = E_ALL & ~E_NOTICE & ~E_USER_NOTICE;
+        $this->setErrorHandler($errorLevels);
+        error_reporting($errorLevels);
+    }
+
+    public function unmutePhpNotices()
+    {
+        $errorLevels = E_ALL;
+        $this->setErrorHandler($errorLevels);
+        error_reporting($errorLevels);
+    }
 
     /**
      * @see https://stackoverflow.com/questions/933367/php-how-to-best-determine-if-the-current-invocation-is-from-cli-or-web-server
@@ -285,7 +303,16 @@ class TestHelper
             )
         );
         $this->printText('<blue>Test duration: </blue><yellow>' . $execTime . 's</yellow>');
-        exit($this->numOfFailedTests ? 1 : 0);
+
+        if($this->numOfFailedTests){
+            exit(1);
+        }
+
+        if(!$this->numOfSkippedTests && $this->numOfPassedTests){
+            exit(0);
+        }
+
+        exit(2);
     }
 
     /**

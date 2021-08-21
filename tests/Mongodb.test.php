@@ -20,12 +20,6 @@ $config->setItemDetailedDate(true)
     ->setUsername('travis')
     ->setPassword('test');
 
-try{
-    $cacheInstance = CacheManager::getInstance('Mongodb', $config);
-}catch(PhpfastcacheDriverCheckException $exception){
-    $testHelper->exceptionHandler($exception);
-    $testHelper->terminateTest();
-}
-
+$cacheInstance = CacheManager::getInstance('Mongodb', $config);
 $testHelper->runCRUDTests($cacheInstance);
 $testHelper->terminateTest();

@@ -11,11 +11,12 @@
 os: linux
 dist: bionic
 language: php
+
 services:
   - memcached
   - redis
-  - couchdb
   - mongodb
+  - docker
 
 php:
   - 7.3
@@ -26,38 +27,28 @@ jobs:
   fast_finish: true
   allow_failures:
     - php: nightly
-  include:
-    - dist: trusty
-      php: 7.3
-    - dist: trusty
-      php: 7.4
-  exclude:
-    - dist: bionic
-      php: 7.3
-    - dist: bionic
-      php: 7.4
 
 before_install:
 # Memcached is not yet available for PHP8 (hasn't been updated since 2019): https://pecl.php.net/package/memcached
 # Memcache however seems to be compatible with PHP 7 and 8: https://pecl.php.net/package/memcache
 #
   - |
-    echo "\$TRAVIS_PHP_VERSION set to: $TRAVIS_PHP_VERSION";
+    ./bin/ci/scripts/setup_couchdb.sh;
+    ./bin/ci/scripts/setup_mongodb.sh
+    ./bin/ci/scripts/setup_couchbase.sh;
     pecl channel-update pecl.php.net;
     yes | pecl install -f mongodb-stable;
     yes | pecl install -f apcu-stable || true;
+    yes | pecl install -f memcache;
+    yes | pecl install -f couchbase-stable;
   - |
     if [[ $TRAVIS_PHP_VERSION == "8."* || $TRAVIS_PHP_VERSION == "nightly" ]]; then
-        ./bin/ci/scripts/setup_couchbase.sh;
-        yes | pecl install -f couchbase-stable;
-        yes | pecl install -f memcache;
         phpenv config-add bin/ci/php8_phpfastcache.ini;
     else
         phpenv config-add bin/ci/php7_phpfastcache.ini;
     fi
   - phpenv config-add bin/ci/php_common.ini;
   - phpenv config-rm xdebug.ini
-  - ./bin/ci/scripts/setup_mongodb.sh
 
 install:
   - ./bin/ci/scripts/install_dependencies.sh

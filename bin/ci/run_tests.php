@@ -14,9 +14,11 @@ $climate->forceAnsiOn();
 $phpBinPath = 'php ';
 $status = 0;
 $dir = __DIR__;
+$projectDir = dirname($dir, 2);
 $driver = $argv[ 1 ] ?? 'Files';
 $phpBinPath = $_SERVER['PHP_BIN_PATH'] ?? 'php';
 $failedTests = [];
+$skippedTests = [];
 
 /**
  * @param string $pattern
@@ -38,18 +40,23 @@ $globCallback = static function (string $pattern, int $flags = 0) use (&$globCal
 foreach ($globCallback(PFC_TEST_DIR . DIRECTORY_SEPARATOR . '*.test.php') as $filename) {
     $climate->backgroundLightYellow()->blue()->out('---');
     $command = "{$phpBinPath} -f {$filename} {$driver}";
-    $climate->out("<yellow>phpfastcache@unit-tests</yellow> <blue>{$dir}</blue> <green>#</green> <red>$command</red>");
+    $shortCommand = str_replace(dirname(PFC_TEST_DIR), '~', $command);
+
+    $climate->out("<yellow>phpfastcache@unit-tests</yellow> <blue>{$projectDir}</blue> <green>#</green> <red>$shortCommand</red>");
 
     \exec($command, $output, $return_var);
     $climate->out('=====================================');
     $climate->out(\implode("\n", $output));
     $climate->out('=====================================');
     if ($return_var === 0) {
-        $climate->green("Process finished with exit code $return_var");
-    } else {
-        $climate->red("Process finished with exit code $return_var");
-        $status = 255;
+        $climate->green("Test finished successfully");
+    } else if($return_var === 1){
+        $climate->red("Test finished with a least one error");
+        $status = 1;
         $failedTests[] = basename($filename);
+    }else{
+        $climate->yellow("Test skipped due to unmeet dependencies");
+        $skippedTests[] = basename($filename);
     }
 
     $climate->out('');
@@ -62,11 +69,15 @@ foreach ($globCallback(PFC_TEST_DIR . DIRECTORY_SEPARATOR . '*.test.php') as $fi
 $execTime = gmdate('i\m s\s', (int) round(microtime(true) - $timestamp, 3));
 $climate->out('<yellow>Total tests duration: </yellow><light_green>' . $execTime . '</light_green>');
 
-if ($status === 0) {
+if (!$failedTests) {
     $climate->backgroundGreen()->white()->flank('[OK] The build has passed successfully', '#')->out('');
 } else {
     $climate->backgroundRed()->white()->flank('[KO] The build has failed miserably', '~')->out('');
-    $climate->red()->out('Tests failed: ' . implode(', ', $failedTests))->out('');
+    $climate->red()->out('[TESTS FAILED] ' . PHP_EOL . '- '. implode(PHP_EOL . '- ', $failedTests))->out('');
+}
+
+if($skippedTests){
+    $climate->yellow()->out('[TESTS SKIPPED] ' . PHP_EOL . '- '. implode(PHP_EOL . '- ', $skippedTests))->out('');
 }
 
 exit($status);

@@ -14,6 +14,7 @@ use Phpfastcache\Drivers\Predis\Config as PredisConfig;
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
 $testHelper = new TestHelper('Github issue #627 - Redis/Predis "prefix" option');
+$testHelper->mutePhpNotices();
 $redisInstance = CacheManager::getInstance('Redis', new RedisConfig(['optPrefix' => uniqid('pfc', true) . '_']));
 $predisInstance = CacheManager::getInstance('Predis', new PredisConfig(['optPrefix' => uniqid('pfc', true) . '_']));
 

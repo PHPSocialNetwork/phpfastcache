@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Not possible to run docker container in travis...
-# https://docs.travis-ci.com/user/database-setup/#starting-services => Couchbase not yet available
-
 set -e
 
 export CB_VERSION=7.0.0
@@ -30,8 +27,8 @@ check_db() {
 i=1
 # Echo with
 numbered_echo() {
-  echo "[$i] $@"
-  i=`expr $i + 1`
+  echo "[$i] $*"
+  i=$(($i+1))
 }
 
 echo "# Prepare Couchbase dependencies"
@@ -54,24 +51,23 @@ done
 
 echo "# Couchbase Server Online"
 echo "# Starting setup process"
-
-echo "# Setting up memory"
+echo "# 1) Setting up memory"
 curl -i "http://127.0.0.1:8091/pools/default" \
     -d memoryQuota=${MEMORY_QUOTA} \
     -d indexMemoryQuota=${INDEX_MEMORY_QUOTA} \
     -d ftsMemoryQuota=${FTS_MEMORY_QUOTA}
 
-echo "# Setting up services"
+echo "# 2) Setting up services"
 curl -i "http://127.0.0.1:8091/node/controller/setupServices" \
     -d services="${SERVICES}"
 
-echo "# Setting up user credentials"
+echo "# 3) Setting up user credentials"
 curl -i "http://127.0.0.1:8091/settings/web" \
     -d port=8091 \
     -d username=${USERNAME} \
     -d password=${PASSWORD}
 
-echo "# Setting up the bucket"
+echo "# 4) Setting up the bucket"
 curl -i "http://127.0.0.1:8091/pools/default/buckets" \
     -d name=phpfastcache \
     -d ramQuotaMB=256 \

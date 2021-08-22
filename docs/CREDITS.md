@@ -1,4 +1,4 @@
-## phpFastCache Copyright (c) 2016
+## Phpfastcache Copyright (c) 2016
 https://www.phpfastcache.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,25 +19,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-__phpFastCache Current Project Manager:__ Georges.L (Geolim4) / (v5, v6, v7, v8)
+__Phpfastcache Current Project Manager:__ Georges.L (Geolim4) / (v5, v6, v7, v8)
 
-__phpFastCache Former Project Founder:__ Khoa Bui (khoaofgod) / (<= v4)
+__Phpfastcache Former Project Founder:__ Khoa Bui (khoaofgod) / (<= v4)
 
-__phpFastCache Contributors:__    https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
+__Phpfastcache Contributors:__    https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
 
 #### Hall of fame (Special thanks):
 
 - __Jetbrains__ * for providing us a free IDE licence
 - __Scrutinizer-CI__ * for providing us a free Security Analysis
-- __VersionEye__ * For being an awesome tool that helped us to watch version dependencies. You will be missed, thanks you very much Robert.
+- __VersionEye__ * For being an awesome tool that helped us to watch version dependencies. You will be missed, thank you very much Robert.
 - __Sabine van Lommen__ * from __Zend.com__ for providing us a free developer licence of Zend Server
 - __Lucas (_hammermaps_)__ for the "Zend Data Cache" driver implementation
 - __Anton (_git-webmaster_)__ for kindly providing us a Couchbase server for deep tests purposes.
 
-\* Thanks to the companies that provided us free access to their products to help us to build a better quality software every days.
+\* Thanks to the companies that provided us free access to their products to help us to build a better quality software every day.
 
 But above all, many thanks to these companies to support indisputably Open Source Projects.
-Thanks to all the contributors that added their stone to the building. Each contribution made this project a bit better, every commits, every pull request you made contributed to make this project greater and better.
+Thanks to all the contributors that added their stone to the building. Each contribution made this project a bit better, every commit, every pull request you made contributed to make this project greater and better.
 
 #### Software licenses:
 

@@ -1,4 +1,4 @@
-:mega: As of the V6, PhpFastCache provides an event mechanism.
+:mega: As of the V6, Phpfastcache provides an event mechanism.
 You can subscribe to an event by passing a Closure to an active event:
 
 ```php

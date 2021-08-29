@@ -232,6 +232,7 @@ class Psr16Adapter implements CacheInterface
 
     /**
      * @return ExtendedCacheItemPoolInterface
+     * @internal
      */
     public function getInternalCacheInstance(): ExtendedCacheItemPoolInterface
     {

@@ -73,11 +73,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverRead(CacheItemInterface $item)
     {
-        $key = md5($item->getKey());
-        if (isset($this->staticStack[$key])) {
-            return $this->staticStack[$key];
-        }
-        return null;
+        return $this->staticStack[$item->getKey()] ?? null;
     }
 
     /**
@@ -91,7 +87,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            $this->staticStack[md5($item->getKey())] = $this->driverPreWrap($item);
+            $this->staticStack[$item->getKey()] = $this->driverPreWrap($item);
             return true;
         }
 
@@ -109,7 +105,7 @@ class Driver implements ExtendedCacheItemPoolInterface
          * Check for Cross-Driver type confusion
          */
         if ($item instanceof Item) {
-            $key = md5($item->getKey());
+            $key = $item->getKey();
             if (isset($this->staticStack[$key])) {
                 unset($this->staticStack[$key]);
                 return true;

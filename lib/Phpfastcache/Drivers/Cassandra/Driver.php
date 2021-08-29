@@ -60,7 +60,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 To install the php Cassandra extension via Pecl:
 <code>sudo pecl install cassandra</code>
 More information on: https://github.com/datastax/php-driver
-Please not that this repository only provide php stubs and C/C++ sources, it does NOT provide php client.
+Please note that this repository only provide php stubs and C/C++ sources, it does NOT provide php client.
 </p>
 HELP;
     }

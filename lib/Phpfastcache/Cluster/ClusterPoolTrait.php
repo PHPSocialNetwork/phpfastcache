@@ -19,17 +19,12 @@ use Psr\Cache\CacheItemInterface;
 
 trait ClusterPoolTrait
 {
-    /**
-     * @return bool
-     */
+
     protected function driverCheck(): bool
     {
         return true;
     }
 
-    /**
-     * @return bool
-     */
     protected function driverConnect(): bool
     {
         return true;

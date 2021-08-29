@@ -90,7 +90,7 @@ interface TaggableCacheItemPoolInterface
      *   MUST be thrown.
      *
      */
-    public function getItemsByTagsAsJsonString(array $tagNames, int $option = 0, int $depth = 512, int $strategy = self::TAG_STRATEGY_ONE): string;
+    public function getItemsByTagsAsJsonString(array $tagNames, int $option = \JSON_THROW_ON_ERROR, int $depth = 512, int $strategy = self::TAG_STRATEGY_ONE): string;
 
     /**
      * Removes the item from the pool by tag.

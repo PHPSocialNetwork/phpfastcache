@@ -15,7 +15,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Core\Item;
 
-use Countable;
 use DateTime;
 use DateTimeInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
@@ -43,16 +42,9 @@ trait ItemExtendedTrait
      * PSR-6 Extended Methods
      *
      *******************/
+    protected ExtendedCacheItemPoolInterface $driver;
 
-    /**
-     * @var ExtendedCacheItemPoolInterface
-     */
-    protected $driver;
-
-    /**
-     * @var string
-     */
-    protected $encodedKey;
+    protected string $encodedKey;
 
     /**
      * Item constructor.
@@ -63,6 +55,7 @@ trait ItemExtendedTrait
     public function __construct(ExtendedCacheItemPoolInterface $driver, $key)
     {
         if (\is_string($key)) {
+            $this->data = null;
             $this->key = $key;
             $this->driver = $driver;
             if($driver->getConfig()->isUseStaticItemCaching()){
@@ -115,6 +108,7 @@ trait ItemExtendedTrait
      *
      * @return ExtendedCacheItemInterface
      *   The called object.
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function setExpirationDate(DateTimeInterface $expiration): ExtendedCacheItemInterface
     {
@@ -222,14 +216,13 @@ trait ItemExtendedTrait
         switch (\gettype($this->data)) {
             case 'array':
             case 'object':
-                if (\is_array($this->data) || $this->data instanceof Countable) {
+                if (\is_countable($this->data)) {
                     return \count($this->data);
                 }
                 break;
 
             case 'string':
                 return \strlen($this->data);
-                break;
         }
 
         return -1;
@@ -279,12 +272,10 @@ trait ItemExtendedTrait
     {
         if (\is_array($this->data)) {
             $this->data[] = $data;
+        } elseif (\is_string($data)) {
+            $this->data .= $data;
         } else {
-            if (\is_string($data)) {
-                $this->data .= (string)$data;
-            } else {
-                throw new PhpfastcacheInvalidArgumentException('$data must be either array nor string.');
-            }
+            throw new PhpfastcacheInvalidArgumentException('$data must be either array nor string.');
         }
 
         return $this;
@@ -300,12 +291,10 @@ trait ItemExtendedTrait
     {
         if (\is_array($this->data)) {
             \array_unshift($this->data, $data);
+        } elseif (\is_string($data)) {
+            $this->data = $data . $this->data;
         } else {
-            if (\is_string($data)) {
-                $this->data = (string)$data . $this->data;
-            } else {
-                throw new PhpfastcacheInvalidArgumentException('$data must be either array nor string.');
-            }
+            throw new PhpfastcacheInvalidArgumentException('$data must be either array nor string.');
         }
 
         return $this;
@@ -314,28 +303,28 @@ trait ItemExtendedTrait
     /**
      * Return the data as a well-formatted string.
      * Any scalar value will be casted to an array
-     * @param int $option \json_encode() options
+     * @param int $options \json_encode() options
      * @param int $depth \json_encode() depth
      * @return string
      */
-    public function getDataAsJsonString(int $option = 0, int $depth = 512): string
+    public function getDataAsJsonString(int $options = JSON_THROW_ON_ERROR, int $depth = 512): string
     {
         $data = $this->get();
 
         if (\is_object($data) || \is_array($data)) {
-            $data = \json_encode($data, $option, $depth);
+            $data = \json_encode($data, $options, $depth);
         } else {
-            $data = \json_encode([$data], $option, $depth);
+            $data = \json_encode([$data], $options, $depth);
         }
 
-        return \json_encode($data, $option, $depth);
+        return \json_encode($data, $options, $depth);
     }
 
     /**
      * Implements \JsonSerializable interface
      * @return mixed
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->get();
     }
@@ -343,24 +332,9 @@ trait ItemExtendedTrait
     /**
      * @param ExtendedCacheItemPoolInterface $driverPool
      * @return bool
-     * @throws PhpfastcacheInvalidArgumentException
      */
     public function doesItemBelongToThatDriverBackend(ExtendedCacheItemPoolInterface $driverPool): bool
     {
         return $driverPool->getClassNamespace() === $this->getClassNamespace();
-    }
-
-    /**
-     * @return array
-     * @todo Is it still useful ??
-     *
-     * Prevent recursions for Debug (php 5.6+)
-     */
-    final public function __debugInfo()
-    {
-        $info = \get_object_vars($this);
-        $info['driver'] = 'object(' . \get_class($info['driver']) . ')';
-
-        return $info;
     }
 }

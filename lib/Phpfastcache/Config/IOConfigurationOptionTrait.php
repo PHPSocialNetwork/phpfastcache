@@ -21,25 +21,15 @@ const SAFE_FILE_EXTENSIONS = 'txt|cache|db|pfc';
 
 trait IOConfigurationOptionTrait
 {
-    /**
-     * @var boolean
-     */
-    protected $secureFileManipulation = false;
+    protected bool $secureFileManipulation = false;
 
-    /**
-     * @var bool
-     */
-    protected $htaccess = true;
+    protected bool $htaccess = true;
 
-    /**
-     * @var string
-     */
-    protected $securityKey = '';
+    protected string $securityKey = '';
 
-    /**
-     * @var string
-     */
-    protected $cacheFileExtension = 'txt';
+    protected string $cacheFileExtension = 'txt';
+
+    protected int $defaultChmod = 0777;
 
     /**
      * @return string
@@ -51,7 +41,7 @@ trait IOConfigurationOptionTrait
 
     /**
      * @param string $securityKey
-     * @return Config
+     * @return self
      */
     public function setSecurityKey(string $securityKey): self
     {
@@ -124,11 +114,29 @@ trait IOConfigurationOptionTrait
         }
         if (!\in_array($cacheFileExtension, $safeFileExtensions, true)) {
             throw new PhpfastcacheInvalidConfigurationException(
-                "Extension \"{$cacheFileExtension}\" is not safe, currently allowed extension names: " . \implode(', ', $safeFileExtensions)
+                "Extension \"$cacheFileExtension\" is not safe, currently allowed extension names: " . \implode(', ', $safeFileExtensions)
             );
         }
 
         $this->cacheFileExtension = $cacheFileExtension;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDefaultChmod(): int
+    {
+        return $this->defaultChmod;
+    }
+
+    /**
+     * @param int $defaultChmod
+     * @return self
+     */
+    public function setDefaultChmod(int $defaultChmod): self
+    {
+        $this->defaultChmod = $defaultChmod;
         return $this;
     }
 }

@@ -138,7 +138,7 @@ HELP;
      * @return null|array
      * @throws PhpfastcacheDriverException
      */
-    protected function driverRead(CacheItemInterface $item)
+    protected function driverRead(CacheItemInterface $item): ?array
     {
         try {
             $response = $this->instance->findDocument($this->getCouchDbItemKey($item));

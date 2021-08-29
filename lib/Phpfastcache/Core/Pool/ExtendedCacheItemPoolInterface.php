@@ -107,7 +107,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      *   MUST be thrown.
      *
      */
-    public function getItem($key);
+    public function getItem(string $key): ExtendedCacheItemInterface;
 
     /**
      * [phpFastCache phpDoc Override]
@@ -126,7 +126,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      *   MUST be thrown.
      *
      */
-    public function getItems(array $keys = []);
+    public function getItems(array $keys = []): iterable;
 
     /**
      * Returns A json string that represents an array of items.
@@ -142,44 +142,23 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      *   MUST be thrown.
      *
      */
-    public function getItemsAsJsonString(array $keys = [], int $option = 0, int $depth = 512): string;
+    public function getItemsAsJsonString(array $keys = [], int $option = \JSON_THROW_ON_ERROR, int $depth = 512): string;
 
-    /**
-     * @param CacheItemInterface $item
-     * @return mixed
-     */
-    public function setItem(CacheItemInterface $item);
+    public function setItem(CacheItemInterface $item): static;
 
-    /**
-     * @return DriverStatistic
-     */
     public function getStats(): DriverStatistic;
 
     /**
      * Get a quick help guide
      * about the current driver
-     *
-     * @return string
      */
     public function getHelp(): string;
 
-    /**
-     * @param CacheItemInterface $item
-     * @return void
-     */
-    public function detachItem(CacheItemInterface $item);
+    public function detachItem(CacheItemInterface $item): static;
 
-    /**
-     * @return void
-     */
-    public function detachAllItems();
+    public function detachAllItems(): static;
 
-    /**
-     * @param CacheItemInterface $item
-     * @return void
-     * @throws PhpfastcacheLogicException
-     */
-    public function attachItem(CacheItemInterface $item);
+    public function attachItem(CacheItemInterface $item): static;
 
     /**
      * Returns true if the item exists, is attached and the Spl Hash matches
@@ -187,10 +166,10 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      * Returns null if the item does not exists
      *
      * @param CacheItemInterface $item
-     * @return bool|null
+     * @return bool
      * @throws PhpfastcacheLogicException
      */
-    public function isAttached(CacheItemInterface $item);
+    public function isAttached(CacheItemInterface $item): bool;
 
     /**
      * Save multiple items, possible uses:
@@ -200,7 +179,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      * @param ExtendedCacheItemInterface[] $items
      * @return bool
      */
-    public function saveMultiple(...$items): bool;
+    public function saveMultiple(ExtendedCacheItemInterface...$items): bool;
 
 
     /**

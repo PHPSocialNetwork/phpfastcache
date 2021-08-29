@@ -28,65 +28,29 @@ use TypeError;
  */
 class ConfigurationOption extends ArrayObject implements ConfigurationOptionInterface
 {
-    /**
-     * @var bool
-     */
-    protected $itemDetailedDate = false;
+    protected bool $itemDetailedDate = false;
+
+    protected bool $autoTmpFallback = false;
+
+    protected int $defaultTtl = 900;
 
     /**
-     * @var bool
-     */
-    protected $autoTmpFallback = false;
-
-    /**
-     * @var int
-     */
-    protected $defaultTtl = 900;
-
-    /**
-     * @var string|Callable
+     * @var string|callable
      */
     protected $defaultKeyHashFunction = 'md5';
 
     /**
-     * @var string|Callable
+     * @var string|callable
      */
     protected $defaultFileNameHashFunction = 'md5';
 
-    /**
-     * @var int
-     */
-    protected $defaultChmod = 0777;
+    protected string $path = '';
 
-    /**
-     * @var string
-     */
-    protected $path = '';
+    protected bool $preventCacheSlams = false;
 
-    /**
-     * @var int
-     */
-    protected $limitedMemoryByObject = 4096;
+    protected int $cacheSlamsTimeout = 15;
 
-    /**
-     * @var bool
-     */
-    protected $compressData = false;
-
-    /**
-     * @var bool
-     */
-    protected $preventCacheSlams = false;
-
-    /**
-     * @var int
-     */
-    protected $cacheSlamsTimeout = 15;
-
-    /**
-     * @var bool
-     */
-    protected $useStaticItemCaching = true;
+    protected bool $useStaticItemCaching = true;
 
     /**
      * @param $args
@@ -261,24 +225,6 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     }
 
     /**
-     * @return int
-     */
-    public function getDefaultChmod(): int
-    {
-        return $this->defaultChmod;
-    }
-
-    /**
-     * @param int $defaultChmod
-     * @return ConfigurationOption
-     */
-    public function setDefaultChmod(int $defaultChmod): self
-    {
-        $this->defaultChmod = $defaultChmod;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getPath(): string
@@ -293,42 +239,6 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     public function setPath(string $path): self
     {
         $this->path = $path;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLimitedMemoryByObject(): int
-    {
-        return $this->limitedMemoryByObject;
-    }
-
-    /**
-     * @param int $limitedMemoryByObject
-     * @return ConfigurationOption
-     */
-    public function setLimitedMemoryByObject(int $limitedMemoryByObject): self
-    {
-        $this->limitedMemoryByObject = $limitedMemoryByObject;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isCompressData(): bool
-    {
-        return $this->compressData;
-    }
-
-    /**
-     * @param bool $compressData
-     * @return ConfigurationOption
-     */
-    public function setCompressData(bool $compressData): self
-    {
-        $this->compressData = $compressData;
         return $this;
     }
 

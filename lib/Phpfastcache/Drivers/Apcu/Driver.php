@@ -91,7 +91,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      * @param CacheItemInterface $item
      * @return null|array
      */
-    protected function driverRead(CacheItemInterface $item)
+    protected function driverRead(CacheItemInterface $item): ?array
     {
         $data = apcu_fetch($item->getKey(), $success);
 

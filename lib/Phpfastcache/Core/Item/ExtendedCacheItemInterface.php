@@ -171,12 +171,12 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      * Return the data as a well-formatted string.
      * Any scalar value will be casted to an array
      *
-     * @param int $option \json_encode() options
+     * @param int $options \json_encode() options
      * @param int $depth \json_encode() depth
      *
      * @return string
      */
-    public function getDataAsJsonString(int $option = 0, int $depth = 512): string;
+    public function getDataAsJsonString(int $options = JSON_THROW_ON_ERROR, int $depth = 512): string;
 
     /**
      * @param ExtendedCacheItemPoolInterface $driverPool

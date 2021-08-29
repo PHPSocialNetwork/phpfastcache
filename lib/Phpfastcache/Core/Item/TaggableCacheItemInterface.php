@@ -17,7 +17,6 @@ namespace Phpfastcache\Core\Item;
 
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 
-
 /**
  * Interface TaggableCacheItemInterface
  * @package Phpfastcache\Core\Item
@@ -33,7 +32,7 @@ interface TaggableCacheItemInterface
     public function addTag(string $tagName): ExtendedCacheItemInterface;
 
     /**
-     * @param array $tagNames
+     * @param string[] $tagNames
      *
      * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
@@ -42,7 +41,7 @@ interface TaggableCacheItemInterface
 
 
     /**
-     * @param array $tags
+     * @param string[] $tags
      *
      * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
@@ -50,7 +49,7 @@ interface TaggableCacheItemInterface
     public function setTags(array $tags): ExtendedCacheItemInterface;
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getTags(): array;
 
@@ -70,14 +69,14 @@ interface TaggableCacheItemInterface
     public function removeTag(string $tagName): ExtendedCacheItemInterface;
 
     /**
-     * @param array $tagNames
+     * @param string[] $tagNames
      *
      * @return ExtendedCacheItemInterface
      */
     public function removeTags(array $tagNames): ExtendedCacheItemInterface;
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getRemovedTags(): array;
 }

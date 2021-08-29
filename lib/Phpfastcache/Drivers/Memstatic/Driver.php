@@ -34,7 +34,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     /**
      * @var array
      */
-    protected $staticStack = [];
+    protected array $staticStack = [];
 
     /**
      * @return bool
@@ -70,7 +70,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @param CacheItemInterface $item
      * @return null|array
      */
-    protected function driverRead(CacheItemInterface $item)
+    protected function driverRead(CacheItemInterface $item): ?array
     {
         return $this->staticStack[$item->getKey()] ?? null;
     }

@@ -74,7 +74,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @param CacheItemInterface $item
      * @return null
      */
-    protected function driverRead(CacheItemInterface $item)
+    protected function driverRead(CacheItemInterface $item): ?array
     {
         return null;
     }

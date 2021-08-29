@@ -25,16 +25,9 @@ use Iterator;
  */
 class ArrayObject implements ArrayAccess, Iterator, Countable
 {
+    private array $array;
 
-    /**
-     * @var array
-     */
-    private $array = [];
-
-    /**
-     * @var int
-     */
-    private $position = 0;
+    private int $position = 0;
 
     /**
      * @param $args

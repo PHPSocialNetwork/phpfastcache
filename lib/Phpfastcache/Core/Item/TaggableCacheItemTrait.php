@@ -26,9 +26,8 @@ use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 trait TaggableCacheItemTrait
 {
     /**
-     * @param array $tagNames
+     * @param string[] $tagNames
      * @return ExtendedCacheItemInterface
-     * @throws PhpfastcacheInvalidArgumentException
      */
     public function addTags(array $tagNames): ExtendedCacheItemInterface
     {
@@ -40,23 +39,18 @@ trait TaggableCacheItemTrait
     }
 
     /**
-     * @param $tagName
+     * @param string $tagName
      * @return ExtendedCacheItemInterface
-     * @throws PhpfastcacheInvalidArgumentException
      */
     public function addTag(string $tagName): ExtendedCacheItemInterface
     {
-        if (\is_string($tagName)) {
-            $this->tags = \array_unique(\array_merge($this->tags, [$tagName]));
+        $this->tags = \array_unique(\array_merge($this->tags, [$tagName]));
 
-            return $this;
-        }
-
-        throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
+        return $this;
     }
 
     /**
-     * @param array $tags
+     * @param string[] $tags
      * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -74,7 +68,7 @@ trait TaggableCacheItemTrait
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getTags(): array
     {
@@ -91,7 +85,7 @@ trait TaggableCacheItemTrait
     }
 
     /**
-     * @param array $tagNames
+     * @param string[] $tagNames
      * @return ExtendedCacheItemInterface
      */
     public function removeTags(array $tagNames): ExtendedCacheItemInterface
@@ -104,7 +98,7 @@ trait TaggableCacheItemTrait
     }
 
     /**
-     * @param $tagName
+     * @param string $tagName
      * @return ExtendedCacheItemInterface
      */
     public function removeTag(string $tagName): ExtendedCacheItemInterface
@@ -118,7 +112,7 @@ trait TaggableCacheItemTrait
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getRemovedTags(): array
     {

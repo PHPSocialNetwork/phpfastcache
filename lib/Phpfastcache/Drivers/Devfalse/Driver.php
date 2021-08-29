@@ -75,7 +75,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @param CacheItemInterface $item
      * @return array
      */
-    protected function driverRead(CacheItemInterface $item): array
+    protected function driverRead(CacheItemInterface $item): ?array: array
     {
         return [
             self::DRIVER_DATA_WRAPPER_INDEX => false,

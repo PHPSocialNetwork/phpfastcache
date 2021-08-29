@@ -35,14 +35,9 @@ trait AbstractDriverPoolTrait
 
     /**
      * @param CacheItemInterface $item
-     * @return null|array [
-     *      'd' => 'THE ITEM DATA'
-     *      't' => 'THE ITEM DATE EXPIRATION'
-     *      'g' => 'THE ITEM TAGS'
-     * ]
-     *
+     * @return ?array
      */
-    abstract protected function driverRead(CacheItemInterface $item);
+    abstract protected function driverRead(CacheItemInterface $item): ?array;
 
     /**
      * @param CacheItemInterface $item

@@ -31,50 +31,29 @@ trait ItemBaseTrait
     use ItemExtendedTrait;
     use EventManagerDispatcherTrait;
 
-    /**
-     * @var bool
-     */
-    protected $fetched = false;
+    protected bool $fetched = false;
+
+    protected string $key;
+
+    protected mixed $data;
+
+    protected DateTimeInterface $expirationDate;
+
+    protected DateTimeInterface $creationDate;
+
+    protected DateTimeInterface $modificationDate;
 
     /**
-     * @var string
+     * @var string[]
      */
-    protected $key;
+    protected array $tags = [];
 
     /**
-     * @var mixed
+     * @var string[]
      */
-    protected $data;
+    protected array $removedTags = [];
 
-    /**
-     * @var DateTimeInterface
-     */
-    protected $expirationDate;
-
-    /**
-     * @var DateTimeInterface
-     */
-    protected $creationDate;
-
-    /**
-     * @var DateTimeInterface
-     */
-    protected $modificationDate;
-
-    /**
-     * @var array
-     */
-    protected $tags = [];
-
-    /**
-     * @var array
-     */
-    protected $removedTags = [];
-
-    /**
-     * @var bool
-     */
-    protected $isHit = false;
+    protected bool $isHit = false;
 
     /********************
      *
@@ -82,27 +61,18 @@ trait ItemBaseTrait
      *
      *******************/
 
-    /**
-     * @return string
-     */
-    public function getKey()
+
+    public function getKey(): string
     {
         return $this->key;
     }
 
-    /**
-     * @return mixed
-     */
-    public function get()
+    public function get(): mixed
     {
         return $this->data;
     }
 
-    /**
-     * @param mixed $value
-     * @return $this
-     */
-    public function set($value)
+    public function set(mixed $value): static
     {
         /**
          * The user set a value,
@@ -148,11 +118,9 @@ trait ItemBaseTrait
     }
 
     /**
-     * @param DateTimeInterface $expiration
-     * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function expiresAt($expiration): ExtendedCacheItemInterface
+    public function expiresAt(?\DateTimeInterface $expiration): static
     {
         if ($expiration instanceof DateTimeInterface) {
             /**
@@ -170,11 +138,10 @@ trait ItemBaseTrait
     }
 
     /**
-     * @param DateInterval|int $time
      * @return $this
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function expiresAfter($time)
+    public function expiresAfter(int|\DateInterval|null $time): static
     {
         if (\is_numeric($time)) {
             if ($time <= 0) {
@@ -193,19 +160,17 @@ trait ItemBaseTrait
             $this->eventManager->dispatch('CacheItemExpireAfter', $this, $time);
 
             $this->expirationDate = (new DateTime())->add(new DateInterval(\sprintf('PT%dS', $time)));
-        } else {
-            if ($time instanceof DateInterval) {
-                /**
-                 * @eventName CacheItemExpireAt
-                 * @param ExtendedCacheItemInterface $this
-                 * @param DateTimeInterface $expiration
-                 */
-                $this->eventManager->dispatch('CacheItemExpireAfter', $this, $time);
+        } elseif ($time instanceof DateInterval) {
+            /**
+             * @eventName CacheItemExpireAt
+             * @param ExtendedCacheItemInterface $this
+             * @param DateTimeInterface $expiration
+             */
+            $this->eventManager->dispatch('CacheItemExpireAfter', $this, $time);
 
-                $this->expirationDate = (new DateTime())->add($time);
-            } else {
-                throw new PhpfastcacheInvalidArgumentException(\sprintf('Invalid date format, got "%s"', \gettype($time)));
-            }
+            $this->expirationDate = (new DateTime())->add($time);
+        } else {
+            throw new PhpfastcacheInvalidArgumentException(\sprintf('Invalid date format, got "%s"', \gettype($time)));
         }
 
         return $this;

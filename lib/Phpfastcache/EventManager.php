@@ -48,15 +48,9 @@ class EventManager implements EventManagerInterface
 {
     public const ON_EVERY_EVENT = '__every';
 
-    /**
-     * @var $this
-     */
-    protected static $instance;
+    protected static self $instance;
 
-    /**
-     * @var array
-     */
-    protected $events = [
+    protected array $events = [
         self::ON_EVERY_EVENT => []
     ];
 
@@ -73,12 +67,12 @@ class EventManager implements EventManagerInterface
      */
     public static function getInstance(): EventManagerInterface
     {
-        return (self::$instance ?: self::$instance = new self);
+        return (self::$instance ?? self::$instance = new self);
     }
 
     /**
      * @param string $eventName
-     * @param array ...$args
+     * @param array $args
      */
     public function dispatch(string $eventName, ...$args): void
     {

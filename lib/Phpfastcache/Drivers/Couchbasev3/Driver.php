@@ -74,7 +74,7 @@ class Driver extends CoubaseV2Driver
      * @param CacheItemInterface $item
      * @return null|array
      */
-    protected function driverRead(CacheItemInterface $item)
+    protected function driverRead(CacheItemInterface $item): ?array
     {
         try {
             /**

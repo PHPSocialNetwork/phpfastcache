@@ -15,12 +15,4 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Config;
 
-/**
- * Class Config
- * Alias of ConfigurationOption
- * @package phpFastCache\Config
- * @see ConfigurationOption
- */
-class Config extends ConfigurationOption
-{
-}
+\class_alias(ConfigurationOption::class, \Phpfastcache\Config\Config::class);

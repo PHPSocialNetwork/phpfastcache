@@ -74,7 +74,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      * @return null|array
      * @throws PhpfastcacheDriverException
      */
-    protected function driverRead(CacheItemInterface $item)
+    protected function driverRead(CacheItemInterface $item): ?array
     {
         $this->driverConnect();
         $keyword = self::PREFIX . $item->getKey();

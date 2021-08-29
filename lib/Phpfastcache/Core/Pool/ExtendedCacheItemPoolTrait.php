@@ -15,8 +15,9 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool;
 
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
-use Phpfastcache\Exceptions\{PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Psr\Cache\CacheItemInterface;
 
 
@@ -29,60 +30,65 @@ trait ExtendedCacheItemPoolTrait
     use CacheItemPoolTrait;
     use AbstractDriverPoolTrait;
 
-    /**
-     * @var DriverIO
-     */
-    protected $IO;
+    protected DriverIO $IO;
 
     /**
-     * @inheritdoc
+     * @throws PhpfastcacheLogicException
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheCoreException
      */
-    public function getItemsAsJsonString(array $keys = [], int $option = 0, int $depth = 512): string
+    public function getItemsAsJsonString(array $keys = [], int $option = \JSON_THROW_ON_ERROR, int $depth = 512): string
     {
-        $callback = static function (CacheItemInterface $item) {
-            return $item->get();
-        };
-        return \json_encode(\array_map($callback, \array_values($this->getItems($keys))), $option, $depth);
+        return \json_encode(
+            \array_map(
+                static fn(CacheItemInterface $item) => $item->get(),
+                \array_values($this->getItems($keys))
+            ),
+            $option,
+            $depth
+        );
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function detachAllItems()
+    public function detachAllItems(): static
     {
         foreach ($this->itemInstances as $item) {
             $this->detachItem($item);
         }
+
+        return $this;
     }
 
-    /**
-     * @param CacheItemInterface $item
-     * @return void
-     */
-    public function detachItem(CacheItemInterface $item)
+    public function detachItem(CacheItemInterface $item): static
     {
         if (isset($this->itemInstances[$item->getKey()])) {
             $this->deregisterItem($item->getKey());
         }
+
+        return $this;
     }
 
     /**
      * @param string $item
+     * @return ExtendedCacheItemPoolTrait
      * @internal This method de-register an item from $this->itemInstances
      */
-    protected function deregisterItem(string $item)
+    protected function deregisterItem(string $item): static
     {
         unset($this->itemInstances[$item]);
 
         if (\gc_enabled()) {
             \gc_collect_cycles();
         }
+
+        return $this;
     }
 
     /**
-     * @inheritdoc
+     * @param CacheItemInterface $item
+     * @return ExtendedCacheItemPoolTrait
+     * @throws PhpfastcacheLogicException
      */
-    public function attachItem(CacheItemInterface $item)
+    public function attachItem(CacheItemInterface $item): static
     {
         if (isset($this->itemInstances[$item->getKey()]) && \spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
             throw new PhpfastcacheLogicException(
@@ -97,37 +103,28 @@ trait ExtendedCacheItemPoolTrait
         }
 
         $this->itemInstances[$item->getKey()] = $item;
+
+        return $this;
     }
 
-    /**
-     * Returns true if the item exists, is attached and the Spl Hash matches
-     * Returns false if the item exists, is attached and the Spl Hash mismatches
-     * Returns null if the item does not exists
-     *
-     * @param CacheItemInterface $item
-     * @return bool|null
-     */
-    public function isAttached(CacheItemInterface $item)
+    public function isAttached(CacheItemInterface $item): bool
     {
         if (isset($this->itemInstances[$item->getKey()])) {
             return \spl_object_hash($item) === \spl_object_hash($this->itemInstances[$item->getKey()]);
         }
-        return null;
+        return false;
     }
 
     /**
-     * @inheritdoc
+     * @param ExtendedCacheItemInterface ...$items
+     * @return bool
+     * @throws PhpfastcacheLogicException
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws \ReflectionException
      */
-    public function saveMultiple(...$items): bool
+    public function saveMultiple(ExtendedCacheItemInterface...$items): bool
     {
-        if (isset($items[0]) && \is_array($items[0])) {
-            foreach ($items[0] as $item) {
-                $this->save($item);
-            }
-            return true;
-        }
-
-        if (\is_array($items)) {
+        if (\count($items)) {
             foreach ($items as $item) {
                 $this->save($item);
             }

@@ -78,7 +78,7 @@ HELP;
      * @param CacheItemInterface $item
      * @return null|array
      */
-    protected function driverRead(CacheItemInterface $item)
+    protected function driverRead(CacheItemInterface $item): ?array
     {
         $data = zend_shm_cache_fetch($item->getKey());
         if ($data === false) {

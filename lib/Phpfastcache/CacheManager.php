@@ -24,10 +24,8 @@ use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException,
     PhpfastcacheDriverNotFoundException,
     PhpfastcacheInstanceNotFoundException,
     PhpfastcacheInvalidArgumentException,
-    PhpfastcacheInvalidConfigurationException,
     PhpfastcacheLogicException,
-    PhpfastcacheUnsupportedOperationException
-};
+    PhpfastcacheUnsupportedOperationException};
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
 
 
@@ -62,34 +60,24 @@ class CacheManager
 
     use ClassNamespaceResolverTrait;
 
-    /**
-     * @var ConfigurationOption
-     */
-    protected static $config;
-    /**
-     * @var string
-     */
-    protected static $namespacePath;
+    protected static ConfigurationOption $config;
+
+    protected static string $namespacePath;
 
     /**
      * @var ExtendedCacheItemPoolInterface[]
      */
-    protected static $instances = [];
+    protected static array $instances = [];
 
     /**
-     * @var array
+     * @var string[]
      */
-    protected static $driverOverrides = [];
+    protected static array $driverOverrides = [];
 
     /**
-     * @var array
+     * @var string[]
      */
-    protected static $driverCustoms = [];
-
-    /**
-     * @var array
-     */
-    protected static $badPracticeOmeter = [];
+    protected static array $driverCustoms = [];
 
     /**
      * CacheManager constructor.
@@ -124,21 +112,6 @@ class CacheManager
     }
 
     /**
-     * This method is intended for internal
-     * use only and should not be used for
-     * any external development use the
-     * getInstances() method instead
-     *
-     * @return ExtendedCacheItemPoolInterface[]
-     * @internal
-     * @todo Use a proper way to passe them as a reference ?
-     */
-    public static function &getInternalInstances(): array
-    {
-        return self::$instances;
-    }
-
-    /**
      * @param string $name
      * @param array $arguments
      * @return ExtendedCacheItemPoolInterface
@@ -146,29 +119,23 @@ class CacheManager
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheDriverNotFoundException
      * @throws PhpfastcacheInvalidArgumentException
-     * @throws PhpfastcacheInvalidConfigurationException
-     * @throws PhpfastcacheLogicException
-     * @throws \ReflectionException
      */
     public static function __callStatic(string $name, array $arguments): ExtendedCacheItemPoolInterface
     {
-        $options = (\array_key_exists(0, $arguments) && \is_array($arguments) ? $arguments[0] : []);
+        $options = (\array_key_exists(0, $arguments) ? $arguments[0] : []);
 
         return self::getInstance($name, $options);
     }
 
     /**
      * @param string $driver
-     * @param ConfigurationOptionInterface $config
+     * @param ConfigurationOptionInterface|null $config
      * @param string|null $instanceId
      * @return ExtendedCacheItemPoolInterface|AggregatablePoolInterface
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheDriverNotFoundException
      * @throws PhpfastcacheInvalidArgumentException
-     * @throws PhpfastcacheInvalidConfigurationException
-     * @throws PhpfastcacheLogicException
-     * @throws \ReflectionException
      */
     public static function getInstance(string $driver, ?ConfigurationOptionInterface $config = null, ?string $instanceId = null): ExtendedCacheItemPoolInterface
     {
@@ -180,7 +147,6 @@ class CacheManager
         })));
 
         if (!isset(self::$instances[$instanceId])) {
-            self::$badPracticeOmeter[$driver] = 1;
             $driverClass = self::validateDriverClass(self::getDriverClass($driver));
 
             if (\class_exists($driverClass)) {
@@ -190,16 +156,7 @@ class CacheManager
             } else {
                 throw new PhpfastcacheDriverNotFoundException(sprintf('The driver "%s" does not exists', $driver));
             }
-        } else {
-            if (self::$badPracticeOmeter[$driver] >= 2) {
-                \trigger_error(
-                    '[' . $driver . '] Calling many times CacheManager::getInstance() for already instanced drivers is a bad practice and have a significant impact on performances.
-           See https://github.com/PHPSocialNetwork/phpfastcache/wiki/[V5]-Why-calling-getInstance%28%29-each-time-is-a-bad-practice-%3F'
-                );
-            }
         }
-
-        self::$badPracticeOmeter[$driver]++;
 
         return self::$instances[$instanceId];
     }
@@ -208,17 +165,13 @@ class CacheManager
      * @param ConfigurationOptionInterface|null $config
      * @return ConfigurationOption
      * @throws PhpfastcacheInvalidArgumentException
-     * @throws PhpfastcacheInvalidConfigurationException
-     * @throws \ReflectionException
      */
     protected static function validateConfig(?ConfigurationOptionInterface $config): ConfigurationOption
     {
         if ($config === null) {
             $config = self::getDefaultConfig();
-        } else {
-            if (!($config instanceof ConfigurationOption)) {
-                throw new PhpfastcacheInvalidArgumentException(\sprintf('Unsupported config type: %s', \gettype($config)));
-            }
+        } elseif (!($config instanceof ConfigurationOption)) {
+            throw new PhpfastcacheInvalidArgumentException(\sprintf('Unsupported config type: %s', \gettype($config)));
         }
 
         return $config;
@@ -226,12 +179,10 @@ class CacheManager
 
     /**
      * @return ConfigurationOptionInterface
-     * @throws PhpfastcacheInvalidConfigurationException
-     * @throws \ReflectionException
      */
     public static function getDefaultConfig(): ConfigurationOptionInterface
     {
-        return self::$config ?: self::$config = new ConfigurationOption();
+        return self::$config ?? self::$config = new ConfigurationOption();
     }
 
     /**
@@ -270,12 +221,10 @@ class CacheManager
     {
         if (!empty(self::$driverCustoms[$driverName])) {
             $driverClass = self::$driverCustoms[$driverName];
+        } elseif (!empty(self::$driverOverrides[$driverName])) {
+            $driverClass = self::$driverOverrides[$driverName];
         } else {
-            if (!empty(self::$driverOverrides[$driverName])) {
-                $driverClass = self::$driverOverrides[$driverName];
-            } else {
-                $driverClass = self::getNamespacePath() . $driverName . '\Driver';
-            }
+            $driverClass = self::getNamespacePath() . $driverName . '\Driver';
         }
 
         return $driverClass;
@@ -286,7 +235,7 @@ class CacheManager
      */
     public static function getNamespacePath(): string
     {
-        return self::$namespacePath ?: self::getDefaultNamespacePath();
+        return self::$namespacePath ?? self::getDefaultNamespacePath();
     }
 
     /**

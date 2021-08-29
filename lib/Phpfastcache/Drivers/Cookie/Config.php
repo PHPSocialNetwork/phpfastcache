@@ -20,6 +20,10 @@ use Phpfastcache\Config\ConfigurationOption;
 class Config extends ConfigurationOption
 {
     protected $awareOfUntrustableData = false;
+    /**
+     * @var int
+     */
+    protected $limitedMemoryByObject = 4096;
 
     /**
      * @return bool
@@ -36,6 +40,24 @@ class Config extends ConfigurationOption
     public function setAwareOfUntrustableData(bool $awareOfUntrustableData): Config
     {
         $this->awareOfUntrustableData = $awareOfUntrustableData;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLimitedMemoryByObject(): int
+    {
+        return $this->limitedMemoryByObject;
+    }
+
+    /**
+     * @param int $limitedMemoryByObject
+     * @return ConfigurationOption
+     */
+    public function setLimitedMemoryByObject(int $limitedMemoryByObject): self
+    {
+        $this->limitedMemoryByObject = $limitedMemoryByObject;
         return $this;
     }
 }

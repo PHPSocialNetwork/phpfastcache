@@ -19,6 +19,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Util\ArrayObject;
 use ReflectionException;
 use ReflectionMethod;
+use ReflectionNamedType;
 use ReflectionParameter;
 use TypeError;
 
@@ -37,12 +38,12 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     /**
      * @var string|callable
      */
-    protected $defaultKeyHashFunction = 'md5';
+    protected mixed $defaultKeyHashFunction = 'md5';
 
     /**
      * @var string|callable
      */
-    protected $defaultFileNameHashFunction = 'md5';
+    protected mixed $defaultFileNameHashFunction = 'md5';
 
     protected string $path = '';
 
@@ -106,12 +107,15 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
                      */
                     $value = $this->{\lcfirst(\substr($method, 3))};
                     $this->{$method}($value);
-                } catch (TypeError $e) {
+                } catch (TypeError) {
                     $typeHintGot = \get_debug_type($value);
                     $reflectionMethod = new ReflectionMethod($this, $method);
                     $parameter = $reflectionMethod->getParameters()[0] ?? null;
-                    $typeHintExpected = ($parameter instanceof ReflectionParameter ? ($parameter->getType()->getName() === 'object' ? $parameter->getType() : $parameter->getType(
-                    )->getName()) : 'Unknown type');
+                    $typeHintExpected = 'Unknown type';
+
+                    if($parameter instanceof ReflectionParameter && $parameter->getType() instanceof ReflectionNamedType){
+                        $typeHintExpected = ($parameter->getType()->getName() === 'object' ? $parameter->getType() : $parameter->getType()->getName());
+                    }
 
                     throw new PhpfastcacheInvalidConfigurationException(
                         \sprintf(
@@ -128,9 +132,9 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
 
     /**
      * @param string $optionName
-     * @return mixed|null
+     * @return bool
      */
-    public function isValidOption(string $optionName)
+    public function isValidOption(string $optionName): bool
     {
         return property_exists($this, $optionName);
     }
@@ -147,7 +151,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      * @param bool $itemDetailedDate
      * @return ConfigurationOption
      */
-    public function setItemDetailedDate(bool $itemDetailedDate): self
+    public function setItemDetailedDate(bool $itemDetailedDate): static
     {
         $this->itemDetailedDate = $itemDetailedDate;
         return $this;
@@ -165,7 +169,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      * @param bool $autoTmpFallback
      * @return ConfigurationOption
      */
-    public function setAutoTmpFallback(bool $autoTmpFallback): self
+    public function setAutoTmpFallback(bool $autoTmpFallback): static
     {
         $this->autoTmpFallback = $autoTmpFallback;
         return $this;
@@ -183,26 +187,26 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      * @param int $defaultTtl
      * @return ConfigurationOption
      */
-    public function setDefaultTtl(int $defaultTtl): self
+    public function setDefaultTtl(int $defaultTtl): static
     {
         $this->defaultTtl = $defaultTtl;
         return $this;
     }
 
     /**
-     * @return Callable|string
+     * @return callable|string
      */
-    public function getDefaultKeyHashFunction()
+    public function getDefaultKeyHashFunction(): callable|string
     {
         return $this->defaultKeyHashFunction;
     }
 
     /**
-     * @param Callable|string $defaultKeyHashFunction
+     * @param callable|string $defaultKeyHashFunction
      * @return ConfigurationOption
      * @throws  PhpfastcacheInvalidConfigurationException
      */
-    public function setDefaultKeyHashFunction($defaultKeyHashFunction): self
+    public function setDefaultKeyHashFunction(callable|string $defaultKeyHashFunction): static
     {
         if ($defaultKeyHashFunction && !\is_callable($defaultKeyHashFunction) && (\is_string($defaultKeyHashFunction) && !\function_exists($defaultKeyHashFunction))) {
             throw new PhpfastcacheInvalidConfigurationException('defaultKeyHashFunction must be a valid function name string');
@@ -212,19 +216,19 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     }
 
     /**
-     * @return Callable|string
+     * @return callable|string
      */
-    public function getDefaultFileNameHashFunction()
+    public function getDefaultFileNameHashFunction(): callable|string
     {
         return $this->defaultFileNameHashFunction;
     }
 
     /**
-     * @param Callable|string $defaultFileNameHashFunction
+     * @param callable|string $defaultFileNameHashFunction
      * @return ConfigurationOption
      * @throws  PhpfastcacheInvalidConfigurationException
      */
-    public function setDefaultFileNameHashFunction($defaultFileNameHashFunction): self
+    public function setDefaultFileNameHashFunction(callable|string $defaultFileNameHashFunction): static
     {
         if (!\is_callable($defaultFileNameHashFunction) && (\is_string($defaultFileNameHashFunction) && !\function_exists($defaultFileNameHashFunction))) {
             throw new PhpfastcacheInvalidConfigurationException('defaultFileNameHashFunction must be a valid function name string');
@@ -245,7 +249,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      * @param string $path
      * @return ConfigurationOption
      */
-    public function setPath(string $path): self
+    public function setPath(string $path): static
     {
         $this->path = $path;
         return $this;
@@ -263,7 +267,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      * @param bool $preventCacheSlams
      * @return ConfigurationOption
      */
-    public function setPreventCacheSlams(bool $preventCacheSlams): self
+    public function setPreventCacheSlams(bool $preventCacheSlams): static
     {
         $this->preventCacheSlams = $preventCacheSlams;
         return $this;
@@ -281,7 +285,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      * @param int $cacheSlamsTimeout
      * @return ConfigurationOption
      */
-    public function setCacheSlamsTimeout(int $cacheSlamsTimeout): self
+    public function setCacheSlamsTimeout(int $cacheSlamsTimeout): static
     {
         $this->cacheSlamsTimeout = $cacheSlamsTimeout;
         return $this;
@@ -299,7 +303,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      * @param bool $useStaticItemCaching
      * @return ConfigurationOption
      */
-    public function setUseStaticItemCaching(bool $useStaticItemCaching): self
+    public function setUseStaticItemCaching(bool $useStaticItemCaching): static
     {
         $this->useStaticItemCaching = $useStaticItemCaching;
         return $this;

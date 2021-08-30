@@ -6,6 +6,7 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Core\Item\TaggableCacheItemInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolInterface;
 use Phpfastcache\Tests\Helper\TestHelper;
 
@@ -59,13 +60,15 @@ $createItemsCallback = static function() use ($driverInstance)
     ];
 };
 
+$testHelper->printNoteText('##### TESTING POOL TAGS GETTERS');
+
 /**
  * Item tag test // Step 1
  */
 $testHelper->printNewLine()->printText('#1 Testing getter: getItemsByTag() with strategy TAG_STRATEGY_ONE // Expecting 3 results');
 $createItemsCallback();
 
-$tagsItems = $driverInstance->getItemsByTag('tag-test_all');
+$tagsItems = $driverInstance->getItemsByTag('tag-test_all', TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE);
 if(is_array($tagsItems))
 {
     if(count($tagsItems) === 3)
@@ -366,4 +369,119 @@ else
 }
 
 itemTagTest11:
+
+$testHelper->printNewLine()->printNoteText('##### TESTING ITEM TAGS HASSERS');
+
+$testHelper->printNewLine()->printText('#1 Testing ExtendedCacheItemInterface::hasTag()');
+$driverInstance->clear();
+$createItemsCallback();
+$cacheItem = $driverInstance->getItem('tag-test1');
+
+if($cacheItem->hasTag('tag-test_1'))
+{
+    $testHelper->assertPass('STEP#1 // Successfully found the expected tag');
+}
+else
+{
+    $testHelper->assertFail('STEP#1 // Failed finding the expected tag');
+}
+
+if(!$cacheItem->hasTag('non_existing_tag'))
+{
+    $testHelper->assertPass('STEP#2 // Successfully not found an unknown tag');
+}
+else
+{
+    $testHelper->assertFail('STEP#2 // Failed not finding an unknown tag');
+}
+
+
+$testHelper->printNewLine()->printText('#2 Testing ExtendedCacheItemInterface::hasTags() with strategy "TAG_STRATEGY_ONE"');
+$driverInstance->clear();
+$createItemsCallback();
+$cacheItem = $driverInstance->getItem('tag-test2');
+
+if($cacheItem->hasTags(['tag-test_1', 'tag-test_2'], TaggableCacheItemInterface::TAG_STRATEGY_ONE))
+{
+    $testHelper->assertPass('STEP#1 // Successfully finding both the known tags');
+}
+else
+{
+    $testHelper->assertFail('STEP#1 // Failed finding both the known tags');
+}
+
+if($cacheItem->hasTags(['tag-test_1', 'non_existing_tag'], TaggableCacheItemInterface::TAG_STRATEGY_ONE))
+{
+    $testHelper->assertPass('STEP#2 // Successfully finding one of the known tags');
+}
+else
+{
+    $testHelper->assertFail('STEP#2 // Failed finding one of the known tags');
+}
+
+if(!$cacheItem->hasTags(['non_existing_tag', 'non_existing_tag2'], TaggableCacheItemInterface::TAG_STRATEGY_ONE))
+{
+    $testHelper->assertPass('STEP#3 // Successfully not finding one of the unknown tags');
+}
+else
+{
+    $testHelper->assertFail('STEP#3 // Failed not finding one of the unknown tags');
+}
+
+$testHelper->printNewLine()->printText('#3 Testing ExtendedCacheItemInterface::hasTags() with strategy "TAG_STRATEGY_ALL"');
+$driverInstance->clear();
+$createItemsCallback();
+$cacheItem = $driverInstance->getItem('tag-test2');
+
+if($cacheItem->hasTags(['tag-test_1', 'tag-test_2'], TaggableCacheItemInterface::TAG_STRATEGY_ALL))
+{
+    $testHelper->assertPass('STEP#1 // Successfully found both the known tags');
+}
+else
+{
+    $testHelper->assertFail('STEP#1 // Failed finding both the known tags');
+}
+
+if($cacheItem->hasTags(['tag-test_1', 'non_existing_tag'], TaggableCacheItemInterface::TAG_STRATEGY_ALL))
+{
+    $testHelper->assertPass('STEP#2 // Successfully not finding both of the known and unknown tags');
+}
+else
+{
+    $testHelper->assertPass('STEP#2 // Failed not finding both of the known and unknown tags');
+}
+
+
+$testHelper->printNewLine()->printText('#4 Testing ExtendedCacheItemInterface::hasTags() with strategy "TAG_STRATEGY_ONLY"');
+$driverInstance->clear();
+$createItemsCallback();
+$cacheItem = $driverInstance->getItem('tag-test3');
+
+if($cacheItem->hasTags($cacheItem->getTags(), TaggableCacheItemInterface::TAG_STRATEGY_ONLY))
+{
+    $testHelper->assertPass('STEP#1 // Successfully matching only and exclusively the known tags');
+}
+else
+{
+    $testHelper->assertFail('STEP#1 // Failed matching only and exclusively the known tags');
+}
+
+if(!$cacheItem->hasTags(['tag-test_1', 'tag-test_2', /*'tag-test_3',*/ 'tag-test_all', 'tag-test_all2', 'tag-test_all3', 'tag-test_all4'], TaggableCacheItemInterface::TAG_STRATEGY_ONLY))
+{
+    $testHelper->assertPass('STEP#1 // Successfully not matching only the known tags with some of them omitted');
+}
+else
+{
+    $testHelper->assertPass('STEP#1 // Failed not matching only the known tags with some of them omitted');
+}
+
+if(!$cacheItem->hasTags(array_merge($cacheItem->getTags(), ['non_existing_tag']), TaggableCacheItemInterface::TAG_STRATEGY_ONLY))
+{
+    $testHelper->assertPass('STEP#1 // Successfully matching only the known tags plus an unknown tag');
+}
+else
+{
+    $testHelper->assertFail('STEP#1 // Failed matching only the known tags plus an unknown tag');
+}
+
 $testHelper->terminateTest();

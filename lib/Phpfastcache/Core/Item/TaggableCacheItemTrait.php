@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Core\Item;
 
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
 /**
  * Trait TaggableCacheItemTrait
@@ -48,6 +48,33 @@ trait TaggableCacheItemTrait
 
         return $this;
     }
+
+    /**
+     * @param string $tagName
+     *
+     * @return bool
+     */
+    public function hasTag(string $tagName): bool
+    {
+        return \in_array($tagName, $this->tags, true);
+    }
+
+    /**
+     * @param string[] $tagNames
+     * @param int $strategy
+     * @return bool
+     * @throws PhpfastcacheInvalidArgumentException
+     */
+    public function hasTags(array $tagNames, int $strategy = TaggableCacheItemInterface::TAG_STRATEGY_ONE): bool
+    {
+        return match ($strategy) {
+            TaggableCacheItemInterface::TAG_STRATEGY_ONE => !empty(array_intersect($tagNames, $this->tags)),
+            TaggableCacheItemInterface::TAG_STRATEGY_ALL => empty(\array_diff($tagNames, $this->tags)),
+            TaggableCacheItemInterface::TAG_STRATEGY_ONLY => empty(\array_diff($tagNames, $this->tags)) && empty(\array_diff($this->tags, $tagNames)),
+            default => throw new PhpfastcacheInvalidArgumentException('Invalid strategy constant provided.'),
+        };
+    }
+
 
     /**
      * @param string[] $tags

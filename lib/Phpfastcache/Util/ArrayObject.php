@@ -129,9 +129,9 @@ class ArrayObject implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->array;
     }
@@ -140,7 +140,7 @@ class ArrayObject implements ArrayAccess, Iterator, Countable
      * @param array $array
      * @return self
      */
-    public function mergeArray($array): self
+    public function mergeArray(array $array): self
     {
         $this->array = array_merge($this->array, $array);
 
@@ -148,9 +148,9 @@ class ArrayObject implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
-    protected function &getArray()
+    protected function &getArray(): array
     {
         return $this->array;
     }

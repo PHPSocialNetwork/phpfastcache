@@ -1,3 +1,26 @@
+## 9.0.0-dev
+##### 30 august 2021
+- __Estimated release date__: _End of 2021 (december)_
+- __Global__
+  - Upgrading library to use benefits of PHP 8 new features (see below)
+  - Typed every class properties of the library
+  - Migrated many Closure to arrow functions
+  - Updated parameters & return type hint to use benefit of covariance and contravariance
+  - Upgraded `psr/cache` dependency to `^3.0`
+  - Upgraded Phpfastcache API `4.0.0` ([see changes](CHANGELOG_API.md))
+  - Removed embedded Autoload, Phpfastcache is now only Composer-compatible.
+  - Removed embedded dependencies (`psr/cache`, `psr/simple-cache`)
+- __Tests__
+  - Updated tests to works with new core/drivers changes
+  - Removed Autoload test since its support has been removed and now only managed by Composer
+- __Drivers__
+  - Removed `Couchbase` (SDK 2 support dropped) driver which is now replaced by `Couchbasev3` (SDK 3)
+  - Removed `Devtrue` and `Devfalse` drivers
+  - Added `Devrandom` with configurable factor chance and data length
+- __Misc__
+  - Increased minimum PHP compatibility in composer to `^8.0`
+  - Updated copyright headers on every file to include the many project contributors
+
 ## 8.0.8
 #### _"Sanitary-passed"_
 ##### 18 august 2021

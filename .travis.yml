@@ -19,9 +19,8 @@ services:
   - docker
 
 php:
-  - 7.3
-  - 7.4
   - 8.0
+  # - 8.1 # Uncomment this when 8.1 will be released
   - nightly
 jobs:
   fast_finish: true
@@ -32,25 +31,18 @@ before_install:
 # Memcached is not yet available for PHP8 (hasn't been updated since 2019): https://pecl.php.net/package/memcached
 # Memcache however seems to be compatible with PHP 7 and 8: https://pecl.php.net/package/memcache
 #
-  - |
-    ./bin/ci/scripts/setup_couchdb.sh;
-    ./bin/ci/scripts/setup_mongodb.sh
-    ./bin/ci/scripts/setup_couchbase.sh;
-    pecl channel-update pecl.php.net;
-    yes | pecl install -f mongodb-stable;
-    yes | pecl install -f apcu-stable || true;
-    yes | pecl install -f memcache;
-    yes | pecl install -f couchbase-stable;
-  - |
-    if [[ $TRAVIS_PHP_VERSION == "8."* || $TRAVIS_PHP_VERSION == "nightly" ]]; then
-        phpenv config-add bin/ci/php8_phpfastcache.ini;
-    else
-        phpenv config-add bin/ci/php7_phpfastcache.ini;
-    fi
+  - ./bin/ci/scripts/setup_couchdb.sh;
+  - ./bin/ci/scripts/setup_mongodb.sh
+  - ./bin/ci/scripts/setup_couchbase.sh;
+  - pecl channel-update pecl.php.net;
+  - yes | pecl install -f mongodb-stable;
+  - yes | pecl install -f apcu-stable || true;
+  - yes | pecl install -f memcache;
+  - yes | pecl install -f couchbase-stable;
   - phpenv config-add bin/ci/php_common.ini;
   - phpenv config-rm xdebug.ini
-
 install:
   - ./bin/ci/scripts/install_dependencies.sh
+
 script:
   - php -f ./bin/ci/run_tests.php

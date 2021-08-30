@@ -29,10 +29,22 @@ interface TaggableCacheItemPoolInterface
 
     public const DRIVER_TAGS_WRAPPER_INDEX = 'g';
 
+    /**
+     * Allows you to get cache item(s) by at least **ONE** of the specified matching tag(s).
+     * Default behavior
+     */
     public const TAG_STRATEGY_ONE = 1;
 
+    /**
+     * Allows you to get cache item(s) by **ALL** of the specified matching tag(s)
+     * The cache item *CAN* have additional tag(s)
+     */
     public const TAG_STRATEGY_ALL = 2;
 
+    /**
+     * Allows you to get cache item(s) by **ONLY** the specified matching tag(s)
+     * The cache item *CANNOT* have additional tag(s)
+     */
     public const TAG_STRATEGY_ONLY = 4;
 
     /**

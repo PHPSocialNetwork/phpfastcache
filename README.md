@@ -1,23 +1,16 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Latest Stable Version](https://img.shields.io/packagist/v/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![License](https://img.shields.io/packagist/l/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Cache Interface](https://img.shields.io/badge/CI-PSR6-orange.svg?maxAge=86400)](https://github.com/php-fig/cache) [![Extended Coding Style](https://img.shields.io/badge/ECS-PSR12-orange.svg?maxAge=86400)](https://www.php-fig.org/psr/psr-12/)  [![Simple Cache](https://img.shields.io/badge/SC-PSR16-orange.svg?maxAge=86400)](https://github.com/php-fig/simple-cache) 
 [![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/?branch=master) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=master)](https://travis-ci.org/PHPSocialNetwork/phpfastcache) [![Semver compliant](https://img.shields.io/badge/Semver-2.0.0-yellow.svg?maxAge=86400)](https://semver.org/spec/v2.0.0.html) [![Patreon](https://img.shields.io/badge/Support%20us%20on-Patreon-f96854.svg?maxAge=86400)](https://www.patreon.com/geolim4)
 
-#### :warning: Please note that the V8 is an important (with small BC breaking) update of PhpFastCache !
-> As the V8 is **relatively** not compatible with previous versions, please read carefully the [migration guide](./docs/migration/MigratingFromV7ToV8.md) to ensure you the smoothest migration possible.
+#### :warning: Please note that the V9 is mostly a PHP 8 type aware update of PhpFastCache with some significant changes !
+> As the V9 is **relatively** not compatible with previous versions, please read carefully the [migration guide](./docs/migration/MigratingFromV7ToV8.md) to ensure you the smoothest migration possible.
 One of the biggest change is the configuration system which is now an object that replace the primitive array that we used to implement back then. 
-Also please note that the V8 requires at least PHP7.3 or higher to work properly.
-
-:exclamation: Be aware that the V8 is an **LTS** release, this means this version will be supported and maintained for at least 4 years.
-Finally, the V8 is fully compatible with PHP-8 as of version **8.0.4**
+Also, please note that the V9 requires at least PHP 8 or higher to works properly.
 
 ---------------------------
 Simple Yet Powerful PHP Caching Class
 ---------------------------
 More information in [Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki)
 The simplicity of abstraction: One class for many backend cache. You don't need to rewrite your code many times again.
-
-### PHP7 Strict types enforced
-As of the V7 PhpFastCache enforces the php7 strict types to make sure that it's completely php7 compatible and is type aware.
-This ensure you that the library is completely reliable when it come to manipulate variable types. 
 
 ### Supported drivers at this day *
 :bulb: Feel free to propose a driver by making a new **[Pull Request](https://github.com/PHPSocialNetwork/phpfastcache/compare)**, they are welcome !
@@ -35,16 +28,6 @@ This ensure you that the library is completely reliable when it come to manipula
 |                                 |                                                               |                               |                                   |
 
 \* Driver descriptions available in DOCS/DRIVERS.md
-
-Please note that as of PHP7 some php extensions were not yet updated (and will may not), we keep the code here but there's no guarantee that they are still working especially due to the cores changes introduced by Opcache.
-As of the **V8** every abandoned backend drivers have been removed definitely from Phpfastcache.
-
-### Symfony/Drupal developers are not forgotten !
-Starting with v5, Phpfastcache comes with a [Symfony Bundle](https://github.com/PHPSocialNetwork/phpfastcache-bundle).
-It is now a mature project Flex -ready, so feel free to give at try and report any bug (if any).
-The Phpfastcache **V8** is compatible as of the v4 of the phpfastcache bundle.
-
-Also a [Drupal 8 Module](https://github.com/PHPSocialNetwork/phpfastcache-drupal) is currently in (a slow) development, add it to your starred projects to get notified of the first public release. 
 
 ---------------------------
 Because caching does not means weaken your code
@@ -110,7 +93,7 @@ PhpFastCache provides you a lot of useful APIs:
 | `deleteItem($key)`                                              | bool                           | Deletes an item                                                                                  | 
 | `deleteItems(array $keys)`                                      | bool                           | Deletes one or more items                                                                        | 
 | `deleteItemsByTag($tagName)`                                    | bool                           | Deletes items by a tag                                                                           | 
-| `deleteItemsByTags(array $tagNames, int $strategy)`                            | bool                           | Deletes items  by one of multiple tag names                                                      | 
+| `deleteItemsByTags(array $tagNames, int $strategy)`             | bool                           | Deletes items  by one of multiple tag names                                                      | 
 | `detachItem($item)`                                             | void                           | Detaches an item from the pool                                                                   | 
 | `getConfig()`                                                   | ConfigurationOption            | Returns the configuration object                                                                 | 
 | `getConfigOption($optionName);`                                 | mixed                          | Returns a configuration value by its key `$optionName`                                           | 

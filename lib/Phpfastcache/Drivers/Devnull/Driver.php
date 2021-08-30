@@ -60,14 +60,9 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverWrite(CacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return true;
-        }
+        $this->assertCacheItemType($item, Item::class);
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return true;
     }
 
     /**
@@ -86,14 +81,9 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverDelete(CacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return true;
-        }
+        $this->assertCacheItemType($item, Item::class);
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return true;
     }
 
     /**

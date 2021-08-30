@@ -13,16 +13,17 @@
  */
 declare(strict_types=1);
 
-namespace Phpfastcache\Drivers\Devtrue;
+namespace Phpfastcache\Drivers\Devrandom;
 
-use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, ItemBaseTrait};
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Core\Item\ItemBaseTrait;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Drivers\Devtrue\Driver as DevtrueDriver;
+use Phpfastcache\Drivers\Devrandom\Driver as DevrandomDriver;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 
 /**
  * Class Item
- * @package phpFastCache\Drivers\Devtrue
+ * @package phpFastCache\Drivers\Devfalse
  */
 class Item implements ExtendedCacheItemInterface
 {
@@ -36,7 +37,7 @@ class Item implements ExtendedCacheItemInterface
      * @param $key
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function __construct(DevtrueDriver $driver, $key)
+    public function __construct(DevrandomDriver $driver, $key)
     {
         $this->__BaseConstruct($driver, $key);
     }
@@ -48,7 +49,7 @@ class Item implements ExtendedCacheItemInterface
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver)
     {
-        if ($driver instanceof DevtrueDriver) {
+        if ($driver instanceof DevrandomDriver) {
             $this->driver = $driver;
 
             return $this;

@@ -18,8 +18,9 @@ namespace Phpfastcache\Drivers\Sqlite;
 use PDO;
 use PDOException;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface, IO\IOHelperTrait};
-use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheInvalidArgumentException, PhpfastcacheIOException};
+use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface, IO\IOHelperTrait, TaggableCacheItemPoolTrait};
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheInvalidArgumentException, PhpfastcacheIOException, PhpfastcacheLogicException};
 use Psr\Cache\CacheItemInterface;
 
 
@@ -31,35 +32,21 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    use DriverBaseTrait, IOHelperTrait;
+    use TaggableCacheItemPoolTrait, IOHelperTrait;
 
-    /**
-     *
-     */
     protected const INDEXING_FILE = 'indexing';
 
-    /**
-     * @var int
-     */
-    protected $maxSize = 10; // 10 mb
+    protected int $maxSize = 10;
 
-    /**
-     * @var int
-     */
-    protected $currentDB = 1;
+    protected int $currentDB = 1;
 
-    /**
-     * @var string
-     */
-    protected $SqliteDir = '';
+    protected string $SqliteDir = '';
 
-    /**
-     * @var PDO
-     */
-    protected $indexing;
+    protected ?PDO $indexing;
 
     /**
      * @return bool
+     * @throws PhpfastcacheCoreException
      */
     public function driverCheck(): bool
     {
@@ -104,10 +91,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return null|array
      */
-    protected function driverRead(CacheItemInterface $item): ?array
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         try {
             $stm = $this->getDb($item->getEncodedKey())
@@ -150,7 +137,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         /**
          * Default is phpfastcache
          */
-        $instant = $this->indexing($keyword);
+        $instant = $this->getDbIndex($keyword);
 
         /**
          * init instant
@@ -176,14 +163,13 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * INIT Instant DB
      * Return Database of Keyword
      * @param $keyword
      * @return int
      */
-    public function indexing($keyword)
+    public function getDbIndex($keyword)
     {
-        if ($this->indexing == null) {
+        if (!isset($this->indexing)) {
             $tableCreated = false;
             if (!file_exists($this->SqliteDir . '/indexing')) {
                 $tableCreated = true;
@@ -285,67 +271,58 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return mixed
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            try {
-                $stm = $this->getDb($item->getEncodedKey())
-                    ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
-                $stm->execute(
-                    [
-                        ':keyword' => $item->getEncodedKey(),
-                        ':object' => $this->encode($this->driverPreWrap($item)),
-                        ':exp' => $item->getExpirationDate()->getTimestamp(),
-                    ]
-                );
+        $this->assertCacheItemType($item, Item::class);
 
-                return true;
-            } catch (PDOException $e) {
-                return false;
-            }
+        try {
+            $stm = $this->getDb($item->getEncodedKey())
+                ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
+            $stm->execute(
+                [
+                    ':keyword' => $item->getEncodedKey(),
+                    ':object' => $this->encode($this->driverPreWrap($item)),
+                    ':exp' => $item->getExpirationDate()->getTimestamp(),
+                ]
+            );
+
+            return true;
+        } catch (PDOException $e) {
+            return false;
         }
-
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            try {
-                $stm = $this->getDb($item->getEncodedKey())
-                    ->prepare("DELETE FROM `caching` WHERE (`exp` <= :U) OR (`keyword`=:keyword) ");
+        $this->assertCacheItemType($item, Item::class);
+        try {
+            $stm = $this->getDb($item->getEncodedKey())
+                ->prepare("DELETE FROM `caching` WHERE (`exp` <= :exp) OR (`keyword`=:keyword) ");
 
-                return $stm->execute(
-                    [
-                        ':keyword' => $item->getEncodedKey(),
-                        ':U' => time(),
-                    ]
-                );
-            } catch (PDOException $e) {
-                return false;
-            }
-        } else {
-            throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+            return $stm->execute(
+                [
+                    ':keyword' => $item->getEncodedKey(),
+                    ':exp' => time(),
+                ]
+            );
+        } catch (PDOException $e) {
+            return false;
         }
     }
 
     /**
      * @return bool
+     * @throws PhpfastcacheCoreException
      */
     protected function driverClear(): bool
     {
@@ -355,7 +332,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         // delete everything before reset indexing
         $dir = opendir($this->getSqliteDir());
         while ($file = readdir($dir)) {
-            if ($file != '.' && $file != '..') {
+            if ($file !== '.' && $file !== '..') {
                 unlink($this->getSqliteDir() . '/' . $file);
             }
         }

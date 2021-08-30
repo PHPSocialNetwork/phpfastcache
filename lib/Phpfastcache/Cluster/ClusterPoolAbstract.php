@@ -21,7 +21,7 @@ use Phpfastcache\Cluster\Drivers\{FullReplication\FullReplicationCluster,
     SemiReplication\SemiReplicationCluster
 };
 use Phpfastcache\Config\ConfigurationOption;
-use Phpfastcache\Core\{Item\ExtendedCacheItemInterface, Pool\DriverBaseTrait, Pool\ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\{Item\ExtendedCacheItemInterface, Pool\DriverBaseTrait, Pool\ExtendedCacheItemPoolInterface, Pool\TaggableCacheItemPoolTrait};
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\EventManager;
@@ -39,9 +39,9 @@ use ReflectionException;
  */
 abstract class ClusterPoolAbstract implements ClusterPoolInterface
 {
-    use DriverBaseTrait;
+    use TaggableCacheItemPoolTrait;
     use ClusterPoolTrait {
-        DriverBaseTrait::__construct as private __parentConstruct;
+        TaggableCacheItemPoolTrait::__construct as private __parentConstruct;
     }
 
     public const STRATEGY = [
@@ -101,7 +101,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
     /**
      * @inheritDoc
      */
-    public function getItems(array $keys = [])
+    public function getItems(array $keys = []): iterable
     {
         $items = [];
 
@@ -118,7 +118,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
     /**
      * @inheritDoc
      */
-    public function deleteItems(array $keys)
+    public function deleteItems(array $keys): bool
     {
         $hasDeletedOnce = false;
         foreach ($this->clusterPools as $driverPool) {
@@ -133,7 +133,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
     /**
      * @inheritDoc
      */
-    public function saveDeferred(CacheItemInterface $item)
+    public function saveDeferred(CacheItemInterface $item): bool
     {
         /** @var ExtendedCacheItemInterface $item */
         $hasSavedOnce = false;
@@ -150,10 +150,10 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
     /**
      * @param ExtendedCacheItemInterface $item
      * @param ExtendedCacheItemPoolInterface $driverPool
-     * @return CacheItemInterface
+     * @return ExtendedCacheItemInterface
      * @throws InvalidArgumentException
      */
-    protected function getStandardizedItem(ExtendedCacheItemInterface $item, ExtendedCacheItemPoolInterface $driverPool): CacheItemInterface
+    protected function getStandardizedItem(ExtendedCacheItemInterface $item, ExtendedCacheItemPoolInterface $driverPool): ExtendedCacheItemInterface
     {
         if (!$item->doesItemBelongToThatDriverBackend($driverPool)) {
             /**

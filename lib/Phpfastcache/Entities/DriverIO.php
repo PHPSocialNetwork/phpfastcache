@@ -21,24 +21,13 @@ namespace Phpfastcache\Entities;
  */
 class DriverIO
 {
-    /**
-     * @var int
-     */
-    protected $writeHit = 0;
+    protected int $writeHit = 0;
 
-    /**
-     * @var int
-     */
-    protected $readHit = 0;
+    protected int $readHit = 0;
 
-    /**
-     * @var int
-     */
-    protected $readMiss = 0;
+    protected int $readMiss = 0;
 
-    /**
-     * @return int
-     */
+
     public function getWriteHit(): int
     {
         return $this->writeHit;
@@ -54,63 +43,40 @@ class DriverIO
         return $this;
     }
 
-    /**
-     * @return DriverIO
-     */
     public function incWriteHit(): DriverIO
     {
         $this->writeHit++;
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getReadHit(): int
     {
         return $this->readHit;
     }
 
-    /**
-     * @param int $readHit
-     * @return DriverIO
-     */
     public function setReadHit(int $readHit): DriverIO
     {
         $this->readHit = $readHit;
         return $this;
     }
 
-    /**
-     * @return DriverIO
-     */
     public function incReadHit(): DriverIO
     {
         $this->readHit++;
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getReadMiss(): int
     {
         return $this->readMiss;
     }
 
-    /**
-     * @param int $readMiss
-     * @return DriverIO
-     */
     public function setReadMiss(int $readMiss): DriverIO
     {
         $this->readMiss = $readMiss;
         return $this;
     }
 
-    /**
-     * @return DriverIO
-     */
     public function incReadMiss(): DriverIO
     {
         $this->readMiss++;

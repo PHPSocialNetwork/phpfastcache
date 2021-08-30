@@ -15,9 +15,10 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Memstatic;
 
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Psr\Cache\CacheItemInterface;
 
 
@@ -25,11 +26,10 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver
  * @package phpFastCache\Drivers
  * @property Config $config Config object
- * @method Config getConfig() Return the config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
-    use DriverBaseTrait;
+    use TaggableCacheItemPoolTrait;
 
     /**
      * @var array
@@ -67,52 +67,43 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return null|array
      */
-    protected function driverRead(CacheItemInterface $item): ?array
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         return $this->staticStack[$item->getKey()] ?? null;
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            $this->staticStack[$item->getKey()] = $this->driverPreWrap($item);
-            return true;
-        }
+        $this->assertCacheItemType($item, Item::class);
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        $this->staticStack[$item->getKey()] = $this->driverPreWrap($item);
+        return true;
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            $key = $item->getKey();
-            if (isset($this->staticStack[$key])) {
-                unset($this->staticStack[$key]);
-                return true;
-            }
-            return false;
-        }
+        $this->assertCacheItemType($item, Item::class);
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        $key = $item->getKey();
+        if (isset($this->staticStack[$key])) {
+            unset($this->staticStack[$key]);
+            return true;
+        }
+        return false;
     }
 
     /********************

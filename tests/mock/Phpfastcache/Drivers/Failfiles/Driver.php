@@ -14,6 +14,7 @@
 
 namespace Phpfastcache\Drivers\Failfiles;
 
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Drivers\Files\Driver as FilesDriver;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Psr\Cache\CacheItemInterface;
@@ -28,7 +29,7 @@ class Driver extends FilesDriver
      * @return bool
      * @throws PhpfastcacheDriverException
      */
-    protected function driverRead(CacheItemInterface $item)
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         throw new PhpfastcacheDriverException('Error code found: ' . \bin2hex(\random_bytes(8)));
     }
@@ -37,7 +38,7 @@ class Driver extends FilesDriver
      * @return bool
      * @throws PhpfastcacheDriverException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
         throw new PhpfastcacheDriverException('Error code found: ' . \bin2hex(\random_bytes(8)));
     }

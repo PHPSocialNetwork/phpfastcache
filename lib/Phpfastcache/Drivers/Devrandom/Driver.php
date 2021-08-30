@@ -13,10 +13,11 @@
  */
 declare(strict_types=1);
 
-namespace Phpfastcache\Drivers\Devtrue;
+namespace Phpfastcache\Drivers\Devrandom;
 
+use DateInterval;
 use DateTime;
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 use Psr\Cache\CacheItemInterface;
@@ -30,7 +31,7 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
-    use DriverBaseTrait;
+    use TaggableCacheItemPoolTrait;
 
     /**
      * @return bool
@@ -46,42 +47,44 @@ class Driver implements ExtendedCacheItemPoolInterface
     public function getStats(): DriverStatistic
     {
         $stat = new DriverStatistic();
-        $stat->setInfo('[Devtrue] A void info string')
+        $stat->setInfo('[Devfalse] A void info string')
             ->setSize(0)
             ->setData(implode(', ', array_keys($this->itemInstances)))
-            ->setRawData(true);
+            ->setRawData(false);
 
         return $stat;
     }
 
     /**
      * @param CacheItemInterface $item
-     * @return mixed
+     * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverWrite(CacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return false;
-        }
+        $this->assertCacheItemType($item, Item::class);
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return true;
     }
 
     /**
      * @param CacheItemInterface $item
      * @return array
      */
-    protected function driverRead(CacheItemInterface $item): ?array: array
+    protected function driverRead(CacheItemInterface $item): ?array
     {
-        return [
-            self::DRIVER_DATA_WRAPPER_INDEX => true,
-            self::DRIVER_TAGS_WRAPPER_INDEX => [],
-            self::DRIVER_EDATE_WRAPPER_INDEX => new DateTime(),
-        ];
+        $chanceOfRetrieval = $this->getConfig()->getChanceOfRetrieval();
+        $ttl = $this->getConfig()->getDefaultTtl();
+
+        if(\random_int(0, 100) < $chanceOfRetrieval){
+            return [
+                self::DRIVER_DATA_WRAPPER_INDEX => \bin2hex(\random_bytes($this->getConfig()->getDataLength())),
+                self::DRIVER_TAGS_WRAPPER_INDEX => [],
+                self::DRIVER_EDATE_WRAPPER_INDEX => (new DateTime())->add(new DateInterval("PT{$ttl}S")),
+            ];
+        }
+
+        return null;
     }
 
     /**
@@ -91,14 +94,9 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverDelete(CacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return false;
-        }
+        $this->assertCacheItemType($item, Item::class);
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return true;
     }
 
     /**
@@ -106,7 +104,7 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverClear(): bool
     {
-        return false;
+        return true;
     }
 
     /********************
@@ -120,6 +118,6 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverConnect(): bool
     {
-        return false;
+        return true;
     }
 }

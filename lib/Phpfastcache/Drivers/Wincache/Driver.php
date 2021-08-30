@@ -17,11 +17,10 @@ namespace Phpfastcache\Drivers\Wincache;
 
 use DateTime;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
-use Psr\Cache\CacheItemInterface;
-
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 
 /**
  * Class Driver
@@ -31,7 +30,7 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    use DriverBaseTrait;
+    use TaggableCacheItemPoolTrait;
 
     /**
      * @return bool
@@ -66,10 +65,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return null|array
      */
-    protected function driverRead(CacheItemInterface $item): ?array
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         $val = wincache_ucache_get($item->getKey(), $suc);
 
@@ -81,43 +80,29 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return mixed
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return wincache_ucache_set($item->getKey(), $this->driverPreWrap($item), $item->getTtl());
-        }
+        $this->assertCacheItemType($item, Item::class);
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return wincache_ucache_set($item->getKey(), $this->driverPreWrap($item), $item->getTtl());
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return wincache_ucache_delete($item->getKey());
-        }
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
-    }
+        $this->assertCacheItemType($item, Item::class);
 
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
+        return wincache_ucache_delete($item->getKey());
+    }
 
     /**
      * @return bool

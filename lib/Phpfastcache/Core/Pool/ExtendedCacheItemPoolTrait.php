@@ -16,8 +16,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Pool;
 
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Entities\DriverIO;
-use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Psr\Cache\CacheItemInterface;
 
 
@@ -28,14 +27,15 @@ use Psr\Cache\CacheItemInterface;
 trait ExtendedCacheItemPoolTrait
 {
     use CacheItemPoolTrait;
-    use AbstractDriverPoolTrait;
-
-    protected DriverIO $IO;
 
     /**
-     * @throws PhpfastcacheLogicException
-     * @throws PhpfastcacheInvalidArgumentException
+     * @param array $keys
+     * @param int $option
+     * @param int $depth
+     * @return string
      * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
     public function getItemsAsJsonString(array $keys = [], int $option = \JSON_THROW_ON_ERROR, int $depth = 512): string
     {
@@ -118,8 +118,10 @@ trait ExtendedCacheItemPoolTrait
     /**
      * @param ExtendedCacheItemInterface ...$items
      * @return bool
-     * @throws PhpfastcacheLogicException
+     * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      * @throws \ReflectionException
      */
     public function saveMultiple(ExtendedCacheItemInterface...$items): bool
@@ -131,14 +133,6 @@ trait ExtendedCacheItemPoolTrait
             return true;
         }
         return false;
-    }
-
-    /**
-     * @return DriverIO
-     */
-    public function getIO(): DriverIO
-    {
-        return $this->IO;
     }
 
     /**

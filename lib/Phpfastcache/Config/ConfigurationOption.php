@@ -78,15 +78,24 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
         }
 
         foreach (\get_object_vars($this) as $property => $value) {
-            if (\array_key_exists($property, $array)) {
-                $this->$property = &$array[$property];
-            } else {
-                $array[$property] = &$this->$property;
+            try{
+                if (\array_key_exists($property, $array)) {
+                    $this->$property = &$array[$property];
+                } else {
+                    $array[$property] = &$this->$property;
+                }
+            }catch (\TypeError $e){
+                throw new PhpfastcacheInvalidConfigurationException(
+                    \sprintf(
+                        'TypeError exception thrown while trying to set your configuration: %s',
+                        $e->getMessage()
+                    )
+                );
             }
         }
 
         foreach (\get_class_methods($this) as $method) {
-            if (\strpos($method, 'set') === 0) {
+            if (str_starts_with($method, 'set')) {
                 $value = null;
                 try {
                     /**
@@ -98,10 +107,10 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
                     $value = $this->{\lcfirst(\substr($method, 3))};
                     $this->{$method}($value);
                 } catch (TypeError $e) {
-                    $typeHintGot = \is_object($value) ? \get_class($value) : \gettype($value);
+                    $typeHintGot = \get_debug_type($value);
                     $reflectionMethod = new ReflectionMethod($this, $method);
                     $parameter = $reflectionMethod->getParameters()[0] ?? null;
-                    $typeHintExpected = ($parameter instanceof ReflectionParameter ? ($parameter->getType()->getName() === 'object' ? $parameter->getClass() : $parameter->getType(
+                    $typeHintExpected = ($parameter instanceof ReflectionParameter ? ($parameter->getType()->getName() === 'object' ? $parameter->getType() : $parameter->getType(
                     )->getName()) : 'Unknown type');
 
                     throw new PhpfastcacheInvalidConfigurationException(

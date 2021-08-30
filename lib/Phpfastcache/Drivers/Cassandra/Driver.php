@@ -21,25 +21,24 @@ use Cassandra\Exception\InvalidArgumentException;
 use Cassandra\Session as CassandraSession;
 use DateTime;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
-use Psr\Cache\CacheItemInterface;
 
 
 /**
  * Class Driver
  * @package phpFastCache\Drivers
  * @property CassandraSession $instance Instance of driver service
- * @property Config $config Config object
- * @method Config getConfig() Return the config object
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
     protected const CASSANDRA_KEY_SPACE = 'phpfastcache';
     protected const CASSANDRA_TABLE = 'cacheItems';
 
-    use DriverBaseTrait;
+    use TaggableCacheItemPoolTrait;
 
     /**
      * @return bool
@@ -160,10 +159,10 @@ HELP;
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return null|array
      */
-    protected function driverRead(CacheItemInterface $item): ?array
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         try {
             $options = new Cassandra\ExecutionOptions(
@@ -190,35 +189,33 @@ HELP;
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            try {
-                $cacheData = $this->encode($this->driverPreWrap($item));
-                $options = new Cassandra\ExecutionOptions(
-                    [
-                        'arguments' => [
-                            'cache_uuid' => new Cassandra\Uuid(),
-                            'cache_id' => $item->getKey(),
-                            'cache_data' => $cacheData,
-                            'cache_creation_date' => new Cassandra\Timestamp((new DateTime())->getTimestamp()),
-                            'cache_expiration_date' => new Cassandra\Timestamp($item->getExpirationDate()->getTimestamp()),
-                            'cache_length' => strlen($cacheData),
-                        ],
-                        'consistency' => Cassandra::CONSISTENCY_ALL,
-                        'serial_consistency' => Cassandra::CONSISTENCY_SERIAL,
-                    ]
-                );
+        $this->assertCacheItemType($item, Item::class);
 
-                $query = sprintf(
-                    'INSERT INTO %s.%s
+        try {
+            $cacheData = $this->encode($this->driverPreWrap($item));
+            $options = new Cassandra\ExecutionOptions(
+                [
+                    'arguments' => [
+                        'cache_uuid' => new Cassandra\Uuid(),
+                        'cache_id' => $item->getKey(),
+                        'cache_data' => $cacheData,
+                        'cache_creation_date' => new Cassandra\Timestamp((new DateTime())->getTimestamp()),
+                        'cache_expiration_date' => new Cassandra\Timestamp($item->getExpirationDate()->getTimestamp()),
+                        'cache_length' => strlen($cacheData),
+                    ],
+                    'consistency' => Cassandra::CONSISTENCY_ALL,
+                    'serial_consistency' => Cassandra::CONSISTENCY_SERIAL,
+                ]
+            );
+
+            $query = sprintf(
+                'INSERT INTO %s.%s
                     (
                       cache_uuid, 
                       cache_id, 
@@ -229,22 +226,19 @@ HELP;
                     )
                   VALUES (:cache_uuid, :cache_id, :cache_data, :cache_creation_date, :cache_expiration_date, :cache_length);
             ',
-                    self::CASSANDRA_KEY_SPACE,
-                    self::CASSANDRA_TABLE
-                );
+                self::CASSANDRA_KEY_SPACE,
+                self::CASSANDRA_TABLE
+            );
 
-                $result = $this->instance->execute(new Cassandra\SimpleStatement($query), $options);
-                /**
-                 * There's no real way atm
-                 * to know if the item has
-                 * been really upserted
-                 */
-                return $result instanceof Cassandra\Rows;
-            } catch (InvalidArgumentException $e) {
-                throw new PhpfastcacheInvalidArgumentException($e, 0, $e);
-            }
-        } else {
-            throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+            $result = $this->instance->execute(new Cassandra\SimpleStatement($query), $options);
+            /**
+             * There's no real way atm
+             * to know if the item has
+             * been really upserted
+             */
+            return $result instanceof Cassandra\Rows;
+        } catch (InvalidArgumentException $e) {
+            throw new PhpfastcacheInvalidArgumentException($e, 0, $e);
         }
     }
 
@@ -255,46 +249,41 @@ HELP;
      *******************/
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            try {
-                $options = new Cassandra\ExecutionOptions(
-                    [
-                        'arguments' => [
-                            'cache_id' => $item->getKey(),
-                        ],
-                    ]
-                );
-                $result = $this->instance->execute(
-                    new Cassandra\SimpleStatement(
-                        sprintf(
-                            'DELETE FROM %s.%s WHERE cache_id = :cache_id;',
-                            self::CASSANDRA_KEY_SPACE,
-                            self::CASSANDRA_TABLE
-                        )
-                    ),
-                    $options
-                );
+        $this->assertCacheItemType($item, Item::class);
 
-                /**
-                 * There's no real way atm
-                 * to know if the item has
-                 * been really deleted
-                 */
-                return $result instanceof Cassandra\Rows;
-            } catch (Exception $e) {
-                return false;
-            }
-        } else {
-            throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        try {
+            $options = new Cassandra\ExecutionOptions(
+                [
+                    'arguments' => [
+                        'cache_id' => $item->getKey(),
+                    ],
+                ]
+            );
+            $result = $this->instance->execute(
+                new Cassandra\SimpleStatement(
+                    sprintf(
+                        'DELETE FROM %s.%s WHERE cache_id = :cache_id;',
+                        self::CASSANDRA_KEY_SPACE,
+                        self::CASSANDRA_TABLE
+                    )
+                ),
+                $options
+            );
+
+            /**
+             * There's no real way atm
+             * to know if the item has
+             * been really deleted
+             */
+            return $result instanceof Cassandra\Rows;
+        } catch (Exception $e) {
+            return false;
         }
     }
 

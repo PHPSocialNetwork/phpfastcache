@@ -16,11 +16,10 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Zendshm;
 
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
-use Psr\Cache\CacheItemInterface;
-
 
 /**
  * Class Driver (zend memory cache)
@@ -31,7 +30,7 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    use DriverBaseTrait;
+    use TaggableCacheItemPoolTrait;
 
     /**
      * @return bool
@@ -75,10 +74,10 @@ HELP;
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return null|array
      */
-    protected function driverRead(CacheItemInterface $item): ?array
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         $data = zend_shm_cache_fetch($item->getKey());
         if ($data === false) {
@@ -89,22 +88,17 @@ HELP;
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return mixed
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            $ttl = $item->getExpirationDate()->getTimestamp() - time();
+        $this->assertCacheItemType($item, Item::class);
 
-            return zend_shm_cache_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
-        }
+        $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return zend_shm_cache_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
     }
 
     /********************
@@ -114,20 +108,15 @@ HELP;
      *******************/
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return (bool)zend_shm_cache_delete($item->getKey());
-        }
+        $this->assertCacheItemType($item, Item::class);
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return (bool)zend_shm_cache_delete($item->getKey());
     }
 
     /**

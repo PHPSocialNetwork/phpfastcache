@@ -15,17 +15,21 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Couchbasev3;
 
+use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, ItemBaseTrait};
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Drivers\Couchbase\Item as CoubaseV2Item;
 use Phpfastcache\Drivers\Couchbasev3\Driver as CouchbaseDriver;
-use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 
 /**
  * Class Item
  * @package phpFastCache\Drivers\Couchbase
  */
-class Item extends CoubaseV2Item
+class Item implements ExtendedCacheItemInterface
 {
+    use ItemBaseTrait {
+        ItemBaseTrait::__construct as __BaseConstruct;
+    }
+
     /**
      * Item constructor.
      * @param Driver $driver
@@ -34,7 +38,7 @@ class Item extends CoubaseV2Item
      */
     public function __construct(CouchbaseDriver $driver, $key)
     {
-        parent::__construct($driver, $key);
+        $this->__BaseConstruct($driver, $key);
     }
 
     /**

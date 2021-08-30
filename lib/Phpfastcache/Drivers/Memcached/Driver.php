@@ -20,9 +20,10 @@ use Exception;
 use Memcached as MemcachedSoftware;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Config\ConfigurationOption;
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException};
+use Phpfastcache\Exceptions\{PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Phpfastcache\Util\{MemcacheDriverCollisionDetectorTrait};
 use Psr\Cache\CacheItemInterface;
 
@@ -36,7 +37,7 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    use DriverBaseTrait {
+    use TaggableCacheItemPoolTrait {
         __construct as protected __parentConstruct;
     }
     use MemcacheDriverCollisionDetectorTrait;
@@ -82,6 +83,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @return bool
+     * @throws PhpfastcacheDriverException
      */
     protected function driverConnect(): bool
     {
@@ -140,10 +142,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return null|array
      */
-    protected function driverRead(CacheItemInterface $item): ?array
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         $val = $this->instance->get($item->getKey());
 
@@ -155,45 +157,36 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            $ttl = $item->getExpirationDate()->getTimestamp() - time();
+        $this->assertCacheItemType($item, Item::class);
 
-            // Memcache will only allow a expiration timer less than 2592000 seconds,
-            // otherwise, it will assume you're giving it a UNIX timestamp.
-            if ($ttl > 2592000) {
-                $ttl = time() + $ttl;
-            }
+        $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
-            return $this->instance->set($item->getKey(), $this->driverPreWrap($item), $ttl);
+        // Memcache will only allow a expiration timer less than 2592000 seconds,
+        // otherwise, it will assume you're giving it a UNIX timestamp.
+        if ($ttl > 2592000) {
+            $ttl = time() + $ttl;
         }
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return $this->instance->set($item->getKey(), $this->driverPreWrap($item), $ttl);
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return $this->instance->delete($item->getKey());
-        }
+        $this->assertCacheItemType($item, Item::class);
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return $this->instance->delete($item->getKey());
     }
 
     /********************

@@ -73,7 +73,7 @@ class ClusterAggregator implements AggregatorInterface
      */
     public function aggregateDriver(AggregatablePoolInterface $driverPool): void
     {
-        if ($this->cluster) {
+        if (isset($this->cluster)) {
             throw new PhpfastcacheLogicException('The cluster has been already build, cannot aggregate more pools.');
         }
 
@@ -115,7 +115,7 @@ class ClusterAggregator implements AggregatorInterface
      */
     public function disaggregateDriver(AggregatablePoolInterface $driverPool): void
     {
-        if ($this->cluster) {
+        if (isset($this->cluster)) {
             throw new PhpfastcacheLogicException('The cluster has been already build, cannot disaggregate pools.');
         }
 
@@ -136,7 +136,7 @@ class ClusterAggregator implements AggregatorInterface
     public function getCluster(int $strategy = AggregatorInterface::STRATEGY_FULL_REPLICATION): ClusterPoolInterface
     {
         if (isset(ClusterPoolAbstract::STRATEGY[$strategy])) {
-            if (!$this->cluster) {
+            if (!isset($this->cluster)) {
                 $clusterClass = ClusterPoolAbstract::STRATEGY[$strategy];
                 $this->cluster = new $clusterClass(
                     $this->getClusterAggregatorName(),

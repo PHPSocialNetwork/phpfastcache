@@ -235,7 +235,10 @@ class TestHelper
      */
     public function runSubProcess(string $file, string $ext = '.php')
     {
-        $this->runAsyncProcess(($this->isHHVM() ? 'hhvm ' : 'php ') . getcwd() . DIRECTORY_SEPARATOR . 'subprocess' . DIRECTORY_SEPARATOR . $file . '.subprocess' . $ext);
+        $filePath =  getcwd() . DIRECTORY_SEPARATOR . 'subprocess' . DIRECTORY_SEPARATOR . $file . '.subprocess' . $ext;
+        $binary = $this->isHHVM() ? 'hhvm' : 'php';
+        $this->printDebugText(sprintf('Running %s subprocess on "%s"', \strtoupper($binary), $filePath));
+        $this->runAsyncProcess("$binary $filePath");
     }
 
     /**
@@ -320,7 +323,7 @@ class TestHelper
      */
     public function runAsyncProcess(string $cmd)
     {
-        if (substr(php_uname(), 0, 7) === 'Windows') {
+        if (str_starts_with(php_uname(), 'Windows')) {
             pclose(popen('start /B ' . $cmd, 'r'));
         } else {
             exec($cmd . ' > /dev/null &');

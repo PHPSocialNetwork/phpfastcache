@@ -15,6 +15,9 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool;
 
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Drivers\Memstatic\Item;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -34,25 +37,39 @@ trait AbstractDriverPoolTrait
     abstract protected function driverConnect(): bool;
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return ?array
      */
-    abstract protected function driverRead(CacheItemInterface $item): ?array;
+    abstract protected function driverRead(ExtendedCacheItemInterface $item): ?array;
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      */
-    abstract protected function driverWrite(CacheItemInterface $item): bool;
+    abstract protected function driverWrite(ExtendedCacheItemInterface $item): bool;
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      */
-    abstract protected function driverDelete(CacheItemInterface $item): bool;
+    abstract protected function driverDelete(ExtendedCacheItemInterface $item): bool;
 
     /**
      * @return bool
      */
     abstract protected function driverClear(): bool;
+
+    /**
+     * @param ExtendedCacheItemInterface $item
+     * @param string $expectedClassType
+     * @throws PhpfastcacheInvalidArgumentException
+     */
+    protected function assertCacheItemType(ExtendedCacheItemInterface $item, string $expectedClassType): void
+    {
+        if (!($item instanceof $expectedClassType)) {
+            throw new PhpfastcacheInvalidArgumentException(
+                \sprintf('Cross-driver type confusion detected: Expected "%s" object, got "%s"',  $expectedClassType, $item::class)
+            );
+        }
+    }
 }

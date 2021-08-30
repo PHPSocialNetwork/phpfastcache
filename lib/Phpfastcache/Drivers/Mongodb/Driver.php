@@ -21,9 +21,10 @@ use LogicException;
 use MongoClient;
 use MongoDB\{BSON\Binary, BSON\UTCDateTime, Client, Collection, Database, DeleteResult, Driver\Command, Driver\Exception\Exception as MongoDBException, Driver\Manager};
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException};
+use Phpfastcache\Exceptions\{PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Psr\Cache\CacheItemInterface;
 
 
@@ -38,7 +39,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 {
     public const MONGODB_DEFAULT_DB_NAME = 'phpfastcache'; // Public because used in config
 
-    use DriverBaseTrait;
+    use TaggableCacheItemPoolTrait;
 
     /**
      * @var Collection
@@ -140,10 +141,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return null|array
      */
-    protected function driverRead(CacheItemInterface $item): ?array
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         $document = $this->getCollection()->findOne(['_id' => $this->getMongoDbItemKey($item)]);
 
@@ -176,72 +177,64 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return mixed
-     * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheDriverException
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            try {
-                $set = [
-                    self::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(),
-                    self::DRIVER_DATA_WRAPPER_INDEX => new Binary($this->encode($item->get()), Binary::TYPE_GENERIC),
-                    self::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
-                    self::DRIVER_EDATE_WRAPPER_INDEX => new UTCDateTime($item->getExpirationDate()),
+        $this->assertCacheItemType($item, Item::class);
+
+        try {
+            $set = [
+                self::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(),
+                self::DRIVER_DATA_WRAPPER_INDEX => new Binary($this->encode($item->get()), Binary::TYPE_GENERIC),
+                self::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
+                self::DRIVER_EDATE_WRAPPER_INDEX => new UTCDateTime($item->getExpirationDate()),
+            ];
+
+            if (!empty($this->getConfig()->isItemDetailedDate())) {
+                $set += [
+                    self::DRIVER_MDATE_WRAPPER_INDEX =>  new UTCDateTime($item->getModificationDate()),
+                    self::DRIVER_CDATE_WRAPPER_INDEX =>  new UTCDateTime($item->getCreationDate()),
                 ];
-
-                if (!empty($this->getConfig()->isItemDetailedDate())) {
-                    $set += [
-                        self::DRIVER_MDATE_WRAPPER_INDEX =>  new UTCDateTime($item->getModificationDate()),
-                        self::DRIVER_CDATE_WRAPPER_INDEX =>  new UTCDateTime($item->getCreationDate()),
-                    ];
-                }
-                $result = (array)$this->getCollection()->updateOne(
-                    ['_id' => $this->getMongoDbItemKey($item)],
-                    [
-                        '$set' => $set,
-                    ],
-                    ['upsert' => true, 'multiple' => false]
-                );
-            } catch (MongoDBException $e) {
-                throw new PhpfastcacheDriverException('Got an exception while trying to write data to MongoDB server: ' . $e->getMessage(), 0, $e);
             }
-
-            return isset($result['ok']) ? $result['ok'] == 1 : true;
+            $result = (array)$this->getCollection()->updateOne(
+                ['_id' => $this->getMongoDbItemKey($item)],
+                [
+                    '$set' => $set,
+                ],
+                ['upsert' => true, 'multiple' => false]
+            );
+        } catch (MongoDBException $e) {
+            throw new PhpfastcacheDriverException('Got an exception while trying to write data to MongoDB server: ' . $e->getMessage(), 0, $e);
         }
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
-    }
+        return !isset($result['ok']) || (int) $result['ok'] === 1;
+}
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
+        $this->assertCacheItemType($item, Item::class);
+
         /**
-         * Check for Cross-Driver type confusion
+         * @var DeleteResult $deletionResult
          */
-        if ($item instanceof Item) {
-            /**
-             * @var DeleteResult $deletionResult
-             */
-            $deletionResult = $this->getCollection()->deleteOne(['_id' =>  $this->getMongoDbItemKey($item)]);
+        $deletionResult = $this->getCollection()->deleteOne(['_id' =>  $this->getMongoDbItemKey($item)]);
 
-            return $deletionResult->isAcknowledged();
-        }
-
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return $deletionResult->isAcknowledged();
     }
 
     /**
      * @return bool
+     * @throws PhpfastcacheDriverException
      */
     protected function driverClear(): bool
     {
@@ -335,7 +328,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         );
     }
 
-    protected function getMongoDbItemKey(CacheItemInterface $item)
+    protected function getMongoDbItemKey(CacheItemInterface $item): string
     {
         return 'pfc_' . $item->getEncodedKey();
     }
@@ -353,7 +346,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      *
      * @return bool True if the collection exists, false if not.
      */
-    protected function collectionExists($collectionName): bool
+    protected function collectionExists(string $collectionName): bool
     {
         foreach ($this->database->listCollections() as $collection) {
             if ($collection->getName() === $collectionName) {

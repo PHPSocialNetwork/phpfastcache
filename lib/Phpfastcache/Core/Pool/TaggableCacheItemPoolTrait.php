@@ -23,13 +23,21 @@ use Psr\Cache\{CacheItemInterface};
 /**
  * Trait TaggableCacheItemPoolTrait
  * @package Phpfastcache\Core\Pool
- * @method ExtendedCacheItemInterface getItem(string $key) Return the config object
- * @method ExtendedCacheItemInterface[] getItems(array $keys) Return the config object
  */
 trait TaggableCacheItemPoolTrait
 {
+    use ExtendedCacheItemPoolTrait;
+
     /**
-     * @inheritdoc
+     * @param array $tagNames
+     * @param int $option
+     * @param int $depth
+     * @param int $strategy
+     * @return string
+     * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
+     * @throws PhpfastcacheDriverException
      */
     public function getItemsByTagsAsJsonString(array $tagNames, int $option = \JSON_THROW_ON_ERROR, int $depth = 512, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): string
     {
@@ -50,6 +58,7 @@ trait TaggableCacheItemPoolTrait
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
+     * @throws PhpfastcacheDriverException
      */
     public function getItemsByTags(array $tagNames, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): array
     {
@@ -90,6 +99,7 @@ trait TaggableCacheItemPoolTrait
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
      * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      */
     protected function fetchItemsByTagFromBackend(string $tagName): array
     {
@@ -131,6 +141,7 @@ trait TaggableCacheItemPoolTrait
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
+     * @throws PhpfastcacheDriverException
      */
     public function deleteItemsByTags(array $tagNames, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
@@ -153,6 +164,7 @@ trait TaggableCacheItemPoolTrait
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
+     * @throws PhpfastcacheDriverException
      */
     public function deleteItemsByTag(string $tagName, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
@@ -174,6 +186,7 @@ trait TaggableCacheItemPoolTrait
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
+     * @throws PhpfastcacheDriverException
      */
     public function getItemsByTag(string $tagName, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): array
     {
@@ -194,8 +207,10 @@ trait TaggableCacheItemPoolTrait
      * @param int $strategy
      * @return bool
      * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
+     * @throws \ReflectionException
      */
     public function incrementItemsByTags(array $tagNames, int $step = 1, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
@@ -216,8 +231,10 @@ trait TaggableCacheItemPoolTrait
      * @param int $strategy
      * @return bool
      * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
+     * @throws \ReflectionException
      */
     public function incrementItemsByTag(string $tagName, int $step = 1, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
@@ -235,8 +252,10 @@ trait TaggableCacheItemPoolTrait
      * @param int $strategy
      * @return bool
      * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
+     * @throws \ReflectionException
      */
     public function decrementItemsByTags(array $tagNames, int $step = 1, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
@@ -257,8 +276,10 @@ trait TaggableCacheItemPoolTrait
      * @param int $strategy
      * @return bool
      * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
+     * @throws \ReflectionException
      */
     public function decrementItemsByTag(string $tagName, int $step = 1, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
@@ -276,8 +297,10 @@ trait TaggableCacheItemPoolTrait
      * @param int $strategy
      * @return bool
      * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
+     * @throws \ReflectionException
      */
     public function appendItemsByTags(array $tagNames, $data, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
@@ -298,8 +321,10 @@ trait TaggableCacheItemPoolTrait
      * @param int $strategy
      * @return bool
      * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
+     * @throws \ReflectionException
      */
     public function appendItemsByTag(string $tagName, $data, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
@@ -317,8 +342,10 @@ trait TaggableCacheItemPoolTrait
      * @param int $strategy
      * @return bool
      * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
+     * @throws \ReflectionException
      */
     public function prependItemsByTags(array $tagNames, $data, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
@@ -339,8 +366,10 @@ trait TaggableCacheItemPoolTrait
      * @param int $strategy
      * @return bool
      * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
+     * @throws \ReflectionException
      */
     public function prependItemsByTag(string $tagName, $data, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {

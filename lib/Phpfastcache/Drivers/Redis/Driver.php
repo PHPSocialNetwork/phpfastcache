@@ -17,10 +17,10 @@ namespace Phpfastcache\Drivers\Redis;
 
 use DateTime;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
-use Psr\Cache\CacheItemInterface;
 use Redis as RedisClient;
 
 
@@ -32,7 +32,7 @@ use Redis as RedisClient;
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    use DriverBaseTrait;
+    use TaggableCacheItemPoolTrait;
 
     /**
      * @return bool
@@ -70,7 +70,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     protected function driverConnect(): bool
     {
-        if ($this->instance instanceof RedisClient) {
+        if (isset($this->instance) && $this->instance instanceof RedisClient) {
             throw new PhpfastcacheLogicException('Already connected to Redis server');
         }
 
@@ -80,17 +80,17 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
          */
         if ($this->getConfig()->getRedisClient() instanceof RedisClient) {
             /**
-             * Unlike Predis, we can't test if we're are connected
+             * Unlike Predis, we can't test if we're connected
              * or not, so let's just assume that we are
              */
             $this->instance = $this->getConfig()->getRedisClient();
             return true;
         }
 
-        $this->instance = $this->instance ?: new RedisClient();
+        $this->instance = $this->instance ?? new RedisClient();
 
         /**
-         * If path is provided we consider it as an UNIX Socket
+         * If path is provided we consider it as a UNIX Socket
          */
         if ($this->getConfig()->getPath()) {
             $isConnected = $this->instance->connect($this->getConfig()->getPath());
@@ -117,13 +117,13 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return null|array
      */
-    protected function driverRead(CacheItemInterface $item): ?array
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         $val = $this->instance->get($item->getKey());
-        if ($val == false) {
+        if (!$val) {
             return null;
         }
 
@@ -131,54 +131,39 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return mixed
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
+        $this->assertCacheItemType($item, Item::class);
+
+        $ttl = $item->getExpirationDate()->getTimestamp() - time();
+
         /**
-         * Check for Cross-Driver type confusion
+         * @see https://redis.io/commands/setex
+         * @see https://redis.io/commands/expire
          */
-        if ($item instanceof Item) {
-            $ttl = $item->getExpirationDate()->getTimestamp() - time();
-
-            /**
-             * @see https://redis.io/commands/setex
-             * @see https://redis.io/commands/expire
-             */
-            if ($ttl <= 0) {
-                return $this->instance->expire($item->getKey(), 0);
-            }
-
-            return $this->instance->setex($item->getKey(), $ttl, $this->encode($this->driverPreWrap($item)));
+        if ($ttl <= 0) {
+            return $this->instance->expire($item->getKey(), 0);
         }
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return $this->instance->setex($item->getKey(), $ttl, $this->encode($this->driverPreWrap($item)));
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return (bool)$this->instance->del($item->getKey());
-        }
+        $this->assertCacheItemType($item, Item::class);
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return (bool)$this->instance->del($item->getKey());
     }
-
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
 
     /**
      * @return bool

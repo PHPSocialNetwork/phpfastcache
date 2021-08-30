@@ -15,19 +15,112 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Couchbasev3;
 
-use Phpfastcache\Drivers\Couchbase\Config as CoubaseV2Config;
+use Phpfastcache\Config\ConfigurationOption;
 
-class Config extends CoubaseV2Config
+class Config extends ConfigurationOption
 {
+    protected const DEFAULT_VALUE = '_default';
+
+    protected string $host = '127.0.0.1';
+
+    protected int $port = 8091;// SSL: 18091
+
+    protected string $username = '';
+
+    protected string $password = '';
+
+    protected string $bucketName = self::DEFAULT_VALUE;
+
+    protected string $scopeName = self::DEFAULT_VALUE;
+
+    protected string $collectionName = self::DEFAULT_VALUE;
+
+    public function getHost(): string
+    {
+        return $this->host;
+    }
+
     /**
-     * @var string
+     * @param string $host
+     * @return Config
      */
-    protected $bucketName = 'phpfastcache';
+    public function setHost(string $host): Config
+    {
+        $this->host = $host;
+        return $this;
+    }
 
-    protected $scopeName = self::DEFAULT_VALUE;
+    /**
+     * @return int
+     */
+    public function getPort()
+    {
+        return $this->port;
+    }
 
-    protected $collectionName = self::DEFAULT_VALUE;
+    /**
+     * @param int $port
+     * @return Config
+     */
+    public function setPort(int $port): Config
+    {
+        $this->port = $port;
+        return $this;
+    }
 
+    /**
+     * @return string
+     */
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    /**
+     * @param string $username
+     * @return Config
+     */
+    public function setUsername(string $username): Config
+    {
+        $this->username = $username;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param string $password
+     * @return Config
+     */
+    public function setPassword(string $password): Config
+    {
+        $this->password = $password;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBucketName(): string
+    {
+        return $this->bucketName;
+    }
+
+    /**
+     * @param string $bucketName
+     * @return Config
+     */
+    public function setBucketName(string $bucketName): Config
+    {
+        $this->bucketName = $bucketName;
+        return $this;
+    }
     /**
      * @return string
      */

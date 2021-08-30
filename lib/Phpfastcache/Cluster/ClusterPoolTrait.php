@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Cluster;
 
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Psr\Cache\CacheItemInterface;
 
 trait ClusterPoolTrait
@@ -31,28 +32,28 @@ trait ClusterPoolTrait
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return null
      */
-    protected function driverRead(CacheItemInterface $item)
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         return null;
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
         return true;
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
         return true;
     }

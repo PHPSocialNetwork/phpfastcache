@@ -16,12 +16,11 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Pool;
 
 use DateTime;
-use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\ItemBatch;
 use Phpfastcache\Event\EventManagerDispatcherTrait;
-use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheIOException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
 use Psr\Cache\CacheItemInterface;
 use ReflectionClass;
@@ -32,15 +31,12 @@ use RuntimeException;
 /**
  * Trait StandardPsr6StructureTrait
  * @package phpFastCache\Core
- * @property ConfigurationOption $config The config array
- * @method ConfigurationOption getConfig() Return the config object
- * @method DriverIO getIO() Return the IO object
  */
 trait CacheItemPoolTrait
 {
     use ClassNamespaceResolverTrait;
     use EventManagerDispatcherTrait;
-    use TaggableCacheItemPoolTrait;
+    use DriverBaseTrait;
 
     /**
      * @var string
@@ -56,6 +52,8 @@ trait CacheItemPoolTrait
      * @var ExtendedCacheItemInterface[]
      */
     protected array $itemInstances = [];
+
+    protected DriverIO $IO;
 
     /**
      * @throws PhpfastcacheLogicException
@@ -89,7 +87,6 @@ trait CacheItemPoolTrait
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
-     * @throws PhpfastcacheDriverException
      */
     public function getItems(array $keys = []): iterable
     {
@@ -104,7 +101,9 @@ trait CacheItemPoolTrait
     /**
      * @param string $key
      * @return ExtendedCacheItemInterface
-     * @throws PhpfastcacheLogicException|PhpfastcacheCoreException|PhpfastcacheDriverException|PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
     public function getItem(string $key): ExtendedCacheItemInterface
     {
@@ -245,7 +244,6 @@ trait CacheItemPoolTrait
      * @param string $key
      * @return bool
      * @throws PhpfastcacheCoreException
-     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
      */
@@ -256,8 +254,6 @@ trait CacheItemPoolTrait
 
     /**
      * @return bool
-     * @throws PhpfastcacheDriverException
-     * @throws PhpfastcacheIOException
      */
     public function clear(): bool
     {
@@ -452,5 +448,13 @@ trait CacheItemPoolTrait
         }
 
         return false;
+    }
+
+    /**
+     * @return DriverIO
+     */
+    public function getIO(): DriverIO
+    {
+        return $this->IO;
     }
 }

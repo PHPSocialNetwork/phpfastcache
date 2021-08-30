@@ -76,7 +76,7 @@ trait ItemExtendedTrait
      */
     public function getEncodedKey(): string
     {
-        if (!$this->encodedKey) {
+        if (!isset($this->encodedKey)) {
             $keyHashFunction = $this->driver->getConfig()->getDefaultKeyHashFunction();
 
             if ($keyHashFunction) {

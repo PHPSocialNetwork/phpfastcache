@@ -41,9 +41,9 @@ trait IOConfigurationOptionTrait
 
     /**
      * @param string $securityKey
-     * @return self
+     * @return static
      */
-    public function setSecurityKey(string $securityKey): self
+    public function setSecurityKey(string $securityKey): static
     {
         $this->securityKey = $securityKey;
 
@@ -60,9 +60,9 @@ trait IOConfigurationOptionTrait
 
     /**
      * @param bool $htaccess
-     * @return Config
+     * @return static
      */
-    public function setHtaccess(bool $htaccess): ConfigurationOptionInterface
+    public function setHtaccess(bool $htaccess): static
     {
         $this->htaccess = $htaccess;
 
@@ -81,7 +81,7 @@ trait IOConfigurationOptionTrait
      * @param bool $secureFileManipulation
      * @return self
      */
-    public function setSecureFileManipulation(bool $secureFileManipulation): self
+    public function setSecureFileManipulation(bool $secureFileManipulation): static
     {
         $this->secureFileManipulation = $secureFileManipulation;
         return $this;
@@ -98,10 +98,10 @@ trait IOConfigurationOptionTrait
 
     /**
      * @param string $cacheFileExtension
-     * @return self
+     * @return static
      * @throws PhpfastcacheInvalidConfigurationException
      */
-    public function setCacheFileExtension(string $cacheFileExtension): self
+    public function setCacheFileExtension(string $cacheFileExtension): static
     {
         /**
          * Feel free to propose your own one
@@ -109,7 +109,7 @@ trait IOConfigurationOptionTrait
          */
         $safeFileExtensions = \explode('|', SAFE_FILE_EXTENSIONS);
 
-        if (\strpos($cacheFileExtension, '.') !== false) {
+        if (str_contains($cacheFileExtension, '.')) {
             throw new PhpfastcacheInvalidConfigurationException('cacheFileExtension cannot contain a dot "."');
         }
         if (!\in_array($cacheFileExtension, $safeFileExtensions, true)) {
@@ -134,7 +134,7 @@ trait IOConfigurationOptionTrait
      * @param int $defaultChmod
      * @return self
      */
-    public function setDefaultChmod(int $defaultChmod): self
+    public function setDefaultChmod(int $defaultChmod): static
     {
         $this->defaultChmod = $defaultChmod;
         return $this;

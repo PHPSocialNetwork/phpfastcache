@@ -22,17 +22,17 @@ This ensure you that the library is completely reliable when it come to manipula
 ### Supported drivers at this day *
 :bulb: Feel free to propose a driver by making a new **[Pull Request](https://github.com/PHPSocialNetwork/phpfastcache/compare)**, they are welcome !
 
-|      Regular drivers            |     High performances drivers      |    Development drivers        |    Cluster-Aggregated drivers     |
-|---------------------------------|------------------------------------|-------------------------------|-----------------------------------|
-|  `Apcu` *(APC support removed)* | `Cassandra`                        | `Devnull`                     | `FullReplicationCluster`          |
-|  `Cookie`                       | `CouchBase(v3)`                    | `Devfalse`                    | `SemiReplicationCluster`          |
-|  `Files`                        | `Couchdb`                          | `Devtrue`                     | `MasterSlaveReplicationCluster`   |
-|  `Leveldb`                      | `Mongodb`                          | `Memstatic`                   | `RandomReplicationCluster`        |
-|  `Memcache(d)`                  | `Predis`                           |                               |                                   |
-|  `Sqlite`                       | `Redis`                            |                               |                                   |
-|  `Wincache`                     | `Ssdb`                             |                               |                                   |
-|  `Zend Disk Cache`              | `Zend Memory Cache`                |                               |                                   |
-|                                 |                                    |                               |                                   |
+|      Regular drivers            |     High performances drivers                                 |    Development drivers        |    Cluster-Aggregated drivers     |
+|---------------------------------|---------------------------------------------------------------|-------------------------------|-----------------------------------|
+|  `Apcu` *(APC support removed)* | `Cassandra`                                                   | `Devnull`                     | `FullReplicationCluster`          |
+|  `Cookie`                       | `CouchBasev3`<br>_(`Couchbase` for SDK 2 support removed)_    | `Devrandom`                   | `SemiReplicationCluster`          |
+|  `Files`                        | `Couchdb`                                                     | `Memstatic`                   | `MasterSlaveReplicationCluster`   |
+|  `Leveldb`                      | `Mongodb`                                                     |                               | `RandomReplicationCluster`        |
+|  `Memcache(d)`                  | `Predis`                                                      |                               |                                   |
+|  `Sqlite`                       | `Redis`                                                       |                               |                                   |
+|  `Wincache`                     | `Ssdb`                                                        |                               |                                   |
+|  `Zend Disk Cache`              | `Zend Memory Cache`                                           |                               |                                   |
+|                                 |                                                               |                               |                                   |
 
 \* Driver descriptions available in DOCS/DRIVERS.md
 

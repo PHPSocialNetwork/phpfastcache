@@ -181,7 +181,6 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      */
     public function saveMultiple(ExtendedCacheItemInterface...$items): bool;
 
-
     /**
      * @return DriverIO
      */

@@ -15,7 +15,8 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Cookie;
 
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException};
 use Psr\Cache\CacheItemInterface;
@@ -24,12 +25,13 @@ use Psr\Cache\CacheItemInterface;
 /**
  * Class Driver
  * @package phpFastCache\Drivers
- * @property Config $config Config object
- * @method Config getConfig() Return the config object
+ *
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
-    use DriverBaseTrait;
+    use TaggableCacheItemPoolTrait;
+
 
     protected const PREFIX = 'PFC_';
 
@@ -70,11 +72,11 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return null|array
      * @throws PhpfastcacheDriverException
      */
-    protected function driverRead(CacheItemInterface $item): ?array
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         $this->driverConnect();
         $keyword = self::PREFIX . $item->getKey();
@@ -100,27 +102,23 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            $this->driverConnect();
-            $keyword = self::PREFIX . $item->getKey();
-            $v = json_encode($this->driverPreWrap($item));
+        $this->assertCacheItemType($item, Item::class);
 
-            if ($this->getConfig()->getLimitedMemoryByObject() !== null && strlen($v) > $this->getConfig()->getLimitedMemoryByObject()) {
-                return false;
-            }
+        $this->driverConnect();
+        $keyword = self::PREFIX . $item->getKey();
+        $v = json_encode($this->driverPreWrap($item));
 
-            return setcookie($keyword, $v, $item->getExpirationDate()->getTimestamp(), '/');
+        if ($this->getConfig()->getLimitedMemoryByObject() !== null && strlen($v) > $this->getConfig()->getLimitedMemoryByObject()) {
+            return false;
         }
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+
+        return setcookie($keyword, $v, $item->getExpirationDate()->getTimestamp(), '/');
     }
 
     /**
@@ -137,24 +135,19 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            $this->driverConnect();
-            $keyword = self::PREFIX . $item->getKey();
-            $_COOKIE[$keyword] = null;
+        $this->assertCacheItemType($item, Item::class);
 
-            return @setcookie($keyword, null, -10);
-        }
+        $this->driverConnect();
+        $keyword = self::PREFIX . $item->getKey();
+        $_COOKIE[$keyword] = null;
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return @setcookie($keyword, null, -10);
     }
 
     /********************

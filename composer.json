@@ -32,10 +32,11 @@
         "ext-gettext": "*"
     },
     "suggest": {
-        "ext-apc": "*",
+        "ext-apcu": "*",
         "ext-intl": "*",
         "ext-memcached": "*",
         "ext-memcache": "*",
+        "ext-mongodb": "*",
         "ext-redis": "*",
         "ext-xcache": "*",
         "ext-sqlite": "*",

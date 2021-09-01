@@ -23,15 +23,9 @@ use DateTimeInterface;
  */
 class ItemBatch
 {
-    /**
-     * @var string
-     */
-    protected $itemKey;
+    protected string $itemKey;
 
-    /**
-     * @var DateTimeInterface
-     */
-    protected $itemDate;
+    protected DateTimeInterface $itemDate;
 
     /**
      * ItemBatch constructor.

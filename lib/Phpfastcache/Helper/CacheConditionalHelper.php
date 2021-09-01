@@ -17,6 +17,7 @@ namespace Phpfastcache\Helper;
 
 use DateInterval;
 use Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\InvalidArgumentException;
 
 /**
  * Class CacheConditional
@@ -24,10 +25,7 @@ use Psr\Cache\CacheItemPoolInterface;
  */
 class CacheConditionalHelper
 {
-    /**
-     * @var CacheItemPoolInterface
-     */
-    protected $cacheInstance;
+    protected CacheItemPoolInterface $cacheInstance;
 
     /**
      * CachePromise constructor.
@@ -41,10 +39,11 @@ class CacheConditionalHelper
     /**
      * @param string $cacheKey
      * @param callable $callback
-     * @param int|DateInterval $expiresAfter
+     * @param DateInterval|int|null $expiresAfter
      * @return mixed
+     * @throws InvalidArgumentException
      */
-    public function get(string $cacheKey, callable $callback, $expiresAfter = null)
+    public function get(string $cacheKey, callable $callback, DateInterval|int $expiresAfter = null): mixed
     {
         $cacheItem = $this->cacheInstance->getItem($cacheKey);
 

@@ -55,7 +55,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     {
         $size = 0;
         $stat = new DriverStatistic();
-        $stat->setData($_COOKIE);
+        $stat->setData(\json_encode($_COOKIE, JSON_THROW_ON_ERROR));
 
         /**
          * Only count PFC Cookie

@@ -93,7 +93,7 @@ class Config extends ConfigurationOption
      * @param string $host
      * @return Config
      */
-    public function setHost(string $host): self
+    public function setHost(string $host): static
     {
         $this->host = $host;
         return $this;
@@ -111,7 +111,7 @@ class Config extends ConfigurationOption
      * @param int $port
      * @return Config
      */
-    public function setPort(int $port): self
+    public function setPort(int $port): static
     {
         $this->port = $port;
         return $this;
@@ -129,7 +129,7 @@ class Config extends ConfigurationOption
      * @param null $password
      * @return self
      */
-    public function setPassword(string $password): self
+    public function setPassword(string $password): static
     {
         $this->password = $password;
         return $this;
@@ -147,7 +147,7 @@ class Config extends ConfigurationOption
      * @param int $database
      * @return Config
      */
-    public function setDatabase(int $database): self
+    public function setDatabase(int $database): static
     {
         $this->database = $database;
         return $this;
@@ -165,7 +165,7 @@ class Config extends ConfigurationOption
      * @param int $timeout
      * @return self
      */
-    public function setTimeout(int $timeout): self
+    public function setTimeout(int $timeout): static
     {
         $this->timeout = $timeout;
         return $this;

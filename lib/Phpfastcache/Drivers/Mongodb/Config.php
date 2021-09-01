@@ -86,7 +86,7 @@ class Config extends ConfigurationOption
      * @param string $host
      * @return self
      */
-    public function setHost(string $host): self
+    public function setHost(string $host): static
     {
         $this->host = $host;
         return $this;
@@ -104,7 +104,7 @@ class Config extends ConfigurationOption
      * @param int $port
      * @return self
      */
-    public function setPort(int $port): self
+    public function setPort(int $port): static
     {
         $this->port = $port;
         return $this;
@@ -122,7 +122,7 @@ class Config extends ConfigurationOption
      * @param int $timeout
      * @return self
      */
-    public function setTimeout(int $timeout): self
+    public function setTimeout(int $timeout): static
     {
         $this->timeout = $timeout;
         return $this;
@@ -140,7 +140,7 @@ class Config extends ConfigurationOption
      * @param string $username
      * @return self
      */
-    public function setUsername(string $username): self
+    public function setUsername(string $username): static
     {
         $this->username = $username;
         return $this;
@@ -158,7 +158,7 @@ class Config extends ConfigurationOption
      * @param string $password
      * @return self
      */
-    public function setPassword(string $password): self
+    public function setPassword(string $password): static
     {
         $this->password = $password;
         return $this;
@@ -176,7 +176,7 @@ class Config extends ConfigurationOption
      * @param array $servers
      * @return self
      */
-    public function setServers(array $servers): self
+    public function setServers(array $servers): static
     {
         $this->servers = $servers;
         return $this;
@@ -194,7 +194,7 @@ class Config extends ConfigurationOption
      * @param string $collectionName
      * @return self
      */
-    public function setCollectionName(string $collectionName): self
+    public function setCollectionName(string $collectionName): static
     {
         $this->collectionName = $collectionName;
         return $this;
@@ -212,7 +212,7 @@ class Config extends ConfigurationOption
      * @param string $databaseName
      * @return self
      */
-    public function setDatabaseName(string $databaseName): self
+    public function setDatabaseName(string $databaseName): static
     {
         $this->databaseName = $databaseName;
         return $this;
@@ -231,7 +231,7 @@ class Config extends ConfigurationOption
      * @param array $options
      * @return Config
      */
-    public function setOptions(array $options): self
+    public function setOptions(array $options): static
     {
         $this->options = $options;
         return $this;
@@ -249,7 +249,7 @@ class Config extends ConfigurationOption
      * @param array $driverOptions
      * @return self
      */
-    public function setDriverOptions(array $driverOptions): self
+    public function setDriverOptions(array $driverOptions): static
     {
         $this->driverOptions = $driverOptions;
         return $this;
@@ -267,7 +267,7 @@ class Config extends ConfigurationOption
      * @param string $protocol
      * @return self
      */
-    public function setProtocol(string $protocol): self
+    public function setProtocol(string $protocol): static
     {
         $this->protocol = $protocol;
         return $this;

@@ -22,6 +22,7 @@ use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Util\Directory;
+use Phpfastcache\Util\SapiDetector;
 
 
 /**
@@ -31,7 +32,6 @@ use Phpfastcache\Util\Directory;
  * @property ExtendedCacheItemInterface[] $itemInstances The item instance passed via CacheItemPoolTrait
  * @property EventManagerInterface $eventManager The event manager passed via CacheItemPoolTrait
  * @method Config getConfig() Return the config object
- * @method bool isPHPModule() Return true if is a php module
  * @method string getDriverName() Get the driver name
  */
 trait IOHelperTrait
@@ -39,7 +39,7 @@ trait IOHelperTrait
     /**
      * @var array
      */
-    public $tmp = [];
+    public array $tmp = [];
 
     /**
      * Provide a generic getStats() method
@@ -73,12 +73,12 @@ trait IOHelperTrait
     }
 
     /**
-     * @param $keyword
+     * @param string|bool $keyword
      * @param bool $skip
      * @return string
      * @throws PhpfastcacheIOException
      */
-    protected function getFilePath($keyword, $skip = false): string
+    protected function getFilePath(string|bool $keyword, bool $skip = false): string
     {
         $path = $this->getPath();
 
@@ -107,7 +107,7 @@ trait IOHelperTrait
      * @return string
      * @throws PhpfastcacheIOException
      */
-    public function getPath($readonly = false): string
+    public function getPath(bool $readonly = false): string
     {
         /**
          * Get the base system temporary directory
@@ -123,7 +123,7 @@ trait IOHelperTrait
                 if (isset($_SERVER['HTTP_HOST'])) {
                     $securityKey = \preg_replace('/^www./', '', \strtolower(\str_replace(':', '_', $_SERVER['HTTP_HOST'])));
                 } else {
-                    $securityKey = ($this->isPHPModule() ? 'web' : 'cli');
+                    $securityKey = (SapiDetector::isWebScript() ? 'web' : 'cli');
                 }
             }
 
@@ -169,20 +169,14 @@ trait IOHelperTrait
                 if (@mkdir($full_path, $this->getDefaultChmod(), true) === false && !\is_dir($full_path)) {
                     throw new PhpfastcacheIOException('The directory ' . $full_path . ' could not be created.');
                 }
-            } else {
-                if (!@\is_writable($full_path)) {
-                    if (!@\chmod($full_path, $this->getDefaultChmod()) && $this->getConfig()->isAutoTmpFallback()) {
-                        /**
-                         * Switch back to tmp dir
-                         * again if the path is not writable
-                         */
-                        $full_path = $full_path_tmp;
-                        if (!@\file_exists($full_path)) {
-                            if (@\mkdir($full_path, $this->getDefaultChmod(), true) && !\is_dir($full_path)) {
-                                throw new PhpfastcacheIOException('The directory ' . $full_path . ' could not be created.');
-                            }
-                        }
-                    }
+            } elseif (!@\is_writable($full_path) && !@\chmod($full_path, $this->getDefaultChmod()) && $this->getConfig()->isAutoTmpFallback()) {
+                /**
+                 * Switch back to tmp dir
+                 * again if the path is not writable
+                 */
+                $full_path = $full_path_tmp;
+                if (!@\file_exists($full_path) && @\mkdir($full_path, $this->getDefaultChmod(), true) && !\is_dir($full_path)) {
+                    throw new PhpfastcacheIOException('The directory ' . $full_path . ' could not be created.');
                 }
             }
 
@@ -205,10 +199,10 @@ trait IOHelperTrait
     }
 
     /**
-     * @param $filename
+     * @param string $filename
      * @return string
      */
-    protected static function cleanFileName($filename): string
+    protected static function cleanFileName(string $filename): string
     {
         $regex = [
             '/[\?\[\]\/\\\=\<\>\:\;\,\'\"\&\$\#\*\(\)\|\~\`\!\{\}]/',
@@ -233,11 +227,11 @@ trait IOHelperTrait
     }
 
     /**
-     * @param $path
+     * @param string $path
      * @param bool $create
      * @throws PhpfastcacheIOException
      */
-    protected function htaccessGen($path, $create = true)
+    protected function htaccessGen(string $path, bool $create = true): void
     {
         if ($create === true) {
             if (!\is_writable($path)) {
@@ -274,23 +268,23 @@ HTACCESS
     }
 
     /**
-     * @param $keyword
+     * @param string $keyword
      * @return string
      */
-    protected function encodeFilename($keyword): string
+    protected function encodeFilename(string $keyword): string
     {
         return $this->getConfig()->getDefaultFileNameHashFunction()($keyword);
     }
 
     /**
-     * @param $file
+     * @param string $file
      * @return string
      * @throws PhpfastcacheIOException
      */
-    protected function readFile($file): string
+    protected function readFile(string $file): string
     {
         if (!\is_readable($file)) {
-            throw new PhpfastcacheIOException("Cannot read file located at: {$file}");
+            throw new PhpfastcacheIOException("Cannot read file located at: $file");
         }
         if (\function_exists('file_get_contents')) {
             return (string)\file_get_contents($file);
@@ -321,7 +315,7 @@ HTACCESS
      * @return bool
      * @throws PhpfastcacheIOException
      */
-    protected function writefile(string $file, string $data, bool $secureFileManipulation = false): bool
+    protected function writeFile(string $file, string $data, bool $secureFileManipulation = false): bool
     {
         /**
          * @eventName CacheWriteFileOnDisk
@@ -358,6 +352,6 @@ HTACCESS
             }
         }
 
-        return (bool)($octetWritten ?? false);
+        return (bool) ($octetWritten ?? false);
     }
 }

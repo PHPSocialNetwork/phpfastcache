@@ -55,7 +55,7 @@ class Config extends ConfigurationOption
      * @param int $limitedMemoryByObject
      * @return ConfigurationOption
      */
-    public function setLimitedMemoryByObject(int $limitedMemoryByObject): self
+    public function setLimitedMemoryByObject(int $limitedMemoryByObject): static
     {
         $this->limitedMemoryByObject = $limitedMemoryByObject;
         return $this;

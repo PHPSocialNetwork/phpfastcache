@@ -60,7 +60,7 @@ class Config extends ConfigurationOption
      * @param string $host
      * @return self
      */
-    public function setHost(string $host): self
+    public function setHost(string $host): static
     {
         $this->host = $host;
         return $this;
@@ -78,7 +78,7 @@ class Config extends ConfigurationOption
      * @param int $port
      * @return self
      */
-    public function setPort(int $port): self
+    public function setPort(int $port): static
     {
         $this->port = $port;
         return $this;
@@ -96,7 +96,7 @@ class Config extends ConfigurationOption
      * @param int $timeout
      * @return self
      */
-    public function setTimeout(int $timeout): self
+    public function setTimeout(int $timeout): static
     {
         $this->timeout = $timeout;
         return $this;
@@ -114,7 +114,7 @@ class Config extends ConfigurationOption
      * @param string $username
      * @return self
      */
-    public function setUsername(string $username): self
+    public function setUsername(string $username): static
     {
         $this->username = $username;
         return $this;
@@ -132,7 +132,7 @@ class Config extends ConfigurationOption
      * @param string $password
      * @return self
      */
-    public function setPassword(string $password): self
+    public function setPassword(string $password): static
     {
         $this->password = $password;
         return $this;
@@ -150,7 +150,7 @@ class Config extends ConfigurationOption
      * @param bool $sslEnabled
      * @return self
      */
-    public function setSslEnabled(bool $sslEnabled): self
+    public function setSslEnabled(bool $sslEnabled): static
     {
         $this->sslEnabled = $sslEnabled;
         return $this;
@@ -168,7 +168,7 @@ class Config extends ConfigurationOption
      * @param bool $sslVerify
      * @return self
      */
-    public function setSslVerify(bool $sslVerify): self
+    public function setSslVerify(bool $sslVerify): static
     {
         $this->sslVerify = $sslVerify;
         return $this;

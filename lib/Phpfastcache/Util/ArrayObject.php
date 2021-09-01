@@ -140,7 +140,7 @@ class ArrayObject implements ArrayAccess, Iterator, Countable
      * @param array $array
      * @return self
      */
-    public function mergeArray(array $array): self
+    public function mergeArray(array $array): static
     {
         $this->array = array_merge($this->array, $array);
 

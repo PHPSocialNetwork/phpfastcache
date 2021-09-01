@@ -21,57 +21,31 @@ namespace Phpfastcache\Entities;
  */
 class DriverStatistic
 {
-    /**
-     * @var string
-     */
-    protected $info = '';
+    protected string $info = '';
 
-    /**
-     * @var int
-     */
-    protected $size = 0;
+    protected int $size = 0;
 
-    /**
-     * @var string
-     */
-    protected $data = '';
+    protected string $data = '';
 
-    /**
-     * @var mixed
-     */
-    protected $rawData;
+    protected mixed $rawData;
 
-    /**
-     * @return string Return info or false if no information available
-     */
     public function getInfo(): string
     {
         return $this->info;
     }
 
-    /**
-     * @param string $info
-     * @return $this
-     */
-    public function setInfo(string $info): self
+    public function setInfo(string $info): static
     {
         $this->info = $info;
 
         return $this;
     }
 
-    /**
-     * @return int Return size in octet or false if no information available
-     */
     public function getSize(): int
     {
         return $this->size;
     }
 
-    /**
-     * @param int $size
-     * @return $this
-     */
     public function setSize(int $size)
     {
         $this->size = $size;
@@ -79,47 +53,30 @@ class DriverStatistic
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getData()
+    public function getData(): string
     {
         return $this->data;
     }
 
-    /**
-     * @param mixed $data
-     * @return $this
-     */
-    public function setData($data): self
+    public function setData(string $data): static
     {
         $this->data = ($data ?: '');
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRawData()
+    public function getRawData(): mixed
     {
         return $this->rawData;
     }
 
-    /**
-     * @param mixed $raw
-     * @return $this
-     */
-    public function setRawData($raw): self
+    public function setRawData(mixed $raw): static
     {
         $this->rawData = $raw;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getPublicDesc(): array
     {
         return [

@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Cluster\Drivers\RandomReplication;
 
-use Phpfastcache\Cluster\Drivers\MasterSlaveReplication\MasterSlaveReplicationCluster;
+use Phpfastcache\Cluster\Drivers\MasterSlaveReplication\Driver as MasterSlaveReplicationDriver;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use ReflectionException;
 use ReflectionMethod;
@@ -25,7 +25,7 @@ use ReflectionMethod;
  * Class MasterSlaveReplicationCluster
  * @package Phpfastcache\Cluster\Drivers\MasterSlaveReplication
  */
-class RandomReplicationCluster extends MasterSlaveReplicationCluster
+class Driver extends MasterSlaveReplicationDriver
 {
     /**
      * RandomReplicationCluster constructor.

@@ -1,8 +1,15 @@
 ClusterFullReplication.test.php<?php
 
 /**
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ *
+ * This file is part of Phpfastcache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
+ *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 use Phpfastcache\CacheManager;
@@ -10,6 +17,7 @@ use Phpfastcache\Cluster\AggregatorInterface;
 use Phpfastcache\Cluster\ClusterAggregator;
 use Phpfastcache\Cluster\ItemAbstract;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Drivers\Failfiles\Driver as FailFilesDriver;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Tests\Helper\TestHelper;
 
@@ -19,7 +27,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/mock/Autoload.php';
 $testHelper = new TestHelper('Master/Slave Replication Cluster');
 
-CacheManager::addCustomDriver('Failfiles', \Phpfastcache\Drivers\Failfiles\Driver::class);
+CacheManager::addCustomDriver('Failfiles', FailFilesDriver::class);
 $clusterAggregator = new ClusterAggregator('test_10');
 $unwantedPool = CacheManager::getInstance('Redis');
 $clusterAggregator->aggregateDriver(CacheManager::getInstance('Failfiles'));

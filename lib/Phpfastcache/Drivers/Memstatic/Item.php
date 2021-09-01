@@ -16,9 +16,6 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Memstatic;
 
 use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, ItemBaseTrait};
-use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Drivers\Memstatic\Driver as MemstaticDriver;
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 
 /**
  * Class Item
@@ -26,34 +23,10 @@ use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
  */
 class Item implements ExtendedCacheItemInterface
 {
-    use ItemBaseTrait {
-        ItemBaseTrait::__construct as __BaseConstruct;
-    }
+    use ItemBaseTrait;
 
-    /**
-     * Item constructor.
-     * @param Driver $driver
-     * @param $key
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public function __construct(MemstaticDriver $driver, $key)
+    protected function getDriverClass(): string
     {
-        $this->__BaseConstruct($driver, $key);
-    }
-
-    /**
-     * @param ExtendedCacheItemPoolInterface $driver
-     * @return static
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public function setDriver(ExtendedCacheItemPoolInterface $driver)
-    {
-        if ($driver instanceof MemstaticDriver) {
-            $this->driver = $driver;
-
-            return $this;
-        }
-
-        throw new PhpfastcacheInvalidArgumentException('Invalid driver instance');
+        return Driver::class;
     }
 }

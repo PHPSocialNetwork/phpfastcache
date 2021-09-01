@@ -24,12 +24,12 @@ use Psr\Cache\CacheItemInterface;
  * Class FullReplicationCluster
  * @package Phpfastcache\Cluster\Drivers\FullReplication
  */
-class FullReplicationCluster extends ClusterPoolAbstract
+class Driver extends ClusterPoolAbstract
 {
     /**
      * @inheritDoc
      */
-    public function getItem($key)
+    public function getItem(string $key): ExtendedCacheItemInterface
     {
         /** @var ExtendedCacheItemPoolInterface[] $poolsToResync */
         $poolsToResync = [];
@@ -81,7 +81,7 @@ class FullReplicationCluster extends ClusterPoolAbstract
     /**
      * @inheritDoc
      */
-    public function hasItem($key)
+    public function hasItem(string $key): bool
     {
         foreach ($this->clusterPools as $driverPool) {
             $poolItem = $driverPool->getItem($key);
@@ -96,7 +96,7 @@ class FullReplicationCluster extends ClusterPoolAbstract
     /**
      * @inheritDoc
      */
-    public function clear()
+    public function clear(): bool
     {
         $hasClearedOnce = false;
         foreach ($this->clusterPools as $driverPool) {
@@ -111,7 +111,7 @@ class FullReplicationCluster extends ClusterPoolAbstract
     /**
      * @inheritDoc
      */
-    public function deleteItem($key)
+    public function deleteItem(string $key): bool
     {
         $hasDeletedOnce = false;
         foreach ($this->clusterPools as $driverPool) {
@@ -126,7 +126,7 @@ class FullReplicationCluster extends ClusterPoolAbstract
     /**
      * @inheritDoc
      */
-    public function save(CacheItemInterface $item)
+    public function save(CacheItemInterface $item): bool
     {
         /** @var ExtendedCacheItemInterface $item */
         $hasSavedOnce = false;
@@ -143,7 +143,7 @@ class FullReplicationCluster extends ClusterPoolAbstract
     /**
      * @inheritDoc
      */
-    public function saveDeferred(CacheItemInterface $item)
+    public function saveDeferred(CacheItemInterface $item): bool
     {
         /** @var ExtendedCacheItemInterface $item */
         $hasSavedOnce = false;
@@ -160,7 +160,7 @@ class FullReplicationCluster extends ClusterPoolAbstract
     /**
      * @inheritDoc
      */
-    public function commit()
+    public function commit(): bool
     {
         $hasCommitOnce = false;
         foreach ($this->clusterPools as $driverPool) {

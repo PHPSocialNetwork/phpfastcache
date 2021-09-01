@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * This file is part of Phpfastcache.
@@ -11,20 +10,21 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
-namespace Phpfastcache\Cluster\Drivers\SemiReplication;
+namespace Phpfastcache\Util;
 
-use Phpfastcache\Cluster\ItemAbstract;
 
-/**
- * Class ClusterItem
- * @package Phpfastcache\Cluster
- */
-class Item extends ItemAbstract
+class SapiDetector
 {
-    protected function getDriverClass(): string
+    public static function isWebScript(): bool
     {
-        return Driver::class;
+        return \PHP_SAPI === 'apache2handler' || str_contains(\PHP_SAPI, 'handler') || isset($_SERVER['REQUEST_METHOD']);
+    }
+
+    public static function isCliScript(): bool
+    {
+        return (\PHP_SAPI === 'cli') || \defined('STDIN');
     }
 }

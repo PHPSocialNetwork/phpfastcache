@@ -92,10 +92,6 @@ HELP;
      */
     protected function driverConnect(): bool
     {
-        if ($this->instance instanceof PredisClient) {
-            throw new PhpfastcacheLogicException('Already connected to Predis server');
-        }
-
         /**
          * In case of an user-provided
          * Predis client just return here

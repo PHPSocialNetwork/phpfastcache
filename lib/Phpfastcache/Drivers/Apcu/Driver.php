@@ -20,6 +20,7 @@ use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
+use Phpfastcache\Util\SapiDetector;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 
 /**
@@ -36,7 +37,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     public function driverCheck(): bool
     {
-        return extension_loaded('apcu') && ini_get('apc.enabled');
+        return extension_loaded('apcu') && ((ini_get('apc.enabled') && SapiDetector::isWebScript()) || (ini_get('apc.enable_cli') && SapiDetector::isCliScript()));
     }
 
     /**

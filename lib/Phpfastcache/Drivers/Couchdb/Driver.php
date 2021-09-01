@@ -76,10 +76,6 @@ HELP;
      */
     protected function driverConnect(): bool
     {
-        if ($this->instance instanceof CouchDBClient) {
-            throw new PhpfastcacheLogicException('Already connected to Couchdb server');
-        }
-
         $clientConfig = $this->getConfig();
 
         $url = ($clientConfig->isSsl() ? 'https://' : 'http://');
@@ -112,7 +108,7 @@ HELP;
      */
     protected function getDatabaseName(): string
     {
-        return $this->getConfig()->getDatabase() ?: self::COUCHDB_DEFAULT_DB_NAME;
+        return $this->getConfig()->getDatabase() ?: static::COUCHDB_DEFAULT_DB_NAME;
     }
 
     /**

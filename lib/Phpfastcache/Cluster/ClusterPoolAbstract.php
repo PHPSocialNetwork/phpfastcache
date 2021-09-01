@@ -15,13 +15,12 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Cluster;
 
-use Phpfastcache\Cluster\Drivers\{FullReplication\FullReplicationCluster,
-    MasterSlaveReplication\MasterSlaveReplicationCluster,
-    RandomReplication\RandomReplicationCluster,
-    SemiReplication\SemiReplicationCluster
-};
+use Phpfastcache\Cluster\Drivers\{FullReplication\Driver as FullReplicationCluster,
+    MasterSlaveReplication\Driver as MasterSlaveReplicationCluster,
+    RandomReplication\Driver as RandomReplicationCluster,
+    SemiReplication\Driver as SemiReplicationCluster};
 use Phpfastcache\Config\ConfigurationOption;
-use Phpfastcache\Core\{Item\ExtendedCacheItemInterface, Pool\DriverBaseTrait, Pool\ExtendedCacheItemPoolInterface, Pool\TaggableCacheItemPoolTrait};
+use Phpfastcache\Core\{Item\ExtendedCacheItemInterface, Pool\ExtendedCacheItemPoolInterface, Pool\TaggableCacheItemPoolTrait};
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\EventManager;
@@ -221,11 +220,14 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
         );
 
         $stats->setData(
-            (int)\array_map(
-                static function (ExtendedCacheItemPoolInterface $pool) {
-                    return $pool->getStats()->getData();
-                },
-                $this->clusterPools
+            \implode(
+                ', ',
+                \array_map(
+                    static function (ExtendedCacheItemPoolInterface $pool) {
+                        return $pool->getStats()->getData();
+                    },
+                    $this->clusterPools
+                )
             )
         );
 

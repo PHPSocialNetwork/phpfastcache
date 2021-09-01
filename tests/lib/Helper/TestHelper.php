@@ -2,15 +2,14 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 
@@ -158,10 +157,9 @@ class TestHelper
 
         $loadedExtensions = get_loaded_extensions();
         natcasesort($loadedExtensions);
-        $this->printText('[PhpFastCache CORE v' . Api::getPhpFastCacheVersion() . Api::getPhpFastCacheGitHeadHash() . ']', true);
-        $this->printText('[PhpFastCache API v' . Api::getVersion() . ']', true);
-        $this->printText('[PHP v' . PHP_VERSION . ' with: ' . implode(', ', $loadedExtensions) . ']', true);
-        $this->printText("[Begin Test: '{$this->testName}']");
+        $this->printText("[<blue>Begin Test:</blue> <magenta>{$this->testName}</magenta>]");
+        $this->printText('[<blue>PHPFASTCACHE:</blue> CORE <yellow>v' . Api::getPhpFastCacheVersion() . Api::getPhpFastCacheGitHeadHash() . '</yellow> | API <yellow>v' . Api::getVersion() . '</yellow>]');
+        $this->printText('[<blue>PHP</blue> <yellow>v' . PHP_VERSION . '</yellow> with: <green>' . implode(', ', $loadedExtensions) . '</green>]');
         $this->printText('---');
     }
 

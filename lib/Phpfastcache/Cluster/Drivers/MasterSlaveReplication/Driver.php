@@ -32,7 +32,7 @@ use ReflectionException;
  * Class MasterSlaveReplicationCluster
  * @package Phpfastcache\Cluster\Drivers\MasterSlaveReplication
  */
-class MasterSlaveReplicationCluster extends ClusterPoolAbstract
+class Driver extends ClusterPoolAbstract
 {
     /**
      * MasterSlaveReplicationCluster constructor.

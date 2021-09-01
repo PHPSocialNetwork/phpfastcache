@@ -30,21 +30,22 @@ trait ExtendedCacheItemPoolTrait
 
     /**
      * @param array $keys
-     * @param int $option
+     * @param int $options
      * @param int $depth
      * @return string
      * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
      */
-    public function getItemsAsJsonString(array $keys = [], int $option = \JSON_THROW_ON_ERROR, int $depth = 512): string
+    public function getItemsAsJsonString(array $keys = [], int $options = \JSON_THROW_ON_ERROR, int $depth = 512): string
     {
         return \json_encode(
             \array_map(
                 static fn(CacheItemInterface $item) => $item->get(),
                 \array_values($this->getItems($keys))
             ),
-            $option,
+            $options,
             $depth
         );
     }

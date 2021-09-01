@@ -231,7 +231,7 @@ interface TaggableCacheItemPoolInterface
      *   MUST be thrown.
      *
      */
-    public function appendItemsByTag(string $tagName, $data, int $strategy = self::TAG_STRATEGY_ONE): bool;
+    public function appendItemsByTag(string $tagName, array|string $data, int $strategy = self::TAG_STRATEGY_ONE): bool;
 
     /**
      * Append the items from the pool by one of multiple tag names.
@@ -250,7 +250,7 @@ interface TaggableCacheItemPoolInterface
      *   MUST be thrown.
      *
      */
-    public function appendItemsByTags(array $tagNames, $data, int $strategy = self::TAG_STRATEGY_ONE): bool;
+    public function appendItemsByTags(array $tagNames, array|string $data, int $strategy = self::TAG_STRATEGY_ONE): bool;
 
     /**
      * Prepend the items from the pool by tag.
@@ -269,7 +269,7 @@ interface TaggableCacheItemPoolInterface
      *   MUST be thrown.
      *
      */
-    public function prependItemsByTag(string $tagName, $data, int $strategy = self::TAG_STRATEGY_ONE): bool;
+    public function prependItemsByTag(string $tagName, array|string $data, int $strategy = self::TAG_STRATEGY_ONE): bool;
 
     /**
      * Prepend the items from the pool by one of multiple tag names.
@@ -288,5 +288,5 @@ interface TaggableCacheItemPoolInterface
      *   MUST be thrown.
      *
      */
-    public function prependItemsByTags(array $tagNames, $data, int $strategy = self::TAG_STRATEGY_ONE): bool;
+    public function prependItemsByTags(array $tagNames, array|string $data, int $strategy = self::TAG_STRATEGY_ONE): bool;
 }

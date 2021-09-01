@@ -30,7 +30,7 @@ interface EventManagerDispatcherInterface
      * @param EventManagerInterface $eventManager
      * @return mixed
      */
-    public function setEventManager(EventManagerInterface $eventManager): self;
+    public function setEventManager(EventManagerInterface $eventManager): static;
 
     /**
      * @return bool

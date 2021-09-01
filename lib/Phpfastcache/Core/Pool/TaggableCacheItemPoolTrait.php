@@ -179,7 +179,7 @@ trait TaggableCacheItemPoolTrait
     /**
      * @param string $tagName
      * @param int $strategy
-     * @return array
+     * @return ExtendedCacheItemInterface[]
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
@@ -289,7 +289,7 @@ trait TaggableCacheItemPoolTrait
 
     /**
      * @param array $tagNames
-     * @param $data
+     * @param array|string $data
      * @param int $strategy
      * @return bool
      * @throws PhpfastcacheCoreException
@@ -298,7 +298,7 @@ trait TaggableCacheItemPoolTrait
      * @throws PhpfastcacheLogicException
      * @throws \ReflectionException
      */
-    public function appendItemsByTags(array $tagNames, $data, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
+    public function appendItemsByTags(array $tagNames, array|string $data, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
         $return = true;
         foreach ($tagNames as $tagName) {
@@ -322,7 +322,7 @@ trait TaggableCacheItemPoolTrait
      * @throws PhpfastcacheLogicException
      * @throws \ReflectionException
      */
-    public function appendItemsByTag(string $tagName, $data, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
+    public function appendItemsByTag(string $tagName, array|string $data, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
         foreach ($this->getItemsByTag($tagName, $strategy) as $item) {
             $item->append($data);
@@ -334,7 +334,7 @@ trait TaggableCacheItemPoolTrait
 
     /**
      * @param array $tagNames
-     * @param $data
+     * @param array|string $data
      * @param int $strategy
      * @return bool
      * @throws PhpfastcacheCoreException
@@ -343,7 +343,7 @@ trait TaggableCacheItemPoolTrait
      * @throws PhpfastcacheLogicException
      * @throws \ReflectionException
      */
-    public function prependItemsByTags(array $tagNames, $data, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
+    public function prependItemsByTags(array $tagNames, array|string $data, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
         $return = true;
         foreach ($tagNames as $tagName) {
@@ -358,7 +358,7 @@ trait TaggableCacheItemPoolTrait
 
     /**
      * @param string $tagName
-     * @param $data
+     * @param array|string $data
      * @param int $strategy
      * @return bool
      * @throws PhpfastcacheCoreException
@@ -367,7 +367,7 @@ trait TaggableCacheItemPoolTrait
      * @throws PhpfastcacheLogicException
      * @throws \ReflectionException
      */
-    public function prependItemsByTag(string $tagName, $data, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
+    public function prependItemsByTag(string $tagName, array|string $data, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): bool
     {
         foreach ($this->getItemsByTag($tagName, $strategy) as $item) {
             $item->prepend($data);

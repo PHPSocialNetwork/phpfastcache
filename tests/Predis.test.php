@@ -13,20 +13,23 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Drivers\Mongodb\Config;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Tests\Helper\TestHelper;
+use Phpfastcache\Drivers\Predis\Config as PredisConfig;
+use Redis as RedisClient;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
-$testHelper = new TestHelper('Mongodb driver');
-$config = new Config();
-$config->setItemDetailedDate(true)
-    ->setDatabaseName('pfc_test')
-    ->setCollectionName('pfc_' . str_pad('0', 3, random_int(1, 100)))
-    ->setUsername('travis')
-    ->setPassword('test');
+$testHelper = new TestHelper('Predis bundled client');
 
-$cacheInstance = CacheManager::getInstance('Mongodb', $config);
-$testHelper->runCRUDTests($cacheInstance);
+try{
+    if(!class_exists(RedisClient::class)){
+        throw new PhpfastcacheDriverCheckException('Unable to test Redis client because the extension seems to be missing');
+    }
+    $cacheInstance = CacheManager::getInstance('Predis', new PredisConfig());
+    $testHelper->runCRUDTests($cacheInstance);
+}catch (\RedisException $e){
+    $testHelper->assertFail('A Redis exception occurred: ' . $e->getMessage());
+}
+
 $testHelper->terminateTest();

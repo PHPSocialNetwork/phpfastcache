@@ -63,9 +63,9 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * @return EventManagerInterface
+     * @return static
      */
-    public static function getInstance(): EventManagerInterface
+    public static function getInstance(): static
     {
         return (self::$instance ?? self::$instance = new self);
     }

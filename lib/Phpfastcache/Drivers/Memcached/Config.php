@@ -73,7 +73,7 @@ class Config extends ConfigurationOption
      * @param string $saslUser
      * @return self
      */
-    public function setSaslUser(string $saslUser): self
+    public function setSaslUser(string $saslUser): static
     {
         $this->saslUser = $saslUser;
         return $this;
@@ -91,7 +91,7 @@ class Config extends ConfigurationOption
      * @param string $saslPassword
      * @return self
      */
-    public function setSaslPassword(string $saslPassword): self
+    public function setSaslPassword(string $saslPassword): static
     {
         $this->saslPassword = $saslPassword;
         return $this;
@@ -110,7 +110,7 @@ class Config extends ConfigurationOption
      * @return self
      * @throws PhpfastcacheInvalidConfigurationException
      */
-    public function setServers(array $servers): self
+    public function setServers(array $servers): static
     {
         foreach ($servers as $server) {
             if ($diff = array_diff(['host', 'port', 'saslUser', 'saslPassword'], array_keys($server))) {
@@ -142,7 +142,7 @@ class Config extends ConfigurationOption
      * @param string $host
      * @return self
      */
-    public function setHost(string $host): self
+    public function setHost(string $host): static
     {
         $this->host = $host;
         return $this;
@@ -160,7 +160,7 @@ class Config extends ConfigurationOption
      * @param int $port
      * @return Config
      */
-    public function setPort(int $port): self
+    public function setPort(int $port): static
     {
         $this->port = $port;
         return $this;

@@ -18,7 +18,7 @@ namespace Phpfastcache\Core\Item;
 use DateTime;
 use DateTimeInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheInvalidArgumentTypeException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
 
 
@@ -49,26 +49,38 @@ trait ItemExtendedTrait
     /**
      * Item constructor.
      * @param ExtendedCacheItemPoolInterface $driver
-     * @param $key
+     * @param string $key
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function __construct(ExtendedCacheItemPoolInterface $driver, $key)
+    public function __construct(ExtendedCacheItemPoolInterface $driver, string $key)
     {
-        if (\is_string($key)) {
-            $this->data = null;
-            $this->key = $key;
-            $this->driver = $driver;
-            if($driver->getConfig()->isUseStaticItemCaching()){
-                $this->driver->setItem($this);
-            }
-            $this->expirationDate = new DateTime();
-            if ($this->driver->getConfig()->isItemDetailedDate()) {
-                $this->creationDate = new DateTime();
-                $this->modificationDate = new DateTime();
-            }
-        } else {
-            throw new PhpfastcacheInvalidArgumentTypeException('string', $key);
+        $this->data = null;
+        $this->key = $key;
+        $this->setDriver($driver);
+        if ($driver->getConfig()->isUseStaticItemCaching()) {
+            $this->driver->setItem($this);
         }
+        $this->expirationDate = new DateTime();
+        if ($this->driver->getConfig()->isItemDetailedDate()) {
+            $this->creationDate = new DateTime();
+            $this->modificationDate = new DateTime();
+        }
+    }
+
+    /**
+     * @param ExtendedCacheItemPoolInterface $driver
+     * @return ExtendedCacheItemInterface
+     * @throws PhpfastcacheInvalidArgumentException
+     */
+    public function setDriver(ExtendedCacheItemPoolInterface $driver): ExtendedCacheItemInterface
+    {
+        if ($driver instanceof ($this->getDriverClass())) {
+            $this->driver = $driver;
+
+            return $this;
+        }
+
+        throw new PhpfastcacheInvalidArgumentException(\sprintf('Invalid driver instance "%s" for cache item "%s"', $driver::class, static::class));
     }
 
     /**
@@ -171,33 +183,21 @@ trait ItemExtendedTrait
         throw new PhpfastcacheLogicException('Cannot access to the modification date when the "itemDetailedDate" configuration is disabled.');
     }
 
-    /**
-     * @return int
-     */
     public function getTtl(): int
     {
         return \max(0, $this->expirationDate->getTimestamp() - \time());
     }
 
-    /**
-     * @return bool
-     */
     public function isExpired(): bool
     {
         return $this->expirationDate->getTimestamp() < (new DateTime())->getTimestamp();
     }
 
-    /**
-     * @return bool
-     */
     public function isNull(): bool
     {
         return $this->data === null;
     }
 
-    /**
-     * @return bool
-     */
     public function isEmpty(): bool
     {
         return empty($this->data);
@@ -228,73 +228,39 @@ trait ItemExtendedTrait
         return -1;
     }
 
-
-    /**
-     * @param int $step
-     * @return ExtendedCacheItemInterface
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public function increment($step = 1): ExtendedCacheItemInterface
+    public function increment(int $step = 1): ExtendedCacheItemInterface
     {
-        if (\is_int($step)) {
-            $this->fetched = true;
-            $this->data += $step;
-        } else {
-            throw new PhpfastcacheInvalidArgumentException('$step must be numeric.');
-        }
+        $this->fetched = true;
+        $this->data += $step;
 
         return $this;
     }
 
-    /**
-     * @param int $step
-     * @return ExtendedCacheItemInterface
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public function decrement($step = 1): ExtendedCacheItemInterface
+    public function decrement(int $step = 1): ExtendedCacheItemInterface
     {
-        if (\is_int($step)) {
-            $this->fetched = true;
-            $this->data -= $step;
-        } else {
-            throw new PhpfastcacheInvalidArgumentException('$step must be numeric.');
-        }
+        $this->fetched = true;
+        $this->data -= $step;
 
         return $this;
     }
 
-    /**
-     * @param array|string $data
-     * @return ExtendedCacheItemInterface
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public function append($data): ExtendedCacheItemInterface
+    public function append(array|string $data): ExtendedCacheItemInterface
     {
         if (\is_array($this->data)) {
             $this->data[] = $data;
-        } elseif (\is_string($data)) {
-            $this->data .= $data;
         } else {
-            throw new PhpfastcacheInvalidArgumentException('$data must be either array nor string.');
+            $this->data .= $data;
         }
 
         return $this;
     }
 
-
-    /**
-     * @param array|string $data
-     * @return ExtendedCacheItemInterface
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public function prepend($data): ExtendedCacheItemInterface
+    public function prepend(array|string $data): ExtendedCacheItemInterface
     {
         if (\is_array($this->data)) {
             \array_unshift($this->data, $data);
-        } elseif (\is_string($data)) {
-            $this->data = $data . $this->data;
         } else {
-            throw new PhpfastcacheInvalidArgumentException('$data must be either array nor string.');
+            $this->data = $data . $this->data;
         }
 
         return $this;
@@ -320,21 +286,15 @@ trait ItemExtendedTrait
         return \json_encode($data, $options, $depth);
     }
 
-    /**
-     * Implements \JsonSerializable interface
-     * @return mixed
-     */
     public function jsonSerialize(): mixed
     {
         return $this->get();
     }
 
-    /**
-     * @param ExtendedCacheItemPoolInterface $driverPool
-     * @return bool
-     */
     public function doesItemBelongToThatDriverBackend(ExtendedCacheItemPoolInterface $driverPool): bool
     {
         return $driverPool->getClassNamespace() === $this->getClassNamespace();
     }
+
+    abstract protected function getDriverClass(): string;
 }

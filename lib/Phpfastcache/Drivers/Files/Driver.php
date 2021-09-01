@@ -91,7 +91,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
          * Force write
          */
         try {
-            return $this->writefile($file_path, $data, $this->getConfig()->isSecureFileManipulation());
+            return $this->writeFile($file_path, $data, $this->getConfig()->isSecureFileManipulation());
         } catch (Exception) {
             return false;
         }

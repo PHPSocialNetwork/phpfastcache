@@ -2,15 +2,14 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author  Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
- * @author  Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 
@@ -125,7 +124,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      *
      * @return mixed
      */
-    public function setDriver(ExtendedCacheItemPoolInterface $driver);
+    public function setDriver(ExtendedCacheItemPoolInterface $driver): ExtendedCacheItemInterface;
 
     /**
      * @param bool $isHit
@@ -133,7 +132,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function setHit($isHit): ExtendedCacheItemInterface;
+    public function setHit(bool $isHit): ExtendedCacheItemInterface;
 
     /**
      * @param int $step
@@ -141,7 +140,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function increment($step = 1): ExtendedCacheItemInterface;
+    public function increment(int $step = 1): ExtendedCacheItemInterface;
 
     /**
      * @param int $step
@@ -149,7 +148,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function decrement($step = 1): ExtendedCacheItemInterface;
+    public function decrement(int $step = 1): ExtendedCacheItemInterface;
 
     /**
      * @param array|string $data
@@ -157,7 +156,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function append($data): ExtendedCacheItemInterface;
+    public function append(array|string $data): ExtendedCacheItemInterface;
 
     /**
      * @param array|string $data
@@ -165,7 +164,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function prepend($data): ExtendedCacheItemInterface;
+    public function prepend(array|string $data): ExtendedCacheItemInterface;
 
     /**
      * Return the data as a well-formatted string.

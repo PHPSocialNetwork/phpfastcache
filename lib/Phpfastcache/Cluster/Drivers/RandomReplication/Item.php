@@ -23,5 +23,8 @@ use Phpfastcache\Cluster\ItemAbstract;
  */
 class Item extends ItemAbstract
 {
-
+    protected function getDriverClass(): string
+    {
+        return Driver::class;
+    }
 }

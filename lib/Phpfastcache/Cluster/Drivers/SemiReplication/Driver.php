@@ -20,17 +20,20 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Exceptions\PhpfastcacheExceptionInterface;
 use Phpfastcache\Exceptions\PhpfastcacheReplicationException;
 use Psr\Cache\CacheItemInterface;
+use Psr\Cache\InvalidArgumentException;
 
 /**
  * Class FullReplicationCluster
  * @package Phpfastcache\Cluster\Drivers\FullReplication
  */
-class SemiReplicationCluster extends ClusterPoolAbstract
+class Driver extends ClusterPoolAbstract
 {
     /**
      * @inheritDoc
+     * @throws PhpfastcacheReplicationException
+     * @throws InvalidArgumentException
      */
-    public function getItem($key)
+    public function getItem(string $key): ExtendedCacheItemInterface
     {
         /** @var ExtendedCacheItemInterface $item */
         $item = null;
@@ -39,13 +42,11 @@ class SemiReplicationCluster extends ClusterPoolAbstract
         foreach ($this->clusterPools as $driverPool) {
             try {
                 $poolItem = $driverPool->getItem($key);
-                if ($poolItem->isHit()) {
-                    if (!$item) {
-                        $item = $poolItem;
-                        break;
-                    }
+                if (!$item && $poolItem->isHit()) {
+                    $item = $poolItem;
+                    break;
                 }
-            } catch (PhpfastcacheExceptionInterface $e) {
+            } catch (PhpfastcacheExceptionInterface) {
                 $eCount++;
             }
         }
@@ -59,8 +60,9 @@ class SemiReplicationCluster extends ClusterPoolAbstract
 
     /**
      * @inheritDoc
+     * @throws PhpfastcacheReplicationException
      */
-    public function hasItem($key)
+    public function hasItem(string $key): bool
     {
         $eCount = 0;
         foreach ($this->clusterPools as $driverPool) {
@@ -69,7 +71,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
                 if ($poolItem->isHit()) {
                     return true;
                 }
-            } catch (PhpfastcacheExceptionInterface $e) {
+            } catch (PhpfastcacheExceptionInterface) {
                 $eCount++;
             }
         }
@@ -83,8 +85,9 @@ class SemiReplicationCluster extends ClusterPoolAbstract
 
     /**
      * @inheritDoc
+     * @throws PhpfastcacheReplicationException
      */
-    public function clear()
+    public function clear(): bool
     {
         $hasClearedOnce = false;
         $eCount = 0;
@@ -94,7 +97,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
                 if ($result = $driverPool->clear()) {
                     $hasClearedOnce = $result;
                 }
-            } catch (PhpfastcacheExceptionInterface $e) {
+            } catch (PhpfastcacheExceptionInterface) {
                 $eCount++;
             }
         }
@@ -109,8 +112,10 @@ class SemiReplicationCluster extends ClusterPoolAbstract
 
     /**
      * @inheritDoc
+     * @throws PhpfastcacheReplicationException
+     * @throws InvalidArgumentException
      */
-    public function deleteItem($key)
+    public function deleteItem(string $key): bool
     {
         $hasDeletedOnce = false;
         $eCount = 0;
@@ -120,7 +125,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
                 if ($result = $driverPool->deleteItem($key)) {
                     $hasDeletedOnce = $result;
                 }
-            } catch (PhpfastcacheExceptionInterface $e) {
+            } catch (PhpfastcacheExceptionInterface) {
                 $eCount++;
             }
         }
@@ -133,9 +138,12 @@ class SemiReplicationCluster extends ClusterPoolAbstract
     }
 
     /**
-     * @inheritDoc
+     * @param CacheItemInterface $item
+     * @return bool
+     * @throws InvalidArgumentException
+     * @throws PhpfastcacheReplicationException
      */
-    public function save(CacheItemInterface $item)
+    public function save(CacheItemInterface $item): bool
     {
         /** @var ExtendedCacheItemInterface $item */
         $hasSavedOnce = false;
@@ -147,7 +155,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
                 if ($result = $driverPool->save($poolItem)) {
                     $hasSavedOnce = $result;
                 }
-            } catch (PhpfastcacheExceptionInterface $e) {
+            } catch (PhpfastcacheExceptionInterface) {
                 $eCount++;
             }
         }
@@ -161,25 +169,9 @@ class SemiReplicationCluster extends ClusterPoolAbstract
 
     /**
      * @inheritDoc
+     * @throws PhpfastcacheReplicationException
      */
-    public function saveDeferred(CacheItemInterface $item)
-    {
-        /** @var ExtendedCacheItemInterface $item */
-        $hasSavedOnce = false;
-        foreach ($this->clusterPools as $driverPool) {
-            $poolItem = $this->getStandardizedItem($item, $driverPool);
-            if ($result = $driverPool->saveDeferred($poolItem)) {
-                $hasSavedOnce = $result;
-            }
-        }
-        // Return true only if at least one backend confirmed the "commit" operation
-        return $hasSavedOnce;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function commit()
+    public function commit(): bool
     {
         $hasCommitOnce = false;
         $eCount = 0;
@@ -189,7 +181,7 @@ class SemiReplicationCluster extends ClusterPoolAbstract
                 if ($result = $driverPool->commit()) {
                     $hasCommitOnce = $result;
                 }
-            } catch (PhpfastcacheExceptionInterface $e) {
+            } catch (PhpfastcacheExceptionInterface) {
                 $eCount++;
             }
         }

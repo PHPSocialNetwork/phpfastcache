@@ -1,7 +1,14 @@
 <?php
 /**
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ *
+ * This file is part of Phpfastcache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
+ *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 require __DIR__ . '/../../vendor/autoload.php';
@@ -50,13 +57,13 @@ foreach ($globCallback(PFC_TEST_DIR . DIRECTORY_SEPARATOR . '*.test.php') as $fi
     $climate->out('=====================================');
     if ($return_var === 0) {
         $climate->green("Test finished successfully");
-    } else if($return_var === 1){
+    } else if($return_var === 2){
+        $climate->yellow("Test skipped due to unmeet dependencies");
+        $skippedTests[] = basename($filename);
+    }else{
         $climate->red("Test finished with a least one error");
         $status = 1;
         $failedTests[] = basename($filename);
-    }else{
-        $climate->yellow("Test skipped due to unmeet dependencies");
-        $skippedTests[] = basename($filename);
     }
 
     $climate->out('');

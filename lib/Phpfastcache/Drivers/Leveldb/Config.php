@@ -36,7 +36,7 @@ class Config extends ConfigurationOption
      * @param string $htaccess
      * @return self
      */
-    public function setHtaccess(string $htaccess): self
+    public function setHtaccess(string $htaccess): static
     {
         $this->htaccess = $htaccess;
         return $this;

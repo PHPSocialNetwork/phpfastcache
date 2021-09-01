@@ -2,16 +2,14 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- * @author Fabio Covolo Mazzo (fabiocmazzo) <fabiomazzo@gmail.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 
@@ -252,17 +250,13 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     protected function driverConnect(): bool
     {
-        if ($this->instance instanceof Client) {
-            throw new LogicException('Already connected to Mongodb server');
-        }
-
         $timeout = $this->getConfig()->getTimeout() * 1000;
         $collectionName = $this->getConfig()->getCollectionName();
         $databaseName = $this->getConfig()->getDatabaseName();
         $driverOptions = $this->getConfig()->getDriverOptions();
 
-        $this->instance = $this->instance ?: new Client($this->buildConnectionURI($databaseName), ['connectTimeoutMS' => $timeout], $driverOptions);
-        $this->database = $this->database ?: $this->instance->selectDatabase($databaseName);
+        $this->instance = $this->instance ?? new Client($this->buildConnectionURI($databaseName), ['connectTimeoutMS' => $timeout], $driverOptions);
+        $this->database = $this->database ?? $this->instance->selectDatabase($databaseName);
 
         if (!$this->collectionExists($collectionName)) {
             $this->database->createCollection($collectionName);

@@ -2,6 +2,9 @@
 ##### 30 august 2021
 - __Estimated release date__: _End of 2021 (december)_
 - __Global__
+  - Slightly increased performances on some critical points of the library
+  - Removed many code duplicate (like in `\Phpfastcache\Driver\[DRIVER_NAME]\Item` classes)
+  - Reworked traits inter-dependencies for better logic and less polymorphic calls in pool/item traits
   - Upgrading library to use benefits of PHP 8 new features (see below)
   - Typed every class properties of the library
   - Migrated many Closure to arrow functions
@@ -11,12 +14,14 @@
   - Removed embedded Autoload, Phpfastcache is now only Composer-compatible.
   - Removed embedded dependencies (`psr/cache`, `psr/simple-cache`)
 - __Tests__
-  - Updated tests to works with new core/drivers changes
+  - Updated tests to work with new core/drivers changes
   - Removed Autoload test since its support has been removed and now only managed by Composer
+  - Increased tests reliability and code coverage for better catching any eventual regression 
 - __Drivers__
   - Removed `Couchbase` (SDK 2 support dropped) driver which is now replaced by `Couchbasev3` (SDK 3)
   - Removed `Devtrue` and `Devfalse` drivers
   - Added `Devrandom` with configurable factor chance and data length
+  - Renamed classes `\Phpfastcache\Cluster\Drivers\[STATEGY]\[CLUSTER_NAME]Cluster` to `\Phpfastcache\Cluster\Drivers\[STATEGY]\Driver` for better driver naming across the project
 - __Misc__
   - Increased minimum PHP compatibility in composer to `^8.0`
   - Updated copyright headers on every file to include the many project contributors

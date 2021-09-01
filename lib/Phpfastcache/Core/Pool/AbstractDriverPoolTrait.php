@@ -16,9 +16,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Pool;
 
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Drivers\Memstatic\Item;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
-use Psr\Cache\CacheItemInterface;
 
 /**
  * Trait AbstractCacheItemPoolTrait

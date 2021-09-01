@@ -27,7 +27,7 @@ interface EventManagerInterface
     /**
      * @return self
      */
-    public static function getInstance(): self;
+    public static function getInstance(): static;
 
     /**
      * @param string $eventName

@@ -231,13 +231,4 @@ trait DriverBaseTrait
     {
         return \unserialize((string) $value, ['allowed_classes' => true]);
     }
-
-    /**
-     * Check if phpModule or CGI
-     * @return bool
-     */
-    protected function isPHPModule(): bool
-    {
-        return (\PHP_SAPI === 'apache2handler' || str_contains(\PHP_SAPI, 'handler'));
-    }
 }

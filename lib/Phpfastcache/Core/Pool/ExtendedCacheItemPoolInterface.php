@@ -133,7 +133,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      *
      * @param array $keys
      * An indexed array of keys of items to retrieve.
-     * @param int $option \json_encode() options
+     * @param int $options \json_encode() options
      * @param int $depth \json_encode() depth
      *
      * @return string
@@ -142,7 +142,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      *   MUST be thrown.
      *
      */
-    public function getItemsAsJsonString(array $keys = [], int $option = \JSON_THROW_ON_ERROR, int $depth = 512): string;
+    public function getItemsAsJsonString(array $keys = [], int $options = \JSON_THROW_ON_ERROR, int $depth = 512): string;
 
     public function setItem(CacheItemInterface $item): static;
 

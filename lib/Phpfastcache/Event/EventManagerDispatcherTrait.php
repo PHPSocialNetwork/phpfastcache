@@ -24,7 +24,7 @@ trait EventManagerDispatcherTrait
     /**
      * @var EventManagerInterface
      */
-    protected $eventManager;
+    protected EventManagerInterface $eventManager;
 
     /**
      * @return EventManagerInterface
@@ -36,9 +36,9 @@ trait EventManagerDispatcherTrait
 
     /**
      * @param EventManagerInterface $em
-     * @return EventManagerDispatcherInterface
+     * @return static
      */
-    public function setEventManager(EventManagerInterface $em): EventManagerDispatcherInterface
+    public function setEventManager(EventManagerInterface $em): static
     {
         $this->eventManager = $em;
 

@@ -20,7 +20,7 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\ItemBatch;
 use Phpfastcache\Event\EventManagerDispatcherTrait;
-use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheIOException, PhpfastcacheLogicException};
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
 use Psr\Cache\CacheItemInterface;
 use ReflectionClass;
@@ -74,7 +74,7 @@ trait CacheItemPoolTrait
         }
         throw new PhpfastcacheInvalidArgumentException(
             \sprintf(
-                'Invalid Item Class "%s" for this driver "%s".',
+                'Invalid cache item class "%s" for driver "%s".',
                 get_class($item),
                 get_class($this)
             )
@@ -85,6 +85,7 @@ trait CacheItemPoolTrait
      * @param array $keys
      * @return array
      * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
      */
@@ -104,6 +105,7 @@ trait CacheItemPoolTrait
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
+     * @throws PhpfastcacheDriverException
      */
     public function getItem(string $key): ExtendedCacheItemInterface
     {
@@ -244,6 +246,7 @@ trait CacheItemPoolTrait
      * @param string $key
      * @return bool
      * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
      */
@@ -254,6 +257,10 @@ trait CacheItemPoolTrait
 
     /**
      * @return bool
+     * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
+     * @throws PhpfastcacheLogicException
+     * @throws PhpfastcacheIOException
      */
     public function clear(): bool
     {

@@ -16,7 +16,7 @@ use Phpfastcache\CacheManager;
 use Phpfastcache\DriverTest\Files2\Config;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
-use Phpfastcache\Helper\CacheConditionalHelper as CacheConditional;
+use Phpfastcache\CacheContract as CacheConditional;
 use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);

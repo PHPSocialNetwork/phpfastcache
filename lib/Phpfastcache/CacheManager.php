@@ -131,7 +131,7 @@ class CacheManager
      * @param string $driver
      * @param ConfigurationOptionInterface|null $config
      * @param string|null $instanceId
-     * @return ExtendedCacheItemPoolInterface|AggregatablePoolInterface
+     * @return ExtendedCacheItemPoolInterface
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheDriverNotFoundException
@@ -142,9 +142,7 @@ class CacheManager
         $config = self::validateConfig($config);
         $driver = self::standardizeDriverName($driver);
 
-        $instanceId = $instanceId ?: md5($driver . \serialize(\array_filter($config->toArray(), static function ($val){
-            return !\is_callable($val);
-        })));
+        $instanceId = $instanceId ?: md5($driver . \serialize(\array_filter($config->toArray(), static fn ($val) => !\is_callable($val))));
 
         if (!isset(self::$instances[$instanceId])) {
             $driverClass = self::validateDriverClass(self::getDriverClass($driver));

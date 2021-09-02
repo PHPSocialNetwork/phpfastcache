@@ -23,19 +23,15 @@ use DateTimeInterface;
  */
 class ItemBatch
 {
-    protected string $itemKey;
-
-    protected DateTimeInterface $itemDate;
-
     /**
      * ItemBatch constructor.
      * @param string $itemKey
      * @param DateTimeInterface $itemDate
      */
-    public function __construct(string $itemKey, DateTimeInterface $itemDate)
-    {
-        $this->itemKey = $itemKey;
-        $this->itemDate = $itemDate;
+    public function __construct(
+        protected string $itemKey,
+        protected DateTimeInterface $itemDate
+    ) {
     }
 
     /**

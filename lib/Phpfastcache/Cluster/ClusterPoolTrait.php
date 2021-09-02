@@ -33,7 +33,7 @@ trait ClusterPoolTrait
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return null
+     * @return ?array
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {

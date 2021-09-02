@@ -35,7 +35,7 @@ class Api
     }
 
     /**
-     * This method will returns the current
+     * This method will return the current
      * API version, the API version will be
      * updated by following the semantic versioning
      * based on changes of:
@@ -77,8 +77,7 @@ class Api
             $command = 'git -C "' . __DIR__ . '" describe --abbrev=0 --tags';
             $stdout = \shell_exec($command);
             if (\is_string($stdout)) {
-                $version = trim($stdout);
-                return $version;
+                return trim($stdout);
             }
             if (!$fallbackOnChangelog) {
                 throw new PhpfastcacheLogicException('The git command used to retrieve the PhpFastCache version has failed.');
@@ -94,9 +93,8 @@ class Api
             $versionPrefix = '## ';
             $changelog = \explode("\n", self::getPhpFastCacheChangelog());
             foreach ($changelog as $line) {
-                if (\strpos($line, $versionPrefix) === 0) {
-                    $version = \trim(\str_replace($versionPrefix, '', $line));
-                    return $version;
+                if (str_starts_with($line, $versionPrefix)) {
+                    return \trim(\str_replace($versionPrefix, '', $line));
                 }
             }
             throw new PhpfastcacheLogicException('Unable to retrieve the PhpFastCache version through the CHANGELOG.md as no valid string were found in it.');
@@ -140,8 +138,7 @@ class Api
         if (\function_exists('shell_exec')) {
             $stdout = \shell_exec('git rev-parse --short HEAD');
             if (\is_string($stdout)) {
-                $hash = \trim($stdout);
-                return "#{$hash}";
+                return '#' . \trim($stdout);
             }
         }
         return '';

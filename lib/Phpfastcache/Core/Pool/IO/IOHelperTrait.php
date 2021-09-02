@@ -314,6 +314,7 @@ HTACCESS
      * @param bool $secureFileManipulation
      * @return bool
      * @throws PhpfastcacheIOException
+     * @throws \Exception
      */
     protected function writeFile(string $file, string $data, bool $secureFileManipulation = false): bool
     {

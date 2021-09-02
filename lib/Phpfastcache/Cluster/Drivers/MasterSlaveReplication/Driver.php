@@ -59,11 +59,7 @@ class Driver extends ClusterPoolAbstract
     public function getItem(string $key): ExtendedCacheItemInterface
     {
         return $this->getStandardizedItem(
-            $this->makeOperation(
-                static function (ExtendedCacheItemPoolInterface $pool) use ($key) {
-                    return $pool->getItem($key);
-                }
-            ) ?? new Item($this, $key),
+            $this->makeOperation(static fn (ExtendedCacheItemPoolInterface $pool) => $pool->getItem($key)) ?? new Item($this, $key),
             $this
         );
     }
@@ -113,9 +109,7 @@ class Driver extends ClusterPoolAbstract
     public function hasItem(string $key): bool
     {
         return $this->makeOperation(
-            static function (ExtendedCacheItemPoolInterface $pool) use ($key) {
-                return $pool->hasItem($key);
-            }
+            static fn (ExtendedCacheItemPoolInterface $pool) => $pool->hasItem($key)
         );
     }
 
@@ -125,9 +119,7 @@ class Driver extends ClusterPoolAbstract
     public function clear(): bool
     {
         return $this->makeOperation(
-            static function (ExtendedCacheItemPoolInterface $pool) {
-                return $pool->clear();
-            }
+            static fn (ExtendedCacheItemPoolInterface $pool) => $pool->clear()
         );
     }
 
@@ -137,9 +129,7 @@ class Driver extends ClusterPoolAbstract
     public function deleteItem(string $key): bool
     {
         return $this->makeOperation(
-            static function (ExtendedCacheItemPoolInterface $pool) use ($key) {
-                return $pool->deleteItem($key);
-            }
+            static fn (ExtendedCacheItemPoolInterface $pool) => $pool->deleteItem($key)
         );
     }
 
@@ -163,9 +153,7 @@ class Driver extends ClusterPoolAbstract
     public function commit(): bool
     {
         return $this->makeOperation(
-            static function (ExtendedCacheItemPoolInterface $pool) {
-                return $pool->commit();
-            }
+            static fn (ExtendedCacheItemPoolInterface $pool) => $pool->commit()
         );
     }
 }

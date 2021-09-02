@@ -15,7 +15,7 @@
 use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
-use Phpfastcache\Helper\CacheConditionalHelper as CacheConditional;
+use Phpfastcache\CacheContract as CacheConditional;
 use Phpfastcache\Tests\Helper\TestHelper;
 use Psr\Cache\CacheItemPoolInterface;
 

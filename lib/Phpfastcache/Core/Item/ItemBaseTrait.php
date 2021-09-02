@@ -104,17 +104,12 @@ trait ItemBaseTrait
     /**
      * @param bool $isHit
      * @return ExtendedCacheItemInterface
-     * @throws PhpfastcacheInvalidArgumentException
      */
-    public function setHit($isHit): ExtendedCacheItemInterface
+    public function setHit(bool $isHit): ExtendedCacheItemInterface
     {
-        if (\is_bool($isHit)) {
-            $this->isHit = $isHit;
+        $this->isHit = $isHit;
 
-            return $this;
-        }
-
-        throw new PhpfastcacheInvalidArgumentException('$isHit must be a boolean');
+        return $this;
     }
 
     /**
@@ -140,6 +135,7 @@ trait ItemBaseTrait
     /**
      * @return $this
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws \Exception
      */
     public function expiresAfter(int|\DateInterval|null $time): static
     {

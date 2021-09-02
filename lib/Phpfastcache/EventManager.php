@@ -99,7 +99,7 @@ class EventManager implements EventManagerInterface
      */
     public function __call(string $name, array $arguments): void
     {
-        if (\strpos($name, 'on') === 0) {
+        if (str_starts_with($name, 'on')) {
             $name = \substr($name, 2);
             if (\is_callable($arguments[0])) {
                 if (isset($arguments[1]) && \is_string($arguments[0])) {

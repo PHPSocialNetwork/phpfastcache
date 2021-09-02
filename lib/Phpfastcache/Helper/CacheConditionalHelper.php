@@ -15,47 +15,31 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Helper;
 
-use DateInterval;
+use Phpfastcache\CacheContract;
 use Psr\Cache\CacheItemPoolInterface;
-use Psr\Cache\InvalidArgumentException;
 
 /**
- * Class CacheConditional
+ * Class CacheConditionalHelper
  * @package phpFastCache\Helper
+ * @deprecated Use \Phpfastcache\CacheContract instead
  */
-class CacheConditionalHelper
+class CacheConditionalHelper extends CacheContract
 {
-    protected CacheItemPoolInterface $cacheInstance;
-
     /**
-     * CachePromise constructor.
+     * CacheConditionalHelper constructor.
      * @param CacheItemPoolInterface $cacheInstance
      */
     public function __construct(CacheItemPoolInterface $cacheInstance)
     {
-        $this->cacheInstance = $cacheInstance;
-    }
-
-    /**
-     * @param string $cacheKey
-     * @param callable $callback
-     * @param DateInterval|int|null $expiresAfter
-     * @return mixed
-     * @throws InvalidArgumentException
-     */
-    public function get(string $cacheKey, callable $callback, DateInterval|int $expiresAfter = null): mixed
-    {
-        $cacheItem = $this->cacheInstance->getItem($cacheKey);
-
-        if (!$cacheItem->isHit()) {
-            /** Parameter $cacheItem will be available as of 8.0.6 */
-            $cacheItem->set($callback($cacheItem));
-            if ($expiresAfter) {
-                $cacheItem->expiresAfter($expiresAfter);
-            }
-            $this->cacheInstance->save($cacheItem);
-        }
-
-        return $cacheItem->get();
+        \trigger_error(
+            \sprintf(
+                'Class "%s" is deprecated, use "%s" class instead. See the documentation about this change here: %s',
+                self::class,
+                parent::class,
+                'https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV9%CB%96%5D-Cache-contract'
+            ),
+            E_USER_DEPRECATED
+        );
+        parent::__construct($cacheInstance);
     }
 }

@@ -199,9 +199,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
                 \implode(
                     ', ',
                     \array_map(
-                        static function (ExtendedCacheItemPoolInterface $pool) {
-                            return \get_class($pool);
-                        },
+                        static fn (ExtendedCacheItemPoolInterface $pool) => \get_class($pool),
                         $this->clusterPools
                     )
                 )
@@ -211,9 +209,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
         $stats->setSize(
             (int)\array_sum(
                 \array_map(
-                    static function (ExtendedCacheItemPoolInterface $pool) {
-                        return $pool->getStats()->getSize();
-                    },
+                    static fn (ExtendedCacheItemPoolInterface $pool) => $pool->getStats()->getSize(),
                     $this->clusterPools
                 )
             )
@@ -223,9 +219,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
             \implode(
                 ', ',
                 \array_map(
-                    static function (ExtendedCacheItemPoolInterface $pool) {
-                        return $pool->getStats()->getData();
-                    },
+                    static fn (ExtendedCacheItemPoolInterface $pool) => $pool->getStats()->getData(),
                     $this->clusterPools
                 )
             )

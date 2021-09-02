@@ -16,7 +16,6 @@ declare(strict_types=1);
 namespace Phpfastcache\Cluster;
 
 use Exception;
-use Phpfastcache\Annotations\Event;
 use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
@@ -54,7 +53,7 @@ class ClusterAggregator implements AggregatorInterface
         if (empty($clusterAggregatorName)) {
             try {
                 $clusterAggregatorName = 'cluster_' . \bin2hex(\random_bytes(15));
-            } catch (Exception $e) {
+            } catch (Exception) {
                 $clusterAggregatorName = 'cluster_' . \str_shuffle(\spl_object_hash(new stdClass()));
             }
         }

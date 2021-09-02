@@ -298,10 +298,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         if (count($servers) > 0) {
             $host = array_reduce(
                 $servers,
-                static function ($carry, $data) {
-                    $carry .= ($carry === '' ? '' : ',') . $data['host'] . ':' . $data['port'];
-                    return $carry;
-                },
+                static fn ($carry, $data) => $carry . ($carry === '' ? '' : ',') . $data['host'] . ':' . $data['port'],
                 ''
             );
             $port = false;

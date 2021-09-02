@@ -35,6 +35,7 @@ trait TaggableCacheItemPoolTrait
      * @param int $strategy
      * @return string
      * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
      */
@@ -55,6 +56,7 @@ trait TaggableCacheItemPoolTrait
      * @param int $strategy
      * @return array
      * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
      */
@@ -94,9 +96,10 @@ trait TaggableCacheItemPoolTrait
     /**
      * @param string $tagName
      * @return array
+     * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
-     * @throws PhpfastcacheCoreException
      */
     protected function fetchItemsByTagFromBackend(string $tagName): array
     {
@@ -105,10 +108,10 @@ trait TaggableCacheItemPoolTrait
             $tagsItems = (array)$driverResponse->get();
 
             /**
-             * getItems() may provides expired item(s)
+             * getItems() may provide expired item(s)
              * themselves provided by a cache of item
              * keys based stored the tag item.
-             * Therefore we pass a filter callback
+             * Therefore, we pass a filter callback
              * to remove the expired Item(s) provided by
              * the item keys passed through getItems()
              *
@@ -181,6 +184,7 @@ trait TaggableCacheItemPoolTrait
      * @param int $strategy
      * @return ExtendedCacheItemInterface[]
      * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
      */
@@ -313,7 +317,7 @@ trait TaggableCacheItemPoolTrait
 
     /**
      * @param string $tagName
-     * @param $data
+     * @param array|string $data
      * @param int $strategy
      * @return bool
      * @throws PhpfastcacheCoreException

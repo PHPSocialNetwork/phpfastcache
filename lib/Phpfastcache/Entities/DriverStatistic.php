@@ -46,7 +46,7 @@ class DriverStatistic
         return $this->size;
     }
 
-    public function setSize(int $size)
+    public function setSize(int $size): static
     {
         $this->size = $size;
 

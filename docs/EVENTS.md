@@ -34,6 +34,11 @@ EventManager::getInstance()->unbindEventCallback('onCacheGetItem', 'myCallbackNa
 
 ```
 
+:new: In V9 some callback parameter, that aren't objects, are passed by reference via the new `\Phpfastcache\Event\EventReferenceParameter` class.\
+This class is instantiated and passed to the callback with the original value passed **by reference** allowing you to either read or re-write its value.\
+If it's allowed by the event dispatcher the type can be changed or not.\
+If you try to while it's not allowed, you will get a `PhpfastcacheInvalidArgumentException` when trying to call `\Phpfastcache\Event\EventReferenceParameter::setParameterValue()`\
+Finally the class `\Phpfastcache\Event\EventReferenceParameter` is `invokable` and trying to do so will return you the parameter value.\
 
 ## List of active events:
 ### ItemPool Events
@@ -78,6 +83,19 @@ EventManager::getInstance()->unbindEventCallback('onCacheGetItem', 'myCallbackNa
         - *ExtendedCacheItemPoolInterface::commit()*
         - *ExtendedCacheItemPoolInterface::save()*
 
+- onCacheSaveMultipleItems(*Callable* **$callback**)
+    - **Callback arguments**
+        - *ExtendedCacheItemPoolInterface* **$itemPool**
+        - *EventReferenceParameter($items)* **$items** _(via EventReferenceParameter object)_
+    - **Scope**
+        - ItemPool
+    - **Description**
+        - Allow you to manipulate an array of items before they get saved by the driver.
+    - **Risky Circular Methods**
+        - *ExtendedCacheItemPoolInterface::commit()*
+        - *ExtendedCacheItemPoolInterface::save()*
+        - *ExtendedCacheItemPoolInterface::saveMultiple()*
+
 - onCacheSaveDeferredItem(*Callable* **$callback**)
     - **Callback arguments**
         - *ExtendedCacheItemPoolInterface* **$itemPool**
@@ -92,11 +110,11 @@ EventManager::getInstance()->unbindEventCallback('onCacheGetItem', 'myCallbackNa
 - onCacheCommitItem(*Callable* **$callback**)
     - **Callback arguments**
         - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *ExtendedCacheItemInterface[]* **$items**
+        - *EventReferenceParameter($items)* **$items** _(via EventReferenceParameter object)_
     - **Scope**
         - ItemPool
     - **Description**
-        - Allow you to manipulate a set of items just before they gets pre-saved by the driver.
+        - Allow you to manipulate and/or alter a set of items just before they gets pre-saved by the driver.
     - **Risky Circular Methods**
         - *ExtendedCacheItemPoolInterface::commit()*
 
@@ -172,15 +190,15 @@ EventManager::getInstance()->unbindEventCallback('onCacheGetItem', 'myCallbackNa
         - Allow you to get notified when a cluster is being built
     - **Risky Circular Methods**
         - *$clusterAggregator::getCluster()*
-### ItemPool Events
+### Item Events
 - onCacheItemSet(*Callable* **$callback**)
     - **Callback arguments**
         - *ExtendedCacheItemInterface* **$item**
-        - *mixed* **$value**
+        - *EventReferenceParameter($value)* **$value** _(via EventReferenceParameter object)_
     - **Scope**
         - Item
     - **Description**
-        - Allow you to get the value set to an item.
+        - Allow you to read (and rewrite) the value set to an item.
     - **Risky Circular Methods**
         - *ExtendedCacheItemInterface::get()*
 

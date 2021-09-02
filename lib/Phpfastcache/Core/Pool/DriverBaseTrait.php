@@ -31,7 +31,7 @@ use ReflectionObject;
 
 trait DriverBaseTrait
 {
-    use AbstractDriverPoolTrait;
+    use DriverPoolAbstractTrait;
 
     protected ConfigurationOption $config;
 

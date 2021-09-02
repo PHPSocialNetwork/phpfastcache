@@ -20,6 +20,7 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\ItemBatch;
 use Phpfastcache\Event\EventManagerDispatcherTrait;
+use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheIOException, PhpfastcacheLogicException};
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
 use Psr\Cache\CacheItemInterface;
@@ -373,18 +374,21 @@ trait CacheItemPoolTrait
          * @param $this ExtendedCacheItemPoolInterface
          * @param $deferredList ExtendedCacheItemInterface[]
          */
-        $this->eventManager->dispatch('CacheCommitItem', $this, $this->deferredList);
+        $this->eventManager->dispatch('CacheCommitItem', $this, new EventReferenceParameter($this->deferredList));
 
-        $return = true;
-        foreach ($this->deferredList as $key => $item) {
-            $result = $this->save($item);
-            if ($return !== true) {
-                unset($this->deferredList[$key]);
-                $return = $result;
+        if(\count($this->deferredList)){
+            $return = true;
+            foreach ($this->deferredList as $key => $item) {
+                $result = $this->save($item);
+                if ($return !== true) {
+                    unset($this->deferredList[$key]);
+                    $return = $result;
+                }
             }
-        }
 
-        return $return;
+            return $return;
+        }
+        return false;
     }
 
     /**

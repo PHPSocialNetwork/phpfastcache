@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Pool;
 
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Psr\Cache\CacheItemInterface;
 
@@ -122,6 +123,13 @@ trait ExtendedCacheItemPoolTrait
      */
     public function saveMultiple(ExtendedCacheItemInterface...$items): bool
     {
+        /**
+         * @eventName CacheSaveItem
+         * @param $this ExtendedCacheItemPoolInterface
+         * @param $this ExtendedCacheItemInterface
+         */
+        $this->eventManager->dispatch('CacheSaveMultipleItems', $this, new EventReferenceParameter($items));
+
         if (\count($items)) {
             foreach ($items as $item) {
                 $this->save($item);

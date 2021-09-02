@@ -19,6 +19,7 @@ use DateInterval;
 use DateTime;
 use DateTimeInterface;
 use Phpfastcache\Event\EventManagerDispatcherTrait;
+use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
 
@@ -53,13 +54,6 @@ trait CacheItemTrait
 
     public function set(mixed $value): static
     {
-        /**
-         * The user set a value,
-         * therefore there is no need to
-         * fetch from source anymore
-         */
-        $this->fetched = true;
-        $this->data = $value;
 
         /**
          * @eventName CacheSaveDeferredItem
@@ -67,7 +61,15 @@ trait CacheItemTrait
          * @param mixed $value
          *
          */
-        $this->eventManager->dispatch('CacheItemSet', $this, $value);
+        $this->eventManager->dispatch('CacheItemSet', $this, new EventReferenceParameter($value, true));
+
+        /**
+         * The user set a value,
+         * therefore there is no need to
+         * fetch from source anymore
+         */
+        $this->fetched = true;
+        $this->data = $value;
 
         return $this;
     }

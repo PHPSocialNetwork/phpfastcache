@@ -51,4 +51,9 @@ interface EventManagerInterface
      * @return bool
      */
     public function unbindEventCallback(string $eventName, string $callbackName): bool;
+
+    /**
+     * @return bool
+     */
+    public function unbindAllEventCallbacks(): bool;
 }

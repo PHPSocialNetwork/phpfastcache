@@ -15,10 +15,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Util;
 
-/**
- * Interface ClassNamespaceResolverInterface
- * @package Phpfastcache\Util
- */
 interface ClassNamespaceResolverInterface
 {
     /**

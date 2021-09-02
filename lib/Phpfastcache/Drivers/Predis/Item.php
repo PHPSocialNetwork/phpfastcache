@@ -15,15 +15,11 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Predis;
 
-use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, ItemBaseTrait};
+use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, TaggableCacheItemTrait};
 
-/**
- * Class Item
- * @package phpFastCache\Drivers\Predis
- */
 class Item implements ExtendedCacheItemInterface
 {
-    use ItemBaseTrait;
+    use TaggableCacheItemTrait;
 
     protected function getDriverClass(): string
     {

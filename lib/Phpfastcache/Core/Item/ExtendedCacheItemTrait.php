@@ -21,27 +21,10 @@ use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
 
-
-/**
- * Class ItemExtendedTrait
- * @package phpFastCache\Core\Item
- * @property DateTimeInterface $expirationDate Expiration date of the item
- * @property DateTimeInterface $creationDate Creation date of the item
- * @property DateTimeInterface $modificationDate Modification date of the item
- * @property mixed $data Data of the item
- * @property bool $fetched Fetch flag status
- * @property string $key The item key
- */
-trait ItemExtendedTrait
+trait ExtendedCacheItemTrait
 {
-    use ClassNamespaceResolverTrait;
-    use TaggableCacheItemTrait;
+    use CacheItemTrait;
 
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
     protected ExtendedCacheItemPoolInterface $driver;
 
     protected string $encodedKey;
@@ -88,6 +71,7 @@ trait ItemExtendedTrait
      */
     public function getEncodedKey(): string
     {
+        // Only calculate the encoded key on demand to save resources
         if (!isset($this->encodedKey)) {
             $keyHashFunction = $this->driver->getConfig()->getDefaultKeyHashFunction();
 

@@ -24,8 +24,6 @@ use phpssdb\Core\{SimpleSSDB, SSDBException};
 
 
 /**
- * Class Driver
- * @package phpFastCache\Drivers
  * @property SimpleSSDB $instance Instance of driver service
  * @property Config $config Return the config object
  */

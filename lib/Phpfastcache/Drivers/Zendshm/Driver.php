@@ -22,9 +22,7 @@ use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 
 /**
- * Class Driver (zend memory cache)
  * Requires Zend Data Cache Functions from ZendServer
- * @package phpFastCache\Drivers
  * @property Config $config Return the config object
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface

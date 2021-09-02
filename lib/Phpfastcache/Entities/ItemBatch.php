@@ -17,10 +17,6 @@ namespace Phpfastcache\Entities;
 
 use DateTimeInterface;
 
-/**
- * Class ItemBatch
- * @package phpFastCache\Entities
- */
 class ItemBatch
 {
     /**

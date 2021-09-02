@@ -30,8 +30,6 @@ use ReflectionClass;
 use ReflectionException;
 use Throwable;
 
-use function sprintf;
-
 
 /**
  * Class TestHelper
@@ -192,7 +190,7 @@ class TestHelper
     {
         $filePath =  getcwd() . DIRECTORY_SEPARATOR . 'subprocess' . DIRECTORY_SEPARATOR . $file . '.subprocess' . $ext;
         $binary = $this->isHHVM() ? 'hhvm' : 'php';
-        $this->printDebugText(sprintf('Running %s subprocess on "%s"', \strtoupper($binary), $filePath));
+        $this->printDebugText(\sprintf('Running %s subprocess on "%s"', \strtoupper($binary), $filePath));
         $this->runAsyncProcess("$binary $filePath");
     }
 
@@ -245,7 +243,7 @@ class TestHelper
         $totalCount = $this->numOfFailedTests + $this->numOfSkippedTests + $this->numOfPassedTests;
 
         $this->printText(
-            sprintf(
+            \sprintf(
                 '<blue>Test results:</blue> <%1$s> %2$s %3$s failed</%1$s>, <%4$s>%5$s %6$s skipped</%4$s> and <%7$s>%8$s %9$s passed</%7$s> out of a total of %10$s %11$s.',
                 $this->numOfFailedTests ? 'red' : 'green',
                 $this->numOfFailedTests,
@@ -340,7 +338,7 @@ class TestHelper
 
         if ($errorType === '[FATAL ERROR]') {
             $this->assertFail(
-                sprintf(
+                \sprintf(
                     "<red>A critical error has been caught: \"%s\" in %s line %d</red>",
                     "$errorType $errstr",
                     $errfile,
@@ -349,7 +347,7 @@ class TestHelper
             );
         } else {
             $this->printDebugText(
-                sprintf(
+                \sprintf(
                     "<yellow>A non-critical error has been caught: \"%s\" in %s line %d</yellow>",
                     "$errorType $errstr",
                     $errfile,
@@ -527,7 +525,7 @@ class TestHelper
             }
         }
 
-        $this->printInfoText(sprintf('I/O stats: %d HIT, %s MISS, %d WRITE', $pool->getIO()->getReadHit(), $pool->getIO()->getReadMiss(), $pool->getIO()->getWriteHit()));
+        $this->printInfoText(\sprintf('I/O stats: %d HIT, %s MISS, %d WRITE', $pool->getIO()->getReadHit(), $pool->getIO()->getReadMiss(), $pool->getIO()->getWriteHit()));
         $this->printInfoText('<yellow>Driver info</yellow>: <magenta>' . $pool->getStats()->getInfo() . '</magenta>');
     }
 
@@ -543,7 +541,7 @@ class TestHelper
             $this->assertSkip('A driver could not be initialized due to network/authentication issue: ' . $exception->getMessage());
         } else {
             $this->assertFail(
-                sprintf(
+                \sprintf(
                     'Uncaught exception "%s" in "%s" line %d with message: "%s"',
                     get_class($exception),
                     $exception->getFile(),

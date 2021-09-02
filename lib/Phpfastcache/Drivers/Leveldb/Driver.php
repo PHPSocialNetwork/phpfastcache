@@ -22,8 +22,6 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 
 /**
- * Class Driver
- * @package phpFastCache\Drivers
  * @property LeveldbClient $instance Instance of driver service
  * @property Config $config
  */

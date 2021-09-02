@@ -18,10 +18,6 @@ namespace Phpfastcache\Event;
 use BadMethodCallException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
-/**
- * Interface EventManagerInterface
- * @package Phpfastcache\Event
- */
 interface EventManagerInterface
 {
     /**

@@ -26,8 +26,6 @@ use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 
 /**
- * Class Driver
- * @package phpFastCache\Drivers
  * @property Cluster $instance Instance of driver service
  * @property Config $config
  */

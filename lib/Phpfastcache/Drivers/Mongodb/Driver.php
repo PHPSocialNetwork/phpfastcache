@@ -27,8 +27,6 @@ use Psr\Cache\CacheItemInterface;
 
 
 /**
- * Class Driver
- * @package phpFastCache\Drivers
  * @property Client $instance Instance of driver service
  * @property Config $config Return the config object
  */
@@ -322,12 +320,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     {
         return 'pfc_' . $item->getEncodedKey();
     }
-
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
 
     /**
      * Checks if a collection name exists on the Mongo database.

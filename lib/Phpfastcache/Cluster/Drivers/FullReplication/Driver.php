@@ -21,10 +21,6 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Psr\Cache\CacheItemInterface;
 
-/**
- * Class FullReplicationCluster
- * @package Phpfastcache\Cluster\Drivers\FullReplication
- */
 class Driver extends ClusterPoolAbstract
 {
     /**

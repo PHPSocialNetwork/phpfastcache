@@ -23,8 +23,6 @@ use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 
 /**
- * Class Driver
- * @package phpFastCache\Drivers
  * @property Config $config Return the config object
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface

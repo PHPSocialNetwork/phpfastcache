@@ -15,10 +15,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Exceptions;
 
-/**
- * Class PhpfastcacheInstanceNotFoundException
- * @package Phpfastcache\Exceptions
- */
 class PhpfastcacheInstanceNotFoundException extends PhpfastcacheRootException
 {
 

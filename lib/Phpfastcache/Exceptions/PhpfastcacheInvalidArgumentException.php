@@ -17,10 +17,6 @@ namespace Phpfastcache\Exceptions;
 
 use Psr\Cache\InvalidArgumentException;
 
-/**
- * Class PhpfastcacheCoreException
- * @package Phpfastcache\Exceptions
- */
 class PhpfastcacheInvalidArgumentException extends PhpfastcacheRootException implements InvalidArgumentException
 {
 

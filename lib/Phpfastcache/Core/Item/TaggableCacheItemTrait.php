@@ -17,14 +17,19 @@ namespace Phpfastcache\Core\Item;
 
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
-/**
- * Trait TaggableCacheItemTrait
- * @package Phpfastcache\Core\Item
- * @property array $tags The tags array
- * @property array $removedTags The removed tags array
- */
 trait TaggableCacheItemTrait
 {
+    use ExtendedCacheItemTrait;
+    /**
+     * @var string[]
+     */
+    protected array $tags = [];
+
+    /**
+     * @var string[]
+     */
+    protected array $removedTags = [];
+
     /**
      * @param string[] $tagNames
      * @return ExtendedCacheItemInterface

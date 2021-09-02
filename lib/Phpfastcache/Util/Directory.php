@@ -19,10 +19,6 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
 
-/**
- * Class Directory
- * @package phpFastCache\Util
- */
 class Directory
 {
     /**

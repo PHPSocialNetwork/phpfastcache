@@ -22,11 +22,6 @@ use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Util\Directory;
 use Phpfastcache\Util\SapiDetector;
 
-
-/**
- * Trait IOHelperTrait
- * @package phpFastCache\Core\Pool\IO
- */
 trait IOHelperTrait
 {
     use TaggableCacheItemPoolTrait;

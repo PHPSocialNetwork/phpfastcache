@@ -17,10 +17,6 @@ namespace Phpfastcache\Exceptions;
 
 use Psr\Cache\CacheException;
 
-/**
- * Interface PhpfastcacheExceptionInterface
- * @package Phpfastcache\Exceptions
- */
 interface PhpfastcacheExceptionInterface extends CacheException
 {
 

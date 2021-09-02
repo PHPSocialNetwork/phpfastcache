@@ -18,10 +18,6 @@ namespace Phpfastcache\Core\Item;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolInterface;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 
-/**
- * Interface TaggableCacheItemInterface
- * @package Phpfastcache\Core\Item
- */
 interface TaggableCacheItemInterface
 {
     /**

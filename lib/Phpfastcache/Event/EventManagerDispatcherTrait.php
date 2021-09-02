@@ -15,10 +15,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Event;
 
-/**
- * Interface EventInterface
- * @package Phpfastcache\Event
- */
 trait EventManagerDispatcherTrait
 {
     /**

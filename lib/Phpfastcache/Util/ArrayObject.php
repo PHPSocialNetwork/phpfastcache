@@ -19,10 +19,6 @@ use ArrayAccess;
 use Countable;
 use Iterator;
 
-/**
- * Class ArrayObject
- * @package phpFastCache\Util
- */
 class ArrayObject implements ArrayAccess, Iterator, Countable
 {
     private array $array;

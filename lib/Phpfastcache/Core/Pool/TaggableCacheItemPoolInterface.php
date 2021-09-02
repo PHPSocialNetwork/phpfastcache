@@ -18,11 +18,6 @@ namespace Phpfastcache\Core\Pool;
 use InvalidArgumentException;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 
-
-/**
- * Interface TaggableCacheItemPoolInterface
- * @package Phpfastcache\Core\Pool
- */
 interface TaggableCacheItemPoolInterface
 {
     public const DRIVER_TAGS_KEY_PREFIX = '_TAG_';

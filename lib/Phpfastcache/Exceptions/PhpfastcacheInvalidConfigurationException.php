@@ -15,10 +15,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Exceptions;
 
-/**
- * Class PhpfastcacheInvalidConfigurationException
- * @package Phpfastcache\Exceptions
- */
 class PhpfastcacheInvalidConfigurationException extends PhpfastcacheRootException
 {
 

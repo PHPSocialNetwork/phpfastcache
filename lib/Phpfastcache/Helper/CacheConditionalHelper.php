@@ -19,8 +19,6 @@ use Phpfastcache\CacheContract;
 use Psr\Cache\CacheItemPoolInterface;
 
 /**
- * Class CacheConditionalHelper
- * @package phpFastCache\Helper
  * @deprecated Use \Phpfastcache\CacheContract instead
  */
 class CacheConditionalHelper extends CacheContract

@@ -31,11 +31,6 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Psr\Cache\{CacheItemInterface, InvalidArgumentException};
 use ReflectionException;
 
-/**
- * Class ClusterAbstract
- *
- * @package Phpfastcache\Cluster
- */
 abstract class ClusterPoolAbstract implements ClusterPoolInterface
 {
     use TaggableCacheItemPoolTrait;

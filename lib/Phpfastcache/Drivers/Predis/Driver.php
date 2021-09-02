@@ -27,8 +27,6 @@ use Psr\Cache\CacheItemInterface;
 
 
 /**
- * Class Driver
- * @package phpFastCache\Drivers
  * @property PredisClient $instance Instance of driver service
  * @property Config $config Return the config object
  */

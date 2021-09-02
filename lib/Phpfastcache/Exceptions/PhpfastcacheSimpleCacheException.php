@@ -18,10 +18,6 @@ namespace Phpfastcache\Exceptions;
 use Exception;
 use Psr\SimpleCache\CacheException;
 
-/**
- * Class PhpfastcacheRootException
- * @package Phpfastcache\Exceptions
- */
 class PhpfastcacheSimpleCacheException extends Exception implements CacheException
 {
 

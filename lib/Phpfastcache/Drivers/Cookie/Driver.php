@@ -23,9 +23,6 @@ use Psr\Cache\CacheItemInterface;
 
 
 /**
- * Class Driver
- * @package phpFastCache\Drivers
- *
  * @property Config $config
  */
 class Driver implements ExtendedCacheItemPoolInterface
@@ -149,12 +146,6 @@ class Driver implements ExtendedCacheItemPoolInterface
 
         return @setcookie($keyword, null, -10);
     }
-
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
 
     /**
      * @return bool

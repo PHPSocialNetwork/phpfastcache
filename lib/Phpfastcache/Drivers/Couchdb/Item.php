@@ -15,16 +15,11 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Couchdb;
 
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Core\Item\ItemBaseTrait;
+use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, TaggableCacheItemTrait};
 
-/**
- * Class Item
- * @package phpFastCache\Drivers\Couchdb
- */
 class Item implements ExtendedCacheItemInterface
 {
-    use ItemBaseTrait;
+    use TaggableCacheItemTrait;
 
     protected function getDriverClass(): string
     {

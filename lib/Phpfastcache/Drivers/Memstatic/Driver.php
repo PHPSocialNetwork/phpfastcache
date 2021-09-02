@@ -105,12 +105,6 @@ class Driver implements ExtendedCacheItemPoolInterface
         return false;
     }
 
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
-
     /**
      * @return bool
      */

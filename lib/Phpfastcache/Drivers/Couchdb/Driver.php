@@ -18,12 +18,10 @@ namespace Phpfastcache\Drivers\Couchdb;
 use Doctrine\CouchDB\{CouchDBClient, CouchDBException, HTTP\HTTPException};
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
-use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\{PhpfastcacheDriverException,
   PhpfastcacheInvalidArgumentException,
-  PhpfastcacheInvalidConfigurationException,
   PhpfastcacheLogicException};
 
 /**
@@ -60,6 +58,7 @@ HELP;
 
     /**
      * @return DriverStatistic
+     * @throws HTTPException
      */
     public function getStats(): DriverStatistic
     {
@@ -74,7 +73,7 @@ HELP;
 
     /**
      * @return bool
-     * @throws PhpfastcacheLogicException
+     * @throws HTTPException
      */
     protected function driverConnect(): bool
     {
@@ -115,12 +114,13 @@ HELP;
 
     /**
      * @return void
+     * @throws HTTPException
      */
     protected function createDatabase(): void
     {
         try{
             $this->instance->getDatabaseInfo($this->getDatabaseName());
-        } catch(HTTPException $e){
+        } catch(HTTPException){
             $this->instance->createDatabase($this->getDatabaseName());
         }
     }
@@ -198,12 +198,6 @@ HELP;
 
         return null;
     }
-
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
 
     /**
      * @param ExtendedCacheItemInterface $item

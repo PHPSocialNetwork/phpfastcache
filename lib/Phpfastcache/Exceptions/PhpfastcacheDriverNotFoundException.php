@@ -15,10 +15,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Exceptions;
 
-/**
- * Class PhpfastcacheDriverNotFoundException
- * @package Phpfastcache\Exceptions
- */
 class PhpfastcacheDriverNotFoundException extends PhpfastcacheDriverException
 {
 

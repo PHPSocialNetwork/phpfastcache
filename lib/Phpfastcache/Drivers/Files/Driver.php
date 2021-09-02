@@ -24,8 +24,6 @@ use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheI
 use Phpfastcache\Util\Directory;
 
 /**
- * Class Driver
- * @package phpFastCache\Drivers
  * @property Config $config
  *
  * Important NOTE:

@@ -29,11 +29,6 @@ use Phpfastcache\Exceptions\{PhpfastcacheCoreException,
     PhpfastcacheLogicException};
 use ReflectionObject;
 
-
-/**
- * Class DriverBaseTrait
- * @package phpFastCache\Cache
- */
 trait DriverBaseTrait
 {
     use AbstractDriverPoolTrait;

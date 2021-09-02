@@ -27,11 +27,6 @@ use ReflectionClass;
 use ReflectionObject;
 use RuntimeException;
 
-
-/**
- * Trait StandardPsr6StructureTrait
- * @package phpFastCache\Core
- */
 trait CacheItemPoolTrait
 {
     use ClassNamespaceResolverTrait;

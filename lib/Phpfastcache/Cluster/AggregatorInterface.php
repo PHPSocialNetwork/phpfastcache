@@ -17,11 +17,6 @@ namespace Phpfastcache\Cluster;
 
 use Phpfastcache\Config\ConfigurationOption;
 
-/**
- * Interface AggregatorInterface
- *
- * @package Phpfastcache\Cluster
- */
 interface AggregatorInterface
 {
 

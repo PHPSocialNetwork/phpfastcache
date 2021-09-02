@@ -27,7 +27,7 @@ use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 
 /**
  * Class Driver
- * @package phpFastCache\Drivers
+ * @property Config $config
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -108,12 +108,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
         return (bool)apcu_delete($item->getKey());
     }
-
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
 
     /**
      * @return bool

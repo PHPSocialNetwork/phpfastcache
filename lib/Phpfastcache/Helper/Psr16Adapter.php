@@ -32,10 +32,6 @@ use Psr\Cache\InvalidArgumentException;
 use Psr\SimpleCache\CacheInterface;
 use Traversable;
 
-/**
- * Class Psr16Adapter
- * @package phpFastCache\Helper
- */
 class Psr16Adapter implements CacheInterface
 {
     /**

@@ -17,10 +17,6 @@ namespace Phpfastcache\Cluster\Drivers\RandomReplication;
 
 use Phpfastcache\Cluster\ItemAbstract;
 
-/**
- * Class ClusterItem
- * @package Phpfastcache\Cluster
- */
 class Item extends ItemAbstract
 {
     protected function getDriverClass(): string

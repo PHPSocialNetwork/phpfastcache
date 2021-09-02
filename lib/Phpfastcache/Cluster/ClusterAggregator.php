@@ -25,11 +25,6 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use stdClass;
 
-/**
- * Class ClusterAggregator
- *
- * @package Phpfastcache\Cluster
- */
 class ClusterAggregator implements AggregatorInterface
 {
     /**

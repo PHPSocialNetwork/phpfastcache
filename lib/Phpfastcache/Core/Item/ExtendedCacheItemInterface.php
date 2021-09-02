@@ -23,11 +23,6 @@ use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheL
 use Phpfastcache\Util\ClassNamespaceResolverInterface;
 use Psr\Cache\CacheItemInterface;
 
-/**
- * Interface ExtendedCacheItemInterface
- *
- * @package phpFastCache\Cache
- */
 interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDispatcherInterface, ClassNamespaceResolverInterface, JsonSerializable, TaggableCacheItemInterface
 {
 

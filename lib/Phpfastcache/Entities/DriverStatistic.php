@@ -15,10 +15,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Entities;
 
-/**
- * Class DriverStatistic
- * @package phpFastCache\Entities
- */
 class DriverStatistic
 {
     protected string $info = '';

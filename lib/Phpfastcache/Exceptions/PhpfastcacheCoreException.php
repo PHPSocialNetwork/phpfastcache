@@ -15,10 +15,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Exceptions;
 
-/**
- * Class PhpfastcacheCoreException
- * @package Phpfastcache\Exceptions
- */
 class PhpfastcacheCoreException extends PhpfastcacheRootException
 {
 

@@ -20,16 +20,12 @@ use DateTime;
 use DateTimeInterface;
 use Phpfastcache\Event\EventManagerDispatcherTrait;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Util\ClassNamespaceResolverTrait;
 
-
-/**
- * Trait ItemBaseTrait
- * @package phpFastCache\Core\Item
- */
-trait ItemBaseTrait
+trait CacheItemTrait
 {
-    use ItemExtendedTrait;
     use EventManagerDispatcherTrait;
+    use ClassNamespaceResolverTrait;
 
     protected bool $fetched = false;
 
@@ -43,24 +39,7 @@ trait ItemBaseTrait
 
     protected DateTimeInterface $modificationDate;
 
-    /**
-     * @var string[]
-     */
-    protected array $tags = [];
-
-    /**
-     * @var string[]
-     */
-    protected array $removedTags = [];
-
     protected bool $isHit = false;
-
-    /********************
-     *
-     * PSR-6 Methods
-     *
-     *******************/
-
 
     public function getKey(): string
     {

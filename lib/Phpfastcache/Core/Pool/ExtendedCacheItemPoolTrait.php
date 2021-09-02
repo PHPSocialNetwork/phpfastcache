@@ -19,11 +19,6 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Psr\Cache\CacheItemInterface;
 
-
-/**
- * Trait ExtendedCacheItemPoolTrait
- * @package Phpfastcache\Core\Pool
- */
 trait ExtendedCacheItemPoolTrait
 {
     use CacheItemPoolTrait;

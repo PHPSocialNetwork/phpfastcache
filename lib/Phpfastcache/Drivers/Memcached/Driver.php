@@ -29,8 +29,6 @@ use Psr\Cache\CacheItemInterface;
 
 
 /**
- * Class Driver
- * @package phpFastCache\Drivers
  * @property MemcachedSoftware $instance
  * @property Config $config Return the config object
  */
@@ -187,12 +185,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
         return $this->instance->delete($item->getKey());
     }
-
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
 
     /**
      * @return bool

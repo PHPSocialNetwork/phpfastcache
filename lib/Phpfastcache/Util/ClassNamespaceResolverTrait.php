@@ -19,11 +19,6 @@ use Iterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-
-/**
- * Trait ClassNamespaceResolverTrait
- * @package phpFastCache\Core
- */
 trait ClassNamespaceResolverTrait
 {
     /**

@@ -27,11 +27,6 @@ use Phpfastcache\Exceptions\PhpfastcacheReplicationException;
 use Psr\Cache\CacheItemInterface;
 use ReflectionException;
 
-
-/**
- * Class MasterSlaveReplicationCluster
- * @package Phpfastcache\Cluster\Drivers\MasterSlaveReplication
- */
 class Driver extends ClusterPoolAbstract
 {
     /**

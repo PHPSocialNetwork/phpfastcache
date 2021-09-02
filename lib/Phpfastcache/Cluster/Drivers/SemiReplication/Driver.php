@@ -22,10 +22,6 @@ use Phpfastcache\Exceptions\PhpfastcacheReplicationException;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
 
-/**
- * Class FullReplicationCluster
- * @package Phpfastcache\Cluster\Drivers\FullReplication
- */
 class Driver extends ClusterPoolAbstract
 {
     /**

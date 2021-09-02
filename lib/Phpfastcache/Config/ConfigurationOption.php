@@ -23,10 +23,6 @@ use ReflectionNamedType;
 use ReflectionParameter;
 use TypeError;
 
-/**
- * Class ConfigurationOption
- * @package Phpfastcache\Config
- */
 class ConfigurationOption extends ArrayObject implements ConfigurationOptionInterface
 {
     protected bool $itemDetailedDate = false;

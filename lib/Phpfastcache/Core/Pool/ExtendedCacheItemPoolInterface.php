@@ -27,8 +27,6 @@ use Psr\Cache\{CacheItemInterface, CacheItemPoolInterface};
 
 
 /**
- * Interface ExtendedCacheItemPoolInterface
- *
  * IMPORTANT NOTICE
  *
  * If you modify this file please make sure that
@@ -36,7 +34,6 @@ use Psr\Cache\{CacheItemInterface, CacheItemPoolInterface};
  * since it does no longer implements this interface
  * @see \Phpfastcache\Helper\ActOnAll
  *
- * @package phpFastCache\Core\Pool
  */
 interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventManagerDispatcherInterface, ClassNamespaceResolverInterface, TaggableCacheItemPoolInterface
 {

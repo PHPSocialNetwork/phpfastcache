@@ -19,10 +19,6 @@ use DateInterval;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 
-/**
- * Class CacheContract
- * @package phpFastCache\Helper
- */
 class CacheContract
 {
     protected CacheItemPoolInterface $cacheInstance;

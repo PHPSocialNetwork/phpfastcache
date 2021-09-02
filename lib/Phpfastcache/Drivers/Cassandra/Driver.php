@@ -29,7 +29,6 @@ use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheL
 
 /**
  * Class Driver
- * @package phpFastCache\Drivers
  * @property CassandraSession $instance Instance of driver service
  * @property Config $config
  */
@@ -241,12 +240,6 @@ HELP;
             throw new PhpfastcacheInvalidArgumentException($e, 0, $e);
         }
     }
-
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
 
     /**
      * @param ExtendedCacheItemInterface $item

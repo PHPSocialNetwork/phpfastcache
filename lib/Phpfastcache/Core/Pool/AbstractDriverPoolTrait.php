@@ -18,10 +18,6 @@ namespace Phpfastcache\Core\Pool;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
-/**
- * Trait AbstractCacheItemPoolTrait
- * @package Phpfastcache\Core\Pool
- */
 trait AbstractDriverPoolTrait
 {
     /**

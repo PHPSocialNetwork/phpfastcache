@@ -17,11 +17,6 @@ namespace Phpfastcache\Cluster;
 
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 
-/**
- * Interface ClusterInterface
- *
- * @package Phpfastcache\Cluster
- */
 interface ClusterPoolInterface extends ExtendedCacheItemPoolInterface
 {
     /**

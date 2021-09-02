@@ -15,13 +15,9 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Cluster;
 
-use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, ItemBaseTrait};
+use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, TaggableCacheItemTrait};
 
-/**
- * Class ClusterItem
- * @package Phpfastcache\Cluster
- */
 abstract class ItemAbstract implements ExtendedCacheItemInterface
 {
-    use ItemBaseTrait;
+    use TaggableCacheItemTrait;
 }

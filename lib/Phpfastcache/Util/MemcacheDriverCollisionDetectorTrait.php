@@ -15,11 +15,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Util;
 
-
-/**
- * Trait MemcacheDriverCollisionDetectorTrait
- * @package phpFastCache\Core
- */
 trait MemcacheDriverCollisionDetectorTrait
 {
     /**

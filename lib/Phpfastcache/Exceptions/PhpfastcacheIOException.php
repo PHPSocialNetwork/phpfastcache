@@ -16,8 +16,6 @@ declare(strict_types=1);
 namespace Phpfastcache\Exceptions;
 
 /**
- * Class PhpfastcacheIOException
- * @package Phpfastcache\Exceptions
  * @since v6
  */
 class PhpfastcacheIOException extends PhpfastcacheCoreException

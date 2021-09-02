@@ -25,8 +25,6 @@ use Redis as RedisClient;
 
 
 /**
- * Class Driver
- * @package phpFastCache\Drivers
  * @property Config $config Return the config object
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface

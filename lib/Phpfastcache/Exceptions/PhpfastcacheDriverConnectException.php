@@ -15,10 +15,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Exceptions;
 
-/**
- * Class PhpfastcacheDriverCheckException
- * @package phpFastCache\Exceptions
- */
 class PhpfastcacheDriverConnectException extends PhpfastcacheDriverException
 {
 

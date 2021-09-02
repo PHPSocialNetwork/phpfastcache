@@ -30,8 +30,7 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver
  * @package phpFastCache\Drivers
  * @property PredisClient $instance Instance of driver service
- * @property Config $config Config object
- * @method Config getConfig() Return the config object
+ * @property Config $config Return the config object
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -191,5 +190,10 @@ HELP;
     protected function driverClear(): bool
     {
         return $this->instance->flushdb()->getPayload() === 'OK';
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->config;
     }
 }

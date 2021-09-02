@@ -25,12 +25,10 @@ use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheInvalidArgum
  * Class Driver
  * @package phpFastCache\Drivers
  * @property LeveldbClient $instance Instance of driver service
- * @property Config $config Config object
- * @method Config getConfig() Return the config object
+ * @property Config $config
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    use TaggableCacheItemPoolTrait;
     use IOHelperTrait;
 
     protected const LEVELDB_FILENAME = '.database';
@@ -133,5 +131,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $this->instance = $this->instance ?: new LeveldbClient($this->getLeveldbFile());
 
         return true;
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->config;
     }
 }

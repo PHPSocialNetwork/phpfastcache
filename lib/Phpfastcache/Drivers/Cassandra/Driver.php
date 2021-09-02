@@ -31,7 +31,7 @@ use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheL
  * Class Driver
  * @package phpFastCache\Drivers
  * @property CassandraSession $instance Instance of driver service
- * @method Config getConfig()
+ * @property Config $config
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -304,8 +304,13 @@ HELP;
             );
 
             return true;
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->config;
     }
 }

@@ -29,7 +29,7 @@ use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException, PhpfastcacheInval
  * Class Driver
  * @package phpFastCache\Drivers
  * @property Cluster $instance Instance of driver service
- * @method Config getConfig()
+ * @property Config $config
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -259,5 +259,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         }
 
         return $data;
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->config;
     }
 }

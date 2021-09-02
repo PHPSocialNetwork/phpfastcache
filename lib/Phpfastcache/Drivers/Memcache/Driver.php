@@ -31,8 +31,7 @@ use Phpfastcache\Util\{MemcacheDriverCollisionDetectorTrait};
  * Class Driver
  * @package phpFastCache\Drivers
  * @property MemcacheSoftware $instance
- * @property Config $config Config object
- * @method Config getConfig() Return the config object
+ * @property Config $config Return the config object
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -175,7 +174,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return bool
+     * @retur n bool
      * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(ExtendedCacheItemInterface $item): bool
@@ -197,5 +196,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function driverClear(): bool
     {
         return $this->instance->flush();
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->config;
     }
 }

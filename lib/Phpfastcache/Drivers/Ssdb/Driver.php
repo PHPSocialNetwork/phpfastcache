@@ -27,8 +27,7 @@ use phpssdb\Core\{SimpleSSDB, SSDBException};
  * Class Driver
  * @package phpFastCache\Drivers
  * @property SimpleSSDB $instance Instance of driver service
- * @property Config $config Config object
- * @method Config getConfig() Return the config object
+ * @property Config $config Return the config object
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -127,17 +126,16 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return (bool)$this->instance->del($item->getEncodedKey());
     }
 
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
-
     /**
      * @return bool
      */
     protected function driverClear(): bool
     {
         return (bool)$this->instance->flushdb('kv');
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->config;
     }
 }

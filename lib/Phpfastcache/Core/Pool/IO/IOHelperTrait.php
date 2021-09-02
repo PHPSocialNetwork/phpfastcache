@@ -15,11 +15,9 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool\IO;
 
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Drivers\Files\Config;
+use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Util\Directory;
 use Phpfastcache\Util\SapiDetector;
@@ -28,14 +26,11 @@ use Phpfastcache\Util\SapiDetector;
 /**
  * Trait IOHelperTrait
  * @package phpFastCache\Core\Pool\IO
- * @property array $config The configuration array passed via DriverBaseTrait
- * @property ExtendedCacheItemInterface[] $itemInstances The item instance passed via CacheItemPoolTrait
- * @property EventManagerInterface $eventManager The event manager passed via CacheItemPoolTrait
- * @method Config getConfig() Return the config object
- * @method string getDriverName() Get the driver name
  */
 trait IOHelperTrait
 {
+    use TaggableCacheItemPoolTrait;
+
     /**
      * @var array
      */

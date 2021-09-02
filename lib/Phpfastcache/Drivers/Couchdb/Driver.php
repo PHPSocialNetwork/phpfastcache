@@ -18,16 +18,18 @@ namespace Phpfastcache\Drivers\Couchdb;
 use Doctrine\CouchDB\{CouchDBClient, CouchDBException, HTTP\HTTPException};
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
+use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\{PhpfastcacheDriverException,
+  PhpfastcacheInvalidArgumentException,
+  PhpfastcacheInvalidConfigurationException,
+  PhpfastcacheLogicException};
 
 /**
  * Class Driver
- * @package phpFastCache\Drivers
  * @property CouchdbClient $instance Instance of driver service
- * @property Config $config Config object
- * @method Config getConfig() Return the config object
+ * @property Config $config
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -281,5 +283,10 @@ HELP;
         }
 
         return $value;
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->config;
     }
 }

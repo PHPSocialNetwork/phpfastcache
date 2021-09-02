@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Cluster\Drivers\FullReplication;
 
 use Phpfastcache\Cluster\ClusterPoolAbstract;
+use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Psr\Cache\CacheItemInterface;
@@ -171,6 +172,4 @@ class Driver extends ClusterPoolAbstract
         // Return true only if at least one backend confirmed the "commit" operation
         return $hasCommitOnce;
     }
-
-
 }

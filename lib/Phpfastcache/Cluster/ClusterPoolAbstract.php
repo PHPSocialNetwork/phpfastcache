@@ -227,4 +227,9 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
 
         return $stats;
     }
+
+    public function getConfig() : ConfigurationOption
+    {
+        return $this->config;
+    }
 }

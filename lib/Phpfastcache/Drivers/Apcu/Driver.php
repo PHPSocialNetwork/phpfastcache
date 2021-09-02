@@ -18,6 +18,8 @@ namespace Phpfastcache\Drivers\Apcu;
 use DateTime;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
+use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Config\ConfigurationOptionInterface;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Util\SapiDetector;
@@ -26,7 +28,6 @@ use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 /**
  * Class Driver
  * @package phpFastCache\Drivers
- * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -120,5 +121,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function driverClear(): bool
     {
         return @apcu_clear_cache();
+    }
+
+    public function getConfig() : Config|ConfigurationOption
+    {
+        return $this->config;
     }
 }

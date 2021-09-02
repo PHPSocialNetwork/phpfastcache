@@ -27,12 +27,11 @@ use Psr\Cache\CacheItemInterface;
 /**
  * Class Driver
  * @package phpFastCache\Drivers
- * @property Config $config Config object
- * @method Config getConfig() Return the config object
+ * @property Config $config
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    use TaggableCacheItemPoolTrait, IOHelperTrait;
+    use IOHelperTrait;
 
     protected const INDEXING_FILE = 'indexing';
 
@@ -338,5 +337,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         }
 
         return true;
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->config;
     }
 }

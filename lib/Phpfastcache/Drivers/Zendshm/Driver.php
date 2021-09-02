@@ -25,8 +25,7 @@ use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
  * Class Driver (zend memory cache)
  * Requires Zend Data Cache Functions from ZendServer
  * @package phpFastCache\Drivers
- * @property Config $config Config object
- * @method Config getConfig() Return the config object
+ * @property Config $config Return the config object
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -101,12 +100,6 @@ HELP;
         return zend_shm_cache_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
     }
 
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
-
     /**
      * @param ExtendedCacheItemInterface $item
      * @return bool
@@ -119,11 +112,13 @@ HELP;
         return (bool)zend_shm_cache_delete($item->getKey());
     }
 
-    /**
-     * @return bool
-     */
     protected function driverClear(): bool
     {
         return @zend_shm_cache_clear();
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->config;
     }
 }

@@ -18,7 +18,7 @@ namespace Phpfastcache\Drivers\Files;
 use Exception;
 use FilesystemIterator;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, IO\IOHelperTrait, TaggableCacheItemPoolTrait};
+use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, IO\IOHelperTrait};
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheIOException, PhpfastcacheLogicException};
 use Phpfastcache\Util\Directory;
@@ -26,8 +26,7 @@ use Phpfastcache\Util\Directory;
 /**
  * Class Driver
  * @package phpFastCache\Drivers
- * @property Config $config Config object
- * @method Config getConfig() Return the config object
+ * @property Config $config
  *
  * Important NOTE:
  * We are using getKey instead of getEncodedKey since this backend create filename that are
@@ -36,7 +35,6 @@ use Phpfastcache\Util\Directory;
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
     use IOHelperTrait;
-    use TaggableCacheItemPoolTrait;
 
     /**
      * @return bool
@@ -127,5 +125,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function driverClear(): bool
     {
         return Directory::rrmdir($this->getPath(true));
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->config;
     }
 }

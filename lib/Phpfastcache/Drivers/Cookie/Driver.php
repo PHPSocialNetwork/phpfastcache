@@ -26,7 +26,7 @@ use Psr\Cache\CacheItemInterface;
  * Class Driver
  * @package phpFastCache\Drivers
  *
- * @method Config getConfig()
+ * @property Config $config
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -174,5 +174,10 @@ class Driver implements ExtendedCacheItemPoolInterface
         }
 
         return $return;
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->config;
     }
 }

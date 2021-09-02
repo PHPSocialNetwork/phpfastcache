@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Pool;
 
 use DateTime;
+use Phpfastcache\Config\ConfigurationOptionInterface;
 use Throwable;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
@@ -146,10 +147,7 @@ trait DriverBaseTrait
     /**
      * @return ConfigurationOption
      */
-    public function getConfig(): ConfigurationOption
-    {
-        return $this->config;
-    }
+    abstract public function getConfig(): ConfigurationOption;
 
     /**
      * @param ConfigurationOption $config

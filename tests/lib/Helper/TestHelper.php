@@ -20,8 +20,12 @@ use Phpfastcache\Api;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
+use Phpfastcache\Util\SapiDetector;
+use Psr\Cache\InvalidArgumentException;
 use ReflectionClass;
 use ReflectionException;
 use Throwable;
@@ -35,35 +39,17 @@ use function sprintf;
  */
 class TestHelper
 {
-    /***
-     * @var int
-     */
-    protected $numOfFailedTests = 0;
+    protected int $numOfFailedTests = 0;
 
-    /**
-     * @var int
-     */
-    protected $numOfPassedTests = 0;
+    protected int $numOfPassedTests = 0;
 
-    /**
-     * @var int
-     */
-    protected $numOfSkippedTests = 0;
+    protected int $numOfSkippedTests = 0;
 
-    /**
-     * @var string
-     */
-    protected $testName;
+    protected string $testName;
 
-    /**
-     * @var int
-     */
-    protected $timestamp;
+    protected float $timestamp;
 
-    /**
-     * @var CLImate
-     */
-    protected $climate;
+    protected CLImate $climate;
 
     /**
      * TestHelper constructor.
@@ -89,52 +75,23 @@ class TestHelper
         $this->printHeaders();
     }
 
-    protected function setErrorHandler($errorLevels = E_ALL)
+    protected function setErrorHandler($errorLevels = E_ALL): void
     {
         set_error_handler([$this, 'errorHandler'], $errorLevels);
     }
 
-    public function mutePhpNotices()
+    public function mutePhpNotices(): void
     {
         $errorLevels = E_ALL & ~E_NOTICE & ~E_USER_NOTICE;
         $this->setErrorHandler($errorLevels);
         error_reporting($errorLevels);
     }
 
-    public function unmutePhpNotices()
+    public function unmutePhpNotices(): void
     {
         $errorLevels = E_ALL;
         $this->setErrorHandler($errorLevels);
         error_reporting($errorLevels);
-    }
-
-    /**
-     * @see https://stackoverflow.com/questions/933367/php-how-to-best-determine-if-the-current-invocation-is-from-cli-or-web-server
-     * @return bool
-     */
-    public function isCli(): bool
-    {
-        if (defined('STDIN')) {
-            return true;
-        }
-
-        if (php_sapi_name() === 'cli') {
-            return true;
-        }
-
-        if (array_key_exists('SHELL', $_ENV)) {
-            return true;
-        }
-
-        if (empty($_SERVER['REMOTE_ADDR']) && !isset($_SERVER['HTTP_USER_AGENT']) && count($_SERVER['argv']) > 0) {
-            return true;
-        }
-
-        if (!array_key_exists('REQUEST_METHOD', $_SERVER)) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -149,9 +106,9 @@ class TestHelper
      * @throws PhpfastcacheIOException
      * @throws PhpfastcacheLogicException
      */
-    public function printHeaders()
+    public function printHeaders(): void
     {
-        if (!$this->isCli() && !headers_sent()) {
+        if (SapiDetector::isWebScript() && !headers_sent()) {
             header('Content-Type: text/plain, true');
         }
 
@@ -231,7 +188,7 @@ class TestHelper
      * @param string $file
      * @param string $ext
      */
-    public function runSubProcess(string $file, string $ext = '.php')
+    public function runSubProcess(string $file, string $ext = '.php'): void
     {
         $filePath =  getcwd() . DIRECTORY_SEPARATOR . 'subprocess' . DIRECTORY_SEPARATOR . $file . '.subprocess' . $ext;
         $binary = $this->isHHVM() ? 'hhvm' : 'php';
@@ -282,7 +239,7 @@ class TestHelper
     /**
      * @return void
      */
-    public function terminateTest()
+    public function terminateTest(): void
     {
         $execTime = round(microtime(true) - $this->timestamp, 3);
         $totalCount = $this->numOfFailedTests + $this->numOfSkippedTests + $this->numOfPassedTests;
@@ -319,7 +276,7 @@ class TestHelper
     /**
      * @param string $cmd
      */
-    public function runAsyncProcess(string $cmd)
+    public function runAsyncProcess(string $cmd): void
     {
         if (str_starts_with(php_uname(), 'Windows')) {
             pclose(popen('start /B ' . $cmd, 'r'));
@@ -334,7 +291,7 @@ class TestHelper
      * @return mixed
      * @throws ReflectionException
      */
-    public function accessInaccessibleMember($obj, $prop)
+    public function accessInaccessibleMember($obj, $prop): mixed
     {
         $reflection = new ReflectionClass($obj);
         $property = $reflection->getProperty($prop);
@@ -348,7 +305,7 @@ class TestHelper
      * @param string $errfile
      * @param int $errline
      */
-    public function errorHandler(int $errno, string $errstr, string $errfile, int $errline)
+    public function errorHandler(int $errno, string $errstr, string $errfile, int $errline): void
     {
         $errorType = '';
 
@@ -405,7 +362,7 @@ class TestHelper
     /**
      * @param EventManagerInterface $eventManager
      */
-    public function debugEvents(EventManagerInterface $eventManager)
+    public function debugEvents(EventManagerInterface $eventManager): void
     {
         $eventManager->onEveryEvents(
             function (string $eventName) {
@@ -417,8 +374,11 @@ class TestHelper
 
     /**
      * @param ExtendedCacheItemPoolInterface $pool
+     * @param bool $poolClear
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function runCRUDTests(ExtendedCacheItemPoolInterface $pool, bool $poolClear = true)
+    public function runCRUDTests(ExtendedCacheItemPoolInterface $pool, bool $poolClear = true): void
     {
         $this->printInfoText('Running CRUD tests on the following backend: ' . get_class($pool));
 
@@ -575,10 +535,12 @@ class TestHelper
     /**
      * @param Throwable $exception
      */
-    public function exceptionHandler(Throwable $exception)
+    public function exceptionHandler(Throwable $exception): void
     {
         if ($exception instanceof PhpfastcacheDriverCheckException) {
             $this->assertSkip('A driver could not be initialized due to missing requirement: ' . $exception->getMessage());
+        } else if ($exception instanceof PhpfastcacheDriverConnectException) {
+            $this->assertSkip('A driver could not be initialized due to network/authentication issue: ' . $exception->getMessage());
         } else {
             $this->assertFail(
                 sprintf(

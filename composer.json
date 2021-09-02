@@ -25,10 +25,7 @@
         "psr/cache": "^3.0",
         "psr/simple-cache": "^1.0.",
         "ext-mbstring": "*",
-        "ext-json": "*",
-        "phpfastcache/couchdb": "^1.0",
-        "mongodb/mongodb": "^1.9",
-        "predis/predis": "^1.1"
+        "ext-json": "*"
     },
     "require-dev": {
         "league/climate": "^3.5",

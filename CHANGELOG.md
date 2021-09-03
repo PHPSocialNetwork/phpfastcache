@@ -1,4 +1,4 @@
-## 9.0.0-dev
+## 9.0.0
 ##### 30 august 2021
 - __Estimated release date__: _End of 2021 (december)_
 - __Global__

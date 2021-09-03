@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b6c0b906cd2111f799736520ef0ce49a",
+    "content-hash": "3fd7c7257917ea1512dcb53ccb37300f",
     "packages": [
         {
             "name": "psr/cache",
@@ -101,6 +101,9 @@
                 "psr-16",
                 "simple-cache"
             ],
+            "support": {
+                "source": "https://github.com/php-fig/simple-cache/tree/master"
+            },
             "time": "2017-10-23T01:57:42+00:00"
         }
     ],
@@ -164,6 +167,10 @@
                 "php",
                 "terminal"
             ],
+            "support": {
+                "issues": "https://github.com/thephpleague/climate/issues",
+                "source": "https://github.com/thephpleague/climate/tree/3.7.0"
+            },
             "time": "2021-01-10T20:18:52+00:00"
         },
         {
@@ -211,6 +218,9 @@
                 "psr",
                 "psr-3"
             ],
+            "support": {
+                "source": "https://github.com/php-fig/log/tree/1.1.4"
+            },
             "time": "2021-05-03T11:20:27+00:00"
         },
         {
@@ -262,6 +272,10 @@
                 "input",
                 "prompt"
             ],
+            "support": {
+                "issues": "https://github.com/Seldaek/cli-prompt/issues",
+                "source": "https://github.com/Seldaek/cli-prompt/tree/1.0.4"
+            },
             "time": "2020-12-15T21:32:01+00:00"
         }
     ],

@@ -14,12 +14,16 @@
                 "role": "Actual Project Manager/Developer"
             },
             {
-                "name": "Khoa Bui",
-                "email": "khoaofgod@gmail.com",
-                "homepage": "https://www.phpfastcache.com",
-                "role": "Former Project Developer/Original Creator"
+                "name": "Contributors",
+                "homepage": "https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors",
             }
-        ],
+    ],
+    "funding": [
+        {
+            "type": "patreon",
+            "url": "https://www.patreon.com/geolim4"
+        }
+    ],
     "require": {
         "php": "^8.0",
         "psr/cache": "^3.0",

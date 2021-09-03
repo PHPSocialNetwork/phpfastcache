@@ -1,26 +1,26 @@
 ## 4.0.0
-- **[BC]** Upgraded `psr/cache` dependency to `^3.0` which required `ExtendedCacheItemPoolInterface` and `ExtendedCacheItemInterface` updates
-- **[BC]** Increased minimum PHP compatibility to `^8.0` which also required `TaggableCacheItemPoolInterface` and `TaggableCacheItemInterface` updates
-- **[BC]** Updated `ExtendedCacheItemPoolInterface::saveMultiple(ExtendedCacheItemInterface...$items)` which no longer accept argument #0 to be itself an array of `ExtendedCacheItemInterface` objects
+- **[BC Break]** Upgraded `psr/cache` dependency to `^3.0` which required `ExtendedCacheItemPoolInterface` and `ExtendedCacheItemInterface` updates
+- **[BC Break]** Increased minimum PHP compatibility to `^8.0` which also required `TaggableCacheItemPoolInterface` and `TaggableCacheItemInterface` updates
+- **[BC Break]** Updated `ExtendedCacheItemPoolInterface::saveMultiple(ExtendedCacheItemInterface...$items)` which no longer accept argument #0 to be itself an array of `ExtendedCacheItemInterface` objects
 - Referenced `TaggableCacheItemPoolInterface::TAG_STRATEGY_*` constants to `TaggableCacheItemInterface::TAG_STRATEGY_*` for more code usability
 - Added `ExtendedCacheItemInterface::hasTag(string $tag)` to test if a cache item is tagged with the provided tag
 - Added `ExtendedCacheItemInterface::hasTags(array $tags, int $strategy)` to test if a cache item is tagged with ones the provided tags with an optional `$strategy` parameter
 
 ## 3.0.0
-- **[BC]** Removed `ExtendedCacheItemPoolInterface::appendItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
-- **[BC]** Removed `ExtendedCacheItemPoolInterface::decrementItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
-- **[BC]** Removed `ExtendedCacheItemPoolInterface::deleteItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
-- **[BC]** Removed `ExtendedCacheItemPoolInterface::getItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
-- **[BC]** Removed `ExtendedCacheItemPoolInterface::incrementItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
-- **[BC]** Removed `ExtendedCacheItemPoolInterface::prependItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
-- **[BC]** Removed deprecated method `ExtendedCacheItemPoolInterface::getConfigOption()` (Use getConfig()->getOptionName() instead)
-- **[BC]** Removed deprecated method `ExtendedCacheItemPoolInterface::isUsableInAutoContext()` (Since "Auto" driver has been removed)
+- **[BC Break]** Removed `ExtendedCacheItemPoolInterface::appendItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC Break]** Removed `ExtendedCacheItemPoolInterface::decrementItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC Break]** Removed `ExtendedCacheItemPoolInterface::deleteItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC Break]** Removed `ExtendedCacheItemPoolInterface::getItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC Break]** Removed `ExtendedCacheItemPoolInterface::incrementItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC Break]** Removed `ExtendedCacheItemPoolInterface::prependItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)
+- **[BC Break]** Removed deprecated method `ExtendedCacheItemPoolInterface::getConfigOption()` (Use getConfig()->getOptionName() instead)
+- **[BC Break]** Removed deprecated method `ExtendedCacheItemPoolInterface::isUsableInAutoContext()` (Since "Auto" driver has been removed)
 - Added strategy`TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE` usable in every `**byTags**` methods.
 - Added strategy`TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL` usable in every `**byTags**` methods.
 - Added strategy`TaggableCacheItemPoolInterface::TAG_STRATEGY_ONLY` usable in every `**byTags**` methods.
 
 ## 3.0.0-rc
-- **[BC]** Moved `\Phpfastcache\Event\EventInterface` to`\Phpfastcache\Event\EventManagerInterface`
+- **[BC Break]** Moved `\Phpfastcache\Event\EventInterface` to`\Phpfastcache\Event\EventManagerInterface`
 - Moved (by extends) ExtendedCacheItemPoolInterface::setEventManager() in `\Phpfastcache\Event\EventManagerDispatcherInterface:setEventManager()`
 - Moved (by extends) ExtendedCacheItemInterface::doesItemBelongToThatDriverBackend() in `\Phpfastcache\Event\EventManagerDispatcherInterface::setEventManager()`
 - Added `\Phpfastcache\Event\EventManagerDispatcherInterface`

@@ -26,6 +26,12 @@
   - Removed `Devtrue` and `Devfalse` drivers
   - Added `Devrandom` with configurable factor chance and data length
   - Renamed classes `\Phpfastcache\Cluster\Drivers\[STATEGY]\[CLUSTER_NAME]Cluster` to `\Phpfastcache\Cluster\Drivers\[STATEGY]\Driver` for better driver naming across the project
+- __Events__
+  - Added `\Phpfastcache\Event\EventReferenceParameter` class, see [EVENTS.md](./docs/EVENTS.md) file for more information
+  - Added method named `unbindAllEventCallbacks(): bool` to `EventManagerInterface` to allow you to unbind/clear all event from an event instance
+  - Updated argument type #2 (`$items`) of `onCacheSaveMultipleItems()` event from `ExtendedCacheItemInterface[]` to `EventReferenceParameter($items)`
+  - Updated argument type #2 (`$items`) of `onCacheCommitItem()` event from `ExtendedCacheItemInterface[]` to `EventReferenceParameter($items)`
+  - Updated argument type #2 (`$value`) of `onCacheItemSet()` event from `mixed` to `EventReferenceParameter(mixed $value)`
 - __Misc__
   - Increased minimum PHP compatibility in composer to `^8.0`
   - Updated copyright headers on every file to include the many project contributors

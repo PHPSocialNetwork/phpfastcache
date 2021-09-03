@@ -40,6 +40,8 @@ If it's allowed by the event dispatcher the type can be changed or not.\
 If you try to while it's not allowed, you will get a `PhpfastcacheInvalidArgumentException` when trying to call `\Phpfastcache\Event\EventReferenceParameter::setParameterValue()`\
 Finally the class `\Phpfastcache\Event\EventReferenceParameter` is `invokable` and trying to do so will return you the parameter value.\
 
+:new: In V9, a method named `unbindAllEventCallbacks(): bool` has been added to `EventManagerInterface` to allow you to unbind/clear all event from an event instance.
+
 ## List of active events:
 ### ItemPool Events
 - onCacheGetItem(*Callable* **$callback**)
@@ -86,7 +88,7 @@ Finally the class `\Phpfastcache\Event\EventReferenceParameter` is `invokable` a
 - onCacheSaveMultipleItems(*Callable* **$callback**)
     - **Callback arguments**
         - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *EventReferenceParameter($items)* **$items** _(via EventReferenceParameter object)_
+        - *EventReferenceParameter($items)* **$items** _via EventReferenceParameter object_ **(type modification forbidden)**
     - **Scope**
         - ItemPool
     - **Description**
@@ -110,7 +112,7 @@ Finally the class `\Phpfastcache\Event\EventReferenceParameter` is `invokable` a
 - onCacheCommitItem(*Callable* **$callback**)
     - **Callback arguments**
         - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *EventReferenceParameter($items)* **$items** _(via EventReferenceParameter object)_
+        - *EventReferenceParameter($items)* **$items** _via EventReferenceParameter object_ **(type modification forbidden)**
     - **Scope**
         - ItemPool
     - **Description**
@@ -194,7 +196,7 @@ Finally the class `\Phpfastcache\Event\EventReferenceParameter` is `invokable` a
 - onCacheItemSet(*Callable* **$callback**)
     - **Callback arguments**
         - *ExtendedCacheItemInterface* **$item**
-        - *EventReferenceParameter($value)* **$value** _(via EventReferenceParameter object)_
+        - *EventReferenceParameter($value)* **$value** _via EventReferenceParameter object_ **(type modification allowed)**
     - **Scope**
         - Item
     - **Description**

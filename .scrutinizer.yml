@@ -12,9 +12,9 @@
 before_commands: 
   - "composer install --no-dev --prefer-source"
   - "composer require predis/predis \"~1.1.0\""
-  - "composer require mongodb/mongodb \"^1.1\""
+  - "composer require mongodb/mongodb \"^1.9\""
   - "composer require phpfastcache/phpssdb ~1.0.0\""
-  - "composer require phpfastcache/couchdb \"~1.0.0\""
+  - "composer require doctrine/couchdb dev-master"
 build:
   nodes:
     analysis:
@@ -24,7 +24,7 @@ build:
         override: [php-scrutinizer-run]
   environment: 
     php: 
-      version: 7.0.0
+      version: 8.0.0
 checks: 
   php: true
 coding_style: 
@@ -46,7 +46,7 @@ tools:
   php_code_coverage: true
   php_code_sniffer: 
     config: 
-      standard: PSR2
+      standard: PSR12
     enabled: true
     filter: 
       paths: 

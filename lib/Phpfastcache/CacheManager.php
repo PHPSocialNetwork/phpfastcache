@@ -15,7 +15,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache;
 
-use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Config\ConfigurationOptionInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
@@ -194,7 +193,7 @@ class CacheManager
 
     /**
      * @param string $driverClass
-     * @return string|ExtendedCacheItemPoolInterface
+     * @return string
      * @throws PhpfastcacheDriverException
      */
     protected static function validateDriverClass(string $driverClass): string
@@ -314,7 +313,7 @@ class CacheManager
         }
 
         if (\in_array($driverName, self::getDriverList(), true)) {
-            throw new PhpfastcacheLogicException(\sprintf("Driver '%s' is already a part of the PhpFastCache core", $driverName));
+            throw new PhpfastcacheLogicException(\sprintf("Driver '%s' is already a part of the Phpfastcache core", $driverName));
         }
 
         self::$driverCustoms[$driverName] = $className;
@@ -324,11 +323,11 @@ class CacheManager
      * Return the list of available drivers Capitalized
      * with optional FQCN as key
      *
-     * @param bool $FQCNAsKey Describe keys with Full Qualified Class Name
+     * @param bool $fqcnAsKey Describe keys with Full Qualified Class Name
      * @return string[]
      * @throws PhpfastcacheUnsupportedOperationException
      */
-    public static function getDriverList(bool $FQCNAsKey = false): array
+    public static function getDriverList(bool $fqcnAsKey = false): array
     {
         static $driverList;
 
@@ -338,7 +337,7 @@ class CacheManager
                 $classMap = self::createClassMap(__DIR__ . '/Drivers');
                 $driverList = [];
 
-                foreach ($classMap as $class => $file) {
+                foreach (\array_keys($classMap) as $class) {
                     $driverList[] = \str_replace($prefix, '', \substr($class, 0, \strrpos($class, '\\')));
                 }
 
@@ -347,7 +346,7 @@ class CacheManager
 
             $driverList = \array_merge($driverList, \array_keys(self::$driverCustoms));
 
-            if ($FQCNAsKey) {
+            if ($fqcnAsKey) {
                 $realDriverList = [];
                 foreach ($driverList as $driverName) {
                     $realDriverList[self::getDriverClass($driverName)] = $driverName;
@@ -411,7 +410,7 @@ class CacheManager
         }
 
         if (!\in_array($driverName, self::getDriverList(), true)) {
-            throw new PhpfastcacheLogicException(\sprintf("Driver '%s' can't be overridden since its not a part of the PhpFastCache core", $driverName));
+            throw new PhpfastcacheLogicException(\sprintf("Driver '%s' can't be overridden since its not a part of the Phpfastcache core", $driverName));
         }
 
         if (!\is_subclass_of($className, self::CORE_DRIVER_NAMESPACE . $driverName . '\\Driver', true)) {

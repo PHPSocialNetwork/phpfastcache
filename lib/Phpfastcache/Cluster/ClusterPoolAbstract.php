@@ -24,12 +24,13 @@ use Phpfastcache\Core\{Item\ExtendedCacheItemInterface, Pool\ExtendedCacheItemPo
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\EventManager;
+use Phpfastcache\Exceptions\PhpfastcacheCoreException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
-use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Psr\Cache\{CacheItemInterface, InvalidArgumentException};
-use ReflectionException;
+use Phpfastcache\Exceptions\PhpfastcacheIOException;
 
 abstract class ClusterPoolAbstract implements ClusterPoolInterface
 {
@@ -48,17 +49,18 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
     /**
      * @var ExtendedCacheItemPoolInterface[]
      */
-    protected $clusterPools;
+    protected array $clusterPools;
 
     /**
      * ClusterPoolAbstract constructor.
      * @param string $clusterName
      * @param ExtendedCacheItemPoolInterface ...$driverPools
-     * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverConnectException
-     * @throws PhpfastcacheInvalidConfigurationException
-     * @throws ReflectionException
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
+     * @throws PhpfastcacheIOException
      */
     public function __construct(string $clusterName, ExtendedCacheItemPoolInterface ...$driverPools)
     {
@@ -75,13 +77,13 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
      */
     public function getIO(): DriverIO
     {
-        $IO = new DriverIO();
+        $io = new DriverIO();
         foreach ($this->clusterPools as $clusterPool) {
-            $IO->setReadHit($IO->getReadHit() + $clusterPool->getIO()->getReadHit())
-                ->setReadMiss($IO->getReadMiss() + $clusterPool->getIO()->getReadMiss())
-                ->setWriteHit($IO->getWriteHit() + $clusterPool->getIO()->getWriteHit());
+            $io->setReadHit($io->getReadHit() + $clusterPool->getIO()->getReadHit())
+                ->setReadMiss($io->getReadMiss() + $clusterPool->getIO()->getReadMiss())
+                ->setWriteHit($io->getWriteHit() + $clusterPool->getIO()->getWriteHit());
         }
-        return $IO;
+        return $io;
     }
 
     /**

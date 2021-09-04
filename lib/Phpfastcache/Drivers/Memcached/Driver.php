@@ -23,7 +23,7 @@ use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\{PhpfastcacheDriverConnectException, PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Phpfastcache\Util\{MemcacheDriverCollisionDetectorTrait};
 use Psr\Cache\CacheItemInterface;
 
@@ -94,36 +94,26 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
         $servers = $this->getConfig()->getServers();
 
-        if (count($servers) < 1) {
-            $servers = [
-                [
-                    'host' => $this->getConfig()->getHost(),
-                    'path' => $this->getConfig()->getPath(),
-                    'port' => $this->getConfig()->getPort(),
-                    'saslUser' => $this->getConfig()->getSaslUser() ?: false,
-                    'saslPassword' => $this->getConfig()->getSaslPassword() ?: false,
-                ],
-            ];
-        }
-
         foreach ($servers as $server) {
-            try {
-                /**
-                 * If path is provided we consider it as an UNIX Socket
-                 */
-                if (!empty($server['path']) && !$this->instance->addServer($server['path'], 0)) {
-                    $this->fallback = true;
-                } else {
-                    if (!empty($server['host']) && !$this->instance->addServer($server['host'], $server['port'])) {
-                        $this->fallback = true;
-                    }
-                }
-
-                if (!empty($server['saslUser']) && !empty($server['saslPassword'])) {
-                    $this->instance->setSaslAuthData($server['saslUser'], $server['saslPassword']);
-                }
-            } catch (Exception $e) {
-                $this->fallback = true;
+            $connected = false;
+            /**
+             * If path is provided we consider it as an UNIX Socket
+             */
+            if (!empty($server['path'])) {
+                $connected = $this->instance->addServer($server['path'], 0);
+            } elseif (!empty($server['host'])) {
+                $connected = $this->instance->addServer($server['host'], $server['port']);
+            }
+            if (!empty($server['saslUser']) && !empty($server['saslPassword'])) {
+                $connected = $this->instance->setSaslAuthData($server['saslUser'], $server['saslPassword']);
+            }
+            if(!$connected){
+                throw new PhpfastcacheDriverConnectException(
+                    sprintf(
+                        'Failed to connect to memcache host/path "%s".',
+                        $server['host'] ?: $server['path'],
+                    )
+                );
             }
         }
 

@@ -10,21 +10,32 @@ Use [Composer](https://getcomposer.org/doc/03-cli.md#require) to include Phpfast
 ### Deprecated `\Phpfastcache\Helper\CacheConditionalHelper`
 Use `\Phpfastcache\CacheContract` instead. See [Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV9%CB%96%5D-Cache-contract).
 
-###  Removed `Couchbase` driver (SDK 2 support dropped)
+### Removed `Couchbase` driver (SDK 2 support dropped)
 It is now replaced by `Couchbasev3` driver (SDK 3), the configuration options are all the same plus `scopeName` and `collectionName` that are now configurable.
 
-###  Updated EventManager instances
+### Updated EventManager instances
 - Updated argument type #2 (`$items`) of `onCacheSaveMultipleItems()` event from `ExtendedCacheItemInterface[]` to `EventReferenceParameter($items)`
 - Updated argument type #2 (`$items`) of `onCacheCommitItem()` event from `ExtendedCacheItemInterface[]` to `EventReferenceParameter($items)`
 - Updated argument type #2 (`$value`) of `onCacheItemSet()` event from `mixed` to `EventReferenceParameter(mixed $value)`
 
 See [EVENTS.md](./../EVENTS.md) file for more information
-###  Upgraded Phpfastcache API
-The Phpfastcache API has been upgraded to `4.0.0` with BC breaks. [See full changes](./../../CHANGELOG_API.md)
+### Upgraded Phpfastcache API
+- The Phpfastcache API has been upgraded to `4.0.0` with BC breaks. [See full changes](./../../CHANGELOG_API.md)
+- Renamed `Api::getPhpFastCacheVersion()` to `Api::getPhpfastcacheVersion()`
+- Renamed `Api::getPhpFastCacheChangelog()` to `Api::getPhpfastcacheChangelog()`
+- Renamed `Api::getPhpFastCacheGitHeadHash()` to `Api::getPhpfastcacheGitHeadHash()`
 
 ### Removed `Devtrue` and `Devfalse` drivers
 They have not been replaced.
 However, the `Devrandom` driver with configurable factor chance and data length has been added
+
+### Renamed configuration entry `htaccess` to `autoHtaccessCreationEnabled` for files-based drivers.
+- The variable has been renamed to better comply with its supposed role and avoid phpmd exception.
+- Renamed `IOConfigurationOptionTrait::getHtaccess()` to `IOConfigurationOptionTrait::isAutoHtaccessCreationEnabled()`
+- Renamed `IOConfigurationOptionTrait::setHtaccess()` to `IOConfigurationOptionTrait::setAutoHtaccessCreationEnabled()`
+
+### Removed `Cookie` driver because of its potential dangerosity
+However, you can always implement it by yourself if you want to by putting it back from previous versions using `\Phpfastcache\CacheManager::addCustomDriver()` method
 
 ------
 More information in our comprehensive [changelog](./../../CHANGELOG.md).

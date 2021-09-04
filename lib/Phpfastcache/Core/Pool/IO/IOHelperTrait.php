@@ -18,6 +18,7 @@ namespace Phpfastcache\Core\Pool\IO;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Util\Directory;
 use Phpfastcache\Util\SapiDetector;
@@ -96,22 +97,26 @@ trait IOHelperTrait
      * @param bool $readonly
      * @return string
      * @throws PhpfastcacheIOException
+     * @throws PhpfastcacheInvalidArgumentException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function getPath(bool $readonly = false): string
     {
         /**
          * Get the base system temporary directory
          */
-        $tmp_dir = \rtrim(\ini_get('upload_tmp_dir') ?: \sys_get_temp_dir(), '\\/') . DIRECTORY_SEPARATOR . 'phpfastcache';
+        $tmpDir = \rtrim(\ini_get('upload_tmp_dir') ?: \sys_get_temp_dir(), '\\/') . DIRECTORY_SEPARATOR . 'phpfastcache';
 
         /**
          * Calculate the security key
          */
         {
+            $httpHost = $this->getConfig()->getSuperGlobalAccessor()('SERVER', 'HTTP_HOST');
             $securityKey = $this->getConfig()->getSecurityKey();
             if (!$securityKey || \mb_strtolower($securityKey) === 'auto') {
-                if (isset($_SERVER['HTTP_HOST'])) {
-                    $securityKey = \preg_replace('/^www./', '', \strtolower(\str_replace(':', '_', $_SERVER['HTTP_HOST'])));
+                if (isset($httpHost)) {
+                    $securityKey = \preg_replace('/^www./', '', \strtolower(\str_replace(':', '_', $httpHost)));
                 } else {
                     $securityKey = (SapiDetector::isWebScript() ? 'web' : 'cli');
                 }
@@ -128,18 +133,18 @@ trait IOHelperTrait
          * Extends the temporary directory
          * with the security key and the driver name
          */
-        $tmp_dir = \rtrim($tmp_dir, '/') . DIRECTORY_SEPARATOR;
+        $tmpDir = \rtrim($tmpDir, '/') . DIRECTORY_SEPARATOR;
 
         if (empty($this->getConfig()->getPath())) {
-            $path = $tmp_dir;
+            $path = $tmpDir;
         } else {
             $path = \rtrim($this->getConfig()->getPath(), '/') . DIRECTORY_SEPARATOR;
         }
 
-        $path_suffix = $securityKey . DIRECTORY_SEPARATOR . $this->getDriverName();
-        $full_path = Directory::getAbsolutePath($path . $path_suffix);
-        $full_path_tmp = Directory::getAbsolutePath($tmp_dir . $path_suffix);
-        $full_path_hash = $this->getConfig()->getDefaultFileNameHashFunction()($full_path);
+        $pathSuffix = $securityKey . DIRECTORY_SEPARATOR . $this->getDriverName();
+        $fullPath = Directory::getAbsolutePath($path . $pathSuffix);
+        $fullPathTmp = Directory::getAbsolutePath($tmpDir . $pathSuffix);
+        $fullPathHash = $this->getConfig()->getDefaultFileNameHashFunction()($fullPath);
 
         /**
          * In readonly mode we only attempt
@@ -148,25 +153,25 @@ trait IOHelperTrait
          * return the temp dir
          */
         if ($readonly === true) {
-            if ($this->getConfig()->isAutoTmpFallback() && (!@\file_exists($full_path) || !@\is_writable($full_path))) {
-                return $full_path_tmp;
+            if ($this->getConfig()->isAutoTmpFallback() && (!@\file_exists($fullPath) || !@\is_writable($fullPath))) {
+                return $fullPathTmp;
             }
-            return $full_path;
+            return $fullPath;
         }
 
-        if (!isset($this->tmp[$full_path_hash]) || (!@\file_exists($full_path) || !@\is_writable($full_path))) {
-            if (!@\file_exists($full_path)) {
-                if (@mkdir($full_path, $this->getDefaultChmod(), true) === false && !\is_dir($full_path)) {
-                    throw new PhpfastcacheIOException('The directory ' . $full_path . ' could not be created.');
+        if (!isset($this->tmp[$fullPathHash]) || (!@\file_exists($fullPath) || !@\is_writable($fullPath))) {
+            if (!@\file_exists($fullPath)) {
+                if (@mkdir($fullPath, $this->getDefaultChmod(), true) === false && !\is_dir($fullPath)) {
+                    throw new PhpfastcacheIOException('The directory ' . $fullPath . ' could not be created.');
                 }
-            } elseif (!@\is_writable($full_path) && !@\chmod($full_path, $this->getDefaultChmod()) && $this->getConfig()->isAutoTmpFallback()) {
+            } elseif (!@\is_writable($fullPath) && !@\chmod($fullPath, $this->getDefaultChmod()) && $this->getConfig()->isAutoTmpFallback()) {
                 /**
                  * Switch back to tmp dir
                  * again if the path is not writable
                  */
-                $full_path = $full_path_tmp;
-                if (!@\file_exists($full_path) && @\mkdir($full_path, $this->getDefaultChmod(), true) && !\is_dir($full_path)) {
-                    throw new PhpfastcacheIOException('The directory ' . $full_path . ' could not be created.');
+                $fullPath = $fullPathTmp;
+                if (!@\file_exists($fullPath) && @\mkdir($fullPath, $this->getDefaultChmod(), true) && !\is_dir($fullPath)) {
+                    throw new PhpfastcacheIOException('The directory ' . $fullPath . ' could not be created.');
                 }
             }
 
@@ -175,17 +180,17 @@ trait IOHelperTrait
              * writable including the temporary
              * one, we must throw an exception
              */
-            if (!@\file_exists($full_path) || !@\is_writable($full_path)) {
+            if (!@\file_exists($fullPath) || !@\is_writable($fullPath)) {
                 throw new PhpfastcacheIOException(
-                    'Path "' . $full_path . '" is not writable, please set a chmod 0777 or any writable permission and make sure to make use of an absolute path !'
+                    'Path "' . $fullPath . '" is not writable, please set a chmod 0777 or any writable permission and make sure to make use of an absolute path !'
                 );
             }
 
-            $this->tmp[$full_path_hash] = $full_path;
-            $this->htaccessGen($full_path, $this->getConfig()->isValidOption('htaccess') ? $this->getConfig()->getHtaccess() : false);
+            $this->tmp[$fullPathHash] = $fullPath;
+            $this->htaccessGen($fullPath, $this->getConfig()->isValidOption('htaccess') ? $this->getConfig()->isAutoHtaccessCreationEnabled() : false);
         }
 
-        return realpath($full_path);
+        return realpath($fullPath);
     }
 
     /**
@@ -242,7 +247,7 @@ trait IOHelperTrait
                 \fwrite(
                     $file,
                     <<<HTACCESS
-### This .htaccess is auto-generated by PhpFastCache ###
+### This .htaccess is auto-generated by Phpfastcache ###
 <IfModule mod_authz_host>
 Require all denied
 </IfModule>
@@ -282,12 +287,12 @@ HTACCESS
 
         $string = '';
 
-        $file_handle = @\fopen($file, 'rb');
-        while (!\feof($file_handle)) {
-            $line = \fgets($file_handle);
+        $fileHandle = @\fopen($file, 'rb');
+        while (!\feof($fileHandle)) {
+            $line = \fgets($fileHandle);
             $string .= $line;
         }
-        \fclose($file_handle);
+        \fclose($fileHandle);
 
         return $string;
     }

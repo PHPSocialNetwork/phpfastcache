@@ -28,6 +28,7 @@ use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException, PhpfastcacheInval
 /**
  * @property Cluster $instance Instance of driver service
  * @property Config $config
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -207,11 +208,11 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param CouchbaseBucket $CouchbaseBucket
+     * @param CouchbaseBucket $couchbaseBucket
      */
-    protected function setBucket(CouchbaseBucket $CouchbaseBucket): void
+    protected function setBucket(CouchbaseBucket $couchbaseBucket): void
     {
-        $this->bucketInstance = $CouchbaseBucket;
+        $this->bucketInstance = $couchbaseBucket;
     }
 
 

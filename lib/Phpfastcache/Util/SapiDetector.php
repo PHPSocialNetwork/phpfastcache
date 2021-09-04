@@ -18,6 +18,9 @@ namespace Phpfastcache\Util;
 
 class SapiDetector
 {
+    /**
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
     public static function isWebScript(): bool
     {
         return \PHP_SAPI === 'apache2handler' || str_contains(\PHP_SAPI, 'handler') || isset($_SERVER['REQUEST_METHOD']);

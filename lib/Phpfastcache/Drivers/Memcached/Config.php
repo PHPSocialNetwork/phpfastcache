@@ -34,32 +34,32 @@ class Config extends ConfigurationOption
      *         ]
      *      ]);
      */
-    protected $servers = [];
+    protected array $servers = [];
 
     /**
      * @var string
      */
-    protected $host = '127.0.0.1';
+    protected string $host = '127.0.0.1';
 
     /**
      * @var int
      */
-    protected $port = 11211;
+    protected int $port = 11211;
 
     /**
      * @var string
      */
-    protected $saslUser = '';
+    protected string $saslUser = '';
 
     /**
      * @var string
      */
-    protected $saslPassword = '';
+    protected string $saslPassword = '';
 
     /**
      * @var string
      */
-    protected $optPrefix = '';
+    protected string $optPrefix = '';
 
     /**
      * @return string
@@ -102,6 +102,18 @@ class Config extends ConfigurationOption
      */
     public function getServers(): array
     {
+        if (!count($this->servers)) {
+            return [
+                [
+                    'host' => $this->getHost(),
+                    'path' => $this->getPath(),
+                    'port' => $this->getPort(),
+                    'saslUser' => $this->getSaslUser() ?: false,
+                    'saslPassword' => $this->getSaslPassword() ?: false,
+                ],
+            ];
+        }
+
         return $this->servers;
     }
 

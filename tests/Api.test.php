@@ -34,7 +34,7 @@ try {
  * Testing PhpFastCache version
  */
 try {
-    $version = Api::getPhpFastCacheVersion();
+    $version = Api::getPhpfastcacheVersion();
     $testHelper->assertPass(sprintf('Successfully retrieved PhpFastCache version: %s', $version));
 } catch (PhpfastcacheRootException $e) {
     $testHelper->assertFail(sprintf('Failed to retrieve the PhpFastCache version with the following error error: %s', $e->getMessage()));
@@ -54,7 +54,7 @@ try {
  * Testing PhpFastCache changelog
  */
 try {
-    $changelog = Api::getPhpFastCacheChangelog();
+    $changelog = Api::getPhpfastcacheChangelog();
     $testHelper->assertPass(sprintf("Successfully retrieved PhpFastCache changelog:\n%s", $changelog));
 } catch (PhpfastcacheRootException $e) {
     $testHelper->assertFail(sprintf('Failed to retrieve the PhpFastCache changelog with the following error error: %s', $e->getMessage()));

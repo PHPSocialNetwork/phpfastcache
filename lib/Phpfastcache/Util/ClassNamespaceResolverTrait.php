@@ -72,6 +72,8 @@ trait ClassNamespaceResolverTrait
      * @param string $path The file to check
      *
      * @return array The found classes
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected static function findClasses(string $path): array
     {

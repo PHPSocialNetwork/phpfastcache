@@ -23,7 +23,7 @@ use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\{PhpfastcacheDriverConnectException, PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
 use Phpfastcache\Util\{MemcacheDriverCollisionDetectorTrait};
 
 
@@ -88,48 +88,40 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $this->instance = new MemcacheSoftware();
         $servers = $this->getConfig()->getServers();
 
-        if (count($servers) < 1) {
-            $servers = [
-                [
-                    'host' => $this->getConfig()->getHost(),
-                    'path' => $this->getConfig()->getPath(),
-                    'port' => $this->getConfig()->getPort(),
-                    'saslUser' => $this->getConfig()->getSaslUser() ?: false,
-                    'saslPassword' => $this->getConfig()->getSaslPassword() ?: false,
-                ],
-            ];
-        }
-
         foreach ($servers as $server) {
             try {
                 /**
                  * If path is provided we consider it as a UNIX Socket
                  */
-                if (!empty($server['path']) && !$this->instance->addServer($server['path'], 0)) {
-                    $this->fallback = true;
-                } else {
-                    if (!empty($server['host']) && !$this->instance->addServer($server['host'], $server['port'])) {
-                        $this->fallback = true;
-                    }
+                if (!empty($server['path'])) {
+                    $this->instance->addServer($server['path'], 0);
+                } elseif (!empty($server['host'])) {
+                    $this->instance->addServer($server['host'], $server['port']);
                 }
 
                 if (!empty($server['saslUser']) && !empty($server['saslPassword'])) {
                     throw new PhpfastcacheDriverException('Unlike Memcached, Memcache does not support SASL authentication');
                 }
             } catch (Exception $e) {
-                $this->fallback = true;
+                throw new PhpfastcacheDriverConnectException(
+                    sprintf(
+                        'Failed to connect to memcache host/path "%s" with the following error: %s',
+                        $server['host'] ?: $server['path'],
+                        $e->getMessage()
+                    )
+                );
             }
+        }
 
-            /**
-             * Since Memcached does not throw
-             * any error if not connected ...
-             */
-            if (!$this->instance->getServerStatus(
-                !empty($server['path']) ? $server['path'] : $server['host'],
-                !empty($server['port']) ? $server['port'] : 0
-            )) {
-                throw new PhpfastcacheDriverException('Memcache seems to not be connected');
-            }
+        /**
+         * Since Memcached does not throw
+         * any error if not connected ...
+         */
+        if (!$this->instance->getServerStatus(
+            !empty($server['path']) ? $server['path'] : $server['host'],
+            !empty($server['port']) ? $server['port'] : 0
+        )) {
+            throw new PhpfastcacheDriverException('Memcache seems to not be connected');
         }
 
         return true;

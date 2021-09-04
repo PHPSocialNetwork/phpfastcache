@@ -24,6 +24,7 @@ Phpfastcache has some options that you may want to know before using them, here'
 * **preventCacheSlams** _| bool (default: false)_ `[>=V6]` This option will allow you to prevent cache slams when making use of heavy cache items
 * **cacheSlamsTimeout** _| int (default: 15)_ `[>=V6]` This option defines the cache slams timeout in seconds
 * **useStaticItemCaching** _| bool(default: true)_ `[>=V8.0.3]` This option will allow you to disable the internal static storage of cache items. Can be used for cron script that loop indefinitely on cache items to avoid calling `detachAllItems()`/`detachItem($item)` from the cache pool.
+* **superGlobalAccessor** _| object|\Closure(default: null)_ `[>= V9]` This option will allow you to define how Phpfastcache should access to superglobal variables. The object given MUST be **invokable**. Look `\Phpfastcache\Config\ConfigurationOption::getDefaultSuperGlobalAccessor()` for default behavior
 
 ### Host/Authenticating options *
 * **host** _| string (default: null)_ The hostname

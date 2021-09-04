@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Config;
 
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 
 const SAFE_FILE_EXTENSIONS = 'txt|cache|db|pfc';
@@ -23,7 +24,7 @@ trait IOConfigurationOptionTrait
 {
     protected bool $secureFileManipulation = false;
 
-    protected bool $htaccess = true;
+    protected bool $autoHtaccessCreationEnabled = true;
 
     protected string $securityKey = '';
 
@@ -53,18 +54,18 @@ trait IOConfigurationOptionTrait
     /**
      * @return bool
      */
-    public function getHtaccess(): bool
+    public function isAutoHtaccessCreationEnabled(): bool
     {
-        return $this->htaccess;
+        return $this->autoHtaccessCreationEnabled;
     }
 
     /**
-     * @param bool $htaccess
+     * @param bool $autoHtaccessCreationEnabled
      * @return static
      */
-    public function setHtaccess(bool $htaccess): static
+    public function setAutoHtaccessCreationEnabled(bool $autoHtaccessCreationEnabled): static
     {
-        $this->htaccess = $htaccess;
+        $this->autoHtaccessCreationEnabled = $autoHtaccessCreationEnabled;
 
         return $this;
     }

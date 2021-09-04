@@ -102,6 +102,9 @@ trait CacheItemPoolTrait
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
      * @throws PhpfastcacheDriverException
+     *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.GotoStatement)
      */
     public function getItem(string $key): ExtendedCacheItemInterface
     {
@@ -165,6 +168,7 @@ trait CacheItemPoolTrait
                              */
                             \sleep(1);
                             $cacheSlamsSpendSeconds++;
+
                             goto getItemDriverRead;
                         }
                     }

@@ -35,8 +35,6 @@ trait DriverBaseTrait
 
     protected ConfigurationOption $config;
 
-    protected bool $fallback = false;
-
     protected object|array|null $instance;
 
     protected string $driverName;

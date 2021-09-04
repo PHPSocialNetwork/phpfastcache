@@ -91,12 +91,12 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             )
         )->toArray()[0];
 
-        $array_filter_recursive = static function ($array, callable $callback = null) use (&$array_filter_recursive) {
+        $arrayFilterRecursive = static function ($array, callable $callback = null) use (&$arrayFilterRecursive) {
             $array = $callback($array);
 
             if (\is_object($array) || \is_array($array)) {
                 foreach ($array as &$value) {
-                    $value = $array_filter_recursive($value, $callback);
+                    $value = $arrayFilterRecursive($value, $callback);
                 }
             }
 
@@ -113,10 +113,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             return $item;
         };
 
-        $serverStats = $array_filter_recursive($serverStats, $callback);
-        $collectionStats = $array_filter_recursive($collectionStats, $callback);
+        $serverStats = $arrayFilterRecursive($serverStats, $callback);
+        $collectionStats = $arrayFilterRecursive($collectionStats, $callback);
 
-        $stats = (new DriverStatistic())
+        return (new DriverStatistic())
             ->setInfo(
                 'MongoDB version ' . $serverStats->version . ', Uptime (in days): ' . round(
                     $serverStats->uptime / 86400,
@@ -131,8 +131,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                     'collStats' => $collectionStats,
                 ]
             );
-
-        return $stats;
     }
 
     /**

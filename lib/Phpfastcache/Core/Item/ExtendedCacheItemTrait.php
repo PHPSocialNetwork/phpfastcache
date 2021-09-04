@@ -57,7 +57,8 @@ trait ExtendedCacheItemTrait
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver): ExtendedCacheItemInterface
     {
-        if ($driver instanceof ($this->getDriverClass())) {
+        $driverClass = $this->getDriverClass();
+        if ($driver instanceof $driverClass) {
             $this->driver = $driver;
 
             return $this;

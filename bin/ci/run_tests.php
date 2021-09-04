@@ -41,7 +41,7 @@ $globCallback = static function (string $pattern, int $flags = 0) use (&$globCal
         $subFiles[] = $globCallback($dir . '/' . \basename($pattern), $flags);
     }
 
-    return \array_merge($files, ...$subFiles);
+    return \array_merge(...$subFiles,  ...[$files]);
 };
 
 foreach ($globCallback(PFC_TEST_DIR . DIRECTORY_SEPARATOR . '*.test.php') as $filename) {

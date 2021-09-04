@@ -19,6 +19,9 @@ use ArrayAccess;
 use Countable;
 use Iterator;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class ArrayObject implements ArrayAccess, Iterator, Countable
 {
     private array $array;

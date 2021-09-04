@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Util;
 
+use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
@@ -88,18 +89,18 @@ class Directory
 
         $files = new RecursiveIteratorIterator
         (
-            new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS),
+            new RecursiveDirectoryIterator($source, FilesystemIterator::SKIP_DOTS),
             RecursiveIteratorIterator::CHILD_FIRST
         );
 
-        foreach ($files as $fileinfo) {
+        foreach ($files as $fileInfo) {
             /**
-             * @var SplFileInfo $fileinfo
+             * @var SplFileInfo $fileInfo
              */
-            $realpath = $fileinfo->getRealPath();
+            $realpath = $fileInfo->getRealPath();
             if($realpath){
-                if ($fileinfo->isDir()) {
-                    if (self::rrmdir($fileinfo->getRealPath()) === false) {
+                if ($fileInfo->isDir()) {
+                    if (self::rrmdir($fileInfo->getRealPath()) === false) {
                         return false;
                     }
                 } elseif (unlink($realpath) === false) {
@@ -143,8 +144,8 @@ class Directory
         /**
          * Allows to dereference char
          */
-        $__FILE__ = preg_replace('~^(([a-z0-9\-]+)://)~', '', __FILE__);// remove file protocols such as "phar://" etc.
-        $prefix = $__FILE__[0] === DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
+        $file = preg_replace('~^(([a-z0-9\-]+)://)~', '', __FILE__);// remove file protocols such as "phar://" etc.
+        $prefix = $file[0] === DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
         return $prefix . implode(DIRECTORY_SEPARATOR, $absolutes);
     }
 }

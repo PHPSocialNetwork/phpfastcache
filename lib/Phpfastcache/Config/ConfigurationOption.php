@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Config;
 
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Util\ArrayObject;
 use ReflectionException;
@@ -48,6 +49,8 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     protected int $cacheSlamsTimeout = 15;
 
     protected bool $useStaticItemCaching = true;
+
+    protected ?object $superGlobalAccessor = null;
 
     /**
      * @param $args
@@ -303,5 +306,62 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     {
         $this->useStaticItemCaching = $useStaticItemCaching;
         return $this;
+    }
+
+
+    /**
+     * @return object
+     * @throws PhpfastcacheInvalidArgumentException
+     */
+    public function getSuperGlobalAccessor(): object
+    {
+        if(!isset($this->superGlobalAccessor)){
+            $this->setSuperGlobalAccessor($this->getDefaultSuperGlobalAccessor());
+        }
+        return $this->superGlobalAccessor;
+    }
+
+    /**
+     * @param ?object $superGlobalAccessor
+     * @return static
+     * @throws PhpfastcacheInvalidArgumentException
+     */
+    public function setSuperGlobalAccessor(?object $superGlobalAccessor): static
+    {
+        /**
+         *  Symfony's implementation for users that want a good control of their code:
+         *
+         *  $config['superGlobalAccessor'] = \Closure::fromCallable(static function(string $superGlobalName, string $keyName) use ($request) {
+         *      return match ($superGlobalName) {
+         *          'SERVER' => $request->server->get($keyName),
+         *          'REQUEST' => $request->request->get($keyName),
+         *      };
+         *  });
+         */
+
+        if($superGlobalAccessor === null){
+            $this->superGlobalAccessor = $this->getDefaultSuperGlobalAccessor();
+        } elseif(!\is_callable($superGlobalAccessor)){
+            throw new PhpfastcacheInvalidArgumentException('The "superGlobalAccessor" callback must be callable using "__invoke" or \Closure implementation');
+        }else{
+            $this->superGlobalAccessor = $superGlobalAccessor;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return \Closure
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    protected function getDefaultSuperGlobalAccessor(): \Closure
+    {
+        return \Closure::fromCallable(static function(string $superGlobalName, ?string $keyName = null){
+            return match ($superGlobalName) {
+                'SERVER' => $keyName !== null ? $_SERVER[$keyName] ?? null : $_SERVER,
+                'REQUEST' => $keyName !== null ? $_REQUEST[$keyName] ?? null : $_REQUEST,
+                'COOKIE' => $keyName !== null ? $_COOKIE[$keyName] ?? null : $_COOKIE,
+            };
+        });
     }
 }

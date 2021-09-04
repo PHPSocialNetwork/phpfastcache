@@ -16,29 +16,9 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Leveldb;
 
 use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Config\IOConfigurationOptionTrait;
 
 class Config extends ConfigurationOption
 {
-    /**
-     * @var string
-     */
-    protected $htaccess = true;
-
-    /**
-     * @return string
-     */
-    public function getHtaccess(): string
-    {
-        return $this->htaccess;
-    }
-
-    /**
-     * @param string $htaccess
-     * @return self
-     */
-    public function setHtaccess(string $htaccess): static
-    {
-        $this->htaccess = $htaccess;
-        return $this;
-    }
+    use IOConfigurationOptionTrait;
 }

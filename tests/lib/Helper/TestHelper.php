@@ -113,26 +113,29 @@ class TestHelper
         $loadedExtensions = get_loaded_extensions();
         natcasesort($loadedExtensions);
         $this->printText("[<blue>Begin Test:</blue> <magenta>{$this->testName}</magenta>]");
-        $this->printText('[<blue>PHPFASTCACHE:</blue> CORE <yellow>v' . Api::getPhpFastCacheVersion() . Api::getPhpFastCacheGitHeadHash() . '</yellow> | API <yellow>v' . Api::getVersion() . '</yellow>]');
+        $this->printText('[<blue>PHPFASTCACHE:</blue> CORE <yellow>v' . Api::getPhpfastcacheVersion() . Api::getPhpfastcacheGitHeadHash() . '</yellow> | API <yellow>v' . Api::getVersion() . '</yellow>]');
         $this->printText('[<blue>PHP</blue> <yellow>v' . PHP_VERSION . '</yellow> with: <green>' . implode(', ', $loadedExtensions) . '</green>]');
         $this->printText('---');
     }
 
     /**
-     * @param string $string
+     * @param array|string $string
      * @param bool $strtoupper
      * @param string $prefix
      * @return $this
      */
-    public function printText(string $string, bool $strtoupper = false, string $prefix = ''): self
+    public function printText(array|string $string, bool $strtoupper = false, string $prefix = ''): self
     {
+        if(\is_array($string)){
+            $string = implode("\n", $string);
+        }
         if ($prefix) {
             $string = "[{$prefix}] {$string}";
         }
         if (!$strtoupper) {
-            $this->climate->out(trim($string));
+            $this->climate->out($string);
         } else {
-            $this->climate->out(strtoupper(trim($string)));
+            $this->climate->out(strtoupper($string));
         }
 
         return $this;

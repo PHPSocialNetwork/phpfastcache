@@ -1,6 +1,11 @@
 ## 9.0.0
 ##### 30 august 2021
 - __Estimated release date__: _End of 2021 (december)_
+- __API__
+  - Upgraded Phpfastcache API `4.0.0` ([see changes](CHANGELOG_API.md))
+  - Renamed `Api::getPhpFastCacheVersion()` to `Api::getPhpfastcacheVersion()`
+  - Renamed `Api::getPhpFastCacheChangelog()` to `Api::getPhpfastcacheChangelog()`
+  - Renamed `Api::getPhpFastCacheGitHeadHash()` to `Api::getPhpfastcacheGitHeadHash()`
 - __Global__
   - Slightly increased performances on some critical points of the library
   - Removed "BadPracticeOMeter" notice in CacheManager
@@ -11,17 +16,22 @@
   - Migrated many Closure to arrow functions
   - Updated parameters & return type hint to use benefit of covariance and contravariance
   - Upgraded `psr/cache` dependency to `^3.0`
-  - Upgraded Phpfastcache API `4.0.0` ([see changes](CHANGELOG_API.md))
   - Removed embedded Autoload, Phpfastcache is now only Composer-compatible.
   - Removed embedded dependencies (`psr/cache`, `psr/simple-cache`)
 - __Helpers__
   - Deprecated `\Phpfastcache\Helper\CacheConditionalHelper`, use `\Phpfastcache\CacheContract` instead
   - The `\Phpfastcache\CacheContract` class is now also callable directly without calling `get()` method
+- __Options__
+  - Renamed configuration entry `htaccess` to `autoHtaccessCreationEnabled` for files-based drivers.
+  - Renamed `IOConfigurationOptionTrait::getHtaccess()` to `IOConfigurationOptionTrait::isAutoHtaccessCreationEnabled()`
+  - Renamed `IOConfigurationOptionTrait::setHtaccess()` to `IOConfigurationOptionTrait::setAutoHtaccessCreationEnabled()`
 - __Tests__
+  - Added PHPMD coverage to increase quality of the project
   - Updated tests to work with new core/drivers changes
   - Removed Autoload test since its support has been removed and now only managed by Composer
   - Increased tests reliability and code coverage for better catching any eventual regression 
 - __Drivers__
+  - Removed `Cookie` driver because of its potential dangerosity
   - Removed `Couchbase` (SDK 2 support dropped) driver which is now replaced by `Couchbasev3` (SDK 3)
   - Removed `Devtrue` and `Devfalse` drivers
   - Added `Devrandom` with configurable factor chance and data length
@@ -35,3 +45,4 @@
 - __Misc__
   - Increased minimum PHP compatibility in composer to `^8.0`
   - Updated copyright headers on every file to include the many project contributors
+  - Globally renamed every occurrence of `PhpFastCache` to `Phpcastcache`

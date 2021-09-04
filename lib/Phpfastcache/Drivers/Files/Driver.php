@@ -58,10 +58,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
-        $file_path = $this->getFilePath($item->getKey(), true);
+        $filePath = $this->getFilePath($item->getKey(), true);
 
         try{
-            $content = $this->readFile($file_path);
+            $content = $this->readFile($filePath);
         }catch (PhpfastcacheIOException){
             return null;
         }
@@ -80,14 +80,11 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     {
         $this->assertCacheItemType($item, Item::class);
 
-        $file_path = $this->getFilePath($item->getKey());
+        $filePath = $this->getFilePath($item->getKey());
         $data = $this->encode($this->driverPreWrap($item));
 
-        /**
-         * Force write
-         */
         try {
-            return $this->writeFile($file_path, $data, $this->getConfig()->isSecureFileManipulation());
+            return $this->writeFile($filePath, $data, $this->getConfig()->isSecureFileManipulation());
         } catch (Exception) {
             return false;
         }
@@ -103,10 +100,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     {
         $this->assertCacheItemType($item, Item::class);
 
-        $file_path = $this->getFilePath($item->getKey(), true);
-        if (\file_exists($file_path) && @\unlink($file_path)) {
-            \clearstatcache(true, $file_path);
-            $dir = \dirname($file_path);
+        $filePath = $this->getFilePath($item->getKey(), true);
+        if (\file_exists($filePath) && @\unlink($filePath)) {
+            \clearstatcache(true, $filePath);
+            $dir = \dirname($filePath);
             if (!(new FilesystemIterator($dir))->valid()) {
                 \rmdir($dir);
             }

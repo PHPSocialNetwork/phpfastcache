@@ -5,20 +5,22 @@
   * The Alternative Php User Cache (APCU) driver. A memory cache for regular performances.
 * Cassandra
   * A very high-performance NoSQL driver using a key-value pair system. Please note that the Driver rely on php's Datastax extension: https://github.com/datastax/php-driver
-* Cookie
+* Cookie **(REMOVED in V9)**
   * A cookie driver to store non-sensitive scalar (only) data. Limited storage up to 4Ko.
-* Couchbase
-  * A very high-performance NoSQL driver using a key-value pair system
+* Couchbase **(REMOVED in V9)**
+  * A very high-performance NoSQL driver using a key-value pair system, replaced by Couchbasev3 as of V9
 * Couchbasev3 **(Added in V8.0.8)**
   * Same as Couchbase but for Couchbase PHP-SDK 3.0 support
 * Couchdb
   * A very high-performance NoSQL driver using a key-value pair system
-* Devfalse
+* Devfalse **(REMOVED in V9)**
    * A development driver that return false for everything except driverCheck()
 * Devnull
    * A development driver that return null for driverRead() and driverIsHit() (get actions) and true for other action such as driverDelete, DriverClear() etc.
-* Devtrue
+* Devtrue **(REMOVED in V9)**
    * A development driver that return true for everything including driverCheck()
+* Devrandom **(Added in V8.0.8)**
+  * A development driver with configurable factor chance and data length
 * Files
   * A file driver that use serialization for storing data for regular performances. A _$path_ config must be specified, else the system temporary directory will be used.
 * Leveldb

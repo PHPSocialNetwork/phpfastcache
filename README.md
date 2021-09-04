@@ -1,7 +1,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Latest Stable Version](https://img.shields.io/packagist/v/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![License](https://img.shields.io/packagist/l/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Cache Interface](https://img.shields.io/badge/CI-PSR6-orange.svg?maxAge=86400)](https://github.com/php-fig/cache) [![Extended Coding Style](https://img.shields.io/badge/ECS-PSR12-orange.svg?maxAge=86400)](https://www.php-fig.org/psr/psr-12/)  [![Simple Cache](https://img.shields.io/badge/SC-PSR16-orange.svg?maxAge=86400)](https://github.com/php-fig/simple-cache) 
-[![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/?branch=master) [![Build Status](https://travis-ci.org/PHPSocialNetwork/phpfastcache.svg?branch=master)](https://travis-ci.org/PHPSocialNetwork/phpfastcache) [![Semver compliant](https://img.shields.io/badge/Semver-2.0.0-yellow.svg?maxAge=86400)](https://semver.org/spec/v2.0.0.html) [![Patreon](https://img.shields.io/badge/Support%20us%20on-Patreon-f96854.svg?maxAge=86400)](https://www.patreon.com/geolim4)
+[![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/?branch=master) [![Build Status](https://travis-ci.com/PHPSocialNetwork/phpfastcache.svg?branch=master)](https://travis-ci.com/PHPSocialNetwork/phpfastcache) [![Semver compliant](https://img.shields.io/badge/Semver-2.0.0-yellow.svg?maxAge=86400)](https://semver.org/spec/v2.0.0.html) [![Patreon](https://img.shields.io/badge/Support%20us%20on-Patreon-f96854.svg?maxAge=86400)](https://www.patreon.com/geolim4)
 
-#### :warning: Please note that the V9 is mostly a PHP 8 type aware update of PhpFastCache with some significant changes !
+#### :warning: Please note that the V9 is mostly a PHP 8 type aware update of Phpfastcache with some significant changes !
 > As the V9 is **relatively** not compatible with previous versions, please read carefully the [migration guide](./docs/migration/MigratingFromV7ToV8.md) to ensure you the smoothest migration possible.
 One of the biggest change is the configuration system which is now an object that replace the primitive array that we used to implement back then. 
 Also, please note that the V9 requires at least PHP 8 or higher to works properly.
@@ -18,13 +18,13 @@ The simplicity of abstraction: One class for many backend cache. You don't need 
 |      Regular drivers            |     High performances drivers                                 |    Development drivers        |    Cluster-Aggregated drivers     |
 |---------------------------------|---------------------------------------------------------------|-------------------------------|-----------------------------------|
 |  `Apcu` *(APC support removed)* | `Cassandra`                                                   | `Devnull`                     | `FullReplicationCluster`          |
-|  `Cookie`                       | `CouchBasev3`<br>_(`Couchbase` for SDK 2 support removed)_    | `Devrandom`                   | `SemiReplicationCluster`          |
-|  `Files`                        | `Couchdb`                                                     | `Memstatic`                   | `MasterSlaveReplicationCluster`   |
-|  `Leveldb`                      | `Mongodb`                                                     |                               | `RandomReplicationCluster`        |
-|  `Memcache(d)`                  | `Predis`                                                      |                               |                                   |
-|  `Sqlite`                       | `Redis`                                                       |                               |                                   |
-|  `Wincache`                     | `Ssdb`                                                        |                               |                                   |
-|  `Zend Disk Cache`              | `Zend Memory Cache`                                           |                               |                                   |
+|  `Files`                        | `CouchBasev3`<br>_(`Couchbase` for SDK 2 support removed)_    | `Devrandom`                   | `SemiReplicationCluster`          |
+|  `Leveldb`                      | `Couchdb`                                                     | `Memstatic`                   | `MasterSlaveReplicationCluster`   |
+|  `Memcache(d)`                  | `Mongodb`                                                     |                               | `RandomReplicationCluster`        |
+|  `Sqlite`                       | `Predis`                                                      |                               |                                   |
+|  `Wincache`                     | `Redis`                                                       |                               |                                   |
+|  `Zend Disk Cache`              | `Ssdb`                                                        |                               |                                   |
+|                                 | `Zend Memory Cache`                                           |                               |                                   |
 |                                 |                                                               |                               |                                   |
 
 \* Driver descriptions available in DOCS/DRIVERS.md
@@ -41,7 +41,7 @@ Phpfastcache has been developed over the years with 3 main goals:
 Rich Development API
 ---------------------------
 
-PhpFastCache provides you a lot of useful APIs:
+Phpfastcache provides you a lot of useful APIs:
 
 ### Item API (ExtendedCacheItemInterface)
 | Method                               |  Return                      |  Description                                                                                                                           | 
@@ -128,12 +128,12 @@ PhpFastCache provides you a lot of useful APIs:
  
 It also supports multiple calls, Tagging, Setup Folder for caching. Look at our examples folders for more information.
 
-### PhpFastCache versioning API
-PhpFastCache provides a class that gives you basic information about your PhpFastCache installation
+### Phpfastcache versioning API
+Phpfastcache provides a class that gives you basic information about your Phpfastcache installation
 - Get the API version (Item+Pool interface) with `Phpfastcache\Api::GetVersion();`
 - Get the API changelog (Item+Pool interface) `Phpfastcache\Api::getChangelog();`
-- Get the PhpFastCache version with `Phpfastcache\Api::getPhpFastCacheVersion();`
-- Get the PhpFastCache changelog `Phpfastcache\Api::getPhpFastCacheChangelog();`
+- Get the Phpfastcache version with `Phpfastcache\Api::getPhpfastcacheVersion();`
+- Get the Phpfastcache changelog `Phpfastcache\Api::getPhpfastcacheChangelog();`
 
 ---------------------------
 Want to keep it simple ?
@@ -173,13 +173,13 @@ if(!$Psr16Adapter->has('test-key')){
 */
 ```
 
-Internally, the Psr16 adapter calls the PhpFastCache Api via the cache manager. 
+Internally, the Psr16 adapter calls the Phpfastcache Api via the cache manager. 
 
 ---------------------------
 Introducing to events
 ---------------------------
 
-:mega: As of the V6, PhpFastCache provides an event mechanism.
+:mega: As of the V6, Phpfastcache provides an event mechanism.
 You can subscribe to an event by passing a Closure to an active event:
 
 ```php
@@ -223,7 +223,7 @@ More information about the implementation and the events are available on the [W
 ---------------------------
 Introducing new helpers
 ---------------------------
-:books: As of the V6, PhpFastCache provides some helpers to make your code easier.
+:books: As of the V6, Phpfastcache provides some helpers to make your code easier.
 
 - (:warning: Removed in v8, [why ?](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Act-on-all-instances)) ~~The [ActOnAll Helper](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Act-on-all-instances) to help you to act on multiple instance at once.~~
 - The [CacheConditional Helper](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Cache-Conditional) to help you to make the basic conditional statement more easier.

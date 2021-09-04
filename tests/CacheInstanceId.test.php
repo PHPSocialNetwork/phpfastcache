@@ -27,14 +27,14 @@ $driverInstance = CacheManager::getInstance($defaultDriver, null, $instanceId);
 
 if ($driverInstance->getInstanceId() !== $instanceId) {
     $testHelper->assertFail('Unexpected instance ID: ' . $driverInstance->getInstanceId());
-}else{
+} else {
     $testHelper->assertPass('Got expected instance ID: ' . $instanceId);
 }
 
-try{
+try {
     CacheManager::getInstanceById(str_shuffle($instanceId));
     $testHelper->assertFail('Non-existing instance ID has thrown no exception');
-}catch(PhpfastcacheInstanceNotFoundException $e){
+} catch (PhpfastcacheInstanceNotFoundException $e) {
     $testHelper->assertPass('Non-existing instance ID has thrown an exception');
 }
 

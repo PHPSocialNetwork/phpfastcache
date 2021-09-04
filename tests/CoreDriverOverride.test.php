@@ -54,9 +54,9 @@ $cacheInstance = CacheManager::getInstance('Files', new Config(['customOption' =
 $cacheKey = 'cacheKey';
 $RandomCacheValue = str_shuffle(uniqid('pfc', true));
 
-if($cacheInstance instanceof \Phpfastcache\DriverTest\Files2\Driver){
+if ($cacheInstance instanceof \Phpfastcache\DriverTest\Files2\Driver) {
     $testHelper->assertPass('The cache instance is effectively an instance of an override class');
-}else{
+} else {
     $testHelper->assertFail('The cache instance is not an instance of an override class');
 }
 
@@ -92,9 +92,9 @@ if ($cacheValue === $RandomCacheValue) {
 CacheManager::removeCoreDriverOverride('Files');
 $cacheInstance = CacheManager::getInstance('Files');
 
-if($cacheInstance instanceof \Phpfastcache\DriverTest\Files2\Driver){
+if ($cacheInstance instanceof \Phpfastcache\DriverTest\Files2\Driver) {
     $testHelper->assertFail('The cache instance is still an instance of an override class');
-}else{
+} else {
     $testHelper->assertPass('The cache instance is no longer an instance of an override class');
 }
 

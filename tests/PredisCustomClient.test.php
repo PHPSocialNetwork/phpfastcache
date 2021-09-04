@@ -22,9 +22,9 @@ chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Predis custom client');
 
-try{
-    if(!class_exists(PredisClient::class)){
-      throw new PhpfastcacheDriverCheckException('Predis library is not installed');
+try {
+    if (!class_exists(PredisClient::class)) {
+        throw new PhpfastcacheDriverCheckException('Predis library is not installed');
     }
 
     $testHelper->mutePhpNotices();
@@ -38,7 +38,7 @@ try{
 
     $cacheInstance = CacheManager::getInstance('Predis', (new PredisConfig())->setPredisClient($predisClient));
     $testHelper->runCRUDTests($cacheInstance);
-}catch (\RedisException $e){
+} catch (\RedisException $e) {
     $testHelper->assertFail('A Predis exception occurred: ' . $e->getMessage());
 }
 

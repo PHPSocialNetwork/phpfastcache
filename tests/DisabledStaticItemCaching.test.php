@@ -28,7 +28,7 @@ $driverInstance = CacheManager::getInstance($defaultDriver, new ConfigurationOpt
     'useStaticItemCaching' => false,
 ]));
 
-if(!$testHelper->isHHVM()){
+if (!$testHelper->isHHVM()) {
     $testHelper->runSubProcess('DisabledStaticItemCaching');
     /**
      * Give some time to the
@@ -48,9 +48,9 @@ if(!$testHelper->isHHVM()){
     /**
      * @see CacheSlamsProtection.subprocess.php:28
      */
-    if($item->isHit() && $item->get() === 'abcdef-123456'){
+    if ($item->isHit() && $item->get() === 'abcdef-123456') {
         $testHelper->assertPass('The static item caching being disabled, the cache item has been fetched straight from backend.' . $item->get());
-    }else{
+    } else {
         $testHelper->assertFail('The static item caching may not have been disabled since the cache item value does not match the expected value.');
     }
 
@@ -58,8 +58,7 @@ if(!$testHelper->isHHVM()){
      * Cleanup the driver
      */
     $driverInstance->deleteItem($item->getKey());
-
-}else{
+} else {
     $testHelper->assertSkip('Test ignored on HHVM builds due to sub-process issues with C.I.');
 }
 

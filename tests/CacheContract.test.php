@@ -30,10 +30,10 @@ $cacheInstance->clear();
 /**
  * Missing cache item test
  */
-$cacheValue = (new CacheContract($cacheInstance))->get($cacheKey, static function() use ($cacheKey, $testHelper, $RandomCacheValue){
-    if(func_get_arg(0) instanceof ExtendedCacheItemInterface){
+$cacheValue = (new CacheContract($cacheInstance))->get($cacheKey, static function () use ($cacheKey, $testHelper, $RandomCacheValue) {
+    if (func_get_arg(0) instanceof ExtendedCacheItemInterface) {
         $testHelper->assertPass('The callback has been received the cache item as a parameter (introduced in 8.0.6).');
-    }else{
+    } else {
         $testHelper->assertFail('The callback has not received the cache item as a parameter (introduced in 8.0.6).');
     }
     /**
@@ -49,9 +49,9 @@ $cacheValue = (new CacheContract($cacheInstance))->get($cacheKey, static functio
     return $RandomCacheValue . '-1337';
 });
 
-if($cacheValue === $RandomCacheValue . '-1337'){
+if ($cacheValue === $RandomCacheValue . '-1337') {
     $testHelper->assertPass(sprintf('The cache contract successfully returned expected value "%s".', $cacheValue));
-}else{
+} else {
     $testHelper->assertFail(sprintf('The cache contract returned an unexpected value "%s".', $cacheValue));
 }
 
@@ -69,7 +69,7 @@ $cacheInstance->save($cacheItem);
 $cacheInstance->detachAllItems();
 unset($cacheItem);
 
-$cacheValue = (new CacheContract($cacheInstance))->get($cacheKey, static function() use ($cacheKey, $testHelper, $RandomCacheValue){
+$cacheValue = (new CacheContract($cacheInstance))->get($cacheKey, static function () use ($cacheKey, $testHelper, $RandomCacheValue) {
     /**
      * No parameter are passed
      * to this closure
@@ -78,9 +78,9 @@ $cacheValue = (new CacheContract($cacheInstance))->get($cacheKey, static functio
     return $RandomCacheValue . '-1337';
 });
 
-if($cacheValue === $RandomCacheValue){
+if ($cacheValue === $RandomCacheValue) {
     $testHelper->assertPass(sprintf('The cache contract successfully returned expected value "%s".', $cacheValue));
-}else{
+} else {
     $testHelper->assertFail(sprintf('The cache contract returned an unexpected value "%s".', $cacheValue));
 }
 
@@ -102,9 +102,9 @@ sleep($ttl + 1);
 $cacheInstance->detachAllItems();
 $cacheItem = $cacheInstance->getItem($cacheKey);
 
-if(!$cacheItem->isHit()){
+if (!$cacheItem->isHit()) {
     $testHelper->assertPass(sprintf('The cache contract ttl successfully expired the cache after %d seconds', $ttl));
-}else{
+} else {
     $testHelper->assertFail(sprintf('The cache contract ttl does not expired the cache after %d seconds', $ttl));
 }
 
@@ -113,11 +113,11 @@ if(!$cacheItem->isHit()){
  * @since 8.0.6
  */
 $cacheInstance->clear();
-(new CacheContract($cacheInstance))->get($cacheKey, static function() use ($testHelper){
+(new CacheContract($cacheInstance))->get($cacheKey, static function () use ($testHelper) {
     $args = func_get_args();
-    if(isset($args[0]) && $args[0] instanceof CacheItemInterface){
+    if (isset($args[0]) && $args[0] instanceof CacheItemInterface) {
         $testHelper->assertPass('The callback has been received the cache item as the first parameter');
-    }else{
+    } else {
         $testHelper->assertFail('The callback did not received the cache item as the first parameter');
     }
 });
@@ -127,14 +127,14 @@ $cacheInstance->clear();
  * Test callable cache contract syntax via __invoke()
  * @since 8.0.6
  */
-try{
-    $value = (new CacheContract($cacheInstance))($cacheKey, static function() use ($testHelper){
+try {
+    $value = (new CacheContract($cacheInstance))($cacheKey, static function () use ($testHelper) {
         $testHelper->assertPass('The CacheContract class is callable via __invoke()');
         return null;
     });
-}catch(\Error $e){
+} catch (\Error $e) {
     $testHelper->assertFail('The CacheContract class is not callable via __invoke()');
-}catch(\Throwable $e){
+} catch (\Throwable $e) {
     $testHelper->assertFail('Got an unknown error: ' . $e->getMessage());
 }
 

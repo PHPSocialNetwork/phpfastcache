@@ -19,8 +19,7 @@ $testHelper = new TestHelper('PHP Lexer');
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
-$pfcReadDir = static function ($dir, $ext = null) use (&$pfcReadDir)
-{
+$pfcReadDir = static function ($dir, $ext = null) use (&$pfcReadDir) {
     $list = [[]];
     $dir .= '/';
     if (($res = opendir($dir)) === false) {

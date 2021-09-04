@@ -16,7 +16,6 @@ use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Tests\Helper\TestHelper;
 
-
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
 $testHelper = new TestHelper('Github issue #560 - Expiration date bug with sqlite driver');
@@ -56,9 +55,9 @@ $cacheItem = $cacheInstance->getItem($cacheKey);
  * due to the time spend to write the cache on disk that will
  * loss 1 second to the cache ttl :/
  */
-if((int) ceil($cacheItem->getTtl() / 10) * 10 === $defaultTTl){
+if ((int) ceil($cacheItem->getTtl() / 10) * 10 === $defaultTTl) {
     $testHelper->assertPass('The cache Item TTL matches the default TTL after 30 days.');
-}else{
+} else {
     $testHelper->assertFail('The cache Item TTL des not matches the default TTL after 30 days, got the following value: ' . ceil($cacheItem->getTtl() / 10) * 10);
 }
 

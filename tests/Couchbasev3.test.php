@@ -24,7 +24,7 @@ $testHelper = new TestHelper('Couchbasev3 driver');
 $config = new CouchbaseConfig();
 $config->setBucketName('phpfastcache');
 $config->setItemDetailedDate(true);
-try{
+try {
     $config->setUsername('test');
     $config->setPassword('phpfastcache');
     $config->setBucketName('phpfastcache');
@@ -32,7 +32,7 @@ try{
     $config->setCollectionName('_default');
     $cacheInstance = CacheManager::getInstance('Couchbasev3', $config);
     $testHelper->runCRUDTests($cacheInstance);
-} catch(PhpfastcacheDriverConnectException $e){
+} catch (PhpfastcacheDriverConnectException $e) {
     $testHelper->assertSkip('Couchdb server unavailable: ' . $e->getMessage());
     $testHelper->terminateTest();
 }

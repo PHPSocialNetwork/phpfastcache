@@ -28,7 +28,7 @@ $driverInstance = CacheManager::getInstance($defaultDriver);
 
 if (!is_object($driverInstance) || !($driverInstance instanceof ExtendedCacheItemPoolInterface)) {
     $testHelper->assertFail('CacheManager::getInstance() returned wrong data hint:' . gettype($driverInstance));
-}else{
+} else {
     $testHelper->assertPass('CacheManager::getInstance() returned an expected object that implements ExtendedCacheItemPoolInterface');
 }
 

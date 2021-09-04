@@ -54,19 +54,19 @@ try {
     $testHelper->assertPass('An exception has been thrown while trying to override an empty driver');
 }
 
-try{
+try {
     $cacheInstance = CacheManager::getInstance('Fakefiles', new Config(['customOption' => true]));
     $testHelper->assertPass('The custom driver is unavailable at the moment and no exception has been thrown.');
-}catch (PhpfastcacheDriverCheckException $e){
+} catch (PhpfastcacheDriverCheckException $e) {
     $testHelper->assertPass('The custom driver is unavailable at the moment and the exception has been catch.');
 }
 
 CacheManager::removeCustomDriver('Fakefiles');
 
-try{
+try {
     $cacheInstance = CacheManager::getInstance('Fakefiles');
     $testHelper->assertPass('The custom driver has been removed but is still active.');
-}catch (PhpfastcacheDriverCheckException $e){
+} catch (PhpfastcacheDriverCheckException $e) {
     $testHelper->assertPass('The custom driver is unavailable at the moment and the exception has been catch.');
 }
 

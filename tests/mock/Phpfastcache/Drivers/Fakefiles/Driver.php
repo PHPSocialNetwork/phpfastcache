@@ -12,6 +12,7 @@
  */
 
 namespace Phpfastcache\Drivers\Fakefiles;
+
 use Phpfastcache\Drivers\Files\Driver as FilesDriver;
 
 /**

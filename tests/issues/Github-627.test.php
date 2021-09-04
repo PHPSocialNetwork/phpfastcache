@@ -17,7 +17,6 @@ use Phpfastcache\Tests\Helper\TestHelper;
 use Phpfastcache\Drivers\Redis\Config as RedisConfig;
 use Phpfastcache\Drivers\Predis\Config as PredisConfig;
 
-
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
 $testHelper = new TestHelper('Github issue #627 - Redis/Predis "prefix" option');
@@ -46,9 +45,9 @@ $redisInstance->save($cacheItem);
 unset($cacheItem);
 $redisInstance->detachAllItems();
 
-if($redisInstance->getItem($cacheKey)->isHit()){
+if ($redisInstance->getItem($cacheKey)->isHit()) {
     $testHelper->assertPass('The cache item has been found in cache');
-}else{
+} else {
     $testHelper->assertFail('The cache item was not found in cache');
 }
 
@@ -73,9 +72,9 @@ $predisInstance->save($cacheItem);
 unset($cacheItem);
 $predisInstance->detachAllItems();
 
-if($predisInstance->getItem($cacheKey)->isHit()){
+if ($predisInstance->getItem($cacheKey)->isHit()) {
     $testHelper->assertPass('The cache item has been found in cache');
-}else{
+} else {
     $testHelper->assertFail('The cache item was not found in cache');
 }
 

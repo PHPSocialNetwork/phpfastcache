@@ -16,7 +16,6 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Tests\Helper\TestHelper;
 use Phpfastcache\Proxy\PhpfastcacheAbstractProxy;
 
-
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('phpfastcacheAbstractProxy class');
@@ -49,9 +48,9 @@ $driverInstance = new CustomMemcachedCacheClass();
 
 if (!is_object($driverInstance->getItem('test'))) {
     $testHelper->assertFail('$driverInstance->getItem() returned an invalid var type:' . gettype($driverInstance));
-}else if(!($driverInstance->getItem('test') instanceof ExtendedCacheItemInterface)){
+} elseif (!($driverInstance->getItem('test') instanceof ExtendedCacheItemInterface)) {
     $testHelper->assertFail('$driverInstance->getItem() returned an invalid class that does not implements ExtendedCacheItemInterface: ' . get_class($driverInstance));
-}else{
+} else {
     $testHelper->assertPass('$driverInstance->getItem() returned a valid class that implements ExtendedCacheItemInterface: ' . get_class($driverInstance));
 }
 

@@ -22,15 +22,15 @@ $testHelper = new TestHelper('Driver list resolver');
 
 $cache = CacheManager::getInstance('Redis');
 
-for ($i=0; $i<10; $i++){
+for ($i=0; $i<10; $i++) {
     $testHelper->printNoteText(sprintf('Running CRUD tests, loop %d/10', $i));
     $testHelper->runCRUDTests($cache);
 }
 $driverIO = $cache->getIO();
 
-if($driverIO instanceof DriverIO && $driverIO->getReadHit() && $driverIO->getReadMiss() && $driverIO->getWriteHit()){
+if ($driverIO instanceof DriverIO && $driverIO->getReadHit() && $driverIO->getReadMiss() && $driverIO->getWriteHit()) {
     $testHelper->assertPass('Driver IO entity returned some hit info.');
-}else{
+} else {
     $testHelper->assertFail('Driver IO entity did not returned some hit info as expected.');
 }
 

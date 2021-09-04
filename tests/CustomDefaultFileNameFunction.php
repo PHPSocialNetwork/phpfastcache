@@ -47,7 +47,7 @@ $driverInstance->save($item);
 
 if ($testPasses) {
     $testHelper->assertPass('Custom filename function returned expected hash length');
-}else{
+} else {
     $testHelper->assertFail('Custom filename function did not returned expected hash length');
 }
 

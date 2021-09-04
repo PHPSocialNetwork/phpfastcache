@@ -35,19 +35,19 @@ $testItem = $driverInstance->getItem('test-item');
 
 if ($testItem->getLength() === \strlen($cacheTestData)) {
     $testHelper->assertPass('Atomic method getLength() returned the exact length');
-}else{
+} else {
     $testHelper->assertPass('Atomic method getLength() returned an unexpected length' . $testItem->getLength());
 }
 
 if (!$testItem->isNull()) {
     $testHelper->assertPass('Atomic method isNull() returned FALSE');
-}else{
+} else {
     $testHelper->assertPass('Atomic method isNull() returned TRUE');
 }
 
 if (!$testItem->isEmpty()) {
     $testHelper->assertPass('Atomic method isEmpty() returned FALSE');
-}else{
+} else {
     $testHelper->assertPass('Atomic method isEmpty() returned TRUE');
 }
 

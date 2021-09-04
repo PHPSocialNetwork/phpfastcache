@@ -12,6 +12,7 @@
  */
 
 namespace Phpfastcache\DriverTest\Files2;
+
 use Phpfastcache\Drivers\Files\Item as FilesItem;
 
 /**

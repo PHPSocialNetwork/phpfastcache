@@ -15,7 +15,6 @@
 use Phpfastcache\CacheManager;
 use Phpfastcache\Tests\Helper\TestHelper;
 
-
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
 $testHelper = new TestHelper('Quality: PHPCS');
@@ -27,13 +26,13 @@ $binary = realpath(getcwd() . '/vendor/bin/phpcs');
 
 exec($binary . ' lib/  --report=summary', $output, $resultCode);
 
-if($resultCode === 0){
+if ($resultCode === 0) {
     $testHelper->assertPass('Great, PHPCS found no errors on the project');
-}else{
+} else {
     $testHelper->assertFail('Oh no, PHPCS found some errors on the project, full report available below:');
-    $testHelper->printText(str_repeat('#',  100));
+    $testHelper->printText(str_repeat('#', 100));
     $testHelper->printText(array_map(static fn ($str) => $str ? '    ' . $str : '', $output));
-    $testHelper->printText(str_repeat('#',  100));
+    $testHelper->printText(str_repeat('#', 100));
 }
 
 $testHelper->terminateTest();

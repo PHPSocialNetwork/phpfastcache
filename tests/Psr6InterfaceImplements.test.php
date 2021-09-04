@@ -28,9 +28,9 @@ $driverInstance = CacheManager::getInstance($defaultDriver);
 
 if (!is_object($driverInstance)) {
     $testHelper->assertFail('CacheManager::getInstance() returned an invalid variable type:' . gettype($driverInstance));
-}else if(!($driverInstance instanceof CacheItemPoolInterface)){
+} elseif (!($driverInstance instanceof CacheItemPoolInterface)) {
     $testHelper->assertFail('CacheManager::getInstance() returned an invalid class:' . get_class($driverInstance));
-}else{
+} else {
     $testHelper->assertPass('CacheManager::getInstance() returned a valid CacheItemPoolInterface object: ' . get_class($driverInstance));
 }
 

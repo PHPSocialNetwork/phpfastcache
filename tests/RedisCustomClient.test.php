@@ -22,8 +22,8 @@ chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Redis custom client');
 
-try{
-    if(!class_exists(RedisClient::class)){
+try {
+    if (!class_exists(RedisClient::class)) {
         throw new PhpfastcacheDriverCheckException('Unable to test Redis client because the extension seems to be missing');
     }
     $redisClient = new RedisClient();
@@ -31,7 +31,7 @@ try{
     $redisClient->select(0);
     $cacheInstance = CacheManager::getInstance('Redis', (new RedisConfig())->setRedisClient($redisClient));
     $testHelper->runCRUDTests($cacheInstance);
-}catch (\RedisException $e){
+} catch (\RedisException $e) {
     $testHelper->assertFail('A Redis exception occurred: ' . $e->getMessage());
 }
 

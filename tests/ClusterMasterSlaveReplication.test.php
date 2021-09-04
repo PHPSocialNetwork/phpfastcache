@@ -21,7 +21,6 @@ use Phpfastcache\Drivers\Failfiles\Driver as FailFilesDriver;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Tests\Helper\TestHelper;
 
-
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/mock/Autoload.php';

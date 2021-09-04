@@ -30,7 +30,6 @@ use ReflectionClass;
 use ReflectionException;
 use Throwable;
 
-
 /**
  * Class TestHelper
  * @package phpFastCache\Helper
@@ -126,7 +125,7 @@ class TestHelper
      */
     public function printText(array|string $string, bool $strtoupper = false, string $prefix = ''): self
     {
-        if(\is_array($string)){
+        if (\is_array($string)) {
             $string = implode("\n", $string);
         }
         if ($prefix) {
@@ -263,11 +262,11 @@ class TestHelper
         );
         $this->printText('<blue>Test duration: </blue><yellow>' . $execTime . 's</yellow>');
 
-        if($this->numOfFailedTests){
+        if ($this->numOfFailedTests) {
             exit(1);
         }
 
-        if(!$this->numOfSkippedTests && $this->numOfPassedTests){
+        if (!$this->numOfSkippedTests && $this->numOfPassedTests) {
             exit(0);
         }
 
@@ -383,7 +382,7 @@ class TestHelper
     {
         $this->printInfoText('Running CRUD tests on the following backend: ' . get_class($pool));
 
-        if($poolClear){
+        if ($poolClear) {
             $this->printDebugText('Clearing backend before running test...');
             $pool->clear();
         }
@@ -504,7 +503,7 @@ class TestHelper
             $this->assertFail('The pool failed to retrieve the expected new value.');
             return;
         }
-        if($poolClear){
+        if ($poolClear) {
             if ($pool->deleteItem($cacheKey)) {
                 $this->assertPass('The pool successfully deleted the cache item.');
             } else {
@@ -540,7 +539,7 @@ class TestHelper
     {
         if ($exception instanceof PhpfastcacheDriverCheckException) {
             $this->assertSkip('A driver could not be initialized due to missing requirement: ' . $exception->getMessage());
-        } else if ($exception instanceof PhpfastcacheDriverConnectException) {
+        } elseif ($exception instanceof PhpfastcacheDriverConnectException) {
             $this->assertSkip('A driver could not be initialized due to network/authentication issue: ' . $exception->getMessage());
         } else {
             $this->assertFail(

@@ -27,8 +27,7 @@ $testHelper->printText('See https://redis.io/commands/setex');
 $testHelper->printText('See https://redis.io/commands/expire');
 $testHelper->printNewLine();
 
-for ($i = 0; $i <= $loops; $i++)
-{
+for ($i = 0; $i <= $loops; $i++) {
     $cacheItem = $cacheInstance->getItem("{$cacheKey}-{$i}");
     $cacheItem->set($RandomCacheValue)
       ->expiresAt(new DateTime());
@@ -36,13 +35,13 @@ for ($i = 0; $i <= $loops; $i++)
     $cacheInstance->saveDeferred($cacheItem);
 }
 
-try{
+try {
     $cacheInstance->commit();
     $testHelper->assertPass('The COMMIT operation has finished successfully');
-}catch (Predis\Response\ServerException $e){
-    if(strpos($e->getMessage(), 'setex')){
+} catch (Predis\Response\ServerException $e) {
+    if (strpos($e->getMessage(), 'setex')) {
         $testHelper->assertFail('The COMMIT operation has failed due to to an invalid time detection.');
-    }else{
+    } else {
         $testHelper->assertFail('The COMMIT operation has failed due to to an unexpected error: ' . $e->getMessage());
     }
 }
@@ -53,13 +52,12 @@ $testHelper->printText('Sleeping a second...');
 
 sleep(1);
 
-for ($i = 0; $i <= $loops; $i++)
-{
+for ($i = 0; $i <= $loops; $i++) {
     $cacheItem =  $cacheInstance->getItem("{$cacheKey}-{$i}");
 
-    if($cacheItem->isHit()){
+    if ($cacheItem->isHit()) {
         $testHelper->assertFail(sprintf('The cache item "%s" is considered as HIT with the following value: %s', $cacheItem->getKey(), $cacheItem->get()));
-    }else{
+    } else {
         $testHelper->assertPass(sprintf('The cache item "%s" is not considered as HIT.', $cacheItem->getKey()));
     }
 }

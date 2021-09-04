@@ -31,9 +31,9 @@ $driverList = CacheManager::getDriverList();
 foreach ($driverList as $driver) {
     foreach ($subClasses as $subClass) {
         $className = "Phpfastcache\\Drivers\\{$driver}\\{$subClass}";
-        if(class_exists($className)){
+        if (class_exists($className)) {
             $testHelper->assertPass(sprintf('Found the %s %s class: "%s"', $driver, $subClass, $className));
-        }else{
+        } else {
             $testHelper->assertFail(sprintf('Class "%s" not found', $className));
         }
     }

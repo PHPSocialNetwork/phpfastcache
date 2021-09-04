@@ -39,7 +39,7 @@ $cacheInstance->detachAllItems();
 $diffSeconds = 3;
 
 unset($cacheItem);
-for($i = 0; $i < $diffSeconds; $i++){
+for ($i = 0; $i < $diffSeconds; $i++) {
     $testHelper->printText(sprintf("Sleeping {$diffSeconds} seconds (%ds elapsed)", $i + 1));
     sleep(1);
 }
@@ -52,50 +52,50 @@ $cacheInstance->save($cacheItem);
 $cacheInstance->detachAllItems();
 unset($cacheItem);
 
-for($i = 0; $i < $diffSeconds; $i++){
+for ($i = 0; $i < $diffSeconds; $i++) {
     $testHelper->printText(sprintf("Sleeping {$diffSeconds} additional seconds (%ds elapsed)", $i + 1));
     sleep(1);
 }
 $cacheItem = $cacheInstance->getItem($cacheKey);
 
-try{
+try {
     $creationDate = $cacheItem->getCreationDate();
-    if($creationDate instanceof \DateTimeInterface){
+    if ($creationDate instanceof \DateTimeInterface) {
         $testHelper->assertPass('The method getCreationDate() returned a DateTimeInterface object');
-        if($creationDate->format(DateTime::W3C) === $realCreationDate->format(DateTime::W3C)){
+        if ($creationDate->format(DateTime::W3C) === $realCreationDate->format(DateTime::W3C)) {
             $testHelper->assertPass('The item creation date effectively represents the real creation date (obviously).');
-        }else{
+        } else {
             $testHelper->assertFail('The item creation date does not represents the real creation date.');
         }
-    }else{
+    } else {
         $testHelper->assertFail('The method getCreationDate() does not returned a DateTimeInterface object, got: ' . var_export($creationDate, true));
     }
-}catch(PhpfastcacheLogicException $e){
+} catch (PhpfastcacheLogicException $e) {
     $testHelper->assertFail('The method getCreationDate() unexpectedly thrown a phpfastcacheLogicException');
 }
 
-try{
+try {
     $modificationDate = $cacheItem->getModificationDate();
-    if($modificationDate instanceof \DateTimeInterface){
+    if ($modificationDate instanceof \DateTimeInterface) {
         $testHelper->assertPass('The method getModificationDate() returned a DateTimeInterface object');
-        if($modificationDate->format(DateTime::W3C) === $realModificationDate->format(DateTime::W3C)){
+        if ($modificationDate->format(DateTime::W3C) === $realModificationDate->format(DateTime::W3C)) {
             $testHelper->assertPass('The item modification date effectively represents the real modification date (obviously).');
-        }else{
+        } else {
             $testHelper->assertFail('The item modification date does not represents the real modification date.');
         }
         /**
          * Using >= operator instead of === due to a possible micro time
          * offset that can often results to a value of 6 seconds (rounded)
          */
-        if($modificationDate->getTimestamp() - $cacheItem->getCreationDate()->getTimestamp() >= $diffSeconds){
+        if ($modificationDate->getTimestamp() - $cacheItem->getCreationDate()->getTimestamp() >= $diffSeconds) {
             $testHelper->assertPass("The item modification date is effectively {$diffSeconds} seconds greater than the creation date.");
-        }else{
+        } else {
             $testHelper->assertFail('The item modification date effectively is not greater than the creation date.');
         }
-    }else{
+    } else {
         $testHelper->assertFail('The method getModificationDate() does not returned a DateTimeInterface object, got: ' . var_export($modificationDate, true));
     }
-}catch(PhpfastcacheLogicException $e){
+} catch (PhpfastcacheLogicException $e) {
     $testHelper->assertFail('The method getModificationDate() unexpectedly thrown a phpfastcacheLogicException');
 }
 

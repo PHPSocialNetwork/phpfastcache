@@ -34,18 +34,18 @@ $driverInstance4 = CacheManager::getInstance($defaultDriver, null, $instanceId4)
 CacheManager::clearInstance($driverInstance2);
 
 $cacheInstances = CacheManager::getInstances();
-if(\count($cacheInstances) === 3){
+if (\count($cacheInstances) === 3) {
     $testHelper->assertPass('A single cache instance have been cleared');
-}else{
+} else {
     $testHelper->assertFail('A single cache instance have NOT been cleared');
 }
 
 $driverInstance2Hash = spl_object_hash($driverInstance2);
 foreach ($cacheInstances as $cacheInstance) {
     $driverInstanceHash = spl_object_hash($cacheInstance);
-    if($driverInstanceHash !== $driverInstance2Hash){
+    if ($driverInstanceHash !== $driverInstance2Hash) {
         $testHelper->assertPass("Compared cache instance #{$driverInstanceHash} does not match with previously cleared cache instance #" . $driverInstance2Hash);
-    }else{
+    } else {
         $testHelper->assertFail("Compared cache instance  #{$driverInstanceHash} unfortunately match with previously cleared cache instance #" . $driverInstance2Hash);
     }
 }

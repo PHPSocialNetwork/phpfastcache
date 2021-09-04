@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ruleset name="Laravel Standards">
+    <description>The Laravel Coding Standards</description>
+
+    <arg name="colors"/>
+    <arg value="p"/>
+
+    <ini name="memory_limit" value="256M"/>
+
+    <rule ref="Phpfastcache">
+        <exclude name="Generic.Files.LineLength"/>
+    </rule>
+</ruleset>

@@ -29,7 +29,8 @@
         "psr/cache": "^3.0",
         "psr/simple-cache": "^1.0.",
         "ext-mbstring": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "squizlabs/php_codesniffer": "3.*"
     },
     "require-dev": {
         "league/climate": "^3.5",

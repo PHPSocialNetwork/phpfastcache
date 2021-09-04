@@ -7,6 +7,11 @@
     <ini name="memory_limit" value="256M"/>
     <rule ref="PSR2"/>
 
+    <exclude-pattern>tests/*</exclude-pattern>
+    <exclude-pattern>bin/*</exclude-pattern>
+    <exclude-pattern>docs/*</exclude-pattern>
+    <exclude-pattern>vendor/*</exclude-pattern>
+
     <rule ref="Generic.Files.LineLength">
         <properties>
             <property name="lineLimit" value="170"/>

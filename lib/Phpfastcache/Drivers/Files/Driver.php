@@ -18,9 +18,12 @@ namespace Phpfastcache\Drivers\Files;
 use Exception;
 use FilesystemIterator;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, IO\IOHelperTrait};
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Core\Pool\IO\IOHelperTrait;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheIOException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheIOException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Util\Directory;
 
 /**
@@ -60,9 +63,9 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     {
         $filePath = $this->getFilePath($item->getKey(), true);
 
-        try{
+        try {
             $content = $this->readFile($filePath);
-        }catch (PhpfastcacheIOException){
+        } catch (PhpfastcacheIOException) {
             return null;
         }
 
@@ -88,7 +91,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         } catch (Exception) {
             return false;
         }
-}
+    }
 
     /**
      * @param ExtendedCacheItemInterface $item

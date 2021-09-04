@@ -18,15 +18,14 @@ namespace Phpfastcache;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Config\ConfigurationOptionInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException,
-    PhpfastcacheDriverException,
-    PhpfastcacheDriverNotFoundException,
-    PhpfastcacheInstanceNotFoundException,
-    PhpfastcacheInvalidArgumentException,
-    PhpfastcacheLogicException,
-    PhpfastcacheUnsupportedOperationException};
+use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverNotFoundException;
+use Phpfastcache\Exceptions\PhpfastcacheInstanceNotFoundException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
+use Phpfastcache\Exceptions\PhpfastcacheUnsupportedOperationException;
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
-
 
 /**
  * Class CacheManager

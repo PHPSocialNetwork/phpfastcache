@@ -91,14 +91,14 @@ trait ClassNamespaceResolverTrait
                 case T_NAMESPACE:
                     $namespace = '';
                     // If there is a namespace, extract it (PHP 8 test)
-                    if(\defined('T_NAME_QUALIFIED')){
+                    if (\defined('T_NAME_QUALIFIED')) {
                         while (isset($tokens[++$i][1])) {
                             if ($tokens[$i][0] === T_NAME_QUALIFIED) {
                                 $namespace = $tokens[$i][1];
                                 break;
                             }
                         }
-                    }else{
+                    } else {
                         while (isset($tokens[++$i][1])) {
                             if (\in_array($tokens[$i][0], [T_STRING, T_NS_SEPARATOR], true)) {
                                 $namespace .= $tokens[$i][1];

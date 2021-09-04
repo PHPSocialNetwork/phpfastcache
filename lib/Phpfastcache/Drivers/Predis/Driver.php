@@ -17,14 +17,16 @@ namespace Phpfastcache\Drivers\Predis;
 
 use DateTime;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\PhpfastcacheDriverException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Predis\Client as PredisClient;
 use Predis\Connection\ConnectionException as PredisConnectionException;
 use Psr\Cache\CacheItemInterface;
-
 
 /**
  * @property PredisClient $instance Instance of driver service
@@ -114,7 +116,8 @@ HELP;
                     'persistent' => $this->getConfig()->isPersistent(),
                     'timeout' => $this->getConfig()->getTimeout(),
                     'path' => $this->getConfig()->getPath(),
-                ], $options
+                ],
+                $options
             );
         } else {
             $this->instance = new PredisClient($this->getConfig()->getPredisConfigArray(), $options);

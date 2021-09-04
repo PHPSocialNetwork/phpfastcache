@@ -62,7 +62,7 @@ trait DriverPoolAbstractTrait
     {
         if (!($item instanceof $expectedClassType)) {
             throw new PhpfastcacheInvalidArgumentException(
-                \sprintf('Cross-driver type confusion detected: Expected "%s" object, got "%s"',  $expectedClassType, $item::class)
+                \sprintf('Cross-driver type confusion detected: Expected "%s" object, got "%s"', $expectedClassType, $item::class)
             );
         }
     }

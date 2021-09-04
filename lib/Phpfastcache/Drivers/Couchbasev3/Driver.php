@@ -15,7 +15,14 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Couchbasev3;
 
-use Couchbase\{BaseException as CouchbaseException, Bucket as CouchbaseBucket, Cluster, ClusterOptions, Collection, DocumentNotFoundException, Scope, UpsertOptions};
+use Couchbase\BaseException as CouchbaseException;
+use Couchbase\Bucket as CouchbaseBucket;
+use Couchbase\Cluster;
+use Couchbase\ClusterOptions;
+use Couchbase\Collection;
+use Couchbase\DocumentNotFoundException;
+use Couchbase\Scope;
+use Couchbase\UpsertOptions;
 use DateTimeInterface;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Config\ConfigurationOption;
@@ -23,7 +30,9 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
  * @property Cluster $instance Instance of driver service
@@ -160,7 +169,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             ->setSize(0)
             ->setRawData($info)
             ->setData(implode(', ', array_keys($this->itemInstances)))
-            ->setInfo( $info['sdk'] . "\n For more information see RawData.");
+            ->setInfo($info['sdk'] . "\n For more information see RawData.");
     }
 
     /**
@@ -223,11 +232,15 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function encodeDocument(array $data): array
     {
         $data[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX] = $this->encode($data[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX]);
-        $data[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX] = $data[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX]->format(DateTimeInterface::ATOM);
+        $data[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX] = $data[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX]
+            ->format(DateTimeInterface::ATOM);
 
-        if($this->getConfig()->isItemDetailedDate()){
-            $data[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX] = $data[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX]->format(\DateTimeInterface::ATOM);
-            $data[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX] = $data[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX]->format(\DateTimeInterface::ATOM);
+        if ($this->getConfig()->isItemDetailedDate()) {
+            $data[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX] = $data[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX]
+                ->format(\DateTimeInterface::ATOM);
+
+            $data[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX] = $data[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX]
+                ->format(\DateTimeInterface::ATOM);
         }
 
         return $data;
@@ -245,7 +258,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             $data[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX]
         );
 
-        if($this->getConfig()->isItemDetailedDate()){
+        if ($this->getConfig()->isItemDetailedDate()) {
             $data[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX] = \DateTime::createFromFormat(
                 \DateTimeInterface::ATOM,
                 $data[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX]

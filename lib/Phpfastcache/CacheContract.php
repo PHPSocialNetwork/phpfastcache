@@ -1,16 +1,16 @@
 <?php
 
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Georges.L (Geolim4)  <contact@geolim4.com>
- * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
+ * @author Squiz Pty Ltd <products@squiz.net>
+ * @author Squiz Pty Ltd <products@squiz.net>
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache;
@@ -21,17 +21,27 @@ use Psr\Cache\InvalidArgumentException;
 
 class CacheContract
 {
+
+
+
+
+
+
+
+
     protected CacheItemPoolInterface $cacheInstance;
+
 
     public function __construct(CacheItemPoolInterface $cacheInstance)
     {
         $this->cacheInstance = $cacheInstance;
-    }
+    }//end __construct()
+
 
     /**
-     * @param string $cacheKey
-     * @param callable $callback
-     * @param DateInterval|int|null $expiresAfter
+     * @param  string                    $cacheKey
+     * @param  callable                  $callback
+     * @param  DateInterval|integer|null $expiresAfter
      * @return mixed
      * @throws InvalidArgumentException
      */
@@ -39,20 +49,25 @@ class CacheContract
     {
         $cacheItem = $this->cacheInstance->getItem($cacheKey);
 
-        if (!$cacheItem->isHit()) {
-            /** Parameter $cacheItem will be available as of 8.0.6 */
+        if (! $cacheItem->isHit()) {
+            /*
+            *
+    * Parameter $cacheItem will be available as of 8.0.6
+            */
             $cacheItem->set($callback($cacheItem));
             if ($expiresAfter) {
                 $cacheItem->expiresAfter($expiresAfter);
             }
+
             $this->cacheInstance->save($cacheItem);
         }
 
         return $cacheItem->get();
-    }
+    }//end get()
+
 
     public function __invoke(...$args): mixed
     {
         return $this->get(...$args);
-    }
+    }//end __invoke()
 }

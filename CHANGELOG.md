@@ -27,6 +27,7 @@
   - Renamed `IOConfigurationOptionTrait::setHtaccess()` to `IOConfigurationOptionTrait::setAutoHtaccessCreationEnabled()`
 - __Tests__
   - Added PHPMD coverage to increase quality of the project
+  - Added PHPCS coverage to increase quality of the project
   - Updated tests to work with new core/drivers changes
   - Removed Autoload test since its support has been removed and now only managed by Composer
   - Increased tests reliability and code coverage for better catching any eventual regression 

@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Item;
 
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolInterface;
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
 interface TaggableCacheItemInterface
 {

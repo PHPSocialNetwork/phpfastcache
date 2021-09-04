@@ -17,7 +17,10 @@ namespace Phpfastcache\Core\Pool;
 
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Event\EventReferenceParameter;
-use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\PhpfastcacheCoreException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Psr\Cache\CacheItemInterface;
 
 trait ExtendedCacheItemPoolTrait
@@ -89,11 +92,12 @@ trait ExtendedCacheItemPoolTrait
     {
         if (isset($this->itemInstances[$item->getKey()]) && \spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
             throw new PhpfastcacheLogicException(
-                'The item already exists and cannot be overwritten because the Spl object hash mismatches ! You probably tried to re-attach a detached item which has been already retrieved from cache.'
+                'The item already exists and cannot be overwritten because the Spl object hash mismatches ! 
+                You probably tried to re-attach a detached item which has been already retrieved from cache.'
             );
         }
 
-        if(!$this->getConfig()->isUseStaticItemCaching()){
+        if (!$this->getConfig()->isUseStaticItemCaching()) {
             throw new PhpfastcacheLogicException(
                 'The static item caching option (useStaticItemCaching) is disabled so you cannot attach an item.'
             );

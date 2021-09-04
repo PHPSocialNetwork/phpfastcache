@@ -15,12 +15,14 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Cluster;
 
-use Phpfastcache\Cluster\Drivers\{FullReplication\Driver as FullReplicationCluster,
-    MasterSlaveReplication\Driver as MasterSlaveReplicationCluster,
-    RandomReplication\Driver as RandomReplicationCluster,
-    SemiReplication\Driver as SemiReplicationCluster};
+use Phpfastcache\Cluster\Drivers\FullReplication\Driver as FullReplicationCluster;
+use Phpfastcache\Cluster\Drivers\MasterSlaveReplication\Driver as MasterSlaveReplicationCluster;
+use Phpfastcache\Cluster\Drivers\RandomReplication\Driver as RandomReplicationCluster;
+use Phpfastcache\Cluster\Drivers\SemiReplication\Driver as SemiReplicationCluster;
 use Phpfastcache\Config\ConfigurationOption;
-use Phpfastcache\Core\{Item\ExtendedCacheItemInterface, Pool\ExtendedCacheItemPoolInterface, Pool\TaggableCacheItemPoolTrait};
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\EventManager;
@@ -29,7 +31,8 @@ use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
-use Psr\Cache\{CacheItemInterface, InvalidArgumentException};
+use Psr\Cache\CacheItemInterface;
+use Psr\Cache\InvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 
 abstract class ClusterPoolAbstract implements ClusterPoolInterface

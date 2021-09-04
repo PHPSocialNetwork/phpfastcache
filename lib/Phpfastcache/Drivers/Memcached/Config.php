@@ -18,7 +18,6 @@ namespace Phpfastcache\Drivers\Memcached;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 
-
 class Config extends ConfigurationOption
 {
     /**

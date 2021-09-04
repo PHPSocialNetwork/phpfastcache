@@ -47,16 +47,16 @@ trait IOHelperTrait
             throw new PhpfastcacheIOException("Can't read PATH:" . $path);
         }
         $stat->setRawData(
-                [
+            [
                     'tmp' => $this->tmp,
                 ]
-            )
+        )
             ->setSize(Directory::dirSize($path))
             ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($path));
 
-        if($this->getConfig()->isUseStaticItemCaching()){
+        if ($this->getConfig()->isUseStaticItemCaching()) {
             $stat->setData(implode(', ', \array_keys($this->itemInstances)));
-        }else{
+        } else {
             $stat->setData('No data available since static item caching option (useStaticItemCaching) is disabled.');
         }
 
@@ -114,17 +114,17 @@ trait IOHelperTrait
         {
             $httpHost = $this->getConfig()->getSuperGlobalAccessor()('SERVER', 'HTTP_HOST');
             $securityKey = $this->getConfig()->getSecurityKey();
-            if (!$securityKey || \mb_strtolower($securityKey) === 'auto') {
-                if (isset($httpHost)) {
-                    $securityKey = \preg_replace('/^www./', '', \strtolower(\str_replace(':', '_', $httpHost)));
-                } else {
-                    $securityKey = (SapiDetector::isWebScript() ? 'web' : 'cli');
-                }
+        if (!$securityKey || \mb_strtolower($securityKey) === 'auto') {
+            if (isset($httpHost)) {
+                $securityKey = \preg_replace('/^www./', '', \strtolower(\str_replace(':', '_', $httpHost)));
+            } else {
+                $securityKey = (SapiDetector::isWebScript() ? 'web' : 'cli');
             }
+        }
 
-            if ($securityKey !== '') {
-                $securityKey .= '/';
-            }
+        if ($securityKey !== '') {
+            $securityKey .= '/';
+        }
 
             $securityKey = static::cleanFileName($securityKey);
         }

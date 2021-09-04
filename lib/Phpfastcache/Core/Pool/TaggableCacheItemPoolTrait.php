@@ -17,8 +17,11 @@ namespace Phpfastcache\Core\Pool;
 
 use DateTime;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
-use Psr\Cache\{CacheItemInterface};
+use Phpfastcache\Exceptions\PhpfastcacheCoreException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
+use Psr\Cache\CacheItemInterface;
 
 /**
  * Trait TaggableCacheItemPoolTrait
@@ -39,8 +42,12 @@ trait TaggableCacheItemPoolTrait
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
      */
-    public function getItemsByTagsAsJsonString(array $tagNames, int $option = \JSON_THROW_ON_ERROR, int $depth = 512, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): string
-    {
+    public function getItemsByTagsAsJsonString(
+        array $tagNames,
+        int $option = \JSON_THROW_ON_ERROR,
+        int $depth = 512,
+        int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE
+    ): string {
         return \json_encode(
             \array_map(
                 static fn(CacheItemInterface $item) => $item->get(),

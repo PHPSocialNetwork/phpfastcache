@@ -21,12 +21,12 @@ use Throwable;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
-use Phpfastcache\Exceptions\{PhpfastcacheCoreException,
-    PhpfastcacheDriverCheckException,
-    PhpfastcacheDriverConnectException,
-    PhpfastcacheDriverException,
-    PhpfastcacheIOException,
-    PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\PhpfastcacheCoreException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverException;
+use Phpfastcache\Exceptions\PhpfastcacheIOException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use ReflectionObject;
 
 trait DriverBaseTrait

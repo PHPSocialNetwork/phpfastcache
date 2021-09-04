@@ -29,13 +29,13 @@
         "psr/cache": "^3.0",
         "psr/simple-cache": "^1.0.",
         "ext-mbstring": "*",
-        "ext-json": "*",
-        "squizlabs/php_codesniffer": "3.*"
+        "ext-json": "*"
     },
     "require-dev": {
         "league/climate": "^3.5",
         "ext-gettext": "*",
-        "phpmd/phpmd": "@stable"
+        "phpmd/phpmd": "@stable",
+        "squizlabs/php_codesniffer": "~3.0"
     },
     "suggest": {
         "ext-apcu": "*",

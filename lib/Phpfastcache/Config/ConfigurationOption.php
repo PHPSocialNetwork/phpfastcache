@@ -78,13 +78,13 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
         }
 
         foreach (\get_object_vars($this) as $property => $value) {
-            try{
+            try {
                 if (\array_key_exists($property, $array)) {
                     $this->$property = &$array[$property];
                 } else {
                     $array[$property] = &$this->$property;
                 }
-            }catch (\TypeError $e){
+            } catch (\TypeError $e) {
                 throw new PhpfastcacheInvalidConfigurationException(
                     \sprintf(
                         'TypeError exception thrown while trying to set your configuration: %s',
@@ -112,7 +112,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
                     $parameter = $reflectionMethod->getParameters()[0] ?? null;
                     $typeHintExpected = 'Unknown type';
 
-                    if($parameter instanceof ReflectionParameter && $parameter->getType() instanceof ReflectionNamedType){
+                    if ($parameter instanceof ReflectionParameter && $parameter->getType() instanceof ReflectionNamedType) {
                         $typeHintExpected = ($parameter->getType()->getName() === 'object' ? $parameter->getType() : $parameter->getType()->getName());
                     }
 
@@ -315,7 +315,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      */
     public function getSuperGlobalAccessor(): object
     {
-        if(!isset($this->superGlobalAccessor)){
+        if (!isset($this->superGlobalAccessor)) {
             $this->setSuperGlobalAccessor($this->getDefaultSuperGlobalAccessor());
         }
         return $this->superGlobalAccessor;
@@ -339,11 +339,11 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
          *  });
          */
 
-        if($superGlobalAccessor === null){
+        if ($superGlobalAccessor === null) {
             $this->superGlobalAccessor = $this->getDefaultSuperGlobalAccessor();
-        } elseif(!\is_callable($superGlobalAccessor)){
+        } elseif (!\is_callable($superGlobalAccessor)) {
             throw new PhpfastcacheInvalidArgumentException('The "superGlobalAccessor" callback must be callable using "__invoke" or \Closure implementation');
-        }else{
+        } else {
             $this->superGlobalAccessor = $superGlobalAccessor;
         }
 
@@ -356,7 +356,7 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
      */
     protected function getDefaultSuperGlobalAccessor(): \Closure
     {
-        return \Closure::fromCallable(static function(string $superGlobalName, ?string $keyName = null){
+        return \Closure::fromCallable(static function (string $superGlobalName, ?string $keyName = null) {
             return match ($superGlobalName) {
                 'SERVER' => $keyName !== null ? $_SERVER[$keyName] ?? null : $_SERVER,
                 'REQUEST' => $keyName !== null ? $_REQUEST[$keyName] ?? null : $_REQUEST,

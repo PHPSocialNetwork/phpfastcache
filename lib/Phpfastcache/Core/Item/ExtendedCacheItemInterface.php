@@ -19,11 +19,17 @@ use DateTimeInterface;
 use JsonSerializable;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventManagerDispatcherInterface;
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Util\ClassNamespaceResolverInterface;
 use Psr\Cache\CacheItemInterface;
 
-interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDispatcherInterface, ClassNamespaceResolverInterface, JsonSerializable, TaggableCacheItemInterface
+interface ExtendedCacheItemInterface extends
+    CacheItemInterface,
+    EventManagerDispatcherInterface,
+    ClassNamespaceResolverInterface,
+    JsonSerializable,
+    TaggableCacheItemInterface
 {
 
     /**

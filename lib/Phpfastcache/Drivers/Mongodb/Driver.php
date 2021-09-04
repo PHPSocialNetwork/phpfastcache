@@ -17,14 +17,24 @@ namespace Phpfastcache\Drivers\Mongodb;
 
 use LogicException;
 use MongoClient;
-use MongoDB\{BSON\Binary, BSON\UTCDateTime, Client, Collection, Database, DeleteResult, Driver\Command, Driver\Exception\Exception as MongoDBException, Driver\Manager};
+use MongoDB\BSON\Binary;
+use MongoDB\BSON\UTCDateTime;
+use MongoDB\Client;
+use MongoDB\Collection;
+use MongoDB\Database;
+use MongoDB\DeleteResult;
+use MongoDB\Driver\Command;
+use MongoDB\Driver\Exception\Exception as MongoDBException;
+use MongoDB\Driver\Manager;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\PhpfastcacheDriverException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Psr\Cache\CacheItemInterface;
-
 
 /**
  * @property Client $instance Instance of driver service
@@ -206,7 +216,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         }
 
         return !isset($result['ok']) || (int) $result['ok'] === 1;
-}
+    }
 
     /**
      * @param ExtendedCacheItemInterface $item
@@ -232,7 +242,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function driverClear(): bool
     {
         try {
-           return $this->collection->deleteMany([])->isAcknowledged();
+            return $this->collection->deleteMany([])->isAcknowledged();
         } catch (MongoDBException $e) {
             throw new PhpfastcacheDriverException('Got error while trying to empty the collection: ' . $e->getMessage(), 0, $e);
         }

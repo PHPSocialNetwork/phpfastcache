@@ -19,7 +19,6 @@ use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Predis\Client;
 
-
 class Config extends ConfigurationOption
 {
     /**

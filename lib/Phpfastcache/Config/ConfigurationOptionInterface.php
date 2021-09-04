@@ -15,7 +15,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Config;
 
-
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 
 interface ConfigurationOptionInterface

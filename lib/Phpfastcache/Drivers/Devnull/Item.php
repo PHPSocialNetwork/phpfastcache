@@ -15,7 +15,8 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Devnull;
 
-use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, TaggableCacheItemTrait};
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Core\Item\TaggableCacheItemTrait;
 
 /**
  * Class Item

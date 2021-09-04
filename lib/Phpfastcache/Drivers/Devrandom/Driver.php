@@ -17,11 +17,11 @@ namespace Phpfastcache\Drivers\Devrandom;
 
 use DateInterval;
 use DateTime;
-use Phpfastcache\Core\Pool\{ExtendedCacheItemPoolInterface, TaggableCacheItemPoolTrait};
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Psr\Cache\CacheItemInterface;
-
 
 /**
  * @property Config $config Return the config object
@@ -73,7 +73,7 @@ class Driver implements ExtendedCacheItemPoolInterface
         $chanceOfRetrieval = $this->getConfig()->getChanceOfRetrieval();
         $ttl = $this->getConfig()->getDefaultTtl();
 
-        if(\random_int(0, 100) < $chanceOfRetrieval){
+        if (\random_int(0, 100) < $chanceOfRetrieval) {
             return [
                 self::DRIVER_DATA_WRAPPER_INDEX => \bin2hex(\random_bytes($this->getConfig()->getDataLength())),
                 self::DRIVER_TAGS_WRAPPER_INDEX => [],

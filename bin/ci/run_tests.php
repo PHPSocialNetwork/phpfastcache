@@ -32,8 +32,7 @@ $skippedTests = [];
  * @param int $flags
  * @return array
  */
-$globCallback = static function (string $pattern, int $flags = 0) use (&$globCallback): array
-{
+$globCallback = static function (string $pattern, int $flags = 0) use (&$globCallback): array {
     $files = \glob($pattern, $flags);
     $subFiles = [];
 
@@ -41,7 +40,7 @@ $globCallback = static function (string $pattern, int $flags = 0) use (&$globCal
         $subFiles[] = $globCallback($dir . '/' . \basename($pattern), $flags);
     }
 
-    return \array_merge(...$subFiles,  ...[$files]);
+    return \array_merge(...$subFiles, ...[$files]);
 };
 
 foreach ($globCallback(PFC_TEST_DIR . DIRECTORY_SEPARATOR . '*.test.php') as $filename) {
@@ -57,10 +56,10 @@ foreach ($globCallback(PFC_TEST_DIR . DIRECTORY_SEPARATOR . '*.test.php') as $fi
     $climate->out('=====================================');
     if ($return_var === 0) {
         $climate->green("Test finished successfully");
-    } else if($return_var === 2){
+    } elseif ($return_var === 2) {
         $climate->yellow("Test skipped due to unmeet dependencies");
         $skippedTests[] = basename($filename);
-    }else{
+    } else {
         $climate->red("Test finished with a least one error");
         $status = 1;
         $failedTests[] = basename($filename);
@@ -83,7 +82,7 @@ if (!$failedTests) {
     $climate->red()->out('[TESTS FAILED] ' . PHP_EOL . '- '. implode(PHP_EOL . '- ', $failedTests))->out('');
 }
 
-if($skippedTests){
+if ($skippedTests) {
     $climate->yellow()->out('[TESTS SKIPPED] ' . PHP_EOL . '- '. implode(PHP_EOL . '- ', $skippedTests))->out('');
 }
 

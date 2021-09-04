@@ -15,7 +15,8 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Apcu;
 
-use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, TaggableCacheItemTrait};
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Core\Item\TaggableCacheItemTrait;
 
 class Item implements ExtendedCacheItemInterface
 {

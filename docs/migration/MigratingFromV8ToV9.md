@@ -7,6 +7,15 @@ Once released, the php version 8.1 will be unit-tested
 ### Embedded autoload has been removed (and therefore, embedded dependencies)
 Use [Composer](https://getcomposer.org/doc/03-cli.md#require) to include Phpfastcache in your project
 
+### Updated `ConfigurationOption` which is no longer an `ArrayObject` class
+You can no longer use the following array-compatible syntax: `$config['yourKey'] = 'value'`\
+Use the object-notation syntax instead: `$config->setYourKey('value')`
+
+However, this syntax is STILL valid through the configuration constructor\
+For the default config object: `new ConfigurationOption(['yourKey' => 'yourValue'])`\
+Or for specific config objects: `new \Phpfastcache\Drivers\Files\Config(['yourKey' => 'yourValue'])`\
+Finally, the config name you try to set MUST be recognized or an exception will be thrown. 
+
 ### Deprecated `\Phpfastcache\Helper\CacheConditionalHelper`
 Use `\Phpfastcache\CacheContract` instead. See [Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV9%CB%96%5D-Cache-contract).
 

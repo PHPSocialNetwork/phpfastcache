@@ -20,10 +20,14 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 interface ConfigurationOptionInterface
 {
     /**
-     * @param $args
-     * ArrayObject constructor.
+     * ConfigurationOptionInterface constructor.
      */
-    public function __construct(...$args);
+    public function __construct(array $parameters = []);
+
+    /**
+     * @return array
+     */
+    public function toArray(): array;
 
     /**
      * @param string $optionName

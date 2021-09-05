@@ -146,7 +146,7 @@ trait CacheItemPoolTrait
                 }
                 $driverData = $this->driverUnwrapData($driverArray);
 
-                if ($this->getConfig()['preventCacheSlams']) {
+                if ($this->getConfig()->isPreventCacheSlams()) {
                     while ($driverData instanceof ItemBatch) {
                         if ($driverData->getItemDate()->getTimestamp() + $this->getConfig()->getCacheSlamsTimeout() < \time()) {
                             /**
@@ -208,7 +208,7 @@ trait CacheItemPoolTrait
                      * Reset the Item
                      */
                     $item->set(null)
-                        ->expiresAfter(abs((int)$this->getConfig()['defaultTtl']))
+                        ->expiresAfter(abs((int)$this->getConfig()->getDefaultTtl()))
                         ->setHit(false)
                         ->setTags([]);
                     if ($this->getConfig()->isItemDetailedDate()) {
@@ -224,7 +224,7 @@ trait CacheItemPoolTrait
                     $item->setHit(true);
                 }
             } else {
-                $item->expiresAfter(abs((int)$this->getConfig()['defaultTtl']));
+                $item->expiresAfter(abs($this->getConfig()->getDefaultTtl()));
             }
             }
         } else {

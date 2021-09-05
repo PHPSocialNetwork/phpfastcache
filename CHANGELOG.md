@@ -21,7 +21,8 @@
 - __Helpers__
   - Deprecated `\Phpfastcache\Helper\CacheConditionalHelper`, use `\Phpfastcache\CacheContract` instead
   - The `\Phpfastcache\CacheContract` class is now also callable directly without calling `get()` method
-- __Options__
+- __Config/Options__
+  - Updated `ConfigurationOption` which is no longer an `ArrayObject` class, therefore array-syntax is no longer available.
   - Renamed configuration entry `htaccess` to `autoHtaccessCreationEnabled` for files-based drivers.
   - Renamed `IOConfigurationOptionTrait::getHtaccess()` to `IOConfigurationOptionTrait::isAutoHtaccessCreationEnabled()`
   - Renamed `IOConfigurationOptionTrait::setHtaccess()` to `IOConfigurationOptionTrait::setAutoHtaccessCreationEnabled()`

@@ -17,14 +17,8 @@ namespace Phpfastcache\Config;
 
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
-use Phpfastcache\Util\ArrayObject;
-use ReflectionException;
-use ReflectionMethod;
-use ReflectionNamedType;
-use ReflectionParameter;
-use TypeError;
 
-class ConfigurationOption extends ArrayObject implements ConfigurationOptionInterface
+class ConfigurationOption implements ConfigurationOptionInterface
 {
     protected bool $itemDetailedDate = false;
 
@@ -53,36 +47,22 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
     protected ?object $superGlobalAccessor = null;
 
     /**
-     * @param $args
-     * ArrayObject constructor.
      * @throws PhpfastcacheInvalidConfigurationException
-     * @throws ReflectionException
      */
-    public function __construct(...$args)
+    public function __construct(array $parameters = [])
     {
-        parent::__construct(...$args);
-        $array =& $this->getArray();
-
-        /**
-         * Detect unwanted keys and throw an exception.
-         * No more kidding now, it's 21th century.
-         */
-        if (\array_diff_key($array, \get_object_vars($this))) {
-            throw new PhpfastcacheInvalidConfigurationException(
-                sprintf(
-                    'Invalid option(s) for the config %s: %s',
-                    static::class,
-                    \implode(', ', \array_keys(\array_diff_key($array, \get_object_vars($this))))
-                )
-            );
-        }
-
-        foreach (\get_object_vars($this) as $property => $value) {
+        foreach ($parameters as $configKey => $configVal) {
             try {
-                if (\array_key_exists($property, $array)) {
-                    $this->$property = &$array[$property];
+                if (\property_exists($this, $configKey)) {
+                    $this->{'set' . \ucfirst($configKey)}($configVal);
                 } else {
-                    $array[$property] = &$this->$property;
+                    throw new PhpfastcacheInvalidConfigurationException(
+                        sprintf(
+                            'Invalid option for the config %s: %s',
+                            $this::class,
+                            $configKey
+                        )
+                    );
                 }
             } catch (\TypeError $e) {
                 throw new PhpfastcacheInvalidConfigurationException(
@@ -93,40 +73,11 @@ class ConfigurationOption extends ArrayObject implements ConfigurationOptionInte
                 );
             }
         }
+    }
 
-        foreach (\get_class_methods($this) as $method) {
-            if (str_starts_with($method, 'set')) {
-                $value = null;
-                try {
-                    /**
-                     * We use property instead of getter
-                     * because of is/get conditions and
-                     * to allow us to retrieve the value
-                     * in catch statement bloc
-                     */
-                    $value = $this->{\lcfirst(\substr($method, 3))};
-                    $this->{$method}($value);
-                } catch (TypeError) {
-                    $typeHintGot = \get_debug_type($value);
-                    $reflectionMethod = new ReflectionMethod($this, $method);
-                    $parameter = $reflectionMethod->getParameters()[0] ?? null;
-                    $typeHintExpected = 'Unknown type';
-
-                    if ($parameter instanceof ReflectionParameter && $parameter->getType() instanceof ReflectionNamedType) {
-                        $typeHintExpected = ($parameter->getType()->getName() === 'object' ? $parameter->getType() : $parameter->getType()->getName());
-                    }
-
-                    throw new PhpfastcacheInvalidConfigurationException(
-                        \sprintf(
-                            'Invalid type hint found for "%s", expected "%s" got "%s"',
-                            \lcfirst(\substr($method, 3)),
-                            $typeHintExpected,
-                            $typeHintGot
-                        )
-                    );
-                }
-            }
-        }
+    public function toArray(): array
+    {
+        return get_object_vars($this);
     }
 
     /**

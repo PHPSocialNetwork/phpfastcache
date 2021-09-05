@@ -16,11 +16,12 @@ use Phpfastcache\CacheManager;
 use Phpfastcache\Drivers\Files\Config as FilesConfig;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Tests\Helper\TestHelper;
+use \Phpfastcache\Config\ConfigurationOption;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
 $testHelper = new TestHelper('Github issue #467 - Allow to specify the file extension in the File Driver');
-CacheManager::setDefaultConfig(new FilesConfig(['path' => __DIR__ . '/../../cache']));
+CacheManager::setDefaultConfig(new ConfigurationOption(['path' => __DIR__ . '/../../cache']));
 
 try {
     $cacheInstance = CacheManager::getInstance('Files', new FilesConfig(['cacheFileExtension' => 'php']));

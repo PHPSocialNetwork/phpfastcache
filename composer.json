@@ -55,7 +55,8 @@
         "predis/predis": "^1.1",
         "mongodb/mongodb": "^1.9",
         "phpfastcache/phpssdb": "~1.1.0",
-        "doctrine/couchdb": "^dev-master#9eeb9e5"
+        "doctrine/couchdb": "^dev-master#9eeb9e5",
+        "triagens/arangodb": "^3.8"
     },
     "conflict": {
         "doctrine/couchdb": "<dev-master#9eeb9e5"

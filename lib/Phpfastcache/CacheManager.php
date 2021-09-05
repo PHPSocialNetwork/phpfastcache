@@ -147,7 +147,10 @@ class CacheManager
 
             if (\class_exists($driverClass)) {
                 $configClass = $driverClass::getConfigClass();
-                self::$instances[$instanceId] = new $driverClass(new $configClass($config->toArray()), $instanceId);
+                if ($configClass !== $config::class) {
+                    $config = new $configClass($config->toArray());
+                }
+                self::$instances[$instanceId] = new $driverClass($config, $instanceId);
                 self::$instances[$instanceId]->setEventManager(EventManager::getInstance());
             } else {
                 throw new PhpfastcacheDriverNotFoundException(sprintf('The driver "%s" does not exists', $driver));
@@ -158,25 +161,18 @@ class CacheManager
     }
 
     /**
-     * @param ConfigurationOptionInterface|null $config
+     * @param ConfigurationOption|null $config
      * @return ConfigurationOption
-     * @throws PhpfastcacheInvalidArgumentException
      */
-    protected static function validateConfig(?ConfigurationOptionInterface $config): ConfigurationOption
+    protected static function validateConfig(?ConfigurationOption $config): ConfigurationOption
     {
-        if ($config === null) {
-            $config = self::getDefaultConfig();
-        } elseif (!($config instanceof ConfigurationOption)) {
-            throw new PhpfastcacheInvalidArgumentException(\sprintf('Unsupported config type: %s', \gettype($config)));
-        }
-
-        return $config;
+        return $config ?? self::getDefaultConfig();
     }
 
     /**
-     * @return ConfigurationOptionInterface
+     * @return ConfigurationOption
      */
-    public static function getDefaultConfig(): ConfigurationOptionInterface
+    public static function getDefaultConfig(): ConfigurationOption
     {
         return self::$config ?? self::$config = new ConfigurationOption();
     }
@@ -282,6 +278,9 @@ class CacheManager
      */
     public static function setDefaultConfig(ConfigurationOption $config): void
     {
+        if(is_subclass_of($config, ConfigurationOption::class)){
+            throw new PhpfastcacheInvalidArgumentException('Default configuration cannot be a child class of ConfigurationOption::class');
+        }
         self::$config = $config;
     }
 

@@ -2,7 +2,7 @@
 [![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/?branch=master) [![Build Status](https://travis-ci.com/PHPSocialNetwork/phpfastcache.svg?branch=master)](https://travis-ci.com/PHPSocialNetwork/phpfastcache) [![Semver compliant](https://img.shields.io/badge/Semver-2.0.0-yellow.svg?maxAge=86400)](https://semver.org/spec/v2.0.0.html) [![Patreon](https://img.shields.io/badge/Support%20us%20on-Patreon-f96854.svg?maxAge=86400)](https://www.patreon.com/geolim4)
 
 #### :warning: Please note that the V9 is mostly a PHP 8 type aware update of Phpfastcache with some significant changes !
-> As the V9 is **relatively** not compatible with previous versions, please read carefully the [migration guide](./docs/migration/MigratingFromV7ToV8.md) to ensure you the smoothest migration possible.
+> As the V9 is **relatively** not compatible with previous versions, please read carefully the [migration guide](./docs/migration/MigratingFromV8ToV9.md) to ensure you the smoothest migration possible.
 One of the biggest change is the configuration system which is now an object that replace the primitive array that we used to implement back then. 
 Also, please note that the V9 requires at least PHP 8 or higher to works properly.
 
@@ -30,7 +30,7 @@ The simplicity of abstraction: One class for many backend cache. You don't need 
 \* Driver descriptions available in DOCS/DRIVERS.md
 
 ---------------------------
-Because caching does not means weaken your code
+Because caching does not mean weaken your code
 ---------------------------
 Phpfastcache has been developed over the years with 3 main goals:
 

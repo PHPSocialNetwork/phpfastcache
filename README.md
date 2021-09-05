@@ -17,13 +17,14 @@ The simplicity of abstraction: One class for many backend cache. You don't need 
 
 |      Regular drivers            |     High performances drivers                                 |    Development drivers        |    Cluster-Aggregated drivers     |
 |---------------------------------|---------------------------------------------------------------|-------------------------------|-----------------------------------|
-|  `Apcu` *(APC support removed)* | `Cassandra`                                                   | `Devnull`                     | `FullReplicationCluster`          |
-|  `Files`                        | `CouchBasev3`<br>_(`Couchbase` for SDK 2 support removed)_    | `Devrandom`                   | `SemiReplicationCluster`          |
-|  `Leveldb`                      | `Couchdb`                                                     | `Memstatic`                   | `MasterSlaveReplicationCluster`   |
-|  `Memcache(d)`                  | `Mongodb`                                                     |                               | `RandomReplicationCluster`        |
-|  `Sqlite`                       | `Predis`                                                      |                               |                                   |
-|  `Wincache`                     | `Redis`                                                       |                               |                                   |
-|  `Zend Disk Cache`              | `Ssdb`                                                        |                               |                                   |
+|  `Apcu` *(APC support removed)* | `Arangodb`                                                    | `Devnull`                     | `FullReplicationCluster`          |
+|  `Files`                        | `Cassandra`                                                   | `Devrandom`                   | `SemiReplicationCluster`          |
+|  `Leveldb`                      | `CouchBasev3`<br>_(`Couchbase` for SDK 2 support removed)_    | `Memstatic`                   | `MasterSlaveReplicationCluster`   |
+|  `Memcache(d)`                  | `Couchdb`                                                     |                               | `RandomReplicationCluster`        |
+|  `Sqlite`                       | `Mongodb`                                                     |                               |                                   |
+|  `Wincache`                     | `Predis`                                                      |                               |                                   |
+|  `Zend Disk Cache`              | `Redis`                                                       |                               |                                   |
+|                                 | `Ssdb`                                                        |                               |                                   |
 |                                 | `Zend Memory Cache`                                           |                               |                                   |
 |                                 |                                                               |                               |                                   |
 

@@ -25,6 +25,16 @@ jobs:
         run: composer validate
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
-      - name: Run tests on PHP 8.0
+        run: ./bin/ci/scripts/install_dependencies.sh
+
+      - name: Run TESTS
         run: php -f ./bin/ci/run_tests.php
+
+      - name: Run PHPCS
+        run: ./vendor/bin/phpcs lib/  --report=summary
+
+      - name: Run PHPMD
+        run: ./vendor/bin/phpmd lib/ ansi phpmd.xml
+
+      - name: Run PHPSTAN (lite)
+        run: ./vendor/bin/phpstan analyse lib/ -l 2 -c phpstan_lite.neon 2>&1

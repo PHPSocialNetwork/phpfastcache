@@ -46,3 +46,6 @@ install:
 
 script:
   - php -f ./bin/ci/run_tests.php
+  - ./vendor/bin/phpcs lib/  --report=summary
+  - ./vendor/bin/phpmd lib/ ansi phpmd.xml
+  - ./vendor/bin/phpstan analyse lib/ -l 2 -c phpstan.neon 2>&1

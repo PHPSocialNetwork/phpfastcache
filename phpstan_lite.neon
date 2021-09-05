@@ -1,0 +1,6 @@
+parameters:
+	excludePaths:
+		- lib/Phpfastcache/Drivers/*/Driver.php
+		- lib/Phpfastcache/Drivers/*/Config.php
+	ignoreErrors:
+		- '#PHPDoc tag @(.*)#' # (Really) Annoying PHPDoc tag issues...

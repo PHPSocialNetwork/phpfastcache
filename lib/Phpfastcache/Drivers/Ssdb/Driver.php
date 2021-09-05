@@ -80,10 +80,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                 $this->instance->auth($clientConfig->getPassword());
             }
 
-            if (!$this->instance) {
-                return false;
-            }
-
             return true;
         } catch (SSDBException $e) {
             throw new PhpfastcacheDriverCheckException('Ssdb failed to connect with error: ' . $e->getMessage(), 0, $e);
@@ -134,7 +130,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     protected function driverClear(): bool
     {
-        return (bool)$this->instance->flushdb('kv');
+        $this->instance->flushdb('kv');
+
+        // Status not returned, then we assume its true
+        return true;
     }
 
     public function getConfig(): Config

@@ -17,3 +17,17 @@ Contributing policy
 -------------------
 
 Our contributing policy is described in our [Coding Guideline](https://github.com/PHPSocialNetwork/phpfastcache/blob/v7/CODING_GUIDELINE.md)
+
+Developer notes
+-------------------
+If you want to contribute to the repository you will need to install/configure some things first.
+
+To run tests follow the steps:
+- Run `bin/ci/scripts/install_dependencies.sh`
+- Run `php bin/ci/run_tests.php`
+
+The last command will run all the tests including the quality tests (phpmd, phpcs, phpstan).
+If an error appears, fix it then you can submit your pull request.
+
+Don't worry if you don't have some services installed like "memcached", "couchdb", "couchbase", "mongodb", etc.
+The tests will be skipped on your computer but will be running in Github CI/Travis CI.

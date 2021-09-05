@@ -27,9 +27,6 @@ jobs:
       - name: Install dependencies
         run: ./bin/ci/scripts/install_dependencies.sh
 
-      - name: Run TESTS
-        run: php -f ./bin/ci/run_tests.php
-
       - name: Run PHPCS
         run: ./vendor/bin/phpcs lib/  --report=summary
 
@@ -38,3 +35,6 @@ jobs:
 
       - name: Run PHPSTAN (lite)
         run: ./vendor/bin/phpstan analyse lib/ -l 2 -c phpstan_lite.neon 2>&1
+
+      - name: Run TESTS
+        run: php -f ./bin/ci/run_tests.php

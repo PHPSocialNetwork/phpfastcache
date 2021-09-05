@@ -23,8 +23,11 @@ Developer notes
 If you want to contribute to the repository you will need to install/configure some things first.
 
 To run tests follow the steps:
-- Run `bin/ci/scripts/install_dependencies.sh`
-- Run `php bin/ci/run_tests.php`
+- Run `./bin/ci/scripts/install_dependencies.sh`
+- Run `./vendor/bin/phpcs lib/  --report=summary`
+- Run `./vendor/bin/phpmd lib/ ansi phpmd.xml`
+- Run `./vendor/bin/phpstan analyse lib/ -l 2 -c phpstan_lite.neon 2>&1`
+- Run `php -f ./bin/ci/run_tests.php`
 
 The last command will run all the tests including the quality tests (phpmd, phpcs, phpstan).
 If an error appears, fix it then you can submit your pull request.

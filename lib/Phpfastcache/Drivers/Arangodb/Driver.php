@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Arangodb;
 
+use ArangoDBClient\AdminHandler;
 use ArangoDBClient\Collection as ArangoCollection;
 use ArangoDBClient\CollectionHandler as ArangoCollectionHandler;
 use ArangoDBClient\Connection as ArangoConnection;
@@ -296,15 +297,31 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     {
         /** @var Config $config */
         $config = $this->getConfig();
+        $rawData = [];
 
-        $count = $this->collectionHandler->count($config->getCollection(), false);
-        $info = $this->collectionHandler->get($config->getCollection());
+        $rawData['collectionCount'] = $this->collectionHandler->count($config->getCollection(), false);
+        $rawData['collectionInfo'] = $this->collectionHandler->get($config->getCollection());
+
+        try {
+            $adminHandler = new AdminHandler($this->instance);
+            $rawData['adminInfo'] = $adminHandler->getServerVersion(true);
+            $infoText = \sprintf(
+                '%s server v%s "%s" edition (%s/%s).',
+                \ucfirst($rawData['adminInfo']['server']),
+                $rawData['adminInfo']['version'] ?? 'unknown version',
+                $rawData['adminInfo']['license'] ?? 'unknown licence',
+                $rawData['adminInfo']['details']['architecture'] ?? 'unknown architecture',
+                $rawData['adminInfo']['details']['platform'] ?? 'unknown platform',
+            );
+        } catch (ArangoException $e) {
+            $infoText = 'No readable human data, encountered an error while trying to get details: ' . $e->getMessage();
+        }
 
         return (new DriverStatistic())
             ->setData(implode(', ', array_keys($this->itemInstances)))
-            ->setInfo('No readable human data provided by ArangoDB :(')
-            ->setRawData([$count, $info])
-            ->setSize($count);
+            ->setInfo($infoText)
+            ->setRawData($rawData)
+            ->setSize($rawData['collectionCount']);
     }
 
     public function getConfig() : Config|ConfigurationOption

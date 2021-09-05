@@ -278,7 +278,7 @@ class CacheManager
      */
     public static function setDefaultConfig(ConfigurationOption $config): void
     {
-        if(is_subclass_of($config, ConfigurationOption::class)){
+        if (is_subclass_of($config, ConfigurationOption::class)) {
             throw new PhpfastcacheInvalidArgumentException('Default configuration cannot be a child class of ConfigurationOption::class');
         }
         self::$config = $config;

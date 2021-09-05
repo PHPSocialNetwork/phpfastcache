@@ -227,9 +227,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     {
         $this->assertCacheItemType($item, Item::class);
 
-        /**
-         * @var DeleteResult $deletionResult
-         */
         $deletionResult = $this->getCollection()->deleteOne(['_id' =>  $this->getMongoDbItemKey($item)]);
 
         return $deletionResult->isAcknowledged();
@@ -324,7 +321,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         );
     }
 
-    protected function getMongoDbItemKey(CacheItemInterface $item): string
+    protected function getMongoDbItemKey(ExtendedCacheItemInterface $item): string
     {
         return 'pfc_' . $item->getEncodedKey();
     }

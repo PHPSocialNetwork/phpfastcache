@@ -26,6 +26,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use phpssdb\Core\SimpleSSDB;
 use phpssdb\Core\SSDBException;
+use phpssdb\Core\SSDB;
 
 /**
  * @property SimpleSSDB $instance Instance of driver service
@@ -42,7 +43,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     {
         static $driverCheck;
 
-        return $driverCheck ?? ($driverCheck = class_exists('phpssdb\Core\SSDB'));
+        return $driverCheck ?? ($driverCheck = class_exists(SSDB::class));
     }
 
     /**

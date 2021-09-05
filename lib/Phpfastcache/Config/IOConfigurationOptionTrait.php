@@ -15,10 +15,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Config;
 
-use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
-
-const SAFE_FILE_EXTENSIONS = 'txt|cache|db|pfc';
 
 trait IOConfigurationOptionTrait
 {
@@ -104,11 +101,7 @@ trait IOConfigurationOptionTrait
      */
     public function setCacheFileExtension(string $cacheFileExtension): static
     {
-        /**
-         * Feel free to propose your own one
-         * by opening a pull request :)
-         */
-        $safeFileExtensions = \explode('|', SAFE_FILE_EXTENSIONS);
+        $safeFileExtensions = \explode('|', IOConfigurationOptionInterface::SAFE_FILE_EXTENSIONS);
 
         if (str_contains($cacheFileExtension, '.')) {
             throw new PhpfastcacheInvalidConfigurationException('cacheFileExtension cannot contain a dot "."');

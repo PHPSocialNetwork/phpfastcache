@@ -108,7 +108,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                 $connected = $this->instance->addServer($server['host'], $server['port']);
             }
             if (!empty($server['saslUser']) && !empty($server['saslPassword'])) {
-                $connected = $this->instance->setSaslAuthData($server['saslUser'], $server['saslPassword']);
+                $this->instance->setSaslAuthData($server['saslUser'], $server['saslPassword']);
             }
             if (!$connected) {
                 throw new PhpfastcacheDriverConnectException(

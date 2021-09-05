@@ -68,8 +68,6 @@ trait ExtendedCacheItemPoolTrait
     }
 
     /**
-     * @param string $item
-     * @return ExtendedCacheItemPoolTrait
      * @internal This method de-register an item from $this->itemInstances
      */
     protected function deregisterItem(string $item): static
@@ -84,8 +82,6 @@ trait ExtendedCacheItemPoolTrait
     }
 
     /**
-     * @param CacheItemInterface $item
-     * @return ExtendedCacheItemPoolTrait
      * @throws PhpfastcacheLogicException
      */
     public function attachItem(CacheItemInterface $item): static

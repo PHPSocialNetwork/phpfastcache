@@ -135,6 +135,7 @@ class Driver extends ClusterPoolAbstract
     {
         return $this->makeOperation(
             function (ExtendedCacheItemPoolInterface $pool) use ($item) {
+                /** @var ExtendedCacheItemInterface $item */
                 $item->setHit(true);
                 return $pool->save($this->getStandardizedItem($item, $pool));
             }

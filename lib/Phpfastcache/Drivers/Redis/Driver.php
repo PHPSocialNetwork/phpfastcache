@@ -26,6 +26,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Redis as RedisClient;
 
 /**
+ * @property \Redis $instance
  * @property Config $config Return the config object
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface

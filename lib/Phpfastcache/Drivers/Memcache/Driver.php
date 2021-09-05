@@ -114,17 +114,17 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                     )
                 );
             }
-        }
 
-        /**
-         * Since Memcached does not throw
-         * any error if not connected ...
-         */
-        if (!$this->instance->getServerStatus(
-            !empty($server['path']) ? $server['path'] : $server['host'],
-            !empty($server['port']) ? $server['port'] : 0
-        )) {
-            throw new PhpfastcacheDriverException('Memcache seems to not be connected');
+            /**
+             * Since Memcached does not throw
+             * any error if not connected ...
+             */
+            if (!$this->instance->getServerStatus(
+                !empty($server['path']) ? $server['path'] : $server['host'],
+                !empty($server['port']) ? $server['port'] : 0
+            )) {
+                throw new PhpfastcacheDriverException('Memcache seems to not be connected');
+            }
         }
 
         return true;

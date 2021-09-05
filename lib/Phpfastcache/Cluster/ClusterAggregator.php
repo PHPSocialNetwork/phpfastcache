@@ -39,7 +39,7 @@ class ClusterAggregator implements AggregatorInterface
     /**
      * ClusterAggregator constructor.
      * @param string $clusterAggregatorName
-     * @param $driverPools array<AggregatablePoolInterface>
+     * @param array<AggregatablePoolInterface> $driverPools
      * @throws PhpfastcacheLogicException
      */
     public function __construct(string $clusterAggregatorName = '', AggregatablePoolInterface ...$driverPools)

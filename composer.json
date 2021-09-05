@@ -35,7 +35,9 @@
         "league/climate": "^3.5",
         "ext-gettext": "*",
         "phpmd/phpmd": "@stable",
-        "squizlabs/php_codesniffer": "~3.0"
+        "squizlabs/php_codesniffer": "~3.0",
+        "phpstan/phpstan": "^0.12.98",
+        "jetbrains/phpstorm-stubs": "dev-master"
     },
     "suggest": {
         "ext-apcu": "*",
@@ -52,7 +54,7 @@
         "ext-couchbase_v3": "*",
         "predis/predis": "^1.1",
         "mongodb/mongodb": "^1.9",
-        "phpfastcache/phpssdb": "~1.0.0",
+        "phpfastcache/phpssdb": "~1.1.0",
         "doctrine/couchdb": "^dev-master#9eeb9e5"
     },
     "conflict": {

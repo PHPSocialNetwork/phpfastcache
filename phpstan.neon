@@ -1,0 +1,14 @@
+parameters:
+	ignoreErrors:
+		- '#PHPDoc tag @(.*)#' # (Really) Annoying PHPDoc tag issues...
+		- '#Function zend_shm_cache_info not found#' # Stub not yet referenced by jetbrains/phpstorm-stubs => https://github.com/JetBrains/phpstorm-stubs/pull/1224
+		- '#Call to an undefined method phpssdb(.*)#' # Phpstan is not able to know the magic of Ssdb __call() implementation
+		-
+			message: '#Class Couchbase\\Cluster constructor invoked with 2 parameters, 1 required#' # Phpstan not differencing coucbase and couchbase_v3 stubs from jetbrains/phpstorm-stubs
+			path: lib/Phpfastcache/Drivers/Couchbasev3/Driver.php
+		-
+			message: '#Call to an undefined method Couchbase\\(.*)#' # Phpstan not differencing coucbase and couchbase_v3 stubs from jetbrains/phpstorm-stubs
+			path: lib/Phpfastcache/Drivers/Couchbasev3/Driver.php
+		-
+			message: '#Cannot call method getPayload\(\) on int#' # Issue in predis/predis => https://github.com/predis/predis/pull/710
+			path: lib/Phpfastcache/Drivers/Predis/Driver.php

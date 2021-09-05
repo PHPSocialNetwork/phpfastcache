@@ -76,7 +76,8 @@ HELP;
                     self::CASSANDRA_KEY_SPACE,
                     self::CASSANDRA_TABLE
                 )
-            )
+            ),
+            null
         );
 
         return (new DriverStatistic())
@@ -202,11 +203,11 @@ HELP;
             $options = new Cassandra\ExecutionOptions(
                 [
                     'arguments' => [
-                        'cache_uuid' => new Cassandra\Uuid(),
+                        'cache_uuid' => new Cassandra\Uuid(''),
                         'cache_id' => $item->getKey(),
                         'cache_data' => $cacheData,
-                        'cache_creation_date' => new Cassandra\Timestamp((new DateTime())->getTimestamp()),
-                        'cache_expiration_date' => new Cassandra\Timestamp($item->getExpirationDate()->getTimestamp()),
+                        'cache_creation_date' => new Cassandra\Timestamp((new DateTime())->getTimestamp(), 0),
+                        'cache_expiration_date' => new Cassandra\Timestamp($item->getExpirationDate()->getTimestamp(), 0),
                         'cache_length' => strlen($cacheData),
                     ],
                     'consistency' => Cassandra::CONSISTENCY_ALL,
@@ -294,7 +295,8 @@ HELP;
                         self::CASSANDRA_KEY_SPACE,
                         self::CASSANDRA_TABLE
                     )
-                )
+                ),
+                null
             );
 
             return true;

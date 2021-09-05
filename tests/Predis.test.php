@@ -23,9 +23,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Predis bundled client');
 
 try {
-    if (!class_exists(RedisClient::class)) {
-        throw new PhpfastcacheDriverCheckException('Unable to test Redis client because the extension seems to be missing');
-    }
     $cacheInstance = CacheManager::getInstance('Predis', new PredisConfig());
     $testHelper->runCRUDTests($cacheInstance);
 } catch (\RedisException $e) {

@@ -26,7 +26,6 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Predis\Client as PredisClient;
 use Predis\Connection\ConnectionException as PredisConnectionException;
-use Psr\Cache\CacheItemInterface;
 
 /**
  * @property PredisClient $instance Instance of driver service

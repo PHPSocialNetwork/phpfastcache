@@ -15,8 +15,8 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Devrandom;
 
-use Cassandra\Exception\InvalidArgumentException;
 use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
 class Config extends ConfigurationOption
 {
@@ -57,7 +57,7 @@ class Config extends ConfigurationOption
     public function setChanceOfRetrieval(int $chanceOfRetrieval): Config
     {
         if ($chanceOfRetrieval < 0 || $chanceOfRetrieval > 100) {
-            throw new InvalidArgumentException('Chance of retrieval must be between 0 and 100');
+            throw new PhpfastcacheInvalidArgumentException('Chance of retrieval must be between 0 and 100');
         }
         $this->chanceOfRetrieval = $chanceOfRetrieval;
         return $this;

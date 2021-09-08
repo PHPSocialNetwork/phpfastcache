@@ -28,7 +28,7 @@ echo "1/3 - Creating 'phpfastcache' user:"
 curl -X POST -u root:$ARANGODB_ROOT_PASSWD --header 'accept: application/json' --data-binary @- --dump - http://localhost:8529/_api/user <<EOF
 {
   "user" : "phpfastcache",
-  "passwd" : "phpfastcache"
+  "passwd" : "travis"
 }
 EOF
 printf "\n\n"

@@ -40,6 +40,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     /**
      * @return bool
      * @throws PhpfastcacheIOException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function driverCheck(): bool
     {
@@ -119,6 +120,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     /**
      * @return bool
      * @throws \Phpfastcache\Exceptions\PhpfastcacheIOException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverClear(): bool
     {

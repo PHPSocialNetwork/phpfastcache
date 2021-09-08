@@ -58,9 +58,10 @@ class ConfigurationOption implements ConfigurationOptionInterface
                 } else {
                     throw new PhpfastcacheInvalidConfigurationException(
                         sprintf(
-                            'Invalid option for the config %s: %s',
+                            'Unknown configuration option name "%s" for the config class "%s". Allowed configurations options are "%s"',
+                            $configKey,
                             $this::class,
-                            $configKey
+                            \implode('", "', array_keys($this->toArray())),
                         )
                     );
                 }

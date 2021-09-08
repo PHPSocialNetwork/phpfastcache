@@ -44,7 +44,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     public function getStats(): DriverStatistic
     {
         $stat = new DriverStatistic();
-        $stat->setInfo('[Devfalse] A void info string')
+        $stat->setInfo('[Devrandom] A void info string')
             ->setSize(0)
             ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setRawData(false);

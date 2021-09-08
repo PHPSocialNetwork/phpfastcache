@@ -28,10 +28,10 @@ class Config extends ConfigurationOption
     protected string $collection;
 
     /**
-     *  HTTP ENDPOINT: ssl://localhost:8529
-     *  SSL ENDPOINT: ssl://localhost:8529
+     *  HTTP ENDPOINT: ssl://127.0.0.1:8529
+     *  SSL ENDPOINT: ssl://127.0.0.1:8529
      *  UNIX ENDPOINT: unix:///tmp/arangodb.sock
-     *  Failover ENDPOINTS: ['tcp://localhost:8529', 'tcp://another-host:8529']
+     *  Failover ENDPOINTS: ['tcp://127.0.0.1:8529', 'tcp://127.0.0.1:8529']
      */
     protected string|array $endpoint = 'tcp://127.0.0.1:8529';
 

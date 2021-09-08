@@ -465,7 +465,7 @@ class TestHelper
         /**
          * Tag strategy ONE success and fail
          */
-        $this->printInfoText('Re-fetching item by one of its tags <red>and an unknown tag</red> (tag strategy "<yellow>ONE</yellow>")...');
+        $this->printInfoText('Re-fetching item <green>by one of its tags</green> <red>and an unknown tag</red> (tag strategy "<yellow>ONE</yellow>")...');
         $cacheItems = $pool->getItemsByTags([$cacheTag, 'unknown_tag'], $pool::TAG_STRATEGY_ONE);
 
         if (isset($cacheItems[$cacheKey]) && $cacheItems[$cacheKey]->getKey() === $cacheKey) {

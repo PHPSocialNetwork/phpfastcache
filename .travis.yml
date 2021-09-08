@@ -31,11 +31,11 @@ before_install:
 # Memcached is not yet available for PHP8 (hasn't been updated since 2019): https://pecl.php.net/package/memcached
 # Memcache however seems to be compatible with PHP 7 and 8: https://pecl.php.net/package/memcache
 #
-  - ./bin/ci/scripts/setup_arangodb.sh;
-  - ./bin/ci/scripts/setup_ssdb.sh;
-  - ./bin/ci/scripts/setup_couchdb.sh;
+  - ./bin/ci/scripts/install_arangodb.sh;
+  - ./bin/ci/scripts/install_ssdb.sh;
+  - ./bin/ci/scripts/install_couchdb.sh;
+  - ./bin/ci/scripts/install_couchbase.sh;
   - ./bin/ci/scripts/setup_mongodb.sh
-  - ./bin/ci/scripts/setup_couchbase.sh;
   - pecl channel-update pecl.php.net;
   - yes | pecl install -f mongodb-stable;
   - yes | pecl install -f apcu-stable || true;

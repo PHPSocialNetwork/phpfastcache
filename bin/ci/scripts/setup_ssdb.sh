@@ -2,7 +2,7 @@
 
 set -e
 
-wget --no-check-certificate https://github.com/ideawu/ssdb/archive/master.zip
+wget --no-check-certificate -O master.zip https://codeload.github.com/ideawu/ssdb/zip/master
 unzip -q master
 cd ssdb-master
 

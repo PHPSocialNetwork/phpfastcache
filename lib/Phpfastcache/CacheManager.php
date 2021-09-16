@@ -27,38 +27,13 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Exceptions\PhpfastcacheUnsupportedOperationException;
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
 
-/**
- * Class CacheManager
- * @package phpFastCache
- *
- * @method static ExtendedCacheItemPoolInterface Apcu() Apcu($config = []) Return a driver "Apcu" instance
- * @method static ExtendedCacheItemPoolInterface Cassandra() Cassandra($config = []) Return a driver "Cassandra" instance
- * @method static ExtendedCacheItemPoolInterface Cookie() Cookie($config = []) Return a driver "Cookie" instance
- * @method static ExtendedCacheItemPoolInterface Couchbase() Couchbase($config = []) Return a driver "Couchbase" instance
- * @method static ExtendedCacheItemPoolInterface Couchdb() Couchdb($config = []) Return a driver "Couchdb" instance
- * @method static ExtendedCacheItemPoolInterface Devnull() Devnull($config = []) Return a driver "Devnull" instance
- * @method static ExtendedCacheItemPoolInterface Files() Files($config = []) Return a driver "files" instance
- * @method static ExtendedCacheItemPoolInterface Leveldb() Leveldb($config = []) Return a driver "Leveldb" instance
- * @method static ExtendedCacheItemPoolInterface Memcache() Memcache($config = []) Return a driver "Memcache" instance
- * @method static ExtendedCacheItemPoolInterface Memcached() Memcached($config = []) Return a driver "Memcached" instance
- * @method static ExtendedCacheItemPoolInterface Memstatic() Memstatic($config = []) Return a driver "Memstatic" instance
- * @method static ExtendedCacheItemPoolInterface Mongodb() Mongodb($config = []) Return a driver "Mongodb" instance
- * @method static ExtendedCacheItemPoolInterface Predis() Predis($config = []) Return a driver "Predis" instance
- * @method static ExtendedCacheItemPoolInterface Redis() Redis($config = []) Return a driver "Pedis" instance
- * @method static ExtendedCacheItemPoolInterface Sqlite() Sqlite($config = []) Return a driver "Sqlite" instance
- * @method static ExtendedCacheItemPoolInterface Ssdb() Ssdb($config = []) Return a driver "Ssdb" instance
- * @method static ExtendedCacheItemPoolInterface Wincache() Wincache($config = []) Return a driver "Wincache" instance
- * @method static ExtendedCacheItemPoolInterface Zenddisk() Zenddisk($config = []) Return a driver "Zend disk cache" instance
- * @method static ExtendedCacheItemPoolInterface Zendshm() Zendshm($config = []) Return a driver "Zend memory cache" instance
- *
- */
 class CacheManager
 {
     public const CORE_DRIVER_NAMESPACE = 'Phpfastcache\Drivers\\';
 
     use ClassNamespaceResolverTrait;
 
-    protected static ConfigurationOption $config;
+    protected static ConfigurationOptionInterface $config;
 
     protected static string $namespacePath;
 
@@ -110,22 +85,6 @@ class CacheManager
     }
 
     /**
-     * @param string $name
-     * @param array $arguments
-     * @return ExtendedCacheItemPoolInterface
-     * @throws PhpfastcacheDriverCheckException
-     * @throws PhpfastcacheDriverException
-     * @throws PhpfastcacheDriverNotFoundException
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public static function __callStatic(string $name, array $arguments): ExtendedCacheItemPoolInterface
-    {
-        $options = (\array_key_exists(0, $arguments) ? $arguments[0] : []);
-
-        return self::getInstance($name, $options);
-    }
-
-    /**
      * @param string $driver
      * @param ConfigurationOptionInterface|null $config
      * @param string|null $instanceId
@@ -133,13 +92,12 @@ class CacheManager
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheDriverNotFoundException
-     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
     public static function getInstance(string $driver, ?ConfigurationOptionInterface $config = null, ?string $instanceId = null): ExtendedCacheItemPoolInterface
     {
         $config = self::validateConfig($config);
         $driver = self::standardizeDriverName($driver);
-
         $instanceId = $instanceId ?: md5($driver . \serialize(\array_filter($config->toArray(), static fn ($val) => !\is_callable($val))));
 
         if (!isset(self::$instances[$instanceId])) {
@@ -161,18 +119,22 @@ class CacheManager
     }
 
     /**
-     * @param ConfigurationOption|null $config
-     * @return ConfigurationOption
+     * @param ConfigurationOptionInterface|null $config
+     * @return ConfigurationOptionInterface
+     * @throws PhpfastcacheLogicException
      */
-    protected static function validateConfig(?ConfigurationOption $config): ConfigurationOption
+    protected static function validateConfig(?ConfigurationOptionInterface $config): ConfigurationOptionInterface
     {
+        if ($config instanceof ConfigurationOptionInterface && $config->isLocked()) {
+            throw new PhpfastcacheLogicException('You provided an already locked configuration, cannot continue.');
+        }
         return $config ?? self::getDefaultConfig();
     }
 
     /**
-     * @return ConfigurationOption
+     * @return ConfigurationOptionInterface
      */
-    public static function getDefaultConfig(): ConfigurationOption
+    public static function getDefaultConfig(): ConfigurationOptionInterface
     {
         return self::$config ?? self::$config = new ConfigurationOption();
     }
@@ -246,7 +208,8 @@ class CacheManager
         self::$instances = [];
 
         \gc_collect_cycles();
-        return !\count(self::$instances);
+
+        return true;
     }
 
     /**
@@ -274,9 +237,10 @@ class CacheManager
     }
 
     /**
-     * @param ConfigurationOption $config
+     * @param ConfigurationOptionInterface $config
+     * @throws PhpfastcacheInvalidArgumentException
      */
-    public static function setDefaultConfig(ConfigurationOption $config): void
+    public static function setDefaultConfig(ConfigurationOptionInterface $config): void
     {
         if (is_subclass_of($config, ConfigurationOption::class)) {
             throw new PhpfastcacheInvalidArgumentException('Default configuration cannot be a child class of ConfigurationOption::class');

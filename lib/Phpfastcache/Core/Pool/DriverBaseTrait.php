@@ -17,6 +17,7 @@ namespace Phpfastcache\Core\Pool;
 
 use DateTime;
 use Phpfastcache\Config\ConfigurationOptionInterface;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Throwable;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
@@ -24,7 +25,6 @@ use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Exceptions\PhpfastcacheCoreException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
-use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use ReflectionObject;
@@ -33,7 +33,7 @@ trait DriverBaseTrait
 {
     use DriverPoolAbstractTrait;
 
-    protected ConfigurationOption $config;
+    protected ConfigurationOptionInterface $config;
 
     protected object|array|null $instance;
 
@@ -43,15 +43,15 @@ trait DriverBaseTrait
 
     /**
      * Driver constructor.
-     * @param ConfigurationOption $config
+     * @param ConfigurationOptionInterface $config
      * @param string $instanceId
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverConnectException
-     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheIOException
+     * @throws PhpfastcacheInvalidArgumentException
      */
-    public function __construct(ConfigurationOption $config, string $instanceId)
+    public function __construct(ConfigurationOptionInterface $config, string $instanceId)
     {
         $this->setConfig($config);
         $this->instanceId = $instanceId;
@@ -63,6 +63,7 @@ trait DriverBaseTrait
 
         try {
             $this->driverConnect();
+            $config->lock($this);
         } catch (Throwable $e) {
             throw new PhpfastcacheDriverConnectException(
                 sprintf(
@@ -143,10 +144,10 @@ trait DriverBaseTrait
     abstract public function getConfig(): ConfigurationOption;
 
     /**
-     * @param ConfigurationOption $config
+     * @param ConfigurationOptionInterface $config
      * @return static
      */
-    public function setConfig(ConfigurationOption $config): static
+    public function setConfig(ConfigurationOptionInterface $config): static
     {
         $this->config = $config;
 

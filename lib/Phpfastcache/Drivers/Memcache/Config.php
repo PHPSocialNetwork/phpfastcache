@@ -17,6 +17,7 @@ namespace Phpfastcache\Drivers\Memcache;
 
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 class Config extends ConfigurationOption
 {
@@ -35,24 +36,12 @@ class Config extends ConfigurationOption
      */
     protected array $servers = [];
 
-    /**
-     * @var string
-     */
     protected string $host = '127.0.0.1';
 
-    /**
-     * @var int
-     */
     protected int $port = 11211;
 
-    /**
-     * @var string
-     */
     protected string $saslUser = '';
 
-    /**
-     * @var string
-     */
     protected string $saslPassword = '';
 
     /**
@@ -66,9 +55,11 @@ class Config extends ConfigurationOption
     /**
      * @param string $saslUser
      * @return self
+     * @throws PhpfastcacheLogicException
      */
     public function setSaslUser(string $saslUser): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->saslUser = $saslUser;
         return $this;
     }
@@ -84,9 +75,11 @@ class Config extends ConfigurationOption
     /**
      * @param string $saslPassword
      * @return self
+     * @throws PhpfastcacheLogicException
      */
     public function setSaslPassword(string $saslPassword): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->saslPassword = $saslPassword;
         return $this;
     }
@@ -115,9 +108,11 @@ class Config extends ConfigurationOption
      * @param array $servers
      * @return self
      * @throws PhpfastcacheInvalidConfigurationException
+     * @throws PhpfastcacheLogicException
      */
     public function setServers(array $servers): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         foreach ($servers as $server) {
             if ($diff = array_diff(['host', 'port', 'saslUser', 'saslPassword'], array_keys($server))) {
                 throw new PhpfastcacheInvalidConfigurationException('Missing keys for memcached server: ' . implode(', ', $diff));
@@ -147,9 +142,11 @@ class Config extends ConfigurationOption
     /**
      * @param string $host
      * @return self
+     * @throws PhpfastcacheLogicException
      */
     public function setHost(string $host): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->host = $host;
         return $this;
     }
@@ -165,9 +162,11 @@ class Config extends ConfigurationOption
     /**
      * @param int $port
      * @return self
+     * @throws PhpfastcacheLogicException
      */
     public function setPort(int $port): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->port = $port;
         return $this;
     }

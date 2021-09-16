@@ -17,40 +17,23 @@ namespace Phpfastcache\Drivers\Couchdb;
 
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 class Config extends ConfigurationOption
 {
-    /**
-     * @var string
-     */
-    protected $host = '127.0.0.1';
+    protected string $host = '127.0.0.1';
 
-    /**
-     * @var int
-     */
-    protected $port = 5984;
+    protected int $port = 5984;
 
-    /**
-     * @var string
-     */
-    protected $username = '';
-    /**
-     * @var string
-     */
-    protected $password = '';
-    /**
-     * @var bool
-     */
-    protected $ssl = false;
-    /**
-     * @var int
-     */
-    protected $timeout = 10;
+    protected string $username = '';
 
-    /**
-     * @var string
-     */
-    protected $database = Driver::COUCHDB_DEFAULT_DB_NAME;
+    protected string $password = '';
+
+    protected bool $ssl = false;
+
+    protected int $timeout = 10;
+
+    protected string $database = Driver::COUCHDB_DEFAULT_DB_NAME;
 
     /**
      * @return string
@@ -63,9 +46,12 @@ class Config extends ConfigurationOption
     /**
      * @param string $database
      * @return Config
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
     public function setDatabase(string $database): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         /** @see https://docs.couchdb.org/en/latest/api/database/common.html#put--db */
         if (\preg_match('#^[a-z][a-z0-9_\-+\$()/]+$#', $database)) {
             $this->database = $database;
@@ -90,9 +76,11 @@ class Config extends ConfigurationOption
     /**
      * @param string $host
      * @return self
+     * @throws PhpfastcacheLogicException
      */
     public function setHost(string $host): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->host = $host;
         return $this;
     }
@@ -108,9 +96,11 @@ class Config extends ConfigurationOption
     /**
      * @param int $port
      * @return self
+     * @throws PhpfastcacheLogicException
      */
     public function setPort(int $port): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->port = $port;
         return $this;
     }
@@ -126,9 +116,11 @@ class Config extends ConfigurationOption
     /**
      * @param string $username
      * @return self
+     * @throws PhpfastcacheLogicException
      */
     public function setUsername(string $username): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->username = $username;
         return $this;
     }
@@ -144,9 +136,11 @@ class Config extends ConfigurationOption
     /**
      * @param string $password
      * @return self
+     * @throws PhpfastcacheLogicException
      */
     public function setPassword(string $password): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->password = $password;
         return $this;
     }
@@ -162,9 +156,11 @@ class Config extends ConfigurationOption
     /**
      * @param bool $ssl
      * @return self
+     * @throws PhpfastcacheLogicException
      */
     public function setSsl(bool $ssl): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->ssl = $ssl;
         return $this;
     }
@@ -180,9 +176,11 @@ class Config extends ConfigurationOption
     /**
      * @param int $timeout
      * @return self
+     * @throws PhpfastcacheLogicException
      */
     public function setTimeout(int $timeout): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->timeout = $timeout;
         return $this;
     }

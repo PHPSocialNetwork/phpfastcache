@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Couchbasev3;
 
 use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 class Config extends ConfigurationOption
 {
@@ -43,9 +44,11 @@ class Config extends ConfigurationOption
     /**
      * @param string $host
      * @return Config
+     * @throws PhpfastcacheLogicException
      */
     public function setHost(string $host): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->host = $host;
         return $this;
     }
@@ -61,9 +64,11 @@ class Config extends ConfigurationOption
     /**
      * @param int $port
      * @return Config
+     * @throws PhpfastcacheLogicException
      */
     public function setPort(int $port): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->port = $port;
         return $this;
     }
@@ -79,9 +84,11 @@ class Config extends ConfigurationOption
     /**
      * @param string $username
      * @return Config
+     * @throws PhpfastcacheLogicException
      */
     public function setUsername(string $username): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->username = $username;
         return $this;
     }
@@ -97,9 +104,11 @@ class Config extends ConfigurationOption
     /**
      * @param string $password
      * @return Config
+     * @throws PhpfastcacheLogicException
      */
     public function setPassword(string $password): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->password = $password;
         return $this;
     }
@@ -115,9 +124,11 @@ class Config extends ConfigurationOption
     /**
      * @param string $bucketName
      * @return Config
+     * @throws PhpfastcacheLogicException
      */
     public function setBucketName(string $bucketName): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->bucketName = $bucketName;
         return $this;
     }
@@ -132,9 +143,11 @@ class Config extends ConfigurationOption
     /**
      * @param string $scopeName
      * @return Config
+     * @throws PhpfastcacheLogicException
      */
     public function setScopeName(string $scopeName): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->scopeName = $scopeName;
         return $this;
     }
@@ -150,9 +163,11 @@ class Config extends ConfigurationOption
     /**
      * @param string $collectionName
      * @return Config
+     * @throws PhpfastcacheLogicException
      */
     public function setCollectionName(string $collectionName): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->collectionName = $collectionName;
         return $this;
     }

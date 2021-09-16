@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Arangodb;
 
 use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
  * @see https://github.com/arangodb/arangodb-php/blob/devel/examples/init.php
@@ -66,8 +67,12 @@ class Config extends ConfigurationOption
         return $this->database;
     }
 
+    /**
+     * @throws PhpfastcacheLogicException
+     */
     public function setDatabase(string $database): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->database = $database;
         return $this;
     }
@@ -77,8 +82,12 @@ class Config extends ConfigurationOption
         return $this->collection;
     }
 
+    /**
+     * @throws PhpfastcacheLogicException
+     */
     public function setCollection(string $collection): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->collection = $collection;
         return $this;
     }
@@ -88,8 +97,12 @@ class Config extends ConfigurationOption
         return $this->endpoint;
     }
 
+    /**
+     * @throws PhpfastcacheLogicException
+     */
     public function setEndpoint(string|array $endpoint): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->endpoint = $endpoint;
         return $this;
     }
@@ -99,8 +112,12 @@ class Config extends ConfigurationOption
         return $this->connection;
     }
 
+    /**
+     * @throws PhpfastcacheLogicException
+     */
     public function setConnection(string $connection): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->connection = $connection;
         return $this;
     }
@@ -110,8 +127,12 @@ class Config extends ConfigurationOption
         return $this->authType;
     }
 
+    /**
+     * @throws PhpfastcacheLogicException
+     */
     public function setAuthType(string $authType): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->authType = $authType;
         return $this;
     }
@@ -121,8 +142,12 @@ class Config extends ConfigurationOption
         return $this->authUser;
     }
 
+    /**
+     * @throws PhpfastcacheLogicException
+     */
     public function setAuthUser(string $authUser): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->authUser = $authUser;
         return $this;
     }
@@ -132,8 +157,12 @@ class Config extends ConfigurationOption
         return $this->authPasswd;
     }
 
+    /**
+     * @throws PhpfastcacheLogicException
+     */
     public function setAuthPasswd(string $authPasswd): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->authPasswd = $authPasswd;
         return $this;
     }
@@ -149,9 +178,11 @@ class Config extends ConfigurationOption
     /**
      * @param string|null $authJwt
      * @return Config
+     * @throws PhpfastcacheLogicException
      */
     public function setAuthJwt(?string $authJwt): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->authJwt = $authJwt;
         return $this;
     }
@@ -161,8 +192,12 @@ class Config extends ConfigurationOption
         return $this->autoCreate;
     }
 
+    /**
+     * @throws PhpfastcacheLogicException
+     */
     public function setAutoCreate(bool $autoCreate): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->autoCreate = $autoCreate;
         return $this;
     }
@@ -172,8 +207,12 @@ class Config extends ConfigurationOption
         return $this->connectTimeout;
     }
 
+    /**
+     * @throws PhpfastcacheLogicException
+     */
     public function setConnectTimeout(int $connectTimeout): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->connectTimeout = $connectTimeout;
         return $this;
     }
@@ -183,8 +222,12 @@ class Config extends ConfigurationOption
         return $this->requestTimeout;
     }
 
+    /**
+     * @throws PhpfastcacheLogicException
+     */
     public function setRequestTimeout(int $requestTimeout): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->requestTimeout = $requestTimeout;
         return $this;
     }
@@ -194,8 +237,12 @@ class Config extends ConfigurationOption
         return $this->updatePolicy;
     }
 
+    /**
+     * @throws PhpfastcacheLogicException
+     */
     public function setUpdatePolicy(string $updatePolicy): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->updatePolicy = $updatePolicy;
         return $this;
     }
@@ -205,8 +252,12 @@ class Config extends ConfigurationOption
         return $this->verifyCert;
     }
 
+    /**
+     * @throws PhpfastcacheLogicException
+     */
     public function setVerifyCert(bool $verifyCert): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->verifyCert = $verifyCert;
         return $this;
     }
@@ -216,8 +267,12 @@ class Config extends ConfigurationOption
         return $this->selfSigned;
     }
 
+    /**
+     * @throws PhpfastcacheLogicException
+     */
     public function setSelfSigned(bool $selfSigned): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->selfSigned = $selfSigned;
         return $this;
     }
@@ -227,8 +282,12 @@ class Config extends ConfigurationOption
         return $this->ciphers;
     }
 
+    /**
+     * @throws PhpfastcacheLogicException
+     */
     public function setCiphers(string $ciphers): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->ciphers = $ciphers;
         return $this;
     }
@@ -244,9 +303,11 @@ class Config extends ConfigurationOption
     /**
      * @param \Closure|null $traceFunction
      * @return Config
+     * @throws PhpfastcacheLogicException
      */
     public function setTraceFunction(?\Closure $traceFunction): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->traceFunction = $traceFunction;
         return $this;
     }

@@ -47,7 +47,7 @@ install:
   - ./bin/ci/scripts/install_dependencies.sh
 
 script:
-  - ./vendor/bin/phpcs lib/  --report=summary
+  - ./vendor/bin/phpcs lib/ --report=summary
   - ./vendor/bin/phpmd lib/ ansi phpmd.xml
   - ./vendor/bin/phpstan analyse lib/ -l 2 -c phpstan.neon 2>&1
   - php -f ./bin/ci/run_tests.php

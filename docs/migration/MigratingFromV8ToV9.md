@@ -7,6 +7,10 @@ Once released, the php version 8.1 will be unit-tested
 ### Embedded autoload has been removed (and therefore, embedded dependencies)
 Use [Composer](https://getcomposer.org/doc/03-cli.md#require) to include Phpfastcache in your project
 
+### Removed magics methods from CacheManager `CacheManager::DriverName()`
+Use `CacheManager::getInstance('DriverName')` instead.\
+This decision was made to make the cache manager more consistent by removing the "old legacy code". 
+
 ### Updated `ConfigurationOption` which is no longer an `ArrayObject` class
 You can no longer use the following array-compatible syntax: `$config['yourKey'] = 'value'`\
 Use the object-notation syntax instead: `$config->setYourKey('value')`
@@ -38,10 +42,13 @@ See [EVENTS.md](./../EVENTS.md) file for more information
 They have not been replaced.
 However, the `Devrandom` driver with configurable factor chance and data length has been added
 
-### Renamed configuration entry `htaccess` to `autoHtaccessCreationEnabled` for files-based drivers.
-- The variable has been renamed to better comply with its supposed role and avoid phpmd exception.
-- Renamed `IOConfigurationOptionTrait::getHtaccess()` to `IOConfigurationOptionTrait::isAutoHtaccessCreationEnabled()`
-- Renamed `IOConfigurationOptionTrait::setHtaccess()` to `IOConfigurationOptionTrait::setAutoHtaccessCreationEnabled()`
+### Removed configuration entry `htaccess` for files-based drivers.
+- We consider that it's no longer the task of Phpfastcache to handle server configuration
+- Removed `IOConfigurationOptionTrait::getHtaccess()`
+- Removed `IOConfigurationOptionTrait::setHtaccess()`
+
+### Configuration object will now be locked once the cache pool instance is running
+If you try to set a configuration value after the cache pool instance is being built, an exception will be thrown.
 
 ### Removed `Cookie` driver because of its potential dangerosity
 However, you can always implement it by yourself if you want to by putting it back from previous versions using `\Phpfastcache\CacheManager::addCustomDriver()` method

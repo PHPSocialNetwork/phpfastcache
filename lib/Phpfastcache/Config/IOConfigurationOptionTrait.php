@@ -16,12 +16,11 @@ declare(strict_types=1);
 namespace Phpfastcache\Config;
 
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 trait IOConfigurationOptionTrait
 {
     protected bool $secureFileManipulation = false;
-
-    protected bool $autoHtaccessCreationEnabled = true;
 
     protected string $securityKey = '';
 
@@ -40,29 +39,12 @@ trait IOConfigurationOptionTrait
     /**
      * @param string $securityKey
      * @return static
+     * @throws PhpfastcacheLogicException
      */
     public function setSecurityKey(string $securityKey): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->securityKey = $securityKey;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAutoHtaccessCreationEnabled(): bool
-    {
-        return $this->autoHtaccessCreationEnabled;
-    }
-
-    /**
-     * @param bool $autoHtaccessCreationEnabled
-     * @return static
-     */
-    public function setAutoHtaccessCreationEnabled(bool $autoHtaccessCreationEnabled): static
-    {
-        $this->autoHtaccessCreationEnabled = $autoHtaccessCreationEnabled;
 
         return $this;
     }
@@ -78,9 +60,11 @@ trait IOConfigurationOptionTrait
     /**
      * @param bool $secureFileManipulation
      * @return self
+     * @throws PhpfastcacheLogicException
      */
     public function setSecureFileManipulation(bool $secureFileManipulation): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->secureFileManipulation = $secureFileManipulation;
         return $this;
     }
@@ -98,9 +82,11 @@ trait IOConfigurationOptionTrait
      * @param string $cacheFileExtension
      * @return static
      * @throws PhpfastcacheInvalidConfigurationException
+     * @throws PhpfastcacheLogicException
      */
     public function setCacheFileExtension(string $cacheFileExtension): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $safeFileExtensions = \explode('|', IOConfigurationOptionInterface::SAFE_FILE_EXTENSIONS);
 
         if (str_contains($cacheFileExtension, '.')) {
@@ -127,9 +113,11 @@ trait IOConfigurationOptionTrait
     /**
      * @param int $defaultChmod
      * @return self
+     * @throws PhpfastcacheLogicException
      */
     public function setDefaultChmod(int $defaultChmod): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->defaultChmod = $defaultChmod;
         return $this;
     }

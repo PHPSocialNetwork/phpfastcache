@@ -1,12 +1,14 @@
 ## 9.0.0
-##### 30 august 2021
-- __Estimated release date__: _End of 2021 (december)_
+##### 1 november 2021
+- __Migration guide__
+  - Read the [migration guide](./docs/migration/MigratingFromV8ToV9.md) to upgrade from V8 to V9
 - __API__
   - Upgraded Phpfastcache API `4.0.0` ([see changes](CHANGELOG_API.md))
   - Renamed `Api::getPhpFastCacheVersion()` to `Api::getPhpfastcacheVersion()`
   - Renamed `Api::getPhpFastCacheChangelog()` to `Api::getPhpfastcacheChangelog()`
   - Renamed `Api::getPhpFastCacheGitHeadHash()` to `Api::getPhpfastcacheGitHeadHash()`
 - __Global__
+  - Removed magics methods from CacheManager `CacheManager::DriverName()`, use `CacheManager::getInstance('DriverName')` instead
   - Slightly increased performances on some critical points of the library
   - Removed "BadPracticeOMeter" notice in CacheManager
   - Removed many code duplicate (like in `\Phpfastcache\Driver\[DRIVER_NAME]\Item` classes)
@@ -22,10 +24,11 @@
   - Deprecated `\Phpfastcache\Helper\CacheConditionalHelper`, use `\Phpfastcache\CacheContract` instead
   - The `\Phpfastcache\CacheContract` class is now also callable directly without calling `get()` method
 - __Config/Options__
+  - Configuration object will now be locked once the cache pool instance is running. 
   - Updated `ConfigurationOption` which is no longer an `ArrayObject` class, therefore array-syntax is no longer available.
-  - Renamed configuration entry `htaccess` to `autoHtaccessCreationEnabled` for files-based drivers.
-  - Renamed `IOConfigurationOptionTrait::getHtaccess()` to `IOConfigurationOptionTrait::isAutoHtaccessCreationEnabled()`
-  - Renamed `IOConfigurationOptionTrait::setHtaccess()` to `IOConfigurationOptionTrait::setAutoHtaccessCreationEnabled()`
+  - Removed configuration entry `htaccess` for files-based drivers.
+  - Removed `IOConfigurationOptionTrait::getHtaccess()`
+  - Removed `IOConfigurationOptionTrait::setHtaccess()`
 - __Tests__
   - Added PHPMD, PHPCS and PHPSTAN coverages to increase quality of the project
   - Updated tests to work with new core/drivers changes

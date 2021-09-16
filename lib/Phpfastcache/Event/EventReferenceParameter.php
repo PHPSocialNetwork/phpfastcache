@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Event;
 
-use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 
 class EventReferenceParameter
 {
@@ -34,17 +34,18 @@ class EventReferenceParameter
     }
 
     /**
-     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidTypeException
      */
     public function setParameterValue(mixed $newValue): void
     {
-        $currentType = \gettype($this->parameter);
-        $newType = \gettype($newValue);
-
-        if (!$this->allowTypeChange && $newType !== $currentType) {
-            throw new PhpfastcacheInvalidArgumentException(
-                \sprintf('You tried to change the variable type from "%s" to "%s" which is not allowed.', $currentType, $newType)
-            );
+        if (!$this->allowTypeChange) {
+            $currentType = \gettype($this->parameter);
+            $newType = \gettype($newValue);
+            if ($newType !== $currentType) {
+                throw new PhpfastcacheInvalidTypeException(
+                    \sprintf('You tried to change the variable type from "%s" to "%s" which is not allowed.', $currentType, $newType)
+                );
+            }
         }
 
         $this->parameter = $newValue;

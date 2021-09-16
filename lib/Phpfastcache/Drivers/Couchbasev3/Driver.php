@@ -98,7 +98,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
              * CouchbaseBucket::get() returns a GetResult interface
              */
             return $this->decodeDocument((array)$this->getCollection()->get($item->getEncodedKey())->content());
-        } catch (DocumentNotFoundException $e) {
+        } catch (DocumentNotFoundException) {
             return null;
         }
     }
@@ -120,7 +120,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                 (new UpsertOptions())->expiry($item->getTtl())
             );
             return true;
-        } catch (CouchbaseException $e) {
+        } catch (CouchbaseException) {
             return false;
         }
     }
@@ -137,9 +137,9 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         try {
             $this->getCollection()->remove($item->getEncodedKey());
             return true;
-        } catch (DocumentNotFoundException $e) {
+        } catch (DocumentNotFoundException) {
             return true;
-        } catch (CouchbaseException $e) {
+        } catch (CouchbaseException) {
             return false;
         }
     }

@@ -17,6 +17,7 @@ namespace Phpfastcache\Drivers\Devrandom;
 
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 class Config extends ConfigurationOption
 {
@@ -35,9 +36,11 @@ class Config extends ConfigurationOption
     /**
      * @param int $dataLength
      * @return Config
+     * @throws PhpfastcacheLogicException
      */
     public function setDataLength(int $dataLength): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->dataLength = $dataLength;
         return $this;
     }
@@ -53,9 +56,12 @@ class Config extends ConfigurationOption
     /**
      * @param int $chanceOfRetrieval
      * @return Config
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
     public function setChanceOfRetrieval(int $chanceOfRetrieval): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         if ($chanceOfRetrieval < 0 || $chanceOfRetrieval > 100) {
             throw new PhpfastcacheInvalidArgumentException('Chance of retrieval must be between 0 and 100');
         }

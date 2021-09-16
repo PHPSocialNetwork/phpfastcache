@@ -27,10 +27,6 @@ interface IOConfigurationOptionInterface extends ConfigurationOptionInterface
 
     public function setSecurityKey(string $securityKey): static;
 
-    public function isAutoHtaccessCreationEnabled(): bool;
-
-    public function setAutoHtaccessCreationEnabled(bool $autoHtaccessCreationEnabled): static;
-
     public function isSecureFileManipulation(): bool;
 
     public function setSecureFileManipulation(bool $secureFileManipulation): static;

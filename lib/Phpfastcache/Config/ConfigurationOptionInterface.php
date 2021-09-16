@@ -17,7 +17,7 @@ namespace Phpfastcache\Config;
 
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 
-interface ConfigurationOptionInterface
+interface ConfigurationOptionInterface extends LockableConfigurationInterface
 {
     /**
      * ConfigurationOptionInterface constructor.

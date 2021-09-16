@@ -17,8 +17,10 @@ namespace Phpfastcache\Config;
 
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
-class ConfigurationOption implements ConfigurationOptionInterface
+class ConfigurationOption extends AbstractConfigurationOption implements ConfigurationOptionInterface
 {
     protected bool $itemDetailedDate = false;
 
@@ -48,6 +50,7 @@ class ConfigurationOption implements ConfigurationOptionInterface
 
     /**
      * @throws PhpfastcacheInvalidConfigurationException
+     * @throws PhpfastcacheInvalidTypeException
      */
     public function __construct(array $parameters = [])
     {
@@ -66,7 +69,7 @@ class ConfigurationOption implements ConfigurationOptionInterface
                     );
                 }
             } catch (\TypeError $e) {
-                throw new PhpfastcacheInvalidConfigurationException(
+                throw new PhpfastcacheInvalidTypeException(
                     \sprintf(
                         'TypeError exception thrown while trying to set your configuration: %s',
                         $e->getMessage()
@@ -101,9 +104,11 @@ class ConfigurationOption implements ConfigurationOptionInterface
     /**
      * @param bool $itemDetailedDate
      * @return ConfigurationOption
+     * @throws PhpfastcacheLogicException
      */
     public function setItemDetailedDate(bool $itemDetailedDate): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->itemDetailedDate = $itemDetailedDate;
         return $this;
     }
@@ -119,9 +124,11 @@ class ConfigurationOption implements ConfigurationOptionInterface
     /**
      * @param bool $autoTmpFallback
      * @return ConfigurationOption
+     * @throws PhpfastcacheLogicException
      */
     public function setAutoTmpFallback(bool $autoTmpFallback): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->autoTmpFallback = $autoTmpFallback;
         return $this;
     }
@@ -137,9 +144,11 @@ class ConfigurationOption implements ConfigurationOptionInterface
     /**
      * @param int $defaultTtl
      * @return ConfigurationOption
+     * @throws PhpfastcacheLogicException
      */
     public function setDefaultTtl(int $defaultTtl): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->defaultTtl = $defaultTtl;
         return $this;
     }
@@ -156,9 +165,11 @@ class ConfigurationOption implements ConfigurationOptionInterface
      * @param callable|string $defaultKeyHashFunction
      * @return ConfigurationOption
      * @throws  PhpfastcacheInvalidConfigurationException
+     * @throws PhpfastcacheLogicException
      */
     public function setDefaultKeyHashFunction(callable|string $defaultKeyHashFunction): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         if ($defaultKeyHashFunction && !\is_callable($defaultKeyHashFunction) && (\is_string($defaultKeyHashFunction) && !\function_exists($defaultKeyHashFunction))) {
             throw new PhpfastcacheInvalidConfigurationException('defaultKeyHashFunction must be a valid function name string');
         }
@@ -178,9 +189,11 @@ class ConfigurationOption implements ConfigurationOptionInterface
      * @param callable|string $defaultFileNameHashFunction
      * @return ConfigurationOption
      * @throws  PhpfastcacheInvalidConfigurationException
+     * @throws PhpfastcacheLogicException
      */
     public function setDefaultFileNameHashFunction(callable|string $defaultFileNameHashFunction): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         if (!\is_callable($defaultFileNameHashFunction) && (\is_string($defaultFileNameHashFunction) && !\function_exists($defaultFileNameHashFunction))) {
             throw new PhpfastcacheInvalidConfigurationException('defaultFileNameHashFunction must be a valid function name string');
         }
@@ -199,9 +212,11 @@ class ConfigurationOption implements ConfigurationOptionInterface
     /**
      * @param string $path
      * @return ConfigurationOption
+     * @throws PhpfastcacheLogicException
      */
     public function setPath(string $path): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->path = $path;
         return $this;
     }
@@ -217,9 +232,11 @@ class ConfigurationOption implements ConfigurationOptionInterface
     /**
      * @param bool $preventCacheSlams
      * @return ConfigurationOption
+     * @throws PhpfastcacheLogicException
      */
     public function setPreventCacheSlams(bool $preventCacheSlams): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->preventCacheSlams = $preventCacheSlams;
         return $this;
     }
@@ -235,9 +252,11 @@ class ConfigurationOption implements ConfigurationOptionInterface
     /**
      * @param int $cacheSlamsTimeout
      * @return ConfigurationOption
+     * @throws PhpfastcacheLogicException
      */
     public function setCacheSlamsTimeout(int $cacheSlamsTimeout): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->cacheSlamsTimeout = $cacheSlamsTimeout;
         return $this;
     }
@@ -253,9 +272,11 @@ class ConfigurationOption implements ConfigurationOptionInterface
     /**
      * @param bool $useStaticItemCaching
      * @return ConfigurationOption
+     * @throws PhpfastcacheLogicException
      */
     public function setUseStaticItemCaching(bool $useStaticItemCaching): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->useStaticItemCaching = $useStaticItemCaching;
         return $this;
     }
@@ -277,9 +298,11 @@ class ConfigurationOption implements ConfigurationOptionInterface
      * @param ?object $superGlobalAccessor
      * @return static
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
     public function setSuperGlobalAccessor(?object $superGlobalAccessor): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         /**
          *  Symfony's implementation for users that want a good control of their code:
          *

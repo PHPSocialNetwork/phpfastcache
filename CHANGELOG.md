@@ -35,6 +35,8 @@
   - Removed Autoload test since its support has been removed and now only managed by Composer
   - Increased tests reliability and code coverage for better catching any eventual regression 
 - __Drivers__
+  - Added `Arangodb` driver support
+  - Added `Dynamodb` driver support
   - Removed `Cookie` driver because of its potential dangerosity
   - Removed `Couchbase` (SDK 2 support dropped) driver which is now replaced by `Couchbasev3` (SDK 3)
   - Removed `Devtrue` and `Devfalse` drivers

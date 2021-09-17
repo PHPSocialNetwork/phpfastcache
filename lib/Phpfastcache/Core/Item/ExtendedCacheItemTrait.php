@@ -279,7 +279,7 @@ trait ExtendedCacheItemTrait
 
     public function doesItemBelongToThatDriverBackend(ExtendedCacheItemPoolInterface $driverPool): bool
     {
-        return $driverPool->getClassNamespace() === $this->getClassNamespace();
+        return $driverPool::getClassNamespace() === self::getClassNamespace();
     }
 
     abstract protected function getDriverClass(): string;

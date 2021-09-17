@@ -21,9 +21,10 @@ The simplicity of abstraction: One class for many backend cache. You don't need 
 |  `Files`                        | `Cassandra`                                                   | `Devrandom`                   | `SemiReplicationCluster`          |
 |  `Leveldb`                      | `CouchBasev3`<br>_(`Couchbase` for SDK 2 support removed)_    | `Memstatic`                   | `MasterSlaveReplicationCluster`   |
 |  `Memcache(d)`                  | `Couchdb`                                                     |                               | `RandomReplicationCluster`        |
-|  `Sqlite`                       | `Mongodb`                                                     |                               |                                   |
-|  `Wincache`                     | `Predis`                                                      |                               |                                   |
-|  `Zend Disk Cache`              | `Redis`                                                       |                               |                                   |
+|  `Sqlite`                       | `Dynamodb`                                                    |                               |                                   |
+|  `Wincache`                     | `Mongodb`                                                     |                               |                                   |
+|  `Zend Disk Cache`              | `Predis`                                                      |                               |                                   |
+|                                 | `Redis`                                                       |                               |                                   |
 |                                 | `Ssdb`                                                        |                               |                                   |
 |                                 | `Zend Memory Cache`                                           |                               |                                   |
 |                                 |                                                               |                               |                                   |

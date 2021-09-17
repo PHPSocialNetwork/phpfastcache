@@ -16,8 +16,10 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Pool;
 
 use DateTime;
+use DateTimeInterface;
 use Phpfastcache\Config\ConfigurationOptionInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Util\ClassNamespaceResolverTrait;
 use Throwable;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
@@ -32,6 +34,9 @@ use ReflectionObject;
 trait DriverBaseTrait
 {
     use DriverPoolAbstractTrait;
+    use ClassNamespaceResolverTrait;
+
+    protected static array $cacheItemClasses = [];
 
     protected ConfigurationOptionInterface $config;
 
@@ -68,11 +73,14 @@ trait DriverBaseTrait
             throw new PhpfastcacheDriverConnectException(
                 sprintf(
                     self::DRIVER_CONNECT_FAILURE,
+                    $e::class,
                     $this->getDriverName(),
                     $e->getMessage(),
                     $e->getLine() ?: 'unknown line',
                     $e->getFile() ?: 'unknown file'
-                )
+                ),
+                0,
+                $e
             );
         }
     }
@@ -93,8 +101,9 @@ trait DriverBaseTrait
      */
     public function getDefaultConfig(): ConfigurationOption
     {
-        $className = self::getConfigClass();
-        return new $className;
+        $className = $this::getConfigClass();
+
+        return new $className();
     }
 
     /**
@@ -109,12 +118,23 @@ trait DriverBaseTrait
         return ConfigurationOption::class;
     }
 
+    public static function getItemClass(): string
+    {
+        if (!isset(self::$cacheItemClasses[static::class])) {
+            self::$cacheItemClasses[static::class] = self::getClassNamespace() . '\\' . 'Item';
+        }
+
+        return self::$cacheItemClasses[static::class];
+    }
+
+
     /**
      * @param ExtendedCacheItemInterface $item
+     * @param bool $stringifyDate
      * @return array
      * @throws PhpfastcacheLogicException
      */
-    public function driverPreWrap(ExtendedCacheItemInterface $item): array
+    public function driverPreWrap(ExtendedCacheItemInterface $item, bool $stringifyDate = false): array
     {
         $wrap = [
             self::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(), // Stored but not really used, allow you to quickly identify the cache key
@@ -133,6 +153,15 @@ trait DriverBaseTrait
         } else {
             $wrap[self::DRIVER_MDATE_WRAPPER_INDEX] = null;
             $wrap[self::DRIVER_CDATE_WRAPPER_INDEX] = null;
+        }
+
+        if ($stringifyDate) {
+            $wrap = \array_map(static function ($value) {
+                if ($value instanceof DateTimeInterface) {
+                    return $value->format(DateTimeInterface::W3C);
+                }
+                return $value;
+            }, $wrap);
         }
 
         return $wrap;
@@ -157,12 +186,12 @@ trait DriverBaseTrait
     /**
      * @param array $wrapper
      * @return mixed
+     * @throws \Exception
      */
     public function driverUnwrapData(array $wrapper): mixed
     {
         return $wrapper[self::DRIVER_DATA_WRAPPER_INDEX];
     }
-
 
     /**
      * @param array $wrapper
@@ -170,7 +199,11 @@ trait DriverBaseTrait
      */
     public function driverUnwrapEdate(array $wrapper): \DateTime
     {
-        return $wrapper[self::DRIVER_EDATE_WRAPPER_INDEX];
+        if ($wrapper[self::DRIVER_EDATE_WRAPPER_INDEX] instanceof \DateTime) {
+            return $wrapper[self::DRIVER_EDATE_WRAPPER_INDEX];
+        }
+
+        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[self::DRIVER_EDATE_WRAPPER_INDEX]);
     }
 
     /**
@@ -179,7 +212,11 @@ trait DriverBaseTrait
      */
     public function driverUnwrapCdate(array $wrapper): ?\DateTime
     {
-        return $wrapper[self::DRIVER_CDATE_WRAPPER_INDEX];
+        if ($wrapper[self::DRIVER_CDATE_WRAPPER_INDEX] instanceof \DateTime) {
+            return $wrapper[self::DRIVER_CDATE_WRAPPER_INDEX];
+        }
+
+        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[self::DRIVER_CDATE_WRAPPER_INDEX]);
     }
 
     /**
@@ -188,7 +225,11 @@ trait DriverBaseTrait
      */
     public function driverUnwrapMdate(array $wrapper): ?\DateTime
     {
-        return $wrapper[self::DRIVER_MDATE_WRAPPER_INDEX];
+        if ($wrapper[self::DRIVER_MDATE_WRAPPER_INDEX] instanceof \DateTime) {
+            return $wrapper[self::DRIVER_MDATE_WRAPPER_INDEX];
+        }
+
+        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[self::DRIVER_MDATE_WRAPPER_INDEX]);
     }
 
     /**
@@ -198,7 +239,6 @@ trait DriverBaseTrait
     {
         return $this->instanceId;
     }
-
 
     /**
      * Encode data types such as object/array

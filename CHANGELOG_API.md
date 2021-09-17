@@ -2,9 +2,11 @@
 - **[BC Break]** Upgraded `psr/cache` dependency to `^3.0` which required `ExtendedCacheItemPoolInterface` and `ExtendedCacheItemInterface` updates
 - **[BC Break]** Increased minimum PHP compatibility to `^8.0` which also required `TaggableCacheItemPoolInterface` and `TaggableCacheItemInterface` updates
 - **[BC Break]** Updated `ExtendedCacheItemPoolInterface::saveMultiple(ExtendedCacheItemInterface...$items)` which no longer accept argument #0 to be itself an array of `ExtendedCacheItemInterface` objects
-- Referenced `TaggableCacheItemPoolInterface::TAG_STRATEGY_*` constants to `TaggableCacheItemInterface::TAG_STRATEGY_*` for more code usability
+- **[BC Break]** Updated `ExtendedCacheItemPoolInterface::getConfigClass()` signature: it is now a **static** method
+- Added `ExtendedCacheItemPoolInterface::getItemClass()`
 - Added `ExtendedCacheItemInterface::hasTag(string $tag)` to test if a cache item is tagged with the provided tag
 - Added `ExtendedCacheItemInterface::hasTags(array $tags, int $strategy)` to test if a cache item is tagged with ones the provided tags with an optional `$strategy` parameter
+- Referenced `TaggableCacheItemPoolInterface::TAG_STRATEGY_*` constants to `TaggableCacheItemInterface::TAG_STRATEGY_*` for more code usability
 
 ## 3.0.0
 - **[BC Break]** Removed `ExtendedCacheItemPoolInterface::appendItemsByTagsAll()` (replaced by strategy `TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL`)

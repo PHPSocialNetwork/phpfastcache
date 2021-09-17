@@ -160,7 +160,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
              */
             if ($driverPool === $this) {
                 /** @var ExtendedCacheItemInterface $itemPool */
-                $itemClass = $driverPool->getClassNamespace() . '\\' . 'Item';
+                $itemClass = $driverPool->getItemClass();
                 $itemPool = new $itemClass($this, $item->getKey());
                 $itemPool->setEventManager($this->getEventManager())
                     ->set($item->get())

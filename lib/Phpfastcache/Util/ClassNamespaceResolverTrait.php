@@ -21,10 +21,7 @@ use RecursiveIteratorIterator;
 
 trait ClassNamespaceResolverTrait
 {
-    /**
-     * @var string
-     */
-    protected string $namespace;
+    protected static array $namespaces = [];
 
     /**
      * Iterate over all files in the given directory searching for classes.
@@ -148,13 +145,13 @@ trait ClassNamespaceResolverTrait
     /**
      * @return string
      */
-    public function getClassNamespace(): string
+    public static function getClassNamespace(): string
     {
-        if (!isset($this->namespace)) {
-            $this->namespace = substr(static::class, 0, strrpos(static::class, '\\'));
+        if (!isset(self::$namespaces[static::class])) {
+            self::$namespaces[static::class] = substr(static::class, 0, strrpos(static::class, '\\'));
         }
 
-        return $this->namespace;
+        return self::$namespaces[static::class];
     }
 
     /**

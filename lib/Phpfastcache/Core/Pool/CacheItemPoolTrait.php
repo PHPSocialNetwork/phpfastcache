@@ -34,7 +34,6 @@ use RuntimeException;
 
 trait CacheItemPoolTrait
 {
-    use ClassNamespaceResolverTrait;
     use EventManagerDispatcherTrait;
     use DriverBaseTrait;
 
@@ -61,7 +60,7 @@ trait CacheItemPoolTrait
      */
     public function setItem(CacheItemInterface $item): static
     {
-        if ($this->getClassNamespace() . '\\Item' === \get_class($item)) {
+        if ($this->getItemClass() === $item::class) {
             if (!$this->getConfig()->isUseStaticItemCaching()) {
                 throw new PhpfastcacheLogicException(
                     'The static item caching option (useStaticItemCaching) is disabled so you cannot attach an item.'
@@ -92,6 +91,7 @@ trait CacheItemPoolTrait
     public function getItems(array $keys = []): iterable
     {
         $collection = [];
+
         foreach ($keys as $key) {
             $collection[$key] = $this->getItem($key);
         }
@@ -126,9 +126,9 @@ trait CacheItemPoolTrait
             }
 
             $cacheSlamsSpendSeconds = 0;
-            $class = $this->getClassNamespace() . '\Item';
+            $itemClass = self::getItemClass();
             /** @var $item ExtendedCacheItemInterface */
-            $item = new $class($this, $key);
+            $item = new $itemClass($this, $key);
             $item->setEventManager($this->eventManager);
 
             getItemDriverRead:

@@ -41,7 +41,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
     public const DRIVER_CHECK_FAILURE = '%s is not installed or is misconfigured, cannot continue. 
     Also, please verify the suggested dependencies in composer because as of the V6, 3rd party libraries are no longer required.';
 
-    public const DRIVER_CONNECT_FAILURE = '%s failed to connect with the following error message: "%s" line %d in %s';
+    public const DRIVER_CONNECT_FAILURE = '(%s) %s failed to connect with the following error message: "%s" line %d in %s';
 
     public const DRIVER_KEY_WRAPPER_INDEX = 'k';
 
@@ -67,6 +67,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      * @return string
      */
     public static function getConfigClass(): string;
+
+    /**
+     * Return the item class name
+     * @return string
+     */
+    public static function getItemClass(): string;
 
     /**
      * @return ConfigurationOption

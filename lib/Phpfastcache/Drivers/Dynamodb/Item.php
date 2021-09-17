@@ -13,17 +13,17 @@
  */
 declare(strict_types=1);
 
-namespace Phpfastcache\Util;
+namespace Phpfastcache\Drivers\Dynamodb;
 
-interface ClassNamespaceResolverInterface
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Core\Item\TaggableCacheItemTrait;
+
+class Item implements ExtendedCacheItemInterface
 {
-    /**
-     * @return string
-     */
-    public static function getClassNamespace(): string;
+    use TaggableCacheItemTrait;
 
-    /**
-     * @return string
-     */
-    public function getClassName(): string;
+    protected function getDriverClass(): string
+    {
+        return Driver::class;
+    }
 }

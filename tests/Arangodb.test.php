@@ -24,6 +24,7 @@ $testHelper = new TestHelper('Arangodb driver');
 $config = new ArangodbConfig();
 
 $config->setItemDetailedDate(true);
+
 try {
     $config->setCollection('phpfastcache');
     $config->setAuthUser('phpfastcache');

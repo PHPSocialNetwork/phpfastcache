@@ -503,6 +503,7 @@ class TestHelper
             $this->assertFail('The pool failed to retrieve the expected new value.');
             return;
         }
+
         if ($poolClear) {
             if ($pool->deleteItem($cacheKey)) {
                 $this->assertPass('The pool successfully deleted the cache item.');

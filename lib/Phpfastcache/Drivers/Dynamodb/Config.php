@@ -29,7 +29,7 @@ class Config extends ConfigurationOption
 
     protected ?string $awsSecretAccessKey = null;
 
-    protected bool $allowEnvironmentCredentialOverride = false;
+    protected bool $allowEnvCredentialOverride = false;
 
     protected ? string $endpoint = null; // List of endpoints here: https://docs.aws.amazon.com/general/latest/gr/ddb.html
 
@@ -67,7 +67,7 @@ class Config extends ConfigurationOption
     {
         $this->enforceLockedProperty(__FUNCTION__);
         if ($awsAccessKeyId !== null) {
-            if (!$this->isAllowEnvironmentCredentialOverride()) {
+            if (!$this->isAllowEnvCredentialOverride()) {
                 throw new PhpfastcacheLogicException('You are not allowed to override AWS environment variables.');
             }
             \putenv("AWS_ACCESS_KEY_ID=$awsAccessKeyId");
@@ -93,7 +93,7 @@ class Config extends ConfigurationOption
     {
         $this->enforceLockedProperty(__FUNCTION__);
         if ($awsSecretAccessKey !== null) {
-            if (!$this->isAllowEnvironmentCredentialOverride()) {
+            if (!$this->isAllowEnvCredentialOverride()) {
                 throw new PhpfastcacheLogicException('You are not allowed to override AWS environment variables.');
             }
             \putenv("AWS_SECRET_ACCESS_KEY=$awsSecretAccessKey");
@@ -105,20 +105,20 @@ class Config extends ConfigurationOption
     /**
      * @return bool
      */
-    public function isAllowEnvironmentCredentialOverride(): bool
+    public function isAllowEnvCredentialOverride(): bool
     {
-        return $this->allowEnvironmentCredentialOverride;
+        return $this->allowEnvCredentialOverride;
     }
 
     /**
-     * @param bool $allowEnvironmentCredentialOverride
+     * @param bool $allowEnvCredentialOverride
      * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setAllowEnvironmentCredentialOverride(bool $allowEnvironmentCredentialOverride): Config
+    public function setAllowEnvCredentialOverride(bool $allowEnvCredentialOverride): Config
     {
         $this->enforceLockedProperty(__FUNCTION__);
-        $this->allowEnvironmentCredentialOverride = $allowEnvironmentCredentialOverride;
+        $this->allowEnvCredentialOverride = $allowEnvCredentialOverride;
         return $this;
     }
 

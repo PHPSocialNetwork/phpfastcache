@@ -31,10 +31,14 @@ use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheIOException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
-use Phpfastcache\Exceptions\PhpfastcacheIOException;
 
+/**
+ * @property ConfigurationOption $config
+ */
 abstract class ClusterPoolAbstract implements ClusterPoolInterface
 {
     use TaggableCacheItemPoolTrait;
@@ -100,6 +104,20 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
     /**
      * @inheritDoc
      */
+    public function getConfigs() : array
+    {
+        $configs = [];
+
+        foreach ($this->getClusterPools() as $clusterPool) {
+            $configs[$clusterPool->getDriverName()] = $clusterPool->getConfig();
+        }
+
+        return $configs;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getItems(array $keys = []): iterable
     {
         $items = [];
@@ -130,7 +148,10 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
     }
 
     /**
-     * @inheritDoc
+     * @param CacheItemInterface $item
+     * @return bool
+     * @throws InvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
     public function saveDeferred(CacheItemInterface $item): bool
     {
@@ -151,6 +172,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
      * @param ExtendedCacheItemPoolInterface $driverPool
      * @return ExtendedCacheItemInterface
      * @throws InvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
     protected function getStandardizedItem(ExtendedCacheItemInterface $item, ExtendedCacheItemPoolInterface $driverPool): ExtendedCacheItemInterface
     {
@@ -162,29 +184,42 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
                 /** @var ExtendedCacheItemInterface $itemPool */
                 $itemClass = $driverPool->getItemClass();
                 $itemPool = new $itemClass($this, $item->getKey());
-                $itemPool->setEventManager($this->getEventManager())
-                    ->set($item->get())
-                    ->setHit($item->isHit())
-                    ->setTags($item->getTags())
-                    ->expiresAt($item->getExpirationDate())
-                    ->setDriver($driverPool);
+
+                $this->remapCacheItem($item, $itemPool, $driverPool);
+
                 return $itemPool;
             }
-            return $driverPool->getItem($item->getKey())
-                ->setEventManager($this->getEventManager())
-                ->set($item->get())
-                ->setHit($item->isHit())
-                ->setTags($item->getTags())
-                ->expiresAt($item->getExpirationDate())
-                ->setDriver($driverPool);
+
+            $itemPool = $driverPool->getItem($item->getKey());
+            $this->remapCacheItem($item, $itemPool, $driverPool);
+
+            return $itemPool;
         }
 
         return $item->setEventManager($this->getEventManager());
     }
 
     /**
-     * Interfaced methods that needs to be faked
+     * @param ExtendedCacheItemInterface $itemSource
+     * @param ExtendedCacheItemInterface $itemTarget
+     * @param ExtendedCacheItemPoolInterface $driverPool
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
+    protected function remapCacheItem(ExtendedCacheItemInterface $itemSource, ExtendedCacheItemInterface $itemTarget, ExtendedCacheItemPoolInterface $driverPool): void
+    {
+        $itemTarget->setEventManager($this->getEventManager())
+            ->set($itemSource->get())
+            ->setHit($itemSource->isHit())
+            ->setTags($itemSource->getTags())
+            ->expiresAt($itemSource->getExpirationDate())
+            ->setDriver($driverPool);
+
+        if ($driverPool->getConfig()->isItemDetailedDate()) {
+            $itemTarget->setCreationDate($itemSource->getCreationDate())
+                ->setModificationDate($itemSource->getModificationDate());
+        }
+    }
 
     /**
      * @return DriverStatistic

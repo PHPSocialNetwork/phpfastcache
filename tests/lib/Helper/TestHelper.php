@@ -395,7 +395,6 @@ class TestHelper
         $this->printInfoText('Using cache key: ' . $cacheKey);
 
         $cacheItem->set($cacheValue)
-            ->expiresAfter(300)
             ->addTags([$cacheTag, $cacheTag2]);
 
         if ($pool->save($cacheItem)) {
@@ -528,7 +527,14 @@ class TestHelper
             }
         }
 
-        $this->printInfoText(\sprintf('I/O stats: %d HIT, %s MISS, %d WRITE', $pool->getIO()->getReadHit(), $pool->getIO()->getReadMiss(), $pool->getIO()->getWriteHit()));
+        $this->printInfoText(
+            \sprintf(
+                'I/O stats: %d HIT(S), %s MISS, %d WRITE(S)',
+                $pool->getIO()->getReadHit(),
+                $pool->getIO()->getReadMiss(),
+                $pool->getIO()->getWriteHit()
+            )
+        );
         $this->printInfoText('<yellow>Driver info</yellow>: <magenta>' . $pool->getStats()->getInfo() . '</magenta>');
     }
 

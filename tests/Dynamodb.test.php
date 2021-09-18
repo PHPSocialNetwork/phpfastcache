@@ -29,7 +29,7 @@ try {
     $config->setEndpoint('dynamodb.eu-west-3.amazonaws.com');
     $config->setTable('phpfastcache');
     $cacheInstance = CacheManager::getInstance('Dynamodb', $config);
-    $testHelper->runCRUDTests($cacheInstance);
+    $testHelper->runCRUDTests($cacheInstance, false);
 } catch (PhpfastcacheDriverConnectException $e) {
     $testHelper->assertSkip('Dynamodb server unavailable: ' . $e->getMessage());
     $testHelper->terminateTest();

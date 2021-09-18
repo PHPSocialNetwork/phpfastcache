@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Cluster;
 
+use Phpfastcache\Config\ConfigurationOptionInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 
 interface ClusterPoolInterface extends ExtendedCacheItemPoolInterface
@@ -23,4 +24,9 @@ interface ClusterPoolInterface extends ExtendedCacheItemPoolInterface
      * @return ExtendedCacheItemPoolInterface[]
      */
     public function getClusterPools(): array;
+
+    /**
+     * @return ConfigurationOptionInterface[]
+     */
+    public function getConfigs(): array;
 }

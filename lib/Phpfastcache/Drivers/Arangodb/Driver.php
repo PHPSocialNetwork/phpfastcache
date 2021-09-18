@@ -65,22 +65,19 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     protected function driverConnect(): bool
     {
-        /** @var Config $config */
-        $config = $this->getConfig();
-
         $connectionOptions = [
-            ArangoConnectionOptions::OPTION_DATABASE => $config->getDatabase(),
-            ArangoConnectionOptions::OPTION_ENDPOINT => $config->getEndpoint(),
+            ArangoConnectionOptions::OPTION_DATABASE => $this->getConfig()->getDatabase(),
+            ArangoConnectionOptions::OPTION_ENDPOINT => $this->getConfig()->getEndpoint(),
 
-            ArangoConnectionOptions::OPTION_CONNECTION  => $config->getConnection(),
-            ArangoConnectionOptions::OPTION_AUTH_TYPE   => $config->getAuthType(),
-            ArangoConnectionOptions::OPTION_AUTH_USER   => $config->getAuthUser(),
-            ArangoConnectionOptions::OPTION_AUTH_PASSWD => $config->getAuthPasswd(),
+            ArangoConnectionOptions::OPTION_CONNECTION  => $this->getConfig()->getConnection(),
+            ArangoConnectionOptions::OPTION_AUTH_TYPE   => $this->getConfig()->getAuthType(),
+            ArangoConnectionOptions::OPTION_AUTH_USER   => $this->getConfig()->getAuthUser(),
+            ArangoConnectionOptions::OPTION_AUTH_PASSWD => $this->getConfig()->getAuthPasswd(),
 
-            ArangoConnectionOptions::OPTION_CONNECT_TIMEOUT => $config->getConnectTimeout(),
-            ArangoConnectionOptions::OPTION_REQUEST_TIMEOUT => $config->getRequestTimeout(),
-            ArangoConnectionOptions::OPTION_CREATE        => $config->isAutoCreate(),
-            ArangoConnectionOptions::OPTION_UPDATE_POLICY => $config->getUpdatePolicy(),
+            ArangoConnectionOptions::OPTION_CONNECT_TIMEOUT => $this->getConfig()->getConnectTimeout(),
+            ArangoConnectionOptions::OPTION_REQUEST_TIMEOUT => $this->getConfig()->getRequestTimeout(),
+            ArangoConnectionOptions::OPTION_CREATE        => $this->getConfig()->isAutoCreate(),
+            ArangoConnectionOptions::OPTION_UPDATE_POLICY => $this->getConfig()->getUpdatePolicy(),
 
             // Options below are not yet supported
             // ConnectionOptions::OPTION_MEMCACHED_PERSISTENT_ID => 'arangodb-php-pool',
@@ -90,18 +87,18 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             // ConnectionOptions::OPTION_MEMCACHED_TTL           => 600
         ];
 
-        if ($config->getTraceFunction() !== null) {
-            $connectionOptions[ArangoConnectionOptions::OPTION_TRACE] = $config->getTraceFunction();
+        if ($this->getConfig()->getTraceFunction() !== null) {
+            $connectionOptions[ArangoConnectionOptions::OPTION_TRACE] = $this->getConfig()->getTraceFunction();
         }
 
-        if ($config->getAuthJwt() !== null) {
-            $connectionOptions[ArangoConnectionOptions::OPTION_AUTH_JWT] = $config->getAuthJwt();
+        if ($this->getConfig()->getAuthJwt() !== null) {
+            $connectionOptions[ArangoConnectionOptions::OPTION_AUTH_JWT] = $this->getConfig()->getAuthJwt();
         }
 
-        if (\str_starts_with($config->getAuthType(), 'ssl://')) {
-            $connectionOptions[ArangoConnectionOptions::OPTION_VERIFY_CERT] = $config->isVerifyCert();
-            $connectionOptions[ArangoConnectionOptions::OPTION_ALLOW_SELF_SIGNED] = $config->isSelfSigned();
-            $connectionOptions[ArangoConnectionOptions::OPTION_CIPHERS] = $config->getCiphers();
+        if (\str_starts_with($this->getConfig()->getAuthType(), 'ssl://')) {
+            $connectionOptions[ArangoConnectionOptions::OPTION_VERIFY_CERT] = $this->getConfig()->isVerifyCert();
+            $connectionOptions[ArangoConnectionOptions::OPTION_ALLOW_SELF_SIGNED] = $this->getConfig()->isSelfSigned();
+            $connectionOptions[ArangoConnectionOptions::OPTION_CIPHERS] = $this->getConfig()->getCiphers();
         }
 
         $this->instance = new ArangoConnection($connectionOptions);
@@ -110,11 +107,11 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
         $collectionNames = array_keys($this->collectionHandler->getAllCollections());
 
-        if ($config->isAutoCreate() && !\in_array($config->getCollection(), $collectionNames, true)) {
-            return $this->createCollection($config->getCollection());
+        if ($this->getConfig()->isAutoCreate() && !\in_array($this->getConfig()->getCollection(), $collectionNames, true)) {
+            return $this->createCollection($this->getConfig()->getCollection());
         }
 
-        return $this->collectionHandler->has($config->getCollection());
+        return $this->collectionHandler->has($this->getConfig()->getCollection());
     }
 
     /**
@@ -125,8 +122,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        /** @var Config $config */
-        $config = $this->getConfig();
         $options = [
             'overwriteMode' => 'replace',
             'returnNew' => true,
@@ -142,12 +137,12 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $document->set(self::DRIVER_EDATE_WRAPPER_INDEX, $item->getExpirationDate());
         $document->set(self::TTL_FIELD_NAME, $item->getExpirationDate()->getTimestamp());
 
-        if ($config->isItemDetailedDate()) {
+        if ($this->getConfig()->isItemDetailedDate()) {
             $document->set(self::DRIVER_CDATE_WRAPPER_INDEX, $item->getCreationDate());
             $document->set(self::DRIVER_MDATE_WRAPPER_INDEX, $item->getModificationDate());
         }
 
-        return $this->documentHandler->insert($config->getCollection(), $document, $options) !== null;
+        return $this->documentHandler->insert($this->getConfig()->getCollection(), $document, $options) !== null;
     }
 
     /**
@@ -158,11 +153,8 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
-        /** @var Config $config */
-        $config = $this->getConfig();
-
         try {
-            $document = $this->documentHandler->get($config->getCollection(), $item->getEncodedKey());
+            $document = $this->documentHandler->get($this->getConfig()->getCollection(), $item->getEncodedKey());
         } catch (ArangoServerException $e) {
             if ($e->getCode() === 404) {
                 return null;
@@ -181,15 +173,12 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        /** @var Config $config */
-        $config = $this->getConfig();
-
         $options = [
             'returnOld' => false
         ];
 
         try {
-            $this->documentHandler->removeById($config->getCollection(), $item->getEncodedKey(), null, $options);
+            $this->documentHandler->removeById($this->getConfig()->getCollection(), $item->getEncodedKey(), null, $options);
             return true;
         } catch (ArangoException) {
             return false;
@@ -201,11 +190,8 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     protected function driverClear(): bool
     {
-        /** @var Config $config */
-        $config = $this->getConfig();
-
         try {
-            $this->collectionHandler->truncate($config->getCollection());
+            $this->collectionHandler->truncate($this->getConfig()->getCollection());
             return true;
         } catch (ArangoException) {
             return false;
@@ -254,9 +240,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     protected function decode(ArangoDocument $document): mixed
     {
-        /** @var Config $config */
-        $config = $this->getConfig();
-
         $value = [
             self::DRIVER_KEY_WRAPPER_INDEX => $document->get(self::DRIVER_KEY_WRAPPER_INDEX),
             self::DRIVER_TAGS_WRAPPER_INDEX => $document->get(self::DRIVER_TAGS_WRAPPER_INDEX),
@@ -272,7 +255,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             new \DateTimeZone($eDate['timezone'])
         );
 
-        if ($config->isItemDetailedDate()) {
+        if ($this->getConfig()->isItemDetailedDate()) {
             $cDate = $document->get(self::DRIVER_CDATE_WRAPPER_INDEX);
             if (isset($cDate['date'], $cDate['timezone'])) {
                 $value[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX] = new \DateTime(
@@ -295,12 +278,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     public function getStats(): DriverStatistic
     {
-        /** @var Config $config */
-        $config = $this->getConfig();
         $rawData = [];
 
-        $rawData['collectionCount'] = $this->collectionHandler->count($config->getCollection(), false);
-        $rawData['collectionInfo'] = $this->collectionHandler->get($config->getCollection());
+        $rawData['collectionCount'] = $this->collectionHandler->count($this->getConfig()->getCollection(), false);
+        $rawData['collectionInfo'] = $this->collectionHandler->get($this->getConfig()->getCollection());
 
         try {
             $adminHandler = new AdminHandler($this->instance);
@@ -324,7 +305,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             ->setSize($rawData['collectionCount']);
     }
 
-    public function getConfig() : Config|ConfigurationOption
+    public function getConfig() : Config
     {
         return $this->config;
     }

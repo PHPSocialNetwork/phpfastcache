@@ -7,6 +7,8 @@
   - Renamed `Api::getPhpFastCacheVersion()` to `Api::getPhpfastcacheVersion()`
   - Renamed `Api::getPhpFastCacheChangelog()` to `Api::getPhpfastcacheChangelog()`
   - Renamed `Api::getPhpFastCacheGitHeadHash()` to `Api::getPhpfastcacheGitHeadHash()`
+- __Cluster__
+  - Renamed `\Phpfastcache\Cluster\AggregatorInterface::aggregateNewDriver()` to `\Phpfastcache\Cluster\AggregatorInterface::aggregateDriverByName()` 
 - __Global__
   - Removed magics methods from CacheManager `CacheManager::DriverName()`, use `CacheManager::getInstance('DriverName')` instead
   - Slightly increased performances on some critical points of the library

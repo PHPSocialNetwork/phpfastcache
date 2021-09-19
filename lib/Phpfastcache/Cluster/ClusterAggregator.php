@@ -18,6 +18,7 @@ namespace Phpfastcache\Cluster;
 use Exception;
 use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\EventManager;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverNotFoundException;
@@ -144,6 +145,7 @@ class ClusterAggregator implements AggregatorInterface
                 $clusterClass = ClusterPoolAbstract::STRATEGY[$strategy];
                 $this->cluster = new $clusterClass(
                     $this->getClusterAggregatorName(),
+                    EventManager::getInstance(),
                     ...\array_values($this->driverPools)
                 );
 

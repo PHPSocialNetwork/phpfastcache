@@ -108,8 +108,11 @@ class CacheManager
                 if ($configClass !== $config::class) {
                     $config = new $configClass($config->toArray());
                 }
-                self::$instances[$instanceId] = new $driverClass($config, $instanceId);
-                self::$instances[$instanceId]->setEventManager(EventManager::getInstance());
+                self::$instances[$instanceId] = new $driverClass(
+                    $config,
+                    $instanceId,
+                    EventManager::getInstance()
+                );
             } else {
                 throw new PhpfastcacheDriverNotFoundException(sprintf('The driver "%s" does not exists', $driver));
             }

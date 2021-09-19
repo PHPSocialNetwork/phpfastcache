@@ -17,6 +17,7 @@ namespace Phpfastcache\Cluster\Drivers\RandomReplication;
 
 use Phpfastcache\Cluster\Drivers\MasterSlaveReplication\Driver as MasterSlaveReplicationDriver;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Event\EventManagerInterface;
 use ReflectionException;
 use ReflectionMethod;
 
@@ -28,10 +29,10 @@ class Driver extends MasterSlaveReplicationDriver
      * @param ExtendedCacheItemPoolInterface ...$driverPools
      * @throws ReflectionException
      */
-    public function __construct(string $clusterName, ExtendedCacheItemPoolInterface ...$driverPools)
+    public function __construct(string $clusterName, EventManagerInterface $em, ExtendedCacheItemPoolInterface ...$driverPools)
     {
         (new ReflectionMethod(\get_parent_class(\get_parent_class($this)), __FUNCTION__))
-            ->invoke($this, $clusterName, ...$driverPools);
+            ->invoke($this, $clusterName, $em, ...$driverPools);
         $randomPool = $driverPools[\random_int(0, \count($driverPools) - 1)];
 
         $this->eventManager->dispatch(

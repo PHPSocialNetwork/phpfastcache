@@ -26,11 +26,11 @@ use ArangoDBClient\Exception as ArangoException;
 use ArangoDBClient\ServerException as ArangoServerException;
 
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
+use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
@@ -100,6 +100,8 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             $connectionOptions[ArangoConnectionOptions::OPTION_ALLOW_SELF_SIGNED] = $this->getConfig()->isSelfSigned();
             $connectionOptions[ArangoConnectionOptions::OPTION_CIPHERS] = $this->getConfig()->getCiphers();
         }
+
+        $this->eventManager->dispatch('ArangodbConnection', $this, new EventReferenceParameter($connectionOptions));
 
         $this->instance = new ArangoConnection($connectionOptions);
         $this->documentHandler = new ArangoDocumentHandler($this->instance);
@@ -207,10 +209,14 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $collection = new ArangoCollection($collectionName);
 
         try {
-            $this->collectionHandler->create($collection, [
+            $params = [
                 'type' => ArangoCollection::TYPE_DOCUMENT,
                 'waitForSync' => false
-            ]);
+            ];
+
+            $this->eventManager->dispatch('ArangodbCollectionParams', $this, new EventReferenceParameter($params));
+
+            $this->collectionHandler->create($collection, $params);
 
             $this->collectionHandler->createIndex($collection, [
                 'type'         => 'ttl',

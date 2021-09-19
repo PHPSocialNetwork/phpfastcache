@@ -34,13 +34,31 @@ EventManager::getInstance()->unbindEventCallback('onCacheGetItem', 'myCallbackNa
 
 ```
 
-:new: In V9 some callback parameter, that aren't objects, are passed by reference via the new `\Phpfastcache\Event\EventReferenceParameter` class.\
-This class is instantiated and passed to the callback with the original value passed **by reference** allowing you to either read or re-write its value.\
-If it's allowed by the event dispatcher the type can be changed or not.\
-If you try to while it's not allowed, you will get a `PhpfastcacheInvalidArgumentException` when trying to call `\Phpfastcache\Event\EventReferenceParameter::setParameterValue()`\
-Finally the class `\Phpfastcache\Event\EventReferenceParameter` is `invokable` and trying to do so will return you the parameter value.\
+:new: in V8
 
-:new: In V9, a method named `unbindAllEventCallbacks(): bool` has been added to `EventManagerInterface` to allow you to unbind/clear all event from an event instance.
+You can simply subscribe to **every** events at once of Phpfastcache.
+```php
+<?php
+use Phpfastcache\EventManager;
+
+EventManager::getInstance()->onEveryEvents(static function (string $eventName, ...$args) {
+    echo sprintf("Triggered event '{$eventName}' with %d arguments provided", count($args));
+}, 'debugCallback');
+```
+
+This is an exhaustive list, and it will be updated as soon as new events will be added to the Core.
+
+
+:new: In V9
+
+- Some callback parameter, that are __NOT__ objects, are passed by reference via the new `\Phpfastcache\Event\EventReferenceParameter` class.\
+  This class is instantiated and passed to the callback with the original value passed **by reference** allowing you to either read or re-write its value.\
+  If it's allowed by the event dispatcher the type can be changed or not.\
+  If you try to while it's not allowed, you will get a `PhpfastcacheInvalidArgumentException` when trying to call `\Phpfastcache\Event\EventReferenceParameter::setParameterValue()`\
+  Finally the class `\Phpfastcache\Event\EventReferenceParameter` is `invokable` and trying to do so will return you the parameter value.\
+- A method named `unbindAllEventCallbacks(): bool` has been added to `EventManagerInterface` to allow you to unbind/clear all event from an event instance.
+- Event callbacks will now receive the `eventName` as an extra _last_ callback parameter (except for `onEveryEvents` callbacks)
+- Added `EventManagerInterface::on(array $eventNames, $callback)` method, to subscribe to multiple events in once with the same callback
 
 ## List of active events:
 ### ItemPool Events
@@ -226,14 +244,35 @@ Finally the class `\Phpfastcache\Event\EventReferenceParameter` is `invokable` a
     - **Risky Circular Methods**
         - *ExtendedCacheItemInterface::expiresAt()*
 
-:new: As of the **V8** you can simply subscribe to **every** events at once of Phpfastcache.
-```php
-<?php
-use Phpfastcache\EventManager;
+### Driver-specific Events (as of V9)
+#### Arangodb
+- onArangodbConnection(*Callable* **$callback**)
+    - **Callback arguments**
+        - *ExtendedCacheItemPoolInterface* **$itemPool**
+        - *EventReferenceParameter($connectionOptions)* **$connectionOptions** _via EventReferenceParameter object_ **(type modification forbidden)**
+    - **Scope**
+        - Arangodb Driver
+    - **Description**
+        - Allow you to alter the parameters built used to connect to Arangodb server
+    - **Risky Circular Methods**: None
 
-EventManager::getInstance()->onEveryEvents(static function (string $eventName, ...$args) {
-    echo sprintf("Triggered event '{$eventName}' with %d arguments provided", count($args));
-}, 'debugCallback');
-```
+- onArangodbCollectionParams(*Callable* **$callback**)
+    - **Callback arguments**
+        - *ExtendedCacheItemPoolInterface* **$itemPool**
+        - *EventReferenceParameter($params)* **$params** _via EventReferenceParameter object_ **(type modification forbidden)**
+    - **Scope**
+        - Arangodb Driver
+    - **Description**
+        - Allow you to alter the parameters built used to create the collection
+    - **Risky Circular Methods**: None
 
-This is an exhaustive list and it will be updated as soon as new events will be added to the Core.
+#### Dynamodb
+- onDynamodbCreateTable(*Callable* **$callback**)
+    - **Callback arguments**
+        - *ExtendedCacheItemPoolInterface* **$itemPool**
+        - *EventReferenceParameter($params)* **$params** _via EventReferenceParameter object_ **(type modification forbidden)**
+    - **Scope**
+        - Dynamodb Driver
+    - **Description**
+        - Allow you to alter the parameters built used to create the table
+    - **Risky Circular Methods**: None

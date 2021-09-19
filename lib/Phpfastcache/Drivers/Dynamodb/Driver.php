@@ -25,6 +25,7 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
+use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Psr\Http\Message\UriInterface;
@@ -192,6 +193,8 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                 'WriteCapacityUnits' => 10
             ]
         ];
+
+        $this->eventManager->dispatch('DynamodbCreateTable', $this, new EventReferenceParameter($params));
 
         $this->instance->createTable($params);
         $this->instance->waitUntil('TableExists', $params);

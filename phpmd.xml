@@ -44,6 +44,7 @@
     <rule ref="rulesets/naming.xml/ShortMethodName">
         <properties>
             <property name="minimum" value="3" />
+            <property name="exceptions" value="on" />
         </properties>
     </rule>
     <rule ref="rulesets/naming.xml/ShortClassName">

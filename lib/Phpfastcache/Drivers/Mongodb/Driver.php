@@ -75,72 +75,37 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @return DriverStatistic
+     * @return bool
+     * @throws MongodbException
+     * @throws LogicException
      */
-    public function getStats(): DriverStatistic
+    protected function driverConnect(): bool
     {
-        $serverStats = $this->instance->getManager()->executeCommand(
-            $this->getConfig()->getDatabaseName(),
-            new Command(
-                [
-                    'serverStatus' => 1,
-                    'recordStats' => 0,
-                    'repl' => 0,
-                    'metrics' => 0,
-                ]
-            )
-        )->toArray()[0];
+        $timeout = $this->getConfig()->getTimeout() * 1000;
+        $collectionName = $this->getConfig()->getCollectionName();
+        $databaseName = $this->getConfig()->getDatabaseName();
+        $driverOptions = $this->getConfig()->getDriverOptions();
 
-        $collectionStats = $this->instance->getManager()->executeCommand(
-            $this->getConfig()->getDatabaseName(),
-            new Command(
-                [
-                    'collStats' => $this->getConfig()->getCollectionName(),
-                    'verbose' => true,
-                ]
-            )
-        )->toArray()[0];
+        $this->instance = $this->instance ?? new Client($this->buildConnectionURI($databaseName), ['connectTimeoutMS' => $timeout], $driverOptions);
+        $this->database = $this->database ?? $this->instance->selectDatabase($databaseName);
 
-        $arrayFilterRecursive = static function ($array, callable $callback = null) use (&$arrayFilterRecursive) {
-            $array = $callback($array);
+        if (!$this->collectionExists($collectionName)) {
+            $this->database->createCollection($collectionName);
+            $this->database->selectCollection($collectionName)
+                ->createIndex(
+                    [self::DRIVER_KEY_WRAPPER_INDEX => 1],
+                    ['unique' => true, 'name' => 'unique_key_index']
+                );
+            $this->database->selectCollection($collectionName)
+                ->createIndex(
+                    [self::DRIVER_EDATE_WRAPPER_INDEX => 1],
+                    ['expireAfterSeconds' => 0,  'name' => 'auto_expire_index']
+                );
+        }
 
-            if (\is_object($array) || \is_array($array)) {
-                foreach ($array as &$value) {
-                    $value = $arrayFilterRecursive($value, $callback);
-                }
-            }
+        $this->collection = $this->database->selectCollection($collectionName);
 
-            return $array;
-        };
-
-        $callback = static function ($item) {
-            /**
-             * Remove unserializable properties
-             */
-            if ($item instanceof UTCDateTime) {
-                return (string)$item;
-            }
-            return $item;
-        };
-
-        $serverStats = $arrayFilterRecursive($serverStats, $callback);
-        $collectionStats = $arrayFilterRecursive($collectionStats, $callback);
-
-        return (new DriverStatistic())
-            ->setInfo(
-                'MongoDB version ' . $serverStats->version . ', Uptime (in days): ' . round(
-                    $serverStats->uptime / 86400,
-                    1
-                ) . "\n For more information see RawData."
-            )
-            ->setSize($collectionStats->size)
-            ->setData(implode(', ', array_keys($this->itemInstances)))
-            ->setRawData(
-                [
-                    'serverStatus' => $serverStats,
-                    'collStats' => $collectionStats,
-                ]
-            );
+        return true;
     }
 
     /**
@@ -169,14 +134,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         }
 
         return null;
-    }
-
-    /**
-     * @return Collection
-     */
-    protected function getCollection(): Collection
-    {
-        return $this->collection;
     }
 
     /**
@@ -246,37 +203,81 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @return bool
-     * @throws MongodbException
-     * @throws LogicException
+     * @return DriverStatistic
+     * @throws MongoDBException
      */
-    protected function driverConnect(): bool
+    public function getStats(): DriverStatistic
     {
-        $timeout = $this->getConfig()->getTimeout() * 1000;
-        $collectionName = $this->getConfig()->getCollectionName();
-        $databaseName = $this->getConfig()->getDatabaseName();
-        $driverOptions = $this->getConfig()->getDriverOptions();
+        $serverStats = $this->instance->getManager()->executeCommand(
+            $this->getConfig()->getDatabaseName(),
+            new Command(
+                [
+                    'serverStatus' => 1,
+                    'recordStats' => 0,
+                    'repl' => 0,
+                    'metrics' => 0,
+                ]
+            )
+        )->toArray()[0];
 
-        $this->instance = $this->instance ?? new Client($this->buildConnectionURI($databaseName), ['connectTimeoutMS' => $timeout], $driverOptions);
-        $this->database = $this->database ?? $this->instance->selectDatabase($databaseName);
+        $collectionStats = $this->instance->getManager()->executeCommand(
+            $this->getConfig()->getDatabaseName(),
+            new Command(
+                [
+                    'collStats' => $this->getConfig()->getCollectionName(),
+                    'verbose' => true,
+                ]
+            )
+        )->toArray()[0];
 
-        if (!$this->collectionExists($collectionName)) {
-            $this->database->createCollection($collectionName);
-            $this->database->selectCollection($collectionName)
-                ->createIndex(
-                    [self::DRIVER_KEY_WRAPPER_INDEX => 1],
-                    ['unique' => true, 'name' => 'unique_key_index']
-                );
-            $this->database->selectCollection($collectionName)
-                ->createIndex(
-                    [self::DRIVER_EDATE_WRAPPER_INDEX => 1],
-                    ['expireAfterSeconds' => 0,  'name' => 'auto_expire_index']
-                );
-        }
+        $arrayFilterRecursive = static function ($array, callable $callback = null) use (&$arrayFilterRecursive) {
+            $array = $callback($array);
 
-        $this->collection = $this->database->selectCollection($collectionName);
+            if (\is_object($array) || \is_array($array)) {
+                foreach ($array as &$value) {
+                    $value = $arrayFilterRecursive($value, $callback);
+                }
+            }
 
-        return true;
+            return $array;
+        };
+
+        $callback = static function ($item) {
+            /**
+             * Remove unserializable properties
+             */
+            if ($item instanceof UTCDateTime) {
+                return (string)$item;
+            }
+            return $item;
+        };
+
+        $serverStats = $arrayFilterRecursive($serverStats, $callback);
+        $collectionStats = $arrayFilterRecursive($collectionStats, $callback);
+
+        return (new DriverStatistic())
+            ->setInfo(
+                'MongoDB version ' . $serverStats->version . ', Uptime (in days): ' . round(
+                    $serverStats->uptime / 86400,
+                    1
+                ) . "\n For more information see RawData."
+            )
+            ->setSize($collectionStats->size)
+            ->setData(implode(', ', array_keys($this->itemInstances)))
+            ->setRawData(
+                [
+                    'serverStatus' => $serverStats,
+                    'collStats' => $collectionStats,
+                ]
+            );
+    }
+
+    /**
+     * @return Collection
+     */
+    protected function getCollection(): Collection
+    {
+        return $this->collection;
     }
 
     /**

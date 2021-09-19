@@ -18,11 +18,15 @@ namespace Phpfastcache\Cluster\Drivers\MasterSlaveReplication;
 use Phpfastcache\Cluster\ClusterPoolAbstract;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\EventManager;
+use Phpfastcache\Exceptions\PhpfastcacheCoreException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheExceptionInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
+use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Exceptions\PhpfastcacheReplicationException;
 use Psr\Cache\CacheItemInterface;
 use ReflectionException;
@@ -32,20 +36,22 @@ class Driver extends ClusterPoolAbstract
     /**
      * MasterSlaveReplicationCluster constructor.
      * @param string $clusterName
+     * @param EventManager $em
      * @param ExtendedCacheItemPoolInterface ...$driverPools
-     * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverConnectException
-     * @throws PhpfastcacheInvalidConfigurationException
-     * @throws ReflectionException
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
+     * @throws PhpfastcacheIOException
      */
-    public function __construct(string $clusterName, ExtendedCacheItemPoolInterface ...$driverPools)
+    public function __construct(string $clusterName, EventManager $em, ExtendedCacheItemPoolInterface ...$driverPools)
     {
         if (\count($driverPools) !== 2) {
             throw new PhpfastcacheInvalidArgumentException('A "master/slave" cluster requires exactly two pools to be working.');
         }
 
-        parent::__construct($clusterName, ...$driverPools);
+        parent::__construct($clusterName, $em, ...$driverPools);
     }
 
     /**
@@ -54,7 +60,7 @@ class Driver extends ClusterPoolAbstract
     public function getItem(string $key): ExtendedCacheItemInterface
     {
         return $this->getStandardizedItem(
-            $this->makeOperation(static fn (ExtendedCacheItemPoolInterface $pool) => $pool->getItem($key)) ?? new Item($this, $key),
+            $this->makeOperation(static fn (ExtendedCacheItemPoolInterface $pool) => $pool->getItem($key)) ?? new Item($this, $key, $this->getEventManager()),
             $this
         );
     }

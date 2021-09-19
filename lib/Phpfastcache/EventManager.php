@@ -17,31 +17,9 @@ namespace Phpfastcache;
 
 use BadMethodCallException;
 use Phpfastcache\Event\EventManagerInterface;
+use Phpfastcache\Exceptions\PhpfastcacheEventManagerException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
-/**
- * == ItemPool Events ==
- * @method Void onCacheGetItem(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheDeleteItem(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheSaveItem(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheSaveMultipleItems(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheSaveDeferredItem(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheCommitItem(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheClearItem(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheWriteFileOnDisk(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheGetItemInSlamBatch(Callable $callable, ?string $callbackName = null)
- *
- * == ItemPool Events (Cluster) ==
- * @method Void onCacheReplicationSlaveFallback(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheReplicationRandomPoolChosen(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheClusterBuilt(Callable $callable, ?string $callbackName = null)
- *
- * == Item Events ==
- * @method Void onCacheItemSet(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheItemExpireAt(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheItemExpireAfter(Callable $callable, ?string $callbackName = null)
- *
- */
 class EventManager implements EventManagerInterface
 {
     public const ON_EVERY_EVENT = '__every';
@@ -65,7 +43,7 @@ class EventManager implements EventManagerInterface
      */
     public static function getInstance(): static
     {
-        return (self::$instance ?? self::$instance = new static);
+        return (self::$instance ?? self::$instance = new static());
     }
 
     /**
@@ -80,8 +58,9 @@ class EventManager implements EventManagerInterface
          * loop dispatching operations
          */
         if (isset($this->events[$eventName]) && $eventName !== self::ON_EVERY_EVENT) {
+            $loopArgs = array_merge($args, [$eventName]);
             foreach ($this->events[$eventName] as $event) {
-                $event(... $args);
+                $event(... $loopArgs);
             }
         }
         foreach ($this->events[self::ON_EVERY_EVENT] as $event) {
@@ -93,7 +72,7 @@ class EventManager implements EventManagerInterface
      * @param string $name
      * @param array $arguments
      * @throws PhpfastcacheInvalidArgumentException
-     * @throws BadMethodCallException
+     * @throws PhpfastcacheEventManagerException
      */
     public function __call(string $name, array $arguments): void
     {
@@ -109,7 +88,7 @@ class EventManager implements EventManagerInterface
                 throw new PhpfastcacheInvalidArgumentException(\sprintf('Expected Callable, got "%s"', \gettype($arguments[0])));
             }
         } else {
-            throw new BadMethodCallException('An event must start with "on" such as "onCacheGetItem"');
+            throw new PhpfastcacheEventManagerException('An event must start with "on" such as "onCacheGetItem"');
         }
     }
 
@@ -120,6 +99,21 @@ class EventManager implements EventManagerInterface
     public function onEveryEvents(callable $callback, string $callbackName): void
     {
         $this->events[self::ON_EVERY_EVENT][$callbackName] = $callback;
+    }
+
+
+    /**
+     * @throws PhpfastcacheEventManagerException
+     */
+    public function on(array $events, callable $callback): void
+    {
+        foreach ($events as $event) {
+            if (!\preg_match('#^([a-zA-z])*$#', $event)) {
+                throw new PhpfastcacheEventManagerException(\sprintf('Invalid event name "%s"', $event));
+            }
+
+            $this->{'on' . \ucfirst($event)}($callback);
+        }
     }
 
     /**

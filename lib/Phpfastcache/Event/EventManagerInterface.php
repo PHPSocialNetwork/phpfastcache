@@ -18,6 +18,33 @@ namespace Phpfastcache\Event;
 use BadMethodCallException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
+/**
+ * == ItemPool Events ==
+ * @method Void onCacheGetItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheDeleteItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheSaveItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheSaveMultipleItems(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheSaveDeferredItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheCommitItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheClearItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheWriteFileOnDisk(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheGetItemInSlamBatch(Callable $callable, ?string $callbackName = null)
+ *
+ * == ItemPool Events (Cluster) ==
+ * @method Void onCacheReplicationSlaveFallback(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheReplicationRandomPoolChosen(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheClusterBuilt(Callable $callable, ?string $callbackName = null)
+ *
+ * == Item Events ==
+ * @method Void onCacheItemSet(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheItemExpireAt(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheItemExpireAfter(Callable $callable, ?string $callbackName = null)
+ *
+ * == Driver-specific events ==
+ * @method Void onArangodbConnection(Callable $callable, ?string $callbackName = null)
+ * @method Void onArangodbCollectionParams(Callable $callable, ?string $callbackName = null)
+ * @method Void onDynamodbCreateTable(Callable $callable, ?string $callbackName = null)
+ */
 interface EventManagerInterface
 {
     /**
@@ -44,6 +71,12 @@ interface EventManagerInterface
      * @param string $callbackName
      */
     public function onEveryEvents(callable $callback, string $callbackName): void;
+
+    /**
+     * @param array $events
+     * @param callable $callback
+     */
+    public function on(array $events, callable $callback): void;
 
     /**
      * @param string $eventName

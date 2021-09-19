@@ -30,6 +30,7 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
+use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
@@ -51,9 +52,9 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     protected CouchbaseBucket $bucketInstance;
 
-    public function __construct(ConfigurationOption $config, $instanceId)
+    public function __construct(ConfigurationOption $config, $instanceId, EventManagerInterface $em)
     {
-        $this->__baseConstruct($config, $instanceId);
+        $this->__baseConstruct($config, $instanceId, $em);
     }
 
     /**

@@ -1,5 +1,5 @@
 ## 9.0.0
-##### 1 november 2021
+##### 1 october 2021
 - __Migration guide__
   - Read the [migration guide](./docs/migration/MigratingFromV8ToV9.md) to upgrade from V8 to V9
 - __API__
@@ -9,6 +9,8 @@
   - Renamed `Api::getPhpFastCacheGitHeadHash()` to `Api::getPhpfastcacheGitHeadHash()`
 - __Cluster__
   - Renamed `\Phpfastcache\Cluster\AggregatorInterface::aggregateNewDriver()` to `\Phpfastcache\Cluster\AggregatorInterface::aggregateDriverByName()` 
+- __Exceptions__
+  - Added `PhpfastcacheEventManagerException` for EventManager-related exceptions
 - __Global__
   - Removed magics methods from CacheManager `CacheManager::DriverName()`, use `CacheManager::getInstance('DriverName')` instead
   - Slightly increased performances on some critical points of the library
@@ -45,7 +47,9 @@
   - Added `Devrandom` with configurable factor chance and data length
   - Renamed classes `\Phpfastcache\Cluster\Drivers\[STATEGY]\[CLUSTER_NAME]Cluster` to `\Phpfastcache\Cluster\Drivers\[STATEGY]\Driver` for better driver naming across the project
 - __Events__
-  - Added `\Phpfastcache\Event\EventReferenceParameter` class, see [EVENTS.md](./docs/EVENTS.md) file for more information
+  - Added `\Phpfastcache\Event\EventReferenceParameter` class and more events such as driver-specific events, see [EVENTS.md](./docs/EVENTS.md) file for more information
+  - Event callbacks will now receive the `eventName` as an extra _last_ callback parameter (except for `onEveryEvents` callbacks)
+  - Added `EventManagerInterface::on(array $eventNames, $callback)` method, to subscribe to multiple events in once with the same callback
   - Added method named `unbindAllEventCallbacks(): bool` to `EventManagerInterface` to allow you to unbind/clear all event from an event instance
   - Updated argument type #2 (`$items`) of `onCacheSaveMultipleItems()` event from `ExtendedCacheItemInterface[]` to `EventReferenceParameter($items)`
   - Updated argument type #2 (`$items`) of `onCacheCommitItem()` event from `ExtendedCacheItemInterface[]` to `EventReferenceParameter($items)`

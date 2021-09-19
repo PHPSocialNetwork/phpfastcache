@@ -13,7 +13,10 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Drivers\Arangodb\Config as ArangodbConfig;
+use Phpfastcache\Event\EventReferenceParameter;
+use Phpfastcache\EventManager;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Tests\Helper\TestHelper;
 
@@ -35,6 +38,16 @@ try {
 /*    $config->setTraceFunction(\Closure::fromCallable(static function ($type, $data) use ($testHelper){
         $testHelper->printDebugText(sprintf('Trace for %s: %s', strtoupper($type), $data));
     }));*/
+    EventManager::getInstance()->on(['ArangodbConnection', 'ArangodbCollectionParams'], static function() use ($testHelper){
+        $args = func_get_args();
+        $eventName = $args[array_key_last($args)];
+        $testHelper->printDebugText(
+            sprintf(
+                'Arangodb db event "%s" has been triggered.',
+                $eventName
+            )
+        );
+    });
     $cacheInstance = CacheManager::getInstance('Arangodb', $config);
     $testHelper->runCRUDTests($cacheInstance);
 } catch (PhpfastcacheDriverConnectException $e) {

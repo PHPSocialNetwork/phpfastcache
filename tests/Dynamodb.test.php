@@ -13,6 +13,7 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Drivers\Dynamodb\Config as DynamodbConfig;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Tests\Helper\TestHelper;
@@ -29,6 +30,16 @@ try {
     $config->setEndpoint('dynamodb.eu-west-3.amazonaws.com');
     $config->setTable('phpfastcache');
     $cacheInstance = CacheManager::getInstance('Dynamodb', $config);
+
+    $cacheInstance->getEventManager()->onDynamodbCreateTable(static function(ExtendedCacheItemPoolInterface $pool, array $params) use ($testHelper){
+        $testHelper->printDebugText(
+            sprintf(
+                'Table created with the following parameters: %s',
+                json_encode($params, JSON_THROW_ON_ERROR)
+            )
+        );
+    });
+
     $testHelper->runCRUDTests($cacheInstance, false);
 } catch (PhpfastcacheDriverConnectException $e) {
     $testHelper->assertSkip('Dynamodb server unavailable: ' . $e->getMessage());

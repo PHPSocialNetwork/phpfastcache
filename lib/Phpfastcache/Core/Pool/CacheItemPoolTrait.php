@@ -34,7 +34,6 @@ use RuntimeException;
 
 trait CacheItemPoolTrait
 {
-    use EventManagerDispatcherTrait;
     use DriverBaseTrait;
 
     /**
@@ -128,8 +127,7 @@ trait CacheItemPoolTrait
             $cacheSlamsSpendSeconds = 0;
             $itemClass = self::getItemClass();
             /** @var $item ExtendedCacheItemInterface */
-            $item = new $itemClass($this, $key);
-            $item->setEventManager($this->eventManager);
+            $item = new $itemClass($this, $key, $this->eventManager);
 
             getItemDriverRead:
             {
@@ -405,9 +403,9 @@ trait CacheItemPoolTrait
      * @return bool
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
+     * @throws PhpfastcacheIOException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
-     * @throws \ReflectionException
      */
     public function save(CacheItemInterface $item): bool
     {
@@ -438,10 +436,9 @@ trait CacheItemPoolTrait
             /**
              * @var $itemBatch ExtendedCacheItemInterface
              */
-            $class = new ReflectionClass((new ReflectionObject($this))->getNamespaceName() . '\Item');
-            $itemBatch = $class->newInstanceArgs([$this, $item->getKey()]);
-            $itemBatch->setEventManager($this->eventManager)
-                ->set(new ItemBatch($item->getKey(), new DateTime()))
+            $itemClassName = self::getItemClass();
+            $itemBatch = new $itemClassName($this, $item->getKey(), $this->eventManager);
+            $itemBatch->set(new ItemBatch($item->getKey(), new DateTime()))
                 ->expiresAfter($this->getConfig()->getCacheSlamsTimeout());
 
             /**

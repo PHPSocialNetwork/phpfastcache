@@ -72,7 +72,7 @@ class Driver extends ClusterPoolAbstract
             }
         }
 
-        return $this->getStandardizedItem($item ?? new Item($this, $key), $this);
+        return $this->getStandardizedItem($item ?? new Item($this, $key, $this->getEventManager()), $this);
     }
 
     /**

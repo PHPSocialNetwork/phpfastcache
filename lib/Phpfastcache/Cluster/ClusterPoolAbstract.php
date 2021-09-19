@@ -25,6 +25,7 @@ use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\DriverStatistic;
+use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\EventManager;
 use Phpfastcache\Exceptions\PhpfastcacheCoreException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
@@ -61,6 +62,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
     /**
      * ClusterPoolAbstract constructor.
      * @param string $clusterName
+     * @param EventManagerInterface $em
      * @param ExtendedCacheItemPoolInterface ...$driverPools
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverConnectException
@@ -69,13 +71,13 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheIOException
      */
-    public function __construct(string $clusterName, ExtendedCacheItemPoolInterface ...$driverPools)
+    public function __construct(string $clusterName, EventManagerInterface $em, ExtendedCacheItemPoolInterface ...$driverPools)
     {
         if (count($driverPools) < 2) {
             throw new PhpfastcacheInvalidArgumentException('A cluster requires at least two pools to be working.');
         }
         $this->clusterPools = $driverPools;
-        $this->__parentConstruct(new ConfigurationOption(), $clusterName);
+        $this->__parentConstruct(new ConfigurationOption(), $clusterName, $em);
         $this->setEventManager(EventManager::getInstance());
     }
 
@@ -183,7 +185,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
             if ($driverPool === $this) {
                 /** @var ExtendedCacheItemInterface $itemPool */
                 $itemClass = $driverPool->getItemClass();
-                $itemPool = new $itemClass($this, $item->getKey());
+                $itemPool = new $itemClass($this, $item->getKey(), $this->getEventManager());
 
                 $this->remapCacheItem($item, $itemPool, $driverPool);
 

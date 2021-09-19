@@ -18,6 +18,7 @@ namespace Phpfastcache\Core\Item;
 use DateTime;
 use DateTimeInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
@@ -34,12 +35,14 @@ trait ExtendedCacheItemTrait
      * Item constructor.
      * @param ExtendedCacheItemPoolInterface $driver
      * @param string $key
+     * @param EventManagerInterface $em
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function __construct(ExtendedCacheItemPoolInterface $driver, string $key)
+    public function __construct(ExtendedCacheItemPoolInterface $driver, string $key, EventManagerInterface $em)
     {
         $this->data = null;
         $this->key = $key;
+        $this->setEventManager($em);
         $this->setDriver($driver);
         if ($driver->getConfig()->isUseStaticItemCaching()) {
             $this->driver->setItem($this);

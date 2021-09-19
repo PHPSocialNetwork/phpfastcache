@@ -24,9 +24,13 @@ use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
+use Phpfastcache\Event\EventManagerInterface;
+use Phpfastcache\Exceptions\PhpfastcacheCoreException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Util\MemcacheDriverCollisionDetectorTrait;
 
@@ -47,12 +51,17 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      * Driver constructor.
      * @param ConfigurationOption $config
      * @param string $instanceId
-     * @throws PhpfastcacheDriverException
+     * @param EventManagerInterface $em
+     * @throws PhpfastcacheDriverConnectException
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverCheckException
+     * @throws PhpfastcacheIOException
      */
-    public function __construct(ConfigurationOption $config, string $instanceId)
+    public function __construct(ConfigurationOption $config, string $instanceId, EventManagerInterface $em)
     {
         self::checkCollision('Memcache');
-        $this->__parentConstruct($config, $instanceId);
+        $this->__parentConstruct($config, $instanceId, $em);
     }
 
     /**

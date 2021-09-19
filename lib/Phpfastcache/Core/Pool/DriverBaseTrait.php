@@ -18,6 +18,8 @@ namespace Phpfastcache\Core\Pool;
 use DateTime;
 use DateTimeInterface;
 use Phpfastcache\Config\ConfigurationOptionInterface;
+use Phpfastcache\Event\EventManagerDispatcherTrait;
+use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
 use Throwable;
@@ -35,6 +37,7 @@ trait DriverBaseTrait
 {
     use DriverPoolAbstractTrait;
     use ClassNamespaceResolverTrait;
+    use EventManagerDispatcherTrait;
 
     protected static array $cacheItemClasses = [];
 
@@ -50,14 +53,16 @@ trait DriverBaseTrait
      * Driver constructor.
      * @param ConfigurationOptionInterface $config
      * @param string $instanceId
+     * @param EventManagerInterface $em
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverConnectException
      * @throws PhpfastcacheIOException
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function __construct(ConfigurationOptionInterface $config, string $instanceId)
+    public function __construct(ConfigurationOptionInterface $config, string $instanceId, EventManagerInterface $em)
     {
+        $this->setEventManager($em);
         $this->setConfig($config);
         $this->instanceId = $instanceId;
         $this->IO = new DriverIO();

@@ -146,7 +146,7 @@ class Psr16Adapter implements CacheInterface
         }
         try {
             return \array_map(
-                static fn (ExtendedCacheItemInterface $item) => $item->get(),
+                static fn (ExtendedCacheItemInterface $item) => $item->isHit() ? $item->get() : $default,
                 $this->internalCacheInstance->getItems($keys)
             );
         } catch (PhpfastcacheInvalidArgumentException $e) {

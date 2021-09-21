@@ -21,22 +21,12 @@ use Psr\Cache\InvalidArgumentException;
 
 class CacheContract
 {
-
-
-
-
-
-
-
-
     protected CacheItemPoolInterface $cacheInstance;
-
 
     public function __construct(CacheItemPoolInterface $cacheInstance)
     {
         $this->cacheInstance = $cacheInstance;
-    }//end __construct()
-
+    }
 
     /**
      * @param  string                    $cacheKey
@@ -51,8 +41,7 @@ class CacheContract
 
         if (! $cacheItem->isHit()) {
             /*
-            *
-    * Parameter $cacheItem will be available as of 8.0.6
+            * Parameter $cacheItem will be available as of 8.0.6
             */
             $cacheItem->set($callback($cacheItem));
             if ($expiresAfter) {
@@ -63,11 +52,10 @@ class CacheContract
         }
 
         return $cacheItem->get();
-    }//end get()
-
+    }
 
     public function __invoke(...$args): mixed
     {
         return $this->get(...$args);
-    }//end __invoke()
+    }
 }

@@ -311,7 +311,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             ->setSize($rawData['collectionCount']);
     }
 
-    public function getConfig() : Config
+    public function getConfig(): Config
     {
         return $this->config;
     }

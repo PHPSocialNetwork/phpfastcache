@@ -118,7 +118,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return @apcu_clear_cache();
     }
 
-    public function getConfig() : Config|ConfigurationOption
+    public function getConfig(): Config
     {
         return $this->config;
     }

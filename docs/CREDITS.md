@@ -19,9 +19,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-__Phpfastcache Current Project Manager:__ Georges.L (Geolim4) / (v5, v6, v7, v8)
+__Phpfastcache Current Project Manager:__ Georges.L (Geolim4) / (v5, v6, v7, v8, v9)
 
-__Phpfastcache Former Project Founder:__ Khoa Bui (khoaofgod) / (<= v4)
+__Phpfastcache Former Project Founder:__ Khoa Bui (khoaofgod) / (> v4)
 
 __Phpfastcache Contributors:__    https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
 

@@ -279,7 +279,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return $data;
     }
 
-    public function getConfig() : Config
+    public function getConfig(): Config
     {
         return $this->config;
     }

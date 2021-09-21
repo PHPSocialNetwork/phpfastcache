@@ -152,8 +152,8 @@ class Psr16Adapter implements CacheInterface
         }
         try {
             return \array_map(
-                static function (ExtendedCacheItemInterface $item) {
-                    return $item->get();
+                static function (ExtendedCacheItemInterface $item) use ($default) {
+                    return $item->isHit() ? $item->get() : $default;
                 },
                 $this->internalCacheInstance->getItems($keys)
             );

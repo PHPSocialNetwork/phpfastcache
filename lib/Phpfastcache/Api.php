@@ -93,8 +93,8 @@ class Api
             $semverRegexp = '/^([\d]+)\.([\d]+)\.([\d]+)(?:-([\dA-Za-z-]+(?:\.[\dA-Za-z-]+)*))?(?:\+[\dA-Za-z-]+)?$/';
             $changelog = \explode("\n", self::getPhpfastcacheChangelog());
             foreach ($changelog as $line) {
-                $trimmedLine = trim($line, " \t\n\r\0\x0B#");
-                if (str_starts_with($line, '#') && \preg_match($semverRegexp, $trimmedLine)) {
+                $trimmedLine = \trim($line, " \t\n\r\0\x0B#");
+                if (\str_starts_with($line, '#') && \preg_match($semverRegexp, $trimmedLine)) {
                     return $trimmedLine;
                 }
             }

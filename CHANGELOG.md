@@ -2,6 +2,11 @@
 ##### 1 october 2021
 - __Migration guide__
   - Read the [migration guide](./docs/migration/MigratingFromV8ToV9.md) to upgrade from V8 to V9
+- __PSR-6__
+  - Upgraded `psr/cache` dependency to `^3.0` (for PHP-8 types)
+  - `\Psr\Cache\CacheItemInterface::get()` slightly changed to fully comply with missing PSR-6 specification: If the cache item is **NOT** hit, this method will return `NULL`.
+- __PSR-16__
+  - _To be written when the PSR-16 will be upgraded for PHP-8_
 - __API__
   - Upgraded Phpfastcache API `4.0.0` ([see changes](CHANGELOG_API.md))
   - Renamed `Api::getPhpFastCacheVersion()` to `Api::getPhpfastcacheVersion()`
@@ -21,7 +26,6 @@
   - Typed every class properties of the library
   - Migrated many Closure to arrow functions
   - Updated parameters & return type hint to use benefit of covariance and contravariance
-  - Upgraded `psr/cache` dependency to `^3.0`
   - Removed embedded Autoload, Phpfastcache is now only Composer-compatible.
   - Removed embedded dependencies (`psr/cache`, `psr/simple-cache`)
 - __Helpers__
@@ -38,6 +42,8 @@
   - Updated tests to work with new core/drivers changes
   - Removed Autoload test since its support has been removed and now only managed by Composer
   - Increased tests reliability and code coverage for better catching any eventual regression 
+- __Item__
+  - `\Psr\Cache\CacheItemInterface::set` will not accept `\Closure` object anymore as method unique parameter
 - __Drivers__
   - Added `Arangodb` driver support
   - Added `Dynamodb` driver support

@@ -28,8 +28,6 @@ trait CacheItemTrait
     use EventManagerDispatcherTrait;
     use ClassNamespaceResolverTrait;
 
-    protected bool $fetched = false;
-
     protected string $key;
 
     protected mixed $data;
@@ -49,11 +47,21 @@ trait CacheItemTrait
 
     public function get(): mixed
     {
+        if (!$this->isHit()) {
+            return null;
+        }
+
         return $this->data;
     }
 
+    /**
+     * @throws PhpfastcacheInvalidArgumentException
+     */
     public function set(mixed $value): static
     {
+        if ($value instanceof \Closure) {
+            throw new PhpfastcacheInvalidArgumentException('The value set cannot be an instance of \\Closure.');
+        }
 
         /**
          * @eventName CacheSaveDeferredItem
@@ -63,12 +71,6 @@ trait CacheItemTrait
          */
         $this->eventManager->dispatch('CacheItemSet', $this, new EventReferenceParameter($value, true));
 
-        /**
-         * The user set a value,
-         * therefore there is no need to
-         * fetch from source anymore
-         */
-        $this->fetched = true;
         $this->data = $value;
 
         return $this;

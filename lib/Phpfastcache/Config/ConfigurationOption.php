@@ -64,7 +64,7 @@ class ConfigurationOption extends AbstractConfigurationOption implements Configu
                             'Unknown configuration option name "%s" for the config class "%s". Allowed configurations options are "%s"',
                             $configKey,
                             $this::class,
-                            \implode('", "', array_keys($this->toArray())),
+                            \implode('", "', \array_keys($this->toArray())),
                         )
                     );
                 }
@@ -81,7 +81,7 @@ class ConfigurationOption extends AbstractConfigurationOption implements Configu
 
     public function toArray(): array
     {
-        return get_object_vars($this);
+        return \get_object_vars($this);
     }
 
     /**
@@ -90,7 +90,7 @@ class ConfigurationOption extends AbstractConfigurationOption implements Configu
      */
     public function isValidOption(string $optionName): bool
     {
-        return property_exists($this, $optionName);
+        return \property_exists($this, $optionName);
     }
 
     /**
@@ -285,6 +285,7 @@ class ConfigurationOption extends AbstractConfigurationOption implements Configu
     /**
      * @return object
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
     public function getSuperGlobalAccessor(): object
     {

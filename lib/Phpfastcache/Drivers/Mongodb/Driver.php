@@ -150,7 +150,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         try {
             $set = [
                 self::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(),
-                self::DRIVER_DATA_WRAPPER_INDEX => new Binary($this->encode($item->get()), Binary::TYPE_GENERIC),
+                self::DRIVER_DATA_WRAPPER_INDEX => new Binary($this->encode($item->getRawValue()), Binary::TYPE_GENERIC),
                 self::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
                 self::DRIVER_EDATE_WRAPPER_INDEX => new UTCDateTime($item->getExpirationDate()),
             ];

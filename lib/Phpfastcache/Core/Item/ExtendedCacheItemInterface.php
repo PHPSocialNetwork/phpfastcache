@@ -43,6 +43,18 @@ interface ExtendedCacheItemInterface extends
     public function getEncodedKey(): string;
 
     /**
+     * Returns the raw value, regardless of hit status.
+     *
+     * Although not part of the CacheItemInterface, this method is used by
+     * the pool for extracting information for saving.
+     *
+     * @return mixed
+     *
+     * @internal
+     */
+    public function getRawValue(): mixed;
+
+    /**
      * @return DateTimeInterface
      */
     public function getExpirationDate(): DateTimeInterface;

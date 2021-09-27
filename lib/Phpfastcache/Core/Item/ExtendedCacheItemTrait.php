@@ -72,7 +72,7 @@ trait ExtendedCacheItemTrait
     }
 
     /**
-     * @return string
+     * @inheritDoc
      */
     public function getEncodedKey(): string
     {
@@ -91,7 +91,15 @@ trait ExtendedCacheItemTrait
     }
 
     /**
-     * @return DateTimeInterface
+     * @inheritDoc
+     */
+    public function getRawValue(): mixed
+    {
+        return $this->data;
+    }
+
+    /**
+     * @inheritDoc
      */
     public function getExpirationDate(): DateTimeInterface
     {
@@ -99,16 +107,7 @@ trait ExtendedCacheItemTrait
     }
 
     /**
-     * Alias of expireAt() with forced $expiration param
-     *
-     * @param DateTimeInterface $expiration
-     *   The point in time after which the item MUST be considered expired.
-     *   If null is passed explicitly, a default value MAY be used. If none is set,
-     *   the value should be stored permanently or for as long as the
-     *   implementation allows.
-     *
-     * @return ExtendedCacheItemInterface
-     *   The called object.
+     * @inheritDoc
      * @throws PhpfastcacheInvalidArgumentException
      */
     public function setExpirationDate(DateTimeInterface $expiration): ExtendedCacheItemInterface
@@ -117,7 +116,7 @@ trait ExtendedCacheItemTrait
     }
 
     /**
-     * @return DateTimeInterface
+     * @inheritDoc
      * @throws PhpfastcacheLogicException
      */
     public function getCreationDate(): DateTimeInterface
@@ -130,8 +129,7 @@ trait ExtendedCacheItemTrait
     }
 
     /**
-     * @param DateTimeInterface $date
-     * @return ExtendedCacheItemInterface
+     * @inheritDoc
      * @throws PhpfastcacheLogicException
      */
     public function setCreationDate(DateTimeInterface $date): ExtendedCacheItemInterface
@@ -145,7 +143,7 @@ trait ExtendedCacheItemTrait
     }
 
     /**
-     * @return DateTimeInterface
+     * @inheritDoc
      * @throws PhpfastcacheLogicException
      */
     public function getModificationDate(): DateTimeInterface
@@ -158,8 +156,7 @@ trait ExtendedCacheItemTrait
     }
 
     /**
-     * @param DateTimeInterface $date
-     * @return ExtendedCacheItemInterface
+     * @inheritDoc
      * @throws PhpfastcacheLogicException
      */
     public function setModificationDate(DateTimeInterface $date): ExtendedCacheItemInterface
@@ -219,7 +216,6 @@ trait ExtendedCacheItemTrait
 
     public function increment(int $step = 1): ExtendedCacheItemInterface
     {
-        $this->fetched = true;
         $this->data += $step;
 
         return $this;
@@ -227,7 +223,6 @@ trait ExtendedCacheItemTrait
 
     public function decrement(int $step = 1): ExtendedCacheItemInterface
     {
-        $this->fetched = true;
         $this->data -= $step;
 
         return $this;

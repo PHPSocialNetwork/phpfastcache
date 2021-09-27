@@ -134,7 +134,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $document = new ArangoDocument();
         $document->setInternalKey($item->getEncodedKey());
         $document->set(self::DRIVER_KEY_WRAPPER_INDEX, $item->getKey());
-        $document->set(self::DRIVER_DATA_WRAPPER_INDEX, $this->encode($item->get()));
+        $document->set(self::DRIVER_DATA_WRAPPER_INDEX, $this->encode($item->getRawValue()));
         $document->set(self::DRIVER_TAGS_WRAPPER_INDEX, $item->getTags());
         $document->set(self::DRIVER_EDATE_WRAPPER_INDEX, $item->getExpirationDate());
         $document->set(self::TTL_FIELD_NAME, $item->getExpirationDate()->getTimestamp());

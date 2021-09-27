@@ -44,7 +44,6 @@ class Psr16Adapter implements CacheInterface
      * @param $driver
      * @param null|ConfigurationOptionInterface $config
      * @throws PhpfastcacheDriverCheckException
-     * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheDriverNotFoundException
@@ -216,19 +215,5 @@ class Psr16Adapter implements CacheInterface
         } catch (PhpfastcacheInvalidArgumentException $e) {
             throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }
-    }
-
-    /**
-     * Extra methods that are not part of
-     * psr16 specifications
-     */
-
-    /**
-     * @return ExtendedCacheItemPoolInterface
-     * @internal
-     */
-    public function getInternalCacheInstance(): ExtendedCacheItemPoolInterface
-    {
-        return $this->internalCacheInstance;
     }
 }

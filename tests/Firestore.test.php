@@ -39,7 +39,7 @@ try {
     $cacheInstance = CacheManager::getInstance('Firestore', $config);
     $testHelper->runCRUDTests($cacheInstance);
 } catch (PhpfastcacheDriverConnectException $e) {
-    $testHelper->assertSkip('Dynamodb server unavailable: ' . $e->getMessage());
+    $testHelper->assertSkip('Firestore server unavailable: ' . $e->getMessage());
     $testHelper->terminateTest();
 }
 $testHelper->terminateTest();

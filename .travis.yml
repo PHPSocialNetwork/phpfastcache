@@ -36,7 +36,9 @@ before_install:
   - ./bin/ci/scripts/install_couchdb.sh;
   - ./bin/ci/scripts/install_couchbase.sh;
   - ./bin/ci/scripts/setup_mongodb.sh
+  - ./bin/ci/scripts/setup_gcp.sh;
   - pecl channel-update pecl.php.net;
+  - yes | pecl install -f grpc-stable;
   - yes | pecl install -f mongodb-stable;
   - yes | pecl install -f apcu-stable || true;
   - yes | pecl install -f memcache;

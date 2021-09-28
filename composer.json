@@ -51,6 +51,7 @@
         "phpfastcache/phpssdb": "~1.1.0",
         "doctrine/couchdb": "^dev-master#9eeb9e5",
         "triagens/arangodb": "^3.8",
+        "google/cloud-firestore": "^1.20",
         "aws/aws-sdk-php": "~3.0"
     },
     "conflict": {

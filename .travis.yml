@@ -38,7 +38,7 @@ before_install:
   - ./bin/ci/scripts/setup_mongodb.sh
   - ./bin/ci/scripts/setup_gcp.sh;
   - pecl channel-update pecl.php.net;
-  - yes | travis_wait 20 pecl install -f grpc-stable  > /dev/null; # This pecl install is muted due to too much output written
+  - yes | pecl install -f grpc-stable  | grep -v --line-buffered "/tmp/pear/install/grpc"; # This pecl install is partially muted due to too much output written
   - yes | pecl install -f mongodb-stable;
   - yes | pecl install -f apcu-stable || true;
   - yes | pecl install -f memcache;

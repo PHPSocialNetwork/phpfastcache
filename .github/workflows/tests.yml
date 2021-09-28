@@ -4,6 +4,7 @@ jobs:
   build:
     name: Github CI - Branch
     runs-on: ubuntu-latest
+    environment: github-ci
     steps:
       - name: Setup PHP 8.0
         uses: shivammathur/setup-php@v2

@@ -232,3 +232,4 @@ vendor/
 # composer.lock
 composer.phar
 /cache/
+/composer.lock

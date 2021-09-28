@@ -38,12 +38,12 @@ before_install:
   - ./bin/ci/scripts/setup_mongodb.sh
   - ./bin/ci/scripts/setup_gcp.sh;
   - pecl channel-update pecl.php.net;
-  - yes | pecl install -f grpc-stable;
-  - yes | pecl install -f mongodb-stable;
-  - yes | pecl install -f apcu-stable || true;
-  - yes | pecl install -f memcache;
-  - yes | pecl install -f couchbase-stable;
-  - phpenv config-add bin/ci/php_common.ini;
+  - yes | pecl install -f grpc-stable  > /dev/null
+  - yes | pecl install -f mongodb-stable > /dev/null
+  - yes | pecl install -f apcu-stable > /dev/null || true
+  - yes | pecl install -f memcache > /dev/null
+  - yes | pecl install -f couchbase-stable > /dev/null
+  - phpenv config-add bin/ci/php_common.ini
   - phpenv config-rm xdebug.ini
 install:
   - ./bin/ci/scripts/install_dependencies.sh

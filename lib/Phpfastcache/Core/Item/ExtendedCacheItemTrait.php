@@ -21,7 +21,6 @@ use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
-use Phpfastcache\Util\ClassNamespaceResolverTrait;
 
 trait ExtendedCacheItemTrait
 {
@@ -278,6 +277,25 @@ trait ExtendedCacheItemTrait
     public function doesItemBelongToThatDriverBackend(ExtendedCacheItemPoolInterface $driverPool): bool
     {
         return $driverPool::getClassNamespace() === self::getClassNamespace();
+    }
+
+    /**
+     * @throws PhpfastcacheLogicException
+     * @throws PhpfastcacheInvalidArgumentException
+     */
+    public function cloneInto(ExtendedCacheItemInterface $itemTarget, ?ExtendedCacheItemPoolInterface $itemPoolTarget = null): void
+    {
+        $itemTarget->setEventManager($this->getEventManager())
+            ->set($this->getRawValue())
+            ->setHit($this->isHit())
+            ->setTags($this->getTags())
+            ->expiresAt($this->getExpirationDate())
+            ->setDriver($itemPoolTarget ?? $this->driver);
+
+        if ($this->driver->getConfig()->isItemDetailedDate()) {
+            $itemTarget->setCreationDate($this->getCreationDate())
+                ->setModificationDate($this->getModificationDate());
+        }
     }
 
     abstract protected function getDriverClass(): string;

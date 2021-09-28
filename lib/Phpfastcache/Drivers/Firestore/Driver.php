@@ -15,25 +15,26 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Firestore;
 
+use Google\Cloud\Core\Blob as GoogleBlob;
+use Google\Cloud\Core\Timestamp as GoogleTimestamp;
 use Google\Cloud\Firestore\FirestoreClient as GoogleFirestoreClient;
-
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
+use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
  * Class Driver
  * @property Config $config
  * @property GoogleFirestoreClient $instance
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait;
-
-    protected const TTL_FIELD_NAME = 't';
 
     /**
      * @return bool
@@ -45,21 +46,24 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @return bool
+     * @throws PhpfastcacheDriverConnectException
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
     protected function driverConnect(): bool
     {
-/*
-        $this->instance = new GoogleFirestoreClient([
-            //'projectId' => $projectId,
-        ]);*/
+        $gcpId = $this->getConfig()->getSuperGlobalAccessor()('SERVER', 'GOOGLE_CLOUD_PROJECT');
+        $gacPath = $this->getConfig()->getSuperGlobalAccessor()('SERVER', 'GOOGLE_APPLICATION_CREDENTIALS');
 
-/*        if (!$this->hasCollection()) {
-            $this->createCollection();
+        if (empty($gcpId)) {
+            throw new PhpfastcacheDriverConnectException('The environment configuration GOOGLE_CLOUD_PROJECT must be set');
         }
 
-        if (!$this->hasTtlEnabled()) {
-            $this->enableTtl();
-        }*/
+        if (empty($gacPath) || !\is_readable($gacPath)) {
+            throw new PhpfastcacheDriverConnectException('The environment configuration GOOGLE_APPLICATION_CREDENTIALS must be set and the file must be readable.');
+        }
+
+        $this->instance = new GoogleFirestoreClient();
 
         return true;
     }
@@ -70,6 +74,13 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
+        $this->instance->collection($this->getConfig()->getCollection())
+            ->document($item->getKey())
+            ->set(
+                $this->driverPreWrap($item),
+                ['merge' => true]
+            );
+
         return true;
     }
 
@@ -80,6 +91,15 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
+        $doc = $this->instance->collection($this->getConfig()->getCollection())
+            ->document($item->getKey());
+
+        $snapshotData = $doc->snapshot()->data();
+
+        if (\is_array($snapshotData)) {
+            return $this->decodeFirestoreDocument($snapshotData);
+        }
+
         return null;
     }
 
@@ -89,6 +109,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
+        $this->instance->collection($this->getConfig()->getCollection())
+            ->document($item->getKey())
+            ->delete();
+
         return true;
     }
 
@@ -97,44 +121,45 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     protected function driverClear(): bool
     {
+        $batchSize = 100;
+        $collection = $this->instance->collection($this->getConfig()->getCollection());
+        $documents = $collection->limit($batchSize)->documents();
+        while (!$documents->isEmpty()) {
+            foreach ($documents as $document) {
+                $document->reference()->delete();
+            }
+            $documents = $collection->limit($batchSize)->documents();
+        }
+
         return true;
     }
 
-    protected function hasCollection(): bool
+    protected function decodeFirestoreDocument(array $snapshotData): array
     {
-        return true;
-    }
+        return \array_map(static function ($datum) {
+            if ($datum instanceof GoogleTimestamp) {
+                $date = $datum->get();
+                if ($date instanceof \DateTimeImmutable) {
+                    return \DateTime::createFromImmutable($date);
+                }
+                return $date;
+            }
 
-    protected function createCollection() :void
-    {
-    }
+            if ($datum instanceof GoogleBlob) {
+                return (string) $datum;
+            }
 
-    protected function hasTtlEnabled(): bool
-    {
-        return true;
-    }
-
-    protected function enableTtl(): void
-    {
+            return $datum;
+        }, $snapshotData);
     }
 
     public function getStats(): DriverStatistic
     {
-        return new DriverStatistic();
-    }
-
-    protected function encodeDocument(array $data): array
-    {
-        $data[self::DRIVER_DATA_WRAPPER_INDEX] = $this->encode($data[self::DRIVER_DATA_WRAPPER_INDEX]);
-
-        return $data;
-    }
-
-    protected function decodeDocument(array $data): array
-    {
-        $data[self::DRIVER_DATA_WRAPPER_INDEX] = $this->decode($data[self::DRIVER_DATA_WRAPPER_INDEX]);
-
-        return $data;
+        return (new DriverStatistic())
+            ->setData(implode(', ', array_keys($this->itemInstances)))
+            ->setInfo('No info provided by Google Firestore')
+            ->setRawData([])
+            ->setSize(0);
     }
 
     public function getConfig(): Config

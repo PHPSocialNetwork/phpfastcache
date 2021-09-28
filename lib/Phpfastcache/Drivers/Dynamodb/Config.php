@@ -46,8 +46,8 @@ class Config extends ConfigurationOption
     public function __construct(array $parameters = [])
     {
         parent::__construct($parameters);
-        $this->awsAccessKeyId = $this->getDefaultSuperGlobalAccessor()('SERVER', 'AWS_ACCESS_KEY_ID');
-        $this->awsSecretAccessKey = $this->getDefaultSuperGlobalAccessor()('SERVER', 'AWS_SECRET_ACCESS_KEY');
+        $this->awsAccessKeyId = $this->getSuperGlobalAccessor()('SERVER', 'AWS_ACCESS_KEY_ID');
+        $this->awsSecretAccessKey = $this->getSuperGlobalAccessor()('SERVER', 'AWS_SECRET_ACCESS_KEY');
     }
 
     /**

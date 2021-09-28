@@ -31,15 +31,15 @@ $testHelper = new TestHelper('Google Firestore driver');
 
 
 
-/*$config = new FirestoreConfig();
+$config = new FirestoreConfig();
 
 try {
     $config->setItemDetailedDate(true);
     $config->setCollection('phpfastcache');
     $cacheInstance = CacheManager::getInstance('Firestore', $config);
-    $testHelper->runCRUDTests($cacheInstance, false);
+    $testHelper->runCRUDTests($cacheInstance);
 } catch (PhpfastcacheDriverConnectException $e) {
     $testHelper->assertSkip('Dynamodb server unavailable: ' . $e->getMessage());
     $testHelper->terminateTest();
-}*/
+}
 $testHelper->terminateTest();

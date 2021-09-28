@@ -18,15 +18,17 @@ The simplicity of abstraction: One class for many backend cache. You don't need 
 |      Regular drivers            |     High performances drivers                                 |    Development drivers        |    Cluster-Aggregated drivers     |
 |---------------------------------|---------------------------------------------------------------|-------------------------------|-----------------------------------|
 |  `Apcu` *(APC support removed)* | `Arangodb`                                                    | `Devnull`                     | `FullReplicationCluster`          |
-|  `Files`                        | `Cassandra`                                                   | `Devrandom`                   | `SemiReplicationCluster`          |
-|  `Leveldb`                      | `CouchBasev3`<br>_(`Couchbase` for SDK 2 support removed)_    | `Memstatic`                   | `MasterSlaveReplicationCluster`   |
-|  `Memcache(d)`                  | `Couchdb`                                                     |                               | `RandomReplicationCluster`        |
-|  `Sqlite`                       | `Dynamodb`                                                    |                               |                                   |
-|  `Wincache`                     | `Mongodb`                                                     |                               |                                   |
-|  `Zend Disk Cache`              | `Predis`                                                      |                               |                                   |
-|                                 | `Redis`                                                       |                               |                                   |
-|                                 | `Ssdb`                                                        |                               |                                   |
-|                                 | `Zend Memory Cache`                                           |                               |                                   |
+|  `Dynamodb` (AWS)               | `Cassandra`                                                   | `Devrandom`                   | `SemiReplicationCluster`          |
+|  `Files`                        | `CouchBasev3`<br>_(`Couchbase` for SDK 2 support removed)_    | `Devrandom`                   | `SemiReplicationCluster`          |
+|  `Firestore` (GCP)              | `Couchdb`                                                     | `Devrandom`                   | `SemiReplicationCluster`          |
+|  `Leveldb`                      | `Mongodb`                                                     | `Memstatic`                   | `MasterSlaveReplicationCluster`   |
+|  `Memcache(d)`                  | `Predis`                                                      |                               | `RandomReplicationCluster`        |
+|  `Sqlite`                       | `Redis`                                                       |                               |                                   |
+|  `Wincache`                     | `Ssdb`                                                        |                               |                                   |
+|  `Zend Disk Cache`              | `Zend Memory Cache`                                           |                               |                                   |
+|                                 |                                                               |                               |                                   |
+|                                 |                                                               |                               |                                   |
+|                                 |                                                               |                               |                                   |
 |                                 |                                                               |                               |                                   |
 
 \* Driver descriptions available in DOCS/DRIVERS.md

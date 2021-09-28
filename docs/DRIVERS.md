@@ -24,9 +24,11 @@
 * Devrandom **(Added in V8.0.8)**
   * A development driver with configurable factor chance and data length.
 * Dynamodb **(Added in V9)**
-  * A very high-performance NoSQL driver using a key-value pair system. Be careful when flushing the table as it will delete and recreate the table due to a Dynamodb limitation.
+  * An AWS cloud NoSQL driver using a key-value pair system. Be careful when flushing the table as it will delete and recreate the table due to a Dynamodb limitation.
 * Files
   * A file driver that use serialization for storing data for regular performances. A _$path_ config must be specified, else the system temporary directory will be used.
+* Firestore **(Added in V9)**
+  * A GCP cloud NoSQL driver using a key-value pair system. Collections are created automatically on-the-fly.
 * Leveldb
   * A NoSQL driver using a key-value pair system. A _$path_ config must be specified, else the system temporary directory will be used.
 * Memcache

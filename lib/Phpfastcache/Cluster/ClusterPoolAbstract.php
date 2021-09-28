@@ -186,41 +186,18 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
                 /** @var ExtendedCacheItemInterface $itemPool */
                 $itemClass = $driverPool->getItemClass();
                 $itemPool = new $itemClass($this, $item->getKey(), $this->getEventManager());
-
-                $this->remapCacheItem($item, $itemPool, $driverPool);
+                $item->cloneInto($itemPool, $driverPool);
 
                 return $itemPool;
             }
 
             $itemPool = $driverPool->getItem($item->getKey());
-            $this->remapCacheItem($item, $itemPool, $driverPool);
+            $item->cloneInto($itemPool, $driverPool);
 
             return $itemPool;
         }
 
         return $item->setEventManager($this->getEventManager());
-    }
-
-    /**
-     * @param ExtendedCacheItemInterface $itemSource
-     * @param ExtendedCacheItemInterface $itemTarget
-     * @param ExtendedCacheItemPoolInterface $driverPool
-     * @throws PhpfastcacheInvalidArgumentException
-     * @throws PhpfastcacheLogicException
-     */
-    protected function remapCacheItem(ExtendedCacheItemInterface $itemSource, ExtendedCacheItemInterface $itemTarget, ExtendedCacheItemPoolInterface $driverPool): void
-    {
-        $itemTarget->setEventManager($this->getEventManager())
-            ->set($itemSource->get())
-            ->setHit($itemSource->isHit())
-            ->setTags($itemSource->getTags())
-            ->expiresAt($itemSource->getExpirationDate())
-            ->setDriver($driverPool);
-
-        if ($driverPool->getConfig()->isItemDetailedDate()) {
-            $itemTarget->setCreationDate($itemSource->getCreationDate())
-                ->setModificationDate($itemSource->getModificationDate());
-        }
     }
 
     /**

@@ -3,7 +3,7 @@
 - __Migration guide__
   - Read the [migration guide](./docs/migration/MigratingFromV8ToV9.md) to upgrade from V8 to V9
 - __PSR-6__
-  - Upgraded `psr/cache` dependency to `^3.0` (for PHP-8 types)
+  - Upgraded `psr/cache` dependency to `^2.0||^3.0` (for PHP-8 types)
   - `\Psr\Cache\CacheItemInterface::get()` slightly changed to fully comply with missing PSR-6 specification: If the cache item is **NOT** hit, this method will return `NULL`.
 - __PSR-16__
   - _To be written when the PSR-16 will be upgraded for PHP-8_
@@ -46,7 +46,8 @@
   - `\Psr\Cache\CacheItemInterface::set` will not accept `\Closure` object anymore as method unique parameter
 - __Drivers__
   - Added `Arangodb` driver support
-  - Added `Dynamodb` driver support
+  - Added `Dynamodb` (AWS) driver support
+  - Added `Firestore` (GCP) driver support
   - Removed `Cookie` driver because of its potential dangerosity
   - Removed `Couchbase` (SDK 2 support dropped) driver which is now replaced by `Couchbasev3` (SDK 3)
   - Removed `Devtrue` and `Devfalse` drivers

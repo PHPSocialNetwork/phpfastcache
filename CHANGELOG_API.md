@@ -5,7 +5,8 @@
 - **[BC Break]** Updated `ExtendedCacheItemPoolInterface::getConfigClass()` signature: it is now a **static** method
 - Added `ExtendedCacheItemPoolInterface::getItemClass()`
 - Added `ExtendedCacheItemInterface::hasTag(string $tag)` to test if a cache item is tagged with the provided tag
-- Added `ExtendedCacheItemInterface::hasTags(array $tags, int $strategy)` to test if a cache item is tagged with ones the provided tags with an optional `$strategy` parameter
+- Added `ExtendedCacheItemInterface::hasTag(string $tag)` to test if a cache item is tagged with the provided tag
+- Added `ExtendedCacheItemInterface::cloneInto(ExtendedCacheItemInterface $itemTarget, ?ExtendedCacheItemPoolInterface $itemPoolTarget = null)` to clone a cache item into another with an optional pool object
 - Referenced `TaggableCacheItemPoolInterface::TAG_STRATEGY_*` constants to `TaggableCacheItemInterface::TAG_STRATEGY_*` for more code usability
 
 ## 3.0.0

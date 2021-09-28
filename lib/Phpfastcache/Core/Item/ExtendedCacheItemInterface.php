@@ -44,6 +44,8 @@ interface ExtendedCacheItemInterface extends
 
     /**
      * Returns the raw value, regardless of hit status.
+     * This method can be called if the cache item is NOT YET
+     * persisted, and you need to access to its set value.
      *
      * Although not part of the CacheItemInterface, this method is used by
      * the pool for extracting information for saving.
@@ -195,4 +197,10 @@ interface ExtendedCacheItemInterface extends
      * @return bool
      */
     public function doesItemBelongToThatDriverBackend(ExtendedCacheItemPoolInterface $driverPool): bool;
+
+    /**
+     * @param ExtendedCacheItemInterface $itemTarget
+     * @param ExtendedCacheItemPoolInterface|null $itemPoolTarget
+     */
+    public function cloneInto(ExtendedCacheItemInterface $itemTarget, ?ExtendedCacheItemPoolInterface $itemPoolTarget = null): void;
 }

@@ -60,7 +60,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         }
 
         if (empty($gacPath) || !\is_readable($gacPath)) {
-            throw new PhpfastcacheDriverConnectException('The environment configuration GOOGLE_APPLICATION_CREDENTIALS must be set and the file must be readable.');
+            throw new PhpfastcacheDriverConnectException('The environment configuration GOOGLE_APPLICATION_CREDENTIALS must be set and the JSON file must be readable.');
         }
 
         $this->instance = new GoogleFirestoreClient();

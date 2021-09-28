@@ -118,6 +118,28 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @param ExtendedCacheItemInterface $item
+     * @return null|array
+     * @throws PhpfastcacheDriverException
+     * @throws \Exception
+     */
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
+    {
+        try {
+            $document = $this->documentHandler->get($this->getConfig()->getCollection(), $item->getEncodedKey());
+        } catch (ArangoServerException $e) {
+            if ($e->getCode() === 404) {
+                return null;
+            }
+            throw new PhpfastcacheDriverException(
+                'Got unexpeced error from Arangodb: ' . $e->getMessage()
+            );
+        }
+
+        return $this->decode($document);
+    }
+
+    /**
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws ArangoException
      * @throws PhpfastcacheLogicException
@@ -145,28 +167,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         }
 
         return $this->documentHandler->insert($this->getConfig()->getCollection(), $document, $options) !== null;
-    }
-
-    /**
-     * @param ExtendedCacheItemInterface $item
-     * @return null|array
-     * @throws PhpfastcacheDriverException
-     * @throws \Exception
-     */
-    protected function driverRead(ExtendedCacheItemInterface $item): ?array
-    {
-        try {
-            $document = $this->documentHandler->get($this->getConfig()->getCollection(), $item->getEncodedKey());
-        } catch (ArangoServerException $e) {
-            if ($e->getCode() === 404) {
-                return null;
-            }
-            throw new PhpfastcacheDriverException(
-                'Got unexpeced error from Arangodb: ' . $e->getMessage()
-            );
-        }
-
-        return $this->decode($document);
     }
 
     /**

@@ -27,7 +27,7 @@ __Phpfastcache Contributors:__    https://github.com/PHPSocialNetwork/phpfastcac
 
 #### Hall of fame (Special thanks):
 
-- __Jetbrains__ * for providing us a free IDE licence
+- __Jetbrains__ * for providing us a free Phpstorm IDE licence for years
 - __Scrutinizer-CI__ * for providing us a free Security Analysis
 - __VersionEye__ * For being an awesome tool that helped us to watch version dependencies. You will be missed, thank you very much Robert.
 - __Sabine van Lommen__ * from __Zend.com__ for providing us a free developer licence of Zend Server

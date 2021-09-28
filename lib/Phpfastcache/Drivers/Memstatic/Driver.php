@@ -45,20 +45,6 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @return DriverStatistic
-     */
-    public function getStats(): DriverStatistic
-    {
-        $stat = new DriverStatistic();
-        $stat->setInfo('[Memstatic] A memory static driver')
-            ->setSize(mb_strlen(serialize($this->staticStack)))
-            ->setData(implode(', ', array_keys($this->itemInstances)))
-            ->setRawData($this->staticStack);
-
-        return $stat;
-    }
-
-    /**
      * @return bool
      */
     protected function driverConnect(): bool
@@ -114,6 +100,20 @@ class Driver implements ExtendedCacheItemPoolInterface
         unset($this->staticStack);
         $this->staticStack = [];
         return true;
+    }
+
+    /**
+     * @return DriverStatistic
+     */
+    public function getStats(): DriverStatistic
+    {
+        $stat = new DriverStatistic();
+        $stat->setInfo('[Memstatic] A memory static driver')
+            ->setSize(mb_strlen(serialize($this->staticStack)))
+            ->setData(implode(', ', array_keys($this->itemInstances)))
+            ->setRawData($this->staticStack);
+
+        return $stat;
     }
 
     public function getConfig(): Config

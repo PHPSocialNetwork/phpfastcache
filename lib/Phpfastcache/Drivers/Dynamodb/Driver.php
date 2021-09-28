@@ -26,7 +26,9 @@ use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Event\EventReferenceParameter;
+use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Psr\Http\Message\UriInterface;
 
@@ -56,10 +58,24 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @return bool
+     * @throws PhpfastcacheDriverConnectException
      * @throws PhpfastcacheDriverException
+     * @throws PhpfastcacheLogicException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverConnect(): bool
     {
+        $wsAccessKey = $this->getConfig()->getSuperGlobalAccessor()('SERVER', 'AWS_ACCESS_KEY_ID');
+        $awsSecretKey = $this->getConfig()->getSuperGlobalAccessor()('SERVER', 'AWS_SECRET_ACCESS_KEY');
+
+        if (empty($wsAccessKey)) {
+            throw new PhpfastcacheDriverConnectException('The environment configuration AWS_ACCESS_KEY_ID must be set');
+        }
+
+        if (empty($awsSecretKey)) {
+            throw new PhpfastcacheDriverConnectException('The environment configuration AWS_SECRET_ACCESS_KEY must be set');
+        }
+
         $this->awsSdk = new AwsSdk([
             'endpoint'   => $this->getConfig()->getEndpoint(),
             'region'   => $this->getConfig()->getRegion(),

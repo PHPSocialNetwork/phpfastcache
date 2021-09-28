@@ -49,45 +49,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @return string
-     */
-    public function getHelp(): string
-    {
-        return <<<HELP
-<p>
-To install the php Cassandra extension via Pecl:
-<code>sudo pecl install cassandra</code>
-More information on: https://github.com/datastax/php-driver
-Please note that this repository only provide php stubs and C/C++ sources, it does NOT provide php client.
-</p>
-HELP;
-    }
-
-    /**
-     * @return DriverStatistic
-     * @throws Exception
-     */
-    public function getStats(): DriverStatistic
-    {
-        $result = $this->instance->execute(
-            new Cassandra\SimpleStatement(
-                sprintf(
-                    'SELECT SUM(cache_length) as cache_size FROM %s.%s',
-                    self::CASSANDRA_KEY_SPACE,
-                    self::CASSANDRA_TABLE
-                )
-            ),
-            null
-        );
-
-        return (new DriverStatistic())
-            ->setSize($result->first()['cache_size'])
-            ->setRawData([])
-            ->setData(implode(', ', array_keys($this->itemInstances)))
-            ->setInfo('The cache size represents only the cache data itself without counting data structures associated to the cache entries.');
-    }
-
-    /**
      * @return bool
      * @throws PhpfastcacheLogicException
      * @throws Exception
@@ -303,6 +264,45 @@ HELP;
         } catch (Exception) {
             return false;
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getHelp(): string
+    {
+        return <<<HELP
+<p>
+To install the php Cassandra extension via Pecl:
+<code>sudo pecl install cassandra</code>
+More information on: https://github.com/datastax/php-driver
+Please note that this repository only provide php stubs and C/C++ sources, it does NOT provide php client.
+</p>
+HELP;
+    }
+
+    /**
+     * @return DriverStatistic
+     * @throws Exception
+     */
+    public function getStats(): DriverStatistic
+    {
+        $result = $this->instance->execute(
+            new Cassandra\SimpleStatement(
+                sprintf(
+                    'SELECT SUM(cache_length) as cache_size FROM %s.%s',
+                    self::CASSANDRA_KEY_SPACE,
+                    self::CASSANDRA_TABLE
+                )
+            ),
+            null
+        );
+
+        return (new DriverStatistic())
+            ->setSize($result->first()['cache_size'])
+            ->setRawData([])
+            ->setData(implode(', ', array_keys($this->itemInstances)))
+            ->setInfo('The cache size represents only the cache data itself without counting data structures associated to the cache entries.');
     }
 
     public function getConfig(): Config

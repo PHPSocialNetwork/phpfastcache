@@ -26,7 +26,7 @@ class Directory
      * Get the directory size
      * @param string $directory
      * @param bool $includeDirAllocSize
-     * @return integer
+     * @return int
      */
     public static function dirSize(string $directory, bool $includeDirAllocSize = false): int
     {
@@ -37,10 +37,8 @@ class Directory
              */
             if ($file->isFile()) {
                 $size += filesize($file->getRealPath());
-            } else {
-                if ($includeDirAllocSize) {
-                    $size += $file->getSize();
-                }
+            } elseif ($includeDirAllocSize) {
+                $size += $file->getSize();
             }
         }
 

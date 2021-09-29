@@ -24,6 +24,7 @@ use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
+use Phpfastcache\Proxy\PhpfastcacheAbstractProxyInterface;
 use Phpfastcache\Util\SapiDetector;
 use Psr\Cache\InvalidArgumentException;
 use ReflectionClass;
@@ -59,7 +60,7 @@ class TestHelper
     {
         $this->timestamp = microtime(true);
         $this->testName = $testName;
-        $this->climate = new CLImate;
+        $this->climate = new CLImate();
         $this->climate->forceAnsiOn();
 
         /**
@@ -111,7 +112,7 @@ class TestHelper
 
         $loadedExtensions = get_loaded_extensions();
         natcasesort($loadedExtensions);
-        $this->printText("[<blue>Begin Test:</blue> <magenta>{$this->testName}</magenta>]");
+        $this->printText("[<blue>Begin Test:</blue> <magenta>$this->testName</magenta>]");
         $this->printText('[<blue>PHPFASTCACHE:</blue> CORE <yellow>v' . Api::getPhpfastcacheVersion() . Api::getPhpfastcacheGitHeadHash() . '</yellow> | API <yellow>v' . Api::getVersion() . '</yellow>]');
         $this->printText('[<blue>PHP</blue> <yellow>v' . PHP_VERSION . '</yellow> with: <green>' . implode(', ', $loadedExtensions) . '</green>]');
         $this->printText('---');
@@ -129,7 +130,7 @@ class TestHelper
             $string = implode("\n", $string);
         }
         if ($prefix) {
-            $string = "[{$prefix}] {$string}";
+            $string = "[$prefix] $string";
         }
         if (!$strtoupper) {
             $this->climate->out($string);
@@ -235,10 +236,6 @@ class TestHelper
         return $this;
     }
 
-
-    /**
-     * @return void
-     */
     public function terminateTest(): void
     {
         $execTime = round(microtime(true) - $this->timestamp, 3);
@@ -256,7 +253,7 @@ class TestHelper
                 !$this->numOfPassedTests && $totalCount ? 'red' : 'green',
                 $this->numOfPassedTests,
                 ngettext('assertion', 'assertions', $this->numOfPassedTests),
-                "<cyan>{$totalCount}</cyan>",
+                "<cyan>$totalCount</cyan>",
                 ngettext('assertion', 'assertions', $totalCount),
             )
         );
@@ -366,19 +363,20 @@ class TestHelper
     {
         $eventManager->onEveryEvents(
             function (string $eventName) {
-                $this->printDebugText("Triggered event '{$eventName}'");
+                $this->printDebugText("Triggered event '$eventName'");
             },
             'debugCallback'
         );
     }
 
     /**
-     * @param ExtendedCacheItemPoolInterface $pool
+     * @param ExtendedCacheItemPoolInterface|PhpfastcacheAbstractProxyInterface $pool
      * @param bool $poolClear
      * @throws PhpfastcacheInvalidArgumentException
      * @throws InvalidArgumentException
+     * @throws \Exception
      */
-    public function runCRUDTests(ExtendedCacheItemPoolInterface $pool, bool $poolClear = true): void
+    public function runCRUDTests(ExtendedCacheItemPoolInterface|PhpfastcacheAbstractProxyInterface $pool, bool $poolClear = true): void
     {
         $this->printInfoText('Running CRUD tests on the following backend: ' . get_class($pool));
 

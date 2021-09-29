@@ -18,6 +18,7 @@
   - Added `PhpfastcacheEventManagerException` for EventManager-related exceptions
 - __Global__
   - Removed magics methods from CacheManager `CacheManager::DriverName()`, use `CacheManager::getInstance('DriverName')` instead
+  - `\Phpfastcache\Proxy\PhpfastcacheAbstractProxy` now implements `\Phpfastcache\Proxy\PhpfastcacheAbstractProxyInterface`
   - Slightly increased performances on some critical points of the library
   - Removed "BadPracticeOMeter" notice in CacheManager
   - Removed many code duplicate (like in `\Phpfastcache\Driver\[DRIVER_NAME]\Item` classes)

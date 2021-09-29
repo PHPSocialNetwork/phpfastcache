@@ -21,37 +21,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('phpfastcacheAbstractProxy class');
 $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 
+$myCustomClass = new class($defaultDriver) extends PhpfastcacheAbstractProxy{};
 
-/**
- * Dynamic driver-based example
- * Class myCustomCacheClass
- * @package MyCustom\Project
- */
-class CustomMemcachedCacheClass extends PhpfastcacheAbstractProxy
-{
-    public function __construct($driver = '', $config = null)
-    {
-        global $defaultDriver;
-        $driver = $defaultDriver;
-        parent::__construct($driver, $config);
-        /**
-         * That's all !! Your cache class is ready to use
-         */
-    }
-}
-
-
-/**
- * Testing memcached as it is declared in .travis.yml
- */
-$driverInstance = new CustomMemcachedCacheClass();
-
-if (!is_object($driverInstance->getItem('test'))) {
-    $testHelper->assertFail('$driverInstance->getItem() returned an invalid var type:' . gettype($driverInstance));
-} elseif (!($driverInstance->getItem('test') instanceof ExtendedCacheItemInterface)) {
-    $testHelper->assertFail('$driverInstance->getItem() returned an invalid class that does not implements ExtendedCacheItemInterface: ' . get_class($driverInstance));
-} else {
-    $testHelper->assertPass('$driverInstance->getItem() returned a valid class that implements ExtendedCacheItemInterface: ' . get_class($driverInstance));
-}
-
+$testHelper->runCRUDTests($myCustomClass);
 $testHelper->terminateTest();

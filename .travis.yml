@@ -31,25 +31,40 @@ before_install:
 # Memcached is not yet available for PHP8 (hasn't been updated since 2019): https://pecl.php.net/package/memcached
 # Memcache however seems to be compatible with PHP 7 and 8: https://pecl.php.net/package/memcache
 #
-  - ./bin/ci/scripts/install_arangodb.sh;
-  - ./bin/ci/scripts/install_ssdb.sh;
-  - ./bin/ci/scripts/install_couchdb.sh;
-  - ./bin/ci/scripts/install_couchbase.sh;
-  - ./bin/ci/scripts/setup_mongodb.sh
-  - ./bin/ci/scripts/setup_gcp.sh;
-  - pecl channel-update pecl.php.net;
-  - yes | pecl install -f grpc-stable  | grep -v --line-buffered "/tmp/pear/install/grpc"; # This pecl install is partially muted due to too much output written
-  - yes | pecl install -f mongodb-stable;
-  - yes | pecl install -f apcu-stable || true;
-  - yes | pecl install -f memcache;
-  - yes | pecl install -f couchbase-stable;
-  - phpenv config-add bin/ci/php_common.ini;
+  # - ./bin/ci/scripts/install_arangodb.sh;
+  - "[[ $TRAVIS_PHP_VERSION != \"nightly\" ]] && ./bin/ci/scripts/install_arangodb.sh || echo \"Arangodb install ignored on nightly\""
+  # - ./bin/ci/scripts/install_ssdb.sh;
+  - "[[ $TRAVIS_PHP_VERSION != \"nightly\" ]] && ./bin/ci/scripts/install_ssdb.sh || echo \"SSDB install ignored on nightly\""
+  # - ./bin/ci/scripts/install_couchdb.sh;
+  - "[[ $TRAVIS_PHP_VERSION != \"nightly\" ]] && ./bin/ci/scripts/install_couchdb.sh || echo \"Couchdb install ignored on nightly\""
+  # - ./bin/ci/scripts/install_couchbase.sh;
+  - "[[ $TRAVIS_PHP_VERSION != \"nightly\" ]] && ./bin/ci/scripts/install_couchbase.sh || echo \"Couchbase install ignored on nightly\""
+  # - ./bin/ci/scripts/setup_mongodb.sh
+  - "[[ $TRAVIS_PHP_VERSION != \"nightly\" ]] && ./bin/ci/scripts/setup_mongodb.sh || echo \"Setup Mongodb ignored on nightly\""
+  # - ./bin/ci/scripts/setup_gcp.sh;
+  - "[[ $TRAVIS_PHP_VERSION !=  \"nightly\" ]] && ./bin/ci/scripts/setup_gcp.sh || echo \"GCP setup ignored on nightly\""
+  # - pecl channel-update pecl.php.net;
+  - "[[ $TRAVIS_PHP_VERSION != \"nightly\" ]] && pecl channel-update pecl.php.net || echo \"PECL Channel update ignored on nightly\""
+  # - yes | pecl install -f grpc-stable  | grep -v --line-buffered "/tmp/pear/install/grpc"; # This pecl install is partially muted due to too much output written
+  - "[[ $TRAVIS_PHP_VERSION != \"nightly\" ]] && yes | pecl install -f grpc-stable | grep -v --line-buffered \"/tmp/pear/install/grpc\" || echo \"PECL GRPC install ignored on nightly\""
+  # - yes | pecl install -f mongodb-stable;
+  - "[[ $TRAVIS_PHP_VERSION != \"nightly\" ]] && yes | pecl install -f mongodb-stable || echo \"PECL Mongodb install ignored on nightly\""
+  # - yes | pecl install -f apcu-stable || true;
+  - "[[ $TRAVIS_PHP_VERSION != \"nightly\" ]] && yes | (pecl install -f apcu-stable || true) || echo \"PECL Apcu install ignored on nightly\""
+  # - yes | pecl install -f memcache;
+  - "[[ $TRAVIS_PHP_VERSION != \"nightly\" ]] && yes | pecl install -f couchbase-stable || echo \"PECL Memcache install ignored on nightly\""
+  # - yes | pecl install -f couchbase-stable;
+  - "[[ $TRAVIS_PHP_VERSION != \"nightly\" ]] && yes | pecl install -f couchbase-stable || echo \"PECL Couchbase install ignored on nightly\""
+  # - phpenv config-add bin/ci/php_common.ini;
+  - phpenv config-add bin/ci/php_common.ini
+
   - phpenv config-rm xdebug.ini
 install:
-  - ./bin/ci/scripts/install_dependencies.sh
+  - "[[ $TRAVIS_PHP_VERSION != \"nightly\" ]] && ./bin/ci/scripts/install_dependencies.sh || ./bin/ci/scripts/install_dependencies_lite.sh"
+
 
 script:
   - ./vendor/bin/phpcs lib/ --report=summary
   - ./vendor/bin/phpmd lib/ ansi phpmd.xml
-  - ./vendor/bin/phpstan analyse lib/ -l 2 -c phpstan.neon 2>&1
+  - "[[ $TRAVIS_PHP_VERSION != \"nightly\" ]] && ./vendor/bin/phpstan analyse lib/ -l 2 -c phpstan.neon 2>&1 || ./vendor/bin/phpstan analyse lib/ -l 2 -c phpstan_lite.neon 2>&1"
   - php -f ./bin/ci/run_tests.php

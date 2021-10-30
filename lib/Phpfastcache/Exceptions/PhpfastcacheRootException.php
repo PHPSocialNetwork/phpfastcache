@@ -17,7 +17,7 @@ namespace Phpfastcache\Exceptions;
 
 use Exception;
 
-class PhpfastcacheRootException extends Exception implements PhpfastcacheExceptionInterface
+abstract class PhpfastcacheRootException extends Exception implements PhpfastcacheExceptionInterface
 {
 
 }

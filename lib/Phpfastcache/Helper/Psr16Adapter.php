@@ -62,11 +62,11 @@ class Psr16Adapter implements CacheInterface
 
     /**
      * @param string $key
-     * @param mixed|null $default
-     * @return mixed|null
+     * @param mixed $default
+     * @return mixed
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function get($key, $default = null)
+    public function get(string $key, mixed $default = null): mixed
     {
         try {
             $cacheItem = $this->internalCacheInstance->getItem($key);
@@ -87,7 +87,7 @@ class Psr16Adapter implements CacheInterface
      * @return bool
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function set($key, $value, $ttl = null): bool
+    public function set(string $key, mixed $value, null|int|\DateInterval $ttl = null): bool
     {
         try {
             $cacheItem = $this->internalCacheInstance
@@ -110,7 +110,7 @@ class Psr16Adapter implements CacheInterface
      * @throws PhpfastcacheSimpleCacheException
      * @throws InvalidArgumentException
      */
-    public function delete($key): bool
+    public function delete(string $key): bool
     {
         try {
             return $this->internalCacheInstance->deleteItem($key);
@@ -135,10 +135,10 @@ class Psr16Adapter implements CacheInterface
     /**
      * @param iterable $keys
      * @param null $default
-     * @return ExtendedCacheItemInterface[]|iterable
+     * @return ExtendedCacheItemInterface[]
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getMultiple($keys, $default = null)
+    public function getMultiple(iterable $keys, mixed $default = null): iterable
     {
         if ($keys instanceof Traversable) {
             $keys = \iterator_to_array($keys);
@@ -154,12 +154,12 @@ class Psr16Adapter implements CacheInterface
     }
 
     /**
-     * @param string[] $values
+     * @param iterable $values
      * @param null|int|DateInterval $ttl
      * @return bool
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function setMultiple($values, $ttl = null): bool
+    public function setMultiple(iterable $values, null|int|\DateInterval $ttl = null): bool
     {
         try {
             foreach ($values as $key => $value) {
@@ -180,12 +180,12 @@ class Psr16Adapter implements CacheInterface
     }
 
     /**
-     * @param iterable|array $keys
+     * @param iterable $keys
      * @return bool
      * @throws PhpfastcacheSimpleCacheException
      * @throws InvalidArgumentException
      */
-    public function deleteMultiple($keys): bool
+    public function deleteMultiple(iterable $keys): bool
     {
         try {
             if ($keys instanceof Traversable) {
@@ -207,7 +207,7 @@ class Psr16Adapter implements CacheInterface
      * @return bool
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function has($key): bool
+    public function has(string $key): bool
     {
         try {
             $cacheItem = $this->internalCacheInstance->getItem($key);

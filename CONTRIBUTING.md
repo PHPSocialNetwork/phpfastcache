@@ -23,14 +23,16 @@ Developer notes
 If you want to contribute to the repository you will need to install/configure some things first.
 
 To run tests follow the steps:
-- Run `./bin/ci/scripts/install_dependencies.sh`
-- Run `./vendor/bin/phpcs lib/  --report=summary`
-- Run `./vendor/bin/phpmd lib/ ansi phpmd.xml`
-- Run `./vendor/bin/phpstan analyse lib/ -l 2 -c phpstan_lite.neon 2>&1`
-- Run `php -f ./bin/ci/run_tests.php`
+1) Run `./bin/ci/scripts/install_dependencies.sh`
+2) Run `./vendor/bin/phpcs lib/  --report=summary`
+3) Run `./vendor/bin/phpmd lib/ ansi phpmd.xml`
+4) Run `./vendor/bin/phpstan analyse lib/ -l 2 -c phpstan_lite.neon 2>&1`
+5) Run `php -f ./bin/ci/run_tests.php`
 
-The last command will run all the tests including the quality tests (phpmd, phpcs, phpstan).
+If you are on Windows environment simply run the file `quality.bat` located at the root of the project to run the step 2, 3 and 4 in once.
+
+The last command will run all the unit tests of the project.
 If an error appears, fix it then you can submit your pull request.
 
-Don't worry if you don't have some services installed like "memcached", "couchdb", "couchbase", "mongodb", etc.
-The tests will be skipped on your computer but will be running in Github CI/Travis CI.
+Some tests will be skipped if you don't have special dependencies installed (Arangodb, Couchbase, Couchdb, Firestore credential and SDK, Dynamodb credential, etc.).\
+So don't worry if those tests are skipped as long as they **pass** on the Github and Travis CIs.

@@ -29,19 +29,11 @@ engines:
     enabled: true
   phpmd:
     enabled: true
-    checks:
-      CleanCode/ElseExpression:
-        enabled: false
-      CleanCode/BooleanArgumentFlag:
-        enabled: false
-      Controversial/Superglobals:
-        enabled: false
-      Controversial/CamelCaseVariableName:
-        enabled: false
-      Design/TooManyPublicMethods:
-        enabled: false
-      Design/NpathComplexity:
-        enabled: false
+    config:
+      file_extensions:
+        - php
+        - inc
+      rulesets: "phpmd.xml"
 ratings:
   paths:
   - "**.inc"

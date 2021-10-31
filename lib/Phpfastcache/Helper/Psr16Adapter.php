@@ -196,7 +196,7 @@ class Psr16Adapter implements CacheInterface
                 return $this->internalCacheInstance->deleteItems($keys);
             }
 
-            throw new phpFastCacheInvalidArgumentException('$keys must be an array/Traversable instance.');
+            throw new PhpfastcacheInvalidArgumentException('$keys must be an array/Traversable instance.');
         } catch (PhpfastcacheInvalidArgumentException $e) {
             throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }

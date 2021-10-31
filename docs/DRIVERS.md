@@ -10,8 +10,8 @@
 * Cookie **(REMOVED in V9)**
   * A cookie driver to store non-sensitive scalar (only) data. Limited storage up to 4Ko.
 * Couchbase **(REMOVED in V9)**
-  * A very high-performance NoSQL driver using a key-value pair system, replaced by Couchbasev3 as of V9.
-* Couchbasev3 **(Added in V8.0.8)**
+  * A very high-performance NoSQL driver using a key-value pair system, replaced by Couchbasev3 as of v8.0.8.
+* Couchbasev3 **(Added in v8.0.8)**
   * Same as Couchbase but for Couchbase PHP-SDK 3.0 support.
 * Couchdb
   * A very high-performance NoSQL driver using a key-value pair system.
@@ -21,7 +21,7 @@
    * A development driver that return null for driverRead() and driverIsHit() (get actions) and true for other action such as driverDelete, DriverClear() etc.
 * Devtrue **(REMOVED in V9)**
    * A development driver that return true for everything including driverCheck().
-* Devrandom **(Added in V8.0.8)**
+* Devrandom **(Added in v8.0.8)**
   * A development driver with configurable factor chance and data length.
 * Dynamodb **(Added in V9)**
   * An AWS cloud NoSQL driver using a key-value pair system. Be careful when flushing the table as it will delete and recreate the table due to a Dynamodb limitation.
@@ -43,7 +43,7 @@
   * A high-performance memory driver using a in-memory data structure storage. Less efficient than Redis driver as it is an embedded library.
 * Redis
   * A very high-performance memory driver using a in-memory data structure storage. More efficient than Predis driver as it is an compiled library.
-* Riak **(REMOVED in V8.0.6)**
+* Riak **(REMOVED in v8.0.6)**
   * A very high-performance NoSQL driver using a key-value pair system.
 * Sqlite
   * A Sqlite driver that use serialization for storing data for regular performances. A _$path_ config must be specified, else the system temporary directory will be used.

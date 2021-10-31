@@ -26,7 +26,7 @@ jobs:
         run: composer validate
 
       - name: Setup GCP environment
-        run: ./bin/ci/scripts/setup_gcp.sh
+        run: "./bin/ci/scripts/setup_gcp.sh || echo \"GCP setup failed (maybe due to fork limitation)\""
         env:
           BASE64_GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.BASE64_GOOGLE_APPLICATION_CREDENTIALS }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}

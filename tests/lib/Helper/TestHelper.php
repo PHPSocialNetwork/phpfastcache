@@ -559,4 +559,19 @@ class TestHelper
         }
         $this->terminateTest();
     }
+
+    public function getRandomKey(string $prefix = 'test_', int $minBlockLength = 3): string
+    {
+        return $prefix . \implode(
+                '_',
+                \array_filter(
+                    \array_map(
+                        static function ($str) use ($minBlockLength) {
+                            return \strlen($str) < $minBlockLength ? null : $str;
+                        },
+                        \str_split(\bin2hex(\random_bytes(\random_int(6, 16))), \random_int($minBlockLength, $minBlockLength + 5))
+                    )
+                )
+            );
+    }
 }

@@ -1,5 +1,5 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Latest Stable Version](https://img.shields.io/packagist/v/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![License](https://img.shields.io/packagist/l/phpfastcache/phpfastcache.svg?maxAge=86400)](https://packagist.org/packages/phpfastcache/phpfastcache) [![Cache Interface](https://img.shields.io/badge/CI-PSR6-orange.svg?maxAge=86400)](https://github.com/php-fig/cache) [![Extended Coding Style](https://img.shields.io/badge/ECS-PSR12-orange.svg?maxAge=86400)](https://www.php-fig.org/psr/psr-12/)  [![Simple Cache](https://img.shields.io/badge/SC-PSR16-orange.svg?maxAge=86400)](https://github.com/php-fig/simple-cache) 
-[![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/?branch=master) [![Build Status](https://travis-ci.com/PHPSocialNetwork/phpfastcache.svg?branch=master)](https://travis-ci.com/PHPSocialNetwork/phpfastcache) [![Semver compliant](https://img.shields.io/badge/Semver-2.0.0-yellow.svg?maxAge=86400)](https://semver.org/spec/v2.0.0.html) [![Patreon](https://img.shields.io/badge/Support%20us%20on-Patreon-f96854.svg?maxAge=86400)](https://www.patreon.com/geolim4)
+[![Code Climate](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache/badges/gpa.svg)](https://codeclimate.com/github/PHPSocialNetwork/phpfastcache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/PHPSocialNetwork/phpfastcache/?branch=master) [![Build Status](https://travis-ci.com/PHPSocialNetwork/phpfastcache.svg?branch=master)](https://app.travis-ci.com/github/PHPSocialNetwork/phpfastcache) [![Semver compliant](https://img.shields.io/badge/Semver-2.0.0-yellow.svg?maxAge=86400)](https://semver.org/spec/v2.0.0.html) [![Patreon](https://img.shields.io/badge/Support%20us%20on-Patreon-f96854.svg?maxAge=86400)](https://www.patreon.com/geolim4)
 
 #### :warning: Please note that the V9 is mostly a PHP 8 type aware update of Phpfastcache with some significant changes !
 > As the V9 is **relatively** not compatible with previous versions, please read carefully the [migration guide](./docs/migration/MigratingFromV8ToV9.md) to ensure you the smoothest migration possible.
@@ -19,19 +19,16 @@ The simplicity of abstraction: One class for many backend cache. You don't need 
 |---------------------------------|---------------------------------------------------------------|-------------------------------|-----------------------------------|
 |  `Apcu` *(APC support removed)* | `Arangodb`                                                    | `Devnull`                     | `FullReplicationCluster`          |
 |  `Dynamodb` (AWS)               | `Cassandra`                                                   | `Devrandom`                   | `SemiReplicationCluster`          |
-|  `Files`                        | `CouchBasev3`<br>_(`Couchbase` for SDK 2 support removed)_    | `Devrandom`                   | `SemiReplicationCluster`          |
-|  `Firestore` (GCP)              | `Couchdb`                                                     | `Devrandom`                   | `SemiReplicationCluster`          |
-|  `Leveldb`                      | `Mongodb`                                                     | `Memstatic`                   | `MasterSlaveReplicationCluster`   |
-|  `Memcache(d)`                  | `Predis`                                                      |                               | `RandomReplicationCluster`        |
+|  `Files`                        | `CouchBasev3`<br>_(`Couchbase` for SDK 2 support removed)_    | `Memstatic`                   | `MasterSlaveReplicationCluster`   |
+|  `Firestore` (GCP)              | `Couchdb`                                                     |                               | `RandomReplicationCluster`        |
+|  `Leveldb`                      | `Mongodb`                                                     |                               |                                   |
+|  `Memcache(d)`                  | `Predis`                                                      |                               |                                   |
 |  `Sqlite`                       | `Redis`                                                       |                               |                                   |
 |  `Wincache`                     | `Ssdb`                                                        |                               |                                   |
 |  `Zend Disk Cache`              | `Zend Memory Cache`                                           |                               |                                   |
 |                                 |                                                               |                               |                                   |
-|                                 |                                                               |                               |                                   |
-|                                 |                                                               |                               |                                   |
-|                                 |                                                               |                               |                                   |
 
-\* Driver descriptions available in DOCS/DRIVERS.md
+\* Driver descriptions available in [DOCS/DRIVERS.md](./docs/DRIVERS.md)
 
 ---------------------------
 Because caching does not mean weaken your code
@@ -41,6 +38,7 @@ Phpfastcache has been developed over the years with 3 main goals:
 - Performance: We optimized and still optimize the code to provide you the lightest library as possible
 - Security: Because caching strategies can sometimes comes with unwanted vulnerabilities, we do our best to provide you a sage & strong library as possible 
 - Portability: No matter what operating system you're working on, we did our best to provide you the most cross-platform code as possible
+
 ---------------------------
 Rich Development API
 ---------------------------

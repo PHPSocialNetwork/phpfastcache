@@ -4,14 +4,16 @@ jobs:
   build:
     name: Github CI - Branch
     runs-on: ubuntu-latest
+    environment: github-ci
     steps:
-      - name: Setup PHP 7.3
+      - name: Setup PHP 8.0
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.3'
+          php-version: '8.0'
           coverage: none
-          extensions: mbstring, intl, pdo_sqlite
+          extensions: mbstring, intl, pdo_sqlite, json, redis, grpc
           ini-values: apc.enabled=1, apc.shm_size=32M, apc.ttl=7200, apc.enable_cli=1, apc.serializer=php
+
       - name: Setup Memcached server
         uses: niden/actions-memcached@v7
       - name: Setup Redis server
@@ -23,32 +25,28 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+      - name: Setup GCP environment
+        run: "./bin/ci/scripts/setup_gcp.sh || echo \"GCP setup failed (maybe due to fork limitation)\""
+        env:
+          BASE64_GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.BASE64_GOOGLE_APPLICATION_CREDENTIALS }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
 
-      # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-      # Docs: https://getcomposer.org/doc/articles/scripts.md
-      - name: Run tests on PHP 7.3
-        run: php -f ./bin/ci/run_tests.php
-      - name: Setup PHP 7.4
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.4'
-          coverage: none
-          extensions: mbstring, intl, pdo_sqlite, json
-          ini-values: apc.enabled=1, apc.shm_size=32M, apc.ttl=7200, apc.enable_cli=1, apc.serializer=php
-      - name: Run tests on PHP 7.4
-        run: php -f ./bin/ci/run_tests.php
-      # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-      # Docs: https://getcomposer.org/doc/articles/scripts.md
-      - name: Run tests on PHP 8.0
-        run: php -f ./bin/ci/run_tests.php
-      - name: Setup PHP 8.0
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.0'
-          coverage: none
-          extensions: mbstring, intl, pdo_sqlite, json
-          ini-values: apc.enabled=1, apc.shm_size=32M, apc.ttl=7200, apc.enable_cli=1, apc.serializer=php
-      - name: Run tests on PHP 8.0
+      - name: Install dependencies
+        run: ./bin/ci/scripts/install_dependencies.sh
+
+      - name: Run PHPCS
+        run: ./vendor/bin/phpcs lib/  --report=summary
+
+      - name: Run PHPMD
+        run: ./vendor/bin/phpmd lib/ ansi phpmd.xml
+
+      - name: Run PHPSTAN (lite)
+        run: ./vendor/bin/phpstan analyse lib/ -l 2 -c phpstan_lite.neon 2>&1
+
+      - name: Run TESTS
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          GOOGLE_CLOUD_PROJECT: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
         run: php -f ./bin/ci/run_tests.php

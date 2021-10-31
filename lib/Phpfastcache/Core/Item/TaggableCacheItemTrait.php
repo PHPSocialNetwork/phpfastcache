@@ -2,34 +2,37 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 
 namespace Phpfastcache\Core\Item;
 
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
-/**
- * Trait TaggableCacheItemTrait
- * @package Phpfastcache\Core\Item
- * @property array $tags The tags array
- * @property array $removedTags The removed tags array
- */
 trait TaggableCacheItemTrait
 {
+    use ExtendedCacheItemTrait;
     /**
-     * @param array $tagNames
+     * @var string[]
+     */
+    protected array $tags = [];
+
+    /**
+     * @var string[]
+     */
+    protected array $removedTags = [];
+
+    /**
+     * @param string[] $tagNames
      * @return ExtendedCacheItemInterface
-     * @throws PhpfastcacheInvalidArgumentException
      */
     public function addTags(array $tagNames): ExtendedCacheItemInterface
     {
@@ -41,23 +44,45 @@ trait TaggableCacheItemTrait
     }
 
     /**
-     * @param $tagName
+     * @param string $tagName
      * @return ExtendedCacheItemInterface
-     * @throws PhpfastcacheInvalidArgumentException
      */
     public function addTag(string $tagName): ExtendedCacheItemInterface
     {
-        if (\is_string($tagName)) {
-            $this->tags = \array_unique(\array_merge($this->tags, [$tagName]));
+        $this->tags = \array_unique(\array_merge($this->tags, [$tagName]));
 
-            return $this;
-        }
-
-        throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
+        return $this;
     }
 
     /**
-     * @param array $tags
+     * @param string $tagName
+     *
+     * @return bool
+     */
+    public function hasTag(string $tagName): bool
+    {
+        return \in_array($tagName, $this->tags, true);
+    }
+
+    /**
+     * @param string[] $tagNames
+     * @param int $strategy
+     * @return bool
+     * @throws PhpfastcacheInvalidArgumentException
+     */
+    public function hasTags(array $tagNames, int $strategy = TaggableCacheItemInterface::TAG_STRATEGY_ONE): bool
+    {
+        return match ($strategy) {
+            TaggableCacheItemInterface::TAG_STRATEGY_ONE => !empty(array_intersect($tagNames, $this->tags)),
+            TaggableCacheItemInterface::TAG_STRATEGY_ALL => empty(\array_diff($tagNames, $this->tags)),
+            TaggableCacheItemInterface::TAG_STRATEGY_ONLY => empty(\array_diff($tagNames, $this->tags)) && empty(\array_diff($this->tags, $tagNames)),
+            default => throw new PhpfastcacheInvalidArgumentException('Invalid strategy constant provided.'),
+        };
+    }
+
+
+    /**
+     * @param string[] $tags
      * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -75,7 +100,7 @@ trait TaggableCacheItemTrait
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getTags(): array
     {
@@ -92,7 +117,7 @@ trait TaggableCacheItemTrait
     }
 
     /**
-     * @param array $tagNames
+     * @param string[] $tagNames
      * @return ExtendedCacheItemInterface
      */
     public function removeTags(array $tagNames): ExtendedCacheItemInterface
@@ -105,7 +130,7 @@ trait TaggableCacheItemTrait
     }
 
     /**
-     * @param $tagName
+     * @param string $tagName
      * @return ExtendedCacheItemInterface
      */
     public function removeTag(string $tagName): ExtendedCacheItemInterface
@@ -119,7 +144,7 @@ trait TaggableCacheItemTrait
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getRemovedTags(): array
     {

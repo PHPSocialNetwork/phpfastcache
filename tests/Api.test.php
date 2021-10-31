@@ -1,8 +1,15 @@
 <?php
 
 /**
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ *
+ * This file is part of Phpfastcache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
+ *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 use Phpfastcache\Api;
@@ -27,7 +34,7 @@ try {
  * Testing PhpFastCache version
  */
 try {
-    $version = Api::getPhpFastCacheVersion();
+    $version = Api::getPhpfastcacheVersion();
     $testHelper->assertPass(sprintf('Successfully retrieved PhpFastCache version: %s', $version));
 } catch (PhpfastcacheRootException $e) {
     $testHelper->assertFail(sprintf('Failed to retrieve the PhpFastCache version with the following error error: %s', $e->getMessage()));
@@ -47,7 +54,7 @@ try {
  * Testing PhpFastCache changelog
  */
 try {
-    $changelog = Api::getPhpFastCacheChangelog();
+    $changelog = Api::getPhpfastcacheChangelog();
     $testHelper->assertPass(sprintf("Successfully retrieved PhpFastCache changelog:\n%s", $changelog));
 } catch (PhpfastcacheRootException $e) {
     $testHelper->assertFail(sprintf('Failed to retrieve the PhpFastCache changelog with the following error error: %s', $e->getMessage()));

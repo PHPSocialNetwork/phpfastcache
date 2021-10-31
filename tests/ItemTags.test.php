@@ -1,11 +1,19 @@
 <?php
 
 /**
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ *
+ * This file is part of Phpfastcache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
+ *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Core\Item\TaggableCacheItemInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolInterface;
 use Phpfastcache\Tests\Helper\TestHelper;
 
@@ -19,8 +27,7 @@ $driverInstance = CacheManager::getInstance($defaultDriver);
  * Item tag test // Init tags/items
  */
 
-$createItemsCallback = static function() use ($driverInstance)
-{
+$createItemsCallback = static function () use ($driverInstance) {
     $item1 = $driverInstance->getItem('tag-test1');
     $item2 = $driverInstance->getItem('tag-test2');
     $item3 = $driverInstance->getItem('tag-test3');
@@ -59,34 +66,29 @@ $createItemsCallback = static function() use ($driverInstance)
     ];
 };
 
+$testHelper->printNoteText('##### TESTING POOL TAGS GETTERS');
+
 /**
  * Item tag test // Step 1
  */
 $testHelper->printNewLine()->printText('#1 Testing getter: getItemsByTag() with strategy TAG_STRATEGY_ONE // Expecting 3 results');
 $createItemsCallback();
 
-$tagsItems = $driverInstance->getItemsByTag('tag-test_all');
-if(is_array($tagsItems))
-{
-    if(count($tagsItems) === 3)
-    {
-        foreach($tagsItems as $tagsItem)
-        {
-            if(!in_array($tagsItem->getKey(), ['tag-test1', 'tag-test2', 'tag-test3'])){
+$tagsItems = $driverInstance->getItemsByTag('tag-test_all', TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE);
+if (is_array($tagsItems)) {
+    if (count($tagsItems) === 3) {
+        foreach ($tagsItems as $tagsItem) {
+            if (!in_array($tagsItem->getKey(), ['tag-test1', 'tag-test2', 'tag-test3'])) {
                 $testHelper->assertFail('STEP#1 // Got unexpected tagged item key:' . $tagsItem->getKey());
                 goto itemTagTest2;
             }
         }
         $testHelper->assertPass('STEP#1 // Successfully retrieved 3 tagged item keys');
-    }
-    else
-    {
+    } else {
         $testHelper->assertFail('STEP#1 //Got wrong count of item:' . count($tagsItems));
         goto itemTagTest2;
     }
-}
-else
-{
+} else {
     $testHelper->assertFail('STEP#1 // Expected $tagsItems to be an array, got: ' . gettype($tagsItems));
     goto itemTagTest2;
 }
@@ -101,27 +103,20 @@ $createItemsCallback();
 
 $tagsItems = $driverInstance->getItemsByTags(['tag-test_all', 'tag-test_all2', 'tag-test_all3'], TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL);
 
-if(is_array($tagsItems))
-{
-    if(count($tagsItems) === 3)
-    {
-        foreach($tagsItems as $tagsItem)
-        {
-            if(!in_array($tagsItem->getKey(), ['tag-test1', 'tag-test2', 'tag-test3'])){
+if (is_array($tagsItems)) {
+    if (count($tagsItems) === 3) {
+        foreach ($tagsItems as $tagsItem) {
+            if (!in_array($tagsItem->getKey(), ['tag-test1', 'tag-test2', 'tag-test3'])) {
                 $testHelper->assertFail('STEP#2 // Got unexpected tagged item key:' . $tagsItem->getKey());
                 goto itemTagTest3;
             }
         }
         $testHelper->assertPass('STEP#2 // Successfully retrieved 3 tagged item key');
-    }
-    else
-    {
-        $testHelper->assertFail('STEP#2 // Got wrong count of item:' . count($tagsItems) );
+    } else {
+        $testHelper->assertFail('STEP#2 // Got wrong count of item:' . count($tagsItems));
         goto itemTagTest3;
     }
-}
-else
-{
+} else {
     $testHelper->assertFail('STEP#2 // Expected $tagsItems to be an array, got: ' . gettype($tagsItems));
     goto itemTagTest3;
 }
@@ -136,32 +131,23 @@ $createItemsCallback();
 
 $tagsItems = $driverInstance->getItemsByTags(['tag-test_all', 'tag-test_all2', 'tag-test_all3', 'tag-test_all4'], TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL);
 
-if(is_array($tagsItems))
-{
-    if(count($tagsItems) === 1)
-    {
-        if(isset($tagsItems['tag-test3']))
-        {
-            if($tagsItems['tag-test3']->getKey() !== 'tag-test3'){
+if (is_array($tagsItems)) {
+    if (count($tagsItems) === 1) {
+        if (isset($tagsItems['tag-test3'])) {
+            if ($tagsItems['tag-test3']->getKey() !== 'tag-test3') {
                 $testHelper->assertFail('STEP#3 // Got unexpected tagged item key:' . $tagsItems['tag-test3']->getKey());
                 goto itemTagTest4;
             }
             $testHelper->assertPass('STEP#3 // Successfully retrieved 1 tagged item keys');
-        }
-        else
-        {
+        } else {
             $testHelper->assertFail('STEP#3 // Got wrong array key, expected "tag-test3", got "' . key($tagsItems) . '"');
             goto itemTagTest4;
         }
-    }
-    else
-    {
+    } else {
         $testHelper->assertFail('STEP#3 // Got wrong count of item:' . count($tagsItems));
         goto itemTagTest4;
     }
-}
-else
-{
+} else {
     $testHelper->assertFail('STEP#3 // Expected $tagsItems to be an array, got: ' . gettype($tagsItems));
     goto itemTagTest4;
 }
@@ -175,24 +161,17 @@ $driverInstance->deleteItems(['item-test_1', 'item-test_2', 'item-test_3']);
 $createItemsCallback();
 $driverInstance->deleteItemsByTag('tag-test_all');
 
-if(count($driverInstance->getItemsByTag('tag-test_all')) > 0)
-{
+if (count($driverInstance->getItemsByTag('tag-test_all')) > 0) {
     $testHelper->assertFail('[FAIL] STEP#4 // Getter getItemsByTag() found item(s), possible memory leak');
-}
-else
-{
+} else {
     $testHelper->assertPass('STEP#4 // Getter getItemsByTag() found no item');
 }
 
 $i = 0;
-while(++$i <= 3)
-{
-    if($driverInstance->getItem("tag-test{$i}")->isHit())
-    {
+while (++$i <= 3) {
+    if ($driverInstance->getItem("tag-test{$i}")->isHit()) {
         $testHelper->assertFail("STEP#4 // Item 'tag-test{$i}' should've been deleted and is still in cache storage");
-    }
-    else
-    {
+    } else {
         $testHelper->assertPass("STEP#4 // Item 'tag-test{$i}' have been deleted and is no longer in cache storage");
     }
 }
@@ -207,24 +186,17 @@ $createItemsCallback();
 
 $driverInstance->deleteItemsByTags(['tag-test_all', 'tag-test_all2', 'tag-test_all3'], TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL);
 
-if(count($driverInstance->getItemsByTag('tag-test_all')) > 0)
-{
+if (count($driverInstance->getItemsByTag('tag-test_all')) > 0) {
     $testHelper->assertFail('STEP#5 // Getter getItemsByTag() found item(s), possible memory leak');
-}
-else
-{
+} else {
     $testHelper->assertPass('STEP#5 // Getter getItemsByTag() found no item');
 }
 
 $i = 0;
-while(++$i <= 3)
-{
-    if($driverInstance->getItem("tag-test{$i}")->isHit())
-    {
+while (++$i <= 3) {
+    if ($driverInstance->getItem("tag-test{$i}")->isHit()) {
         $testHelper->assertFail("STEP#5 // Item 'tag-test{$i}' should've been deleted and is still in cache storage");
-    }
-    else
-    {
+    } else {
         $testHelper->assertPass("STEP#5 // Item 'tag-test{$i}' have been deleted and is no longer in cache storage");
     }
 }
@@ -242,12 +214,9 @@ $createItemsCallback();
  */
 $driverInstance->deleteItemsByTags(['tag-test_all', 'tag-test_all2', 'tag-test_all3', 'tag-test_all4'], TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL);
 
-if($driverInstance->getItem('item-test_3')->isHit())
-{
+if ($driverInstance->getItem('item-test_3')->isHit()) {
     $testHelper->assertFail('STEP#6 // Getter getItem() found item \'item-test_3\', possible memory leak');
-}
-else
-{
+} else {
     $testHelper->assertPass('STEP#6 // Getter getItem() did not found item \'item-test_3\'');
 }
 
@@ -261,14 +230,10 @@ $createItemsCallback();
 $appendStr = '$*#*$';
 $driverInstance->appendItemsByTags(['tag-test_all', 'tag-test_all2', 'tag-test_all3'], $appendStr, TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL);
 
-foreach($driverInstance->getItems(['tag-test1', 'tag-test2', 'tag-test3']) as $item)
-{
-    if(strpos($item->get(), $appendStr) === false)
-    {
+foreach ($driverInstance->getItems(['tag-test1', 'tag-test2', 'tag-test3']) as $item) {
+    if (strpos($item->get(), $appendStr) === false) {
         $testHelper->assertFail("STEP#7 // Item '{$item->getKey()}' does not have the string part '{$appendStr}' in it's value");
-    }
-    else
-    {
+    } else {
         $testHelper->assertPass("STEP#7 // Item 'tag-test{$item->getKey()}' does have the string part '{$appendStr}' in it's value");
     }
 }
@@ -283,14 +248,10 @@ $createItemsCallback();
 $prependStr = '&+_+&';
 $driverInstance->prependItemsByTags(['tag-test_all', 'tag-test_all2', 'tag-test_all3'], $prependStr, TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL);
 
-foreach($driverInstance->getItems(['tag-test1', 'tag-test2', 'tag-test3']) as $item)
-{
-    if(strpos($item->get(), $prependStr) === false)
-    {
+foreach ($driverInstance->getItems(['tag-test1', 'tag-test2', 'tag-test3']) as $item) {
+    if (strpos($item->get(), $prependStr) === false) {
         $testHelper->assertFail("STEP#8 // Item '{$item->getKey()}' does not have the string part '{$prependStr}' in it's value");
-    }
-    else
-    {
+    } else {
         $testHelper->assertPass("STEP#8 // Item 'tag-test{$item->getKey()}' does have the string part '{$prependStr}' in it's value");
     }
 }
@@ -307,32 +268,23 @@ $createItemsCallback();
 
 $tagsItems = $driverInstance->getItemsByTags(['tag-test_1', 'tag-test_all', 'tag-test_all2', 'tag-test_all3'], TaggableCacheItemPoolInterface::TAG_STRATEGY_ONLY);
 
-if(is_array($tagsItems))
-{
-    if(count($tagsItems) === 1)
-    {
-        if(isset($tagsItems['tag-test1']))
-        {
-            if($tagsItems['tag-test1']->getKey() !== 'tag-test1'){
+if (is_array($tagsItems)) {
+    if (count($tagsItems) === 1) {
+        if (isset($tagsItems['tag-test1'])) {
+            if ($tagsItems['tag-test1']->getKey() !== 'tag-test1') {
                 $testHelper->assertFail('STEP#9 // Got unexpected tagged item key:' . $tagsItems['tag-test1']->getKey());
                 goto itemTagTest10;
             }
             $testHelper->assertPass('STEP#9 // Successfully retrieved 1 tagged item keys');
-        }
-        else
-        {
+        } else {
             $testHelper->assertFail('STEP#9 // Got wrong array key, expected "tag-test3", got "' . key($tagsItems) . '"');
             goto itemTagTest10;
         }
-    }
-    else
-    {
+    } else {
         $testHelper->assertFail('STEP#9 // Got wrong count of item:' . count($tagsItems));
         goto itemTagTest10;
     }
-}
-else
-{
+} else {
     $testHelper->assertFail('STEP#9 // Expected $tagsItems to be an array, got: ' . gettype($tagsItems));
     goto itemTagTest10;
 }
@@ -347,23 +299,102 @@ $createItemsCallback();
 
 $tagsItems = $driverInstance->getItemsByTags(['tag-test_1', 'tag-test_all', 'tag-test_all2', /*'tag-test_all3'*/], TaggableCacheItemPoolInterface::TAG_STRATEGY_ONLY);
 
-if(is_array($tagsItems))
-{
-    if(count($tagsItems) === 0)
-    {
+if (is_array($tagsItems)) {
+    if (count($tagsItems) === 0) {
         $testHelper->assertPass('STEP#10 // Successfully retrieved 0 tagged item keys');
-    }
-    else
-    {
+    } else {
         $testHelper->assertFail('STEP#10 // Got wrong count of item:' . count($tagsItems));
         goto itemTagTest11;
     }
-}
-else
-{
+} else {
     $testHelper->assertFail('STEP#10 // Expected $tagsItems to be an array, got: ' . gettype($tagsItems));
     goto itemTagTest11;
 }
 
 itemTagTest11:
+
+$testHelper->printNewLine()->printNoteText('##### TESTING ITEM TAGS HASSERS');
+
+$testHelper->printNewLine()->printText('#1 Testing ExtendedCacheItemInterface::hasTag()');
+$driverInstance->clear();
+$createItemsCallback();
+$cacheItem = $driverInstance->getItem('tag-test1');
+
+if ($cacheItem->hasTag('tag-test_1')) {
+    $testHelper->assertPass('STEP#1 // Successfully found the expected tag');
+} else {
+    $testHelper->assertFail('STEP#1 // Failed finding the expected tag');
+}
+
+if (!$cacheItem->hasTag('non_existing_tag')) {
+    $testHelper->assertPass('STEP#2 // Successfully not found an unknown tag');
+} else {
+    $testHelper->assertFail('STEP#2 // Failed not finding an unknown tag');
+}
+
+
+$testHelper->printNewLine()->printText('#2 Testing ExtendedCacheItemInterface::hasTags() with strategy "TAG_STRATEGY_ONE"');
+$driverInstance->clear();
+$createItemsCallback();
+$cacheItem = $driverInstance->getItem('tag-test2');
+
+if ($cacheItem->hasTags(['tag-test_1', 'tag-test_2'], TaggableCacheItemInterface::TAG_STRATEGY_ONE)) {
+    $testHelper->assertPass('STEP#1 // Successfully finding both the known tags');
+} else {
+    $testHelper->assertFail('STEP#1 // Failed finding both the known tags');
+}
+
+if ($cacheItem->hasTags(['tag-test_1', 'non_existing_tag'], TaggableCacheItemInterface::TAG_STRATEGY_ONE)) {
+    $testHelper->assertPass('STEP#2 // Successfully finding one of the known tags');
+} else {
+    $testHelper->assertFail('STEP#2 // Failed finding one of the known tags');
+}
+
+if (!$cacheItem->hasTags(['non_existing_tag', 'non_existing_tag2'], TaggableCacheItemInterface::TAG_STRATEGY_ONE)) {
+    $testHelper->assertPass('STEP#3 // Successfully not finding one of the unknown tags');
+} else {
+    $testHelper->assertFail('STEP#3 // Failed not finding one of the unknown tags');
+}
+
+$testHelper->printNewLine()->printText('#3 Testing ExtendedCacheItemInterface::hasTags() with strategy "TAG_STRATEGY_ALL"');
+$driverInstance->clear();
+$createItemsCallback();
+$cacheItem = $driverInstance->getItem('tag-test2');
+
+if ($cacheItem->hasTags(['tag-test_1', 'tag-test_2'], TaggableCacheItemInterface::TAG_STRATEGY_ALL)) {
+    $testHelper->assertPass('STEP#1 // Successfully found both the known tags');
+} else {
+    $testHelper->assertFail('STEP#1 // Failed finding both the known tags');
+}
+
+if ($cacheItem->hasTags(['tag-test_1', 'non_existing_tag'], TaggableCacheItemInterface::TAG_STRATEGY_ALL)) {
+    $testHelper->assertPass('STEP#2 // Successfully not finding both of the known and unknown tags');
+} else {
+    $testHelper->assertPass('STEP#2 // Failed not finding both of the known and unknown tags');
+}
+
+
+$testHelper->printNewLine()->printText('#4 Testing ExtendedCacheItemInterface::hasTags() with strategy "TAG_STRATEGY_ONLY"');
+$driverInstance->clear();
+$createItemsCallback();
+$cacheItem = $driverInstance->getItem('tag-test3');
+
+if ($cacheItem->hasTags($cacheItem->getTags(), TaggableCacheItemInterface::TAG_STRATEGY_ONLY)) {
+    $testHelper->assertPass('STEP#1 // Successfully matching only and exclusively the known tags');
+} else {
+    $testHelper->assertFail('STEP#1 // Failed matching only and exclusively the known tags');
+}
+
+if (!$cacheItem->hasTags(['tag-test_1', 'tag-test_2', /*'tag-test_3',*/ 'tag-test_all', 'tag-test_all2', 'tag-test_all3', 'tag-test_all4'], TaggableCacheItemInterface::TAG_STRATEGY_ONLY)) {
+    $testHelper->assertPass('STEP#1 // Successfully not matching only the known tags with some of them omitted');
+} else {
+    $testHelper->assertPass('STEP#1 // Failed not matching only the known tags with some of them omitted');
+}
+
+if (!$cacheItem->hasTags(array_merge($cacheItem->getTags(), ['non_existing_tag']), TaggableCacheItemInterface::TAG_STRATEGY_ONLY)) {
+    $testHelper->assertPass('STEP#1 // Successfully matching only the known tags plus an unknown tag');
+} else {
+    $testHelper->assertFail('STEP#1 // Failed matching only the known tags plus an unknown tag');
+}
+
 $testHelper->terminateTest();

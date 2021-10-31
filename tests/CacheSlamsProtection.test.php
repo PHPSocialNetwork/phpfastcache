@@ -1,8 +1,15 @@
 <?php
 
 /**
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ *
+ * This file is part of Phpfastcache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
+ *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 use Phpfastcache\CacheManager;
@@ -22,9 +29,8 @@ $driverInstance = CacheManager::getInstance($defaultDriver, new ConfigurationOpt
   'cacheSlamsTimeout' => 20
 ]));
 
-if(!$testHelper->isHHVM()){
-
-    EventManager::getInstance()->onCacheGetItemInSlamBatch(function(ExtendedCacheItemPoolInterface $itemPool, ItemBatch $driverData, $cacheSlamsSpendSeconds) use ($testHelper){
+if (!$testHelper->isHHVM()) {
+    EventManager::getInstance()->onCacheGetItemInSlamBatch(function (ExtendedCacheItemPoolInterface $itemPool, ItemBatch $driverData, $cacheSlamsSpendSeconds) use ($testHelper) {
         $testHelper->printText("Looping in batch for {$cacheSlamsSpendSeconds} second(s) with a batch from " . $driverData->getItemDate()->format(\DateTime::W3C));
     });
 
@@ -42,9 +48,9 @@ if(!$testHelper->isHHVM()){
     /**
      * @see CacheSlamsProtection.subprocess.php:28
      */
-    if($item->isHit() && $item->get() === 1337){
+    if ($item->isHit() && $item->get() === 1337) {
         $testHelper->assertPass('The batch has expired and returned a non-empty item with expected value: ' . $item->get());
-    }else{
+    } else {
         $testHelper->assertFail('The batch has expired and returned an empty item with expected value: ' . print_r($item->get(), true));
     }
 
@@ -52,8 +58,7 @@ if(!$testHelper->isHHVM()){
      * Cleanup the driver
      */
     $driverInstance->deleteItem($item->getKey());
-
-}else{
+} else {
     $testHelper->assertSkip('Test ignored on HHVM builds due to sub-process issues with C.I.');
 }
 

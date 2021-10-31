@@ -2,45 +2,31 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 
 namespace Phpfastcache\Config;
 
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
-
-const SAFE_FILE_EXTENSIONS = 'txt|cache|db|pfc';
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 trait IOConfigurationOptionTrait
 {
-    /**
-     * @var boolean
-     */
-    protected $secureFileManipulation = false;
+    protected bool $secureFileManipulation = false;
 
-    /**
-     * @var bool
-     */
-    protected $htaccess = true;
+    protected string $securityKey = '';
 
-    /**
-     * @var string
-     */
-    protected $securityKey = '';
+    protected string $cacheFileExtension = 'txt';
 
-    /**
-     * @var string
-     */
-    protected $cacheFileExtension = 'txt';
+    protected int $defaultChmod = 0777;
 
     /**
      * @return string
@@ -52,30 +38,13 @@ trait IOConfigurationOptionTrait
 
     /**
      * @param string $securityKey
-     * @return Config
+     * @return static
+     * @throws PhpfastcacheLogicException
      */
-    public function setSecurityKey(string $securityKey): self
+    public function setSecurityKey(string $securityKey): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->securityKey = $securityKey;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getHtaccess(): bool
-    {
-        return $this->htaccess;
-    }
-
-    /**
-     * @param bool $htaccess
-     * @return Config
-     */
-    public function setHtaccess(bool $htaccess): ConfigurationOptionInterface
-    {
-        $this->htaccess = $htaccess;
 
         return $this;
     }
@@ -91,9 +60,11 @@ trait IOConfigurationOptionTrait
     /**
      * @param bool $secureFileManipulation
      * @return self
+     * @throws PhpfastcacheLogicException
      */
-    public function setSecureFileManipulation(bool $secureFileManipulation): self
+    public function setSecureFileManipulation(bool $secureFileManipulation): static
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->secureFileManipulation = $secureFileManipulation;
         return $this;
     }
@@ -109,27 +80,45 @@ trait IOConfigurationOptionTrait
 
     /**
      * @param string $cacheFileExtension
-     * @return self
+     * @return static
      * @throws PhpfastcacheInvalidConfigurationException
+     * @throws PhpfastcacheLogicException
      */
-    public function setCacheFileExtension(string $cacheFileExtension): self
+    public function setCacheFileExtension(string $cacheFileExtension): static
     {
-        /**
-         * Feel free to propose your own one
-         * by opening a pull request :)
-         */
-        $safeFileExtensions = \explode('|', SAFE_FILE_EXTENSIONS);
+        $this->enforceLockedProperty(__FUNCTION__);
+        $safeFileExtensions = \explode('|', IOConfigurationOptionInterface::SAFE_FILE_EXTENSIONS);
 
-        if (\strpos($cacheFileExtension, '.') !== false) {
+        if (str_contains($cacheFileExtension, '.')) {
             throw new PhpfastcacheInvalidConfigurationException('cacheFileExtension cannot contain a dot "."');
         }
         if (!\in_array($cacheFileExtension, $safeFileExtensions, true)) {
             throw new PhpfastcacheInvalidConfigurationException(
-                "Extension \"{$cacheFileExtension}\" is not safe, currently allowed extension names: " . \implode(', ', $safeFileExtensions)
+                "Extension \"$cacheFileExtension\" is not safe, currently allowed extension names: " . \implode(', ', $safeFileExtensions)
             );
         }
 
         $this->cacheFileExtension = $cacheFileExtension;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDefaultChmod(): int
+    {
+        return $this->defaultChmod;
+    }
+
+    /**
+     * @param int $defaultChmod
+     * @return self
+     * @throws PhpfastcacheLogicException
+     */
+    public function setDefaultChmod(int $defaultChmod): static
+    {
+        $this->enforceLockedProperty(__FUNCTION__);
+        $this->defaultChmod = $defaultChmod;
         return $this;
     }
 }

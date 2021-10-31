@@ -1,8 +1,8 @@
 {
     "name": "phpfastcache/phpfastcache",
     "type" : "library",
-    "description": "PHP Abstract Cache Class - Reduce your database call using cache system. PhpFastCache handles a lot of drivers such as Apc(u), Cassandra, CouchBase, Couchdb, Mongodb, Files, (P)redis, Leveldb, Memcache(d), Ssdb, Sqlite, Wincache, Xcache, Zend Data Cache.",
-    "keywords": ["abstract", "cache","caching","php cache","mysql cache","apc","apcu","memcache","memcached","wincache","files cache","pdo cache","cache class","redis","predis","cookie", "mongodb", "cassandra", "couchdb", "couchbase", "LevelDb", "Ssdb", "Wincache", "xcache","zend","zend disk cache","zend memory cache","zend data cache","zend server"],
+    "description": "PHP Abstract Cache Class - Reduce your database call using cache system. Phpfastcache handles a lot of drivers such as Apc(u), Cassandra, CouchBase, Couchdb, Mongodb, Files, (P)redis, Leveldb, Memcache(d), Ssdb, Sqlite, Wincache, Xcache, Zend Data Cache.",
+    "keywords": ["abstract", "cache","caching","php cache","mysql cache","apc","apcu","arangodb","dynamodb","memcache","memcached","wincache","files cache","pdo cache","cache class","redis","predis","cookie", "mongodb", "cassandra", "couchdb", "couchbase", "LevelDb", "Ssdb", "Wincache", "xcache","zend","zend disk cache","zend memory cache","zend data cache","zend server"],
     "homepage": "https://www.phpfastcache.com",
     "license": "MIT",
     "minimum-stability": "stable",
@@ -14,28 +14,31 @@
                 "role": "Actual Project Manager/Developer"
             },
             {
-                "name": "Khoa Bui",
-                "email": "khoaofgod@gmail.com",
-                "homepage": "https://www.phpfastcache.com",
-                "role": "Former Project Developer/Original Creator"
+                "name": "Contributors",
+                "homepage": "https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors"
             }
-        ],
+    ],
     "require": {
-        "php": ">=7.3",
-        "psr/cache": "~1.0.0",
-        "psr/simple-cache": "~1.0.0",
+        "php": ">=8.0",
+        "psr/cache": "^2.0||^3.0",
+        "psr/simple-cache": "^2.0||^3.0",
         "ext-mbstring": "*",
         "ext-json": "*"
     },
     "require-dev": {
         "league/climate": "^3.5",
-        "ext-gettext": "*"
+        "ext-gettext": "*",
+        "phpmd/phpmd": "@stable",
+        "squizlabs/php_codesniffer": "~3.0",
+        "phpstan/phpstan": "^0.12.98",
+        "jetbrains/phpstorm-stubs": "dev-master"
     },
     "suggest": {
-        "ext-apc": "*",
+        "ext-apcu": "*",
         "ext-intl": "*",
         "ext-memcached": "*",
         "ext-memcache": "*",
+        "ext-mongodb": "*",
         "ext-redis": "*",
         "ext-xcache": "*",
         "ext-sqlite": "*",
@@ -45,16 +48,30 @@
         "ext-couchbase_v3": "*",
         "predis/predis": "^1.1",
         "mongodb/mongodb": "^1.9",
-        "phpfastcache/phpssdb": "~1.0.0",
-        "phpfastcache/couchdb": "~1.0.0"
+        "phpfastcache/phpssdb": "~1.1.0",
+        "doctrine/couchdb": "^dev-master#9eeb9e5",
+        "triagens/arangodb": "^3.8",
+        "google/cloud-firestore": "^1.20",
+        "aws/aws-sdk-php": "~3.0"
     },
     "conflict": {
-        "doctrine/couchdb": "*"
+        "doctrine/couchdb": "<dev-master#9eeb9e5"
     },
     "autoload": {
         "psr-4": {
             "Phpfastcache\\": "lib/Phpfastcache/",
             "Phpfastcache\\Tests\\": "tests/lib/"
         }
-    }
+    },
+    "support": {
+        "issues": "https://github.com/PHPSocialNetwork/phpfastcache/issues",
+        "wiki": "https://github.com/PHPSocialNetwork/phpfastcache/wiki",
+        "source": "https://github.com/PHPSocialNetwork/phpfastcache"
+    },
+    "funding": [
+        {
+            "type": "patreon",
+            "url": "https://www.patreon.com/geolim4"
+        }
+    ]
 }

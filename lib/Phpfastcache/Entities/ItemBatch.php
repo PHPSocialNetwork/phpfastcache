@@ -2,15 +2,14 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 
@@ -18,31 +17,17 @@ namespace Phpfastcache\Entities;
 
 use DateTimeInterface;
 
-/**
- * Class ItemBatch
- * @package phpFastCache\Entities
- */
 class ItemBatch
 {
-    /**
-     * @var string
-     */
-    protected $itemKey;
-
-    /**
-     * @var DateTimeInterface
-     */
-    protected $itemDate;
-
     /**
      * ItemBatch constructor.
      * @param string $itemKey
      * @param DateTimeInterface $itemDate
      */
-    public function __construct(string $itemKey, DateTimeInterface $itemDate)
-    {
-        $this->itemKey = $itemKey;
-        $this->itemDate = $itemDate;
+    public function __construct(
+        protected string $itemKey,
+        protected DateTimeInterface $itemDate
+    ) {
     }
 
     /**

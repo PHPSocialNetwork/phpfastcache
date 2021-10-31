@@ -1,0 +1,13 @@
+###################################################
+# Complete PHPSTAN configuration for Travis CI
+###################################################
+parameters:
+	ignoreErrors:
+		- '#PHPDoc tag @(.*)#' # (Really) Annoying PHPDoc tag issues...
+		- '#Call to an undefined method phpssdb(.*)#' # Phpstan is not able to know the magic of Ssdb __call() implementation
+		-
+			message: '#(Method|Class) Couchbase(.*)#' # Phpstan not differencing coucbase and couchbase_v3 stubs from jetbrains/phpstorm-stubs
+			path: lib/Phpfastcache/Drivers/Couchbasev3/Driver.php
+		-
+			message: '#Cannot call method getPayload\(\) on int#' # Issue in predis/predis => https://github.com/predis/predis/pull/710
+			path: lib/Phpfastcache/Drivers/Predis/Driver.php

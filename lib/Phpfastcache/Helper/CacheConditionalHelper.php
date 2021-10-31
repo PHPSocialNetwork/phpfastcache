@@ -2,62 +2,42 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 
 namespace Phpfastcache\Helper;
 
-use DateInterval;
+use Phpfastcache\CacheContract;
 use Psr\Cache\CacheItemPoolInterface;
 
 /**
- * Class CacheConditional
- * @package phpFastCache\Helper
+ * @deprecated Use \Phpfastcache\CacheContract instead
  */
-class CacheConditionalHelper
+class CacheConditionalHelper extends CacheContract
 {
     /**
-     * @var CacheItemPoolInterface
-     */
-    protected $cacheInstance;
-
-    /**
-     * CachePromise constructor.
+     * CacheConditionalHelper constructor.
      * @param CacheItemPoolInterface $cacheInstance
      */
     public function __construct(CacheItemPoolInterface $cacheInstance)
     {
-        $this->cacheInstance = $cacheInstance;
-    }
-
-    /**
-     * @param string $cacheKey
-     * @param callable $callback
-     * @param int|DateInterval $expiresAfter
-     * @return mixed
-     */
-    public function get(string $cacheKey, callable $callback, $expiresAfter = null)
-    {
-        $cacheItem = $this->cacheInstance->getItem($cacheKey);
-
-        if (!$cacheItem->isHit()) {
-            /** Parameter $cacheItem will be available as of 8.0.6 */
-            $cacheItem->set($callback($cacheItem));
-            if ($expiresAfter) {
-                $cacheItem->expiresAfter($expiresAfter);
-            }
-            $this->cacheInstance->save($cacheItem);
-        }
-
-        return $cacheItem->get();
+        \trigger_error(
+            \sprintf(
+                'Class "%s" is deprecated, use "%s" class instead. See the documentation about this change here: %s',
+                self::class,
+                parent::class,
+                'https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV9%CB%96%5D-Cache-contract'
+            ),
+            E_USER_DEPRECATED
+        );
+        parent::__construct($cacheInstance);
     }
 }

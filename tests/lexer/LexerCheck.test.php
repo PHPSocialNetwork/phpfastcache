@@ -8,36 +8,42 @@ $testHelper = new TestHelper('PHP Lexer');
 
 
 /**
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ *
+ * This file is part of Phpfastcache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
+ *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
-function phpfastcache_read_dir($dir, $ext = null)
-{
-    $list = [];
+$pfcReadDir = static function ($dir, $ext = null) use (&$pfcReadDir) {
+    $list = [[]];
     $dir .= '/';
     if (($res = opendir($dir)) === false) {
         exit(1);
     }
     while (($name = readdir($res)) !== false) {
-        if ($name == '.' || $name == '..') {
+        if ($name === '.' || $name === '..') {
             continue;
         }
         $name = $dir . $name;
         if (is_dir($name)) {
-            $list = array_merge($list, phpfastcache_read_dir($name, $ext));
+            $list[] = $pfcReadDir($name, $ext);
         } elseif (is_file($name)) {
-            if (!is_null($ext) && substr(strrchr($name, '.'), 1) != $ext) {
+            if (!is_null($ext) && substr(strrchr($name, '.'), 1) !== $ext) {
                 continue;
             }
-            $list[] = $name;
+            $list[] = [$name];
         }
     }
 
-    return $list;
-}
+    return array_merge(...$list);
+};
 
-$list = phpfastcache_read_dir('./lib', 'php');
+$list = $pfcReadDir('./lib', 'php');
 
 foreach (array_map('realpath', $list) as $file) {
     $output = '';

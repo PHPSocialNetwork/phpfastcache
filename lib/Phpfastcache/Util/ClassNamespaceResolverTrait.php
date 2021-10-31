@@ -2,15 +2,14 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 
@@ -19,19 +18,10 @@ namespace Phpfastcache\Util;
 use Iterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Traversable;
 
-
-/**
- * Trait ClassNamespaceResolverTrait
- * @package phpFastCache\Core
- */
 trait ClassNamespaceResolverTrait
 {
-    /**
-     * @var string
-     */
-    protected $namespace;
+    protected static array $namespaces = [];
 
     /**
      * Iterate over all files in the given directory searching for classes.
@@ -43,7 +33,7 @@ trait ClassNamespaceResolverTrait
      *
      * @return array A class map array
      */
-    protected static function createClassMap($dir): array
+    protected static function createClassMap(Iterator|string|array $dir): array
     {
         if (\is_string($dir)) {
             $dir = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
@@ -60,10 +50,7 @@ trait ClassNamespaceResolverTrait
                     continue;
                 }
                 $classes = self::findClasses($path);
-                if (PHP_VERSION_ID >= 70000) {
-                    // PHP 7 memory manager will not release after token_get_all(), see https://bugs.php.net/70098
-                    gc_mem_caches();
-                }
+                gc_mem_caches();
                 foreach ($classes as $class) {
                     $map[$class] = $path;
                 }
@@ -82,6 +69,8 @@ trait ClassNamespaceResolverTrait
      * @param string $path The file to check
      *
      * @return array The found classes
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected static function findClasses(string $path): array
     {
@@ -99,14 +88,14 @@ trait ClassNamespaceResolverTrait
                 case T_NAMESPACE:
                     $namespace = '';
                     // If there is a namespace, extract it (PHP 8 test)
-                    if(\defined('T_NAME_QUALIFIED')){
+                    if (\defined('T_NAME_QUALIFIED')) {
                         while (isset($tokens[++$i][1])) {
                             if ($tokens[$i][0] === T_NAME_QUALIFIED) {
                                 $namespace = $tokens[$i][1];
                                 break;
                             }
                         }
-                    }else{
+                    } else {
                         while (isset($tokens[++$i][1])) {
                             if (\in_array($tokens[$i][0], [T_STRING, T_NS_SEPARATOR], true)) {
                                 $namespace .= $tokens[$i][1];
@@ -156,13 +145,13 @@ trait ClassNamespaceResolverTrait
     /**
      * @return string
      */
-    public function getClassNamespace(): string
+    public static function getClassNamespace(): string
     {
-        if (!$this->namespace) {
-            $this->namespace = substr(static::class, 0, strrpos(static::class, '\\'));
+        if (!isset(self::$namespaces[static::class])) {
+            self::$namespaces[static::class] = substr(static::class, 0, strrpos(static::class, '\\'));
         }
 
-        return $this->namespace;
+        return self::$namespaces[static::class];
     }
 
     /**

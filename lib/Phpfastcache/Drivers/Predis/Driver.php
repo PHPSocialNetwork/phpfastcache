@@ -2,15 +2,14 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 
@@ -18,24 +17,23 @@ namespace Phpfastcache\Drivers\Predis;
 
 use DateTime;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\PhpfastcacheDriverException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Predis\Client as PredisClient;
 use Predis\Connection\ConnectionException as PredisConnectionException;
-use Psr\Cache\CacheItemInterface;
-
 
 /**
- * Class Driver
- * @package phpFastCache\Drivers
  * @property PredisClient $instance Instance of driver service
- * @property Config $config Config object
- * @method Config getConfig() Return the config object
+ * @property Config $config Return the config object
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    use DriverBaseTrait;
+    use TaggableCacheItemPoolTrait;
 
     /**
      * @return bool
@@ -46,7 +44,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             trigger_error('The native Redis extension is installed, you should use Redis instead of Predis to increase performances', E_USER_NOTICE);
         }
 
-        return class_exists('Predis\Client');
+        return class_exists(\Predis\Client::class);
     }
 
     /**
@@ -92,10 +90,6 @@ HELP;
      */
     protected function driverConnect(): bool
     {
-        if ($this->instance instanceof PredisClient) {
-            throw new PhpfastcacheLogicException('Already connected to Predis server');
-        }
-
         /**
          * In case of an user-provided
          * Predis client just return here
@@ -121,7 +115,8 @@ HELP;
                     'persistent' => $this->getConfig()->isPersistent(),
                     'timeout' => $this->getConfig()->getTimeout(),
                     'path' => $this->getConfig()->getPath(),
-                ], $options
+                ],
+                $options
             );
         } else {
             $this->instance = new PredisClient($this->getConfig()->getPredisConfigArray(), $options);
@@ -141,10 +136,10 @@ HELP;
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return null|array
      */
-    protected function driverRead(CacheItemInterface $item)
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         $val = $this->instance->get($item->getKey());
         if ($val == false) {
@@ -155,53 +150,38 @@ HELP;
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return mixed
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
+        $this->assertCacheItemType($item, Item::class);
+
+        $ttl = $item->getExpirationDate()->getTimestamp() - time();
+
         /**
-         * Check for Cross-Driver type confusion
+         * @see https://redis.io/commands/setex
+         * @see https://redis.io/commands/expire
          */
-        if ($item instanceof Item) {
-            $ttl = $item->getExpirationDate()->getTimestamp() - time();
-
-            /**
-             * @see https://redis.io/commands/setex
-             * @see https://redis.io/commands/expire
-             */
-            if ($ttl <= 0) {
-                return (bool)$this->instance->expire($item->getKey(), 0);
-            }
-
-            return $this->instance->setex($item->getKey(), $ttl, $this->encode($this->driverPreWrap($item)))->getPayload() === 'OK';
+        if ($ttl <= 0) {
+            return (bool)$this->instance->expire($item->getKey(), 0);
         }
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return $this->instance->setex($item->getKey(), $ttl, $this->encode($this->driverPreWrap($item)))->getPayload() === 'OK';
     }
 
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
-
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return (bool)$this->instance->del([$item->getKey()]);
-        }
+        $this->assertCacheItemType($item, Item::class);
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return (bool)$this->instance->del([$item->getKey()]);
     }
 
     /**
@@ -210,5 +190,10 @@ HELP;
     protected function driverClear(): bool
     {
         return $this->instance->flushdb()->getPayload() === 'OK';
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->config;
     }
 }

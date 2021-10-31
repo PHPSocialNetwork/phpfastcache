@@ -2,15 +2,14 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 
@@ -21,14 +20,16 @@ use Phpfastcache\Api;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
+use Phpfastcache\Proxy\PhpfastcacheAbstractProxyInterface;
+use Phpfastcache\Util\SapiDetector;
+use Psr\Cache\InvalidArgumentException;
 use ReflectionClass;
 use ReflectionException;
 use Throwable;
-
-use function sprintf;
-
 
 /**
  * Class TestHelper
@@ -36,35 +37,17 @@ use function sprintf;
  */
 class TestHelper
 {
-    /***
-     * @var int
-     */
-    protected $numOfFailedTests = 0;
+    protected int $numOfFailedTests = 0;
 
-    /**
-     * @var int
-     */
-    protected $numOfPassedTests = 0;
+    protected int $numOfPassedTests = 0;
 
-    /**
-     * @var int
-     */
-    protected $numOfSkippedTests = 0;
+    protected int $numOfSkippedTests = 0;
 
-    /**
-     * @var string
-     */
-    protected $testName;
+    protected string $testName;
 
-    /**
-     * @var int
-     */
-    protected $timestamp;
+    protected float $timestamp;
 
-    /**
-     * @var CLImate
-     */
-    protected $climate;
+    protected CLImate $climate;
 
     /**
      * TestHelper constructor.
@@ -77,7 +60,7 @@ class TestHelper
     {
         $this->timestamp = microtime(true);
         $this->testName = $testName;
-        $this->climate = new CLImate;
+        $this->climate = new CLImate();
         $this->climate->forceAnsiOn();
 
         /**
@@ -90,52 +73,23 @@ class TestHelper
         $this->printHeaders();
     }
 
-    protected function setErrorHandler($errorLevels = E_ALL)
+    protected function setErrorHandler($errorLevels = E_ALL): void
     {
         set_error_handler([$this, 'errorHandler'], $errorLevels);
     }
 
-    public function mutePhpNotices()
+    public function mutePhpNotices(): void
     {
         $errorLevels = E_ALL & ~E_NOTICE & ~E_USER_NOTICE;
         $this->setErrorHandler($errorLevels);
         error_reporting($errorLevels);
     }
 
-    public function unmutePhpNotices()
+    public function unmutePhpNotices(): void
     {
         $errorLevels = E_ALL;
         $this->setErrorHandler($errorLevels);
         error_reporting($errorLevels);
-    }
-
-    /**
-     * @see https://stackoverflow.com/questions/933367/php-how-to-best-determine-if-the-current-invocation-is-from-cli-or-web-server
-     * @return bool
-     */
-    public function isCli(): bool
-    {
-        if (defined('STDIN')) {
-            return true;
-        }
-
-        if (php_sapi_name() === 'cli') {
-            return true;
-        }
-
-        if (array_key_exists('SHELL', $_ENV)) {
-            return true;
-        }
-
-        if (empty($_SERVER['REMOTE_ADDR']) && !isset($_SERVER['HTTP_USER_AGENT']) && count($_SERVER['argv']) > 0) {
-            return true;
-        }
-
-        if (!array_key_exists('REQUEST_METHOD', $_SERVER)) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -150,36 +104,38 @@ class TestHelper
      * @throws PhpfastcacheIOException
      * @throws PhpfastcacheLogicException
      */
-    public function printHeaders()
+    public function printHeaders(): void
     {
-        if (!$this->isCli() && !headers_sent()) {
+        if (SapiDetector::isWebScript() && !headers_sent()) {
             header('Content-Type: text/plain, true');
         }
 
         $loadedExtensions = get_loaded_extensions();
         natcasesort($loadedExtensions);
-        $this->printText('[PhpFastCache CORE v' . Api::getPhpFastCacheVersion() . Api::getPhpFastCacheGitHeadHash() . ']', true);
-        $this->printText('[PhpFastCache API v' . Api::getVersion() . ']', true);
-        $this->printText('[PHP v' . PHP_VERSION . ' with: ' . implode(', ', $loadedExtensions) . ']', true);
-        $this->printText("[Begin Test: '{$this->testName}']");
+        $this->printText("[<blue>Begin Test:</blue> <magenta>$this->testName</magenta>]");
+        $this->printText('[<blue>PHPFASTCACHE:</blue> CORE <yellow>v' . Api::getPhpfastcacheVersion() . Api::getPhpfastcacheGitHeadHash() . '</yellow> | API <yellow>v' . Api::getVersion() . '</yellow>]');
+        $this->printText('[<blue>PHP</blue> <yellow>v' . PHP_VERSION . '</yellow> with: <green>' . implode(', ', $loadedExtensions) . '</green>]');
         $this->printText('---');
     }
 
     /**
-     * @param string $string
+     * @param array|string $string
      * @param bool $strtoupper
      * @param string $prefix
      * @return $this
      */
-    public function printText(string $string, bool $strtoupper = false, string $prefix = ''): self
+    public function printText(array|string $string, bool $strtoupper = false, string $prefix = ''): self
     {
+        if (\is_array($string)) {
+            $string = implode("\n", $string);
+        }
         if ($prefix) {
-            $string = "[{$prefix}] {$string}";
+            $string = "[$prefix] $string";
         }
         if (!$strtoupper) {
-            $this->climate->out(trim($string));
+            $this->climate->out($string);
         } else {
-            $this->climate->out(strtoupper(trim($string)));
+            $this->climate->out(strtoupper($string));
         }
 
         return $this;
@@ -233,9 +189,12 @@ class TestHelper
      * @param string $file
      * @param string $ext
      */
-    public function runSubProcess(string $file, string $ext = '.php')
+    public function runSubProcess(string $file, string $ext = '.php'): void
     {
-        $this->runAsyncProcess(($this->isHHVM() ? 'hhvm ' : 'php ') . getcwd() . DIRECTORY_SEPARATOR . 'subprocess' . DIRECTORY_SEPARATOR . $file . '.subprocess' . $ext);
+        $filePath =  getcwd() . DIRECTORY_SEPARATOR . 'subprocess' . DIRECTORY_SEPARATOR . $file . '.subprocess' . $ext;
+        $binary = $this->isHHVM() ? 'hhvm' : 'php';
+        $this->printDebugText(\sprintf('Running %s subprocess on "%s"', \strtoupper($binary), $filePath));
+        $this->runAsyncProcess("$binary $filePath");
     }
 
     /**
@@ -277,17 +236,13 @@ class TestHelper
         return $this;
     }
 
-
-    /**
-     * @return void
-     */
-    public function terminateTest()
+    public function terminateTest(): void
     {
         $execTime = round(microtime(true) - $this->timestamp, 3);
         $totalCount = $this->numOfFailedTests + $this->numOfSkippedTests + $this->numOfPassedTests;
 
         $this->printText(
-            sprintf(
+            \sprintf(
                 '<blue>Test results:</blue> <%1$s> %2$s %3$s failed</%1$s>, <%4$s>%5$s %6$s skipped</%4$s> and <%7$s>%8$s %9$s passed</%7$s> out of a total of %10$s %11$s.',
                 $this->numOfFailedTests ? 'red' : 'green',
                 $this->numOfFailedTests,
@@ -298,17 +253,17 @@ class TestHelper
                 !$this->numOfPassedTests && $totalCount ? 'red' : 'green',
                 $this->numOfPassedTests,
                 ngettext('assertion', 'assertions', $this->numOfPassedTests),
-                "<cyan>{$totalCount}</cyan>",
+                "<cyan>$totalCount</cyan>",
                 ngettext('assertion', 'assertions', $totalCount),
             )
         );
         $this->printText('<blue>Test duration: </blue><yellow>' . $execTime . 's</yellow>');
 
-        if($this->numOfFailedTests){
+        if ($this->numOfFailedTests) {
             exit(1);
         }
 
-        if(!$this->numOfSkippedTests && $this->numOfPassedTests){
+        if (!$this->numOfSkippedTests && $this->numOfPassedTests) {
             exit(0);
         }
 
@@ -318,9 +273,9 @@ class TestHelper
     /**
      * @param string $cmd
      */
-    public function runAsyncProcess(string $cmd)
+    public function runAsyncProcess(string $cmd): void
     {
-        if (substr(php_uname(), 0, 7) === 'Windows') {
+        if (str_starts_with(php_uname(), 'Windows')) {
             pclose(popen('start /B ' . $cmd, 'r'));
         } else {
             exec($cmd . ' > /dev/null &');
@@ -333,7 +288,7 @@ class TestHelper
      * @return mixed
      * @throws ReflectionException
      */
-    public function accessInaccessibleMember($obj, $prop)
+    public function accessInaccessibleMember($obj, $prop): mixed
     {
         $reflection = new ReflectionClass($obj);
         $property = $reflection->getProperty($prop);
@@ -347,7 +302,7 @@ class TestHelper
      * @param string $errfile
      * @param int $errline
      */
-    public function errorHandler(int $errno, string $errstr, string $errfile, int $errline)
+    public function errorHandler(int $errno, string $errstr, string $errfile, int $errline): void
     {
         $errorType = '';
 
@@ -382,7 +337,7 @@ class TestHelper
 
         if ($errorType === '[FATAL ERROR]') {
             $this->assertFail(
-                sprintf(
+                \sprintf(
                     "<red>A critical error has been caught: \"%s\" in %s line %d</red>",
                     "$errorType $errstr",
                     $errfile,
@@ -391,7 +346,7 @@ class TestHelper
             );
         } else {
             $this->printDebugText(
-                sprintf(
+                \sprintf(
                     "<yellow>A non-critical error has been caught: \"%s\" in %s line %d</yellow>",
                     "$errorType $errstr",
                     $errfile,
@@ -404,24 +359,28 @@ class TestHelper
     /**
      * @param EventManagerInterface $eventManager
      */
-    public function debugEvents(EventManagerInterface $eventManager)
+    public function debugEvents(EventManagerInterface $eventManager): void
     {
         $eventManager->onEveryEvents(
             function (string $eventName) {
-                $this->printDebugText("Triggered event '{$eventName}'");
+                $this->printDebugText("Triggered event '$eventName'");
             },
             'debugCallback'
         );
     }
 
     /**
-     * @param ExtendedCacheItemPoolInterface $pool
+     * @param ExtendedCacheItemPoolInterface|PhpfastcacheAbstractProxyInterface $pool
+     * @param bool $poolClear
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws InvalidArgumentException
+     * @throws \Exception
      */
-    public function runCRUDTests(ExtendedCacheItemPoolInterface $pool, bool $poolClear = true)
+    public function runCRUDTests(ExtendedCacheItemPoolInterface|PhpfastcacheAbstractProxyInterface $pool, bool $poolClear = true): void
     {
         $this->printInfoText('Running CRUD tests on the following backend: ' . get_class($pool));
 
-        if($poolClear){
+        if ($poolClear) {
             $this->printDebugText('Clearing backend before running test...');
             $pool->clear();
         }
@@ -434,7 +393,6 @@ class TestHelper
         $this->printInfoText('Using cache key: ' . $cacheKey);
 
         $cacheItem->set($cacheValue)
-            ->expiresAfter(60)
             ->addTags([$cacheTag, $cacheTag2]);
 
         if ($pool->save($cacheItem)) {
@@ -504,7 +462,7 @@ class TestHelper
         /**
          * Tag strategy ONE success and fail
          */
-        $this->printInfoText('Re-fetching item by one of its tags <red>and an unknown tag</red> (tag strategy "<yellow>ONE</yellow>")...');
+        $this->printInfoText('Re-fetching item <green>by one of its tags</green> <red>and an unknown tag</red> (tag strategy "<yellow>ONE</yellow>")...');
         $cacheItems = $pool->getItemsByTags([$cacheTag, 'unknown_tag'], $pool::TAG_STRATEGY_ONE);
 
         if (isset($cacheItems[$cacheKey]) && $cacheItems[$cacheKey]->getKey() === $cacheKey) {
@@ -542,7 +500,8 @@ class TestHelper
             $this->assertFail('The pool failed to retrieve the expected new value.');
             return;
         }
-        if($poolClear){
+
+        if ($poolClear) {
             if ($pool->deleteItem($cacheKey)) {
                 $this->assertPass('The pool successfully deleted the cache item.');
             } else {
@@ -566,7 +525,14 @@ class TestHelper
             }
         }
 
-        $this->printInfoText(sprintf('I/O stats: %d HIT, %s MISS, %d WRITE', $pool->getIO()->getReadHit(), $pool->getIO()->getReadMiss(), $pool->getIO()->getWriteHit()));
+        $this->printInfoText(
+            \sprintf(
+                'I/O stats: %d HIT(S), %s MISS, %d WRITE(S)',
+                $pool->getIO()->getReadHit(),
+                $pool->getIO()->getReadMiss(),
+                $pool->getIO()->getWriteHit()
+            )
+        );
         $this->printInfoText('<yellow>Driver info</yellow>: <magenta>' . $pool->getStats()->getInfo() . '</magenta>');
     }
 
@@ -574,13 +540,15 @@ class TestHelper
     /**
      * @param Throwable $exception
      */
-    public function exceptionHandler(Throwable $exception)
+    public function exceptionHandler(Throwable $exception): void
     {
         if ($exception instanceof PhpfastcacheDriverCheckException) {
             $this->assertSkip('A driver could not be initialized due to missing requirement: ' . $exception->getMessage());
+        } elseif ($exception instanceof PhpfastcacheDriverConnectException) {
+            $this->assertSkip('A driver could not be initialized due to network/authentication issue: ' . $exception->getMessage());
         } else {
             $this->assertFail(
-                sprintf(
+                \sprintf(
                     'Uncaught exception "%s" in "%s" line %d with message: "%s"',
                     get_class($exception),
                     $exception->getFile(),

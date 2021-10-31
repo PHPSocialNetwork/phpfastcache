@@ -1,8 +1,15 @@
 <?php
 
 /**
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ *
+ * This file is part of Phpfastcache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
+ *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 use Phpfastcache\CacheManager;
@@ -21,9 +28,9 @@ $driverInstance = CacheManager::getInstance($defaultDriver);
 
 if (!is_object($driverInstance)) {
     $testHelper->assertFail('CacheManager::getInstance() returned an invalid variable type:' . gettype($driverInstance));
-}else if(!($driverInstance instanceof CacheItemPoolInterface)){
+} elseif (!($driverInstance instanceof CacheItemPoolInterface)) {
     $testHelper->assertFail('CacheManager::getInstance() returned an invalid class:' . get_class($driverInstance));
-}else{
+} else {
     $testHelper->assertPass('CacheManager::getInstance() returned a valid CacheItemPoolInterface object: ' . get_class($driverInstance));
 }
 

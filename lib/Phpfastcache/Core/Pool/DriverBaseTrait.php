@@ -2,72 +2,67 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool;
 
 use DateTime;
-use Exception;
+use DateTimeInterface;
+use Phpfastcache\Config\ConfigurationOptionInterface;
+use Phpfastcache\Event\EventManagerDispatcherTrait;
+use Phpfastcache\Event\EventManagerInterface;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Util\ClassNamespaceResolverTrait;
+use Throwable;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
-use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException, PhpfastcacheDriverConnectException};
+use Phpfastcache\Exceptions\PhpfastcacheCoreException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
+use Phpfastcache\Exceptions\PhpfastcacheIOException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use ReflectionObject;
 
-
-/**
- * Class DriverBaseTrait
- * @package phpFastCache\Cache
- */
 trait DriverBaseTrait
 {
-    use ExtendedCacheItemPoolTrait;
+    use DriverPoolAbstractTrait;
+    use ClassNamespaceResolverTrait;
+    use EventManagerDispatcherTrait;
 
-    /**
-     * @var ConfigurationOption the options
-     */
-    protected $config;
+    protected static array $cacheItemClasses = [];
 
-    /**
-     * @var bool
-     */
-    protected $fallback = false;
+    protected ConfigurationOptionInterface $config;
 
-    /**
-     * @var object Instance of driver service
-     */
-    protected $instance;
+    protected object|array|null $instance;
 
-    /**
-     * @var string
-     */
-    protected $driverName;
+    protected string $driverName;
 
-    /**
-     * @internal This variable is read-access only
-     * @var string
-     */
-    protected $instanceId;
+    protected string $instanceId;
 
     /**
      * Driver constructor.
-     * @param ConfigurationOption $config
+     * @param ConfigurationOptionInterface $config
      * @param string $instanceId
+     * @param EventManagerInterface $em
+     * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverConnectException
+     * @throws PhpfastcacheIOException
+     * @throws PhpfastcacheInvalidArgumentException
      */
-    public function __construct(ConfigurationOption $config, $instanceId)
+    public function __construct(ConfigurationOptionInterface $config, string $instanceId, EventManagerInterface $em)
     {
+        $this->setEventManager($em);
         $this->setConfig($config);
         $this->instanceId = $instanceId;
         $this->IO = new DriverIO();
@@ -78,15 +73,19 @@ trait DriverBaseTrait
 
         try {
             $this->driverConnect();
-        } catch (Exception $e) {
+            $config->lock($this);
+        } catch (Throwable $e) {
             throw new PhpfastcacheDriverConnectException(
                 sprintf(
                     self::DRIVER_CONNECT_FAILURE,
+                    $e::class,
                     $this->getDriverName(),
                     $e->getMessage(),
                     $e->getLine() ?: 'unknown line',
                     $e->getFile() ?: 'unknown file'
-                )
+                ),
+                0,
+                $e
             );
         }
     }
@@ -96,7 +95,7 @@ trait DriverBaseTrait
      */
     public function getDriverName(): string
     {
-        if (!$this->driverName) {
+        if (!isset($this->driverName)) {
             $this->driverName = \ucfirst(\substr(\strrchr((new ReflectionObject($this))->getNamespaceName(), '\\'), 1));
         }
         return $this->driverName;
@@ -107,8 +106,9 @@ trait DriverBaseTrait
      */
     public function getDefaultConfig(): ConfigurationOption
     {
-        $className = self::getConfigClass();
-        return new $className;
+        $className = $this::getConfigClass();
+
+        return new $className();
     }
 
     /**
@@ -123,15 +123,27 @@ trait DriverBaseTrait
         return ConfigurationOption::class;
     }
 
+    public static function getItemClass(): string
+    {
+        if (!isset(self::$cacheItemClasses[static::class])) {
+            self::$cacheItemClasses[static::class] = self::getClassNamespace() . '\\' . 'Item';
+        }
+
+        return self::$cacheItemClasses[static::class];
+    }
+
+
     /**
      * @param ExtendedCacheItemInterface $item
+     * @param bool $stringifyDate
      * @return array
+     * @throws PhpfastcacheLogicException
      */
-    public function driverPreWrap(ExtendedCacheItemInterface $item): array
+    public function driverPreWrap(ExtendedCacheItemInterface $item, bool $stringifyDate = false): array
     {
         $wrap = [
             self::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(), // Stored but not really used, allow you to quickly identify the cache key
-            self::DRIVER_DATA_WRAPPER_INDEX => $item->get(),
+            self::DRIVER_DATA_WRAPPER_INDEX => $item->getRawValue(),
             self::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
             self::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),
         ];
@@ -148,60 +160,81 @@ trait DriverBaseTrait
             $wrap[self::DRIVER_CDATE_WRAPPER_INDEX] = null;
         }
 
+        if ($stringifyDate) {
+            $wrap = \array_map(static function ($value) {
+                if ($value instanceof DateTimeInterface) {
+                    return $value->format(DateTimeInterface::W3C);
+                }
+                return $value;
+            }, $wrap);
+        }
+
         return $wrap;
     }
 
     /**
      * @return ConfigurationOption
      */
-    public function getConfig(): ConfigurationOption
-    {
-        return $this->config;
-    }
+    abstract public function getConfig(): ConfigurationOption;
 
     /**
-     * @param ConfigurationOption $config
+     * @param ConfigurationOptionInterface $config
+     * @return static
      */
-    public function setConfig(ConfigurationOption $config)
+    public function setConfig(ConfigurationOptionInterface $config): static
     {
         $this->config = $config;
+
+        return $this;
     }
 
     /**
      * @param array $wrapper
      * @return mixed
+     * @throws \Exception
      */
-    public function driverUnwrapData(array $wrapper)
+    public function driverUnwrapData(array $wrapper): mixed
     {
         return $wrapper[self::DRIVER_DATA_WRAPPER_INDEX];
     }
 
-
     /**
      * @param array $wrapper
      * @return DateTime
      */
-    public function driverUnwrapEdate(array $wrapper)
+    public function driverUnwrapEdate(array $wrapper): \DateTime
     {
-        return $wrapper[self::DRIVER_EDATE_WRAPPER_INDEX];
+        if ($wrapper[self::DRIVER_EDATE_WRAPPER_INDEX] instanceof \DateTime) {
+            return $wrapper[self::DRIVER_EDATE_WRAPPER_INDEX];
+        }
+
+        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[self::DRIVER_EDATE_WRAPPER_INDEX]);
     }
 
     /**
      * @param array $wrapper
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function driverUnwrapCdate(array $wrapper)
+    public function driverUnwrapCdate(array $wrapper): ?\DateTime
     {
-        return $wrapper[self::DRIVER_CDATE_WRAPPER_INDEX];
+        if ($wrapper[self::DRIVER_CDATE_WRAPPER_INDEX] instanceof \DateTime) {
+            return $wrapper[self::DRIVER_CDATE_WRAPPER_INDEX];
+        }
+
+        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[self::DRIVER_CDATE_WRAPPER_INDEX]);
     }
 
     /**
      * @param array $wrapper
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function driverUnwrapMdate(array $wrapper)
+    public function driverUnwrapMdate(array $wrapper): ?\DateTime
     {
-        return $wrapper[self::DRIVER_MDATE_WRAPPER_INDEX];
+        if ($wrapper[self::DRIVER_MDATE_WRAPPER_INDEX] instanceof \DateTime) {
+            return $wrapper[self::DRIVER_MDATE_WRAPPER_INDEX];
+        }
+
+        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[self::DRIVER_MDATE_WRAPPER_INDEX]);
     }
 
     /**
@@ -211,7 +244,6 @@ trait DriverBaseTrait
     {
         return $this->instanceId;
     }
-
 
     /**
      * Encode data types such as object/array
@@ -232,17 +264,8 @@ trait DriverBaseTrait
      * @param string|null $value
      * @return mixed
      */
-    protected function decode($value)
+    protected function decode(?string $value): mixed
     {
-        return \unserialize((string)$value, ['allowed_classes' => true]);
-    }
-
-    /**
-     * Check if phpModule or CGI
-     * @return bool
-     */
-    protected function isPHPModule(): bool
-    {
-        return (\PHP_SAPI === 'apache2handler' || \strpos(\PHP_SAPI, 'handler') !== false);
+        return \unserialize((string) $value, ['allowed_classes' => true]);
     }
 }

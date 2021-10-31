@@ -1,13 +1,19 @@
 <?php
 
 /**
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ *
+ * This file is part of Phpfastcache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
+ *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 use Phpfastcache\Helper\Psr16Adapter;
 use Phpfastcache\Tests\Helper\TestHelper;
-
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -23,15 +29,15 @@ $testHelper->printText(sprintf('Sleeping for %d seconds...', $ttl + 1));
 
 sleep($ttl + 1);
 
-if(!$Psr16Adapter->has('test-key')){
+if (!$Psr16Adapter->has('test-key')) {
     $testHelper->assertPass('1/2 [Testing has()] Psr16 adapter does not return an expired cache item anymore');
-}else{
+} else {
     $testHelper->assertFail('1/2 [Testing has()] Psr16 adapter returned an expired cache item');
 }
 
-if(!$Psr16Adapter->has('test-key')){
+if (!$Psr16Adapter->has('test-key')) {
     $testHelper->assertPass('2/2 [Testing get()] Psr16 adapter does not return an expired cache item anymore');
-}else{
+} else {
     $testHelper->assertFail('2/2 [Testing get()] Psr16 adapter returned an expired cache item');
 }
 

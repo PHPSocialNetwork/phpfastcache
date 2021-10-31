@@ -1,15 +1,22 @@
 <?php
 
 /**
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ *
+ * This file is part of Phpfastcache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
+ *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\DriverTest\Files2\Config;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
-use Phpfastcache\Helper\CacheConditionalHelper as CacheConditional;
+use Phpfastcache\CacheContract as CacheConditional;
 use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
@@ -47,9 +54,9 @@ $cacheInstance = CacheManager::getInstance('Files', new Config(['customOption' =
 $cacheKey = 'cacheKey';
 $RandomCacheValue = str_shuffle(uniqid('pfc', true));
 
-if($cacheInstance instanceof \Phpfastcache\DriverTest\Files2\Driver){
+if ($cacheInstance instanceof \Phpfastcache\DriverTest\Files2\Driver) {
     $testHelper->assertPass('The cache instance is effectively an instance of an override class');
-}else{
+} else {
     $testHelper->assertFail('The cache instance is not an instance of an override class');
 }
 
@@ -85,9 +92,9 @@ if ($cacheValue === $RandomCacheValue) {
 CacheManager::removeCoreDriverOverride('Files');
 $cacheInstance = CacheManager::getInstance('Files');
 
-if($cacheInstance instanceof \Phpfastcache\DriverTest\Files2\Driver){
+if ($cacheInstance instanceof \Phpfastcache\DriverTest\Files2\Driver) {
     $testHelper->assertFail('The cache instance is still an instance of an override class');
-}else{
+} else {
     $testHelper->assertPass('The cache instance is no longer an instance of an override class');
 }
 

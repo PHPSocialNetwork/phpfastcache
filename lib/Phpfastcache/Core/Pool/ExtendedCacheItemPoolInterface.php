@@ -2,15 +2,14 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 
@@ -22,14 +21,13 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Event\EventManagerDispatcherInterface;
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Util\ClassNamespaceResolverInterface;
-use Psr\Cache\{CacheItemInterface, CacheItemPoolInterface};
-
+use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 
 /**
- * Interface ExtendedCacheItemPoolInterface
- *
  * IMPORTANT NOTICE
  *
  * If you modify this file please make sure that
@@ -37,14 +35,13 @@ use Psr\Cache\{CacheItemInterface, CacheItemPoolInterface};
  * since it does no longer implements this interface
  * @see \Phpfastcache\Helper\ActOnAll
  *
- * @package phpFastCache\Core\Pool
  */
 interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventManagerDispatcherInterface, ClassNamespaceResolverInterface, TaggableCacheItemPoolInterface
 {
     public const DRIVER_CHECK_FAILURE = '%s is not installed or is misconfigured, cannot continue. 
     Also, please verify the suggested dependencies in composer because as of the V6, 3rd party libraries are no longer required.';
 
-    public const DRIVER_CONNECT_FAILURE = '%s failed to connect with the following error message: "%s" line %d in %s';
+    public const DRIVER_CONNECT_FAILURE = '(%s) %s failed to connect with the following error message: "%s" line %d in %s';
 
     public const DRIVER_KEY_WRAPPER_INDEX = 'k';
 
@@ -70,6 +67,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      * @return string
      */
     public static function getConfigClass(): string;
+
+    /**
+     * Return the item class name
+     * @return string
+     */
+    public static function getItemClass(): string;
 
     /**
      * @return ConfigurationOption
@@ -108,7 +111,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      *   MUST be thrown.
      *
      */
-    public function getItem($key);
+    public function getItem(string $key): ExtendedCacheItemInterface;
 
     /**
      * [phpFastCache phpDoc Override]
@@ -127,14 +130,14 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      *   MUST be thrown.
      *
      */
-    public function getItems(array $keys = []);
+    public function getItems(array $keys = []): iterable;
 
     /**
      * Returns A json string that represents an array of items.
      *
      * @param array $keys
      * An indexed array of keys of items to retrieve.
-     * @param int $option \json_encode() options
+     * @param int $options \json_encode() options
      * @param int $depth \json_encode() depth
      *
      * @return string
@@ -143,44 +146,23 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      *   MUST be thrown.
      *
      */
-    public function getItemsAsJsonString(array $keys = [], int $option = 0, int $depth = 512): string;
+    public function getItemsAsJsonString(array $keys = [], int $options = \JSON_THROW_ON_ERROR, int $depth = 512): string;
 
-    /**
-     * @param CacheItemInterface $item
-     * @return mixed
-     */
-    public function setItem(CacheItemInterface $item);
+    public function setItem(CacheItemInterface $item): static;
 
-    /**
-     * @return DriverStatistic
-     */
     public function getStats(): DriverStatistic;
 
     /**
      * Get a quick help guide
      * about the current driver
-     *
-     * @return string
      */
     public function getHelp(): string;
 
-    /**
-     * @param CacheItemInterface $item
-     * @return void
-     */
-    public function detachItem(CacheItemInterface $item);
+    public function detachItem(CacheItemInterface $item): static;
 
-    /**
-     * @return void
-     */
-    public function detachAllItems();
+    public function detachAllItems(): static;
 
-    /**
-     * @param CacheItemInterface $item
-     * @return void
-     * @throws PhpfastcacheLogicException
-     */
-    public function attachItem(CacheItemInterface $item);
+    public function attachItem(CacheItemInterface $item): static;
 
     /**
      * Returns true if the item exists, is attached and the Spl Hash matches
@@ -188,10 +170,10 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      * Returns null if the item does not exists
      *
      * @param CacheItemInterface $item
-     * @return bool|null
+     * @return bool
      * @throws PhpfastcacheLogicException
      */
-    public function isAttached(CacheItemInterface $item);
+    public function isAttached(CacheItemInterface $item): bool;
 
     /**
      * Save multiple items, possible uses:
@@ -201,8 +183,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      * @param ExtendedCacheItemInterface[] $items
      * @return bool
      */
-    public function saveMultiple(...$items): bool;
-
+    public function saveMultiple(ExtendedCacheItemInterface...$items): bool;
 
     /**
      * @return DriverIO

@@ -1,8 +1,15 @@
 <?php
 
 /**
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ *
+ * This file is part of Phpfastcache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
+ *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 use Phpfastcache\CacheManager;
@@ -17,15 +24,15 @@ $testHelper = new TestHelper('Couchdb driver');
 $config = new CouchdbConfig();
 $config->setDatabase('phpfastcache($test/-)+1337');
 $config->setItemDetailedDate(true);
-try{
+try {
     $cacheInstance = CacheManager::getInstance('Couchdb', $config);
-} catch (PhpfastcacheDriverConnectException $e){
-    try{
+} catch (PhpfastcacheDriverConnectException $e) {
+    try {
         $testHelper->printDebugText('Unable to connect to Couchdb as an anynymous, trying with default credential...');
         $config->setUsername('admin');
         $config->setPassword('travis');
         $cacheInstance = CacheManager::getInstance('Couchdb', $config);
-    } catch(PhpfastcacheDriverConnectException $e){
+    } catch (PhpfastcacheDriverConnectException $e) {
         $testHelper->assertSkip('Couchdb server unavailable: ' . $e->getMessage());
         $testHelper->terminateTest();
     }

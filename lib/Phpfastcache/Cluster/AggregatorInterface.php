@@ -17,11 +17,6 @@ namespace Phpfastcache\Cluster;
 
 use Phpfastcache\Config\ConfigurationOption;
 
-/**
- * Interface AggregatorInterface
- *
- * @package Phpfastcache\Cluster
- */
 interface AggregatorInterface
 {
 
@@ -66,7 +61,7 @@ interface AggregatorInterface
      *
      * CRUD operations are made on a random-chosen backend from a given cluster.
      * This means you have 1 chance out of (n count of pools) to find an existing cache item
-     * but also to write/delete an non-existing item.
+     * but also to write/delete a non-existing item.
      */
     public const STRATEGY_RANDOM_REPLICATION = 8;
 
@@ -91,7 +86,7 @@ interface AggregatorInterface
      *
      * @return void
      */
-    public function aggregateNewDriver(string $driverName, ConfigurationOption $driverConfig = null): void;
+    public function aggregateDriverByName(string $driverName, ConfigurationOption $driverConfig = null): void;
 
     /**
      * @param AggregatablePoolInterface $driverPool

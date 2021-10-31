@@ -15,45 +15,15 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Zendshm;
 
-use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, ItemBaseTrait};
-use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Drivers\Zendshm\Driver as ZendSHMDriver;
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Core\Item\TaggableCacheItemTrait;
 
-/**
- * Class Item
- * @package phpFastCache\Drivers\Zendshm
- */
 class Item implements ExtendedCacheItemInterface
 {
-    use ItemBaseTrait {
-        ItemBaseTrait::__construct as __BaseConstruct;
-    }
+    use TaggableCacheItemTrait;
 
-    /**
-     * Item constructor.
-     * @param Driver $driver
-     * @param $key
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public function __construct(ZendSHMDriver $driver, $key)
+    protected function getDriverClass(): string
     {
-        $this->__BaseConstruct($driver, $key);
-    }
-
-    /**
-     * @param ExtendedCacheItemPoolInterface $driver
-     * @return static
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public function setDriver(ExtendedCacheItemPoolInterface $driver)
-    {
-        if ($driver instanceof ZendSHMDriver) {
-            $this->driver = $driver;
-
-            return $this;
-        }
-
-        throw new PhpfastcacheInvalidArgumentException('Invalid driver instance');
+        return Driver::class;
     }
 }

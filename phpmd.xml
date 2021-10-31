@@ -1,0 +1,96 @@
+<ruleset
+        name="PHPMD rules"
+        xmlns="https://pmd.sf.net/ruleset/1.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 https://pmd.sf.net/ruleset_xml_schema.xsd"
+        xsi:noNamespaceSchemaLocation="https://pmd.sf.net/ruleset_xml_schema.xsd"
+>
+    <rule ref="rulesets/codesize.xml">
+        <exclude name="CyclomaticComplexity" />
+        <exclude name="NPathComplexity" />
+        <exclude name="ExcessiveMethodLength" />
+    </rule>
+    <rule ref="rulesets/controversial.xml" />
+    <rule ref="rulesets/design.xml">
+        <exclude name="DevelopmentCodeFragment" />
+        <exclude name="CouplingBetweenObjects" />
+        <exclude name="NumberOfChildren" />
+    </rule>
+    <rule ref="rulesets/unusedcode.xml">
+        <!-- Too many unfixable issues with PSR Interfaces and PHP 8 properties constructors -->
+        <exclude name="UnusedFormalParameter" />
+    </rule>
+    <rule ref="rulesets/naming.xml">
+        <exclude name="LongVariable" />
+        <exclude name="ShortVariable" />
+        <exclude name="ShortMethodName" />
+        <exclude name="ShortClassName" />
+        <exclude name="LongClassName" />
+    </rule>
+
+    <!-- Unusedcode -->
+    <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable">
+        <properties>
+            <property name="exceptions" value=""/>
+        </properties>
+    </rule>
+
+    <!-- Naming -->
+    <rule ref="rulesets/naming.xml/LongVariable">
+        <properties>
+            <property name="maximum" value="30" />
+        </properties>
+    </rule>
+    <rule ref="rulesets/naming.xml/ShortMethodName">
+        <properties>
+            <property name="minimum" value="3" />
+            <property name="exceptions" value="on" />
+        </properties>
+    </rule>
+    <rule ref="rulesets/naming.xml/ShortClassName">
+        <properties>
+            <property name="minimum" value="3" />
+        </properties>
+    </rule>
+    <rule ref="rulesets/naming.xml/LongClassName">
+        <properties>
+            <property name="maximum" value="40" />
+            <property name="subtract-suffixes" value="Exception" />
+        </properties>
+    </rule>
+
+    <!-- Design -->
+    <rule ref="rulesets/design.xml/DevelopmentCodeFragment">
+        <properties>
+            <property name="unwanted-functions" value="var_dump,print_r,debug_zval_dump,debug_print_backtrace,dd,dump" />
+            <property name="ignore-namespaces" value="true" />
+        </properties>
+    </rule>
+    <rule ref="rulesets/design.xml/CouplingBetweenObjects">
+        <properties>
+            <property name="maximum" value="20" />
+        </properties>
+    </rule>
+    <rule ref="rulesets/design.xml/NumberOfChildren">
+        <properties>
+            <property name="minimum" value="25" />
+        </properties>
+    </rule>
+
+    <!-- Codesize -->
+    <rule ref="rulesets/codesize.xml/CyclomaticComplexity">
+        <properties>
+            <property name="reportLevel" value="18" />
+        </properties>
+    </rule>
+    <rule ref="rulesets/codesize.xml/ExcessiveMethodLength">
+        <properties>
+            <property name="minimum" value="150" />
+        </properties>
+    </rule>
+    <rule ref="rulesets/codesize.xml/NPathComplexity">
+        <properties>
+            <property name="minimum" value="500" />
+        </properties>
+    </rule>
+</ruleset>

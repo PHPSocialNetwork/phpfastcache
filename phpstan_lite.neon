@@ -1,0 +1,10 @@
+###################################################
+# Lite PHPSTAN configuration for Github CI
+# or any Phpfastcache contributing user
+###################################################
+parameters:
+	excludePaths:
+		- lib/Phpfastcache/Drivers/*/Driver.php
+		- lib/Phpfastcache/Drivers/*/Config.php
+	ignoreErrors:
+		- '#PHPDoc tag @(.*)#' # (Really) Annoying PHPDoc tag issues...

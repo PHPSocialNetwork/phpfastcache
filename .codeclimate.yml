@@ -5,8 +5,8 @@
 #
 # For full copyright and license information, please see the docs/CREDITS.txt file.
 #
-# @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
 # @author Georges.L (Geolim4)  <contact@geolim4.com>
+# @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
 #
 
 engines:
@@ -29,19 +29,11 @@ engines:
     enabled: true
   phpmd:
     enabled: true
-    checks:
-      CleanCode/ElseExpression:
-        enabled: false
-      CleanCode/BooleanArgumentFlag:
-        enabled: false
-      Controversial/Superglobals:
-        enabled: false
-      Controversial/CamelCaseVariableName:
-        enabled: false
-      Design/TooManyPublicMethods:
-        enabled: false
-      Design/NpathComplexity:
-        enabled: false
+    config:
+      file_extensions:
+        - php
+        - inc
+      rulesets: "phpmd.xml"
 ratings:
   paths:
   - "**.inc"

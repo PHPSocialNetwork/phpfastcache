@@ -5,16 +5,12 @@
 #
 # For full copyright and license information, please see the docs/CREDITS.txt file.
 #
-# @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
 # @author Georges.L (Geolim4)  <contact@geolim4.com>
+# @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
 #
 
 before_commands: 
-  - "composer install --no-dev --prefer-source"
-  - "composer require predis/predis \"~1.1.0\""
-  - "composer require mongodb/mongodb \"^1.1\""
-  - "composer require phpfastcache/phpssdb ~1.0.0\""
-  - "composer require phpfastcache/couchdb \"~1.0.0\""
+  - "./bin/ci/scripts/install_dependencies.sh"
 build:
   nodes:
     analysis:
@@ -24,7 +20,7 @@ build:
         override: [php-scrutinizer-run]
   environment: 
     php: 
-      version: 7.0.0
+      version: 8.0.0
 checks: 
   php: true
 coding_style: 
@@ -46,7 +42,7 @@ tools:
   php_code_coverage: true
   php_code_sniffer: 
     config: 
-      standard: PSR2
+      standard: PSR12
     enabled: true
     filter: 
       paths: 

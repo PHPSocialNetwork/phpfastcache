@@ -1,14 +1,20 @@
 <?php
 
 /**
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ *
+ * This file is part of Phpfastcache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
+ *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Tests\Helper\TestHelper;
-
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -49,9 +55,9 @@ $cacheItem = $cacheInstance->getItem($cacheKey);
  * due to the time spend to write the cache on disk that will
  * loss 1 second to the cache ttl :/
  */
-if((int) ceil($cacheItem->getTtl() / 10) * 10 === $defaultTTl){
+if ((int) ceil($cacheItem->getTtl() / 10) * 10 === $defaultTTl) {
     $testHelper->assertPass('The cache Item TTL matches the default TTL after 30 days.');
-}else{
+} else {
     $testHelper->assertFail('The cache Item TTL des not matches the default TTL after 30 days, got the following value: ' . ceil($cacheItem->getTtl() / 10) * 10);
 }
 

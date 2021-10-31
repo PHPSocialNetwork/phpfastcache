@@ -1,15 +1,21 @@
 <?php
 
 /**
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ *
+ * This file is part of Phpfastcache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
+ *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Tests\Helper\TestHelper;
 use Phpfastcache\Drivers\Redis\Config as RedisConfig;
 use Phpfastcache\Drivers\Predis\Config as PredisConfig;
-
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -39,9 +45,9 @@ $redisInstance->save($cacheItem);
 unset($cacheItem);
 $redisInstance->detachAllItems();
 
-if($redisInstance->getItem($cacheKey)->isHit()){
+if ($redisInstance->getItem($cacheKey)->isHit()) {
     $testHelper->assertPass('The cache item has been found in cache');
-}else{
+} else {
     $testHelper->assertFail('The cache item was not found in cache');
 }
 
@@ -66,9 +72,9 @@ $predisInstance->save($cacheItem);
 unset($cacheItem);
 $predisInstance->detachAllItems();
 
-if($predisInstance->getItem($cacheKey)->isHit()){
+if ($predisInstance->getItem($cacheKey)->isHit()) {
     $testHelper->assertPass('The cache item has been found in cache');
-}else{
+} else {
     $testHelper->assertFail('The cache item was not found in cache');
 }
 

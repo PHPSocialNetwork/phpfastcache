@@ -2,15 +2,14 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author  Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
- * @author  Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 
@@ -20,16 +19,17 @@ use DateTimeInterface;
 use JsonSerializable;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventManagerDispatcherInterface;
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Util\ClassNamespaceResolverInterface;
 use Psr\Cache\CacheItemInterface;
 
-/**
- * Interface ExtendedCacheItemInterface
- *
- * @package phpFastCache\Cache
- */
-interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDispatcherInterface, ClassNamespaceResolverInterface, JsonSerializable, TaggableCacheItemInterface
+interface ExtendedCacheItemInterface extends
+    CacheItemInterface,
+    EventManagerDispatcherInterface,
+    ClassNamespaceResolverInterface,
+    JsonSerializable,
+    TaggableCacheItemInterface
 {
 
     /**
@@ -41,6 +41,20 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      *   The encoded key string for this cache item.
      */
     public function getEncodedKey(): string;
+
+    /**
+     * Returns the raw value, regardless of hit status.
+     * This method can be called if the cache item is NOT YET
+     * persisted, and you need to access to its set value.
+     *
+     * Although not part of the CacheItemInterface, this method is used by
+     * the pool for extracting information for saving.
+     *
+     * @return mixed
+     *
+     * @internal
+     */
+    public function getRawValue(): mixed;
 
     /**
      * @return DateTimeInterface
@@ -125,7 +139,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      *
      * @return mixed
      */
-    public function setDriver(ExtendedCacheItemPoolInterface $driver);
+    public function setDriver(ExtendedCacheItemPoolInterface $driver): ExtendedCacheItemInterface;
 
     /**
      * @param bool $isHit
@@ -133,7 +147,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function setHit($isHit): ExtendedCacheItemInterface;
+    public function setHit(bool $isHit): ExtendedCacheItemInterface;
 
     /**
      * @param int $step
@@ -141,7 +155,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function increment($step = 1): ExtendedCacheItemInterface;
+    public function increment(int $step = 1): ExtendedCacheItemInterface;
 
     /**
      * @param int $step
@@ -149,7 +163,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function decrement($step = 1): ExtendedCacheItemInterface;
+    public function decrement(int $step = 1): ExtendedCacheItemInterface;
 
     /**
      * @param array|string $data
@@ -157,7 +171,7 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function append($data): ExtendedCacheItemInterface;
+    public function append(array|string $data): ExtendedCacheItemInterface;
 
     /**
      * @param array|string $data
@@ -165,22 +179,28 @@ interface ExtendedCacheItemInterface extends CacheItemInterface, EventManagerDis
      * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function prepend($data): ExtendedCacheItemInterface;
+    public function prepend(array|string $data): ExtendedCacheItemInterface;
 
     /**
      * Return the data as a well-formatted string.
      * Any scalar value will be casted to an array
      *
-     * @param int $option \json_encode() options
+     * @param int $options \json_encode() options
      * @param int $depth \json_encode() depth
      *
      * @return string
      */
-    public function getDataAsJsonString(int $option = 0, int $depth = 512): string;
+    public function getDataAsJsonString(int $options = JSON_THROW_ON_ERROR, int $depth = 512): string;
 
     /**
      * @param ExtendedCacheItemPoolInterface $driverPool
      * @return bool
      */
     public function doesItemBelongToThatDriverBackend(ExtendedCacheItemPoolInterface $driverPool): bool;
+
+    /**
+     * @param ExtendedCacheItemInterface $itemTarget
+     * @param ExtendedCacheItemPoolInterface|null $itemPoolTarget
+     */
+    public function cloneInto(ExtendedCacheItemInterface $itemTarget, ?ExtendedCacheItemPoolInterface $itemPoolTarget = null): void;
 }

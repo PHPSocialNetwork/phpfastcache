@@ -2,35 +2,31 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 
 namespace Phpfastcache\Util;
 
+use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
 
-/**
- * Class Directory
- * @package phpFastCache\Util
- */
 class Directory
 {
     /**
      * Get the directory size
      * @param string $directory
      * @param bool $includeDirAllocSize
-     * @return integer
+     * @return int
      */
     public static function dirSize(string $directory, bool $includeDirAllocSize = false): int
     {
@@ -41,10 +37,8 @@ class Directory
              */
             if ($file->isFile()) {
                 $size += filesize($file->getRealPath());
-            } else {
-                if ($includeDirAllocSize) {
-                    $size += $file->getSize();
-                }
+            } elseif ($includeDirAllocSize) {
+                $size += $file->getSize();
             }
         }
 
@@ -91,27 +85,25 @@ class Directory
             return unlink($source);
         }
 
-        $files = new RecursiveIteratorIterator
-        (
-            new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS),
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($source, FilesystemIterator::SKIP_DOTS),
             RecursiveIteratorIterator::CHILD_FIRST
         );
 
-        foreach ($files as $fileinfo) {
+        foreach ($files as $fileInfo) {
             /**
-             * @var SplFileInfo $fileinfo
+             * @var SplFileInfo $fileInfo
              */
-            $realpath = $fileinfo->getRealPath();
-            if($realpath){
-                if ($fileinfo->isDir()) {
-                    if (self::rrmdir($fileinfo->getRealPath()) === false) {
+            $realpath = $fileInfo->getRealPath();
+            if ($realpath) {
+                if ($fileInfo->isDir()) {
+                    if (self::rrmdir($fileInfo->getRealPath()) === false) {
                         return false;
                     }
                 } elseif (unlink($realpath) === false) {
                     return false;
                 }
-            }
-            else{
+            } else {
                 return false;
             }
         }
@@ -148,8 +140,8 @@ class Directory
         /**
          * Allows to dereference char
          */
-        $__FILE__ = preg_replace('~^(([a-z0-9\-]+)://)~', '', __FILE__);// remove file protocols such as "phar://" etc.
-        $prefix = $__FILE__[0] === DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
+        $file = preg_replace('~^(([a-z0-9\-]+)://)~', '', __FILE__);// remove file protocols such as "phar://" etc.
+        $prefix = $file[0] === DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
         return $prefix . implode(DIRECTORY_SEPARATOR, $absolutes);
     }
 }

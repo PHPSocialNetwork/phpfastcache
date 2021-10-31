@@ -1,7 +1,6 @@
 /tests export-ignore
 /docs/examples export-ignore
-/bin/ci export-ignore
-/bin/stubs export-ignore
+/bin export-ignore
 /.github export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore
@@ -15,4 +14,9 @@ CODING_GUIDELINE.md export-ignore
 phpunit.xml.dist export-ignore
 phpcs.xml.dist export-ignore
 composer.lock export-ignore
+quality.bat export-ignore
+phpstan.neon export-ignore
+phpstan_lite.neon export-ignore
+phpcs.xml export-ignore
+phpmd.xml export-ignore
 CNAME export-ignore

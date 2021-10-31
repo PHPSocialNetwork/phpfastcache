@@ -5,7 +5,7 @@ Fork the project, create a feature branch, and send us a pull request.
 Preferably on a distinct branch.
 
 To ensure a consistent code base, you should make sure the code follows
-the [PSR-2 Coding Standards](http://www.php-fig.org/psr/psr-2/). You can also
+the [PSR-12: Extended Coding Style](https://www.php-fig.org/psr/psr-12/). You can also
 run [php-cs-fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) with the
 configuration file that can be found in the project root directory.
 
@@ -24,7 +24,7 @@ As of the V7 your contributions MUST comply the following standards:
   - E.g: `$dateFormat = \DATE_ISO8601`
 
 ### PHP CORE CLASSES
-- Do not imports non-namespaced classes, use an absolute path instead:  
+- Do not import non-namespaced classes, use an absolute path instead:  
   - E.g: `$date = new \DateTime();`
 
 ### CODE STYLE

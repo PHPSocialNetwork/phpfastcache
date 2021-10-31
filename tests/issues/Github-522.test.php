@@ -1,8 +1,15 @@
 <?php
 
 /**
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ *
+ * This file is part of Phpfastcache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
+ *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 use Phpfastcache\CacheManager;
@@ -23,11 +30,10 @@ try {
      * Clear Predis cache
      */
     $cacheInstance->clear();
-    for($i = 0; $i < 1000; $i++)
-    {
+    for ($i = 0; $i < 1000; $i++) {
         $stringObject->test .= md5(uniqid('pfc', true));
     }
-    $stringObject->test  = str_shuffle($stringObject->test );
+    $stringObject->test  = str_shuffle($stringObject->test);
 
     $item1 = $cacheInstance->getItem('item1');
     $item2 = $cacheInstance->getItem('item2');
@@ -46,23 +52,23 @@ try {
     $cacheInstance->detachAllItems();
     unset($item1, $item2, $item3);
 
-    if($cacheInstance->getItem('item1')->isHit() && $cacheInstance->getItem('item1')->get()->test === $stringObject->test){
+    if ($cacheInstance->getItem('item1')->isHit() && $cacheInstance->getItem('item1')->get()->test === $stringObject->test) {
         $testHelper->assertPass('The cache item "item1" returned the expected value.');
-    }else{
+    } else {
         $testHelper->assertFail('The cache item "item1" returned an expected value: ' . gettype($stringObject));
     }
 
-    if(!$cacheInstance->getItem('item2')->isHit() && !$cacheInstance->getItem('item2')->isHit()){
+    if (!$cacheInstance->getItem('item2')->isHit() && !$cacheInstance->getItem('item2')->isHit()) {
         $testHelper->assertPass('The cache items "item2, item3" are not stored in cache as expected.');
-    }else{
+    } else {
         $testHelper->assertFail('The cache items "item2, item3" are unexpectedly stored in cache.');
     }
 
     $cacheInstance->clear();
 
-    if(!$cacheInstance->getItem('item1')->isHit() && $cacheInstance->getItem('item1')->get() === null){
+    if (!$cacheInstance->getItem('item1')->isHit() && $cacheInstance->getItem('item1')->get() === null) {
         $testHelper->assertPass('After a cache clear the cache item "item1" is not stored in cache as expected.');
-    }else{
+    } else {
         $testHelper->assertFail('After a cache clear the cache item "item1" is still unexpectedly stored in cache.');
     }
 } catch (\Throwable $e) {

@@ -2,71 +2,65 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool;
 
 use DateTime;
-use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\ItemBatch;
 use Phpfastcache\Event\EventManagerDispatcherTrait;
-use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
+use Phpfastcache\Event\EventReferenceParameter;
+use Phpfastcache\Exceptions\PhpfastcacheCoreException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheIOException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
 use Psr\Cache\CacheItemInterface;
 use ReflectionClass;
 use ReflectionObject;
 use RuntimeException;
 
-
-/**
- * Trait StandardPsr6StructureTrait
- * @package phpFastCache\Core
- * @property ConfigurationOption $config The config array
- * @method ConfigurationOption getConfig() Return the config object
- * @method DriverIO getIO() Return the IO object
- */
 trait CacheItemPoolTrait
 {
-    use ClassNamespaceResolverTrait;
-    use EventManagerDispatcherTrait;
-    use TaggableCacheItemPoolTrait;
+    use DriverBaseTrait;
 
     /**
      * @var string
      */
-    protected static $unsupportedKeyChars = '{}()/\@:';
-
-    /**
-     * @var array
-     */
-    protected $deferredList = [];
+    protected static string $unsupportedKeyChars = '{}()/\@:';
 
     /**
      * @var ExtendedCacheItemInterface[]
      */
-    protected $itemInstances = [];
+    protected array $deferredList = [];
 
-    /**CacheItemPoolTrait
-     * @param CacheItemInterface $item
-     * @return $this
+    /**
+     * @var ExtendedCacheItemInterface[]
+     */
+    protected array $itemInstances = [];
+
+    protected DriverIO $IO;
+
+    /**
+     * @throws PhpfastcacheLogicException
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function setItem(CacheItemInterface $item)
+    public function setItem(CacheItemInterface $item): static
     {
-        if ($this->getClassNamespace() . '\\Item' === \get_class($item)) {
-            if(!$this->getConfig()->isUseStaticItemCaching()){
+        if ($this->getItemClass() === $item::class) {
+            if (!$this->getConfig()->isUseStaticItemCaching()) {
                 throw new PhpfastcacheLogicException(
                     'The static item caching option (useStaticItemCaching) is disabled so you cannot attach an item.'
                 );
@@ -78,7 +72,7 @@ trait CacheItemPoolTrait
         }
         throw new PhpfastcacheInvalidArgumentException(
             \sprintf(
-                'Invalid Item Class "%s" for this driver "%s".',
+                'Invalid cache item class "%s" for driver "%s".',
                 get_class($item),
                 get_class($this)
             )
@@ -89,12 +83,14 @@ trait CacheItemPoolTrait
      * @param array $keys
      * @return array
      * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
      */
-    public function getItems(array $keys = [])
+    public function getItems(array $keys = []): iterable
     {
         $collection = [];
+
         foreach ($keys as $key) {
             $collection[$key] = $this->getItem($key);
         }
@@ -105,164 +101,171 @@ trait CacheItemPoolTrait
     /**
      * @param string $key
      * @return ExtendedCacheItemInterface
+     * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
-     * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
+     *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.GotoStatement)
      */
-    public function getItem($key)
+    public function getItem(string $key): ExtendedCacheItemInterface
     {
-        if (\is_string($key)) {
-            $item = null;
+        /**
+         * Replace array_key_exists by isset
+         * due to performance issue on huge
+         * loop dispatching operations
+         */
+        if (!isset($this->itemInstances[$key]) || !$this->getConfig()->isUseStaticItemCaching()) {
+            if (\preg_match('~([' . \preg_quote(self::$unsupportedKeyChars, '~') . ']+)~', $key, $matches)) {
+                throw new PhpfastcacheInvalidArgumentException(
+                    'Unsupported key character detected: "' . $matches[1] . '". 
+                    Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers'
+                );
+            }
 
-            /**
-             * Replace array_key_exists by isset
-             * due to performance issue on huge
-             * loop dispatching operations
-             */
-            if (!isset($this->itemInstances[$key]) || !$this->getConfig()->isUseStaticItemCaching()) {
-                if (\preg_match('~([' . \preg_quote(self::$unsupportedKeyChars, '~') . ']+)~', $key, $matches)) {
-                    throw new PhpfastcacheInvalidArgumentException(
-                        'Unsupported key character detected: "' . $matches[1] . '". Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers'
+            $cacheSlamsSpendSeconds = 0;
+            $itemClass = self::getItemClass();
+            /** @var $item ExtendedCacheItemInterface */
+            $item = new $itemClass($this, $key, $this->eventManager);
+
+            getItemDriverRead:
+            {
+                $driverArray = $this->driverRead($item);
+
+            if ($driverArray) {
+                if (!\is_array($driverArray)) {
+                    throw new PhpfastcacheCoreException(
+                        sprintf(
+                            'The driverRead method returned an unexpected variable type: %s',
+                            \gettype($driverArray)
+                        )
                     );
                 }
+                $driverData = $this->driverUnwrapData($driverArray);
 
-                $cacheSlamsSpendSeconds = 0;
-                $class = $this->getClassNamespace() . '\Item';
-                /** @var $item ExtendedCacheItemInterface */
-                $item = new $class($this, $key);
-                $item->setEventManager($this->eventManager);
-
-                getItemDriverRead:
-                {
-                    $driverArray = $this->driverRead($item);
-
-                    if ($driverArray) {
-                        if (!\is_array($driverArray)) {
-                            throw new PhpfastcacheCoreException(
-                                sprintf(
-                                    'The driverRead method returned an unexpected variable type: %s',
-                                    \gettype($driverArray)
-                                )
-                            );
-                        }
-                        $driverData = $this->driverUnwrapData($driverArray);
-
-                        if ($this->getConfig()['preventCacheSlams']) {
-                            while ($driverData instanceof ItemBatch) {
-                                if ($driverData->getItemDate()->getTimestamp() + $this->getConfig()->getCacheSlamsTimeout() < \time()) {
-                                    /**
-                                     * The timeout has been reached
-                                     * Consider that the batch has
-                                     * failed and serve an empty item
-                                     * to avoid to get stuck with a
-                                     * batch item stored in driver
-                                     */
-                                    goto getItemDriverExpired;
-                                }
-                                /**
-                                 * @eventName CacheGetItem
-                                 * @param $this ExtendedCacheItemPoolInterface
-                                 * @param $driverData ItemBatch
-                                 * @param $cacheSlamsSpendSeconds int
-                                 */
-                                $this->eventManager->dispatch('CacheGetItemInSlamBatch', $this, $driverData, $cacheSlamsSpendSeconds);
-
-                                /**
-                                 * Wait for a second before
-                                 * attempting to get exit
-                                 * the current batch process
-                                 */
-                                \sleep(1);
-                                $cacheSlamsSpendSeconds++;
-                                goto getItemDriverRead;
-                            }
-                        }
-
-                        $item->set($driverData);
-                        $item->expiresAt($this->driverUnwrapEdate($driverArray));
-
-                        if ($this->getConfig()->isItemDetailedDate()) {
+                if ($this->getConfig()->isPreventCacheSlams()) {
+                    while ($driverData instanceof ItemBatch) {
+                        if ($driverData->getItemDate()->getTimestamp() + $this->getConfig()->getCacheSlamsTimeout() < \time()) {
                             /**
-                             * If the itemDetailedDate has been
-                             * set after caching, we MUST inject
-                             * a new DateTime object on the fly
+                             * The timeout has been reached
+                             * Consider that the batch has
+                             * failed and serve an empty item
+                             * to avoid to get stuck with a
+                             * batch item stored in driver
                              */
-                            $item->setCreationDate($this->driverUnwrapCdate($driverArray) ?: new DateTime());
-                            $item->setModificationDate($this->driverUnwrapMdate($driverArray) ?: new DateTime());
+                            goto getItemDriverExpired;
                         }
+                        /**
+                         * @eventName CacheGetItem
+                         * @param $this ExtendedCacheItemPoolInterface
+                         * @param $driverData ItemBatch
+                         * @param $cacheSlamsSpendSeconds int
+                         */
+                        $this->eventManager->dispatch('CacheGetItemInSlamBatch', $this, $driverData, $cacheSlamsSpendSeconds);
 
-                        $item->setTags($this->driverUnwrapTags($driverArray));
+                        /**
+                         * Wait for a second before
+                         * attempting to get exit
+                         * the current batch process
+                         */
+                        \sleep(1);
+                        $cacheSlamsSpendSeconds++;
 
-                        getItemDriverExpired:
-                        if ($item->isExpired()) {
-                            /**
-                             * Using driverDelete() instead of delete()
-                             * to avoid infinite loop caused by
-                             * getItem() call in delete() method
-                             * As we MUST return an item in any
-                             * way, we do not de-register here
-                             */
-                            $this->driverDelete($item);
-
-                            /**
-                             * Reset the Item
-                             */
-                            $item->set(null)
-                                ->expiresAfter(abs((int)$this->getConfig()['defaultTtl']))
-                                ->setHit(false)
-                                ->setTags([]);
-                            if ($this->getConfig()->isItemDetailedDate()) {
-                                /**
-                                 * If the itemDetailedDate has been
-                                 * set after caching, we MUST inject
-                                 * a new DateTime object on the fly
-                                 */
-                                $item->setCreationDate(new DateTime());
-                                $item->setModificationDate(new DateTime());
-                            }
-                        } else {
-                            $item->setHit(true);
-                        }
-                    } else {
-                        $item->expiresAfter(abs((int)$this->getConfig()['defaultTtl']));
+                        goto getItemDriverRead;
                     }
                 }
-            }else{
-                $item = $this->itemInstances[$key];
+
+                $item->set($driverData);
+                $item->expiresAt($this->driverUnwrapEdate($driverArray));
+
+                if ($this->getConfig()->isItemDetailedDate()) {
+                    /**
+                     * If the itemDetailedDate has been
+                     * set after caching, we MUST inject
+                     * a new DateTime object on the fly
+                     */
+                    $item->setCreationDate($this->driverUnwrapCdate($driverArray) ?: new DateTime());
+                    $item->setModificationDate($this->driverUnwrapMdate($driverArray) ?: new DateTime());
+                }
+
+                $item->setTags($this->driverUnwrapTags($driverArray));
+
+                getItemDriverExpired:
+                if ($item->isExpired()) {
+                    /**
+                     * Using driverDelete() instead of delete()
+                     * to avoid infinite loop caused by
+                     * getItem() call in delete() method
+                     * As we MUST return an item in any
+                     * way, we do not de-register here
+                     */
+                    $this->driverDelete($item);
+
+                    /**
+                     * Reset the Item
+                     */
+                    $item->set(null)
+                        ->expiresAfter(abs((int)$this->getConfig()->getDefaultTtl()))
+                        ->setHit(false)
+                        ->setTags([]);
+                    if ($this->getConfig()->isItemDetailedDate()) {
+                        /**
+                         * If the itemDetailedDate has been
+                         * set after caching, we MUST inject
+                         * a new DateTime object on the fly
+                         */
+                        $item->setCreationDate(new DateTime());
+                        $item->setModificationDate(new DateTime());
+                    }
+                } else {
+                    $item->setHit(true);
+                }
+            } else {
+                $item->expiresAfter(abs($this->getConfig()->getDefaultTtl()));
             }
-
-
-            if($item !== null){
-                /**
-                 * @eventName CacheGetItem
-                 * @param $this ExtendedCacheItemPoolInterface
-                 * @param $this ExtendedCacheItemInterface
-                 */
-                $this->eventManager->dispatch('CacheGetItem', $this, $item);
-
-                $item->isHit() ? $this->getIO()->incReadHit() : $this->getIO()->incReadMiss();
-
-                return $item;
             }
-            throw new PhpfastcacheInvalidArgumentException(\sprintf('Item %s was not build due to an unknown error', \gettype($key)));
+        } else {
+            $item = $this->itemInstances[$key];
         }
-        throw new PhpfastcacheInvalidArgumentException(\sprintf('$key must be a string, got type "%s" instead.', \gettype($key)));
+
+
+        if ($item !== null) {
+            /**
+             * @eventName CacheGetItem
+             * @param $this ExtendedCacheItemPoolInterface
+             * @param $this ExtendedCacheItemInterface
+             */
+            $this->eventManager->dispatch('CacheGetItem', $this, $item);
+
+            $item->isHit() ? $this->getIO()->incReadHit() : $this->getIO()->incReadMiss();
+
+            return $item;
+        }
+        throw new PhpfastcacheInvalidArgumentException(\sprintf('Item %s was not build due to an unknown error', \gettype($key)));
     }
 
     /**
      * @param string $key
      * @return bool
+     * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
-    public function hasItem($key)
+    public function hasItem(string $key): bool
     {
         return $this->getItem($key)->isHit();
     }
 
     /**
      * @return bool
+     * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
+     * @throws PhpfastcacheLogicException
+     * @throws PhpfastcacheIOException
      */
-    public function clear()
+    public function clear(): bool
     {
         /**
          * @eventName CacheClearItem
@@ -281,27 +284,33 @@ trait CacheItemPoolTrait
     /**
      * @param array $keys
      * @return bool
+     * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
-    public function deleteItems(array $keys)
+    public function deleteItems(array $keys): bool
     {
-        $return = null;
+        $return = true;
         foreach ($keys as $key) {
             $result = $this->deleteItem($key);
-            if ($result !== false) {
-                $return = $result;
+            if ($result !== true) {
+                $return = false;
             }
         }
 
-        return (bool)$return;
+        return $return;
     }
 
     /**
      * @param string $key
      * @return bool
+     * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
-    public function deleteItem($key)
+    public function deleteItem(string $key): bool
     {
         $item = $this->getItem($key);
         if ($item->isHit() && $this->driverDelete($item)) {
@@ -324,7 +333,7 @@ trait CacheItemPoolTrait
             /**
              * Perform a tag cleanup to avoid memory leaks
              */
-            if (\strpos($key, self::DRIVER_TAGS_KEY_PREFIX) !== 0) {
+            if (!\str_starts_with($key, self::DRIVER_TAGS_KEY_PREFIX)) {
                 $this->cleanItemTags($item);
             }
 
@@ -336,17 +345,14 @@ trait CacheItemPoolTrait
 
     /**
      * @param CacheItemInterface $item
-     * @return CacheItemInterface
-     * @throws RuntimeException
+     * @return bool
      */
-    public function saveDeferred(CacheItemInterface $item)
+    public function saveDeferred(CacheItemInterface $item): bool
     {
         if (!\array_key_exists($item->getKey(), $this->itemInstances)) {
             $this->itemInstances[$item->getKey()] = $item;
-        } else {
-            if (\spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
-                throw new RuntimeException('Spl object hash mismatches ! You probably tried to save a detached item which has been already retrieved from cache.');
-            }
+        } elseif (\spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
+            throw new RuntimeException('Spl object hash mismatches ! You probably tried to save a detached item which has been already retrieved from cache.');
         }
 
         /**
@@ -355,43 +361,53 @@ trait CacheItemPoolTrait
          * @param $this ExtendedCacheItemInterface
          */
         $this->eventManager->dispatch('CacheSaveDeferredItem', $this, $item);
+        $this->deferredList[$item->getKey()] = $item;
 
-        return $this->deferredList[$item->getKey()] = $item;
+        return true;
     }
 
     /**
      * @return bool
+     * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
+     * @throws \ReflectionException
      */
-    public function commit()
+    public function commit(): bool
     {
         /**
          * @eventName CacheCommitItem
          * @param $this ExtendedCacheItemPoolInterface
          * @param $deferredList ExtendedCacheItemInterface[]
          */
-        $this->eventManager->dispatch('CacheCommitItem', $this, $this->deferredList);
+        $this->eventManager->dispatch('CacheCommitItem', $this, new EventReferenceParameter($this->deferredList));
 
-        $return = null;
-        foreach ($this->deferredList as $key => $item) {
-            $result = $this->save($item);
-            if ($return !== false) {
-                unset($this->deferredList[$key]);
-                $return = $result;
+        if (\count($this->deferredList)) {
+            $return = true;
+            foreach ($this->deferredList as $key => $item) {
+                $result = $this->save($item);
+                if ($return !== true) {
+                    unset($this->deferredList[$key]);
+                    $return = $result;
+                }
             }
-        }
 
-        return (bool)$return;
+            return $return;
+        }
+        return false;
     }
 
     /**
      * @param CacheItemInterface $item
      * @return bool
+     * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheDriverException
+     * @throws PhpfastcacheIOException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
-     * @throws \ReflectionException
      */
-    public function save(CacheItemInterface $item)
+    public function save(CacheItemInterface $item): bool
     {
         /**
          * @var ExtendedCacheItemInterface $item
@@ -401,13 +417,11 @@ trait CacheItemPoolTrait
          * loop dispatching operations
          */
         if (!isset($this->itemInstances[$item->getKey()])) {
-            if($this->getConfig()->isUseStaticItemCaching()){
+            if ($this->getConfig()->isUseStaticItemCaching()) {
                 $this->itemInstances[$item->getKey()] = $item;
             }
-        } else {
-            if (\spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
-                throw new RuntimeException('Spl object hash mismatches ! You probably tried to save a detached item which has been already retrieved from cache.');
-            }
+        } elseif (\spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
+            throw new RuntimeException('Spl object hash mismatches ! You probably tried to save a detached item which has been already retrieved from cache.');
         }
 
         /**
@@ -422,10 +436,9 @@ trait CacheItemPoolTrait
             /**
              * @var $itemBatch ExtendedCacheItemInterface
              */
-            $class = new ReflectionClass((new ReflectionObject($this))->getNamespaceName() . '\Item');
-            $itemBatch = $class->newInstanceArgs([$this, $item->getKey()]);
-            $itemBatch->setEventManager($this->eventManager)
-                ->set(new ItemBatch($item->getKey(), new DateTime()))
+            $itemClassName = self::getItemClass();
+            $itemBatch = new $itemClassName($this, $item->getKey(), $this->eventManager);
+            $itemBatch->set(new ItemBatch($item->getKey(), new DateTime()))
                 ->expiresAfter($this->getConfig()->getCacheSlamsTimeout());
 
             /**
@@ -447,5 +460,13 @@ trait CacheItemPoolTrait
         }
 
         return false;
+    }
+
+    /**
+     * @return DriverIO
+     */
+    public function getIO(): DriverIO
+    {
+        return $this->IO;
     }
 }

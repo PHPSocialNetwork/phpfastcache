@@ -1,8 +1,15 @@
 <?php
 
 /**
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ *
+ * This file is part of Phpfastcache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
+ *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 use Phpfastcache\CacheManager;
@@ -17,7 +24,7 @@ $testHelper = new TestHelper('Couchbasev3 driver');
 $config = new CouchbaseConfig();
 $config->setBucketName('phpfastcache');
 $config->setItemDetailedDate(true);
-try{
+try {
     $config->setUsername('test');
     $config->setPassword('phpfastcache');
     $config->setBucketName('phpfastcache');
@@ -25,7 +32,7 @@ try{
     $config->setCollectionName('_default');
     $cacheInstance = CacheManager::getInstance('Couchbasev3', $config);
     $testHelper->runCRUDTests($cacheInstance);
-} catch(PhpfastcacheDriverConnectException $e){
+} catch (PhpfastcacheDriverConnectException $e) {
     $testHelper->assertSkip('Couchdb server unavailable: ' . $e->getMessage());
     $testHelper->terminateTest();
 }

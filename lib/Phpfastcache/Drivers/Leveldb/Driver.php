@@ -2,15 +2,14 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 
@@ -18,21 +17,20 @@ namespace Phpfastcache\Drivers\Leveldb;
 
 use LevelDB as LeveldbClient;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface, IO\IOHelperTrait};
-use Phpfastcache\Exceptions\{PhpfastcacheCoreException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
-use Psr\Cache\CacheItemInterface;
-
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Core\Pool\IO\IOHelperTrait;
+use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Exceptions\PhpfastcacheCoreException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
- * Class Driver
- * @package phpFastCache\Drivers
  * @property LeveldbClient $instance Instance of driver service
- * @property Config $config Config object
- * @method Config getConfig() Return the config object
+ * @property Config $config
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    use DriverBaseTrait;
     use IOHelperTrait;
 
     protected const LEVELDB_FILENAME = '.database';
@@ -57,13 +55,13 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return null|array
      */
-    protected function driverRead(CacheItemInterface $item)
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         $val = $this->instance->get($item->getKey());
-        if ($val == false) {
+        if (!$val) {
             return null;
         }
 
@@ -71,41 +69,34 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return (bool)$this->instance->set($item->getKey(), $this->encode($this->driverPreWrap($item)));
-        }
+        $this->assertCacheItemType($item, Item::class);
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return (bool)$this->instance->set($item->getKey(), $this->encode($this->driverPreWrap($item)));
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return $this->instance->delete($item->getKey());
-        }
+        $this->assertCacheItemType($item, Item::class);
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return $this->instance->delete($item->getKey());
     }
 
     /**
      * @return bool
+     * @throws PhpfastcacheCoreException
+     * @throws PhpfastcacheLogicException
      */
     protected function driverClear(): bool
     {
@@ -113,7 +104,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             $this->instance->close();
             $this->instance = null;
         }
-        $result = (bool)LeveldbClient::destroy($this->getLeveldbFile());
+        $result = LeveldbClient::destroy($this->getLeveldbFile());
         $this->driverConnect();
 
         return $result;
@@ -130,6 +121,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @return bool
+     * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheLogicException
      */
     protected function driverConnect(): bool
@@ -141,5 +133,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $this->instance = $this->instance ?: new LeveldbClient($this->getLeveldbFile());
 
         return true;
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->config;
     }
 }

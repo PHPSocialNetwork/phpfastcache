@@ -2,15 +2,14 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 declare(strict_types=1);
 
@@ -19,17 +18,16 @@ namespace Phpfastcache\Drivers\Files;
 use Exception;
 use FilesystemIterator;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface, IO\IOHelperTrait};
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException, PhpfastcacheIOException};
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Core\Pool\IO\IOHelperTrait;
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheIOException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Util\Directory;
-use Psr\Cache\CacheItemInterface;
-
 
 /**
- * Class Driver
- * @package phpFastCache\Drivers
- * @property Config $config Config object
- * @method Config getConfig() Return the config object
+ * @property Config $config
  *
  * Important NOTE:
  * We are using getKey instead of getEncodedKey since this backend create filename that are
@@ -38,22 +36,11 @@ use Psr\Cache\CacheItemInterface;
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
     use IOHelperTrait;
-    use DriverBaseTrait {
-        DriverBaseTrait::__construct as private __parentConstruct;
-    }
-
-    /**
-     * Driver constructor.
-     * @param Config $config
-     * @param string $instanceId
-     */
-    public function __construct(Config $config, string $instanceId)
-    {
-        $this->__parentConstruct($config, $instanceId);
-    }
 
     /**
      * @return bool
+     * @throws PhpfastcacheIOException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function driverCheck(): bool
     {
@@ -69,16 +56,17 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return null|array
+     * @throws PhpfastcacheIOException
      */
-    protected function driverRead(CacheItemInterface $item)
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
-        $file_path = $this->getFilePath($item->getKey(), true);
+        $filePath = $this->getFilePath($item->getKey(), true);
 
-        try{
-            $content = $this->readFile($file_path);
-        }catch (PhpfastcacheIOException $e){
+        try {
+            $content = $this->readFile($filePath);
+        } catch (PhpfastcacheIOException) {
             return null;
         }
 
@@ -86,65 +74,61 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
+     * @throws PhpfastcacheIOException
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            $file_path = $this->getFilePath($item->getKey());
-            $data = $this->encode($this->driverPreWrap($item));
+        $this->assertCacheItemType($item, Item::class);
 
-            /**
-             * Force write
-             */
-            try {
-                return $this->writefile($file_path, $data, $this->getConfig()->isSecureFileManipulation());
-            } catch (Exception $e) {
-                return false;
-            }
+        $filePath = $this->getFilePath($item->getKey());
+        $data = $this->encode($this->driverPreWrap($item));
+
+        try {
+            return $this->writeFile($filePath, $data, $this->getConfig()->isSecureFileManipulation());
+        } catch (Exception) {
+            return false;
         }
-
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
+     * @throws PhpfastcacheIOException
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            $file_path = $this->getFilePath($item->getKey(), true);
-            if (\file_exists($file_path) && @\unlink($file_path)) {
-                \clearstatcache(true, $file_path);
-                $dir = \dirname($file_path);
-                if (!(new FilesystemIterator($dir))->valid()) {
-                    \rmdir($dir);
-                }
-                return true;
-            }
+        $this->assertCacheItemType($item, Item::class);
 
-            return false;
+        $filePath = $this->getFilePath($item->getKey(), true);
+        if (\file_exists($filePath) && @\unlink($filePath)) {
+            \clearstatcache(true, $filePath);
+            $dir = \dirname($filePath);
+            if (!(new FilesystemIterator($dir))->valid()) {
+                \rmdir($dir);
+            }
+            return true;
         }
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return false;
     }
 
     /**
      * @return bool
      * @throws \Phpfastcache\Exceptions\PhpfastcacheIOException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverClear(): bool
     {
         return Directory::rrmdir($this->getPath(true));
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->config;
     }
 }

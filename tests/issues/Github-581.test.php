@@ -1,13 +1,19 @@
 <?php
 
 /**
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
+ *
+ * This file is part of Phpfastcache.
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
+ *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Tests\Helper\TestHelper;
-
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -39,9 +45,9 @@ $cacheInstance->save($cacheItem);
 unset($cacheItem);
 $cacheInstance->detachAllItems();
 
-if(strpos($cacheInstance->getPath(), 'phpfastcache' . DIRECTORY_SEPARATOR . $_SERVER[ 'HTTP_HOST' ]) !== false){
+if (strpos($cacheInstance->getPath(), 'phpfastcache' . DIRECTORY_SEPARATOR . $_SERVER[ 'HTTP_HOST' ]) !== false) {
     $testHelper->assertPass('The "securityKey" option in automatic mode writes the HTTP_HOST directory as expected.');
-}else{
+} else {
     $testHelper->assertFail('The "securityKey" option in automatic mode leads to the following path: ' . $cacheInstance->getPath());
 }
 

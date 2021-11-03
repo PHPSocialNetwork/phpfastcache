@@ -18,6 +18,7 @@ namespace Phpfastcache\Core\Item;
 use DateInterval;
 use DateTime;
 use DateTimeInterface;
+use Phpfastcache\Event\Event;
 use Phpfastcache\Event\EventManagerDispatcherTrait;
 use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
@@ -63,13 +64,11 @@ trait CacheItemTrait
             throw new PhpfastcacheInvalidArgumentException('The value set cannot be an instance of \\Closure.');
         }
 
-        /**
-         * @eventName CacheSaveDeferredItem
-         * @param ExtendedCacheItemInterface $this
-         * @param mixed $value
-         *
-         */
-        $this->eventManager->dispatch('CacheItemSet', $this, new EventReferenceParameter($value, true));
+        if (\is_resource($value)) {
+            throw new PhpfastcacheInvalidArgumentException('The value set cannot be a resource');
+        }
+
+        $this->eventManager->dispatch(Event::CACHE_ITEM_SET, $this, new EventReferenceParameter($value, true));
 
         $this->data = $value;
 
@@ -101,12 +100,7 @@ trait CacheItemTrait
     public function expiresAt(?\DateTimeInterface $expiration): static
     {
         if ($expiration instanceof DateTimeInterface) {
-            /**
-             * @eventName CacheItemExpireAt
-             * @param ExtendedCacheItemInterface $this
-             * @param DateTimeInterface $expiration
-             */
-            $this->eventManager->dispatch('CacheItemExpireAt', $this, $expiration);
+            $this->eventManager->dispatch(Event::CACHE_ITEM_EXPIRE_AT, $this, $expiration);
             $this->expirationDate = $expiration;
         } else {
             throw new PhpfastcacheInvalidArgumentException('$expiration must be an object implementing the DateTimeInterface got: ' . \gettype($expiration));
@@ -131,21 +125,11 @@ trait CacheItemTrait
                 $time = 30 * 24 * 3600 * 5;
             }
 
-            /**
-             * @eventName CacheItemExpireAt
-             * @param ExtendedCacheItemInterface $this
-             * @param DateTimeInterface $expiration
-             */
-            $this->eventManager->dispatch('CacheItemExpireAfter', $this, $time);
+            $this->eventManager->dispatch(Event::CACHE_ITEM_EXPIRE_AFTER, $this, $time);
 
             $this->expirationDate = (new DateTime())->add(new DateInterval(\sprintf('PT%dS', $time)));
         } elseif ($time instanceof DateInterval) {
-            /**
-             * @eventName CacheItemExpireAt
-             * @param ExtendedCacheItemInterface $this
-             * @param DateTimeInterface $expiration
-             */
-            $this->eventManager->dispatch('CacheItemExpireAfter', $this, $time);
+            $this->eventManager->dispatch(Event::CACHE_ITEM_EXPIRE_AFTER, $this, $time);
 
             $this->expirationDate = (new DateTime())->add($time);
         } else {

@@ -18,6 +18,7 @@ namespace Phpfastcache\Cluster\Drivers\MasterSlaveReplication;
 use Phpfastcache\Cluster\ClusterPoolAbstract;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Event\Event;
 use Phpfastcache\EventManager;
 use Phpfastcache\Exceptions\PhpfastcacheCoreException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
@@ -77,7 +78,7 @@ class Driver extends ClusterPoolAbstract
         } catch (PhpfastcacheExceptionInterface $e) {
             try {
                 $this->eventManager->dispatch(
-                    'CacheReplicationSlaveFallback',
+                    Event::CACHE_REPLICATION_SLAVE_FALLBACK,
                     $this,
                     \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']
                 );

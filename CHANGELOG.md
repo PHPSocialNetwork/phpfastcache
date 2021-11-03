@@ -1,3 +1,9 @@
+## 9.0.1
+##### 07 november 2021
+- __Core__
+  - Added `\Phpfastcache\Event\Event` class for centralizing event name with reusable constants.
+- __Item__
+  - `\Psr\Cache\CacheItemInterface::set` will also no longer accepts resource object anymore as method unique parameter
 ## 9.0.0
 ##### 31 october 2021
 - __Migration guide__

@@ -20,6 +20,7 @@ use DateTimeInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 trait ExtendedCacheItemTrait
@@ -180,12 +181,12 @@ trait ExtendedCacheItemTrait
 
     public function isNull(): bool
     {
-        return $this->data === null;
+        return $this->get() === null;
     }
 
     public function isEmpty(): bool
     {
-        return empty($this->data);
+        return empty($this->get());
     }
 
     /**
@@ -213,22 +214,43 @@ trait ExtendedCacheItemTrait
         return -1;
     }
 
+    /**
+     * @throws PhpfastcacheInvalidTypeException
+     */
     public function increment(int $step = 1): ExtendedCacheItemInterface
     {
+        if ($this->data !== null && !\is_numeric($this->data)) {
+            throw new PhpfastcacheInvalidTypeException(\sprintf('Cannot increment on a "%s" type.', \gettype($this->data)));
+        }
+
         $this->data += $step;
 
         return $this;
     }
 
+    /**
+     * @throws PhpfastcacheInvalidTypeException
+     */
     public function decrement(int $step = 1): ExtendedCacheItemInterface
     {
+        if ($this->data !== null && !\is_numeric($this->data)) {
+            throw new PhpfastcacheInvalidTypeException(\sprintf('Cannot decrement on a "%s" type.', \gettype($this->data)));
+        }
+
         $this->data -= $step;
 
         return $this;
     }
 
+    /**
+     * @throws PhpfastcacheInvalidTypeException
+     */
     public function append(array|string $data): ExtendedCacheItemInterface
     {
+        if ($this->data !== null && !\is_string($this->data) && !\is_array($this->data)) {
+            throw new PhpfastcacheInvalidTypeException(\sprintf('Cannot append on a "%s" type.', \gettype($this->data)));
+        }
+
         if (\is_array($this->data)) {
             $this->data[] = $data;
         } else {
@@ -238,8 +260,15 @@ trait ExtendedCacheItemTrait
         return $this;
     }
 
+    /**
+     * @throws PhpfastcacheInvalidTypeException
+     */
     public function prepend(array|string $data): ExtendedCacheItemInterface
     {
+        if ($this->data !== null && !\is_string($this->data) && !\is_array($this->data)) {
+            throw new PhpfastcacheInvalidTypeException(\sprintf('Cannot prepend on a "%s" type.', \gettype($this->data)));
+        }
+
         if (\is_array($this->data)) {
             \array_unshift($this->data, $data);
         } else {

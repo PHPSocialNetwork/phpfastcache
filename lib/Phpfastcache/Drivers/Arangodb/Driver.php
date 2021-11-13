@@ -30,6 +30,7 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
+use Phpfastcache\Event\Event;
 use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
@@ -101,7 +102,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             $connectionOptions[ArangoConnectionOptions::OPTION_CIPHERS] = $this->getConfig()->getCiphers();
         }
 
-        $this->eventManager->dispatch('ArangodbConnection', $this, new EventReferenceParameter($connectionOptions));
+        $this->eventManager->dispatch(Event::ARANGODB_CONNECTION, $this, new EventReferenceParameter($connectionOptions));
 
         $this->instance = new ArangoConnection($connectionOptions);
         $this->documentHandler = new ArangoDocumentHandler($this->instance);
@@ -214,7 +215,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                 'waitForSync' => false
             ];
 
-            $this->eventManager->dispatch('ArangodbCollectionParams', $this, new EventReferenceParameter($params));
+            $this->eventManager->dispatch(Event::ARANGODB_COLLECTION_PARAMS, $this, new EventReferenceParameter($params));
 
             $this->collectionHandler->create($collection, $params);
 

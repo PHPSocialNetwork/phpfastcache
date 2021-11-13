@@ -17,6 +17,7 @@ namespace Phpfastcache\Cluster\Drivers\RandomReplication;
 
 use Phpfastcache\Cluster\Drivers\MasterSlaveReplication\Driver as MasterSlaveReplicationDriver;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Event\Event;
 use Phpfastcache\Event\EventManagerInterface;
 use ReflectionException;
 use ReflectionMethod;
@@ -36,7 +37,7 @@ class Driver extends MasterSlaveReplicationDriver
         $randomPool = $driverPools[\random_int(0, \count($driverPools) - 1)];
 
         $this->eventManager->dispatch(
-            'CacheReplicationRandomPoolChosen',
+            Event::CACHE_REPLICATION_RANDOM_POOL_CHOSEN,
             $this,
             $randomPool
         );

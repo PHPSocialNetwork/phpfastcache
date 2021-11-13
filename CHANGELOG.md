@@ -1,12 +1,20 @@
+## 9.0.1
+##### 14 november 2021
+- __Core__
+  - Added `\Phpfastcache\Event\Event` class for centralizing event name with reusable constants.
+- __Item__
+  - `\Psr\Cache\CacheItemInterface::set` will also no longer accepts resource object anymore as method unique parameter
+- __Misc__
+  - Fixed typos in [README.md](./README.md)
 ## 9.0.0
-##### 1 october 2021
+##### 31 october 2021
 - __Migration guide__
   - Read the [migration guide](./docs/migration/MigratingFromV8ToV9.md) to upgrade from V8 to V9
 - __PSR-6__
   - Upgraded `psr/cache` dependency to `^2.0||^3.0` (for PHP-8 types)
   - `\Psr\Cache\CacheItemInterface::get()` slightly changed to fully comply with missing PSR-6 specification: If the cache item is **NOT** hit, this method will return `NULL`.
 - __PSR-16__
-  - _To be written when the PSR-16 will be upgraded for PHP-8_
+  - Upgraded `psr/simple-cache` dependency to `^2.0||^3.0` (for PHP-8 types)
 - __API__
   - Upgraded Phpfastcache API `4.0.0` ([see changes](CHANGELOG_API.md))
   - Renamed `Api::getPhpFastCacheVersion()` to `Api::getPhpfastcacheVersion()`

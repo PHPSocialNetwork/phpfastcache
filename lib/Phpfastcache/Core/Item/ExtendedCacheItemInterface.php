@@ -20,6 +20,7 @@ use JsonSerializable;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventManagerDispatcherInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Util\ClassNamespaceResolverInterface;
 use Psr\Cache\CacheItemInterface;
@@ -137,7 +138,7 @@ interface ExtendedCacheItemInterface extends
     /**
      * @param ExtendedCacheItemPoolInterface $driver
      *
-     * @return mixed
+     * @return ExtendedCacheItemInterface
      */
     public function setDriver(ExtendedCacheItemPoolInterface $driver): ExtendedCacheItemInterface;
 
@@ -145,7 +146,6 @@ interface ExtendedCacheItemInterface extends
      * @param bool $isHit
      *
      * @return ExtendedCacheItemInterface
-     * @throws PhpfastcacheInvalidArgumentException
      */
     public function setHit(bool $isHit): ExtendedCacheItemInterface;
 
@@ -153,7 +153,7 @@ interface ExtendedCacheItemInterface extends
      * @param int $step
      *
      * @return ExtendedCacheItemInterface
-     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidTypeException
      */
     public function increment(int $step = 1): ExtendedCacheItemInterface;
 
@@ -161,7 +161,7 @@ interface ExtendedCacheItemInterface extends
      * @param int $step
      *
      * @return ExtendedCacheItemInterface
-     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidTypeException
      */
     public function decrement(int $step = 1): ExtendedCacheItemInterface;
 
@@ -169,7 +169,7 @@ interface ExtendedCacheItemInterface extends
      * @param array|string $data
      *
      * @return ExtendedCacheItemInterface
-     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidTypeException
      */
     public function append(array|string $data): ExtendedCacheItemInterface;
 
@@ -177,7 +177,7 @@ interface ExtendedCacheItemInterface extends
      * @param array|string $data
      *
      * @return ExtendedCacheItemInterface
-     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheInvalidTypeException
      */
     public function prepend(array|string $data): ExtendedCacheItemInterface;
 

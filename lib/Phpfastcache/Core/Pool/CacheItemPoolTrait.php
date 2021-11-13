@@ -19,6 +19,7 @@ use DateTime;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\ItemBatch;
+use Phpfastcache\Event\Event;
 use Phpfastcache\Event\EventManagerDispatcherTrait;
 use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheCoreException;
@@ -151,18 +152,13 @@ trait CacheItemPoolTrait
                              * The timeout has been reached
                              * Consider that the batch has
                              * failed and serve an empty item
-                             * to avoid to get stuck with a
+                             * to avoid get stuck with a
                              * batch item stored in driver
                              */
                             goto getItemDriverExpired;
                         }
-                        /**
-                         * @eventName CacheGetItem
-                         * @param $this ExtendedCacheItemPoolInterface
-                         * @param $driverData ItemBatch
-                         * @param $cacheSlamsSpendSeconds int
-                         */
-                        $this->eventManager->dispatch('CacheGetItemInSlamBatch', $this, $driverData, $cacheSlamsSpendSeconds);
+
+                        $this->eventManager->dispatch(Event::CACHE_GET_ITEM_IN_SLAM_BATCH, $this, $driverData, $cacheSlamsSpendSeconds);
 
                         /**
                          * Wait for a second before
@@ -231,12 +227,7 @@ trait CacheItemPoolTrait
 
 
         if ($item !== null) {
-            /**
-             * @eventName CacheGetItem
-             * @param $this ExtendedCacheItemPoolInterface
-             * @param $this ExtendedCacheItemInterface
-             */
-            $this->eventManager->dispatch('CacheGetItem', $this, $item);
+            $this->eventManager->dispatch(Event::CACHE_GET_ITEM, $this, $item);
 
             $item->isHit() ? $this->getIO()->incReadHit() : $this->getIO()->incReadMiss();
 
@@ -267,12 +258,7 @@ trait CacheItemPoolTrait
      */
     public function clear(): bool
     {
-        /**
-         * @eventName CacheClearItem
-         * @param $this ExtendedCacheItemPoolInterface
-         * @param $itemInstances ExtendedCacheItemInterface[]
-         */
-        $this->eventManager->dispatch('CacheClearItem', $this, $this->itemInstances);
+        $this->eventManager->dispatch(Event::CACHE_CLEAR_ITEM, $this, $this->itemInstances);
 
         $this->getIO()->incWriteHit();
         // Faster than detachAllItems()
@@ -317,12 +303,7 @@ trait CacheItemPoolTrait
             $item->setHit(false);
             $this->getIO()->incWriteHit();
 
-            /**
-             * @eventName CacheCommitItem
-             * @param $this ExtendedCacheItemPoolInterface
-             * @param $item ExtendedCacheItemInterface
-             */
-            $this->eventManager->dispatch('CacheDeleteItem', $this, $item);
+            $this->eventManager->dispatch(Event::CACHE_DELETE_ITEM, $this, $item);
 
             /**
              * De-register the item instance
@@ -355,12 +336,7 @@ trait CacheItemPoolTrait
             throw new RuntimeException('Spl object hash mismatches ! You probably tried to save a detached item which has been already retrieved from cache.');
         }
 
-        /**
-         * @eventName CacheSaveDeferredItem
-         * @param $this ExtendedCacheItemPoolInterface
-         * @param $this ExtendedCacheItemInterface
-         */
-        $this->eventManager->dispatch('CacheSaveDeferredItem', $this, $item);
+        $this->eventManager->dispatch(Event::CACHE_SAVE_DEFERRED_ITEM, $this, $item);
         $this->deferredList[$item->getKey()] = $item;
 
         return true;
@@ -372,16 +348,10 @@ trait CacheItemPoolTrait
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
-     * @throws \ReflectionException
      */
     public function commit(): bool
     {
-        /**
-         * @eventName CacheCommitItem
-         * @param $this ExtendedCacheItemPoolInterface
-         * @param $deferredList ExtendedCacheItemInterface[]
-         */
-        $this->eventManager->dispatch('CacheCommitItem', $this, new EventReferenceParameter($this->deferredList));
+        $this->eventManager->dispatch(Event::CACHE_COMMIT_ITEM, $this, new EventReferenceParameter($this->deferredList));
 
         if (\count($this->deferredList)) {
             $return = true;
@@ -424,13 +394,7 @@ trait CacheItemPoolTrait
             throw new RuntimeException('Spl object hash mismatches ! You probably tried to save a detached item which has been already retrieved from cache.');
         }
 
-        /**
-         * @eventName CacheSaveItem
-         * @param $this ExtendedCacheItemPoolInterface
-         * @param $this ExtendedCacheItemInterface
-         */
-        $this->eventManager->dispatch('CacheSaveItem', $this, $item);
-
+        $this->eventManager->dispatch(Event::CACHE_SAVE_ITEM, $this, $item);
 
         if ($this->getConfig()->isPreventCacheSlams()) {
             /**

@@ -18,6 +18,7 @@ namespace Phpfastcache\Core\Pool\IO;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
+use Phpfastcache\Event\Event;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Util\Directory;
@@ -271,14 +272,7 @@ trait IOHelperTrait
      */
     protected function writeFile(string $file, string $data, bool $secureFileManipulation = false): bool
     {
-        /**
-         * @eventName CacheWriteFileOnDisk
-         * @param ExtendedCacheItemPoolInterface $this
-         * @param string $file
-         * @param bool $secureFileManipulation
-         *
-         */
-        $this->eventManager->dispatch('CacheWriteFileOnDisk', $this, $file, $secureFileManipulation);
+        $this->eventManager->dispatch(Event::CACHE_WRITE_FILE_ON_DISK, $this, $file, $secureFileManipulation);
 
         if ($secureFileManipulation) {
             $tmpFilename = Directory::getAbsolutePath(

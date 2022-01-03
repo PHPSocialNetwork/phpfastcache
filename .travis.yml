@@ -22,7 +22,7 @@ cache:
     - $HOME/pecl_cache
 php:
   - 8.0
-  # - 8.1 # Uncomment this when 8.1 will be released
+  - 8.1
   # - nightly # nightly is currently too much unstable many bundled extension are not available...
 jobs:
   fast_finish: true

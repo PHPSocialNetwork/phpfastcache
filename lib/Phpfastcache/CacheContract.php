@@ -39,7 +39,7 @@ class CacheContract
     {
         $cacheItem = $this->cacheInstance->getItem($cacheKey);
 
-        if (! $cacheItem->isHit()) {
+        if (!$cacheItem->isHit()) {
             /*
             * Parameter $cacheItem will be available as of 8.0.6
             */

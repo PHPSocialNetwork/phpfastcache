@@ -1,3 +1,17 @@
+## 8.1.0
+#### _"Re-Vaccinated"_
+##### 05 january 2022
+- __Core__
+  - Fixed #831 // Bug in the PSR-16 getMultiple method
+- __Utils__
+  - Fixed #846 // PHP 8.1 compatibility bug
+- __Drivers__
+  - Fixed #840 // Invalid type hint found for "htaccess", expected "string" got "boolean" for leveldb driver
+- __Misc__
+  - Updated some docs files (fixed typos)
+- __Tests__
+  - Migrate all Travis tests on bionic
+
 ## 8.0.8
 #### _"Sanitary-passed"_
 ##### 18 august 2021

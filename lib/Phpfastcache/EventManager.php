@@ -15,7 +15,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache;
 
-use BadMethodCallException;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheEventManagerException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;

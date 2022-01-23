@@ -29,10 +29,6 @@ class CacheContract
     }
 
     /**
-     * @param  string                    $cacheKey
-     * @param  callable                  $callback
-     * @param  DateInterval|integer|null $expiresAfter
-     * @return mixed
      * @throws InvalidArgumentException
      */
     public function get(string $cacheKey, callable $callback, DateInterval|int $expiresAfter = null): mixed
@@ -54,8 +50,11 @@ class CacheContract
         return $cacheItem->get();
     }
 
-    public function __invoke(...$args): mixed
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function __invoke(string $cacheKey, callable $callback, DateInterval|int $expiresAfter = null): mixed
     {
-        return $this->get(...$args);
+        return $this->get($cacheKey, $callback, $expiresAfter);
     }
 }

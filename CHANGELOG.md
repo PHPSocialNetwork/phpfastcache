@@ -1,3 +1,9 @@
+## 8.1.1
+#### _"Re-re-Vaccinated"_
+##### 21 february 2022
+- __Core__
+  - Fixed #848 // Others PHP 8.1 compatibility bugs
+
 ## 8.1.0
 #### _"Re-Vaccinated"_
 ##### 05 january 2022

@@ -19,13 +19,10 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 
 class EventReferenceParameter
 {
-    protected mixed $parameter;
-
     public function __construct(
-        mixed &$parameter,
+        protected mixed &$parameter,
         protected bool $allowTypeChange = false
     ) {
-        $this->parameter = &$parameter;
     }
 
     public function getParameterValue(): mixed

@@ -53,6 +53,12 @@ interface EventManagerInterface
     public static function getInstance(): static;
 
     /**
+     * @param EventManagerInterface $eventManagerInstance
+     * @return void
+     */
+    public static function setInstance(EventManagerInterface $eventManagerInstance): void;
+
+    /**
      * @param string $eventName
      * @param array ...$args
      */

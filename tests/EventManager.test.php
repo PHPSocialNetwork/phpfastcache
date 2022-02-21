@@ -17,6 +17,7 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\EventManager;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
@@ -33,18 +34,26 @@ $eventInstance->onCacheSaveItem(static function (ExtendedCacheItemPoolInterface 
     }
 });
 
+$eventInstance->onCacheItemSet(static function (ExtendedCacheItemInterface $item, EventReferenceParameter $eventReferenceParameter) use ($testHelper) {
+    try{
+        $eventReferenceParameter->setParameterValue(1000);
+        $testHelper->assertPass('The event reference parameter accepted a value type change');
+    } catch(PhpfastcacheInvalidTypeException){
+        $testHelper->assertFail('The event reference parameter denied a value type change');
+    }
+});
 
 $cacheKey = 'testItem';
 $cacheKey2 = 'testItem2';
 
 $item = $cacheInstance->getItem($cacheKey);
-$item->set(1000)->expiresAfter(60);
+$item->set(false)->expiresAfter(60);
 $cacheInstance->save($item);
 
 if ($cacheInstance->getItem($cacheKey)->get() === 1337) {
     $testHelper->assertPass('The dispatched event executed the custom callback to alter the item');
 } else {
-    $testHelper->assertFail("The dispatched event is not working properly, the expected value '1337', got '" . (int) $cacheInstance->getItem($cacheKey)->get() . "'");
+    $testHelper->assertFail("The dispatched event is not working properly, the expected value '1337', got '" . $cacheInstance->getItem($cacheKey)->get() . "'");
 }
 $cacheInstance->clear();
 unset($item);
@@ -53,7 +62,14 @@ $testHelper->debugEvents($eventInstance);
 
 $eventInstance->onCacheSaveMultipleItems(static function (ExtendedCacheItemPoolInterface $itemPool, EventReferenceParameter $eventReferenceParameter) use ($testHelper) {
     $parameterValue = $eventReferenceParameter->getParameterValue();
-    $eventReferenceParameter->setParameterValue([]);
+
+    try{
+        $eventReferenceParameter->setParameterValue(null);
+        $testHelper->assertFail('The event reference parameter accepted a value type change');
+    } catch(PhpfastcacheInvalidTypeException){
+        $testHelper->assertPass('The event reference parameter denied a value type change');
+        $eventReferenceParameter->setParameterValue([]);
+    }
 
     if (is_array($parameterValue) && count($parameterValue) === 2) {
         $testHelper->assertPass('The event reference parameter returned an array of 2 cache items');

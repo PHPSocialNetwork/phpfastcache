@@ -1,13 +1,11 @@
 <?php
 
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -18,21 +16,18 @@ namespace Phpfastcache\Drivers\Sqlite;
 use PDO;
 use PDOException;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Core\Pool\DriverBaseTrait;
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\IO\IOHelperTrait;
-use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Exceptions\PhpfastcacheCoreException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
-use Psr\Cache\CacheItemInterface;
 
 /**
  * @property Config $config
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface, ExtendedCacheItemPoolInterface
 {
     use IOHelperTrait;
 
@@ -47,16 +42,14 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected ?PDO $indexing;
 
     /**
-     * @return bool
      * @throws PhpfastcacheCoreException
      */
     public function driverCheck(): bool
     {
-        return extension_loaded('pdo_sqlite') && (is_writable($this->getSqliteDir()) || @mkdir($this->getSqliteDir(), $this->getDefaultChmod(), true));
+        return \extension_loaded('pdo_sqlite') && (is_writable($this->getSqliteDir()) || @mkdir($this->getSqliteDir(), $this->getDefaultChmod(), true));
     }
 
     /**
-     * @return string
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheInvalidArgumentException
      */
@@ -65,16 +58,12 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return $this->SqliteDir ?: $this->getPath();
     }
 
-    /**
-     * @return array
-     */
     public function __sleep(): array
     {
         return array_diff(array_keys(get_object_vars($this)), ['indexing', 'instance']);
     }
 
     /**
-     * @return bool
      * @throws PhpfastcacheIOException
      */
     protected function driverConnect(): bool
@@ -88,15 +77,11 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return true;
     }
 
-    /**
-     * @param ExtendedCacheItemInterface $item
-     * @return null|array
-     */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         try {
             $stm = $this->getDb($item->getEncodedKey())
-                ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
+                ->prepare('SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1');
             $stm->execute(
                 [
                     ':keyword' => $item->getEncodedKey(),
@@ -106,7 +91,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         } catch (PDOException $e) {
             try {
                 $stm = $this->getDb($item->getEncodedKey(), true)
-                    ->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
+                    ->prepare('SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1');
                 $stm->execute(
                     [
                         ':keyword' => $item->getEncodedKey(),
@@ -125,11 +110,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return null;
     }
 
-    /**
-     * @param string $keyword
-     * @param bool $reset
-     * @return PDO
-     */
     public function getDb(string $keyword, bool $reset = false): PDO
     {
         /**
@@ -137,7 +117,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
          */
         $instant = $this->getDbIndex($keyword);
 
-        /**
+        /*
          * init instant
          */
         if (!isset($this->instance[$instant])) {
@@ -162,7 +142,9 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * Return Database of Keyword
+     *
      * @param $keyword
+     *
      * @return int
      */
     public function getDbIndex($keyword)
@@ -173,7 +155,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                 $tableCreated = true;
             }
 
-            $pdo = new PDO("sqlite:" . $this->SqliteDir . '/' . self::INDEXING_FILE);
+            $pdo = new PDO('sqlite:' . $this->SqliteDir . '/' . self::INDEXING_FILE);
             $pdo->setAttribute(
                 PDO::ATTR_ERRMODE,
                 PDO::ERRMODE_EXCEPTION
@@ -185,7 +167,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             $this->indexing = $pdo;
             unset($pdo);
 
-            $stm = $this->indexing->prepare("SELECT MAX(`db`) as `db` FROM `balancing`");
+            $stm = $this->indexing->prepare('SELECT MAX(`db`) as `db` FROM `balancing`');
             $stm->execute();
             $row = $stm->fetch(PDO::FETCH_ASSOC);
             if (!isset($row['db'])) {
@@ -201,29 +183,28 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             $size = file_exists($this->SqliteDir . '/db' . $db) ? filesize($this->SqliteDir . '/db' . $db) : 1;
             $size = round($size / 1024 / 1024, 1);
 
-
             if ($size > $this->maxSize) {
-                $db++;
+                ++$db;
             }
             $this->currentDB = $db;
         }
 
         // look for keyword
-        $stm = $this->indexing->prepare("SELECT * FROM `balancing` WHERE `keyword`=:keyword LIMIT 1");
+        $stm = $this->indexing->prepare('SELECT * FROM `balancing` WHERE `keyword`=:keyword LIMIT 1');
         $stm->execute(
             [
                 ':keyword' => $keyword,
             ]
         );
         $row = $stm->fetch(PDO::FETCH_ASSOC);
-        if (isset($row['db']) && $row['db'] != '') {
+        if (isset($row['db']) && '' != $row['db']) {
             $db = $row['db'];
         } else {
             /*
              * Insert new to Indexing
              */
             $db = $this->currentDB;
-            $stm = $this->indexing->prepare("INSERT INTO `balancing` (`keyword`,`db`) VALUES(:keyword, :db)");
+            $stm = $this->indexing->prepare('INSERT INTO `balancing` (`keyword`,`db`) VALUES(:keyword, :db)');
             $stm->execute(
                 [
                     ':keyword' => $keyword,
@@ -237,14 +218,13 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * INIT Indexing DB
-     * @param PDO $db
      */
-    public function initIndexing(PDO $db)
+    public function initIndexing(PDO $db): void
     {
         // delete everything before reset indexing
         $dir = opendir($this->SqliteDir);
         while ($file = readdir($dir)) {
-            if ($file !== '.' && $file !== '..' && $file !== 'indexing' && $file !== 'dbfastcache') {
+            if ('.' !== $file && '..' !== $file && 'indexing' !== $file && 'dbfastcache' !== $file) {
                 unlink($this->SqliteDir . '/' . $file);
             }
         }
@@ -257,7 +237,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * INIT NEW DB
-     * @param PDO $db
      */
     protected function initDB(PDO $db): void
     {
@@ -269,10 +248,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
-     * @return mixed
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
+     *
+     * @return mixed
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
@@ -280,7 +259,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
         try {
             $stm = $this->getDb($item->getEncodedKey())
-                ->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
+                ->prepare('INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)');
             $stm->execute(
                 [
                     ':keyword' => $item->getEncodedKey(),
@@ -296,8 +275,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
-     * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(ExtendedCacheItemInterface $item): bool
@@ -305,7 +282,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $this->assertCacheItemType($item, Item::class);
         try {
             $stm = $this->getDb($item->getEncodedKey())
-                ->prepare("DELETE FROM `caching` WHERE (`exp` <= :exp) OR (`keyword`=:keyword) ");
+                ->prepare('DELETE FROM `caching` WHERE (`exp` <= :exp) OR (`keyword`=:keyword) ');
 
             return $stm->execute(
                 [
@@ -319,7 +296,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @return bool
      * @throws PhpfastcacheCoreException
      */
     protected function driverClear(): bool
@@ -330,7 +306,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         // delete everything before reset indexing
         $dir = opendir($this->getSqliteDir());
         while ($file = readdir($dir)) {
-            if ($file !== '.' && $file !== '..') {
+            if ('.' !== $file && '..' !== $file) {
                 unlink($this->getSqliteDir() . '/' . $file);
             }
         }

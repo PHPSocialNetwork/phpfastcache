@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -26,18 +26,16 @@ $driverInstance = CacheManager::getInstance(
     'Files',
     new ConfigurationOption(
         [
-            'defaultFileNameHashFunction' => static function (string $str) {
-                return hash('sha256', $str);
-            }
+            'defaultFileNameHashFunction' => static fn (string $str) => hash('sha256', $str),
         ]
     )
 );
 
 $testPasses = false;
 EventManager::getInstance()->onCacheWriteFileOnDisk(
-    static function (ExtendedCacheItemPoolInterface $itemPool, $file) use ($driverInstance, &$testPasses) {
-        /** @var $driverInstance Driver */
-        $testPasses = strlen(basename($file, '.' . $driverInstance->getConfig()->getCacheFileExtension())) === 64;
+    static function (ExtendedCacheItemPoolInterface $itemPool, $file) use ($driverInstance, &$testPasses): void {
+        /** @var Driver $driverInstance */
+        $testPasses = 64 === mb_strlen(basename($file, '.' . $driverInstance->getConfig()->getCacheFileExtension()));
     }
 );
 

@@ -1,13 +1,11 @@
 <?php
 
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -17,10 +15,9 @@ namespace Phpfastcache\Drivers\Leveldb;
 
 use LevelDB as LeveldbClient;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\IO\IOHelperTrait;
-use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Exceptions\PhpfastcacheCoreException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
@@ -29,18 +26,15 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  * @property LeveldbClient $instance Instance of driver service
  * @property Config $config
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface, ExtendedCacheItemPoolInterface
 {
     use IOHelperTrait;
 
     protected const LEVELDB_FILENAME = '.database';
 
-    /**
-     * @return bool
-     */
     public function driverCheck(): bool
     {
-        return extension_loaded('Leveldb');
+        return \extension_loaded('Leveldb');
     }
 
     /**
@@ -54,10 +48,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         }
     }
 
-    /**
-     * @param ExtendedCacheItemInterface $item
-     * @return null|array
-     */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         $val = $this->instance->get($item->getKey());
@@ -69,8 +59,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
-     * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
      */
@@ -78,12 +66,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     {
         $this->assertCacheItemType($item, Item::class);
 
-        return (bool)$this->instance->set($item->getKey(), $this->encode($this->driverPreWrap($item)));
+        return (bool) $this->instance->set($item->getKey(), $this->encode($this->driverPreWrap($item)));
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
-     * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(ExtendedCacheItemInterface $item): bool
@@ -94,7 +80,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @return bool
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheLogicException
      */
@@ -111,7 +96,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @return string
      * @throws PhpfastcacheCoreException
      */
     public function getLeveldbFile(): string
@@ -120,7 +104,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @return bool
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheLogicException
      */

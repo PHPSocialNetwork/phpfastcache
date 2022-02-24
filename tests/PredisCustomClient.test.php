@@ -1,22 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Drivers\Predis\Config as PredisConfig;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Tests\Helper\TestHelper;
-use Phpfastcache\Drivers\Predis\Config as PredisConfig;
 use Predis\Client as PredisClient;
 use Predis\Connection\ConnectionException as PredisConnectionException;
 
@@ -31,15 +31,15 @@ try {
 
     $testHelper->mutePhpNotices();
 
-    try{
+    try {
         $predisClient = new PredisClient([
             'host' => '127.0.0.1',
-            'port' =>  6379,
+            'port' => 6379,
             'password' => null,
             'database' => 0,
         ]);
         $predisClient->connect();
-    }catch (PredisConnectionException $e){
+    } catch (PredisConnectionException $e) {
         throw new PhpfastcacheDriverConnectException('Redis server unreachable.');
     }
 

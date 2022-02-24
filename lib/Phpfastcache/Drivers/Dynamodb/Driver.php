@@ -1,13 +1,11 @@
 <?php
 
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -15,11 +13,11 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Dynamodb;
 
-use Aws\Sdk as AwsSdk;
 use Aws\DynamoDb\DynamoDbClient as AwsDynamoDbClient;
-use Aws\DynamoDb\Marshaler as AwsMarshaler;
 use Aws\DynamoDb\Exception\DynamoDbException as AwsDynamoDbException;
-
+use Aws\DynamoDb\Marshaler as AwsMarshaler;
+use Aws\Sdk as AwsSdk;
+use Exception;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
@@ -35,11 +33,12 @@ use Psr\Http\Message\UriInterface;
 
 /**
  * Class Driver
+ *
  * @property Config $config
  * @property AwsDynamoDbClient $instance
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface, ExtendedCacheItemPoolInterface
 {
     use TaggableCacheItemPoolTrait;
 
@@ -49,16 +48,12 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     protected AwsMarshaler $marshaler;
 
-    /**
-     * @return bool
-     */
     public function driverCheck(): bool
     {
-        return \class_exists(AwsSdk::class) && \class_exists(AwsDynamoDbClient::class);
+        return class_exists(AwsSdk::class) && class_exists(AwsDynamoDbClient::class);
     }
 
     /**
-     * @return bool
      * @throws PhpfastcacheDriverConnectException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheLogicException
@@ -78,10 +73,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         }
 
         $this->awsSdk = new AwsSdk([
-            'endpoint'   => $this->getConfig()->getEndpoint(),
-            'region'   => $this->getConfig()->getRegion(),
-            'version'  => $this->getConfig()->getVersion(),
-            'debug'  => $this->getConfig()->isDebugEnabled(),
+            'endpoint' => $this->getConfig()->getEndpoint(),
+            'region' => $this->getConfig()->getRegion(),
+            'version' => $this->getConfig()->getVersion(),
+            'debug' => $this->getConfig()->isDebugEnabled(),
         ]);
         $this->instance = $this->awsSdk->createDynamoDb();
         $this->marshaler = new AwsMarshaler();
@@ -98,14 +93,12 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
-     * @return bool
      * @throws PhpfastcacheLogicException
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
         $awsItem = $this->marshaler->marshalItem(
-            \array_merge(
+            array_merge(
                 $this->encodeDocument($this->driverPreWrap($item, true)),
                 ['t' => $item->getExpirationDate()->getTimestamp()]
             )
@@ -113,31 +106,29 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
         $result = $this->instance->putItem([
             'TableName' => $this->getConfig()->getTable(),
-            'Item' => $awsItem
+            'Item' => $awsItem,
         ]);
 
         return ($result->get('@metadata')['statusCode'] ?? null) === 200;
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
-     * @return null|array
-     * @throws \Exception
+     * @throws Exception
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         $key = $this->marshaler->marshalItem([
-            $this->getConfig()->getPartitionKey() => $item->getKey()
+            $this->getConfig()->getPartitionKey() => $item->getKey(),
         ]);
 
         $result = $this->instance->getItem([
             'TableName' => $this->getConfig()->getTable(),
-            'Key' => $key
+            'Key' => $key,
         ]);
 
         $awsItem = $result->get('Item');
 
-        if ($awsItem !== null) {
+        if (null !== $awsItem) {
             return $this->decodeDocument(
                 $this->marshaler->unmarshalItem($awsItem)
             );
@@ -146,26 +137,21 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return null;
     }
 
-    /**
-     * @param ExtendedCacheItemInterface $item
-     * @return bool
-     */
     protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
         $key = $this->marshaler->marshalItem([
-            $this->getConfig()->getPartitionKey() => $item->getKey()
+            $this->getConfig()->getPartitionKey() => $item->getKey(),
         ]);
 
         $result = $this->instance->deleteItem([
             'TableName' => $this->getConfig()->getTable(),
-            'Key' => $key
+            'Key' => $key,
         ]);
 
         return ($result->get('@metadata')['statusCode'] ?? null) === 200;
     }
 
     /**
-     * @return bool
      * @throws PhpfastcacheDriverException
      */
     protected function driverClear(): bool
@@ -189,26 +175,26 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return \count($this->instance->listTables(['TableNames' => [$this->getConfig()->getTable()]])->get('TableNames')) > 0;
     }
 
-    protected function createTable() :void
+    protected function createTable(): void
     {
         $params = [
             'TableName' => $this->getConfig()->getTable(),
             'KeySchema' => [
                 [
                     'AttributeName' => $this->getConfig()->getPartitionKey(),
-                    'KeyType' => 'HASH'
-                ]
+                    'KeyType' => 'HASH',
+                ],
             ],
             'AttributeDefinitions' => [
                 [
                     'AttributeName' => $this->getConfig()->getPartitionKey(),
-                    'AttributeType' => 'S'
+                    'AttributeType' => 'S',
                 ],
             ],
             'ProvisionedThroughput' => [
                 'ReadCapacityUnits' => 10,
-                'WriteCapacityUnits' => 10
-            ]
+                'WriteCapacityUnits' => 10,
+            ],
         ];
 
         $this->eventManager->dispatch(Event::DYNAMODB_CREATE_TABLE, $this, new EventReferenceParameter($params));
@@ -225,7 +211,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             return false;
         }
 
-        return $ttlDesc['TimeToLiveStatus'] === 'ENABLED' && $ttlDesc['AttributeName'] === self::TTL_FIELD_NAME;
+        return 'ENABLED' === $ttlDesc['TimeToLiveStatus'] && self::TTL_FIELD_NAME === $ttlDesc['AttributeName'];
     }
 
     /**
@@ -237,20 +223,18 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             $this->instance->updateTimeToLive([
                 'TableName' => $this->getConfig()->getTable(),
                 'TimeToLiveSpecification' => [
-                    "AttributeName" => self::TTL_FIELD_NAME,
-                    "Enabled" => true
+                    'AttributeName' => self::TTL_FIELD_NAME,
+                    'Enabled' => true,
                 ],
             ]);
         } catch (AwsDynamoDbException $e) {
-            /**
+            /*
              * Error 400 can be an acceptable error of a
              * Dynamodb restriction: "Time to live has been modified multiple times within a fixed interval"
              * @see https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_UpdateTimeToLive.html
              */
-            if ($e->getStatusCode() !== 400) {
-                throw new PhpfastcacheDriverException(
-                    'Failed to enable TTL with the following error: ' . $e->getMessage()
-                );
+            if (400 !== $e->getStatusCode()) {
+                throw new PhpfastcacheDriverException('Failed to enable TTL with the following error: ' . $e->getMessage());
             }
         }
     }
@@ -261,7 +245,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $endpoint = $this->instance->getEndpoint();
         $table = $this->instance->describeTable(['TableName' => $this->getConfig()->getTable()])->get('Table');
 
-        $info = \sprintf(
+        $info = sprintf(
             'Dynamo server "%s" | Table "%s" with %d item(s) stored',
             $endpoint->getHost(),
             $table['TableName'] ?? 'Unknown table name',

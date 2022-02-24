@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -49,21 +49,20 @@ if (!$Psr16Adapter->has('test-key')) {
 
 $testHelper->printNewLine()->printText('Setting up value to "test-key, test-key2, test-key3"...')->printNewLine();
 $Psr16Adapter->setMultiple([
-  'test-key' => $value,
-  'test-key2' => $value,
-  'test-key3' => $value
+    'test-key' => $value,
+    'test-key2' => $value,
+    'test-key3' => $value,
 ]);
 
-
 $values = $Psr16Adapter->getMultiple(['test-key', 'test-key2', 'test-key3']);
-if (count(array_filter($values)) === 3) {
+if (3 === count(array_filter($values))) {
     $testHelper->assertPass('4/9 Psr16 multiple getters returned expected values (3)');
 } else {
     $testHelper->assertFail('4/9 Psr16 getters(3) returned unexpected values.');
 }
 
 $values = $Psr16Adapter->getMultiple(new ArrayObject(['test-key', 'test-key2', 'test-key3']));
-if (count(array_filter($values)) === 3) {
+if (3 === count(array_filter($values))) {
     $testHelper->assertPass('5/9 Psr16 multiple getters with Traversable returned expected values (3)');
 } else {
     $testHelper->assertFail('5/9 Psr16 getters(3) with Traversable returned unexpected values.');
@@ -74,9 +73,9 @@ $Psr16Adapter->clear();
 
 $testHelper->printText('Setting up value to "test-key, test-key2, test-key3"...')->printNewLine();
 $Psr16Adapter->setMultiple([
-  'test-key' => $value,
-  'test-key2' => $value,
-  'test-key3' => $value
+    'test-key' => $value,
+    'test-key2' => $value,
+    'test-key3' => $value,
 ]);
 
 if ($Psr16Adapter->has('test-key') && $Psr16Adapter->has('test-key2') && $Psr16Adapter->has('test-key3')) {
@@ -90,9 +89,9 @@ $Psr16Adapter->clear();
 
 $testHelper->printText('Setting multiple values using a Traversable to "test-key, test-key2, test-key3"...')->printNewLine();
 $Psr16Adapter->setMultiple(new ArrayObject([
-  'test-key' => $value,
-  'test-key2' => $value,
-  'test-key3' => $value
+    'test-key' => $value,
+    'test-key2' => $value,
+    'test-key3' => $value,
 ]));
 
 if ($Psr16Adapter->has('test-key') && $Psr16Adapter->has('test-key2') && $Psr16Adapter->has('test-key3')) {
@@ -114,9 +113,9 @@ $testHelper->printNewLine()->printText('Clearing whole cache ...')->printNewLine
 $Psr16Adapter->clear();
 $testHelper->printText('Setting up value to "test-key, test-key2, test-key3"...')->printNewLine();
 $Psr16Adapter->setMultiple([
-  'test-key' => $value,
-  'test-key2' => $value,
-  'test-key3' => $value
+    'test-key' => $value,
+    'test-key2' => $value,
+    'test-key3' => $value,
 ]);
 
 $testHelper->printText('Deleting up keys "test-key, test-key2, test-key3"... from a Traversable')->printNewLine();

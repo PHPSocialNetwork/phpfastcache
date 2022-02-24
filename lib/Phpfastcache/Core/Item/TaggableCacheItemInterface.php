@@ -1,13 +1,11 @@
 <?php
 
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -39,9 +37,6 @@ interface TaggableCacheItemInterface
     public const TAG_STRATEGY_ONLY = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONLY;
 
     /**
-     * @param string $tagName
-     *
-     * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
     public function addTag(string $tagName): ExtendedCacheItemInterface;
@@ -49,22 +44,15 @@ interface TaggableCacheItemInterface
     /**
      * @param string[] $tagNames
      *
-     * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
     public function addTags(array $tagNames): ExtendedCacheItemInterface;
 
-    /**
-     * @param string $tagName
-     *
-     * @return bool
-     */
     public function hasTag(string $tagName): bool;
 
     /**
      * @param string[] $tagNames
-     * @param int $strategy
-     * @return bool
+     *
      * @throws PhpfastcacheInvalidArgumentException
      */
     public function hasTags(array $tagNames, int $strategy = self::TAG_STRATEGY_ONE): bool;
@@ -72,7 +60,6 @@ interface TaggableCacheItemInterface
     /**
      * @param string[] $tags
      *
-     * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
     public function setTags(array $tags): ExtendedCacheItemInterface;
@@ -82,25 +69,15 @@ interface TaggableCacheItemInterface
      */
     public function getTags(): array;
 
-    /**
-     * @param string $separator
-     *
-     * @return string
-     */
     public function getTagsAsString(string $separator = ', '): string;
 
     /**
-     * @param string $tagName
-     *
-     * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidArgumentException
      */
     public function removeTag(string $tagName): ExtendedCacheItemInterface;
 
     /**
      * @param string[] $tagNames
-     *
-     * @return ExtendedCacheItemInterface
      */
     public function removeTags(array $tagNames): ExtendedCacheItemInterface;
 

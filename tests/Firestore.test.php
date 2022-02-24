@@ -1,19 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Drivers\Firestore\Config as FirestoreConfig;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Tests\Helper\TestHelper;
@@ -28,8 +27,6 @@ $testHelper = new TestHelper('Google Firestore driver');
  * @see https://github.com/googleapis/google-auth-library-php/pull/364
  * @see https://github.com/googleapis/google-auth-library-php/issues/363
  */
-
-
 
 $config = new FirestoreConfig();
 

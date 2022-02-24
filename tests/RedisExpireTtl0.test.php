@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -27,10 +27,10 @@ $testHelper->printText('See https://redis.io/commands/setex');
 $testHelper->printText('See https://redis.io/commands/expire');
 $testHelper->printNewLine();
 
-for ($i = 0; $i <= $loops; $i++) {
+for ($i = 0; $i <= $loops; ++$i) {
     $cacheItem = $cacheInstance->getItem("{$cacheKey}-{$i}");
     $cacheItem->set($RandomCacheValue)
-      ->expiresAt(new DateTime());
+        ->expiresAt(new DateTimeImmutable());
 
     $cacheInstance->saveDeferred($cacheItem);
 }
@@ -39,7 +39,7 @@ try {
     $cacheInstance->commit();
     $testHelper->assertPass('The COMMIT operation has finished successfully');
 } catch (Predis\Response\ServerException $e) {
-    if (strpos($e->getMessage(), 'setex')) {
+    if (mb_strpos($e->getMessage(), 'setex')) {
         $testHelper->assertFail('The COMMIT operation has failed due to to an invalid time detection.');
     } else {
         $testHelper->assertFail('The COMMIT operation has failed due to to an unexpected error: ' . $e->getMessage());
@@ -49,11 +49,10 @@ $cacheInstance->detachAllItems();
 
 $testHelper->printText('Sleeping a second...');
 
-
 sleep(1);
 
-for ($i = 0; $i <= $loops; $i++) {
-    $cacheItem =  $cacheInstance->getItem("{$cacheKey}-{$i}");
+for ($i = 0; $i <= $loops; ++$i) {
+    $cacheItem = $cacheInstance->getItem("{$cacheKey}-{$i}");
 
     if ($cacheItem->isHit()) {
         $testHelper->assertFail(sprintf('The cache item "%s" is considered as HIT with the following value: %s', $cacheItem->getKey(), $cacheItem->get()));

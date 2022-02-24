@@ -1,15 +1,12 @@
 <?php
 
 /**
- *
  * This file is part of phpFastCache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt file.
- *
  * @author  Georges.L (Geolim4)  <contact@geolim4.com>
- *
  */
 declare(strict_types=1);
 
@@ -19,7 +16,6 @@ use Phpfastcache\Config\ConfigurationOption;
 
 interface AggregatorInterface
 {
-
     /**
      * Full replication mechanism
      *
@@ -67,34 +63,14 @@ interface AggregatorInterface
 
     /**
      * AggregatorInterface constructor.
-     *
-     * @param string $clusterAggregatorName
-     * @param AggregatablePoolInterface ...$driverPools
      */
     public function __construct(string $clusterAggregatorName, AggregatablePoolInterface ...$driverPools);
 
-    /**
-     * @param int $strategy
-     *
-     * @return ClusterPoolInterface
-     */
     public function getCluster(int $strategy): ClusterPoolInterface;
 
-    /**
-     * @param string $driverName
-     * @param ConfigurationOption|NULL $driverConfig
-     *
-     * @return void
-     */
-    public function aggregateDriverByName(string $driverName, ConfigurationOption $driverConfig = null): void;
+    public function aggregateDriverByName(string $driverName, ?ConfigurationOption $driverConfig = null): void;
 
-    /**
-     * @param AggregatablePoolInterface $driverPool
-     */
     public function aggregateDriver(AggregatablePoolInterface $driverPool): void;
 
-    /**
-     * @param AggregatablePoolInterface $driverPool
-     */
     public function disaggregateDriver(AggregatablePoolInterface $driverPool): void;
 }

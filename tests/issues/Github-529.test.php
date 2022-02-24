@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -22,24 +22,24 @@ $testHelper = new TestHelper('Github issue #529 - Memory leak caused by item tag
 $cacheInstance = CacheManager::getInstance('Files');
 $string = uniqid('pfc', true);
 
-/**
+/*
  * Populate the cache with some data
  */
 [$item, $item2] = array_values($cacheInstance->getItems(['item1', 'item2']));
 
 $item->set($string)
-  ->addTags(['tag-all', 'tag1'])
-  ->expiresAfter(3600);
+    ->addTags(['tag-all', 'tag1'])
+    ->expiresAfter(3600);
 
 $item2->set($string)
-  ->addTags(['tag-all', 'tag2'])
-  ->expiresAfter(3600);
+    ->addTags(['tag-all', 'tag2'])
+    ->expiresAfter(3600);
 
 $cacheInstance->saveMultiple(...[$item, $item2]);
 $cacheInstance->detachAllItems();
 unset($item, $item2);
 
-/**
+/*
  * Destroy the populated items
  */
 $cacheInstance->deleteItemsByTag('tag-all');
@@ -54,7 +54,7 @@ if (isset($itemInstances[$cacheInstance::DRIVER_TAGS_KEY_PREFIX . 'tag-all'])) {
     $testHelper->assertPass('The internal cache item tag is no longer stored in memory');
 }
 
-/**
+/*
  * Then test disk to see if the item is still there
  */
 if ($cacheInstance->getItem($cacheInstance::DRIVER_TAGS_KEY_PREFIX . 'tag-all')->isHit()) {

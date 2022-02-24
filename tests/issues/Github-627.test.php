@@ -1,21 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Tests\Helper\TestHelper;
-use Phpfastcache\Drivers\Redis\Config as RedisConfig;
 use Phpfastcache\Drivers\Predis\Config as PredisConfig;
+use Phpfastcache\Drivers\Redis\Config as RedisConfig;
+use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -26,7 +26,7 @@ $predisInstance = CacheManager::getInstance('Predis', new PredisConfig(['optPref
 
 $testHelper->printInfoText('Testing Redis 1/2');
 
-/**
+/*
  * Clear the cache to avoid
  * unexpected results
  */
@@ -53,7 +53,7 @@ if ($redisInstance->getItem($cacheKey)->isHit()) {
 
 $testHelper->printInfoText('Testing Predis 2/2');
 
-/**
+/*
  * Clear the cache to avoid
  * unexpected results
  */
@@ -77,6 +77,5 @@ if ($predisInstance->getItem($cacheKey)->isHit()) {
 } else {
     $testHelper->assertFail('The cache item was not found in cache');
 }
-
 
 $testHelper->terminateTest();

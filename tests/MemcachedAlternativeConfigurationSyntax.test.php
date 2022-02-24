@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -29,8 +29,8 @@ $cacheInstanceOldSyntax = CacheManager::getInstance('Memcached', new MemcachedCo
             'port' => 11211,
             'saslUser' => null,
             'saslPassword' => null,
-        ]
-    ]
+        ],
+    ],
 ]));
 
 $cacheInstanceNewSyntax = CacheManager::getInstance('Memcached', new MemcachedConfig([
@@ -47,7 +47,6 @@ $cacheInstanceDefSyntax->save($cacheItem);
 unset($cacheItem);
 $cacheInstanceDefSyntax->detachAllItems();
 
-
 $cacheItem = $cacheInstanceOldSyntax->getItem($cacheKey);
 $cacheItem->set($RandomCacheValue)->expiresAfter(600);
 $cacheInstanceOldSyntax->save($cacheItem);
@@ -59,7 +58,6 @@ $cacheItem->set($RandomCacheValue)->expiresAfter(600);
 $cacheInstanceNewSyntax->save($cacheItem);
 unset($cacheItem);
 $cacheInstanceNewSyntax->detachAllItems();
-
 
 if ($cacheInstanceDefSyntax->getItem($cacheKey)->isHit()) {
     $testHelper->assertPass('The default Memcached syntax is working well');

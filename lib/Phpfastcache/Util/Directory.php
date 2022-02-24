@@ -1,13 +1,11 @@
 <?php
 
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -24,9 +22,6 @@ class Directory
 {
     /**
      * Get the directory size
-     * @param string $directory
-     * @param bool $includeDirAllocSize
-     * @return int
      */
     public static function dirSize(string $directory, bool $includeDirAllocSize = false): int
     {
@@ -45,10 +40,6 @@ class Directory
         return $size;
     }
 
-    /**
-     * @param string $path
-     * @return int
-     */
     public static function getFileCount(string $path): int
     {
         $count = 0;
@@ -58,7 +49,7 @@ class Directory
              * @var SplFileInfo $object
              */
             if ($object->isFile()) {
-                $count++;
+                ++$count;
             }
         }
 
@@ -69,19 +60,20 @@ class Directory
      * Recursively delete a directory and all of it's contents - e.g.the equivalent of `rm -r` on the command-line.
      * Consistent with `rmdir()` and `unlink()`, an E_WARNING level error will be generated on failure.
      *
-     * @param string $source absolute path to directory or file to delete.
-     * @param bool $removeOnlyChildren set to true will only remove content inside directory.
+     * @param string $source absolute path to directory or file to delete
+     * @param bool $removeOnlyChildren set to true will only remove content inside directory
      *
      * @return bool true on success; false on failure
      */
     public static function rrmdir(string $source, bool $removeOnlyChildren = false): bool
     {
-        if (empty($source) || file_exists($source) === false) {
+        if (empty($source) || false === file_exists($source)) {
             return false;
         }
 
         if (is_file($source) || is_link($source)) {
             clearstatcache(true, $source);
+
             return unlink($source);
         }
 
@@ -97,10 +89,10 @@ class Directory
             $realpath = $fileInfo->getRealPath();
             if ($realpath) {
                 if ($fileInfo->isDir()) {
-                    if (self::rrmdir($fileInfo->getRealPath()) === false) {
+                    if (false === self::rrmdir($fileInfo->getRealPath())) {
                         return false;
                     }
-                } elseif (unlink($realpath) === false) {
+                } elseif (false === unlink($realpath)) {
                     return false;
                 }
             } else {
@@ -108,7 +100,7 @@ class Directory
             }
         }
 
-        if ($removeOnlyChildren === false) {
+        if (false === $removeOnlyChildren) {
             return rmdir($source);
         }
 
@@ -118,13 +110,10 @@ class Directory
     /**
      * Alias of realpath() but work
      * on non-existing files
-     *
-     * @param string $path
-     * @return string
      */
     public static function getAbsolutePath(string $path): string
     {
-        $parts = preg_split('~[/\\\\]+~', $path, 0, PREG_SPLIT_NO_EMPTY);
+        $parts = preg_split('~[/\\\\]+~', $path, 0, \PREG_SPLIT_NO_EMPTY);
         $absolutes = [];
         foreach ($parts as $part) {
             if ('.' === $part) {
@@ -140,8 +129,9 @@ class Directory
         /**
          * Allows to dereference char
          */
-        $file = preg_replace('~^(([a-z0-9\-]+)://)~', '', __FILE__);// remove file protocols such as "phar://" etc.
-        $prefix = $file[0] === DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
-        return $prefix . implode(DIRECTORY_SEPARATOR, $absolutes);
+        $file = preg_replace('~^(([a-z0-9\-]+)://)~', '', __FILE__); // remove file protocols such as "phar://" etc.
+        $prefix = \DIRECTORY_SEPARATOR === $file[0] ? \DIRECTORY_SEPARATOR : '';
+
+        return $prefix . implode(\DIRECTORY_SEPARATOR, $absolutes);
     }
 }

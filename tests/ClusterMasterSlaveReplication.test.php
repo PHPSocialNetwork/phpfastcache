@@ -1,13 +1,11 @@
 ClusterFullReplication.test.php<?php
 
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -44,8 +42,8 @@ $cluster = $clusterAggregator->getCluster(AggregatorInterface::STRATEGY_MASTER_S
 
 $testPasses = false;
 $cluster->getEventManager()->onCacheReplicationSlaveFallback(
-    static function (ExtendedCacheItemPoolInterface $pool, string $actionName) use (&$testPasses) {
-        if ($actionName === 'getItem') {
+    static function (ExtendedCacheItemPoolInterface $pool, string $actionName) use (&$testPasses): void {
+        if ('getItem' === $actionName) {
             $testPasses = true;
         }
     }
@@ -65,8 +63,8 @@ $clusterAggregator->aggregateDriver(CacheManager::getInstance('Redis'));
 $clusterAggregator->aggregateDriver(CacheManager::getInstance('Files'));
 $cluster = $clusterAggregator->getCluster(AggregatorInterface::STRATEGY_MASTER_SLAVE);
 $cluster->clear();
-$cacheKey = 'cache_' . \bin2hex(\random_bytes(12));
-$cacheValue = 'cache_' . \random_int(1000, 999999);
+$cacheKey = 'cache_' . bin2hex(random_bytes(12));
+$cacheValue = 'cache_' . random_int(1000, 999999);
 $cacheItem = $cluster->getItem($cacheKey);
 
 $cacheItem->set($cacheValue);

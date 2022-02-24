@@ -1,13 +1,11 @@
 <?php
 
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -15,55 +13,40 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Memstatic;
 
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
-use Psr\Cache\CacheItemInterface;
 
 /**
  * Class Driver
+ *
  * @property Config $config
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
     use TaggableCacheItemPoolTrait;
 
-    /**
-     * @var array
-     */
     protected array $staticStack = [];
 
-    /**
-     * @return bool
-     */
     public function driverCheck(): bool
     {
         return true;
     }
 
-    /**
-     * @return bool
-     */
     protected function driverConnect(): bool
     {
         return true;
     }
 
-    /**
-     * @param ExtendedCacheItemInterface $item
-     * @return null|array
-     */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         return $this->staticStack[$item->getKey()] ?? null;
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
-     * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
      */
@@ -72,12 +55,11 @@ class Driver implements ExtendedCacheItemPoolInterface
         $this->assertCacheItemType($item, Item::class);
 
         $this->staticStack[$item->getKey()] = $this->driverPreWrap($item);
+
         return true;
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
-     * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(ExtendedCacheItemInterface $item): bool
@@ -87,24 +69,21 @@ class Driver implements ExtendedCacheItemPoolInterface
         $key = $item->getKey();
         if (isset($this->staticStack[$key])) {
             unset($this->staticStack[$key]);
+
             return true;
         }
+
         return false;
     }
 
-    /**
-     * @return bool
-     */
     protected function driverClear(): bool
     {
-        unset($this->staticStack);
+        $this->staticStack = null;
         $this->staticStack = [];
+
         return true;
     }
 
-    /**
-     * @return DriverStatistic
-     */
     public function getStats(): DriverStatistic
     {
         $stat = new DriverStatistic();

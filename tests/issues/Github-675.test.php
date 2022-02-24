@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -30,7 +30,7 @@ try {
             'invalidPortKey' => 8080,
             'saslUser' => false,
             'saslPassword' => false,
-        ]
+        ],
     ]);
     $testHelper->assertFail('1/4 Memcached config accepted unknown key(s) from $servers array.');
 } catch (PhpfastcacheInvalidConfigurationException $e) {
@@ -47,7 +47,7 @@ try {
             'port' => 8080,
             'saslUser' => false,
             'saslPassword' => false,
-        ]
+        ],
     ]);
     $testHelper->assertFail('2/4 Memcached config accepted unwanted key(s) from $servers array.');
 } catch (PhpfastcacheInvalidConfigurationException $e) {
@@ -62,7 +62,7 @@ try {
             'port' => '8080',
             'saslUser' => false,
             'saslPassword' => false,
-        ]
+        ],
     ]);
     $testHelper->assertFail('3/4 Memcached config does not detected invalid types fort host and port');
 } catch (PhpfastcacheInvalidConfigurationException $e) {

@@ -1,12 +1,10 @@
 <?php
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -24,7 +22,7 @@ class Config extends ConfigurationOption
 
     protected string $host = '127.0.0.1';
 
-    protected int $port = 8091;// SSL: 18091
+    protected int $port = 8091; // SSL: 18091
 
     protected string $username = '';
 
@@ -42,14 +40,13 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @param string $host
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setHost(string $host): Config
+    public function setHost(string $host): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->host = $host;
+
         return $this;
     }
 
@@ -62,113 +59,93 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @param int $port
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setPort(int $port): Config
+    public function setPort(int $port): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->port = $port;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getUsername(): string
     {
         return $this->username;
     }
 
     /**
-     * @param string $username
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setUsername(string $username): Config
+    public function setUsername(string $username): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->username = $username;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPassword(): string
     {
         return $this->password;
     }
 
     /**
-     * @param string $password
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setPassword(string $password): Config
+    public function setPassword(string $password): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->password = $password;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getBucketName(): string
     {
         return $this->bucketName;
     }
 
     /**
-     * @param string $bucketName
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setBucketName(string $bucketName): Config
+    public function setBucketName(string $bucketName): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->bucketName = $bucketName;
+
         return $this;
     }
-    /**
-     * @return string
-     */
+
     public function getScopeName(): string
     {
         return $this->scopeName;
     }
 
     /**
-     * @param string $scopeName
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setScopeName(string $scopeName): Config
+    public function setScopeName(string $scopeName): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->scopeName = $scopeName;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getCollectionName(): string
     {
         return $this->collectionName;
     }
 
     /**
-     * @param string $collectionName
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setCollectionName(string $collectionName): Config
+    public function setCollectionName(string $collectionName): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->collectionName = $collectionName;
+
         return $this;
     }
 }

@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -38,7 +38,7 @@ if (!is_object($driverInstance)) {
     $driverInstance->detachItem($itemDetached);
     $itemAttached = $driverInstance->getItem($key);
 
-    if ($driverInstance->isAttached($itemDetached) !== true) {
+    if (true !== $driverInstance->isAttached($itemDetached)) {
         $testHelper->assertPass('ExtendedCacheItemPoolInterface::isAttached() identified $itemDetached as being detached.');
     } else {
         $testHelper->assertFail('ExtendedCacheItemPoolInterface::isAttached() failed to identify $itemDetached as to be detached.');

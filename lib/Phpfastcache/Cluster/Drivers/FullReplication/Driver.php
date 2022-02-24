@@ -1,22 +1,18 @@
 <?php
 
 /**
- *
  * This file is part of phpFastCache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt file.
- *
  * @author  Georges.L (Geolim4)  <contact@geolim4.com>
- *
  */
 declare(strict_types=1);
 
 namespace Phpfastcache\Cluster\Drivers\FullReplication;
 
 use Phpfastcache\Cluster\ClusterPoolAbstract;
-use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Psr\Cache\CacheItemInterface;
@@ -24,7 +20,7 @@ use Psr\Cache\CacheItemInterface;
 class Driver extends ClusterPoolAbstract
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getItem(string $key): ExtendedCacheItemInterface
     {
@@ -76,7 +72,7 @@ class Driver extends ClusterPoolAbstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function hasItem(string $key): bool
     {
@@ -91,7 +87,7 @@ class Driver extends ClusterPoolAbstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function clear(): bool
     {
@@ -106,7 +102,7 @@ class Driver extends ClusterPoolAbstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function deleteItem(string $key): bool
     {
@@ -121,7 +117,7 @@ class Driver extends ClusterPoolAbstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function save(CacheItemInterface $item): bool
     {
@@ -138,7 +134,7 @@ class Driver extends ClusterPoolAbstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function saveDeferred(CacheItemInterface $item): bool
     {
@@ -155,7 +151,7 @@ class Driver extends ClusterPoolAbstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function commit(): bool
     {

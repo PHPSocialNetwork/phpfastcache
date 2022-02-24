@@ -1,22 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
+use Phpfastcache\CacheContract as CacheConditional;
 use Phpfastcache\CacheManager;
 use Phpfastcache\DriverTest\Files2\Config;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
-use Phpfastcache\CacheContract as CacheConditional;
 use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
@@ -68,18 +68,19 @@ $RandomCacheValue = str_shuffle(uniqid('pfc', true));
 $cacheItem->set($RandomCacheValue);
 $cacheInstance->save($cacheItem);
 
-/**
+/*
  * Remove objects references
  */
 $cacheInstance->detachAllItems();
 unset($cacheItem);
 
-$cacheValue = (new CacheConditional($cacheInstance))->get($cacheKey, function () use ($cacheKey, $testHelper, $RandomCacheValue) {
-    /**
+$cacheValue = (new CacheConditional($cacheInstance))->get($cacheKey, static function () use ($testHelper, $RandomCacheValue) {
+    /*
      * No parameter are passed
      * to this closure
      */
     $testHelper->assertFail('Unexpected closure call.');
+
     return $RandomCacheValue . '-1337';
 });
 

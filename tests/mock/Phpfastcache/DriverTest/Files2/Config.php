@@ -1,12 +1,12 @@
 <?php
+
+declare(strict_types=1);
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -17,7 +17,6 @@ use Phpfastcache\Drivers\Files\Config as FilesConfig;
 
 /**
  * Class Config
- * @package Phpfastcache\DriverTest\Files2
  */
 class Config extends FilesConfig
 {
@@ -26,21 +25,15 @@ class Config extends FilesConfig
      */
     protected $customOption = true;
 
-    /**
-     * @return bool
-     */
     public function isCustomOption(): bool
     {
         return $this->customOption;
     }
 
-    /**
-     * @param bool $customOption
-     * @return Config
-     */
-    public function setCustomOption(bool $customOption): Config
+    public function setCustomOption(bool $customOption): self
     {
         $this->customOption = $customOption;
+
         return $this;
     }
 }

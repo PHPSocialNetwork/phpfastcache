@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -20,7 +20,7 @@ chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('API class');
 
-/**
+/*
  * Testing API version
  */
 try {
@@ -30,7 +30,7 @@ try {
     $testHelper->assertFail(sprintf('Failed to retrieve the API version with the following error error: %s', $e->getMessage()));
 }
 
-/**
+/*
  * Testing PhpFastCache version
  */
 try {
@@ -40,7 +40,7 @@ try {
     $testHelper->assertFail(sprintf('Failed to retrieve the PhpFastCache version with the following error error: %s', $e->getMessage()));
 }
 
-/**
+/*
  * Testing API changelog
  */
 try {
@@ -50,7 +50,7 @@ try {
     $testHelper->assertFail(sprintf('Failed to retrieve the API changelog with the following error error: %s', $e->getMessage()));
 }
 
-/**
+/*
  * Testing PhpFastCache changelog
  */
 try {

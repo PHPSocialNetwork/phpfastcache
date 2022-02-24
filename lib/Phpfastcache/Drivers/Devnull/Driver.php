@@ -1,13 +1,11 @@
 <?php
 
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -23,23 +21,18 @@ use Psr\Cache\CacheItemInterface;
 
 /**
  * Class Driver
+ *
  * @property Config $config Return the config object
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
     use TaggableCacheItemPoolTrait;
 
-    /**
-     * @return bool
-     */
     public function driverCheck(): bool
     {
         return true;
     }
 
-    /**
-     * @return DriverStatistic
-     */
     public function getStats(): DriverStatistic
     {
         $stat = new DriverStatistic();
@@ -52,9 +45,9 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param CacheItemInterface $item
-     * @return mixed
      * @throws PhpfastcacheInvalidArgumentException
+     *
+     * @return mixed
      */
     protected function driverWrite(CacheItemInterface $item): bool
     {
@@ -63,18 +56,12 @@ class Driver implements ExtendedCacheItemPoolInterface
         return true;
     }
 
-    /**
-     * @param CacheItemInterface $item
-     * @return null
-     */
     protected function driverRead(CacheItemInterface $item): ?array
     {
         return null;
     }
 
     /**
-     * @param CacheItemInterface $item
-     * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(CacheItemInterface $item): bool
@@ -84,17 +71,11 @@ class Driver implements ExtendedCacheItemPoolInterface
         return true;
     }
 
-    /**
-     * @return bool
-     */
     protected function driverClear(): bool
     {
         return true;
     }
 
-    /**
-     * @return bool
-     */
     protected function driverConnect(): bool
     {
         return true;

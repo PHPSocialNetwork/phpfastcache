@@ -1,13 +1,11 @@
 <?php
 
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -15,14 +13,14 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Memcache;
 
-use DateTime;
+use DateTimeImmutable;
 use Exception;
 use Memcache as MemcacheSoftware;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheCoreException;
@@ -38,20 +36,18 @@ use Phpfastcache\Util\MemcacheDriverCollisionDetectorTrait;
  * @property MemcacheSoftware $instance
  * @property Config $config Return the config object
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface, ExtendedCacheItemPoolInterface
 {
+    use MemcacheDriverCollisionDetectorTrait;
     use TaggableCacheItemPoolTrait {
         __construct as protected __parentConstruct;
     }
-    use MemcacheDriverCollisionDetectorTrait;
 
     protected int $memcacheFlags = 0;
 
     /**
      * Driver constructor.
-     * @param ConfigurationOption $config
-     * @param string $instanceId
-     * @param EventManagerInterface $em
+     *
      * @throws PhpfastcacheDriverConnectException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheCoreException
@@ -64,35 +60,28 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $this->__parentConstruct($config, $instanceId, $em);
     }
 
-    /**
-     * @return bool
-     */
     public function driverCheck(): bool
     {
         return class_exists('Memcache');
     }
 
-    /**
-     * @return DriverStatistic
-     */
     public function getStats(): DriverStatistic
     {
-        $stats = (array)$this->instance->getstats();
-        $stats['uptime'] = (isset($stats['uptime']) ? $stats['uptime'] : 0);
-        $stats['version'] = (isset($stats['version']) ? $stats['version'] : 'UnknownVersion');
+        $stats = (array) $this->instance->getstats();
+        $stats['uptime'] = ($stats['uptime'] ?? 0);
+        $stats['version'] = ($stats['version'] ?? 'UnknownVersion');
         $stats['bytes'] = (isset($stats['bytes']) ? $stats['version'] : 0);
 
-        $date = (new DateTime())->setTimestamp(time() - $stats['uptime']);
+        $date = (new DateTimeImmutable())->setTimestamp(time() - $stats['uptime']);
 
         return (new DriverStatistic())
             ->setData(implode(', ', array_keys($this->itemInstances)))
-            ->setInfo(sprintf("The memcache daemon v%s is up since %s.\n For more information see RawData.", $stats['version'], $date->format(DATE_RFC2822)))
+            ->setInfo(sprintf("The memcache daemon v%s is up since %s.\n For more information see RawData.", $stats['version'], $date->format(\DATE_RFC2822)))
             ->setRawData($stats)
-            ->setSize((int)$stats['bytes']);
+            ->setSize((int) $stats['bytes']);
     }
 
     /**
-     * @return bool
      * @throws PhpfastcacheDriverException
      */
     protected function driverConnect(): bool
@@ -102,7 +91,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
         foreach ($servers as $server) {
             try {
-                /**
+                /*
                  * If path is provided we consider it as a UNIX Socket
                  */
                 if (!empty($server['path'])) {
@@ -115,16 +104,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                     throw new PhpfastcacheDriverException('Unlike Memcached, Memcache does not support SASL authentication');
                 }
             } catch (Exception $e) {
-                throw new PhpfastcacheDriverConnectException(
-                    sprintf(
-                        'Failed to connect to memcache host/path "%s" with the following error: %s',
-                        $server['host'] ?: $server['path'],
-                        $e->getMessage()
-                    )
-                );
+                throw new PhpfastcacheDriverConnectException(sprintf('Failed to connect to memcache host/path "%s" with the following error: %s', $server['host'] ?: $server['path'], $e->getMessage()));
             }
 
-            /**
+            /*
              * Since Memcached does not throw
              * any error if not connected ...
              */
@@ -139,15 +122,11 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return true;
     }
 
-    /**
-     * @param ExtendedCacheItemInterface $item
-     * @return null|array
-     */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         $val = $this->instance->get($item->getKey());
 
-        if ($val === false) {
+        if (false === $val) {
             return null;
         }
 
@@ -155,10 +134,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
-     * @return mixed
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
+     *
+     * @return mixed
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
@@ -171,12 +150,13 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         if ($ttl > 2592000) {
             $ttl = time() + $ttl;
         }
+
         return $this->instance->set($item->getKey(), $this->driverPreWrap($item), $this->memcacheFlags, $ttl);
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
      * @retur n bool
+     *
      * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(ExtendedCacheItemInterface $item): bool
@@ -186,9 +166,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return $this->instance->delete($item->getKey());
     }
 
-    /**
-     * @return bool
-     */
     protected function driverClear(): bool
     {
         return $this->instance->flush();

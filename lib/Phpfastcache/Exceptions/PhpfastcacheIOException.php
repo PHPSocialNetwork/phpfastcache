@@ -1,13 +1,11 @@
 <?php
 
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -21,9 +19,9 @@ namespace Phpfastcache\Exceptions;
 class PhpfastcacheIOException extends PhpfastcacheCoreException
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function __construct($message = "", $code = 0, $previous = null)
+    public function __construct($message = '', $code = 0, $previous = null)
     {
         $lastError = error_get_last();
         if ($lastError) {

@@ -1,13 +1,11 @@
 <?php
 
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -15,6 +13,8 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Firestore;
 
+use DateTimeImmutable;
+use Exception;
 use Google\Cloud\Core\Blob as GoogleBlob;
 use Google\Cloud\Core\Timestamp as GoogleTimestamp;
 use Google\Cloud\Firestore\FirestoreClient as GoogleFirestoreClient;
@@ -29,23 +29,20 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
  * Class Driver
+ *
  * @property Config $config
  * @property GoogleFirestoreClient $instance
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface, ExtendedCacheItemPoolInterface
 {
     use TaggableCacheItemPoolTrait;
 
-    /**
-     * @return bool
-     */
     public function driverCheck(): bool
     {
-        return \class_exists(GoogleFirestoreClient::class) && \extension_loaded('grpc');
+        return class_exists(GoogleFirestoreClient::class) && \extension_loaded('grpc');
     }
 
     /**
-     * @return bool
      * @throws PhpfastcacheDriverConnectException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
@@ -59,7 +56,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             throw new PhpfastcacheDriverConnectException('The environment configuration GOOGLE_CLOUD_PROJECT must be set');
         }
 
-        if (empty($gacPath) || !\is_readable($gacPath)) {
+        if (empty($gacPath) || !is_readable($gacPath)) {
             throw new PhpfastcacheDriverConnectException('The environment configuration GOOGLE_APPLICATION_CREDENTIALS must be set and the JSON file must be readable.');
         }
 
@@ -68,10 +65,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return true;
     }
 
-    /**
-     * @param ExtendedCacheItemInterface $item
-     * @return bool
-     */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
         $this->instance->collection($this->getConfig()->getCollection())
@@ -85,9 +78,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
-     * @return null|array
-     * @throws \Exception
+     * @throws Exception
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
@@ -103,10 +94,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return null;
     }
 
-    /**
-     * @param ExtendedCacheItemInterface $item
-     * @return bool
-     */
     protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
         $this->instance->collection($this->getConfig()->getCollection())
@@ -116,9 +103,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return true;
     }
 
-    /**
-     * @return bool
-     */
     protected function driverClear(): bool
     {
         $batchSize = 100;
@@ -136,12 +120,13 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     protected function decodeFirestoreDocument(array $snapshotData): array
     {
-        return \array_map(static function ($datum) {
+        return array_map(static function ($datum) {
             if ($datum instanceof GoogleTimestamp) {
                 $date = $datum->get();
-                if ($date instanceof \DateTimeImmutable) {
-                    return \DateTime::createFromImmutable($date);
+                if ($date instanceof DateTimeImmutable) {
+                    return DateTimeImmutable::createFromImmutable($date);
                 }
+
                 return $date;
             }
 

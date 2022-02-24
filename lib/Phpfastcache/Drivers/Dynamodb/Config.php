@@ -1,12 +1,10 @@
 <?php
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -31,7 +29,7 @@ class Config extends ConfigurationOption
 
     protected bool $allowEnvCredentialOverride = false;
 
-    protected ? string $endpoint = null; // List of endpoints here: https://docs.aws.amazon.com/general/latest/gr/ddb.html
+    protected ?string $endpoint = null; // List of endpoints here: https://docs.aws.amazon.com/general/latest/gr/ddb.html
 
     protected string $region;
 
@@ -50,75 +48,63 @@ class Config extends ConfigurationOption
         $this->awsSecretAccessKey = $this->getSuperGlobalAccessor()('SERVER', 'AWS_SECRET_ACCESS_KEY');
     }
 
-    /**
-     * @return string|null
-     */
     public function getAwsAccessKeyId(): ?string
     {
         return $this->awsAccessKeyId;
     }
 
     /**
-     * @param string|null $awsAccessKeyId
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setAwsAccessKeyId(?string $awsAccessKeyId): Config
+    public function setAwsAccessKeyId(?string $awsAccessKeyId): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
-        if ($awsAccessKeyId !== null) {
+        if (null !== $awsAccessKeyId) {
             if (!$this->isAllowEnvCredentialOverride()) {
                 throw new PhpfastcacheLogicException('You are not allowed to override AWS environment variables.');
             }
-            \putenv("AWS_ACCESS_KEY_ID=$awsAccessKeyId");
+            putenv("AWS_ACCESS_KEY_ID=$awsAccessKeyId");
             $this->awsAccessKeyId = $awsAccessKeyId;
         }
+
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getAwsSecretAccessKey(): ?string
     {
         return $this->awsSecretAccessKey;
     }
 
     /**
-     * @param string|null $awsSecretAccessKey
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setAwsSecretAccessKey(?string $awsSecretAccessKey): Config
+    public function setAwsSecretAccessKey(?string $awsSecretAccessKey): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
-        if ($awsSecretAccessKey !== null) {
+        if (null !== $awsSecretAccessKey) {
             if (!$this->isAllowEnvCredentialOverride()) {
                 throw new PhpfastcacheLogicException('You are not allowed to override AWS environment variables.');
             }
-            \putenv("AWS_SECRET_ACCESS_KEY=$awsSecretAccessKey");
+            putenv("AWS_SECRET_ACCESS_KEY=$awsSecretAccessKey");
             $this->awsSecretAccessKey = $awsSecretAccessKey;
         }
+
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isAllowEnvCredentialOverride(): bool
     {
         return $this->allowEnvCredentialOverride;
     }
 
     /**
-     * @param bool $allowEnvCredentialOverride
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setAllowEnvCredentialOverride(bool $allowEnvCredentialOverride): Config
+    public function setAllowEnvCredentialOverride(bool $allowEnvCredentialOverride): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->allowEnvCredentialOverride = $allowEnvCredentialOverride;
+
         return $this;
     }
 
@@ -132,116 +118,97 @@ class Config extends ConfigurationOption
 
     /**
      * @param ?string $endpoint
-     * @return Config
+     *
      * @throws PhpfastcacheLogicException
      */
-    public function setEndpoint(?string $endpoint): Config
+    public function setEndpoint(?string $endpoint): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
-        if (!\str_starts_with($endpoint, 'https://') && \str_ends_with($endpoint, 'amazonaws.com')) {
+        if (!str_starts_with($endpoint, 'https://') && str_ends_with($endpoint, 'amazonaws.com')) {
             $endpoint = 'https://' . $endpoint;
         }
         $this->endpoint = $endpoint;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getRegion(): string
     {
         return $this->region;
     }
 
     /**
-     * @param string $region
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setRegion(string $region): Config
+    public function setRegion(string $region): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->region = $region;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTable(): string
     {
         return $this->table;
     }
 
     /**
-     * @param string $table
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setTable(string $table): Config
+    public function setTable(string $table): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->table = $table;
+
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isDebugEnabled(): bool
     {
         return $this->debugEnabled;
     }
 
     /**
-     * @param bool $debugEnabled
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setDebugEnabled(bool $debugEnabled): Config
+    public function setDebugEnabled(bool $debugEnabled): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->debugEnabled = $debugEnabled;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getVersion(): string
     {
         return $this->version;
     }
 
     /**
-     * @param string $version
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setVersion(string $version): Config
+    public function setVersion(string $version): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->version = $version;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPartitionKey(): string
     {
         return $this->partitionKey;
     }
 
     /**
-     * @param string $partitionKey
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setPartitionKey(string $partitionKey): Config
+    public function setPartitionKey(string $partitionKey): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->partitionKey = $partitionKey;
+
         return $this;
     }
 }

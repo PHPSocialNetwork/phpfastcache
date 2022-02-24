@@ -1,12 +1,10 @@
 <?php
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -28,83 +26,67 @@ class Config extends ConfigurationOption
 
     protected int $timeout = 2000;
 
-    /**
-     * @return string
-     */
     public function getHost(): string
     {
         return $this->host;
     }
 
     /**
-     * @param string $host
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setHost(string $host): Config
+    public function setHost(string $host): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->host = $host;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getPort(): int
     {
         return $this->port;
     }
 
     /**
-     * @param int $port
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setPort(int $port): Config
+    public function setPort(int $port): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->port = $port;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPassword(): string
     {
         return $this->password;
     }
 
     /**
-     * @param string $password
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setPassword(string $password): Config
+    public function setPassword(string $password): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->password = $password;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getTimeout(): int
     {
         return $this->timeout;
     }
 
     /**
-     * @param int $timeout
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setTimeout(int $timeout): Config
+    public function setTimeout(int $timeout): self
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->timeout = $timeout;
+
         return $this;
     }
 }

@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -22,7 +22,7 @@ $testHelper = new TestHelper('Driver list resolver');
 
 $cache = CacheManager::getInstance('Redis');
 
-for ($i=0; $i<10; $i++) {
+for ($i = 0; $i < 10; ++$i) {
     $testHelper->printNoteText(sprintf('Running CRUD tests, loop %d/10', $i));
     $testHelper->runCRUDTests($cache);
 }

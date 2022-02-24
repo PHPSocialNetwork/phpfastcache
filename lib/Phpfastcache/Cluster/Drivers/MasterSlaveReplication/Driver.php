@@ -1,15 +1,12 @@
 <?php
 
 /**
- *
  * This file is part of phpFastCache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt file.
- *
  * @author  Georges.L (Geolim4)  <contact@geolim4.com>
- *
  */
 declare(strict_types=1);
 
@@ -26,19 +23,15 @@ use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheExceptionInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
-use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Exceptions\PhpfastcacheReplicationException;
 use Psr\Cache\CacheItemInterface;
-use ReflectionException;
 
 class Driver extends ClusterPoolAbstract
 {
     /**
      * MasterSlaveReplicationCluster constructor.
-     * @param string $clusterName
-     * @param EventManager $em
-     * @param ExtendedCacheItemPoolInterface ...$driverPools
+     *
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverConnectException
      * @throws PhpfastcacheInvalidArgumentException
@@ -48,7 +41,7 @@ class Driver extends ClusterPoolAbstract
      */
     public function __construct(string $clusterName, EventManager $em, ExtendedCacheItemPoolInterface ...$driverPools)
     {
-        if (\count($driverPools) !== 2) {
+        if (2 !== \count($driverPools)) {
             throw new PhpfastcacheInvalidArgumentException('A "master/slave" cluster requires exactly two pools to be working.');
         }
 
@@ -56,7 +49,7 @@ class Driver extends ClusterPoolAbstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getItem(string $key): ExtendedCacheItemInterface
     {
@@ -67,9 +60,9 @@ class Driver extends ClusterPoolAbstract
     }
 
     /**
-     * @param callable $operation
-     * @return mixed
      * @throws PhpfastcacheReplicationException
+     *
+     * @return mixed
      */
     protected function makeOperation(callable $operation)
     {
@@ -80,8 +73,9 @@ class Driver extends ClusterPoolAbstract
                 $this->eventManager->dispatch(
                     Event::CACHE_REPLICATION_SLAVE_FALLBACK,
                     $this,
-                    \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']
+                    debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']
                 );
+
                 return $operation($this->getSlavePool());
             } catch (PhpfastcacheExceptionInterface $e) {
                 throw new PhpfastcacheReplicationException('Master and Slave thrown an exception !');
@@ -89,24 +83,18 @@ class Driver extends ClusterPoolAbstract
         }
     }
 
-    /**
-     * @return ExtendedCacheItemPoolInterface
-     */
     protected function getMasterPool(): ExtendedCacheItemPoolInterface
     {
         return $this->clusterPools[0];
     }
 
-    /**
-     * @return ExtendedCacheItemPoolInterface
-     */
     protected function getSlavePool(): ExtendedCacheItemPoolInterface
     {
         return $this->clusterPools[1];
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function hasItem(string $key): bool
     {
@@ -116,7 +104,7 @@ class Driver extends ClusterPoolAbstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function clear(): bool
     {
@@ -126,7 +114,7 @@ class Driver extends ClusterPoolAbstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function deleteItem(string $key): bool
     {
@@ -136,22 +124,22 @@ class Driver extends ClusterPoolAbstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function save(CacheItemInterface $item): bool
     {
         return $this->makeOperation(
             function (ExtendedCacheItemPoolInterface $pool) use ($item) {
-                /** @var ExtendedCacheItemInterface $item */
+                /* @var ExtendedCacheItemInterface $item */
                 $item->setHit(true);
+
                 return $pool->save($this->getStandardizedItem($item, $pool));
             }
         );
     }
 
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function commit(): bool
     {

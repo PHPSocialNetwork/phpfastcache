@@ -1,13 +1,11 @@
 <?php
 
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -31,15 +29,11 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  */
 abstract class PhpfastcacheAbstractProxy implements PhpfastcacheAbstractProxyInterface
 {
-    /**
-     * @var ExtendedCacheItemPoolInterface
-     */
     protected ExtendedCacheItemPoolInterface $instance;
 
     /**
      * PhpfastcacheAbstractProxy constructor.
-     * @param string $driver
-     * @param null|ConfigurationOptionInterface $config
+     *
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheDriverNotFoundException
@@ -50,11 +44,6 @@ abstract class PhpfastcacheAbstractProxy implements PhpfastcacheAbstractProxyInt
         $this->instance = CacheManager::getInstance($driver, $config);
     }
 
-    /**
-     * @param string $name
-     * @param array $args
-     * @return mixed
-     */
     public function __call(string $name, array $args): mixed
     {
         return $this->instance->$name(...$args);

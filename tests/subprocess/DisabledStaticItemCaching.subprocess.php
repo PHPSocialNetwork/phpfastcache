@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  */
@@ -12,7 +14,7 @@ chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 $driverInstance = CacheManager::getInstance('Files', new ConfigurationOption([
-  'useStaticItemCaching' => false,
+    'useStaticItemCaching' => false,
 ]));
 
 /**

@@ -1,15 +1,12 @@
 <?php
 
 /**
- *
  * This file is part of phpFastCache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt file.
- *
  * @author  Georges.L (Geolim4)  <contact@geolim4.com>
- *
  */
 declare(strict_types=1);
 
@@ -26,15 +23,14 @@ class Driver extends MasterSlaveReplicationDriver
 {
     /**
      * RandomReplicationCluster constructor.
-     * @param string $clusterName
-     * @param ExtendedCacheItemPoolInterface ...$driverPools
+     *
      * @throws ReflectionException
      */
     public function __construct(string $clusterName, EventManagerInterface $em, ExtendedCacheItemPoolInterface ...$driverPools)
     {
-        (new ReflectionMethod(\get_parent_class(\get_parent_class($this)), __FUNCTION__))
+        (new ReflectionMethod(get_parent_class(get_parent_class($this)), __FUNCTION__))
             ->invoke($this, $clusterName, $em, ...$driverPools);
-        $randomPool = $driverPools[\random_int(0, \count($driverPools) - 1)];
+        $randomPool = $driverPools[random_int(0, \count($driverPools) - 1)];
 
         $this->eventManager->dispatch(
             Event::CACHE_REPLICATION_RANDOM_POOL_CHOSEN,
@@ -46,7 +42,6 @@ class Driver extends MasterSlaveReplicationDriver
     }
 
     /**
-     * @param callable $operation
      * @return mixed
      */
     protected function makeOperation(callable $operation)

@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -21,19 +21,18 @@ $testHelper = new TestHelper('Github issue #522 - Predis returns wrong type hint
 $testHelper->mutePhpNotices();
 // Hide php Redis extension notice by using a little @
 $cacheInstance = CacheManager::getInstance('Predis');
-$stringObject = new stdClass;
+$stringObject = new stdClass();
 $stringObject->test = '';
 
 try {
-
-    /**
+    /*
      * Clear Predis cache
      */
     $cacheInstance->clear();
-    for ($i = 0; $i < 1000; $i++) {
+    for ($i = 0; $i < 1000; ++$i) {
         $stringObject->test .= md5(uniqid('pfc', true));
     }
-    $stringObject->test  = str_shuffle($stringObject->test);
+    $stringObject->test = str_shuffle($stringObject->test);
 
     $item1 = $cacheInstance->getItem('item1');
     $item2 = $cacheInstance->getItem('item2');
@@ -66,7 +65,7 @@ try {
 
     $cacheInstance->clear();
 
-    if (!$cacheInstance->getItem('item1')->isHit() && $cacheInstance->getItem('item1')->get() === null) {
+    if (!$cacheInstance->getItem('item1')->isHit() && null === $cacheInstance->getItem('item1')->get()) {
         $testHelper->assertPass('After a cache clear the cache item "item1" is not stored in cache as expected.');
     } else {
         $testHelper->assertFail('After a cache clear the cache item "item1" is still unexpectedly stored in cache.');

@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -15,23 +15,21 @@
 use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
-use Phpfastcache\CacheContract as CacheConditional;
 use Phpfastcache\Tests\Helper\TestHelper;
-use Psr\Cache\CacheItemPoolInterface;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Cache option: itemDetailedDate');
-$defaultDriver = (!empty($argv[ 1 ]) ? ucfirst($argv[ 1 ]) : 'Files');
+$defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 $cacheInstance = CacheManager::getInstance($defaultDriver, new ConfigurationOption([
-  'itemDetailedDate' => true,
-  'path' => __DIR__ . '/../cache/'
+    'itemDetailedDate' => true,
+    'path' => __DIR__ . '/../cache/',
 ]));
 $cacheKey = 'cacheKey';
 $RandomCacheValue = str_shuffle(uniqid('pfc', true));
 
 $testHelper->printText('Preparing cache test item...');
-$realCreationDate = new \DateTime();
+$realCreationDate = new \DateTimeImmutable();
 $cacheItem = $cacheInstance->getItem($cacheKey);
 $cacheItem->set($RandomCacheValue)->expiresAfter(60);
 $cacheInstance->save($cacheItem);
@@ -39,7 +37,7 @@ $cacheInstance->detachAllItems();
 $diffSeconds = 3;
 
 unset($cacheItem);
-for ($i = 0; $i < $diffSeconds; $i++) {
+for ($i = 0; $i < $diffSeconds; ++$i) {
     $testHelper->printText(sprintf("Sleeping {$diffSeconds} seconds (%ds elapsed)", $i + 1));
     sleep(1);
 }
@@ -47,12 +45,12 @@ $testHelper->printText('Triggering modification date...');
 
 $cacheItem = $cacheInstance->getItem($cacheKey);
 $cacheItem->set(str_shuffle($RandomCacheValue));
-$realModificationDate = new \DateTime();
+$realModificationDate = new \DateTimeImmutable();
 $cacheInstance->save($cacheItem);
 $cacheInstance->detachAllItems();
 unset($cacheItem);
 
-for ($i = 0; $i < $diffSeconds; $i++) {
+for ($i = 0; $i < $diffSeconds; ++$i) {
     $testHelper->printText(sprintf("Sleeping {$diffSeconds} additional seconds (%ds elapsed)", $i + 1));
     sleep(1);
 }
@@ -83,7 +81,7 @@ try {
         } else {
             $testHelper->assertFail('The item modification date does not represents the real modification date.');
         }
-        /**
+        /*
          * Using >= operator instead of === due to a possible micro time
          * offset that can often results to a value of 6 seconds (rounded)
          */

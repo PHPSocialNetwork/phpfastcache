@@ -1,13 +1,11 @@
 <?php
 
 /**
- *
  * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
  * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
- *
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
@@ -23,25 +21,22 @@ class DriverIO
 
     protected int $readMiss = 0;
 
-
     public function getWriteHit(): int
     {
         return $this->writeHit;
     }
 
-    /**
-     * @param int $writeHit
-     * @return DriverIO
-     */
-    public function setWriteHit(int $writeHit): DriverIO
+    public function setWriteHit(int $writeHit): self
     {
         $this->writeHit = $writeHit;
+
         return $this;
     }
 
-    public function incWriteHit(): DriverIO
+    public function incWriteHit(): self
     {
-        $this->writeHit++;
+        ++$this->writeHit;
+
         return $this;
     }
 
@@ -50,15 +45,17 @@ class DriverIO
         return $this->readHit;
     }
 
-    public function setReadHit(int $readHit): DriverIO
+    public function setReadHit(int $readHit): self
     {
         $this->readHit = $readHit;
+
         return $this;
     }
 
-    public function incReadHit(): DriverIO
+    public function incReadHit(): self
     {
-        $this->readHit++;
+        ++$this->readHit;
+
         return $this;
     }
 
@@ -67,15 +64,17 @@ class DriverIO
         return $this->readMiss;
     }
 
-    public function setReadMiss(int $readMiss): DriverIO
+    public function setReadMiss(int $readMiss): self
     {
         $this->readMiss = $readMiss;
+
         return $this;
     }
 
-    public function incReadMiss(): DriverIO
+    public function incReadMiss(): self
     {
-        $this->readMiss++;
+        ++$this->readMiss;
+
         return $this;
     }
 }

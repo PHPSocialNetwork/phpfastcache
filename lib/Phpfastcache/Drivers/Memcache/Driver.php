@@ -92,35 +92,28 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function driverConnect(): bool
     {
         $this->instance = new MemcacheSoftware();
-        $servers = $this->getConfig()->getServers();
 
-        if (count($servers) < 1) {
-            $servers = [
-                [
-                    'host' => $this->getConfig()->getHost(),
-                    'path' => $this->getConfig()->getPath(),
-                    'port' => $this->getConfig()->getPort(),
-                    'saslUser' => $this->getConfig()->getSaslUser() ?: false,
-                    'saslPassword' => $this->getConfig()->getSaslPassword() ?: false,
-                ],
-            ];
+        if (count($this->getConfig()->getServers()) < 1) {
+            $this->getConfig()->setServers(
+               [
+                    [
+                        'host' => $this->getConfig()->getHost(),
+                        'path' => $this->getConfig()->getPath(),
+                        'port' => $this->getConfig()->getPort(),
+                    ]
+                ]
+            );
         }
 
-        foreach ($servers as $server) {
+        foreach ($this->getConfig()->getServers() as $server) {
             try {
                 /**
                  * If path is provided we consider it as an UNIX Socket
                  */
                 if (!empty($server['path']) && !$this->instance->addServer($server['path'], 0)) {
                     $this->fallback = true;
-                } else {
-                    if (!empty($server['host']) && !$this->instance->addServer($server['host'], $server['port'])) {
-                        $this->fallback = true;
-                    }
-                }
-
-                if (!empty($server['saslUser']) && !empty($server['saslPassword'])) {
-                    throw new PhpfastcacheDriverException('Unlike Memcached, Memcache does not support SASL authentication');
+                } elseif (!empty($server['host']) && !$this->instance->addServer($server['host'], $server['port'])) {
+                    $this->fallback = true;
                 }
             } catch (Exception $e) {
                 $this->fallback = true;

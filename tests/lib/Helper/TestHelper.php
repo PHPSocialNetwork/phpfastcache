@@ -202,7 +202,7 @@ class TestHelper
      */
     public function printNewLine(int $count = 1): self
     {
-        $this->climate->out(str_repeat(PHP_EOL, $count));
+        $this->climate->out(str_repeat(PHP_EOL, $count - 1));
         return $this;
     }
 

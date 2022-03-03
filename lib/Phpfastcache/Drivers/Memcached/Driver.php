@@ -96,19 +96,21 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
         $servers = $this->getConfig()->getServers();
 
-        if (count($servers) < 1) {
-            $servers = [
+        if (count($this->getConfig()->getServers()) < 1) {
+            $this->getConfig()->setServers(
                 [
-                    'host' => $this->getConfig()->getHost(),
-                    'path' => $this->getConfig()->getPath(),
-                    'port' => $this->getConfig()->getPort(),
-                    'saslUser' => $this->getConfig()->getSaslUser() ?: false,
-                    'saslPassword' => $this->getConfig()->getSaslPassword() ?: false,
-                ],
-            ];
+                    [
+                        'host' => $this->getConfig()->getHost(),
+                        'path' => $this->getConfig()->getPath(),
+                        'port' => $this->getConfig()->getPort(),
+                        'saslUser' => $this->getConfig()->getSaslUser() ?: null,
+                        'saslPassword' => $this->getConfig()->getSaslPassword() ?: null,
+                    ],
+                ]
+            );
         }
 
-        foreach ($servers as $server) {
+        foreach ($this->getConfig()->getServers() as $server) {
             try {
                 /**
                  * If path is provided we consider it as an UNIX Socket

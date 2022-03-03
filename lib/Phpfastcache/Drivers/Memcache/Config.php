@@ -65,6 +65,9 @@ class Config extends ConfigurationOption
      * @return self
      * @throws PhpfastcacheInvalidConfigurationException
      * @throws PhpfastcacheLogicException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function setServers(array $servers): static
     {

@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Memcache;
 
 use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
@@ -27,10 +28,10 @@ class Config extends ConfigurationOption
      * Multiple server can be added this way:
      *       $cfg->setServers([
      *         [
+     *           // If you use an UNIX socket set the host and port to null
      *           'host' => '127.0.0.1',
+     *           //'path' => 'path/to/unix/socket',
      *           'port' => 11211,
-     *           'saslUser' => false,
-     *           'saslPassword' => false,
      *         ]
      *      ]);
      */
@@ -40,49 +41,6 @@ class Config extends ConfigurationOption
 
     protected int $port = 11211;
 
-    protected string $saslUser = '';
-
-    protected string $saslPassword = '';
-
-    /**
-     * @return string
-     */
-    public function getSaslUser(): string
-    {
-        return $this->saslUser;
-    }
-
-    /**
-     * @param string $saslUser
-     * @return self
-     * @throws PhpfastcacheLogicException
-     */
-    public function setSaslUser(string $saslUser): static
-    {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->saslUser = $saslUser;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSaslPassword(): string
-    {
-        return $this->saslPassword;
-    }
-
-    /**
-     * @param string $saslPassword
-     * @return self
-     * @throws PhpfastcacheLogicException
-     */
-    public function setSaslPassword(string $saslPassword): static
-    {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->saslPassword = $saslPassword;
-        return $this;
-    }
 
     /**
      * @return array
@@ -95,8 +53,6 @@ class Config extends ConfigurationOption
                     'host' => $this->getHost(),
                     'path' => $this->getPath(),
                     'port' => $this->getPort(),
-                    'saslUser' => $this->getSaslUser() ?: false,
-                    'saslPassword' => $this->getSaslPassword() ?: false,
                 ],
             ];
         }
@@ -114,17 +70,32 @@ class Config extends ConfigurationOption
     {
         $this->enforceLockedProperty(__FUNCTION__);
         foreach ($servers as $server) {
-            if ($diff = array_diff(['host', 'port', 'saslUser', 'saslPassword'], array_keys($server))) {
-                throw new PhpfastcacheInvalidConfigurationException('Missing keys for memcached server: ' . implode(', ', $diff));
+            if (\array_key_exists('saslUser', $server) || array_key_exists('saslPassword', $server)) {
+                throw new PhpfastcacheInvalidConfigurationException('Unlike Memcached, Memcache does not support SASL authentication');
             }
-            if ($diff = array_diff(array_keys($server), ['host', 'port', 'saslUser', 'saslPassword'])) {
+
+            if ($diff = array_diff(array_keys($server), ['host', 'port', 'path'])) {
                 throw new PhpfastcacheInvalidConfigurationException('Unknown keys for memcached server: ' . implode(', ', $diff));
             }
-            if (!is_string($server['host'])) {
-                throw new PhpfastcacheInvalidConfigurationException('Host must be a valid string in "$server" configuration array');
+
+            if (!empty($server['host']) && !empty($server['path'])) {
+                throw new PhpfastcacheInvalidConfigurationException('Host and path cannot be simultaneous defined.');
             }
-            if (!is_int($server['port'])) {
+
+            if ((isset($server['host']) && !is_string($server['host'])) || (empty($server['path']) && empty($server['host']))) {
+                throw new PhpfastcacheInvalidConfigurationException('Host must be a valid string in "$server" configuration array if path is not defined');
+            }
+
+            if ((isset($server['path']) && !is_string($server['path'])) || (empty($server['host']) && empty($server['path']))) {
+                throw new PhpfastcacheInvalidConfigurationException('Path must be a valid string in "$server" configuration array if host is not defined');
+            }
+
+            if (!empty($server['host']) && (empty($server['port']) || !is_int($server['port'])|| $server['port'] < 1)) {
                 throw new PhpfastcacheInvalidConfigurationException('Port must be a valid integer in "$server" configuration array');
+            }
+
+            if (!empty($server['port']) && !empty($server['path'])) {
+                throw new PhpfastcacheInvalidConfigurationException('Port should not be defined along with path');
             }
         }
         $this->servers = $servers;
@@ -148,6 +119,7 @@ class Config extends ConfigurationOption
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->host = $host;
+
         return $this;
     }
 

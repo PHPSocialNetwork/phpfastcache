@@ -1,3 +1,9 @@
+## 8.1.2
+#### _"Free the masks"_
+##### 04 march 2022
+- __Drivers__
+  - Fixed #853 // Configuration validation issue with Memcached socket (path)
+
 ## 8.1.1
 #### _"Re-re-Vaccinated"_
 ##### 21 february 2022

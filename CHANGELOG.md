@@ -1,3 +1,13 @@
+## 9.0.2
+##### 04 march 2022
+- __Core__
+  - Updated CacheContract::__invoke() signature
+  - Added new option to allow EventManager override + improved EventManager tests (EventManager::setInstance())
+- __Drivers__
+  - Fixed #853 // Configuration validation issue with Memcached socket (path)
+- __Misc__
+  - Fixed typo and some types hint
+
 ## 9.0.1
 ##### 14 november 2021
 - __Core__
@@ -6,6 +16,7 @@
   - `\Psr\Cache\CacheItemInterface::set` will also no longer accepts resource object anymore as method unique parameter
 - __Misc__
   - Fixed typos in [README.md](./README.md)
+
 ## 9.0.0
 ##### 31 october 2021
 - __Migration guide__

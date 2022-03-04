@@ -27,6 +27,7 @@ php:
 jobs:
   fast_finish: true
   allow_failures:
+    - php: 8.1 # PHP 8.1 is still unstable ATM
     - php: nightly
 
 before_install:

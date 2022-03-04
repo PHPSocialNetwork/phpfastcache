@@ -332,7 +332,7 @@ class ConfigurationOption extends AbstractConfigurationOption implements Configu
      */
     protected function getDefaultSuperGlobalAccessor(): \Closure
     {
-        return \Closure::fromCallable(static function (string $superGlobalName, ?string $keyName = null) {
+        return \Closure::fromCallable(static function (string $superGlobalName, ?string $keyName = null): string|int|float|array|bool|null {
             return match ($superGlobalName) {
                 'SERVER' => $keyName !== null ? $_SERVER[$keyName] ?? null : $_SERVER,
                 'REQUEST' => $keyName !== null ? $_REQUEST[$keyName] ?? null : $_REQUEST,

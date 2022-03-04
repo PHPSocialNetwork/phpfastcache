@@ -30,7 +30,7 @@ $cacheInstance->clear();
 /**
  * Missing cache item test
  */
-$cacheValue = (new CacheContract($cacheInstance))->get($cacheKey, static function () use ($cacheKey, $testHelper, $RandomCacheValue) {
+$cacheValue = (new CacheContract($cacheInstance))->get($cacheKey, static function () use ($testHelper, $RandomCacheValue) {
     if (func_get_arg(0) instanceof ExtendedCacheItemInterface) {
         $testHelper->assertPass('The callback has been received the cache item as a parameter (introduced in 8.0.6).');
     } else {
@@ -127,6 +127,7 @@ $cacheInstance->clear();
  * Test callable cache contract syntax via __invoke()
  * @since 8.0.6
  */
+$cacheInstance->clear();
 try {
     $value = (new CacheContract($cacheInstance))($cacheKey, static function () use ($testHelper) {
         $testHelper->assertPass('The CacheContract class is callable via __invoke()');

@@ -15,7 +15,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache;
 
-use BadMethodCallException;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheEventManagerException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
@@ -47,6 +46,16 @@ class EventManager implements EventManagerInterface
     }
 
     /**
+     * @param EventManagerInterface $eventManagerInstance
+     * @return void
+     */
+    public static function setInstance(EventManagerInterface $eventManagerInstance): void
+    {
+        self::$instance = $eventManagerInstance;
+    }
+
+
+    /**
      * @param string $eventName
      * @param array $args
      */
@@ -60,7 +69,7 @@ class EventManager implements EventManagerInterface
         if (isset($this->events[$eventName]) && $eventName !== self::ON_EVERY_EVENT) {
             $loopArgs = array_merge($args, [$eventName]);
             foreach ($this->events[$eventName] as $event) {
-                $event(... $loopArgs);
+                $event(...$loopArgs);
             }
         }
         foreach ($this->events[self::ON_EVERY_EVENT] as $event) {
@@ -108,7 +117,7 @@ class EventManager implements EventManagerInterface
     public function on(array $events, callable $callback): void
     {
         foreach ($events as $event) {
-            if (!\preg_match('#^([a-zA-z])*$#', $event)) {
+            if (!\preg_match('#^([a-zA-Z])*$#', $event)) {
                 throw new PhpfastcacheEventManagerException(\sprintf('Invalid event name "%s"', $event));
             }
 

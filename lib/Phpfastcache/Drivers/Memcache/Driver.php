@@ -98,9 +98,8 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function driverConnect(): bool
     {
         $this->instance = new MemcacheSoftware();
-        $servers = $this->getConfig()->getServers();
 
-        foreach ($servers as $server) {
+        foreach ($this->getConfig()->getServers() as $server) {
             try {
                 /**
                  * If path is provided we consider it as a UNIX Socket

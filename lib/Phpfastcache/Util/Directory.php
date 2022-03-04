@@ -66,7 +66,7 @@ class Directory
     }
 
     /**
-     * Recursively delete a directory and all of it's contents - e.g.the equivalent of `rm -r` on the command-line.
+     * Recursively delete a directory and all of its contents - e.g.the equivalent of `rm -r` on the command-line.
      * Consistent with `rmdir()` and `unlink()`, an E_WARNING level error will be generated on failure.
      *
      * @param string $source absolute path to directory or file to delete.
@@ -138,7 +138,7 @@ class Directory
         }
 
         /**
-         * Allows to dereference char
+         * Allows dereferencing char
          */
         $file = preg_replace('~^(([a-z0-9\-]+)://)~', '', __FILE__);// remove file protocols such as "phar://" etc.
         $prefix = $file[0] === DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';

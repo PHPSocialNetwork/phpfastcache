@@ -104,9 +104,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             $this->instance->setOption(MemcachedSoftware::OPT_PREFIX_KEY, $optPrefix);
         }
 
-        $servers = $this->getConfig()->getServers();
-
-        foreach ($servers as $server) {
+        foreach ($this->getConfig()->getServers() as $server) {
             $connected = false;
             /**
              * If path is provided we consider it as an UNIX Socket

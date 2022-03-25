@@ -89,7 +89,8 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $update = $this->instance->createUpdate();
 
         $doc = $update->createDocument();
-        $doc->{'id'} = $item->getEncodedKey();
+        /** @SuppressWarnings(PHPMD.UndefinedVariable) */
+        $doc->id = $item->getEncodedKey();
         $doc->{$this->getSolrField(self::DRIVER_KEY_WRAPPER_INDEX)} = $item->getKey();
         $doc->{$this->getSolrField(self::DRIVER_DATA_WRAPPER_INDEX)} = $this->encode($item->getRawValue());
         $doc->{$this->getSolrField(self::DRIVER_TAGS_WRAPPER_INDEX)} = $item->getTags();

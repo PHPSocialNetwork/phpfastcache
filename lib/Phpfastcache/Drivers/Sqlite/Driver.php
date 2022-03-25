@@ -42,7 +42,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     protected int $currentDB = 1;
 
-    protected string $SqliteDir = '';
+    protected string $sqliteDir = '';
 
     protected ?PDO $indexing;
 
@@ -62,7 +62,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     public function getSqliteDir(): string
     {
-        return $this->SqliteDir ?: $this->getPath();
+        return $this->sqliteDir ?: $this->getPath();
     }
 
     /**
@@ -83,7 +83,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             throw new PhpfastcacheIOException(sprintf('Sqlite cannot write in "%s", aborting...', $this->getPath()));
         }
 
-        $this->SqliteDir = $this->getPath();
+        $this->sqliteDir = $this->getPath();
 
         return true;
     }
@@ -143,10 +143,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         if (!isset($this->instance[$instant])) {
             // check DB Files ready or not
             $tableCreated = false;
-            if ($reset || !file_exists($this->SqliteDir . '/db' . $instant)) {
+            if ($reset || !file_exists($this->sqliteDir . '/db' . $instant)) {
                 $tableCreated = true;
             }
-            $pdo = new PDO('sqlite:' . $this->SqliteDir . '/db' . $instant);
+            $pdo = new PDO('sqlite:' . $this->sqliteDir . '/db' . $instant);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             if ($tableCreated) {
@@ -169,11 +169,11 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     {
         if (!isset($this->indexing)) {
             $tableCreated = false;
-            if (!file_exists($this->SqliteDir . '/indexing')) {
+            if (!file_exists($this->sqliteDir . '/indexing')) {
                 $tableCreated = true;
             }
 
-            $pdo = new PDO("sqlite:" . $this->SqliteDir . '/' . self::INDEXING_FILE);
+            $pdo = new PDO("sqlite:" . $this->sqliteDir . '/' . self::INDEXING_FILE);
             $pdo->setAttribute(
                 PDO::ATTR_ERRMODE,
                 PDO::ERRMODE_EXCEPTION
@@ -198,7 +198,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
             // check file size
 
-            $size = file_exists($this->SqliteDir . '/db' . $db) ? filesize($this->SqliteDir . '/db' . $db) : 1;
+            $size = file_exists($this->sqliteDir . '/db' . $db) ? filesize($this->sqliteDir . '/db' . $db) : 1;
             $size = round($size / 1024 / 1024, 1);
 
 
@@ -242,10 +242,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     public function initIndexing(PDO $db)
     {
         // delete everything before reset indexing
-        $dir = opendir($this->SqliteDir);
+        $dir = opendir($this->sqliteDir);
         while ($file = readdir($dir)) {
             if ($file !== '.' && $file !== '..' && $file !== 'indexing' && $file !== 'dbfastcache') {
-                unlink($this->SqliteDir . '/' . $file);
+                unlink($this->sqliteDir . '/' . $file);
             }
         }
 

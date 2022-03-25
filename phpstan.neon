@@ -11,3 +11,6 @@ parameters:
 		-
 			message: '#Cannot call method getPayload\(\) on int#' # Issue in predis/predis => https://github.com/predis/predis/pull/710
 			path: lib/Phpfastcache/Drivers/Predis/Driver.php
+		-
+			message: '#Access to an undefined property Solarium\\Core\\Query\\DocumentInterface#' # Issue in predis/predis => https://github.com/predis/predis/pull/710
+			path: lib/Phpfastcache/Drivers/Solr/Driver.php

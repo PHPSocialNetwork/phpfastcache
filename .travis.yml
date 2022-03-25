@@ -37,6 +37,7 @@ before_install:
   # - ./bin/ci/scripts/install_arangodb.sh;
   - composer install
   - composer require phwoolcon/ci-pecl-cacher -n
+  - "./bin/ci/scripts/install_solr.sh || echo \"Solr install failed\""
   - "./bin/ci/scripts/install_arangodb.sh || echo \"Arangodb install failed\""
   - "./bin/ci/scripts/install_ssdb.sh || echo \"SSDB install failed\""
   - "./bin/ci/scripts/install_couchdb.sh || echo \"Couchdb install failed\""

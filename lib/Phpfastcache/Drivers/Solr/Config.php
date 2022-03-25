@@ -38,7 +38,9 @@ class Config extends ConfigurationOption
 
     protected int $port = 8983;
 
-    protected string $coreName = '';
+    protected string $coreName = 'phpfastcache';
+
+    protected string $endpointName = 'phpfastcache';
 
     protected string $scheme = 'http';
 
@@ -192,6 +194,26 @@ class Config extends ConfigurationOption
         }
 
         $this->mappingSchema = $mappingSchema;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEndpointName(): string
+    {
+        return $this->endpointName;
+    }
+
+    /**
+     * @param string $endpointName
+     * @return Config
+     * @throws PhpfastcacheLogicException
+     */
+    public function setEndpointName(string $endpointName): Config
+    {
+        $this->enforceLockedProperty(__FUNCTION__);
+        $this->endpointName = $endpointName;
         return $this;
     }
 }

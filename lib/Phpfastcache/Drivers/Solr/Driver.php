@@ -60,7 +60,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $this->mappingSchema = $this->getConfig()->getMappingSchema();
         $this->instance = new SolariumClient(new SolariumCurlAdapter(), $this->getConfig()->getEventDispatcher(), [
             'endpoint' => [
-                'phpfastcache' => [
+                $this->getConfig()->getEndpointName() => [
                     'scheme' => $this->getConfig()->getScheme(),
                     'host' => $this->getConfig()->getHost(),
                     'port' => $this->getConfig()->getPort(),
@@ -73,7 +73,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         try {
             $this->instance->ping($this->instance->createPing());
         } catch (SolariumExceptionInterface $e) {
-            throw new PhpfastcacheDriverConnectException('Failed to connect to Solr server with the following error: ' . $e->getMessage(), 0, $e);
+            throw new PhpfastcacheDriverConnectException($e->getMessage(), 0, $e);
         }
 
         return false;

@@ -15,18 +15,19 @@ The simplicity of abstraction: One class for many backend cache. You don't need 
 ### Supported drivers at this day *
 :bulb: Feel free to propose a driver by making a new **[Pull Request](https://github.com/PHPSocialNetwork/phpfastcache/compare)**, they are welcome !
 
-|      Regular drivers            |     High performances drivers                                 |    Development drivers        |    Cluster-Aggregated drivers     |
-|---------------------------------|---------------------------------------------------------------|-------------------------------|-----------------------------------|
-|  `Apcu` *(APC support removed)* | `Arangodb`                                                    | `Devnull`                     | `FullReplicationCluster`          |
-|  `Dynamodb` (AWS)               | `Cassandra`                                                   | `Devrandom`                   | `SemiReplicationCluster`          |
-|  `Files`                        | `CouchBasev3`<br>_(`Couchbase` for SDK 2 support removed)_    | `Memstatic`                   | `MasterSlaveReplicationCluster`   |
-|  `Firestore` (GCP)              | `Couchdb`                                                     |                               | `RandomReplicationCluster`        |
-|  `Leveldb`                      | `Mongodb`                                                     |                               |                                   |
-|  `Memcache(d)`                  | `Predis`                                                      |                               |                                   |
-|  `Sqlite`                       | `Redis`                                                       |                               |                                   |
-|  `Wincache`                     | `Ssdb`                                                        |                               |                                   |
-|  `Zend Disk Cache`              | `Zend Memory Cache`                                           |                               |                                   |
-|                                 |                                                               |                               |                                   |
+| Regular drivers                                                        | High performances drivers                                  |    Development drivers        |    Cluster-Aggregated drivers     |
+|------------------------------------------------------------------------|------------------------------------------------------------|-------------------------------|-----------------------------------|
+| `Apcu` _(APC support removed)_                                         | `Arangodb`                                                 | `Devnull`                     | `FullReplicationCluster`          |
+| `Dynamodb` (AWS)                                                       | `Cassandra`                                                | `Devrandom`                   | `SemiReplicationCluster`          |
+| `Files`                                                                | `CouchBasev3`<br>_(`Couchbase` for SDK 2 support removed)_ | `Memstatic`                   | `MasterSlaveReplicationCluster`   |
+| `Firestore` (GCP)                                                      | `Couchdb`                                                  |                               | `RandomReplicationCluster`        |
+| `Leveldb`                                                              | `Mongodb`                                                  |                               |                                   |
+| `Memcache(d)`                                                          | `Predis`                                                   |                               |                                   |
+| `Solr` _(Via [Solarium 6.x](https://github.com/solariumphp/solarium))_ | `Redis`                                                    |                               |                                   |
+| `Sqlite`                                                               | `Ssdb`                                                     |                               |                                   |
+| `Wincache`                                                             | `Zend Memory Cache`                                        |                               |                                   |
+| `Zend Disk Cache`                                                      |                                                            |                               |                                   |
+|                                                                        |                                                            |                               |                                   |
 
 \* Driver descriptions available in [DOCS/DRIVERS.md](./docs/DRIVERS.md)
 

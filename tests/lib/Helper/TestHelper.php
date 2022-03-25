@@ -17,6 +17,7 @@ namespace Phpfastcache\Tests\Helper;
 
 use League\CLImate\CLImate;
 use Phpfastcache\Api;
+use Phpfastcache\Config\ConfigurationOptionInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
@@ -573,5 +574,13 @@ class TestHelper
                     )
                 )
             );
+    }
+
+    public function preConfigure(ConfigurationOptionInterface $configurationOption): ConfigurationOptionInterface
+    {
+        $configurationOption->setItemDetailedDate(true)
+            ->setUseStaticItemCaching(false);
+
+        return $configurationOption;
     }
 }

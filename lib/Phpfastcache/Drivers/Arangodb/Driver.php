@@ -136,7 +136,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             );
         }
 
-        return $this->decode($document);
+        return $this->decodeDocument($document);
     }
 
     /**
@@ -242,17 +242,16 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @param ArangoDocument $document
-     * @return mixed
+     * @return array
      * @throws \Exception
      */
-    protected function decode(ArangoDocument $document): mixed
+    protected function decodeDocument(ArangoDocument $document): array
     {
         $value = [
             self::DRIVER_KEY_WRAPPER_INDEX => $document->get(self::DRIVER_KEY_WRAPPER_INDEX),
             self::DRIVER_TAGS_WRAPPER_INDEX => $document->get(self::DRIVER_TAGS_WRAPPER_INDEX),
-            self::DRIVER_DATA_WRAPPER_INDEX => \unserialize(
+            self::DRIVER_DATA_WRAPPER_INDEX => $this->decode(
                 $document->get(self::DRIVER_DATA_WRAPPER_INDEX),
-                ['allowed_classes' => true]
             ),
         ];
 

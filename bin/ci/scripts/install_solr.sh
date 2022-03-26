@@ -37,7 +37,7 @@ run_solr5() {
     dir_name=$1
     ./$dir_name/bin/solr -p $SOLR_PORT -h $SOLR_HOST
     wait_for_solr
-    ./$dir_name/bin/solr create_core $SOLR_CORE -p $SOLR_PORT -h $SOLR_HOST
+    ./$dir_name/bin/solr create_core -c $SOLR_CORE -p $SOLR_PORT
     echo "Started"
 }
 

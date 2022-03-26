@@ -56,7 +56,8 @@
         "aws/aws-sdk-php": "~3.0"
     },
     "conflict": {
-        "doctrine/couchdb": "<dev-master#9eeb9e5"
+        "doctrine/couchdb": "<dev-master#9eeb9e5",
+        "solarium/solarium": "<6.1"
     },
     "autoload": {
         "psr-4": {

@@ -33,7 +33,7 @@ wait_for_solr(){
     done
 }
 
-run_solr5() {
+run_solr() {
     dir_name=$1
     ./$dir_name/bin/solr -p $SOLR_PORT -h $SOLR_HOST
     wait_for_solr
@@ -47,7 +47,7 @@ download_and_run() {
   dir_name="solr-${version}"
   download $url $dir_name
 
-  run_solr5 $dir_name
+  run_solr $dir_name
 }
 
 

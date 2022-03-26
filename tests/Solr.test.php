@@ -13,8 +13,6 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Core\Pool\TaggableCacheItemPoolInterface;
 use Phpfastcache\Tests\Helper\TestHelper;
 use Phpfastcache\Drivers\Solr\Config as SolrConfig;
 
@@ -38,14 +36,7 @@ $solrConfig->setScheme('http'); // Optional: Default value
  * The keys are the Phpfastcache internal index. All required.
  * The values are the name of your Solr schema.
  */
-$solrConfig->setMappingSchema([
-    ExtendedCacheItemPoolInterface::DRIVER_KEY_WRAPPER_INDEX => ExtendedCacheItemPoolInterface::DRIVER_KEY_WRAPPER_INDEX . '_s', //  Expect type "string" field
-    ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX => ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX . '_s', //  Expect type "string" field
-    ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX => ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX . '_ss', //  Expect type "strings" field
-    ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX => ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX . '_ss', //  Expect type "strings" field
-    ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX => ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX . '_ss', //  Expect type "strings" field
-    TaggableCacheItemPoolInterface::DRIVER_TAGS_WRAPPER_INDEX => TaggableCacheItemPoolInterface::DRIVER_TAGS_WRAPPER_INDEX . '_ss', //  Expect type "strings" field
-]);
+$solrConfig->setMappingSchema($solrConfig::DEFAULT_MAPPING_SCHEMA);
 
 /**
  * Optional:
@@ -55,6 +46,6 @@ $solrConfig->setMappingSchema([
 // $solrConfig->setEventDispatcher($yourEventDispatcher);
 
 $cacheInstance = CacheManager::getInstance('Solr', $solrConfig);
-$testHelper->runCRUDTests($cacheInstance);
+$testHelper->runCRUDTests($cacheInstance, false);
 
 $testHelper->terminateTest();

@@ -20,8 +20,10 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
+use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Solarium\Client as SolariumClient;
 use Solarium\Core\Client\Adapter\Curl as SolariumCurlAdapter;
@@ -35,6 +37,14 @@ use Solarium\QueryType\Select\Result\Document as SolariumDocument;
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
+    public const MINIMUM_SOLARIUM_VERSION = '6.1.0';
+
+    public const SOLR_DEFAULT_ID_FIELD = 'id';
+
+    public const SOLR_DISCRIMINATOR_FIELD = 'type';
+
+    public const SOLR_DISCRIMINATOR_VALUE = '_pfc_';
+
     use TaggableCacheItemPoolTrait;
 
     /**
@@ -45,10 +55,20 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @return bool
+     * @throws PhpfastcacheDriverCheckException
      */
     public function driverCheck(): bool
     {
-        return \class_exists(SolariumClient::class);
+        if (!\class_exists(SolariumClient::class)) {
+            throw new PhpfastcacheDriverCheckException(
+                \sprintf(
+                    'Phpfastcache needs Solarium %s or greater to be installed',
+                    self::MINIMUM_SOLARIUM_VERSION
+                )
+            );
+        }
+
+        return true;
     }
 
     /**
@@ -71,12 +91,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         ]);
 
         try {
-            $this->instance->ping($this->instance->createPing());
+            return $this->instance->ping($this->instance->createPing())->getStatus() === 0;
         } catch (SolariumExceptionInterface $e) {
             throw new PhpfastcacheDriverConnectException($e->getMessage(), 0, $e);
         }
-
-        return false;
     }
 
     /**
@@ -90,24 +108,16 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
         $doc = $update->createDocument();
         /** @SuppressWarnings(PHPMD.UndefinedVariable) */
-        $doc->id = $item->getEncodedKey();
+        $doc->{$this->getSolrField(self::SOLR_DEFAULT_ID_FIELD)} = $item->getEncodedKey();
+        $doc->{$this->getSolrField(self::SOLR_DISCRIMINATOR_FIELD)} = self::SOLR_DISCRIMINATOR_VALUE;
         $doc->{$this->getSolrField(self::DRIVER_KEY_WRAPPER_INDEX)} = $item->getKey();
         $doc->{$this->getSolrField(self::DRIVER_DATA_WRAPPER_INDEX)} = $this->encode($item->getRawValue());
         $doc->{$this->getSolrField(self::DRIVER_TAGS_WRAPPER_INDEX)} = $item->getTags();
-        $doc->{$this->getSolrField(self::DRIVER_EDATE_WRAPPER_INDEX)} = [
-            $item->getExpirationDate()->format(\DateTimeInterface::ATOM),
-            $item->getExpirationDate()->getTimezone()->getName()
-        ];
+        $doc->{$this->getSolrField(self::DRIVER_EDATE_WRAPPER_INDEX)} = $item->getExpirationDate()->format(\DateTimeInterface::ATOM);
 
         if ($this->getConfig()->isItemDetailedDate()) {
-            $doc->{$this->getSolrField(self::DRIVER_MDATE_WRAPPER_INDEX)} = [
-                $item->getModificationDate()->format(\DateTimeInterface::ATOM),
-                $item->getModificationDate()->getTimezone()->getName()
-            ];
-            $doc->{$this->getSolrField(self::DRIVER_CDATE_WRAPPER_INDEX)} = [
-                $item->getCreationDate()->format(\DateTimeInterface::ATOM),
-                $item->getCreationDate()->getTimezone()->getName()
-            ];
+            $doc->{$this->getSolrField(self::DRIVER_MDATE_WRAPPER_INDEX)} = $item->getModificationDate()->format(\DateTimeInterface::ATOM);
+            $doc->{$this->getSolrField(self::DRIVER_CDATE_WRAPPER_INDEX)} = $item->getCreationDate()->format(\DateTimeInterface::ATOM);
         }
 
         $update->addDocument($doc);
@@ -124,10 +134,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         $query = $this->instance->createSelect()
-            ->setQuery('id:' . $item->getEncodedKey())
+            ->setQuery($this->getSolrField(self::SOLR_DEFAULT_ID_FIELD) . ':' . $item->getEncodedKey())
             ->setRows(1);
 
-        $results =  $this->instance->execute($query);
+        $results = $this->instance->execute($query);
 
         if ($results instanceof \IteratorAggregate) {
             $document = $results->getIterator()[0] ?? null;
@@ -148,9 +158,17 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function decodeDocument(SolariumDocument $document): array
     {
         $fields = $document->getFields();
+        $key = $fields[$this->getSolrField(self::DRIVER_KEY_WRAPPER_INDEX)];
+
+        if (\is_array($key)) {
+            throw new PhpfastcacheInvalidTypeException(
+                'Your Solr core seems to be misconfigured, please check the Phpfastcache wiki to setup the expected schema: 
+                https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV9.1%CB%96%5D-Configuring-a-Solr-driver'
+            );
+        }
 
         $value = [
-            self::DRIVER_KEY_WRAPPER_INDEX => $fields[$this->getSolrField(self::DRIVER_KEY_WRAPPER_INDEX)],
+            self::DRIVER_KEY_WRAPPER_INDEX => $key,
             self::DRIVER_TAGS_WRAPPER_INDEX => $fields[$this->getSolrField(self::DRIVER_TAGS_WRAPPER_INDEX)] ?? [],
             self::DRIVER_DATA_WRAPPER_INDEX => $this->decode(
                 $fields[$this->getSolrField(self::DRIVER_DATA_WRAPPER_INDEX)],
@@ -159,26 +177,17 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
         $eDate = $fields[$this->getSolrField(self::DRIVER_EDATE_WRAPPER_INDEX)];
 
-        $value[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX] = new \DateTime(
-            $eDate[0],
-            new \DateTimeZone($eDate[1])
-        );
+        $value[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX] = new \DateTime($eDate);
 
         if ($this->getConfig()->isItemDetailedDate()) {
             $cDate = $fields[$this->getSolrField(self::DRIVER_CDATE_WRAPPER_INDEX)];
-            if (isset($cDate[0], $cDate[1])) {
-                $value[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX] = new \DateTime(
-                    $cDate[0],
-                    new \DateTimeZone($cDate[1])
-                );
+            if (!empty($cDate)) {
+                $value[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX] = new \DateTime($cDate);
             }
 
             $mDate = $fields[$this->getSolrField(self::DRIVER_MDATE_WRAPPER_INDEX)];
-            if (isset($mDate[0], $cDate[1])) {
-                $value[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX] = new \DateTime(
-                    $mDate[0],
-                    new \DateTimeZone($mDate[1])
-                );
+            if (!empty($mDate)) {
+                $value[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX] = new \DateTime($mDate);
             }
         }
 
@@ -194,7 +203,8 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     {
         $update = $this->instance->createUpdate();
 
-        $update->addDeleteById($item->getEncodedKey());
+        $update->addDeleteQuery($this->getSolrField(self::SOLR_DEFAULT_ID_FIELD) . ':' . $item->getEncodedKey());
+        $update->addDeleteQuery($this->getSolrField(self::SOLR_DISCRIMINATOR_FIELD) . ':' . self::SOLR_DISCRIMINATOR_VALUE);
         $update->addCommit();
 
         return $this->instance->update($update)->getStatus() === 0;
@@ -208,10 +218,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     {
         // get an update query instance
         $update = $this->instance->createUpdate();
-        $update->addDeleteQuery('*:*');
+        $update->addDeleteQuery($this->getSolrField(self::SOLR_DISCRIMINATOR_FIELD) . ':' . self::SOLR_DISCRIMINATOR_VALUE);
         $update->addCommit();
 
-        return  $this->instance->update($update)->getStatus() === 0;
+        return $this->instance->update($update)->getStatus() === 0;
     }
 
     /**

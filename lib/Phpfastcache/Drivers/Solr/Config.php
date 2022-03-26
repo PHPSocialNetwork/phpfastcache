@@ -18,19 +18,20 @@ namespace Phpfastcache\Drivers\Solr;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolInterface;
-use Phpfastcache\EventManager;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 class Config extends ConfigurationOption
 {
-    protected const DEFAULT_MAPPING_SCHEMA = [
+    public const DEFAULT_MAPPING_SCHEMA = [
+        Driver::SOLR_DEFAULT_ID_FIELD => Driver::SOLR_DEFAULT_ID_FIELD,
+        Driver::SOLR_DISCRIMINATOR_FIELD => Driver::SOLR_DISCRIMINATOR_FIELD . '_s',
         ExtendedCacheItemPoolInterface::DRIVER_KEY_WRAPPER_INDEX => ExtendedCacheItemPoolInterface::DRIVER_KEY_WRAPPER_INDEX . '_s',
         ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX => ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX . '_s',
-        ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX => ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX . '_ss',
-        ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX => ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX . '_ss',
-        ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX => ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX . '_ss',
+        ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX => ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX . '_s',
+        ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX => ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX . '_s',
+        ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX => ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX . '_s',
         TaggableCacheItemPoolInterface::DRIVER_TAGS_WRAPPER_INDEX => TaggableCacheItemPoolInterface::DRIVER_TAGS_WRAPPER_INDEX . '_ss',
     ];
 

@@ -503,7 +503,7 @@ class TestHelper
         }
 
         if ($poolClear) {
-            if ($pool->deleteItem($cacheKey)) {
+            if ($pool->deleteItem($cacheKey) && !$pool->getItem($cacheKey)->isHit()) {
                 $this->assertPass('The pool successfully deleted the cache item.');
             } else {
                 $this->assertFail('The pool failed to delete the cache item.');

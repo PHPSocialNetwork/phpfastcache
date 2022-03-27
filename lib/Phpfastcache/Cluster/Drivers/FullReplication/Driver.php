@@ -30,7 +30,7 @@ class Driver extends ClusterPoolAbstract
     {
         /** @var ExtendedCacheItemPoolInterface[] $poolsToResync */
         $poolsToResync = [];
-        /** @var ExtendedCacheItemInterface $item */
+        /** @var ?ExtendedCacheItemInterface $item */
         $item = null;
 
         foreach ($this->clusterPools as $driverPool) {

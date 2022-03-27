@@ -11,3 +11,6 @@ parameters:
 		-
 			message: '#Cannot call method getPayload\(\) on int#' # Issue in predis/predis => https://github.com/predis/predis/pull/710
 			path: lib/Phpfastcache/Drivers/Predis/Driver.php
+		-
+			message: '#Offset (.*) on left side of \?\? does not exist#' # Issue in arangodb/arangodb-php => https://github.com/arangodb/arangodb-php/issues/293
+			path: lib/Phpfastcache/Drivers/Arangodb/Driver.php

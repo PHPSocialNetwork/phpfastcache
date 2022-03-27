@@ -31,7 +31,7 @@ class Driver extends ClusterPoolAbstract
      */
     public function getItem(string $key): ExtendedCacheItemInterface
     {
-        /** @var ExtendedCacheItemInterface $item */
+        /** @var ?ExtendedCacheItemInterface $item */
         $item = null;
         $eCount = 0;
 

@@ -26,11 +26,11 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "league/climate": "^3.5",
+        "league/climate": "^3.8",
         "ext-gettext": "*",
         "phpmd/phpmd": "@stable",
-        "squizlabs/php_codesniffer": "~3.0",
-        "phpstan/phpstan": "^0.12.98",
+        "squizlabs/php_codesniffer": "@stable",
+        "phpstan/phpstan": "^1.5",
         "jetbrains/phpstorm-stubs": "dev-master"
     },
     "suggest": {

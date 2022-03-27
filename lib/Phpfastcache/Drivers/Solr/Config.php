@@ -49,7 +49,7 @@ class Config extends ConfigurationOption
 
     protected array $mappingSchema = self::DEFAULT_MAPPING_SCHEMA;
 
-    private EventDispatcherInterface $eventDispatcher;
+    protected EventDispatcherInterface $eventDispatcher;
 
     public function __construct(array $parameters = [])
     {

@@ -30,6 +30,12 @@ interface ConfigurationOptionInterface extends LockableConfigurationInterface
     public function toArray(): array;
 
     /**
+     * @param mixed $val
+     * @return bool
+     */
+    public function isValueSerializable(mixed $val): bool;
+
+    /**
      * @param string $optionName
      * @return bool
      */

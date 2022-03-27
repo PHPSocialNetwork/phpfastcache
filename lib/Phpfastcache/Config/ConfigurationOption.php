@@ -85,6 +85,14 @@ class ConfigurationOption extends AbstractConfigurationOption implements Configu
     }
 
     /**
+     * @throws \ReflectionException
+     */
+    public function isValueSerializable(mixed $val): bool
+    {
+        return !\is_callable($val) && !(is_object($val) && (new \ReflectionClass($val))->isAnonymous());
+    }
+
+    /**
      * @param string $optionName
      * @return bool
      */

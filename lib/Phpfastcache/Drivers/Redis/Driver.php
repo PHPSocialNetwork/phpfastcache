@@ -161,7 +161,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     {
         $this->assertCacheItemType($item, Item::class);
 
-        return (bool)$this->instance->del($item->getKey());
+        $this->instance->del($item->getKey());
+
+        // Redis sometime returns erroneous results
+        return true;
     }
 
     /**

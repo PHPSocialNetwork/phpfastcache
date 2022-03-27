@@ -535,6 +535,11 @@ class TestHelper
             )
         );
         $this->printInfoText('<yellow>Driver info</yellow>: <magenta>' . $pool->getStats()->getInfo() . '</magenta>');
+        $poolSize = $pool->getStats()->getSize();
+
+        if($poolSize){
+            $this->printInfoText('<yellow>Driver size</yellow> (approximative): <magenta>' . round($pool->getStats()->getSize() / (1024 ** 2), 3) . ' Mo</magenta>');
+        }
     }
 
 

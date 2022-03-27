@@ -27,6 +27,8 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Solarium\Client as SolariumClient;
 use Solarium\Core\Client\Adapter\Curl as SolariumCurlAdapter;
+use Solarium\Core\Client\Endpoint;
+use Solarium\Core\Client\Request;
 use Solarium\Exception\ExceptionInterface as SolariumExceptionInterface;
 use Solarium\QueryType\Select\Result\Document as SolariumDocument;
 
@@ -235,11 +237,48 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     public function getStats(): DriverStatistic
     {
+        /**
+         * Solr "phpfastcache" core info
+         */
+        $coreAdminQuery = $this->instance->createCoreAdmin();
+        $statusAction = $coreAdminQuery->createStatus();
+        $coreAdminQuery->setAction($statusAction);
+        $response = $this->instance->coreAdmin($coreAdminQuery);
+        $coreServerInfo = $response->getData()['status'][$this->config->getCoreName()];
+
+        /**
+         * Unfortunately Solarium does not offer
+         * an API to query the admin info system :(
+         */
+        $adminSystemInfoUrl = $this->config->getScheme()
+            . '://'
+            . $this->config->getHost()
+            . ':'
+            . $this->config->getPort()
+            . rtrim($this->config->getPath(), '/')
+            . '/solr/admin/info/system';
+
+        if (($content = \file_get_contents($adminSystemInfoUrl)) !== false) {
+            try {
+                $serverSystemInfo = \json_decode($content, true, 512, \JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $serverSystemInfo = [];
+            }
+        }
+
         return (new DriverStatistic())
             ->setData(implode(', ', array_keys($this->itemInstances)))
-            ->setInfo('')
-            ->setRawData(null)
-            ->setSize(0);
+            ->setInfo(sprintf(
+                'Solarium %s and Solr %s for %s %s. %d document(s) stored in the "%s" core',
+                $this->instance::VERSION,
+                $serverSystemInfo['lucene']['solr-spec-version'] ?? '[unknown SOLR version]',
+                $serverSystemInfo['system']['name'] ?? '[unknown OS]',
+                $serverSystemInfo['system']['version'] ?? '[unknown OS version]',
+                $coreServerInfo['index']['numDocs'] ?? 0,
+                $this->config->getCoreName()
+            ))
+            ->setRawData($coreServerInfo)
+            ->setSize($coreServerInfo['index']['sizeInBytes'] ?? 0);
     }
 
     public function getConfig(): Config

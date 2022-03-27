@@ -46,6 +46,6 @@ $solrConfig->setMappingSchema($solrConfig::DEFAULT_MAPPING_SCHEMA);
 // $solrConfig->setEventDispatcher($yourEventDispatcher);
 
 $cacheInstance = CacheManager::getInstance('Solr', $solrConfig);
-$testHelper->runCRUDTests($cacheInstance, false);
+$testHelper->runCRUDTests($cacheInstance);
 
 $testHelper->terminateTest();

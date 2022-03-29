@@ -26,11 +26,9 @@ use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheExceptionInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
-use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Exceptions\PhpfastcacheReplicationException;
 use Psr\Cache\CacheItemInterface;
-use ReflectionException;
 
 class Driver extends ClusterPoolAbstract
 {
@@ -61,7 +59,9 @@ class Driver extends ClusterPoolAbstract
     public function getItem(string $key): ExtendedCacheItemInterface
     {
         return $this->getStandardizedItem(
-            $this->makeOperation(static fn (ExtendedCacheItemPoolInterface $pool) => $pool->getItem($key)) ?? new Item($this, $key, $this->getEventManager()),
+            $this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool) use ($key) {
+                return $pool->getItem($key);
+            }) ?? (new Item($this, $key, $this->getEventManager()))->expiresAfter(abs($this->getConfig()->getDefaultTtl())),
             $this
         );
     }

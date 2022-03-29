@@ -26,8 +26,8 @@ class Driver extends ClusterPoolAbstract
 {
     /**
      * @inheritDoc
-     * @throws PhpfastcacheReplicationException
      * @throws InvalidArgumentException
+     * @throws PhpfastcacheReplicationException
      */
     public function getItem(string $key): ExtendedCacheItemInterface
     {
@@ -51,7 +51,12 @@ class Driver extends ClusterPoolAbstract
             throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
 
-        return $this->getStandardizedItem($item ?? new Item($this, $key, $this->getEventManager()), $this);
+        if ($item === null) {
+            $item = new Item($this, $key, $this->getEventManager());
+            $item->expiresAfter(abs($this->getConfig()->getDefaultTtl()));
+        }
+
+        return $this->getStandardizedItem($item, $this);
     }
 
     /**

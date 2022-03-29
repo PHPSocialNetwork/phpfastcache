@@ -20,17 +20,13 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\ItemBatch;
 use Phpfastcache\Event\Event;
-use Phpfastcache\Event\EventManagerDispatcherTrait;
 use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheCoreException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
-use Phpfastcache\Util\ClassNamespaceResolverTrait;
 use Psr\Cache\CacheItemInterface;
-use ReflectionClass;
-use ReflectionObject;
 use RuntimeException;
 
 trait CacheItemPoolTrait
@@ -233,7 +229,7 @@ trait CacheItemPoolTrait
 
             return $item;
         }
-        throw new PhpfastcacheInvalidArgumentException(\sprintf('Item %s was not build due to an unknown error', \gettype($key)));
+        throw new PhpfastcacheInvalidArgumentException(\sprintf('Item %s was not built due to an unknown error', \gettype($key)));
     }
 
     /**

@@ -27,6 +27,7 @@ class Driver extends MasterSlaveReplicationDriver
     /**
      * RandomReplicationCluster constructor.
      * @param string $clusterName
+     * @param EventManagerInterface $em
      * @param ExtendedCacheItemPoolInterface ...$driverPools
      * @throws ReflectionException
      */

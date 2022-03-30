@@ -162,9 +162,8 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
             if ($driverPool === $this) {
                 /** @var ExtendedCacheItemInterface $itemPool */
                 $itemClass = $driverPool->getClassNamespace() . '\\' . 'Item';
-                $itemPool = new $itemClass($this, $item->getKey());
-                $itemPool->setEventManager($this->getEventManager())
-                    ->set($item->get())
+                $itemPool = new $itemClass($this, $item->getKey(), $this->getEventManager());
+                $itemPool->set($item->get())
                     ->setHit($item->isHit())
                     ->setTags($item->getTags())
                     ->expiresAt($item->getExpirationDate())

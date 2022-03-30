@@ -18,6 +18,7 @@ namespace Phpfastcache\Cluster;
 
 use Phpfastcache\Core\Item\{ExtendedCacheItemInterface, ItemBaseTrait};
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
 
 /**
@@ -28,6 +29,12 @@ abstract class ItemAbstract implements ExtendedCacheItemInterface
 {
     use ItemBaseTrait {
         ItemBaseTrait::__construct as __BaseConstruct;
+    }
+
+    public function __construct(ExtendedCacheItemPoolInterface $driver, $key, EventManagerInterface $em)
+    {
+        $this->setEventManager($em);
+        $this->__BaseConstruct($driver, $key);
     }
 
     /**

@@ -75,7 +75,12 @@ class FullReplicationCluster extends ClusterPoolAbstract
             }
         }
 
-        return $this->getStandardizedItem($item ?? new Item($this, $key), $this);
+        if ($item === null) {
+            $item = new Item($this, $key, $this->getEventManager());
+            $item->expiresAfter(abs($this->getConfig()->getDefaultTtl()));
+        }
+
+        return $this->getStandardizedItem($item, $this);
     }
 
     /**

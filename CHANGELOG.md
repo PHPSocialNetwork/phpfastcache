@@ -1,3 +1,13 @@
+## 9.1.0
+##### xx april 2022
+- __Drivers__
+  - **Added `Solr` driver support**
+- __Cluster__
+  - Fixed #855 // ClusterReplication drivers are saving erroneous expiration date in low-level backends
+- __Misc__
+  - Multiple typo fixes (@mbiebl)
+  - Updated composer suggestions and CI builder dependencies
+
 ## 9.0.2
 ##### 04 march 2022
 - __Core__

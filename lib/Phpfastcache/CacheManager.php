@@ -120,7 +120,7 @@ class CacheManager
                 );
             } else {
                 throw new PhpfastcacheDriverNotFoundException(sprintf(
-                    'The driver "%s" does not exists or does not implements %s',
+                    'The driver "%s" does not exist or does not implement %s',
                     $driver,
                     ExtendedCacheItemPoolInterface::class
                 ));
@@ -293,7 +293,7 @@ class CacheManager
 
         if (!\class_exists($className)) {
             throw new PhpfastcacheInvalidArgumentException(
-                \sprintf("Can't add '%s' because the class '%s' does not exists", $driverName, $className)
+                \sprintf("Can't add '%s' because the class '%s' does not exist", $driverName, $className)
             );
         }
 
@@ -366,7 +366,7 @@ class CacheManager
         }
 
         if (!isset(self::$driverCustoms[$driverName])) {
-            throw new PhpfastcacheLogicException(\sprintf("Driver '%s' does not exists", $driverName));
+            throw new PhpfastcacheLogicException(\sprintf("Driver '%s' does not exist", $driverName));
         }
 
         unset(self::$driverCustoms[$driverName]);
@@ -390,7 +390,7 @@ class CacheManager
 
         if (!\class_exists($className)) {
             throw new PhpfastcacheInvalidArgumentException(
-                \sprintf("Can't override '%s' because the class '%s' does not exists", $driverName, $className)
+                \sprintf("Can't override '%s' because the class '%s' does not exist", $driverName, $className)
             );
         }
 

@@ -175,7 +175,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @retur n bool
+     * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
     protected function driverDelete(ExtendedCacheItemInterface $item): bool

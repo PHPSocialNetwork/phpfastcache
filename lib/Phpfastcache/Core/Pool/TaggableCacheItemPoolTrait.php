@@ -74,7 +74,7 @@ trait TaggableCacheItemPoolTrait
             if (\is_string($tagName)) {
                 $items[] = $this->fetchItemsByTagFromBackend($tagName);
             } else {
-                throw new PhpfastcacheInvalidArgumentException('$tagName must be a a string');
+                throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
             }
         }
 

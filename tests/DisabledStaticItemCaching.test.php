@@ -42,7 +42,7 @@ if (!$testHelper->isHHVM()) {
     $testHelper->runSubProcess('DisabledStaticItemCaching');
     usleep(random_int(250000, 800000));
 
-    // We dont want to clear cache instance since we disabled the static item caching
+    // We don't want to clear cache instance since we disabled the static item caching
     $item = $driverInstance->getItem('TestUseStaticItemCaching');
 
     /**

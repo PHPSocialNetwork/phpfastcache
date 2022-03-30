@@ -32,7 +32,7 @@ class Cache extends phpFastCacheAbstractProxy
 }
 ```
 
-See examples/extendedPhpFastCache.php for more informations
+See examples/extendedPhpFastCache.php for more information
 
 
 

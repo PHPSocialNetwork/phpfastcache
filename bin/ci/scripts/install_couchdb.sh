@@ -10,7 +10,7 @@ echo "# Running Docker couchdb image"
 docker run -d -p $COUCHDB_PORT:$COUCHDB_PORT couchdb:$COUCHDB_VERSION --with-haproxy --with-admin-party-please -n 1
 
 check_db() {
-  # Allow 4xx errors not to break the connexion check
+  # Allow 4xx errors not to break the connection check
   curl --silent http://$COUCHDB_HOST:$COUCHDB_PORT > /dev/null
   echo $?
 }

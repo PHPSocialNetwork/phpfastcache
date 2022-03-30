@@ -249,7 +249,7 @@ HELP;
 
     /**
      * Specific document decoder for Couchdb
-     * since we dont store encoded version
+     * since we don't store encoded version
      * for performance purposes
      *
      * @param $value

@@ -305,8 +305,12 @@ class TestHelper
      */
     public function errorHandler(int $errno, string $errstr, string $errfile, int $errline): void
     {
-        $errorType = '';
+        // Silenced errors
+        if (!(error_reporting() & $errno)){
+            return;
+        }
 
+        $errorType = '';
         switch ($errno) {
             case E_PARSE:
             case E_ERROR:
@@ -392,6 +396,18 @@ class TestHelper
         $cacheTag2 = 'cache_tag_' . bin2hex(random_bytes(8) . '_' . random_int(100, 999));
         $cacheItem = $pool->getItem($cacheKey);
         $this->printInfoText('Using cache key: ' . $cacheKey);
+
+        /**
+         * Default TTL - 1sec is for dealing with potential script execution delay
+         * @see https://github.com/PHPSocialNetwork/phpfastcache/issues/855
+         */
+        if($cacheItem->getTtl() < $pool->getConfig()->getDefaultTtl() - 1) {
+            $this->assertFail(\sprintf(
+                'The expected TTL of the cache item was ~%ds, got %ds',
+                $pool->getConfig()->getDefaultTtl(),
+                $cacheItem->getTtl()
+            ));
+        }
 
         $cacheItem->set($cacheValue)
             ->addTags([$cacheTag, $cacheTag2]);

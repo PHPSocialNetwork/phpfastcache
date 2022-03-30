@@ -257,7 +257,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             . rtrim($this->config->getPath(), '/')
             . '/solr/admin/info/system';
 
-        if (($content = \file_get_contents($adminSystemInfoUrl)) !== false) {
+        if (($content = @\file_get_contents($adminSystemInfoUrl)) !== false) {
             try {
                 $serverSystemInfo = \json_decode($content, true, 512, \JSON_THROW_ON_ERROR);
             } catch (\JsonException) {

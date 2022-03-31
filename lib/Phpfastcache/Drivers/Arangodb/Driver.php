@@ -38,7 +38,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
  * Class Driver
- * @property Config $config
+ * @method Config getConfig()
  * @property ArangoConnection $instance
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -309,10 +309,5 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             ->setInfo($infoText)
             ->setRawData($rawData)
             ->setSize($rawData['collectionCount']);
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

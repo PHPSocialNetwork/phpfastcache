@@ -103,9 +103,9 @@ trait DriverBaseTrait
     }
 
     /**
-     * @return ConfigurationOption
+     * @return ConfigurationOptionInterface
      */
-    public function getDefaultConfig(): ConfigurationOption
+    public function getDefaultConfig(): ConfigurationOptionInterface
     {
         $className = $this::getConfigClass();
 
@@ -174,9 +174,12 @@ trait DriverBaseTrait
     }
 
     /**
-     * @return ConfigurationOption
+     * @return ConfigurationOptionInterface
      */
-    abstract public function getConfig(): ConfigurationOption;
+    public function getConfig(): ConfigurationOptionInterface
+    {
+        return $this->config;
+    }
 
     /**
      * @param ConfigurationOptionInterface $config

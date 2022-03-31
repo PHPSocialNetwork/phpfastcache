@@ -35,7 +35,7 @@ use Psr\Http\Message\UriInterface;
 
 /**
  * Class Driver
- * @property Config $config
+ * @method Config getConfig()
  * @property AwsDynamoDbClient $instance
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -294,10 +294,5 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $data[self::DRIVER_DATA_WRAPPER_INDEX] = $this->decode($data[self::DRIVER_DATA_WRAPPER_INDEX]);
 
         return $data;
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

@@ -29,7 +29,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
 /**
  * Class Driver
- * @property Config $config
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -117,10 +117,5 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function driverClear(): bool
     {
         return @apcu_clear_cache();
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

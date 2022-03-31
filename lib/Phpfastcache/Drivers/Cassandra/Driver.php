@@ -32,7 +32,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 /**
  * Class Driver
  * @property CassandraSession $instance Instance of driver service
- * @property Config $config
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -304,10 +304,5 @@ HELP;
             ->setRawData([])
             ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setInfo('The cache size represents only the cache data itself without counting data structures associated to the cache entries.');
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

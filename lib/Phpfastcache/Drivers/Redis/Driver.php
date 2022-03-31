@@ -28,7 +28,7 @@ use Redis as RedisClient;
 
 /**
  * @property \Redis $instance
- * @property Config $config Return the config object
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -171,10 +171,5 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function driverClear(): bool
     {
         return $this->instance->flushDB();
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

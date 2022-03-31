@@ -43,6 +43,11 @@ interface ConfigurationOptionInterface extends LockableConfigurationInterface
     public function isValidOption(string $optionName): bool;
 
     /**
+     * @return bool
+     */
+    public function isItemDetailedDate(): bool;
+
+    /**
      * @param bool $itemDetailedDate
      * @return ConfigurationOption
      */

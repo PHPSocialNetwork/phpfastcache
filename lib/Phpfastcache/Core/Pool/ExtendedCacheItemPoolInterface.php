@@ -18,6 +18,7 @@ namespace Phpfastcache\Core\Pool;
 
 use InvalidArgumentException;
 use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Config\ConfigurationOptionInterface;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\DriverStatistic;
@@ -76,14 +77,14 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
     public static function getItemClass(): string;
 
     /**
-     * @return ConfigurationOption
+     * @return ConfigurationOptionInterface
      */
-    public function getConfig(): ConfigurationOption;
+    public function getConfig(): ConfigurationOptionInterface;
 
     /**
-     * @return ConfigurationOption
+     * @return ConfigurationOptionInterface
      */
-    public function getDefaultConfig(): ConfigurationOption;
+    public function getDefaultConfig(): ConfigurationOptionInterface;
 
     /**
      * @return string

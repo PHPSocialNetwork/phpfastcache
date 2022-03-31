@@ -27,8 +27,8 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
- * @property LeveldbClient $instance Instance of driver service
- * @property Config $config
+ * @property LeveldbClient|null $instance Instance of driver service
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -134,10 +134,5 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $this->instance = $this->instance ?: new LeveldbClient($this->getLeveldbFile());
 
         return true;
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

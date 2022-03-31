@@ -25,7 +25,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
 /**
  * Requires Zend Data Cache Functions from ZendServer
- * @property Config $config Return the config object
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -115,10 +115,5 @@ HELP;
     protected function driverClear(): bool
     {
         return @zend_shm_cache_clear();
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

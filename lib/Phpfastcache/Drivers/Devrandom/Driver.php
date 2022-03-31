@@ -25,7 +25,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Psr\Cache\CacheItemInterface;
 
 /**
- * @property Config $config Return the config object
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -111,10 +111,5 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected function driverConnect(): bool
     {
         return true;
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

@@ -37,6 +37,7 @@
         "ext-apcu": "*",
         "ext-intl": "*",
         "ext-memcached": "*",
+        "ext-cassandra": "*",
         "ext-memcache": "*",
         "ext-mongodb": "*",
         "ext-redis": "*",

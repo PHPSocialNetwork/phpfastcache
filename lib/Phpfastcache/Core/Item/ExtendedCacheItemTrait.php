@@ -177,7 +177,7 @@ trait ExtendedCacheItemTrait
 
     public function isExpired(): bool
     {
-        return $this->expirationDate->getTimestamp() < (new DateTime())->getTimestamp();
+        return $this->getTtl() <= 0;
     }
 
     public function isNull(): bool
@@ -319,12 +319,12 @@ trait ExtendedCacheItemTrait
             ->set($this->getRawValue())
             ->setHit($this->isHit())
             ->setTags($this->getTags())
-            ->expiresAt($this->getExpirationDate())
+            ->expiresAt(clone $this->getExpirationDate())
             ->setDriver($itemPoolTarget ?? $this->driver);
 
         if ($this->driver->getConfig()->isItemDetailedDate()) {
-            $itemTarget->setCreationDate($this->getCreationDate())
-                ->setModificationDate($this->getModificationDate());
+            $itemTarget->setCreationDate(clone $this->getCreationDate())
+                ->setModificationDate(clone $this->getModificationDate());
         }
     }
 

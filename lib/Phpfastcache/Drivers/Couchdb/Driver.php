@@ -31,7 +31,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 /**
  * Class Driver
  * @property CouchdbClient $instance Instance of driver service
- * @property Config $config
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -284,10 +284,5 @@ HELP;
         }
 
         return $value;
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

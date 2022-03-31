@@ -28,15 +28,13 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Solarium\Client as SolariumClient;
 use Solarium\Core\Client\Adapter\Curl as SolariumCurlAdapter;
-use Solarium\Core\Client\Endpoint;
-use Solarium\Core\Client\Request;
 use Solarium\Exception\ExceptionInterface as SolariumExceptionInterface;
 use Solarium\QueryType\Select\Result\Document as SolariumDocument;
 
 /**
  * Class Driver
- * @property Config $config
  * @property SolariumClient $instance
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -244,18 +242,18 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $statusAction = $coreAdminQuery->createStatus();
         $coreAdminQuery->setAction($statusAction);
         $response = $this->instance->coreAdmin($coreAdminQuery);
-        $coreServerInfo = $response->getData()['status'][$this->config->getCoreName()];
+        $coreServerInfo = $response->getData()['status'][$this->getConfig()->getCoreName()];
 
         /**
          * Unfortunately Solarium does not offer
          * an API to query the admin info system :(
          */
-        $adminSystemInfoUrl = $this->config->getScheme()
+        $adminSystemInfoUrl = $this->getConfig()->getScheme()
             . '://'
-            . $this->config->getHost()
+            . $this->getConfig()->getHost()
             . ':'
-            . $this->config->getPort()
-            . rtrim($this->config->getPath(), '/')
+            . $this->getConfig()->getPort()
+            . rtrim($this->getConfig()->getPath(), '/')
             . '/solr/admin/info/system';
 
         if (($content = @\file_get_contents($adminSystemInfoUrl)) !== false) {
@@ -275,14 +273,9 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                 $serverSystemInfo['system']['name'] ?? '[unknown OS]',
                 $serverSystemInfo['system']['version'] ?? '[unknown OS version]',
                 $coreServerInfo['index']['numDocs'] ?? 0,
-                $this->config->getCoreName()
+                $this->getConfig()->getCoreName()
             ))
             ->setRawData($coreServerInfo)
             ->setSize($coreServerInfo['index']['sizeInBytes'] ?? 0);
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

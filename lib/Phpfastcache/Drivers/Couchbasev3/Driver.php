@@ -38,7 +38,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
  * @property Cluster $instance Instance of driver service
- * @property Config $config
+ * @method Config getConfig()
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
@@ -273,10 +273,5 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         }
 
         return $data;
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

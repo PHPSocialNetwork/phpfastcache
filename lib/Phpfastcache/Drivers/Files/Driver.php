@@ -28,7 +28,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Util\Directory;
 
 /**
- * @property Config $config
+ * @method Config getConfig()
  *
  * Important NOTE:
  * We are using getKey instead of getEncodedKey since this backend create filename that are
@@ -126,10 +126,5 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function driverClear(): bool
     {
         return Directory::rrmdir($this->getPath(true));
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

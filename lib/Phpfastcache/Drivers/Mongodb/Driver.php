@@ -39,7 +39,7 @@ use Psr\Cache\CacheItemInterface;
 
 /**
  * @property Client $instance Instance of driver service
- * @property Config $config Return the config object
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -344,10 +344,5 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         }
 
         return false;
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

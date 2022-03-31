@@ -40,12 +40,12 @@ trait CacheItemPoolTrait
     protected static string $unsupportedKeyChars = '{}()/\@:';
 
     /**
-     * @var ExtendedCacheItemInterface[]
+     * @var ExtendedCacheItemInterface[]|CacheItemInterface[]
      */
     protected array $deferredList = [];
 
     /**
-     * @var ExtendedCacheItemInterface[]
+     * @var ExtendedCacheItemInterface[]|CacheItemInterface[]
      */
     protected array $itemInstances = [];
 

@@ -38,9 +38,6 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
 
-/**
- * @property ConfigurationOption $config
- */
 abstract class ClusterPoolAbstract implements ClusterPoolInterface
 {
     use TaggableCacheItemPoolTrait;
@@ -241,10 +238,5 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
         );
 
         return $stats;
-    }
-
-    public function getConfig(): ConfigurationOption
-    {
-        return $this->config;
     }
 }

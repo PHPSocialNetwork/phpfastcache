@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of Phpfastcache.
@@ -23,24 +24,15 @@ use Predis\Client;
 class Config extends ConfigurationOption
 {
     protected string $host = '127.0.0.1';
-
     protected int $port = 6379;
-
     protected string $password = '';
-
     protected int $database = 0;
-
     protected ?Client $predisClient = null;
-
     protected string $optPrefix = '';
-
     protected int $timeout = 5;
-
     protected bool $persistent = false;
-
     protected string $scheme = 'unix';
-
-    /**
+/**
      * @return array
      */
     public function getPredisConfigArray(): array

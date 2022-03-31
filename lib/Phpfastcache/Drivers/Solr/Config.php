@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of Phpfastcache.
@@ -34,23 +35,16 @@ class Config extends ConfigurationOption
         ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX => ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX . '_s',
         TaggableCacheItemPoolInterface::DRIVER_TAGS_WRAPPER_INDEX => TaggableCacheItemPoolInterface::DRIVER_TAGS_WRAPPER_INDEX . '_ss',
     ];
-
     protected string $host = '127.0.0.1';
-
     protected int $port = 8983;
-
     protected string $coreName = 'phpfastcache';
-
     protected string $endpointName = 'phpfastcache';
-
     protected string $scheme = 'http';
-
-    protected string $path = '/'; // Override of ConfigurationOption
+    protected string $path = '/';
+// Override of ConfigurationOption
 
     protected array $mappingSchema = self::DEFAULT_MAPPING_SCHEMA;
-
     protected EventDispatcherInterface $eventDispatcher;
-
     public function __construct(array $parameters = [])
     {
         $this->eventDispatcher = $this->getDefaultEventDispatcher();
@@ -187,9 +181,7 @@ class Config extends ConfigurationOption
     public function setMappingSchema(array $mappingSchema): Config
     {
         $this->enforceLockedProperty(__FUNCTION__);
-
         $diff = array_diff(array_keys(self::DEFAULT_MAPPING_SCHEMA), array_keys($mappingSchema));
-
         if ($diff) {
             throw new PhpfastcacheInvalidArgumentException('Missing keys for the solr mapping schema: ' . \implode(', ', $diff));
         }

@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Dynamodb;
@@ -19,7 +20,6 @@ use Aws\Sdk as AwsSdk;
 use Aws\DynamoDb\DynamoDbClient as AwsDynamoDbClient;
 use Aws\DynamoDb\Marshaler as AwsMarshaler;
 use Aws\DynamoDb\Exception\DynamoDbException as AwsDynamoDbException;
-
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
@@ -189,7 +189,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return \count($this->instance->listTables(['TableNames' => [$this->getConfig()->getTable()]])->get('TableNames')) > 0;
     }
 
-    protected function createTable() :void
+    protected function createTable(): void
     {
         $params = [
             'TableName' => $this->getConfig()->getTable(),

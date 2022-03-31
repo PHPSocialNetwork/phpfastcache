@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Memcache;
@@ -127,10 +128,12 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
              * Since Memcached does not throw
              * any error if not connected ...
              */
-            if (!$this->instance->getServerStatus(
-                !empty($server['path']) ? $server['path'] : $server['host'],
-                !empty($server['port']) ? $server['port'] : 0
-            )) {
+            if (
+                !$this->instance->getServerStatus(
+                    !empty($server['path']) ? $server['path'] : $server['host'],
+                    !empty($server['port']) ? $server['port'] : 0
+                )
+            ) {
                 throw new PhpfastcacheDriverException('Memcache seems to not be connected');
             }
         }

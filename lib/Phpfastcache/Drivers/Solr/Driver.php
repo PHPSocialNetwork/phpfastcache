@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Solr;
@@ -39,6 +40,8 @@ use Solarium\QueryType\Select\Result\Document as SolariumDocument;
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
+    use TaggableCacheItemPoolTrait;
+
     public const MINIMUM_SOLARIUM_VERSION = '6.1.0';
 
     public const SOLR_DEFAULT_ID_FIELD = 'id';
@@ -46,8 +49,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     public const SOLR_DISCRIMINATOR_FIELD = 'type';
 
     public const SOLR_DISCRIMINATOR_VALUE = '_pfc_';
-
-    use TaggableCacheItemPoolTrait;
 
     /**
      * Copy of configuration entry for performance optimization

@@ -11,6 +11,7 @@
  * @author  Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Cluster\Drivers\FullReplication;
@@ -44,7 +45,8 @@ class Driver extends ClusterPoolAbstract
                 $itemData = $item->get();
                 $poolItemData = $poolItem->get();
 
-                if (\is_object($itemData)
+                if (
+                    \is_object($itemData)
                 ) {
                     if ($item->get() != $poolItemData) {
                         $poolsToResync[] = $driverPool;

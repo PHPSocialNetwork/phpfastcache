@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool;
@@ -183,7 +184,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      * @param ExtendedCacheItemInterface[] $items
      * @return bool
      */
-    public function saveMultiple(ExtendedCacheItemInterface...$items): bool;
+    public function saveMultiple(ExtendedCacheItemInterface ...$items): bool;
 
     /**
      * @return DriverIO

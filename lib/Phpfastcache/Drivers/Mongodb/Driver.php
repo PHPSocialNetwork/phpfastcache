@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Mongodb;
@@ -42,9 +43,9 @@ use Psr\Cache\CacheItemInterface;
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    public const MONGODB_DEFAULT_DB_NAME = 'phpfastcache'; // Public because used in config
-
     use TaggableCacheItemPoolTrait;
+
+    public const MONGODB_DEFAULT_DB_NAME = 'phpfastcache'; // Public because used in config
 
     /**
      * @var Collection

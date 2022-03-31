@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Couchdb;
@@ -34,9 +35,9 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    public const COUCHDB_DEFAULT_DB_NAME = 'phpfastcache'; // Public because used in config
-
     use TaggableCacheItemPoolTrait;
+
+    public const COUCHDB_DEFAULT_DB_NAME = 'phpfastcache'; // Public because used in config
 
     /**
      * @return bool

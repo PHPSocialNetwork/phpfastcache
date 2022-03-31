@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Cassandra;
@@ -35,10 +36,10 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
+    use TaggableCacheItemPoolTrait;
+
     protected const CASSANDRA_KEY_SPACE = 'phpfastcache';
     protected const CASSANDRA_TABLE = 'cacheItems';
-
-    use TaggableCacheItemPoolTrait;
 
     /**
      * @return bool

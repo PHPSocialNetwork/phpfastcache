@@ -11,6 +11,7 @@
  * @author  Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Cluster;
@@ -106,7 +107,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
     /**
      * @inheritDoc
      */
-    public function getConfigs() : array
+    public function getConfigs(): array
     {
         $configs = [];
 
@@ -242,7 +243,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
         return $stats;
     }
 
-    public function getConfig() : ConfigurationOption
+    public function getConfig(): ConfigurationOption
     {
         return $this->config;
     }

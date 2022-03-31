@@ -150,7 +150,7 @@ trait DriverBaseTrait
         ];
 
         if ($this->getConfig()->isItemDetailedDate()) {
-            $wrap[self::DRIVER_MDATE_WRAPPER_INDEX] = $item->getModificationDate();
+            $wrap[self::DRIVER_MDATE_WRAPPER_INDEX] = new DateTime();// Always on the latest date
             /**
              * If the creation date exists
              * reuse it else set a new Date

@@ -346,6 +346,7 @@ class ConfigurationOption extends AbstractConfigurationOption implements Configu
                 'SERVER' => $keyName !== null ? $_SERVER[$keyName] ?? null : $_SERVER,
                 'REQUEST' => $keyName !== null ? $_REQUEST[$keyName] ?? null : $_REQUEST,
                 'COOKIE' => $keyName !== null ? $_COOKIE[$keyName] ?? null : $_COOKIE,
+                default => null,
             };
         });
     }

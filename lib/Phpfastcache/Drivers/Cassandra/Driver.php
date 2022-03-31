@@ -31,7 +31,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
  * Class Driver
- * @property CassandraSession $instance Instance of driver service
+ * @property CassandraSession|null $instance Instance of driver service
  * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
@@ -56,10 +56,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     protected function driverConnect(): bool
     {
-        if ($this->instance instanceof CassandraSession) {
-            throw new PhpfastcacheLogicException('Already connected to Couchbase server');
-        }
-
         $clientConfig = $this->getConfig();
 
         $clusterBuilder = Cassandra::cluster()
@@ -82,7 +78,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             $clusterBuilder->withCredentials($clientConfig->getUsername(), $clientConfig->getPassword());
         }
 
-        $this->instance = $clusterBuilder->build()->connect();
+        $this->instance = $clusterBuilder->build()->connect('');
 
         /**
          * In case of emergency:
@@ -97,9 +93,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                     "CREATE KEYSPACE IF NOT EXISTS %s WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };",
                     self::CASSANDRA_KEY_SPACE
                 )
-            )
+            ),
+            []
         );
-        $this->instance->execute(new Cassandra\SimpleStatement(sprintf('USE %s;', self::CASSANDRA_KEY_SPACE)));
+        $this->instance->execute(new Cassandra\SimpleStatement(sprintf('USE %s;', self::CASSANDRA_KEY_SPACE)), []);
         $this->instance->execute(
             new Cassandra\SimpleStatement(
                 sprintf(
@@ -115,7 +112,8 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                 );',
                     self::CASSANDRA_TABLE
                 )
-            )
+            ),
+            []
         );
 
         return true;

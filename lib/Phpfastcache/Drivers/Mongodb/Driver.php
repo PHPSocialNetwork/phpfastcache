@@ -87,8 +87,8 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $databaseName = $this->getConfig()->getDatabaseName();
         $driverOptions = $this->getConfig()->getDriverOptions();
 
-        $this->instance = $this->instance ?? new Client($this->buildConnectionURI($databaseName), ['connectTimeoutMS' => $timeout], $driverOptions);
-        $this->database = $this->database ?? $this->instance->selectDatabase($databaseName);
+        $this->instance = new Client($this->buildConnectionURI($databaseName), ['connectTimeoutMS' => $timeout], $driverOptions);
+        $this->database = $this->instance->selectDatabase($databaseName);
 
         if (!$this->collectionExists($collectionName)) {
             $this->database->createCollection($collectionName);
@@ -162,7 +162,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                     self::DRIVER_CDATE_WRAPPER_INDEX =>  new UTCDateTime($item->getCreationDate()),
                 ];
             }
-            $result = (array)$this->getCollection()->updateOne(
+            $result = $this->getCollection()->updateOne(
                 ['_id' => $this->getMongoDbItemKey($item)],
                 [
                     '$set' => $set,
@@ -173,7 +173,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             throw new PhpfastcacheDriverException('Got an exception while trying to write data to MongoDB server: ' . $e->getMessage(), 0, $e);
         }
 
-        return !isset($result['ok']) || (int) $result['ok'] === 1;
+        return $result->isAcknowledged();
     }
 
     /**

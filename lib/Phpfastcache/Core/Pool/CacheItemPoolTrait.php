@@ -227,10 +227,9 @@ trait CacheItemPoolTrait
             $this->eventManager->dispatch(Event::CACHE_GET_ITEM, $this, $item);
 
             $item->isHit() ? $this->getIO()->incReadHit() : $this->getIO()->incReadMiss();
-
-            return $item;
         }
-        throw new PhpfastcacheInvalidArgumentException(\sprintf('Item %s was not built due to an unknown error', \gettype($key)));
+
+        return $item;
     }
 
     /**
@@ -354,7 +353,7 @@ trait CacheItemPoolTrait
             $return = true;
             foreach ($this->deferredList as $key => $item) {
                 $result = $this->save($item);
-                if ($return !== true) {
+                if ($result !== true) {
                     unset($this->deferredList[$key]);
                     $return = $result;
                 }

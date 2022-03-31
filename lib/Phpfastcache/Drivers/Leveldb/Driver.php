@@ -131,7 +131,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             throw new PhpfastcacheLogicException('Already connected to Leveldb database');
         }
 
-        $this->instance = $this->instance ?: new LeveldbClient($this->getLeveldbFile());
+        $this->instance = new LeveldbClient($this->getLeveldbFile());
 
         return true;
     }

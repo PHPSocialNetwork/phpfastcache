@@ -150,12 +150,12 @@ trait DriverBaseTrait
         ];
 
         if ($this->getConfig()->isItemDetailedDate()) {
-            $wrap[self::DRIVER_MDATE_WRAPPER_INDEX] = new DateTime();
+            $wrap[self::DRIVER_MDATE_WRAPPER_INDEX] = $item->getModificationDate();
             /**
              * If the creation date exists
              * reuse it else set a new Date
              */
-            $wrap[self::DRIVER_CDATE_WRAPPER_INDEX] = $item->getCreationDate() ?: new DateTime();
+            $wrap[self::DRIVER_CDATE_WRAPPER_INDEX] = $item->getCreationDate();
         } else {
             $wrap[self::DRIVER_MDATE_WRAPPER_INDEX] = null;
             $wrap[self::DRIVER_CDATE_WRAPPER_INDEX] = null;

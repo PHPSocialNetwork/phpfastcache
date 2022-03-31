@@ -41,7 +41,7 @@ jobs:
         run: ./vendor/bin/phpmd lib/ ansi phpmd.xml
 
       - name: Run PHPSTAN (lite)
-        run: ./vendor/bin/phpstan analyse lib/ -l 3 -c phpstan_lite.neon 2>&1
+        run: ./vendor/bin/phpstan analyse lib/ -l 4 -c phpstan_lite.neon 2>&1
 
       - name: Run TESTS
         env:

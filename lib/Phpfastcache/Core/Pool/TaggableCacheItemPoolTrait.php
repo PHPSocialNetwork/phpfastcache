@@ -157,7 +157,7 @@ trait TaggableCacheItemPoolTrait
 
         foreach ($this->getItemsByTags($tagNames, $strategy) as $item) {
             $result = $this->deleteItem($item->getKey());
-            if ($return !== true) {
+            if ($result !== true) {
                 $return = $result;
             }
         }
@@ -179,7 +179,7 @@ trait TaggableCacheItemPoolTrait
         $return = true;
         foreach ($this->getItemsByTag($tagName, $strategy) as $item) {
             $result = $this->deleteItem($item->getKey());
-            if ($return !== true) {
+            if ($result !== true) {
                 $return = $result;
             }
         }
@@ -225,7 +225,7 @@ trait TaggableCacheItemPoolTrait
         $return = true;
         foreach ($tagNames as $tagName) {
             $result = $this->incrementItemsByTag($tagName, $step, $strategy);
-            if ($return !== true) {
+            if ($result !== true) {
                 $return = $result;
             }
         }
@@ -270,7 +270,7 @@ trait TaggableCacheItemPoolTrait
         $return = true;
         foreach ($tagNames as $tagName) {
             $result = $this->decrementItemsByTag($tagName, $step, $strategy);
-            if ($return !== true) {
+            if ($result !== true) {
                 $return = $result;
             }
         }
@@ -315,7 +315,7 @@ trait TaggableCacheItemPoolTrait
         $return = true;
         foreach ($tagNames as $tagName) {
             $result = $this->appendItemsByTag($tagName, $data, $strategy);
-            if ($return !== true) {
+            if ($result !== true) {
                 $return = $result;
             }
         }
@@ -360,7 +360,7 @@ trait TaggableCacheItemPoolTrait
         $return = true;
         foreach ($tagNames as $tagName) {
             $result = $this->prependItemsByTag($tagName, $data, $strategy);
-            if ($return !== true) {
+            if ($result !== true) {
                 $return = $result;
             }
         }

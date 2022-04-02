@@ -57,7 +57,7 @@ trait CacheItemPoolTrait
      */
     public function setItem(CacheItemInterface $item): static
     {
-        if ($this->getItemClass() === $item::class) {
+        if (self::getItemClass() === $item::class) {
             if (!$this->getConfig()->isUseStaticItemCaching()) {
                 throw new PhpfastcacheLogicException(
                     'The static item caching option (useStaticItemCaching) is disabled so you cannot attach an item.'
@@ -199,7 +199,7 @@ trait CacheItemPoolTrait
                      * Reset the Item
                      */
                     $item->set(null)
-                        ->expiresAfter(abs((int)$this->getConfig()->getDefaultTtl()))
+                        ->expiresAfter(abs($this->getConfig()->getDefaultTtl()))
                         ->setHit(false)
                         ->setTags([]);
                     if ($this->getConfig()->isItemDetailedDate()) {
@@ -414,6 +414,10 @@ trait CacheItemPoolTrait
 
         if ($this->driverWrite($item) && $this->driverWriteTags($item)) {
             $item->setHit(true);
+            if ($this->getConfig()->isItemDetailedDate()) {
+                $item->setModificationDate(new \DateTime());
+            }
+
             $this->getIO()->incWriteHit();
 
             return true;

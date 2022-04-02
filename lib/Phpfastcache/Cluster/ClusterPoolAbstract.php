@@ -2,7 +2,7 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
@@ -182,7 +182,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
              */
             if ($driverPool === $this) {
                 /** @var ExtendedCacheItemInterface $itemPool */
-                $itemClass = $driverPool->getItemClass();
+                $itemClass = $driverPool::getItemClass();
                 $itemPool = new $itemClass($this, $item->getKey(), $this->getEventManager());
                 $item->cloneInto($itemPool, $driverPool);
 

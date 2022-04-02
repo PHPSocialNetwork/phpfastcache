@@ -1,7 +1,10 @@
 ## 9.1.0
-##### xx april 2022
+##### 04 april 2022
+- __API__
+  - Upgraded Phpfastcache API to `4.1.0` ([see changes](CHANGELOG_API.md))
 - __Core__
   - Deprecated `\Phpfastcache\Config\Config::class` 
+  - Removed/reworked/improved dead/unreachable/redundant/obsolete code, thanks to `Phpstan`
 - __Drivers__
   - **Added `Solr` driver support**
 - __Cluster__
@@ -40,7 +43,7 @@
 - __PSR-16__
   - Upgraded `psr/simple-cache` dependency to `^2.0||^3.0` (for PHP-8 types)
 - __API__
-  - Upgraded Phpfastcache API `4.0.0` ([see changes](CHANGELOG_API.md))
+  - Upgraded Phpfastcache API to `4.0.0` ([see changes](CHANGELOG_API.md))
   - Renamed `Api::getPhpFastCacheVersion()` to `Api::getPhpfastcacheVersion()`
   - Renamed `Api::getPhpFastCacheChangelog()` to `Api::getPhpfastcacheChangelog()`
   - Renamed `Api::getPhpFastCacheGitHeadHash()` to `Api::getPhpfastcacheGitHeadHash()`

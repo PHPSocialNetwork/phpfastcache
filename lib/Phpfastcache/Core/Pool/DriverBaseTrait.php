@@ -162,12 +162,11 @@ trait DriverBaseTrait
         }
 
         if ($stringifyDate) {
-            $wrap = \array_map(static function ($value) {
-                if ($value instanceof DateTimeInterface) {
-                    return $value->format(DateTimeInterface::W3C);
+            \array_walk($wrap, static function (mixed &$value, string $key): void {
+                if ($value instanceof DateTimeInterface && $key !== self::DRIVER_DATA_WRAPPER_INDEX) {
+                    $value = $value->format(DateTimeInterface::W3C);
                 }
-                return $value;
-            }, $wrap);
+            });
         }
 
         return $wrap;

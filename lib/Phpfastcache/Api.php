@@ -21,11 +21,11 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
  * Class Api
- * @package phpFastCache
+ * @package Phpfastcache
  */
 class Api
 {
-    protected static string $version = '4.0.0';
+    protected static string $version = '4.1.0';
 
     /**
      * Api constructor.

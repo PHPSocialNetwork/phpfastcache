@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of Phpfastcache.
@@ -19,5 +20,4 @@ use Phpfastcache\Config\ConfigurationOption;
 
 class Config extends ConfigurationOption
 {
-
 }

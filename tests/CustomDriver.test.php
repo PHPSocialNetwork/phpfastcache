@@ -27,7 +27,7 @@ if (!class_exists(Phpfastcache\Drivers\Fakefiles\Item::class)
   || !class_exists(Phpfastcache\Drivers\Fakefiles\Driver::class)
   || !class_exists(Phpfastcache\Drivers\Fakefiles\Config::class)
 ) {
-    $testHelper->assertFail('The php classes of driver "Fakefiles" does not exists');
+    $testHelper->assertFail('The php classes of driver "Fakefiles" do not exist');
     $testHelper->terminateTest();
 } else {
     $testHelper->assertPass('The php classes of driver "Fakefiles" were found');

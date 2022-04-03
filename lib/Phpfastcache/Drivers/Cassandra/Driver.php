@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Cassandra;
@@ -30,15 +31,15 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
  * Class Driver
- * @property CassandraSession $instance Instance of driver service
- * @property Config $config
+ * @property CassandraSession|null $instance Instance of driver service
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
+    use TaggableCacheItemPoolTrait;
+
     protected const CASSANDRA_KEY_SPACE = 'phpfastcache';
     protected const CASSANDRA_TABLE = 'cacheItems';
-
-    use TaggableCacheItemPoolTrait;
 
     /**
      * @return bool
@@ -55,10 +56,6 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      */
     protected function driverConnect(): bool
     {
-        if ($this->instance instanceof CassandraSession) {
-            throw new PhpfastcacheLogicException('Already connected to Couchbase server');
-        }
-
         $clientConfig = $this->getConfig();
 
         $clusterBuilder = Cassandra::cluster()
@@ -81,7 +78,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             $clusterBuilder->withCredentials($clientConfig->getUsername(), $clientConfig->getPassword());
         }
 
-        $this->instance = $clusterBuilder->build()->connect();
+        $this->instance = $clusterBuilder->build()->connect('');
 
         /**
          * In case of emergency:
@@ -96,9 +93,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                     "CREATE KEYSPACE IF NOT EXISTS %s WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };",
                     self::CASSANDRA_KEY_SPACE
                 )
-            )
+            ),
+            []
         );
-        $this->instance->execute(new Cassandra\SimpleStatement(sprintf('USE %s;', self::CASSANDRA_KEY_SPACE)));
+        $this->instance->execute(new Cassandra\SimpleStatement(sprintf('USE %s;', self::CASSANDRA_KEY_SPACE)), []);
         $this->instance->execute(
             new Cassandra\SimpleStatement(
                 sprintf(
@@ -114,7 +112,8 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                 );',
                     self::CASSANDRA_TABLE
                 )
-            )
+            ),
+            []
         );
 
         return true;
@@ -303,10 +302,5 @@ HELP;
             ->setRawData([])
             ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setInfo('The cache size represents only the cache data itself without counting data structures associated to the cache entries.');
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

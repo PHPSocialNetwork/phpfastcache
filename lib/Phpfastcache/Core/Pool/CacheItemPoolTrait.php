@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool;
@@ -20,17 +21,13 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\ItemBatch;
 use Phpfastcache\Event\Event;
-use Phpfastcache\Event\EventManagerDispatcherTrait;
 use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheCoreException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
-use Phpfastcache\Util\ClassNamespaceResolverTrait;
 use Psr\Cache\CacheItemInterface;
-use ReflectionClass;
-use ReflectionObject;
 use RuntimeException;
 
 trait CacheItemPoolTrait
@@ -43,12 +40,12 @@ trait CacheItemPoolTrait
     protected static string $unsupportedKeyChars = '{}()/\@:';
 
     /**
-     * @var ExtendedCacheItemInterface[]
+     * @var ExtendedCacheItemInterface[]|CacheItemInterface[]
      */
     protected array $deferredList = [];
 
     /**
-     * @var ExtendedCacheItemInterface[]
+     * @var ExtendedCacheItemInterface[]|CacheItemInterface[]
      */
     protected array $itemInstances = [];
 
@@ -60,7 +57,7 @@ trait CacheItemPoolTrait
      */
     public function setItem(CacheItemInterface $item): static
     {
-        if ($this->getItemClass() === $item::class) {
+        if (self::getItemClass() === $item::class) {
             if (!$this->getConfig()->isUseStaticItemCaching()) {
                 throw new PhpfastcacheLogicException(
                     'The static item caching option (useStaticItemCaching) is disabled so you cannot attach an item.'
@@ -202,7 +199,7 @@ trait CacheItemPoolTrait
                      * Reset the Item
                      */
                     $item->set(null)
-                        ->expiresAfter(abs((int)$this->getConfig()->getDefaultTtl()))
+                        ->expiresAfter(abs($this->getConfig()->getDefaultTtl()))
                         ->setHit(false)
                         ->setTags([]);
                     if ($this->getConfig()->isItemDetailedDate()) {
@@ -230,10 +227,9 @@ trait CacheItemPoolTrait
             $this->eventManager->dispatch(Event::CACHE_GET_ITEM, $this, $item);
 
             $item->isHit() ? $this->getIO()->incReadHit() : $this->getIO()->incReadMiss();
-
-            return $item;
         }
-        throw new PhpfastcacheInvalidArgumentException(\sprintf('Item %s was not build due to an unknown error', \gettype($key)));
+
+        return $item;
     }
 
     /**
@@ -357,7 +353,7 @@ trait CacheItemPoolTrait
             $return = true;
             foreach ($this->deferredList as $key => $item) {
                 $result = $this->save($item);
-                if ($return !== true) {
+                if ($result !== true) {
                     unset($this->deferredList[$key]);
                     $return = $result;
                 }
@@ -418,6 +414,10 @@ trait CacheItemPoolTrait
 
         if ($this->driverWrite($item) && $this->driverWriteTags($item)) {
             $item->setHit(true);
+            if ($this->getConfig()->isItemDetailedDate()) {
+                $item->setModificationDate(new \DateTime());
+            }
+
             $this->getIO()->incWriteHit();
 
             return true;

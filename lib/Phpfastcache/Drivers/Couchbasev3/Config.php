@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of Phpfastcache.
@@ -21,21 +22,15 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 class Config extends ConfigurationOption
 {
     protected const DEFAULT_VALUE = '_default';
-
     protected string $host = '127.0.0.1';
-
-    protected int $port = 8091;// SSL: 18091
+    protected int $port = 8091;
+// SSL: 18091
 
     protected string $username = '';
-
     protected string $password = '';
-
     protected string $bucketName = self::DEFAULT_VALUE;
-
     protected string $scopeName = self::DEFAULT_VALUE;
-
     protected string $collectionName = self::DEFAULT_VALUE;
-
     public function getHost(): string
     {
         return $this->host;

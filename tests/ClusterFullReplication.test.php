@@ -28,7 +28,6 @@ $clusterAggregator->aggregateDriver(CacheManager::getInstance('Redis'));
 $clusterAggregator->aggregateDriver(CacheManager::getInstance('Files'));
 $clusterAggregator->aggregateDriver(CacheManager::getInstance('Sqlite'));
 $cluster = $clusterAggregator->getCluster(AggregatorInterface::STRATEGY_FULL_REPLICATION);
-$cluster->clear();
 
 $testHelper->runCRUDTests($cluster);
 

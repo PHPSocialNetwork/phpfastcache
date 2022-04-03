@@ -11,28 +11,24 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache;
 
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
+use Phpfastcache\Helper\UninstanciableObjectTrait;
 
 /**
  * Class Api
- * @package phpFastCache
+ * @package Phpfastcache
  */
 class Api
 {
-    protected static string $version = '4.0.0';
+    use UninstanciableObjectTrait;
 
-    /**
-     * Api constructor.
-     */
-    final protected function __construct()
-    {
-        // The Api is not meant to be instantiated
-    }
+    protected static string $version = '4.1.0';
 
     /**
      * This method will return the current

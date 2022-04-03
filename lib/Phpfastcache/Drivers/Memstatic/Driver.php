@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Memstatic;
@@ -25,7 +26,7 @@ use Psr\Cache\CacheItemInterface;
 
 /**
  * Class Driver
- * @property Config $config
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -114,10 +115,5 @@ class Driver implements ExtendedCacheItemPoolInterface
             ->setRawData($this->staticStack);
 
         return $stat;
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

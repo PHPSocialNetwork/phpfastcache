@@ -5,7 +5,7 @@
     <arg name="colors"/>
     <arg value="p"/>
     <ini name="memory_limit" value="256M"/>
-    <rule ref="PSR2"/>
+    <rule ref="PSR12"/>
 
     <exclude-pattern>tests/*</exclude-pattern>
     <exclude-pattern>bin/*</exclude-pattern>

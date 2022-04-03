@@ -1,4 +1,4 @@
-ClusterFullReplication.test.php<?php
+<?php
 
 /**
  *

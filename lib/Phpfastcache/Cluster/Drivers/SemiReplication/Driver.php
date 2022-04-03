@@ -2,7 +2,7 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
@@ -11,6 +11,7 @@
  * @author  Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Cluster\Drivers\SemiReplication;
@@ -26,12 +27,12 @@ class Driver extends ClusterPoolAbstract
 {
     /**
      * @inheritDoc
-     * @throws PhpfastcacheReplicationException
      * @throws InvalidArgumentException
+     * @throws PhpfastcacheReplicationException
      */
     public function getItem(string $key): ExtendedCacheItemInterface
     {
-        /** @var ExtendedCacheItemInterface $item */
+        /** @var ?ExtendedCacheItemInterface $item */
         $item = null;
         $eCount = 0;
 
@@ -51,7 +52,12 @@ class Driver extends ClusterPoolAbstract
             throw new PhpfastcacheReplicationException('Every pools thrown an exception');
         }
 
-        return $this->getStandardizedItem($item ?? new Item($this, $key, $this->getEventManager()), $this);
+        if ($item === null) {
+            $item = new Item($this, $key, $this->getEventManager());
+            $item->expiresAfter(abs($this->getConfig()->getDefaultTtl()));
+        }
+
+        return $this->getStandardizedItem($item, $this);
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of Phpfastcache.
@@ -36,13 +37,9 @@ class Config extends ConfigurationOption
      *      ]);
      */
     protected array $servers = [];
-
     protected string $host = '127.0.0.1';
-
     protected int $port = 11211;
-
-
-    /**
+/**
      * @return array
      */
     public function getServers(): array
@@ -93,7 +90,7 @@ class Config extends ConfigurationOption
                 throw new PhpfastcacheInvalidConfigurationException('Path must be a valid string in "$server" configuration array if host is not defined');
             }
 
-            if (!empty($server['host']) && (empty($server['port']) || !is_int($server['port'])|| $server['port'] < 1)) {
+            if (!empty($server['host']) && (empty($server['port']) || !is_int($server['port']) || $server['port'] < 1)) {
                 throw new PhpfastcacheInvalidConfigurationException('Port must be a valid integer in "$server" configuration array');
             }
 
@@ -122,7 +119,6 @@ class Config extends ConfigurationOption
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->host = $host;
-
         return $this;
     }
 

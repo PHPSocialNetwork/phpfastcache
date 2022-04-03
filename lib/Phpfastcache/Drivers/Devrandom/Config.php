@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of Phpfastcache.
@@ -22,10 +23,8 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 class Config extends ConfigurationOption
 {
     protected int $dataLength = 16;
-
     protected int $chanceOfRetrieval = 50;
-
-    /**
+/**
      * @return int
      */
     public function getDataLength(): int

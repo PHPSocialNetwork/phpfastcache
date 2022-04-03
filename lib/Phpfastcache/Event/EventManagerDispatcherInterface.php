@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of Phpfastcache.
@@ -21,14 +22,12 @@ interface EventManagerDispatcherInterface
      * @return EventManagerInterface
      */
     public function getEventManager(): EventManagerInterface;
-
-    /**
+/**
      * @param EventManagerInterface $eventManager
      * @return mixed
      */
     public function setEventManager(EventManagerInterface $eventManager): static;
-
-    /**
+/**
      * @return bool
      */
     public function hasEventManager(): bool;

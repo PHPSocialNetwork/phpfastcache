@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Leveldb;
@@ -26,8 +27,8 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
- * @property LeveldbClient $instance Instance of driver service
- * @property Config $config
+ * @property LeveldbClient|null $instance Instance of driver service
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -130,13 +131,8 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             throw new PhpfastcacheLogicException('Already connected to Leveldb database');
         }
 
-        $this->instance = $this->instance ?: new LeveldbClient($this->getLeveldbFile());
+        $this->instance = new LeveldbClient($this->getLeveldbFile());
 
         return true;
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

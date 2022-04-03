@@ -11,12 +11,14 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool;
 
 use InvalidArgumentException;
 use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Config\ConfigurationOptionInterface;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\DriverStatistic;
@@ -75,14 +77,14 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
     public static function getItemClass(): string;
 
     /**
-     * @return ConfigurationOption
+     * @return ConfigurationOptionInterface
      */
-    public function getConfig(): ConfigurationOption;
+    public function getConfig(): ConfigurationOptionInterface;
 
     /**
-     * @return ConfigurationOption
+     * @return ConfigurationOptionInterface
      */
-    public function getDefaultConfig(): ConfigurationOption;
+    public function getDefaultConfig(): ConfigurationOptionInterface;
 
     /**
      * @return string
@@ -95,7 +97,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
     public function getInstanceId(): string;
 
     /**
-     * [phpFastCache phpDoc Override]
+     * [Phpfastcache phpDoc Override]
      * Returns a Cache Item representing the specified key.
      *
      * This method must always return a CacheItemInterface object, even in case of
@@ -114,10 +116,10 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
     public function getItem(string $key): ExtendedCacheItemInterface;
 
     /**
-     * [phpFastCache phpDoc Override]
+     * [Phpfastcache phpDoc Override]
      * Returns a traversable set of cache items.
      *
-     * @param array $keys
+     * @param string[] $keys
      * An indexed array of keys of items to retrieve.
      *
      * @return ExtendedCacheItemInterface[]
@@ -167,13 +169,24 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
     /**
      * Returns true if the item exists, is attached and the Spl Hash matches
      * Returns false if the item exists, is attached and the Spl Hash mismatches
-     * Returns null if the item does not exists
+     * Returns null if the item does not exist
      *
      * @param CacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheLogicException
      */
     public function isAttached(CacheItemInterface $item): bool;
+
+    /**
+     * Persists a cache item immediately.
+     *
+     * @param ExtendedCacheItemInterface|CacheItemInterface $item
+     *   The cache item to save.
+     *
+     * @return bool
+     *   True if the item was successfully persisted. False if there was an error.
+     */
+    public function save(ExtendedCacheItemInterface|CacheItemInterface $item): bool;
 
     /**
      * Save multiple items, possible uses:
@@ -183,7 +196,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      * @param ExtendedCacheItemInterface[] $items
      * @return bool
      */
-    public function saveMultiple(ExtendedCacheItemInterface...$items): bool;
+    public function saveMultiple(ExtendedCacheItemInterface ...$items): bool;
 
     /**
      * @return DriverIO

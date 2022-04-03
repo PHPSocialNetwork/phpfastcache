@@ -2,7 +2,7 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
@@ -11,6 +11,7 @@
  * @author  Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Cluster;
@@ -19,5 +20,4 @@ use Psr\Cache\CacheItemPoolInterface;
 
 interface AggregatablePoolInterface extends CacheItemPoolInterface
 {
-
 }

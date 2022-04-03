@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Redis;
@@ -27,7 +28,7 @@ use Redis as RedisClient;
 
 /**
  * @property \Redis $instance
- * @property Config $config Return the config object
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -161,7 +162,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     {
         $this->assertCacheItemType($item, Item::class);
 
-        return (bool)$this->instance->del($item->getKey());
+        return (bool) $this->instance->del($item->getKey());
     }
 
     /**
@@ -170,10 +171,5 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function driverClear(): bool
     {
         return $this->instance->flushDB();
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of Phpfastcache.
@@ -82,6 +83,14 @@ class ConfigurationOption extends AbstractConfigurationOption implements Configu
     public function toArray(): array
     {
         return \get_object_vars($this);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function isValueSerializable(mixed $val): bool
+    {
+        return !\is_callable($val) && !(is_object($val) && (new \ReflectionClass($val))->isAnonymous());
     }
 
     /**
@@ -337,6 +346,7 @@ class ConfigurationOption extends AbstractConfigurationOption implements Configu
                 'SERVER' => $keyName !== null ? $_SERVER[$keyName] ?? null : $_SERVER,
                 'REQUEST' => $keyName !== null ? $_REQUEST[$keyName] ?? null : $_REQUEST,
                 'COOKIE' => $keyName !== null ? $_COOKIE[$keyName] ?? null : $_COOKIE,
+                default => null,
             };
         });
     }

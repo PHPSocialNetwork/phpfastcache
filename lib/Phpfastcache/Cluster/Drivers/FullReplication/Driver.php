@@ -2,7 +2,7 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
@@ -11,6 +11,7 @@
  * @author  Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Cluster\Drivers\FullReplication;
@@ -30,7 +31,7 @@ class Driver extends ClusterPoolAbstract
     {
         /** @var ExtendedCacheItemPoolInterface[] $poolsToResync */
         $poolsToResync = [];
-        /** @var ExtendedCacheItemInterface $item */
+        /** @var ?ExtendedCacheItemInterface $item */
         $item = null;
 
         foreach ($this->clusterPools as $driverPool) {
@@ -44,7 +45,8 @@ class Driver extends ClusterPoolAbstract
                 $itemData = $item->get();
                 $poolItemData = $poolItem->get();
 
-                if (\is_object($itemData)
+                if (
+                    \is_object($itemData)
                 ) {
                     if ($item->get() != $poolItemData) {
                         $poolsToResync[] = $driverPool;
@@ -72,7 +74,12 @@ class Driver extends ClusterPoolAbstract
             }
         }
 
-        return $this->getStandardizedItem($item ?? new Item($this, $key, $this->getEventManager()), $this);
+        if ($item === null) {
+            $item = new Item($this, $key, $this->getEventManager());
+            $item->expiresAfter(abs($this->getConfig()->getDefaultTtl()));
+        }
+
+        return $this->getStandardizedItem($item, $this);
     }
 
     /**

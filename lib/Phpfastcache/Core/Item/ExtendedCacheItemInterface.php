@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Core\Item;
@@ -32,7 +33,6 @@ interface ExtendedCacheItemInterface extends
     JsonSerializable,
     TaggableCacheItemInterface
 {
-
     /**
      * Returns the encoded key for the current cache item.
      * Is a MD5 (default),SHA1,SHA256 hash if "defaultKeyHashFunction" config option is configured

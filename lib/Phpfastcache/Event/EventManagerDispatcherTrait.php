@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of Phpfastcache.
@@ -21,8 +22,7 @@ trait EventManagerDispatcherTrait
      * @var EventManagerInterface
      */
     protected EventManagerInterface $eventManager;
-
-    /**
+/**
      * @return EventManagerInterface
      */
     public function getEventManager(): EventManagerInterface
@@ -37,7 +37,6 @@ trait EventManagerDispatcherTrait
     public function setEventManager(EventManagerInterface $em): static
     {
         $this->eventManager = $em;
-
         return $this;
     }
 

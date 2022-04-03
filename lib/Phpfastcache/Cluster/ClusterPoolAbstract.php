@@ -2,7 +2,7 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
@@ -11,6 +11,7 @@
  * @author  Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Cluster;
@@ -37,9 +38,6 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
 
-/**
- * @property ConfigurationOption $config
- */
 abstract class ClusterPoolAbstract implements ClusterPoolInterface
 {
     use TaggableCacheItemPoolTrait;
@@ -106,7 +104,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
     /**
      * @inheritDoc
      */
-    public function getConfigs() : array
+    public function getConfigs(): array
     {
         $configs = [];
 
@@ -184,7 +182,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
              */
             if ($driverPool === $this) {
                 /** @var ExtendedCacheItemInterface $itemPool */
-                $itemClass = $driverPool->getItemClass();
+                $itemClass = $driverPool::getItemClass();
                 $itemPool = new $itemClass($this, $item->getKey(), $this->getEventManager());
                 $item->cloneInto($itemPool, $driverPool);
 
@@ -240,10 +238,5 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
         );
 
         return $stats;
-    }
-
-    public function getConfig() : ConfigurationOption
-    {
-        return $this->config;
     }
 }

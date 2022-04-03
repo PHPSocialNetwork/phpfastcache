@@ -124,7 +124,7 @@ $instance = CacheManager::getInstance('Files');
 try{
     $item = $instance->getItem(array());
 }catch(\InvalidArgumentException $e){
-    //Catched exception code
+    //Caught exception code
 }
 
 ```
@@ -140,7 +140,7 @@ $instance = CacheManager::getInstance('Files');
 try{
     $item = $instance->getItem(array());
 }catch(\phpFastCache\Exceptions\phpFastCacheInvalidArgumentException $e){
-    //Catched exception code
+    //Caught exception code
 }
 
 ```
@@ -159,7 +159,7 @@ $instance = CacheManager::getInstance('Files');
 try{
     $item = $instance->getItem(array());
 }catch(\LogicException $e){
-    //Catched exception code
+    //Caught exception code
 }
 
 ```
@@ -175,7 +175,7 @@ $instance = CacheManager::getInstance('Files');
 try{
     $item = $instance->getItem(array());
 }catch(\phpFastCache\Exceptions\phpFastCacheLogicException $e){
-    //Catched exception code
+    //Caught exception code
 }
 
 ```

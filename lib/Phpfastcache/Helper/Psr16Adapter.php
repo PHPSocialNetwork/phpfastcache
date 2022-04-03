@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Helper;
@@ -188,15 +189,11 @@ class Psr16Adapter implements CacheInterface
     public function deleteMultiple(iterable $keys): bool
     {
         try {
-            if ($keys instanceof Traversable) {
-                return $this->internalCacheInstance->deleteItems(\iterator_to_array($keys));
-            }
-
             if (\is_array($keys)) {
                 return $this->internalCacheInstance->deleteItems($keys);
             }
 
-            throw new PhpfastcacheInvalidArgumentException('$keys must be an array/Traversable instance.');
+            return $this->internalCacheInstance->deleteItems(\iterator_to_array($keys));
         } catch (PhpfastcacheInvalidArgumentException $e) {
             throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }

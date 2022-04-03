@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Dynamodb;
@@ -19,13 +20,11 @@ use Aws\Sdk as AwsSdk;
 use Aws\DynamoDb\DynamoDbClient as AwsDynamoDbClient;
 use Aws\DynamoDb\Marshaler as AwsMarshaler;
 use Aws\DynamoDb\Exception\DynamoDbException as AwsDynamoDbException;
-
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Event\Event;
 use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
@@ -35,7 +34,7 @@ use Psr\Http\Message\UriInterface;
 
 /**
  * Class Driver
- * @property Config $config
+ * @method Config getConfig()
  * @property AwsDynamoDbClient $instance
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -189,7 +188,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return \count($this->instance->listTables(['TableNames' => [$this->getConfig()->getTable()]])->get('TableNames')) > 0;
     }
 
-    protected function createTable() :void
+    protected function createTable(): void
     {
         $params = [
             'TableName' => $this->getConfig()->getTable(),
@@ -294,10 +293,5 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $data[self::DRIVER_DATA_WRAPPER_INDEX] = $this->decode($data[self::DRIVER_DATA_WRAPPER_INDEX]);
 
         return $data;
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

@@ -1,3 +1,26 @@
+## 9.1.0
+##### 04 april 2022
+- __API__
+  - Upgraded Phpfastcache API to `4.1.0` ([see changes](CHANGELOG_API.md))
+- __Core__
+  - Added `\Phpfastcache\Helper\UninstanciableObjectTrait` trait which will contains base locked constructor for any classes that are nor meant to be instanciated.
+  - Deprecated `\Phpfastcache\Config\Config::class` 
+  - Removed/reworked/improved dead/unreachable/redundant/obsolete code, thanks to `Phpstan`
+- __Drivers__
+  - **Added `Solr` driver support**
+- __Events__
+  - Added `\Phpfastcache\Event\EventInterface` for `\Phpfastcache\Event\Event` and subclasses below
+  - Added `\Phpfastcache\Drivers\Arangodb\Event` for Arangodb events
+  - Added `\Phpfastcache\Drivers\Dynamodb\Event` for Dynamodb events
+  - Added `\Phpfastcache\Drivers\Solr\Event` for Solr events
+  - Moved the following constant from `\Phpfastcache\Event\Event` to their respective drivers: `ARANGODB_CONNECTION`, `ARANGODB_COLLECTION_PARAMS`, `DYNAMODB_CREATE_TABLE`
+- __Cluster__
+  - Fixed #855 // ClusterReplication drivers are saving erroneous expiration date in low-level backends
+- __Misc__
+  - Full PSR-12 compliance is now enforced by PHPCS
+  - Multiple typo fixes (@mbiebl)
+  - Updated composer suggestions and CI builder dependencies
+
 ## 9.0.2
 ##### 04 march 2022
 - __Core__
@@ -27,7 +50,7 @@
 - __PSR-16__
   - Upgraded `psr/simple-cache` dependency to `^2.0||^3.0` (for PHP-8 types)
 - __API__
-  - Upgraded Phpfastcache API `4.0.0` ([see changes](CHANGELOG_API.md))
+  - Upgraded Phpfastcache API to `4.0.0` ([see changes](CHANGELOG_API.md))
   - Renamed `Api::getPhpFastCacheVersion()` to `Api::getPhpfastcacheVersion()`
   - Renamed `Api::getPhpFastCacheChangelog()` to `Api::getPhpfastcacheChangelog()`
   - Renamed `Api::getPhpFastCacheGitHeadHash()` to `Api::getPhpfastcacheGitHeadHash()`

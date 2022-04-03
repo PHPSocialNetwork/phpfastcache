@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of Phpfastcache.
@@ -26,23 +27,16 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 class Config extends ConfigurationOption
 {
     protected ?string $awsAccessKeyId = null;
-
     protected ?string $awsSecretAccessKey = null;
-
     protected bool $allowEnvCredentialOverride = false;
-
-    protected ? string $endpoint = null; // List of endpoints here: https://docs.aws.amazon.com/general/latest/gr/ddb.html
+    protected ?string $endpoint = null;
+// List of endpoints here: https://docs.aws.amazon.com/general/latest/gr/ddb.html
 
     protected string $region;
-
     protected string $table;
-
     protected bool $debugEnabled = false;
-
     protected string $version = 'latest';
-
     protected string $partitionKey = ExtendedCacheItemPoolInterface::DRIVER_KEY_WRAPPER_INDEX;
-
     public function __construct(array $parameters = [])
     {
         parent::__construct($parameters);

@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Couchdb;
@@ -30,13 +31,13 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 /**
  * Class Driver
  * @property CouchdbClient $instance Instance of driver service
- * @property Config $config
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    public const COUCHDB_DEFAULT_DB_NAME = 'phpfastcache'; // Public because used in config
-
     use TaggableCacheItemPoolTrait;
+
+    public const COUCHDB_DEFAULT_DB_NAME = 'phpfastcache'; // Public because used in config
 
     /**
      * @return bool
@@ -249,7 +250,7 @@ HELP;
 
     /**
      * Specific document decoder for Couchdb
-     * since we dont store encoded version
+     * since we don't store encoded version
      * for performance purposes
      *
      * @param $value
@@ -283,10 +284,5 @@ HELP;
         }
 
         return $value;
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

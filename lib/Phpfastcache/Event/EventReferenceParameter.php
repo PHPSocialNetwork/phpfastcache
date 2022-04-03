@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of Phpfastcache.
@@ -19,10 +20,8 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 
 class EventReferenceParameter
 {
-    public function __construct(
-        protected mixed &$parameter,
-        protected bool $allowTypeChange = false
-    ) {
+    public function __construct(protected mixed &$parameter, protected bool $allowTypeChange = false)
+    {
     }
 
     public function getParameterValue(): mixed
@@ -39,9 +38,11 @@ class EventReferenceParameter
             $currentType = \gettype($this->parameter);
             $newType = \gettype($newValue);
             if ($newType !== $currentType) {
-                throw new PhpfastcacheInvalidTypeException(
-                    \sprintf('You tried to change the variable type from "%s" to "%s" which is not allowed.', $currentType, $newType)
-                );
+                throw new PhpfastcacheInvalidTypeException(\sprintf(
+                    'You tried to change the variable type from "%s" to "%s" which is not allowed.',
+                    $currentType,
+                    $newType
+                ));
             }
         }
 

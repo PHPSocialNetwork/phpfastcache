@@ -2,7 +2,7 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
@@ -11,6 +11,7 @@
  * @author Lucas Brucksch <support@hammermaps.de>
  *
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Zenddisk;
@@ -24,7 +25,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
 /**
  * Requires Zend Data Cache Functions from ZendServer
- * @property Config $config Return the config object
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -116,10 +117,5 @@ HELP;
     protected function driverClear(): bool
     {
         return @zend_disk_cache_clear();
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

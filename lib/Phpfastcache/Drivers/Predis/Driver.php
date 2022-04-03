@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Predis;
@@ -29,7 +30,7 @@ use Predis\Connection\ConnectionException as PredisConnectionException;
 
 /**
  * @property PredisClient $instance Instance of driver service
- * @property Config $config Return the config object
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -190,10 +191,5 @@ HELP;
     protected function driverClear(): bool
     {
         return $this->instance->flushdb()->getPayload() === 'OK';
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

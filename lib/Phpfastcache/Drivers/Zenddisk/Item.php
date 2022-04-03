@@ -2,7 +2,7 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
@@ -11,6 +11,7 @@
  * @author Lucas Brucksch <support@hammermaps.de>
  *
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Zenddisk;

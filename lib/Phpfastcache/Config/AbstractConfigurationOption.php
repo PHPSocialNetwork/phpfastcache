@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of Phpfastcache.
@@ -10,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Config;
@@ -20,14 +22,11 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 abstract class AbstractConfigurationOption implements LockableConfigurationInterface
 {
     private bool $lockedObject = false;
-
     private ExtendedCacheItemPoolInterface $locker;
-
     public function lock(ExtendedCacheItemPoolInterface $poolInstance): static
     {
         $this->lockedObject = true;
         $this->locker = $poolInstance;
-
         return $this;
     }
 
@@ -52,13 +51,12 @@ abstract class AbstractConfigurationOption implements LockableConfigurationInter
             if ($cause) {
                 $moreInfo = \sprintf('Caused line %d in %s', $cause['line'], $cause['file']);
             }
-            throw new PhpfastcacheLogicException(
-                \sprintf(
-                    'You can no longer change the configuration "%s" as the cache pool instance is now running. %s',
-                    \lcfirst(\substr($method, 3)),
-                    $moreInfo ?? ''
-                )
-            );
+
+            throw new PhpfastcacheLogicException(\sprintf(
+                'You can no longer change the configuration "%s" as the cache pool instance is now running. %s',
+                \lcfirst(\substr($method, 3)),
+                $moreInfo ?? ''
+            ));
         }
     }
 }

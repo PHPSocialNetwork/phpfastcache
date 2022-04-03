@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool;
@@ -74,7 +75,7 @@ trait TaggableCacheItemPoolTrait
             if (\is_string($tagName)) {
                 $items[] = $this->fetchItemsByTagFromBackend($tagName);
             } else {
-                throw new PhpfastcacheInvalidArgumentException('$tagName must be a a string');
+                throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
             }
         }
 
@@ -138,7 +139,7 @@ trait TaggableCacheItemPoolTrait
      */
     protected function getTagKey(string $key): string
     {
-        return self::DRIVER_TAGS_KEY_PREFIX . $key;
+        return TaggableCacheItemPoolInterface::DRIVER_TAGS_KEY_PREFIX . $key;
     }
 
     /**
@@ -156,7 +157,7 @@ trait TaggableCacheItemPoolTrait
 
         foreach ($this->getItemsByTags($tagNames, $strategy) as $item) {
             $result = $this->deleteItem($item->getKey());
-            if ($return !== true) {
+            if ($result !== true) {
                 $return = $result;
             }
         }
@@ -178,7 +179,7 @@ trait TaggableCacheItemPoolTrait
         $return = true;
         foreach ($this->getItemsByTag($tagName, $strategy) as $item) {
             $result = $this->deleteItem($item->getKey());
-            if ($return !== true) {
+            if ($result !== true) {
                 $return = $result;
             }
         }
@@ -224,7 +225,7 @@ trait TaggableCacheItemPoolTrait
         $return = true;
         foreach ($tagNames as $tagName) {
             $result = $this->incrementItemsByTag($tagName, $step, $strategy);
-            if ($return !== true) {
+            if ($result !== true) {
                 $return = $result;
             }
         }
@@ -269,7 +270,7 @@ trait TaggableCacheItemPoolTrait
         $return = true;
         foreach ($tagNames as $tagName) {
             $result = $this->decrementItemsByTag($tagName, $step, $strategy);
-            if ($return !== true) {
+            if ($result !== true) {
                 $return = $result;
             }
         }
@@ -314,7 +315,7 @@ trait TaggableCacheItemPoolTrait
         $return = true;
         foreach ($tagNames as $tagName) {
             $result = $this->appendItemsByTag($tagName, $data, $strategy);
-            if ($return !== true) {
+            if ($result !== true) {
                 $return = $result;
             }
         }
@@ -359,7 +360,7 @@ trait TaggableCacheItemPoolTrait
         $return = true;
         foreach ($tagNames as $tagName) {
             $result = $this->prependItemsByTag($tagName, $data, $strategy);
-            if ($return !== true) {
+            if ($result !== true) {
                 $return = $result;
             }
         }
@@ -394,7 +395,7 @@ trait TaggableCacheItemPoolTrait
      */
     protected function driverUnwrapTags(array $wrapper): array
     {
-        return $wrapper[self::DRIVER_TAGS_WRAPPER_INDEX];
+        return $wrapper[TaggableCacheItemPoolInterface::DRIVER_TAGS_WRAPPER_INDEX];
     }
 
     /**
@@ -424,7 +425,7 @@ trait TaggableCacheItemPoolTrait
          * on tags item, it can lead
          * to an infinite recursive calls
          */
-        if (str_starts_with($item->getKey(), self::DRIVER_TAGS_KEY_PREFIX)) {
+        if (str_starts_with($item->getKey(), TaggableCacheItemPoolInterface::DRIVER_TAGS_KEY_PREFIX)) {
             throw new PhpfastcacheLogicException('Trying to set tag(s) to an Tag item index: ' . $item->getKey());
         }
 

@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Mongodb;
@@ -38,13 +39,13 @@ use Psr\Cache\CacheItemInterface;
 
 /**
  * @property Client $instance Instance of driver service
- * @property Config $config Return the config object
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
-    public const MONGODB_DEFAULT_DB_NAME = 'phpfastcache'; // Public because used in config
-
     use TaggableCacheItemPoolTrait;
+
+    public const MONGODB_DEFAULT_DB_NAME = 'phpfastcache'; // Public because used in config
 
     /**
      * @var Collection
@@ -86,8 +87,8 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $databaseName = $this->getConfig()->getDatabaseName();
         $driverOptions = $this->getConfig()->getDriverOptions();
 
-        $this->instance = $this->instance ?? new Client($this->buildConnectionURI($databaseName), ['connectTimeoutMS' => $timeout], $driverOptions);
-        $this->database = $this->database ?? $this->instance->selectDatabase($databaseName);
+        $this->instance = new Client($this->buildConnectionURI($databaseName), ['connectTimeoutMS' => $timeout], $driverOptions);
+        $this->database = $this->instance->selectDatabase($databaseName);
 
         if (!$this->collectionExists($collectionName)) {
             $this->database->createCollection($collectionName);
@@ -161,7 +162,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                     self::DRIVER_CDATE_WRAPPER_INDEX =>  new UTCDateTime($item->getCreationDate()),
                 ];
             }
-            $result = (array)$this->getCollection()->updateOne(
+            $result = $this->getCollection()->updateOne(
                 ['_id' => $this->getMongoDbItemKey($item)],
                 [
                     '$set' => $set,
@@ -172,7 +173,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             throw new PhpfastcacheDriverException('Got an exception while trying to write data to MongoDB server: ' . $e->getMessage(), 0, $e);
         }
 
-        return !isset($result['ok']) || (int) $result['ok'] === 1;
+        return $result->isAcknowledged();
     }
 
     /**
@@ -343,10 +344,5 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         }
 
         return false;
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

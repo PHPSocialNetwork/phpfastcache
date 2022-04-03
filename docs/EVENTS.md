@@ -276,3 +276,14 @@ This is an exhaustive list, and it will be updated as soon as new events will be
     - **Description**
         - Allow you to alter the parameters built used to create the table
     - **Risky Circular Methods**: None
+
+#### Solr
+- onSolrBuildEndpoint(*Callable* **$callback**)
+    - **Callback arguments**
+        - *ExtendedCacheItemPoolInterface* **$itemPool**
+        - *EventReferenceParameter($params)* **$endpoints** _via EventReferenceParameter object_ **(type modification forbidden)**
+    - **Scope**
+        - Solr Driver
+    - **Description**
+        - Allow you to alter the endpoints built used to connect to Solr server
+    - **Risky Circular Methods**: None

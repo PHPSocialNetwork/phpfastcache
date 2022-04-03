@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of Phpfastcache.
@@ -26,13 +27,9 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 class Config extends ConfigurationOption
 {
     protected ?string $googleCloudProject = null;
-
     protected ?string $googleApplicationCredential = null;
-
     protected bool $allowEnvCredentialOverride = false;
-
     protected string $collection;
-
     public function __construct(array $parameters = [])
     {
         parent::__construct($parameters);

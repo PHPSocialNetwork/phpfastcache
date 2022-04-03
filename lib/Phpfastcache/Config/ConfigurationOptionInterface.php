@@ -11,11 +11,14 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Config;
 
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 interface ConfigurationOptionInterface extends LockableConfigurationInterface
 {
@@ -30,11 +33,22 @@ interface ConfigurationOptionInterface extends LockableConfigurationInterface
     public function toArray(): array;
 
     /**
+     * @param mixed $val
+     * @return bool
+     */
+    public function isValueSerializable(mixed $val): bool;
+
+    /**
      * @param string $optionName
      * @return bool
      */
     public function isValidOption(string $optionName): bool;
-    
+
+    /**
+     * @return bool
+     */
+    public function isItemDetailedDate(): bool;
+
     /**
      * @param bool $itemDetailedDate
      * @return ConfigurationOption
@@ -122,4 +136,19 @@ interface ConfigurationOptionInterface extends LockableConfigurationInterface
      * @return ConfigurationOption
      */
     public function setUseStaticItemCaching(bool $useStaticItemCaching): static;
+
+    /**
+     * @return object
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
+     */
+    public function getSuperGlobalAccessor(): object;
+
+    /**
+     * @param ?object $superGlobalAccessor
+     * @return static
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
+     */
+    public function setSuperGlobalAccessor(?object $superGlobalAccessor): static;
 }

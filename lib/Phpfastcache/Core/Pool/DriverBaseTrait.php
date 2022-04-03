@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool;
@@ -102,9 +103,9 @@ trait DriverBaseTrait
     }
 
     /**
-     * @return ConfigurationOption
+     * @return ConfigurationOptionInterface
      */
-    public function getDefaultConfig(): ConfigurationOption
+    public function getDefaultConfig(): ConfigurationOptionInterface
     {
         $className = $this::getConfigClass();
 
@@ -142,40 +143,42 @@ trait DriverBaseTrait
     public function driverPreWrap(ExtendedCacheItemInterface $item, bool $stringifyDate = false): array
     {
         $wrap = [
-            self::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(), // Stored but not really used, allow you to quickly identify the cache key
-            self::DRIVER_DATA_WRAPPER_INDEX => $item->getRawValue(),
-            self::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
+            ExtendedCacheItemPoolInterface::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(), // Stored but not really used, allow you to quickly identify the cache key
+            ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX => $item->getRawValue(),
+            TaggableCacheItemPoolInterface::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
             self::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),
         ];
 
         if ($this->getConfig()->isItemDetailedDate()) {
-            $wrap[self::DRIVER_MDATE_WRAPPER_INDEX] = new DateTime();
+            $wrap[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX] = new DateTime();// Always on the latest date
             /**
              * If the creation date exists
              * reuse it else set a new Date
              */
-            $wrap[self::DRIVER_CDATE_WRAPPER_INDEX] = $item->getCreationDate() ?: new DateTime();
+            $wrap[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX] = $item->getCreationDate();
         } else {
-            $wrap[self::DRIVER_MDATE_WRAPPER_INDEX] = null;
-            $wrap[self::DRIVER_CDATE_WRAPPER_INDEX] = null;
+            $wrap[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX] = null;
+            $wrap[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX] = null;
         }
 
         if ($stringifyDate) {
-            $wrap = \array_map(static function ($value) {
-                if ($value instanceof DateTimeInterface) {
-                    return $value->format(DateTimeInterface::W3C);
+            \array_walk($wrap, static function (mixed &$value, string $key): void {
+                if ($value instanceof DateTimeInterface && $key !== ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX) {
+                    $value = $value->format(DateTimeInterface::W3C);
                 }
-                return $value;
-            }, $wrap);
+            });
         }
 
         return $wrap;
     }
 
     /**
-     * @return ConfigurationOption
+     * @return ConfigurationOptionInterface
      */
-    abstract public function getConfig(): ConfigurationOption;
+    public function getConfig(): ConfigurationOptionInterface
+    {
+        return $this->config;
+    }
 
     /**
      * @param ConfigurationOptionInterface $config
@@ -195,7 +198,7 @@ trait DriverBaseTrait
      */
     public function driverUnwrapData(array $wrapper): mixed
     {
-        return $wrapper[self::DRIVER_DATA_WRAPPER_INDEX];
+        return $wrapper[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX];
     }
 
     /**

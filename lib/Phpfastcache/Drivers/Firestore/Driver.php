@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Firestore;
@@ -29,7 +30,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
  * Class Driver
- * @property Config $config
+ * @method Config getConfig()
  * @property GoogleFirestoreClient $instance
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
@@ -160,10 +161,5 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             ->setInfo('No info provided by Google Firestore')
             ->setRawData([])
             ->setSize(0);
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

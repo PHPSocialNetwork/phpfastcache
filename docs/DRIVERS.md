@@ -45,6 +45,8 @@
   * A very high-performance memory driver using a in-memory data structure storage. More efficient than Predis driver as it is an compiled library.
 * Riak **(REMOVED in v8.0.6)**
   * A very high-performance NoSQL driver using a key-value pair system.
+* Solr **(Added in V9.1)**
+  * A Solr driver that use Solarium as PHP client for good performances.
 * Sqlite
   * A Sqlite driver that use serialization for storing data for regular performances. A _$path_ config must be specified, else the system temporary directory will be used.
 * Ssdb

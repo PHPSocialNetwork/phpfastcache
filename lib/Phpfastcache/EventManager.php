@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache;
@@ -18,29 +19,24 @@ namespace Phpfastcache;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheEventManagerException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Helper\UninstanciableObjectTrait;
 
 class EventManager implements EventManagerInterface
 {
+    use UninstanciableObjectTrait;
+
     public const ON_EVERY_EVENT = '__every';
 
-    protected static self $instance;
+    protected static EventManagerInterface $instance;
 
     protected array $events = [
         self::ON_EVERY_EVENT => []
     ];
 
     /**
-     * EventManager constructor.
+     * @return EventManagerInterface
      */
-    final protected function __construct()
-    {
-        // The constructor should not be instantiated externally
-    }
-
-    /**
-     * @return static
-     */
-    public static function getInstance(): static
+    public static function getInstance(): EventManagerInterface
     {
         return (self::$instance ?? self::$instance = new static());
     }
@@ -85,7 +81,7 @@ class EventManager implements EventManagerInterface
      */
     public function __call(string $name, array $arguments): void
     {
-        if (str_starts_with($name, 'on')) {
+        if (\str_starts_with($name, 'on')) {
             $name = \substr($name, 2);
             if (\is_callable($arguments[0])) {
                 if (isset($arguments[1]) && \is_string($arguments[0])) {

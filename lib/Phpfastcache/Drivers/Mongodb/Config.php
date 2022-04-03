@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of Phpfastcache.
@@ -21,28 +22,17 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 class Config extends ConfigurationOption
 {
     protected string $host = '127.0.0.1';
-
     protected int $port = 27017;
-
     protected int $timeout = 3;
-
     protected string $username = '';
-
     protected string $password = '';
-
     protected array $servers = [];
-
     protected string $collectionName = 'phpfastcache';
-
     protected string $databaseName = Driver::MONGODB_DEFAULT_DB_NAME;
-
     protected array $options = [];
-
     protected array $driverOptions = [];
-
     protected string $protocol = 'mongodb';
-
-    /**
+/**
      * @return string
      */
     public function getHost(): string

@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Arangodb;
@@ -24,13 +25,11 @@ use ArangoDBClient\Document as ArangoDocument;
 use ArangoDBClient\DocumentHandler as ArangoDocumentHandler;
 use ArangoDBClient\Exception as ArangoException;
 use ArangoDBClient\ServerException as ArangoServerException;
-
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Event\Event;
 use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
@@ -38,7 +37,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
  * Class Driver
- * @property Config $config
+ * @method Config getConfig()
  * @property ArangoConnection $instance
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -136,7 +135,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             );
         }
 
-        return $this->decode($document);
+        return $this->decodeDocument($document);
     }
 
     /**
@@ -242,17 +241,16 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @param ArangoDocument $document
-     * @return mixed
+     * @return array
      * @throws \Exception
      */
-    protected function decode(ArangoDocument $document): mixed
+    protected function decodeDocument(ArangoDocument $document): array
     {
         $value = [
             self::DRIVER_KEY_WRAPPER_INDEX => $document->get(self::DRIVER_KEY_WRAPPER_INDEX),
             self::DRIVER_TAGS_WRAPPER_INDEX => $document->get(self::DRIVER_TAGS_WRAPPER_INDEX),
-            self::DRIVER_DATA_WRAPPER_INDEX => \unserialize(
+            self::DRIVER_DATA_WRAPPER_INDEX => $this->decode(
                 $document->get(self::DRIVER_DATA_WRAPPER_INDEX),
-                ['allowed_classes' => true]
             ),
         ];
 
@@ -310,10 +308,5 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             ->setInfo($infoText)
             ->setRawData($rawData)
             ->setSize($rawData['collectionCount']);
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

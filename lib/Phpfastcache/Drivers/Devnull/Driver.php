@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Devnull;
@@ -23,7 +24,7 @@ use Psr\Cache\CacheItemInterface;
 
 /**
  * Class Driver
- * @property Config $config Return the config object
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface
 {
@@ -98,10 +99,5 @@ class Driver implements ExtendedCacheItemPoolInterface
     protected function driverConnect(): bool
     {
         return true;
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

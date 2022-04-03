@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of Phpfastcache.
@@ -21,14 +22,10 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 class Config extends ConfigurationOption
 {
     protected string $host = '127.0.0.1';
-
     protected int $port = 8888;
-
     protected string $password = '';
-
     protected int $timeout = 2000;
-
-    /**
+/**
      * @return string
      */
     public function getHost(): string

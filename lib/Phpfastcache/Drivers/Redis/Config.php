@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * This file is part of Phpfastcache.
@@ -22,20 +23,13 @@ use Redis as RedisClient;
 class Config extends ConfigurationOption
 {
     protected string $host = '127.0.0.1';
-
     protected int $port = 6379;
-
     protected string $password = '';
-
     protected int $database = 0;
-
     protected int $timeout = 5;
-
     protected ?RedisClient $redisClient = null;
-
     protected string $optPrefix = '';
-
-    /**
+/**
      * @return string
      */
     public function getHost(): string

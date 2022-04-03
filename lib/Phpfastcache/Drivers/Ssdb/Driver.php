@@ -11,6 +11,7 @@
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Ssdb;
@@ -30,7 +31,7 @@ use phpssdb\Core\SSDB;
 
 /**
  * @property SimpleSSDB $instance Instance of driver service
- * @property Config $config Return the config object
+ * @method Config getConfig()
  */
 class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
 {
@@ -134,10 +135,5 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
         // Status not returned, then we assume its true
         return true;
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 }

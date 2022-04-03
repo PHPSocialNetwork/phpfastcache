@@ -17,6 +17,7 @@ namespace Phpfastcache\Tests\Helper;
 
 use League\CLImate\CLImate;
 use Phpfastcache\Api;
+use Phpfastcache\Config\ConfigurationOptionInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
@@ -304,8 +305,12 @@ class TestHelper
      */
     public function errorHandler(int $errno, string $errstr, string $errfile, int $errline): void
     {
-        $errorType = '';
+        // Silenced errors
+        if (!(error_reporting() & $errno)){
+            return;
+        }
 
+        $errorType = '';
         switch ($errno) {
             case E_PARSE:
             case E_ERROR:
@@ -391,6 +396,18 @@ class TestHelper
         $cacheTag2 = 'cache_tag_' . bin2hex(random_bytes(8) . '_' . random_int(100, 999));
         $cacheItem = $pool->getItem($cacheKey);
         $this->printInfoText('Using cache key: ' . $cacheKey);
+
+        /**
+         * Default TTL - 1sec is for dealing with potential script execution delay
+         * @see https://github.com/PHPSocialNetwork/phpfastcache/issues/855
+         */
+        if($cacheItem->getTtl() < $pool->getConfig()->getDefaultTtl() - 1) {
+            $this->assertFail(\sprintf(
+                'The expected TTL of the cache item was ~%ds, got %ds',
+                $pool->getConfig()->getDefaultTtl(),
+                $cacheItem->getTtl()
+            ));
+        }
 
         $cacheItem->set($cacheValue)
             ->addTags([$cacheTag, $cacheTag2]);
@@ -502,7 +519,7 @@ class TestHelper
         }
 
         if ($poolClear) {
-            if ($pool->deleteItem($cacheKey)) {
+            if ($pool->deleteItem($cacheKey) && !$pool->getItem($cacheKey)->isHit()) {
                 $this->assertPass('The pool successfully deleted the cache item.');
             } else {
                 $this->assertFail('The pool failed to delete the cache item.');
@@ -534,6 +551,11 @@ class TestHelper
             )
         );
         $this->printInfoText('<yellow>Driver info</yellow>: <magenta>' . $pool->getStats()->getInfo() . '</magenta>');
+        $poolSize = $pool->getStats()->getSize();
+
+        if($poolSize){
+            $this->printInfoText('<yellow>Driver size</yellow> (approximative): <magenta>' . round($pool->getStats()->getSize() / (1024 ** 2), 3) . ' Mo</magenta>');
+        }
     }
 
 
@@ -573,5 +595,13 @@ class TestHelper
                     )
                 )
             );
+    }
+
+    public function preConfigure(ConfigurationOptionInterface $configurationOption): ConfigurationOptionInterface
+    {
+        $configurationOption->setItemDetailedDate(true)
+            ->setUseStaticItemCaching(false);
+
+        return $configurationOption;
     }
 }

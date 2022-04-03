@@ -19,9 +19,12 @@ namespace Phpfastcache;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheEventManagerException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Helper\UninstanciableObjectTrait;
 
 class EventManager implements EventManagerInterface
 {
+    use UninstanciableObjectTrait;
+
     public const ON_EVERY_EVENT = '__every';
 
     protected static EventManagerInterface $instance;
@@ -29,14 +32,6 @@ class EventManager implements EventManagerInterface
     protected array $events = [
         self::ON_EVERY_EVENT => []
     ];
-
-    /**
-     * EventManager constructor.
-     */
-    final protected function __construct()
-    {
-        // The constructor should not be instantiated externally
-    }
 
     /**
      * @return EventManagerInterface
@@ -86,7 +81,7 @@ class EventManager implements EventManagerInterface
      */
     public function __call(string $name, array $arguments): void
     {
-        if (str_starts_with($name, 'on')) {
+        if (\str_starts_with($name, 'on')) {
             $name = \substr($name, 2);
             if (\is_callable($arguments[0])) {
                 if (isset($arguments[1]) && \is_string($arguments[0])) {

@@ -18,6 +18,7 @@ namespace Phpfastcache;
 
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
+use Phpfastcache\Helper\UninstanciableObjectTrait;
 
 /**
  * Class Api
@@ -25,15 +26,9 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  */
 class Api
 {
-    protected static string $version = '4.1.0';
+    use UninstanciableObjectTrait;
 
-    /**
-     * Api constructor.
-     */
-    final protected function __construct()
-    {
-        // The Api is not meant to be instantiated
-    }
+    protected static string $version = '4.1.0';
 
     /**
      * This method will return the current

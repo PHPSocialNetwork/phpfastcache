@@ -90,12 +90,12 @@ trait IOConfigurationOptionTrait
         $this->enforceLockedProperty(__FUNCTION__);
         $safeFileExtensions = \explode('|', IOConfigurationOptionInterface::SAFE_FILE_EXTENSIONS);
 
-        if (str_contains($cacheFileExtension, '.')) {
+        if (\str_contains($cacheFileExtension, '.')) {
             throw new PhpfastcacheInvalidConfigurationException('cacheFileExtension cannot contain a dot "."');
         }
         if (!\in_array($cacheFileExtension, $safeFileExtensions, true)) {
             throw new PhpfastcacheInvalidConfigurationException(
-                "Extension \"$cacheFileExtension\" is not safe, currently allowed extension names: " . \implode(', ', $safeFileExtensions)
+                "Extension \"$cacheFileExtension\" is unsafe, currently allowed extension names: " . \implode(', ', $safeFileExtensions)
             );
         }
 

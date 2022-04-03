@@ -16,8 +16,12 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Event;
 
-class Event
+use Phpfastcache\Helper\UninstanciableObjectTrait;
+
+class Event implements EventInterface
 {
+    use UninstanciableObjectTrait;
+
     public const CACHE_GET_ITEM = 'CacheGetItem';
     public const CACHE_DELETE_ITEM = 'CacheDeleteItem';
     public const CACHE_SAVE_ITEM = 'CacheSaveItem';
@@ -33,7 +37,9 @@ class Event
     public const CACHE_ITEM_SET = 'CacheItemSet';
     public const CACHE_ITEM_EXPIRE_AT = 'CacheItemExpireAt';
     public const CACHE_ITEM_EXPIRE_AFTER = 'CacheItemExpireAfter';
-    public const ARANGODB_CONNECTION = 'ArangodbConnection';
-    public const ARANGODB_COLLECTION_PARAMS = 'ArangodbCollectionParams';
-    public const DYNAMODB_CREATE_TABLE = 'DynamodbCreateTable';
+
+    public static function getEvents(): array
+    {
+        return (new \ReflectionClass(static::class))->getConstants();
+    }
 }

@@ -21,6 +21,7 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
+use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
@@ -79,7 +80,8 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function driverConnect(): bool
     {
         $this->mappingSchema = $this->getConfig()->getMappingSchema();
-        $this->instance = new SolariumClient(new SolariumCurlAdapter(), $this->getConfig()->getEventDispatcher(), [
+
+        $endpoint = [
             'endpoint' => [
                 $this->getConfig()->getEndpointName() => [
                     'scheme' => $this->getConfig()->getScheme(),
@@ -89,7 +91,11 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                     'core' => $this->getConfig()->getCoreName(),
                 ]
             ]
-        ]);
+        ];
+
+        $this->eventManager->dispatch(Event::SOLR_BUILD_ENDPOINT, $this, new EventReferenceParameter($endpoint));
+
+        $this->instance = new SolariumClient(new SolariumCurlAdapter(), $this->getConfig()->getEventDispatcher(), $endpoint);
 
         try {
             return $this->instance->ping($this->instance->createPing())->getStatus() === 0;

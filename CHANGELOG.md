@@ -3,10 +3,17 @@
 - __API__
   - Upgraded Phpfastcache API to `4.1.0` ([see changes](CHANGELOG_API.md))
 - __Core__
+  - Added `\Phpfastcache\Helper\UninstanciableObjectTrait` trait which will contains base locked constructor for any classes that are nor meant to be instanciated.
   - Deprecated `\Phpfastcache\Config\Config::class` 
   - Removed/reworked/improved dead/unreachable/redundant/obsolete code, thanks to `Phpstan`
 - __Drivers__
   - **Added `Solr` driver support**
+- __Events__
+  - Added `\Phpfastcache\Event\EventInterface` for `\Phpfastcache\Event\Event` and subclasses below
+  - Added `\Phpfastcache\Drivers\Arangodb\Event` for Arangodb events
+  - Added `\Phpfastcache\Drivers\Dynamodb\Event` for Dynamodb events
+  - Added `\Phpfastcache\Drivers\Solr\Event` for Solr events
+  - Moved the following constant from `\Phpfastcache\Event\Event` to their respective drivers: `ARANGODB_CONNECTION`, `ARANGODB_COLLECTION_PARAMS`, `DYNAMODB_CREATE_TABLE`
 - __Cluster__
   - Fixed #855 // ClusterReplication drivers are saving erroneous expiration date in low-level backends
 - __Misc__

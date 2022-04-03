@@ -26,6 +26,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInstanceNotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Exceptions\PhpfastcacheUnsupportedOperationException;
+use Phpfastcache\Helper\UninstanciableObjectTrait;
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
 
 /**
@@ -34,6 +35,7 @@ use Phpfastcache\Util\ClassNamespaceResolverTrait;
 class CacheManager
 {
     use ClassNamespaceResolverTrait;
+    use UninstanciableObjectTrait;
 
     public const CORE_DRIVER_NAMESPACE = 'Phpfastcache\Drivers\\';
 
@@ -55,14 +57,6 @@ class CacheManager
      * @var string[]
      */
     protected static array $driverCustoms = [];
-
-    /**
-     * CacheManager constructor.
-     */
-    final protected function __construct()
-    {
-        // The cache manager is not meant to be instantiated
-    }
 
     /**
      * @param string $instanceId
@@ -270,7 +264,7 @@ class CacheManager
      */
     public static function setDefaultConfig(ConfigurationOptionInterface $config): void
     {
-        if (is_subclass_of($config, ConfigurationOption::class)) {
+        if (\is_subclass_of($config, ConfigurationOption::class)) {
             throw new PhpfastcacheInvalidArgumentException('Default configuration cannot be a child class of ConfigurationOption::class');
         }
         self::$config = $config;

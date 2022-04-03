@@ -1,4 +1,5 @@
 ## 4.1.0
+- Created `\Phpfastcache\Event\EventInterface` which will be used for `Phpfastcache\Event\Event` and any `Phpfastcache\Drivers\xxxxxxx\Event` classes
 - Extended `CacheItemPoolInterface::save()` with `ExtendedCacheItemPoolInterface::save()` for re-typing
 - Method `ExtendedCacheItemPoolInterface::getConfig()` now returns `ConfigurationOptionInterface` instead of `ConfigurationOption`
 - Method `ExtendedCacheItemPoolInterface::getDefaultConfig()` now returns `ConfigurationOptionInterface` instead of `ConfigurationOption`

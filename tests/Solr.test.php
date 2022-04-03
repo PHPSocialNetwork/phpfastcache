@@ -13,6 +13,9 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Event\EventReferenceParameter;
+use Phpfastcache\EventManager;
 use Phpfastcache\Tests\Helper\TestHelper;
 use Phpfastcache\Drivers\Solr\Config as SolrConfig;
 
@@ -45,7 +48,21 @@ $solrConfig->setMappingSchema($solrConfig::DEFAULT_MAPPING_SCHEMA);
  */
 // $solrConfig->setEventDispatcher($yourEventDispatcher);
 
+/**
+ * Test of custom events
+ */
+$onSolrBuildEndpointCalled = false;
+EventManager::getInstance()->onSolrBuildEndpoint(static function () use (&$onSolrBuildEndpointCalled, $testHelper){
+    $testHelper->assertPass('Event "onSolrBuildEndpoint" has been called.');
+    $onSolrBuildEndpointCalled = true;
+});
+
 $cacheInstance = CacheManager::getInstance('Solr', $solrConfig);
+
+if(!$onSolrBuildEndpointCalled) {
+    $testHelper->assertFail('Event "onSolrBuildEndpoint" has NOT been called.');
+}
+
 $testHelper->runCRUDTests($cacheInstance);
 
 $testHelper->terminateTest();

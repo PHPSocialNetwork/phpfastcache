@@ -139,7 +139,7 @@ trait TaggableCacheItemPoolTrait
      */
     protected function getTagKey(string $key): string
     {
-        return self::DRIVER_TAGS_KEY_PREFIX . $key;
+        return TaggableCacheItemPoolInterface::DRIVER_TAGS_KEY_PREFIX . $key;
     }
 
     /**
@@ -395,7 +395,7 @@ trait TaggableCacheItemPoolTrait
      */
     protected function driverUnwrapTags(array $wrapper): array
     {
-        return $wrapper[self::DRIVER_TAGS_WRAPPER_INDEX];
+        return $wrapper[TaggableCacheItemPoolInterface::DRIVER_TAGS_WRAPPER_INDEX];
     }
 
     /**
@@ -425,7 +425,7 @@ trait TaggableCacheItemPoolTrait
          * on tags item, it can lead
          * to an infinite recursive calls
          */
-        if (str_starts_with($item->getKey(), self::DRIVER_TAGS_KEY_PREFIX)) {
+        if (str_starts_with($item->getKey(), TaggableCacheItemPoolInterface::DRIVER_TAGS_KEY_PREFIX)) {
             throw new PhpfastcacheLogicException('Trying to set tag(s) to an Tag item index: ' . $item->getKey());
         }
 

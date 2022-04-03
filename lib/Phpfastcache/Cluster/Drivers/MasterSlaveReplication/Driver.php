@@ -62,7 +62,7 @@ class Driver extends ClusterPoolAbstract
         return $this->getStandardizedItem(
             $this->makeOperation(static function (ExtendedCacheItemPoolInterface $pool) use ($key) {
                 return $pool->getItem($key);
-            }) ?? (new Item($this, $key, $this->getEventManager()))->expiresAfter(abs($this->getConfig()->getDefaultTtl())),
+            }) ?? (new Item($this, $key, $this->getEventManager()))->expiresAfter((int) abs($this->getConfig()->getDefaultTtl())),
             $this
         );
     }

@@ -54,7 +54,7 @@ class Driver extends ClusterPoolAbstract
 
         if ($item === null) {
             $item = new Item($this, $key, $this->getEventManager());
-            $item->expiresAfter(abs($this->getConfig()->getDefaultTtl()));
+            $item->expiresAfter((int) abs($this->getConfig()->getDefaultTtl()));
         }
 
         return $this->getStandardizedItem($item, $this);

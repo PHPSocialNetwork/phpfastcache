@@ -16,7 +16,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool\IO;
 
-use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Config\IOConfigurationOptionInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Event\Event;
@@ -25,6 +25,9 @@ use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Util\Directory;
 use Phpfastcache\Util\SapiDetector;
 
+/**
+ * @method IOConfigurationOptionInterface getConfig()
+ */
 trait IOHelperTrait
 {
     use TaggableCacheItemPoolTrait;

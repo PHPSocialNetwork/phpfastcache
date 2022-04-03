@@ -199,7 +199,7 @@ trait CacheItemPoolTrait
                      * Reset the Item
                      */
                     $item->set(null)
-                        ->expiresAfter(abs($this->getConfig()->getDefaultTtl()))
+                        ->expiresAfter((int) abs($this->getConfig()->getDefaultTtl()))
                         ->setHit(false)
                         ->setTags([]);
                     if ($this->getConfig()->isItemDetailedDate()) {
@@ -215,7 +215,7 @@ trait CacheItemPoolTrait
                     $item->setHit(true);
                 }
             } else {
-                $item->expiresAfter(abs($this->getConfig()->getDefaultTtl()));
+                $item->expiresAfter((int) abs($this->getConfig()->getDefaultTtl()));
             }
             }
         } else {

@@ -143,27 +143,27 @@ trait DriverBaseTrait
     public function driverPreWrap(ExtendedCacheItemInterface $item, bool $stringifyDate = false): array
     {
         $wrap = [
-            self::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(), // Stored but not really used, allow you to quickly identify the cache key
-            self::DRIVER_DATA_WRAPPER_INDEX => $item->getRawValue(),
-            self::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
+            ExtendedCacheItemPoolInterface::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(), // Stored but not really used, allow you to quickly identify the cache key
+            ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX => $item->getRawValue(),
+            TaggableCacheItemPoolInterface::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
             self::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),
         ];
 
         if ($this->getConfig()->isItemDetailedDate()) {
-            $wrap[self::DRIVER_MDATE_WRAPPER_INDEX] = new DateTime();// Always on the latest date
+            $wrap[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX] = new DateTime();// Always on the latest date
             /**
              * If the creation date exists
              * reuse it else set a new Date
              */
-            $wrap[self::DRIVER_CDATE_WRAPPER_INDEX] = $item->getCreationDate();
+            $wrap[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX] = $item->getCreationDate();
         } else {
-            $wrap[self::DRIVER_MDATE_WRAPPER_INDEX] = null;
-            $wrap[self::DRIVER_CDATE_WRAPPER_INDEX] = null;
+            $wrap[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX] = null;
+            $wrap[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX] = null;
         }
 
         if ($stringifyDate) {
             \array_walk($wrap, static function (mixed &$value, string $key): void {
-                if ($value instanceof DateTimeInterface && $key !== self::DRIVER_DATA_WRAPPER_INDEX) {
+                if ($value instanceof DateTimeInterface && $key !== ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX) {
                     $value = $value->format(DateTimeInterface::W3C);
                 }
             });
@@ -198,7 +198,7 @@ trait DriverBaseTrait
      */
     public function driverUnwrapData(array $wrapper): mixed
     {
-        return $wrapper[self::DRIVER_DATA_WRAPPER_INDEX];
+        return $wrapper[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX];
     }
 
     /**

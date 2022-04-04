@@ -136,7 +136,7 @@ trait ExtendedCacheItemTrait
     public function setCreationDate(DateTimeInterface $date): ExtendedCacheItemInterface
     {
         if ($this->driver->getConfig()->isItemDetailedDate()) {
-            $this->creationDate = $date;
+            $this->creationDate = $this->demutateDatetime($date);
             return $this;
         }
 
@@ -163,7 +163,7 @@ trait ExtendedCacheItemTrait
     public function setModificationDate(DateTimeInterface $date): ExtendedCacheItemInterface
     {
         if ($this->driver->getConfig()->isItemDetailedDate()) {
-            $this->modificationDate = $date;
+            $this->modificationDate = $this->demutateDatetime($date);
             return $this;
         }
 

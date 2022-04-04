@@ -102,7 +102,7 @@ trait CacheItemTrait
     {
         if ($expiration instanceof DateTimeInterface) {
             $this->eventManager->dispatch(Event::CACHE_ITEM_EXPIRE_AT, $this, $expiration);
-            $this->expirationDate = $expiration;
+            $this->expirationDate = $this->demutateDatetime($expiration);
         } else {
             throw new PhpfastcacheInvalidArgumentException('$expiration must be an object implementing the DateTimeInterface got: ' . \gettype($expiration));
         }
@@ -138,5 +138,12 @@ trait CacheItemTrait
         }
 
         return $this;
+    }
+
+    protected function demutateDatetime(\DateTimeInterface $dateTime): \DateTimeInterface
+    {
+        return $dateTime instanceof \DateTimeImmutable
+            ? \DateTime::createFromImmutable($dateTime)
+            : $dateTime;
     }
 }

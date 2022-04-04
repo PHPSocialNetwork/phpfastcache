@@ -203,11 +203,11 @@ trait DriverBaseTrait
 
     /**
      * @param array $wrapper
-     * @return DateTime
+     * @return DateTimeInterface
      */
-    public function driverUnwrapEdate(array $wrapper): \DateTime
+    public function driverUnwrapEdate(array $wrapper): \DateTimeInterface
     {
-        if ($wrapper[self::DRIVER_EDATE_WRAPPER_INDEX] instanceof \DateTime) {
+        if ($wrapper[self::DRIVER_EDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
             return $wrapper[self::DRIVER_EDATE_WRAPPER_INDEX];
         }
 
@@ -216,11 +216,11 @@ trait DriverBaseTrait
 
     /**
      * @param array $wrapper
-     * @return DateTime|null
+     * @return DateTimeInterface|null
      */
-    public function driverUnwrapCdate(array $wrapper): ?\DateTime
+    public function driverUnwrapCdate(array $wrapper): ?\DateTimeInterface
     {
-        if ($wrapper[self::DRIVER_CDATE_WRAPPER_INDEX] instanceof \DateTime) {
+        if ($wrapper[self::DRIVER_CDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
             return $wrapper[self::DRIVER_CDATE_WRAPPER_INDEX];
         }
 
@@ -229,11 +229,11 @@ trait DriverBaseTrait
 
     /**
      * @param array $wrapper
-     * @return DateTime|null
+     * @return DateTimeInterface|null
      */
-    public function driverUnwrapMdate(array $wrapper): ?\DateTime
+    public function driverUnwrapMdate(array $wrapper): ?\DateTimeInterface
     {
-        if ($wrapper[self::DRIVER_MDATE_WRAPPER_INDEX] instanceof \DateTime) {
+        if ($wrapper[self::DRIVER_MDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
             return $wrapper[self::DRIVER_MDATE_WRAPPER_INDEX];
         }
 

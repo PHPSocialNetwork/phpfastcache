@@ -9,9 +9,10 @@
 # @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
 #
 
-before_commands: 
-  - "./bin/ci/scripts/install_dependencies.sh"
 build:
+  dependencies:
+    override:
+      - "./bin/ci/scripts/install_dependencies.sh"
   nodes:
     analysis:
       project_setup:
@@ -21,7 +22,14 @@ build:
   environment: 
     php: 
       version: 8.0.0
-checks: 
+        ini:
+          date.timezone: 'Europe/Paris'
+      pecl_extensions:
+        - couchbase
+        - redis
+        - memcache
+        - grpc
+checks:
   php: true
 coding_style: 
   php: 

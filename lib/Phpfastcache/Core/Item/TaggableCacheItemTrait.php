@@ -63,12 +63,10 @@ trait TaggableCacheItemTrait
      */
     public function setTags(array $tags): ExtendedCacheItemInterface
     {
-        if (\count($tags)) {
-            if (\array_filter($tags, 'is_string')) {
-                $this->tags = $tags;
-            } else {
-                throw new PhpfastcacheInvalidArgumentException('$tagName must be an array of string');
-            }
+        if ($tags === [] || \array_filter($tags, 'is_string')) {
+            $this->tags = $tags;
+        } else {
+            throw new PhpfastcacheInvalidArgumentException('$tagName must be an array of string');
         }
 
         return $this;

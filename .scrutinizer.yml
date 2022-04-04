@@ -22,8 +22,8 @@ build:
   environment: 
     php: 
       version: 8.0.0
-        ini:
-          date.timezone: 'Europe/Paris'
+      ini:
+        date.timezone: 'Europe/Paris'
       pecl_extensions:
         - couchbase
         - redis

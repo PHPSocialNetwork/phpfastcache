@@ -1,3 +1,9 @@
+## 8.1.3
+#### _"Don't throw the masks, yet."_
+##### _date to be defined_
+- __Core__
+  - Fixed #860 // Cache item throw an error on save with DateTimeImmutable date objects
+
 ## 8.1.2
 #### _"Free the masks"_
 ##### 04 march 2022

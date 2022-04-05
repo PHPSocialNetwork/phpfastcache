@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Pool;
 
 use DateTime;
+use DateTimeInterface;
 use Exception;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
@@ -179,27 +180,27 @@ trait DriverBaseTrait
 
     /**
      * @param array $wrapper
-     * @return DateTime
+     * @return ?DateTimeInterface
      */
-    public function driverUnwrapEdate(array $wrapper)
+    public function driverUnwrapEdate(array $wrapper): ?DateTimeInterface
     {
         return $wrapper[self::DRIVER_EDATE_WRAPPER_INDEX];
     }
 
     /**
      * @param array $wrapper
-     * @return DateTime
+     * @return ?DateTimeInterface
      */
-    public function driverUnwrapCdate(array $wrapper)
+    public function driverUnwrapCdate(array $wrapper): ?DateTimeInterface
     {
         return $wrapper[self::DRIVER_CDATE_WRAPPER_INDEX];
     }
 
     /**
      * @param array $wrapper
-     * @return DateTime
+     * @return ?DateTimeInterface
      */
-    public function driverUnwrapMdate(array $wrapper)
+    public function driverUnwrapMdate(array $wrapper) :?DateTimeInterface
     {
         return $wrapper[self::DRIVER_MDATE_WRAPPER_INDEX];
     }

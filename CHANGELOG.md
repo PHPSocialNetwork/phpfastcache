@@ -1,3 +1,9 @@
+## 9.1.1
+##### _Date to be defined_
+- __Core__
+  - Fixed #860 - Cache item throw an error on reading with DateTimeImmutable date objects
+  - Fixed an issue with tags not properly reinitialized when a backend driver returns an expired cache item
+
 ## 9.1.0
 ##### 04 april 2022
 - __API__

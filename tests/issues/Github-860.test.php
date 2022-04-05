@@ -11,7 +11,7 @@ use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
-$testHelper = new TestHelper('Github issue #860 - Cache item throw an error on save with DateTimeImmutable date objects');
+$testHelper = new TestHelper('Github issue #860 - Cache item throw an error on reading with DateTimeImmutable date objects');
 
 $config = new FilesConfig();
 $testHelper->preConfigure($config);

@@ -71,7 +71,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             return null;
         }
 
-        return $this->decode($content);
+        return $this->decode($content) ?: null;
     }
 
     /**

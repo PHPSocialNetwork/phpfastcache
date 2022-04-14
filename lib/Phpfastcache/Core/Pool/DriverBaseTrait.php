@@ -269,6 +269,6 @@ trait DriverBaseTrait
      */
     protected function decode(?string $value): mixed
     {
-        return \unserialize((string) $value, ['allowed_classes' => true]);
+        return $value ? \unserialize($value, ['allowed_classes' => true]) : null;
     }
 }

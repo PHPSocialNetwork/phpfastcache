@@ -92,7 +92,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     {
         $data = apcu_fetch($item->getKey(), $success);
 
-        if ($success === false) {
+        if ($success === false || !\is_array($data)) {
             return null;
         }
 

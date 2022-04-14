@@ -143,7 +143,8 @@ HELP;
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         $val = $this->instance->get($item->getKey());
-        if ($val == false) {
+
+        if ($val === null) {
             return null;
         }
 

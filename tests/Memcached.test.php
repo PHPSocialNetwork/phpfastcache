@@ -13,6 +13,7 @@
  */
 
 use Phpfastcache\CacheManager;
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Drivers\Memcached\Config as MemcachedConfig;
 use Phpfastcache\Tests\Helper\TestHelper;
 
@@ -82,4 +83,6 @@ if ($cacheInstanceNewSyntax->getItem($cacheKey)->isHit()) {
 $cacheInstanceDefSyntax->clear();
 $cacheInstanceOldSyntax->clear();
 $cacheInstanceNewSyntax->clear();
+
+$testHelper->runCRUDTests($cacheInstanceNewSyntax);
 $testHelper->terminateTest();

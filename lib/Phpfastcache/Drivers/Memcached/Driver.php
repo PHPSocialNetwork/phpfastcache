@@ -147,7 +147,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     {
         $val = $this->instance->get($item->getKey());
 
-        if ($val === false) {
+        if (empty($val) || !\is_array($val)) {
             return null;
         }
 

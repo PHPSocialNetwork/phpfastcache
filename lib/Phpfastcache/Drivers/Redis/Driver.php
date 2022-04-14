@@ -57,8 +57,9 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             ->setSize((int)$info['used_memory'])
             ->setInfo(
                 sprintf(
-                    "The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
+                    "The Redis daemon v%s, php-ext v%s, is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
                     $info['redis_version'],
+                    \phpversion("redis"),
                     $date->format(DATE_RFC2822)
                 )
             );

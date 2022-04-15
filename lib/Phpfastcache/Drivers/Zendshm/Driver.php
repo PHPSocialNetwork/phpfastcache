@@ -79,7 +79,8 @@ HELP;
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         $data = zend_shm_cache_fetch($item->getKey());
-        if ($data === false) {
+
+        if (empty($data) || !\is_array($data)) {
             return null;
         }
 

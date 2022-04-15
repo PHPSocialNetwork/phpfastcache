@@ -131,7 +131,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
                 return null;
             }
             throw new PhpfastcacheDriverException(
-                'Got unexpeced error from Arangodb: ' . $e->getMessage()
+                'Got unexpected error from Arangodb: ' . $e->getMessage()
             );
         }
 

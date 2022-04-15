@@ -94,7 +94,8 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         $val = $this->instance->get($item->getEncodedKey());
-        if (!$val) {
+
+        if (empty($val)) {
             return null;
         }
 

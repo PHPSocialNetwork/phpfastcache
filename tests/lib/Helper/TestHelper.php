@@ -550,11 +550,12 @@ class TestHelper
                 $pool->getIO()->getWriteHit()
             )
         );
-        $this->printInfoText('<yellow>Driver info</yellow>: <magenta>' . $pool->getStats()->getInfo() . '</magenta>');
-        $poolSize = $pool->getStats()->getSize();
+        $stats = $pool->getStats();
+        $this->printInfoText('<yellow>Driver info</yellow>: <magenta>' . $stats->getInfo() . '</magenta>');
+        $poolSize = $stats->getSize();
 
         if($poolSize){
-            $this->printInfoText('<yellow>Driver size</yellow> (approximative): <magenta>' . round($pool->getStats()->getSize() / (1024 ** 2), 3) . ' Mo</magenta>');
+            $this->printInfoText('<yellow>Driver size</yellow> (approximative): <magenta>' . round($stats->getSize() / (1024 ** 2), 3) . ' Mo</magenta>');
         }
     }
 

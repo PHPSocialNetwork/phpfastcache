@@ -140,7 +140,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             $results = $this->instance->execute(new Cassandra\SimpleStatement($query), $options);
 
             if ($results instanceof Cassandra\Rows && $results->count() === 1) {
-                return $this->decode($results->first()['cache_data']);
+                return $this->decode($results->first()['cache_data']) ?: null;
             }
 
             return null;

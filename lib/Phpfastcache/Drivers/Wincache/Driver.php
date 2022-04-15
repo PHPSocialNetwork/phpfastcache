@@ -72,7 +72,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
     {
         $val = wincache_ucache_get($item->getKey(), $suc);
 
-        if ($suc === false) {
+        if ($suc === false || empty($val)) {
             return null;
         }
 

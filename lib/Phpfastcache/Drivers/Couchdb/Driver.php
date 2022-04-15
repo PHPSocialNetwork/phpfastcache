@@ -257,7 +257,7 @@ HELP;
      * @return mixed
      * @throws \Exception
      */
-    protected function decode($value): mixed
+    protected function decode($value): array
     {
         $value[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX] = \unserialize(
             $value[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX],

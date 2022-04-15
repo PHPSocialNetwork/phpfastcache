@@ -1,8 +1,10 @@
 ## 9.1.1
 ##### _Date to be defined_
 - __Core__
-  - Fixed #860 - Cache item throw an error on reading with DateTimeImmutable date objects
+  - Fixed #860 // Cache item throw an error on reading with DateTimeImmutable date objects
   - Fixed an issue with tags not properly reinitialized when a backend driver returns an expired cache item
+- __Drivers__
+  - Fixed #862 // Multiple driver errors caused by invalid return type of `driverRead()` (reported by @ShockedPlot7560 and @aemla)
 
 ## 9.1.0
 ##### 04 april 2022

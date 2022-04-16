@@ -39,7 +39,7 @@ use Phpfastcache\Util\MemcacheDriverCollisionDetectorTrait;
  * @property MemcacheSoftware $instance
  * @method Config getConfig()
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait {
         __construct as protected __parentConstruct;

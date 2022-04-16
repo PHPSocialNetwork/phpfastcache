@@ -41,7 +41,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  * @method Config getConfig()
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait {
         __construct as __baseConstruct;

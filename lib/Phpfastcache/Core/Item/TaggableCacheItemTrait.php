@@ -16,7 +16,9 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Core\Item;
 
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 trait TaggableCacheItemTrait
 {
@@ -149,5 +151,24 @@ trait TaggableCacheItemTrait
     public function getRemovedTags(): array
     {
         return \array_diff($this->removedTags, $this->tags);
+    }
+
+    /**
+     * @throws PhpfastcacheLogicException
+     * @throws PhpfastcacheInvalidArgumentException
+     */
+    public function cloneInto(ExtendedCacheItemInterface $itemTarget, ?ExtendedCacheItemPoolInterface $itemPoolTarget = null): void
+    {
+        $itemTarget->setEventManager($this->getEventManager())
+            ->set($this->getRawValue())
+            ->setHit($this->isHit())
+            ->setTags($this->getTags())
+            ->expiresAt(clone $this->getExpirationDate())
+            ->setDriver($itemPoolTarget ?? $this->driver);
+
+        if ($this->driver->getConfig()->isItemDetailedDate()) {
+            $itemTarget->setCreationDate(clone $this->getCreationDate())
+                ->setModificationDate(clone $this->getModificationDate());
+        }
     }
 }

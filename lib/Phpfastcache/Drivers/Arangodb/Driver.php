@@ -41,7 +41,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  * @property ArangoConnection $instance
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait;
 

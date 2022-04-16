@@ -33,7 +33,7 @@ use phpssdb\Core\SSDB;
  * @property SimpleSSDB $instance Instance of driver service
  * @method Config getConfig()
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait;
 

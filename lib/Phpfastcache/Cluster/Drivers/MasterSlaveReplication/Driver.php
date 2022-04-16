@@ -20,7 +20,7 @@ use Phpfastcache\Cluster\ClusterPoolAbstract;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\Event;
-use Phpfastcache\EventManager;
+use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheCoreException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
@@ -36,7 +36,7 @@ class Driver extends ClusterPoolAbstract
     /**
      * MasterSlaveReplicationCluster constructor.
      * @param string $clusterName
-     * @param EventManager $em
+     * @param EventManagerInterface $em
      * @param ExtendedCacheItemPoolInterface ...$driverPools
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverConnectException
@@ -45,7 +45,7 @@ class Driver extends ClusterPoolAbstract
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheIOException
      */
-    public function __construct(string $clusterName, EventManager $em, ExtendedCacheItemPoolInterface ...$driverPools)
+    public function __construct(string $clusterName, EventManagerInterface $em, ExtendedCacheItemPoolInterface ...$driverPools)
     {
         if (\count($driverPools) !== 2) {
             throw new PhpfastcacheInvalidArgumentException('A "master/slave" cluster requires exactly two pools to be working.');

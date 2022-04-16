@@ -28,7 +28,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 /**
  * @method Config getConfig()
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait;
 

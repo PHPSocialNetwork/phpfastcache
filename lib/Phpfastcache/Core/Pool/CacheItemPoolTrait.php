@@ -17,10 +17,12 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Pool;
 
 use DateTime;
+use Phpfastcache\Config\ConfigurationOptionInterface;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\ItemBatch;
 use Phpfastcache\Event\Event;
+use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheCoreException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
@@ -30,9 +32,15 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Psr\Cache\CacheItemInterface;
 use RuntimeException;
 
+/**
+ * @method array driverUnwrapTags(array $wrapper)
+ * @method void cleanItemTags(ExtendedCacheItemInterface $item)
+ */
 trait CacheItemPoolTrait
 {
-    use DriverBaseTrait;
+    use DriverBaseTrait {
+        DriverBaseTrait::__construct as __driverBaseConstruct;
+    }
 
     /**
      * @var string
@@ -50,6 +58,12 @@ trait CacheItemPoolTrait
     protected array $itemInstances = [];
 
     protected DriverIO $IO;
+
+    public function __construct(ConfigurationOptionInterface $config, string $instanceId, EventManagerInterface $em)
+    {
+        $this->IO = new DriverIO();
+        $this->__driverBaseConstruct($config, $instanceId, $em);
+    }
 
     /**
      * @throws PhpfastcacheLogicException
@@ -310,7 +324,7 @@ trait CacheItemPoolTrait
             /**
              * Perform a tag cleanup to avoid memory leaks
              */
-            if (!\str_starts_with($key, self::DRIVER_TAGS_KEY_PREFIX)) {
+            if (!\str_starts_with($key, TaggableCacheItemPoolInterface::DRIVER_TAGS_KEY_PREFIX)) {
                 $this->cleanItemTags($item);
             }
 
@@ -432,5 +446,50 @@ trait CacheItemPoolTrait
     public function getIO(): DriverIO
     {
         return $this->IO;
+    }
+
+    /**
+     * @internal This method de-register an item from $this->itemInstances
+     */
+    protected function deregisterItem(string $item): static
+    {
+        unset($this->itemInstances[$item]);
+
+        if (\gc_enabled()) {
+            \gc_collect_cycles();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @throws PhpfastcacheLogicException
+     */
+    public function attachItem(CacheItemInterface $item): static
+    {
+        if (isset($this->itemInstances[$item->getKey()]) && \spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
+            throw new PhpfastcacheLogicException(
+                'The item already exists and cannot be overwritten because the Spl object hash mismatches ! 
+                You probably tried to re-attach a detached item which has been already retrieved from cache.'
+            );
+        }
+
+        if (!$this->getConfig()->isUseStaticItemCaching()) {
+            throw new PhpfastcacheLogicException(
+                'The static item caching option (useStaticItemCaching) is disabled so you cannot attach an item.'
+            );
+        }
+
+        $this->itemInstances[$item->getKey()] = $item;
+
+        return $this;
+    }
+
+    public function isAttached(CacheItemInterface $item): bool
+    {
+        if (isset($this->itemInstances[$item->getKey()])) {
+            return \spl_object_hash($item) === \spl_object_hash($this->itemInstances[$item->getKey()]);
+        }
+        return false;
     }
 }

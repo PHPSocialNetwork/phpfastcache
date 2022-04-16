@@ -66,10 +66,9 @@ trait DriverBaseTrait
         $this->setEventManager($em);
         $this->setConfig($config);
         $this->instanceId = $instanceId;
-        $this->IO = new DriverIO();
 
         if (!$this->driverCheck()) {
-            throw new PhpfastcacheDriverCheckException(\sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
+            throw new PhpfastcacheDriverCheckException(\sprintf(ExtendedCacheItemPoolInterface::DRIVER_CHECK_FAILURE, $this->getDriverName()));
         }
 
         try {
@@ -78,7 +77,7 @@ trait DriverBaseTrait
         } catch (Throwable $e) {
             throw new PhpfastcacheDriverConnectException(
                 sprintf(
-                    self::DRIVER_CONNECT_FAILURE,
+                    ExtendedCacheItemPoolInterface::DRIVER_CONNECT_FAILURE,
                     $e::class,
                     $this->getDriverName(),
                     $e->getMessage(),
@@ -145,8 +144,8 @@ trait DriverBaseTrait
         $wrap = [
             ExtendedCacheItemPoolInterface::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(), // Stored but not really used, allow you to quickly identify the cache key
             ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX => $item->getRawValue(),
+            ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),
             TaggableCacheItemPoolInterface::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
-            self::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),
         ];
 
         if ($this->getConfig()->isItemDetailedDate()) {
@@ -207,11 +206,11 @@ trait DriverBaseTrait
      */
     public function driverUnwrapEdate(array $wrapper): \DateTimeInterface
     {
-        if ($wrapper[self::DRIVER_EDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
-            return $wrapper[self::DRIVER_EDATE_WRAPPER_INDEX];
+        if ($wrapper[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
+            return $wrapper[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX];
         }
 
-        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[self::DRIVER_EDATE_WRAPPER_INDEX]);
+        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX]);
     }
 
     /**
@@ -220,11 +219,11 @@ trait DriverBaseTrait
      */
     public function driverUnwrapCdate(array $wrapper): ?\DateTimeInterface
     {
-        if ($wrapper[self::DRIVER_CDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
-            return $wrapper[self::DRIVER_CDATE_WRAPPER_INDEX];
+        if ($wrapper[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
+            return $wrapper[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX];
         }
 
-        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[self::DRIVER_CDATE_WRAPPER_INDEX]);
+        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX]);
     }
 
     /**
@@ -233,11 +232,11 @@ trait DriverBaseTrait
      */
     public function driverUnwrapMdate(array $wrapper): ?\DateTimeInterface
     {
-        if ($wrapper[self::DRIVER_MDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
-            return $wrapper[self::DRIVER_MDATE_WRAPPER_INDEX];
+        if ($wrapper[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
+            return $wrapper[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX];
         }
 
-        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[self::DRIVER_MDATE_WRAPPER_INDEX]);
+        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX]);
     }
 
     /**

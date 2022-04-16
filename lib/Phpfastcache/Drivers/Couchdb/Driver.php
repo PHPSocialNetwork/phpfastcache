@@ -33,7 +33,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  * @property CouchdbClient $instance Instance of driver service
  * @method Config getConfig()
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait;
 

@@ -34,7 +34,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  * @property CassandraSession|null $instance Instance of driver service
  * @method Config getConfig()
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait;
 
@@ -63,10 +63,11 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             ->withPort($clientConfig->getPort());
 
         if (!empty($clientConfig->isSslEnabled())) {
+            $sslBuilder = Cassandra::ssl();
             if (!empty($clientConfig->isSslVerify())) {
-                $sslBuilder = Cassandra::ssl()->withVerifyFlags(Cassandra::VERIFY_PEER_CERT);
+                $sslBuilder->withVerifyFlags(Cassandra::VERIFY_PEER_CERT);
             } else {
-                $sslBuilder = Cassandra::ssl()->withVerifyFlags(Cassandra::VERIFY_NONE);
+                $sslBuilder->withVerifyFlags(Cassandra::VERIFY_NONE);
             }
 
             $clusterBuilder->withSSL($sslBuilder->build());
@@ -199,7 +200,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
              */
             return $result instanceof Cassandra\Rows;
         } catch (InvalidArgumentException $e) {
-            throw new PhpfastcacheInvalidArgumentException($e, 0, $e);
+            throw new PhpfastcacheInvalidArgumentException($e->getMessage(), 0, $e);
         }
     }
 

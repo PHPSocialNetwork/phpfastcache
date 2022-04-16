@@ -30,7 +30,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  * @property LeveldbClient|null $instance Instance of driver service
  * @method Config getConfig()
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use IOHelperTrait;
 

@@ -201,7 +201,7 @@ trait TaggableCacheItemPoolTrait
         $items = $this->fetchItemsByTagFromBackend($tagName);
         if ($strategy === TaggableCacheItemPoolInterface::TAG_STRATEGY_ONLY) {
             foreach ($items as $key => $item) {
-                if (\array_diff($item->getTags(), $tagName)) {
+                if (\array_diff($item->getTags(), [$tagName])) {
                     unset($items[$key]);
                 }
             }

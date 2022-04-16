@@ -309,24 +309,5 @@ trait ExtendedCacheItemTrait
         return $driverPool::getClassNamespace() === self::getClassNamespace();
     }
 
-    /**
-     * @throws PhpfastcacheLogicException
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    public function cloneInto(ExtendedCacheItemInterface $itemTarget, ?ExtendedCacheItemPoolInterface $itemPoolTarget = null): void
-    {
-        $itemTarget->setEventManager($this->getEventManager())
-            ->set($this->getRawValue())
-            ->setHit($this->isHit())
-            ->setTags($this->getTags())
-            ->expiresAt(clone $this->getExpirationDate())
-            ->setDriver($itemPoolTarget ?? $this->driver);
-
-        if ($this->driver->getConfig()->isItemDetailedDate()) {
-            $itemTarget->setCreationDate(clone $this->getCreationDate())
-                ->setModificationDate(clone $this->getModificationDate());
-        }
-    }
-
     abstract protected function getDriverClass(): string;
 }

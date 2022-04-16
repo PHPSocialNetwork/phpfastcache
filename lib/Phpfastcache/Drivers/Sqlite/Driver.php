@@ -33,7 +33,7 @@ use Psr\Cache\CacheItemInterface;
 /**
  * @method Config getConfig()
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use IOHelperTrait;
 

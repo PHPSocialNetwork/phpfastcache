@@ -38,7 +38,7 @@ use Psr\Http\Message\UriInterface;
  * @property AwsDynamoDbClient $instance
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait;
 

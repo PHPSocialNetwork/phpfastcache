@@ -27,7 +27,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
  * Requires Zend Data Cache Functions from ZendServer
  * @method Config getConfig()
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait;
 

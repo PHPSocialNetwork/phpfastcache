@@ -32,7 +32,7 @@ use Predis\Connection\ConnectionException as PredisConnectionException;
  * @property PredisClient $instance Instance of driver service
  * @method Config getConfig()
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait;
 

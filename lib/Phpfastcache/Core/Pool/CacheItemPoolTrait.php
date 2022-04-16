@@ -145,14 +145,6 @@ trait CacheItemPoolTrait
                 $driverArray = $this->driverRead($item);
 
             if ($driverArray) {
-                if (!\is_array($driverArray)) {
-                    throw new PhpfastcacheCoreException(
-                        sprintf(
-                            'The driverRead method returned an unexpected variable type: %s',
-                            \gettype($driverArray)
-                        )
-                    );
-                }
                 $driverData = $this->driverUnwrapData($driverArray);
 
                 if ($this->getConfig()->isPreventCacheSlams()) {

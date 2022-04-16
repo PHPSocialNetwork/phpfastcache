@@ -22,6 +22,9 @@ use RecursiveIteratorIterator;
 
 trait ClassNamespaceResolverTrait
 {
+    /**
+     * @var array<string, string>
+     */
     protected static array $namespaces = [];
 
     /**
@@ -30,31 +33,28 @@ trait ClassNamespaceResolverTrait
      * NOTICE: This method has been borrowed from Symfony ClassLoader 3.4 since they
      * deprecated the whole component as of SF4. Our thanks to them.
      *
-     * @param Iterator|string|array $dir The directory to search in or an iterator
+     * @param string $dir The directory to search in or an iterator
      *
-     * @return array A class map array
+     * @return array<string, string> A class map array
      */
-    protected static function createClassMap(Iterator|string|array $dir): array
+    protected static function createClassMap(string $dir): array
     {
-        if (\is_string($dir)) {
-            $dir = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
-        }
+        $dirIterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
+
         $map = [];
 
-        if (\is_iterable($dir)) {
-            foreach ($dir as $file) {
-                if (!$file->isFile()) {
-                    continue;
-                }
-                $path = $file->getRealPath() ?: $file->getPathname();
-                if ('php' !== pathinfo($path, PATHINFO_EXTENSION)) {
-                    continue;
-                }
-                $classes = self::findClasses($path);
-                gc_mem_caches();
-                foreach ($classes as $class) {
-                    $map[$class] = $path;
-                }
+        foreach ($dirIterator as $file) {
+            if (!$file->isFile()) {
+                continue;
+            }
+            $path = $file->getRealPath() ?: $file->getPathname();
+            if ('php' !== pathinfo($path, PATHINFO_EXTENSION)) {
+                continue;
+            }
+            $classes = self::findClasses($path);
+            gc_mem_caches();
+            foreach ($classes as $class) {
+                $map[$class] = $path;
             }
         }
 
@@ -69,7 +69,7 @@ trait ClassNamespaceResolverTrait
      *
      * @param string $path The file to check
      *
-     * @return array The found classes
+     * @return string[] The found classes
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */

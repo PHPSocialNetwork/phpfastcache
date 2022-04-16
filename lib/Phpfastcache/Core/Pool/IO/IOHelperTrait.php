@@ -33,7 +33,7 @@ trait IOHelperTrait
     use TaggableCacheItemPoolTrait;
 
     /**
-     * @var array
+     * @var array<string, string>
      */
     public array $tmp = [];
 
@@ -51,13 +51,13 @@ trait IOHelperTrait
         if (!is_dir($path)) {
             throw new PhpfastcacheIOException("Can't read PATH:" . $path);
         }
-        $stat->setRawData(
-            [
+        $stat->setSize(Directory::dirSize($path))
+            ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($path))
+            ->setRawData(
+                [
                     'tmp' => $this->tmp,
                 ]
-        )
-            ->setSize(Directory::dirSize($path))
-            ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($path));
+            );
 
         if ($this->getConfig()->isUseStaticItemCaching()) {
             $stat->setData(implode(', ', \array_keys($this->itemInstances)));
@@ -283,7 +283,7 @@ trait IOHelperTrait
                 dirname($file) . \DIRECTORY_SEPARATOR . 'tmp_' . $this->getConfig()->getDefaultFileNameHashFunction()(
                     \bin2hex(\random_bytes(16))
                 )
-            ) . '.' .  $this->getConfig()->getCacheFileExtension() . \random_int(1000, 9999);
+            ) . '.' . $this->getConfig()->getCacheFileExtension() . \random_int(1000, 9999);
 
             $handle = \fopen($tmpFilename, 'w+b');
             if (\is_resource($handle)) {
@@ -304,6 +304,6 @@ trait IOHelperTrait
             }
         }
 
-        return (bool) ($octetWritten ?? false);
+        return (bool)($octetWritten ?? false);
     }
 }

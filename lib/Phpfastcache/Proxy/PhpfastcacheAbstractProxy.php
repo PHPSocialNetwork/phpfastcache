@@ -52,9 +52,7 @@ abstract class PhpfastcacheAbstractProxy implements PhpfastcacheAbstractProxyInt
     }
 
     /**
-     * @param string $name
-     * @param array $args
-     * @return mixed
+     * @inheritDoc
      */
     public function __call(string $name, array $args): mixed
     {

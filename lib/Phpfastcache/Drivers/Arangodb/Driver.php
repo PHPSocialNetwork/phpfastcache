@@ -118,7 +118,7 @@ class Driver implements AggregatablePoolInterface
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return null|array
+     * @return ?array<string, mixed>
      * @throws PhpfastcacheDriverException
      * @throws \Exception
      */
@@ -204,7 +204,7 @@ class Driver implements AggregatablePoolInterface
      * @throws PhpfastcacheDriverConnectException
      * @throws ArangoException
      */
-    protected function createCollection($collectionName): bool
+    protected function createCollection(string $collectionName): bool
     {
         $collection = new ArangoCollection($collectionName);
 
@@ -241,7 +241,7 @@ class Driver implements AggregatablePoolInterface
 
     /**
      * @param ArangoDocument $document
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     protected function decodeDocument(ArangoDocument $document): array

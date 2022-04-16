@@ -40,11 +40,12 @@ class Config extends ConfigurationOption
     protected string $coreName = 'phpfastcache';
     protected string $endpointName = 'phpfastcache';
     protected string $scheme = 'http';
-    protected string $path = '/';
-// Override of ConfigurationOption
-
-    protected array $mappingSchema = self::DEFAULT_MAPPING_SCHEMA;
     protected EventDispatcherInterface $eventDispatcher;
+    protected string $path = '/';
+
+    /** @var array<string, string> */
+    protected array $mappingSchema = self::DEFAULT_MAPPING_SCHEMA;
+
     public function __construct(array $parameters = [])
     {
         $this->eventDispatcher = $this->getDefaultEventDispatcher();

@@ -91,7 +91,7 @@ class Driver implements AggregatablePoolInterface
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return null|array
+     * @return ?array<string, mixed>
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
@@ -163,10 +163,10 @@ class Driver implements AggregatablePoolInterface
 
     /**
      * Return Database of Keyword
-     * @param $keyword
+     * @param string $keyword
      * @return int
      */
-    public function getDbIndex($keyword)
+    public function getDbIndex(string $keyword)
     {
         if (!isset($this->indexing)) {
             $tableCreated = false;
@@ -240,7 +240,7 @@ class Driver implements AggregatablePoolInterface
      * INIT Indexing DB
      * @param PDO $db
      */
-    public function initIndexing(PDO $db)
+    public function initIndexing(PDO $db): void
     {
         // delete everything before reset indexing
         $dir = opendir($this->sqliteDir);

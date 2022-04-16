@@ -136,7 +136,7 @@ HELP;
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return null|array
+     * @return ?array<string, mixed>
      * @throws PhpfastcacheDriverException
      * @throws \Exception
      */
@@ -153,7 +153,7 @@ HELP;
         }
 
         if ($response->status === 200) {
-            return $this->decode($response->body);
+            return $this->decodeDocument($response->body);
         }
 
         throw new PhpfastcacheDriverException('Got unexpected HTTP status: ' . $response->status);
@@ -183,10 +183,10 @@ HELP;
     }
 
     /**
-     * @param $docId
+     * @param string $docId
      * @return string|null
      */
-    protected function getLatestDocumentRevision($docId): ?string
+    protected function getLatestDocumentRevision(string $docId): ?string
     {
         $path = '/' . \urlencode($this->getDatabaseName()) . '/' . urlencode($docId);
 
@@ -238,8 +238,8 @@ HELP;
     }
 
     /**
-     * @param array $data
-     * @return array
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
      */
     protected function encodeDocument(array $data): array
     {
@@ -253,11 +253,11 @@ HELP;
      * since we don't store encoded version
      * for performance purposes
      *
-     * @param $value
-     * @return mixed
+     * @param array<string, mixed> $value
+     * @return array<string, mixed>
      * @throws \Exception
      */
-    protected function decode($value): array
+    protected function decodeDocument(array $value): array
     {
         $value[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX] = \unserialize(
             $value[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX],

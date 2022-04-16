@@ -23,12 +23,13 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 interface ConfigurationOptionInterface extends LockableConfigurationInterface
 {
     /**
+     * @param array<string, mixed> $parameters
      * ConfigurationOptionInterface constructor.
      */
     public function __construct(array $parameters = []);
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray(): array;
 

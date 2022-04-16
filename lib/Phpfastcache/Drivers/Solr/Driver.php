@@ -134,7 +134,7 @@ class Driver implements AggregatablePoolInterface
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return null|array
+     * @return ?array<string, mixed>
      * @throws \Exception
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
@@ -158,7 +158,7 @@ class Driver implements AggregatablePoolInterface
 
     /**
      * @param SolariumDocument $document
-     * @return array
+     * @return array<mixed>
      * @throws \Exception
      */
     protected function decodeDocument(SolariumDocument $document): array

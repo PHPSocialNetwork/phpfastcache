@@ -166,7 +166,7 @@ interface ExtendedCacheItemInterface extends
     public function decrement(int $step = 1): ExtendedCacheItemInterface;
 
     /**
-     * @param array|string $data
+     * @param mixed[]|string $data
      *
      * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidTypeException
@@ -174,7 +174,7 @@ interface ExtendedCacheItemInterface extends
     public function append(array|string $data): ExtendedCacheItemInterface;
 
     /**
-     * @param array|string $data
+     * @param mixed[]|string $data
      *
      * @return ExtendedCacheItemInterface
      * @throws PhpfastcacheInvalidTypeException

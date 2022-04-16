@@ -27,34 +27,41 @@ class Config extends ConfigurationOption
 {
     protected string $database;
     protected string $collection;
-/**
+
+    /**
+     * @var string|array<string>
      *  HTTP ENDPOINT: ssl://127.0.0.1:8529
      *  SSL ENDPOINT: ssl://127.0.0.1:8529
      *  UNIX ENDPOINT: unix:///tmp/arangodb.sock
      *  Failover ENDPOINTS: ['tcp://127.0.0.1:8529', 'tcp://127.0.0.1:8529']
      */
     protected string|array $endpoint = 'tcp://127.0.0.1:8529';
-    protected string $connection = 'Keep-Alive';
-// enum{'Close', 'Keep-Alive'}
 
+    // enum{'Close', 'Keep-Alive'}
+    protected string $connection = 'Keep-Alive';
+
+    // enum{'Bearer', 'Basic'}
     protected string $authType = 'Basic';
-// enum{'Bearer', 'Basic'}
+
 
     protected string $authUser = '';
     protected string $authPasswd = '';
     protected ?string $authJwt = null;
+
+    /** Do not create unknown collections automatically */
     protected bool $autoCreate = false;
-// Do not create unknown collections automatically
 
     protected int $connectTimeout = 3;
     protected int $requestTimeout = 5;
     protected string $updatePolicy = 'last';
     protected bool $verifyCert = true;
     protected bool $selfSigned = true;
+
+    /** @see https://www.openssl.org/docs/manmaster/man1/ciphers.html */
     protected string $ciphers = 'DEFAULT';
-// @see https://www.openssl.org/docs/manmaster/apps/ciphers.html
 
     protected ?\Closure $traceFunction = null;
+
     public function getDatabase(): string
     {
         return $this->database;
@@ -85,12 +92,17 @@ class Config extends ConfigurationOption
         return $this;
     }
 
+    /**
+     * @return string|array<string>
+     */
     public function getEndpoint(): string|array
     {
         return $this->endpoint;
     }
 
     /**
+     * @param string|array<string> $endpoint
+     * @return $this
      * @throws PhpfastcacheLogicException
      */
     public function setEndpoint(string|array $endpoint): Config

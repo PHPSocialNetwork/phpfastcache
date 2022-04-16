@@ -122,7 +122,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      * @param string[] $keys
      * An indexed array of keys of items to retrieve.
      *
-     * @return ExtendedCacheItemInterface[]
+     * @return iterable<ExtendedCacheItemInterface>
      *   A traversable collection of Cache Items keyed by the cache keys of
      *   each item. A Cache item will be returned for each key, even if that
      *   key is not found. However, if no keys are specified then an empty
@@ -137,8 +137,7 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
     /**
      * Returns A json string that represents an array of items.
      *
-     * @param array $keys
-     * An indexed array of keys of items to retrieve.
+     * @param array<string> $keys An indexed array of keys of items to retrieve.
      * @param int $options \json_encode() options
      * @param int $depth \json_encode() depth
      *

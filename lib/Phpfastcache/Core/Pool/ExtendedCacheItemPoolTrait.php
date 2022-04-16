@@ -30,10 +30,7 @@ trait ExtendedCacheItemPoolTrait
     use CacheItemPoolTrait;
 
     /**
-     * @param array $keys
-     * @param int $options
-     * @param int $depth
-     * @return string
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException

@@ -20,15 +20,11 @@ trait MemcacheDriverCollisionDetectorTrait
 {
     protected static string $driverUsed;
 
-    /**
-     * @param $driverName
-     * @return bool
-     */
-    public static function checkCollision($driverName): bool
+    public static function checkCollision(string $driverName): bool
     {
         $constantName = __NAMESPACE__ . '\MEMCACHE_DRIVER_USED';
 
-        if ($driverName && is_string($driverName)) {
+        if ($driverName) {
             if (!defined($constantName)) {
                 define($constantName, $driverName);
 

@@ -53,7 +53,7 @@ class Driver implements AggregatablePoolInterface
 
     protected CouchbaseBucket $bucketInstance;
 
-    public function __construct(ConfigurationOption $config, $instanceId, EventManagerInterface $em)
+    public function __construct(ConfigurationOption $config, string $instanceId, EventManagerInterface $em)
     {
         $this->__baseConstruct($config, $instanceId, $em);
     }
@@ -91,7 +91,7 @@ class Driver implements AggregatablePoolInterface
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return null|array
+     * @return ?array<string, mixed>
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
@@ -228,8 +228,8 @@ class Driver implements AggregatablePoolInterface
 
 
     /**
-     * @param array $data
-     * @return array
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
      */
     protected function encodeDocument(array $data): array
     {
@@ -249,8 +249,8 @@ class Driver implements AggregatablePoolInterface
     }
 
     /**
-     * @param array $data
-     * @return array
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
      */
     protected function decodeDocument(array $data): array
     {

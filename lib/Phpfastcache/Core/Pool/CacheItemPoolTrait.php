@@ -33,7 +33,7 @@ use Psr\Cache\CacheItemInterface;
 use RuntimeException;
 
 /**
- * @method array driverUnwrapTags(array $wrapper)
+ * @method string[] driverUnwrapTags(array $wrapper)
  * @method void cleanItemTags(ExtendedCacheItemInterface $item)
  */
 trait CacheItemPoolTrait
@@ -92,8 +92,7 @@ trait CacheItemPoolTrait
     }
 
     /**
-     * @param array $keys
-     * @return array
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -278,8 +277,7 @@ trait CacheItemPoolTrait
     }
 
     /**
-     * @param array $keys
-     * @return bool
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException

@@ -50,6 +50,7 @@ class ConfigurationOption extends AbstractConfigurationOption implements Configu
     protected ?object $superGlobalAccessor = null;
 
     /**
+     * @inheritDoc
      * @throws PhpfastcacheInvalidConfigurationException
      * @throws PhpfastcacheInvalidTypeException
      */

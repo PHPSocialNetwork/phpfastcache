@@ -26,13 +26,20 @@ class Config extends ConfigurationOption
     protected int $timeout = 3;
     protected string $username = '';
     protected string $password = '';
-    protected array $servers = [];
     protected string $collectionName = 'phpfastcache';
     protected string $databaseName = Driver::MONGODB_DEFAULT_DB_NAME;
-    protected array $options = [];
-    protected array $driverOptions = [];
     protected string $protocol = 'mongodb';
-/**
+
+    /** @var array<mixed>  */
+    protected array $servers = [];
+
+    /** @var array<mixed>  */
+    protected array $options = [];
+
+    /** @var array<mixed>  */
+    protected array $driverOptions = [];
+
+    /**
      * @return string
      */
     public function getHost(): string
@@ -133,7 +140,7 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getServers(): array
     {
@@ -141,7 +148,7 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @param array $servers
+     * @param array<mixed> $servers
      * @return self
      * @throws PhpfastcacheLogicException
      */
@@ -193,7 +200,7 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getOptions(): array
     {
@@ -202,7 +209,7 @@ class Config extends ConfigurationOption
 
     /**
      * @see https://docs.mongodb.com/manual/reference/connection-string/#connections-connection-options
-     * @param array $options
+     * @param array<mixed> $options
      * @return Config
      * @throws PhpfastcacheLogicException
      */
@@ -214,7 +221,7 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getDriverOptions(): array
     {
@@ -222,7 +229,7 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @param array $driverOptions
+     * @param array<mixed> $driverOptions
      * @return self
      * @throws PhpfastcacheLogicException
      */

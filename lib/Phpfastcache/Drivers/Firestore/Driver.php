@@ -87,7 +87,7 @@ class Driver implements AggregatablePoolInterface
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return null|array
+     * @return ?array<string, mixed>
      * @throws \Exception
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
@@ -135,6 +135,10 @@ class Driver implements AggregatablePoolInterface
         return true;
     }
 
+    /**
+     * @param array<string, mixed> $snapshotData
+     * @return array<string, mixed>
+     */
     protected function decodeFirestoreDocument(array $snapshotData): array
     {
         return \array_map(static function ($datum) {

@@ -78,5 +78,10 @@ interface PhpfastcacheAbstractProxyInterface
     public const TAG_STRATEGY_ALL = TaggableCacheItemPoolInterface::TAG_STRATEGY_ALL;
     public const TAG_STRATEGY_ONLY = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONLY;
 
+    /**
+     * @param string $name
+     * @param array<mixed> $args
+     * @return mixed
+     */
     public function __call(string $name, array $args): mixed;
 }

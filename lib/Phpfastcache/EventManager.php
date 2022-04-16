@@ -29,6 +29,7 @@ class EventManager implements EventManagerInterface
 
     protected static EventManagerInterface $instance;
 
+    /** @var array<string, array<string, callable>> */
     protected array $events = [
         self::ON_EVERY_EVENT => []
     ];
@@ -50,11 +51,6 @@ class EventManager implements EventManagerInterface
         self::$instance = $eventManagerInstance;
     }
 
-
-    /**
-     * @param string $eventName
-     * @param array $args
-     */
     public function dispatch(string $eventName, ...$args): void
     {
         /**
@@ -74,8 +70,7 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * @param string $name
-     * @param array $arguments
+     * @inheritDoc
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheEventManagerException
      */
@@ -139,7 +134,7 @@ class EventManager implements EventManagerInterface
      */
     public function unbindAllEventCallbacks(): bool
     {
-        $this->events =  [
+        $this->events = [
             self::ON_EVERY_EVENT => []
         ];
 

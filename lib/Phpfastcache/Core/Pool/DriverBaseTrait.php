@@ -40,10 +40,16 @@ trait DriverBaseTrait
     use ClassNamespaceResolverTrait;
     use EventManagerDispatcherTrait;
 
+    /**
+     * @var string[]
+     */
     protected static array $cacheItemClasses = [];
 
     protected ConfigurationOptionInterface $config;
 
+    /**
+     * @var object|array<mixed>|null
+     */
     protected object|array|null $instance;
 
     protected string $driverName;
@@ -136,7 +142,7 @@ trait DriverBaseTrait
     /**
      * @param ExtendedCacheItemInterface $item
      * @param bool $stringifyDate
-     * @return array
+     * @return array<string, mixed>
      * @throws PhpfastcacheLogicException
      */
     public function driverPreWrap(ExtendedCacheItemInterface $item, bool $stringifyDate = false): array
@@ -191,7 +197,7 @@ trait DriverBaseTrait
     }
 
     /**
-     * @param array $wrapper
+     * @param array<string, mixed> $wrapper
      * @return mixed
      * @throws \Exception
      */
@@ -201,7 +207,7 @@ trait DriverBaseTrait
     }
 
     /**
-     * @param array $wrapper
+     * @param array<string, mixed> $wrapper
      * @return DateTimeInterface
      */
     public function driverUnwrapEdate(array $wrapper): \DateTimeInterface
@@ -214,7 +220,7 @@ trait DriverBaseTrait
     }
 
     /**
-     * @param array $wrapper
+     * @param array<string, mixed> $wrapper
      * @return DateTimeInterface|null
      */
     public function driverUnwrapCdate(array $wrapper): ?\DateTimeInterface
@@ -227,7 +233,7 @@ trait DriverBaseTrait
     }
 
     /**
-     * @param array $wrapper
+     * @param array<string, mixed> $wrapper
      * @return DateTimeInterface|null
      */
     public function driverUnwrapMdate(array $wrapper): ?\DateTimeInterface
@@ -251,10 +257,10 @@ trait DriverBaseTrait
      * Encode data types such as object/array
      * for driver that does not support
      * non-scalar value
-     * @param $data
+     * @param mixed $data
      * @return string
      */
-    protected function encode($data): string
+    protected function encode(mixed $data): string
     {
         return \serialize($data);
     }

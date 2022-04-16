@@ -67,8 +67,8 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param CacheItemInterface $item
-     * @return ?array
+     * @param ExtendedCacheItemInterface $item
+     * @return ?array<string, mixed>
      * @throws \Exception
      */
     protected function driverRead(CacheItemInterface $item): ?array

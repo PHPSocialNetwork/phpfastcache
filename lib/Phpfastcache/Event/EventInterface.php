@@ -18,5 +18,8 @@ namespace Phpfastcache\Event;
 
 interface EventInterface
 {
+    /**
+     * @return array<string, string>
+     */
     public static function getEvents(): array;
 }

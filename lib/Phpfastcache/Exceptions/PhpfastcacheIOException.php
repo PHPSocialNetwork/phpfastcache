@@ -24,7 +24,7 @@ class PhpfastcacheIOException extends PhpfastcacheCoreException
     /**
      * @inheritdoc
      */
-    public function __construct($message = "", $code = 0, $previous = null)
+    public function __construct(string $message = "", int $code = 0, \Throwable $previous = null)
     {
         $lastError = error_get_last();
         if ($lastError) {

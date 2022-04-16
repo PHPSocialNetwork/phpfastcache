@@ -33,7 +33,7 @@ class Driver implements ExtendedCacheItemPoolInterface
     use TaggableCacheItemPoolTrait;
 
     /**
-     * @var array
+     * @var array<string, array<string, mixed>>
      */
     protected array $staticStack = [];
 
@@ -55,7 +55,7 @@ class Driver implements ExtendedCacheItemPoolInterface
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return null|array
+     * @return ?array<string, mixed>
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {

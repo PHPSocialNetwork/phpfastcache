@@ -62,7 +62,7 @@ interface EventManagerInterface
 
     /**
      * @param string $eventName
-     * @param array<mixed> ...$args
+     * @param array<mixed> $args
      */
     public function dispatch(string $eventName, ...$args): void;
 

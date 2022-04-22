@@ -35,4 +35,10 @@ $cluster->clear();
 
 $testHelper->runCRUDTests($cluster);
 
+if($cluster->getClusterPools()[0]->isAggregatedBy() === $cluster){
+    $testHelper->assertPass('The cluster aggregator set is the same as the cluster container.');
+} else {
+    $testHelper->assertFail('The cluster aggregator set is NOT the same as the cluster container.');
+}
+
 $testHelper->terminateTest();

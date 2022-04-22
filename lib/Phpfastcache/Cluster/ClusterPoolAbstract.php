@@ -53,7 +53,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
     ];
 
     /**
-     * @var ExtendedCacheItemPoolInterface[]
+     * @var AggregatablePoolInterface[]
      */
     protected array $clusterPools;
 
@@ -69,7 +69,7 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheIOException
      */
-    public function __construct(string $clusterName, EventManagerInterface $em, ExtendedCacheItemPoolInterface ...$driverPools)
+    public function __construct(string $clusterName, EventManagerInterface $em, AggregatablePoolInterface ...$driverPools)
     {
         if (count($driverPools) < 2) {
             throw new PhpfastcacheInvalidArgumentException('A cluster requires at least two pools to be working.');
@@ -77,6 +77,14 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
         $this->clusterPools = $driverPools;
         $this->__parentConstruct(new ConfigurationOption(), $clusterName, $em);
         $this->setEventManager(EventManager::getInstance());
+        $this->setClusterPoolsAggregator();
+    }
+
+    protected function setClusterPoolsAggregator(): void
+    {
+        foreach ($this->clusterPools as $clusterPool) {
+            $clusterPool->setAggregatedBy($this);
+        }
     }
 
     /**

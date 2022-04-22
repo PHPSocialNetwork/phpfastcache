@@ -20,4 +20,7 @@ use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 
 interface AggregatablePoolInterface extends ExtendedCacheItemPoolInterface
 {
+    public function isAggregatedBy(): ?ClusterPoolInterface;
+
+    public function setAggregatedBy(ClusterPoolInterface $clusterPool): static;
 }

@@ -28,6 +28,7 @@ use Psr\Cache\CacheItemInterface;
 trait ExtendedCacheItemPoolTrait
 {
     use CacheItemPoolTrait;
+    use AggregatablePoolTrait;
 
     /**
      * @inheritDoc

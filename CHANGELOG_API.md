@@ -1,3 +1,7 @@
+## 4.2.0
+- Created method `\Phpfastcache\Cluster\AggregatablePoolInterface::isAggregatedBy(): ?ClusterPoolInterface` which will return the aggregator object for Cluster aggregators
+- Created method `\Phpfastcache\Cluster\AggregatablePoolInterface::setAggregatedBy(ClusterPoolInterface $clusterPool): static` which will allow to set the aggregator object
+
 ## 4.1.0
 - Created `\Phpfastcache\Event\EventInterface` which will be used for `Phpfastcache\Event\Event` and any `Phpfastcache\Drivers\xxxxxxx\Event` classes
 - Extended `CacheItemPoolInterface::save()` with `ExtendedCacheItemPoolInterface::save()` for re-typing

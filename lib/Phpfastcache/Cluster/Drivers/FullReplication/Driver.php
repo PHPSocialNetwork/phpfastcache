@@ -45,9 +45,7 @@ class Driver extends ClusterPoolAbstract
                 $itemData = $item->get();
                 $poolItemData = $poolItem->get();
 
-                if (
-                    \is_object($itemData)
-                ) {
+                if (\is_object($itemData)) {
                     if ($item->get() != $poolItemData) {
                         $poolsToResync[] = $driverPool;
                     }
@@ -61,18 +59,7 @@ class Driver extends ClusterPoolAbstract
             }
         }
 
-        if ($item && $item->isHit() && \count($poolsToResync) < \count($this->clusterPools)) {
-            foreach ($poolsToResync as $poolToResync) {
-                $poolItem = $poolToResync->getItem($key);
-                $poolItem->setEventManager($this->getEventManager())
-                    ->set($item->get())
-                    ->setHit($item->isHit())
-                    ->setTags($item->getTags())
-                    ->expiresAt($item->getExpirationDate())
-                    ->setDriver($poolToResync);
-                $poolToResync->save($poolItem);
-            }
-        }
+        $this->resynchronizePool($poolsToResync, $key, $item);
 
         if ($item === null) {
             $item = new Item($this, $key, $this->getEventManager());
@@ -174,5 +161,28 @@ class Driver extends ClusterPoolAbstract
         }
         // Return true only if at least one backend confirmed the "commit" operation
         return $hasCommitOnce;
+    }
+
+    /**
+     * @param ExtendedCacheItemPoolInterface[] $poolsToResynchronize
+     * @param string $key
+     * @param ?ExtendedCacheItemInterface $item
+     * @return void
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException
+     */
+    protected function resynchronizePool(array $poolsToResynchronize, string $key, ?ExtendedCacheItemInterface $item): void
+    {
+        if ($item && $item->isHit() && \count($poolsToResynchronize) < \count($this->clusterPools)) {
+            foreach ($poolsToResynchronize as $poolToResynchronize) {
+                $poolItem = $poolToResynchronize->getItem($key);
+                $poolItem->setEventManager($this->getEventManager())
+                    ->set($item->get())
+                    ->setHit($item->isHit())
+                    ->setTags($item->getTags())
+                    ->expiresAt($item->getExpirationDate())
+                    ->setDriver($poolToResynchronize);
+                $poolToResynchronize->save($poolItem);
+            }
+        }
     }
 }

@@ -128,17 +128,15 @@ trait CacheItemPoolTrait
          * loop dispatching operations
          */
         if (!isset($this->itemInstances[$key]) || !$this->getConfig()->isUseStaticItemCaching()) {
-            if (\preg_match('~([' . \preg_quote(self::$unsupportedKeyChars, '~') . ']+)~', $key, $matches)) {
-                throw new PhpfastcacheInvalidArgumentException(
-                    'Unsupported key character detected: "' . $matches[1] . '". 
-                    Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers'
-                );
-            }
+            $this->validateCacheKey($key);
 
             $cacheSlamsSpendSeconds = 0;
+
             $itemClass = self::getItemClass();
             /** @var $item ExtendedCacheItemInterface */
             $item = new $itemClass($this, $key, $this->eventManager);
+            // $item = new (self::getItemClass())($this, $key, $this->eventManager);
+            // Uncomment above when this one will be fixed: https://github.com/phpmd/phpmd/issues/952
 
             getItemDriverRead:
             {
@@ -190,35 +188,7 @@ trait CacheItemPoolTrait
                 $item->setTags($this->driverUnwrapTags($driverArray));
 
                 getItemDriverExpired:
-                if ($item->isExpired()) {
-                    /**
-                     * Using driverDelete() instead of delete()
-                     * to avoid infinite loop caused by
-                     * getItem() call in delete() method
-                     * As we MUST return an item in any
-                     * way, we do not de-register here
-                     */
-                    $this->driverDelete($item);
-
-                    /**
-                     * Reset the Item
-                     */
-                    $item->set(null)
-                        ->expiresAfter((int) abs($this->getConfig()->getDefaultTtl()))
-                        ->setHit(false)
-                        ->setTags([]);
-                    if ($this->getConfig()->isItemDetailedDate()) {
-                        /**
-                         * If the itemDetailedDate has been
-                         * set after caching, we MUST inject
-                         * a new DateTime object on the fly
-                         */
-                        $item->setCreationDate(new DateTime());
-                        $item->setModificationDate(new DateTime());
-                    }
-                } else {
-                    $item->setHit(true);
-                }
+                $this->handleExpiredCacheItem($item);
             } else {
                 $item->expiresAfter((int) abs($this->getConfig()->getDefaultTtl()));
             }
@@ -227,12 +197,9 @@ trait CacheItemPoolTrait
             $item = $this->itemInstances[$key];
         }
 
+        $this->eventManager->dispatch(Event::CACHE_GET_ITEM, $this, $item);
 
-        if ($item !== null) {
-            $this->eventManager->dispatch(Event::CACHE_GET_ITEM, $this, $item);
-
-            $item->isHit() ? $this->getIO()->incReadHit() : $this->getIO()->incReadMiss();
-        }
+        $item->isHit() ? $this->getIO()->incReadHit() : $this->getIO()->incReadMiss();
 
         return $item;
     }
@@ -481,5 +448,49 @@ trait CacheItemPoolTrait
             return \spl_object_hash($item) === \spl_object_hash($this->itemInstances[$item->getKey()]);
         }
         return false;
+    }
+
+    protected function validateCacheKey(string $key): void
+    {
+        if (\preg_match('~([' . \preg_quote(self::$unsupportedKeyChars, '~') . ']+)~', $key, $matches)) {
+            throw new PhpfastcacheInvalidArgumentException(
+                'Unsupported key character detected: "' . $matches[1] . '". 
+                    Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers'
+            );
+        }
+    }
+
+    protected function handleExpiredCacheItem(ExtendedCacheItemInterface $item): void
+    {
+        if ($item->isExpired()) {
+            /**
+             * Using driverDelete() instead of delete()
+             * to avoid infinite loop caused by
+             * getItem() call in delete() method
+             * As we MUST return an item in any
+             * way, we do not de-register here
+             */
+            $this->driverDelete($item);
+
+            /**
+             * Reset the Item
+             */
+            $item->set(null)
+                ->expiresAfter((int) abs($this->getConfig()->getDefaultTtl()))
+                ->setHit(false)
+                ->setTags([]);
+
+            if ($this->getConfig()->isItemDetailedDate()) {
+                /**
+                 * If the itemDetailedDate has been
+                 * set after caching, we MUST inject
+                 * a new DateTime object on the fly
+                 */
+                $item->setCreationDate(new DateTime());
+                $item->setModificationDate(new DateTime());
+            }
+        } else {
+            $item->setHit(true);
+        }
     }
 }

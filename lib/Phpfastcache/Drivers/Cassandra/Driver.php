@@ -167,7 +167,7 @@ HELP;
     protected function driverRead(CacheItemInterface $item)
     {
         try {
-            $options = new Cassandra\ExecutionOptions(
+            $options = $this->getCompatibleExecutionOptionsArgument(
                 [
                     'arguments' => ['cache_id' => $item->getKey()],
                     'page_size' => 1,
@@ -203,7 +203,7 @@ HELP;
         if ($item instanceof Item) {
             try {
                 $cacheData = $this->encode($this->driverPreWrap($item));
-                $options = new Cassandra\ExecutionOptions(
+                $options = $this->getCompatibleExecutionOptionsArgument(
                     [
                         'arguments' => [
                             'cache_uuid' => new Cassandra\Uuid(),
@@ -267,7 +267,7 @@ HELP;
          */
         if ($item instanceof Item) {
             try {
-                $options = new Cassandra\ExecutionOptions(
+                $options = $this->getCompatibleExecutionOptionsArgument(
                     [
                         'arguments' => [
                             'cache_id' => $item->getKey(),
@@ -319,5 +319,18 @@ HELP;
         } catch (Exception $e) {
             return false;
         }
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     * @return array<string, mixed>|Cassandra\ExecutionOptions
+     */
+    protected function getCompatibleExecutionOptionsArgument(array $options)
+    {
+        if ($this->getConfig()->isUseLegacyExecutionOptions()) {
+            return new Cassandra\ExecutionOptions($options);
+        }
+
+        return $options;
     }
 }

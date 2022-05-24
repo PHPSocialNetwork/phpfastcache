@@ -50,6 +50,11 @@ class Config extends ConfigurationOption
     protected $sslVerify = false;
 
     /**
+     * @var bool
+     */
+    protected $useLegacyExecutionOptions = false;
+
+    /**
      * @return string
      */
     public function getHost(): string
@@ -172,6 +177,24 @@ class Config extends ConfigurationOption
     public function setSslVerify(bool $sslVerify): self
     {
         $this->sslVerify = $sslVerify;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUseLegacyExecutionOptions(): bool
+    {
+        return $this->useLegacyExecutionOptions;
+    }
+
+    /**
+     * @param bool $useLegacyExecutionOptions
+     * @return $this
+     */
+    public function setUseLegacyExecutionOptions(bool $useLegacyExecutionOptions): self
+    {
+        $this->useLegacyExecutionOptions = $useLegacyExecutionOptions;
         return $this;
     }
 }

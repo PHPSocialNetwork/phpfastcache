@@ -127,7 +127,7 @@ class Driver implements AggregatablePoolInterface
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         try {
-            $options = new Cassandra\ExecutionOptions(
+            $options = $this->getCompatibleExecutionOptionsArgument(
                 [
                     'arguments' => ['cache_id' => $item->getKey()],
                     'page_size' => 1,
@@ -161,7 +161,7 @@ class Driver implements AggregatablePoolInterface
 
         try {
             $cacheData = $this->encode($this->driverPreWrap($item));
-            $options = new Cassandra\ExecutionOptions(
+            $options = $this->getCompatibleExecutionOptionsArgument(
                 [
                     'arguments' => [
                         'cache_uuid' => new Cassandra\Uuid(''),
@@ -214,7 +214,7 @@ class Driver implements AggregatablePoolInterface
         $this->assertCacheItemType($item, Item::class);
 
         try {
-            $options = new Cassandra\ExecutionOptions(
+            $options = $this->getCompatibleExecutionOptionsArgument(
                 [
                     'arguments' => [
                         'cache_id' => $item->getKey(),
@@ -303,5 +303,18 @@ HELP;
             ->setRawData([])
             ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setInfo('The cache size represents only the cache data itself without counting data structures associated to the cache entries.');
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     * @return array<string, mixed>|Cassandra\ExecutionOptions
+     */
+    protected function getCompatibleExecutionOptionsArgument(array $options): mixed
+    {
+        if ($this->getConfig()->isUseLegacyExecutionOptions()) {
+            return new Cassandra\ExecutionOptions($options);
+        }
+
+        return $options;
     }
 }

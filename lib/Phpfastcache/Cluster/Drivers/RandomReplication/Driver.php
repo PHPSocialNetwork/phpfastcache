@@ -32,11 +32,17 @@ class Driver extends MasterSlaveReplicationDriver
      * @param AggregatablePoolInterface ...$driverPools
      * @throws ReflectionException
      */
-    public function __construct(string $clusterName, EventManagerInterface $em, AggregatablePoolInterface ...$driverPools)
-    {
+    public function __construct(
+        string $clusterName,
+        EventManagerInterface $em,
+        AggregatablePoolInterface ...$driverPools
+    ) {
         /** Straight call to ClusterPoolAbstract constructor  */
-        (new ReflectionMethod(\get_parent_class(\get_parent_class($this)), __FUNCTION__))
-            ->invoke($this, $clusterName, $em, ...$driverPools);
+        (new ReflectionMethod(
+            \get_parent_class(\get_parent_class($this)),
+            __FUNCTION__
+        ))->invoke($this, $clusterName, $em, ...$driverPools);
+
         $randomPool = $driverPools[\random_int(0, \count($driverPools) - 1)];
 
         $this->eventManager->dispatch(

@@ -8,6 +8,3 @@ parameters:
 		- lib/Phpfastcache/Drivers/*/Config.php
 	ignoreErrors:
 		- '#PHPDoc tag @(.*)#' # (Really) Annoying PHPDoc tag issues...
-		-
-			message: '#(.*)class is deprecated and will be removed in v10(.*)#'
-			path: lib/Phpfastcache/Config/Config.php

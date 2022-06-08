@@ -52,7 +52,7 @@ before_install:
   #- "yes | (./vendor/bin/ci-pecl-install mongodb) || echo \"PECL Mongodb install failed\"" # Mongodb seems to be provided In Bionic: https://docs.travis-ci.com/user/reference/bionic/#php-support
   # - "yes | ./vendor/bin/ci-pecl-install apcu || echo \"PECL Apcu install failed\"" # Apcu seems to be provided In Bionic: https://docs.travis-ci.com/user/reference/bionic/#php-support
   - "yes | ./vendor/bin/ci-pecl-install memcache || echo \"PECL Memcache install failed\""
-  - "yes | ./vendor/bin/ci-pecl-install couchbase || echo \"PECL Couchbase install failed\""
+  - "yes | ./vendor/bin/ci-pecl-install couchbase-3.2.2 couchbase || echo \"PECL Couchbase install failed\"" # @todo UPGRADE TO COUCHBASE 4.x.x once we upgraded from Bionic to Focal
   - phpenv config-add bin/ci/php_common.ini
   - phpenv config-rm xdebug.ini
 install:

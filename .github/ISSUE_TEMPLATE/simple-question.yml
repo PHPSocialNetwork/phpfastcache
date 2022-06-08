@@ -1,0 +1,46 @@
+name: "Ask a question"
+title: "<NAME THE QUESTION>"
+description: Ask a question about Phpfastcache
+labels: ["Needs triage 🔎"]
+assignees: ["Geolim4"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Before you start
+
+        **Are you looking for development help?**
+        ↩ Please note that we cannot provide assistance on web development. We recommend asking around on a dedicated help forum like StackOverflow.
+
+        ### Issue etiquette
+        
+        When opening a new ticket, please:
+        - Follow the project's [Code of Conduct](https://github.com/PHPSocialNetwork/phpfastcache/blob/master/CODE_OF_CONDUCT.md) as well as the [GitHub Community Guidelines](https://docs.github.com/en/site-policy/github-terms/github-community-guidelines).
+        - Check for an [existing question](https://github.com/PHPSocialNetwork/phpfastcache/issues) first. If someone else has opened a similar question, please upvote their question rather than creating another one.
+        - Keep questions relevant to the project. Irrelevant questions will be automatically closed and marked as spam, and repeated offenses may result in exclusion from our organization.
+        - Provide as much detail as possible. The more detail you are able to provide, the better!
+        ---
+
+  - type: textarea
+    id: the_question
+    attributes:
+      label: What's your question ?
+      description: Feel free to ask !
+    validations:
+      required: true
+  - type: textarea
+    id: references
+    attributes:
+      label: References (optional)
+      description: Can you link to any release notes, ideas, pull requests, or Stack-Overflow link related to this?
+  - type: textarea
+    id: more_info
+    attributes:
+      label: Do you have anything more you want to share? (optional)
+      description: For example, screenshots, screen recordings, or sample code, logs, etc.
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        You're finished 👏 
+        The following fields are prefilled and should not be modified. Please click **Submit**.

@@ -2,9 +2,9 @@
 
 set -e
 
-export CB_VERSION=7.0.2
+export CB_VERSION=7.1.0
 export CB_RELEASE_URL=https://packages.couchbase.com/releases
-export CB_PACKAGE=couchbase-server-community_7.0.2-ubuntu18.04_amd64.deb
+export CB_PACKAGE=couchbase-server-community_7.1.0-ubuntu18.04_amd64.deb
 
 # Community Edition requires that all nodes provision all services or data service only
 export SERVICES="kv,n1ql,index,fts"

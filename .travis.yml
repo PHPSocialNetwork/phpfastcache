@@ -11,6 +11,7 @@
 os: linux
 dist: bionic
 language: php
+sudo: true
 
 services:
   - memcached
@@ -29,6 +30,8 @@ jobs:
     - php: nightly
 
 before_install:
+  - sudo apt remove cmake
+  - pip install cmake --upgrade
 # Memcached is not yet available for PHP8 (hasn't been updated since 2019): https://pecl.php.net/package/memcached
 # Memcache however seems to be compatible with PHP 7 and 8: https://pecl.php.net/package/memcache
 #
@@ -40,7 +43,7 @@ before_install:
     yes | pecl install -f mongodb-stable;
     yes | pecl install -f apcu-stable || true;
     yes | pecl install -f memcache;
-    yes | pecl install -f couchbase-stable;
+    yes | pecl install -f couchbase-3.2.2;
   - |
     if [[ $TRAVIS_PHP_VERSION == "8."* || $TRAVIS_PHP_VERSION == "nightly" ]]; then
         phpenv config-add bin/ci/php8_phpfastcache.ini;

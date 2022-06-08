@@ -2,9 +2,9 @@
 
 set -e
 
-export CB_VERSION=7.0.0
+export CB_VERSION=7.0.2
 export CB_RELEASE_URL=https://packages.couchbase.com/releases
-export CB_PACKAGE=couchbase-server-community_7.0.0-ubuntu18.04_amd64.deb
+export CB_PACKAGE=couchbase-server-community_7.0.2-ubuntu18.04_amd64.deb
 
 # Community Edition requires that all nodes provision all services or data service only
 export SERVICES="kv,n1ql,index,fts"
@@ -40,7 +40,7 @@ sudo apt-get update
 sudo apt-get install -yq libcouchbase3 libcouchbase-dev build-essential libssl1.0.0 runit wget python-httplib2 chrpath tzdata lsof lshw sysstat net-tools numactl
 
 echo "# Downloading couchbase"
-wget -q -N $CB_RELEASE_URL/$CB_VERSION/$CB_PACKAGE
+wget -q -N $CB_RELEASE_URL/$CB_VERSION/$CB_PACKAGE || echo "Failed to download Couchbase $CB_RELEASE_URL"
 sudo dpkg -i ./$CB_PACKAGE && rm -f ./$CB_PACKAGE
 
 # Wait until it's ready

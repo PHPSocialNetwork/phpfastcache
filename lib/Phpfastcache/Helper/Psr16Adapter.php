@@ -42,14 +42,14 @@ class Psr16Adapter implements CacheInterface
 
     /**
      * Psr16Adapter constructor.
-     * @param $driver
+     * @param string|ExtendedCacheItemPoolInterface $driver
      * @param null|ConfigurationOptionInterface $config
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheLogicException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheDriverNotFoundException
      */
-    public function __construct($driver, ConfigurationOptionInterface $config = null)
+    public function __construct(string|ExtendedCacheItemPoolInterface $driver, ConfigurationOptionInterface $config = null)
     {
         if ($driver instanceof ExtendedCacheItemPoolInterface) {
             if ($config !== null) {
@@ -134,7 +134,7 @@ class Psr16Adapter implements CacheInterface
     }
 
     /**
-     * @param iterable $keys
+     * @param iterable<string> $keys
      * @param null $default
      * @return ExtendedCacheItemInterface[]
      * @throws PhpfastcacheSimpleCacheException
@@ -155,7 +155,7 @@ class Psr16Adapter implements CacheInterface
     }
 
     /**
-     * @param iterable $values
+     * @param iterable<string, mixed> $values
      * @param null|int|DateInterval $ttl
      * @return bool
      * @throws PhpfastcacheSimpleCacheException
@@ -181,7 +181,7 @@ class Psr16Adapter implements CacheInterface
     }
 
     /**
-     * @param iterable $keys
+     * @param iterable<string> $keys
      * @return bool
      * @throws PhpfastcacheSimpleCacheException
      * @throws InvalidArgumentException

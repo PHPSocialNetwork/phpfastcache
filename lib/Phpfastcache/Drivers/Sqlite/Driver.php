@@ -33,7 +33,7 @@ use Psr\Cache\CacheItemInterface;
 /**
  * @method Config getConfig()
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use IOHelperTrait;
 
@@ -91,7 +91,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return null|array
+     * @return ?array<string, mixed>
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
@@ -163,10 +163,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * Return Database of Keyword
-     * @param $keyword
+     * @param string $keyword
      * @return int
      */
-    public function getDbIndex($keyword)
+    public function getDbIndex(string $keyword)
     {
         if (!isset($this->indexing)) {
             $tableCreated = false;
@@ -240,7 +240,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      * INIT Indexing DB
      * @param PDO $db
      */
-    public function initIndexing(PDO $db)
+    public function initIndexing(PDO $db): void
     {
         // delete everything before reset indexing
         $dir = opendir($this->sqliteDir);

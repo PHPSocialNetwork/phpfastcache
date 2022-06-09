@@ -27,16 +27,21 @@ $subClasses = [
 
 $driverList = CacheManager::getDriverList();
 
-
-foreach ($driverList as $driver) {
-    foreach ($subClasses as $subClass) {
-        $className = "Phpfastcache\\Drivers\\{$driver}\\{$subClass}";
-        if (class_exists($className)) {
-            $testHelper->assertPass(sprintf('Found the %s %s class: "%s"', $driver, $subClass, $className));
-        } else {
-            $testHelper->assertFail(sprintf('Class "%s" not found', $className));
+if(count($driverList)){
+    foreach ($driverList as $driver) {
+        foreach ($subClasses as $subClass) {
+            $className = "Phpfastcache\\Drivers\\{$driver}\\{$subClass}";
+            if (class_exists($className)) {
+                $testHelper->assertPass(sprintf('Found the %s %s class: "%s"', $driver, $subClass, $className));
+            } else {
+                $testHelper->assertFail(sprintf('Class "%s" not found', $className));
+            }
         }
     }
+} else {
+    $testHelper->assertFail('Driver list is empty');
 }
+
+
 
 $testHelper->terminateTest();

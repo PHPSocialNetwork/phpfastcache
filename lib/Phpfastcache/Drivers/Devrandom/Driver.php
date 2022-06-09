@@ -18,6 +18,7 @@ namespace Phpfastcache\Drivers\Devrandom;
 
 use DateInterval;
 use DateTime;
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
@@ -54,11 +55,11 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
         $this->assertCacheItemType($item, Item::class);
 
@@ -66,8 +67,9 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param CacheItemInterface $item
-     * @return array
+     * @param ExtendedCacheItemInterface $item
+     * @return ?array<string, mixed>
+     * @throws \Exception
      */
     protected function driverRead(CacheItemInterface $item): ?array
     {
@@ -86,11 +88,11 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
         $this->assertCacheItemType($item, Item::class);
 

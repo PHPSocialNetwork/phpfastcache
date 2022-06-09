@@ -74,6 +74,9 @@ class DriverStatistic
         return $this;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getPublicDesc(): array
     {
         return [

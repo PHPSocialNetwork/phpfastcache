@@ -33,7 +33,7 @@ trait IOHelperTrait
     use TaggableCacheItemPoolTrait;
 
     /**
-     * @var array
+     * @var array<string, string>
      */
     public array $tmp = [];
 
@@ -42,6 +42,7 @@ trait IOHelperTrait
      * for files-based drivers
      * @return DriverStatistic
      * @throws PhpfastcacheIOException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     public function getStats(): DriverStatistic
     {
@@ -51,13 +52,13 @@ trait IOHelperTrait
         if (!is_dir($path)) {
             throw new PhpfastcacheIOException("Can't read PATH:" . $path);
         }
-        $stat->setRawData(
-            [
+        $stat->setSize(Directory::dirSize($path))
+            ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($path))
+            ->setRawData(
+                [
                     'tmp' => $this->tmp,
                 ]
-        )
-            ->setSize(Directory::dirSize($path))
-            ->setInfo('Number of files used to build the cache: ' . Directory::getFileCount($path));
+            );
 
         if ($this->getConfig()->isUseStaticItemCaching()) {
             $stat->setData(implode(', ', \array_keys($this->itemInstances)));
@@ -73,6 +74,7 @@ trait IOHelperTrait
      * @param bool $skip
      * @return string
      * @throws PhpfastcacheIOException
+     * @throws PhpfastcacheInvalidArgumentException
      */
     protected function getFilePath(string|bool $keyword, bool $skip = false): string
     {
@@ -103,36 +105,12 @@ trait IOHelperTrait
      * @return string
      * @throws PhpfastcacheIOException
      * @throws PhpfastcacheInvalidArgumentException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function getPath(bool $readonly = false): string
     {
-        /**
-         * Get the base system temporary directory
-         */
         $tmpDir = \rtrim(\ini_get('upload_tmp_dir') ?: \sys_get_temp_dir(), '\\/') . DIRECTORY_SEPARATOR . 'phpfastcache';
-
-        /**
-         * Calculate the security key
-         */
-        {
-            $httpHost = $this->getConfig()->getSuperGlobalAccessor()('SERVER', 'HTTP_HOST');
-            $securityKey = $this->getConfig()->getSecurityKey();
-        if (!$securityKey || \mb_strtolower($securityKey) === 'auto') {
-            if (isset($httpHost)) {
-                $securityKey = \preg_replace('/^www./', '', \strtolower(\str_replace(':', '_', $httpHost)));
-            } else {
-                $securityKey = (SapiDetector::isWebScript() ? 'web' : 'cli');
-            }
-        }
-
-        if ($securityKey !== '') {
-            $securityKey .= '/';
-        }
-
-            $securityKey = static::cleanFileName($securityKey);
-        }
+        $httpHost = $this->getConfig()->getSuperGlobalAccessor()('SERVER', 'HTTP_HOST');
+        $securityKey = $this->buildSecurityKey($httpHost);
 
         /**
          * Extends the temporary directory
@@ -149,7 +127,8 @@ trait IOHelperTrait
         $pathSuffix = $securityKey . DIRECTORY_SEPARATOR . $this->getDriverName();
         $fullPath = Directory::getAbsolutePath($path . $pathSuffix);
         $fullPathTmp = Directory::getAbsolutePath($tmpDir . $pathSuffix);
-        $fullPathHash = $this->getConfig()->getDefaultFileNameHashFunction()($fullPath);
+
+        $this->mkdir($fullPath, $fullPathTmp);
 
         /**
          * In readonly mode we only attempt
@@ -157,12 +136,40 @@ trait IOHelperTrait
          * or not, if it does not then we
          * return the temp dir
          */
-        if ($readonly === true) {
+        if ($readonly) {
             if ($this->getConfig()->isAutoTmpFallback() && (!@\file_exists($fullPath) || !@\is_writable($fullPath))) {
                 return $fullPathTmp;
             }
             return $fullPath;
         }
+
+        return realpath($fullPath);
+    }
+
+    protected function buildSecurityKey(?string $httpHost): string
+    {
+        $securityKey = $this->getConfig()->getSecurityKey();
+        if (!$securityKey || \mb_strtolower($securityKey) === 'auto') {
+            if (isset($httpHost)) {
+                $securityKey = \preg_replace('/^www./', '', \strtolower(\str_replace(':', '_', $httpHost)));
+            } else {
+                $securityKey = (SapiDetector::isWebScript() ? 'web' : 'cli');
+            }
+        }
+
+        if (!empty($securityKey)) {
+            $securityKey .= '/';
+        }
+
+        return static::cleanFileName($securityKey);
+    }
+
+    /**
+     * @throws PhpfastcacheIOException
+     */
+    protected function mkdir(string $fullPath, string $fullPathTmp): void
+    {
+        $fullPathHash = $this->getConfig()->getDefaultFileNameHashFunction()($fullPath);
 
         if (!isset($this->tmp[$fullPathHash]) || (!@\file_exists($fullPath) || !@\is_writable($fullPath))) {
             if (!@\file_exists($fullPath)) {
@@ -193,8 +200,6 @@ trait IOHelperTrait
 
             $this->tmp[$fullPathHash] = $fullPath;
         }
-
-        return realpath($fullPath);
     }
 
     /**
@@ -283,7 +288,7 @@ trait IOHelperTrait
                 dirname($file) . \DIRECTORY_SEPARATOR . 'tmp_' . $this->getConfig()->getDefaultFileNameHashFunction()(
                     \bin2hex(\random_bytes(16))
                 )
-            ) . '.' .  $this->getConfig()->getCacheFileExtension() . \random_int(1000, 9999);
+            ) . '.' . $this->getConfig()->getCacheFileExtension() . \random_int(1000, 9999);
 
             $handle = \fopen($tmpFilename, 'w+b');
             if (\is_resource($handle)) {
@@ -304,6 +309,6 @@ trait IOHelperTrait
             }
         }
 
-        return (bool) ($octetWritten ?? false);
+        return (bool)($octetWritten ?? false);
     }
 }

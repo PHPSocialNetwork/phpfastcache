@@ -16,11 +16,12 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Cluster\Drivers\MasterSlaveReplication;
 
+use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Cluster\ClusterPoolAbstract;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\Event;
-use Phpfastcache\EventManager;
+use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheCoreException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
@@ -36,8 +37,8 @@ class Driver extends ClusterPoolAbstract
     /**
      * MasterSlaveReplicationCluster constructor.
      * @param string $clusterName
-     * @param EventManager $em
-     * @param ExtendedCacheItemPoolInterface ...$driverPools
+     * @param EventManagerInterface $em
+     * @param AggregatablePoolInterface ...$driverPools
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverConnectException
      * @throws PhpfastcacheInvalidArgumentException
@@ -45,7 +46,7 @@ class Driver extends ClusterPoolAbstract
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheIOException
      */
-    public function __construct(string $clusterName, EventManager $em, ExtendedCacheItemPoolInterface ...$driverPools)
+    public function __construct(string $clusterName, EventManagerInterface $em, AggregatablePoolInterface ...$driverPools)
     {
         if (\count($driverPools) !== 2) {
             throw new PhpfastcacheInvalidArgumentException('A "master/slave" cluster requires exactly two pools to be working.');
@@ -91,17 +92,17 @@ class Driver extends ClusterPoolAbstract
     }
 
     /**
-     * @return ExtendedCacheItemPoolInterface
+     * @return AggregatablePoolInterface
      */
-    protected function getMasterPool(): ExtendedCacheItemPoolInterface
+    protected function getMasterPool(): AggregatablePoolInterface
     {
         return $this->clusterPools[0];
     }
 
     /**
-     * @return ExtendedCacheItemPoolInterface
+     * @return AggregatablePoolInterface
      */
-    protected function getSlavePool(): ExtendedCacheItemPoolInterface
+    protected function getSlavePool(): AggregatablePoolInterface
     {
         return $this->clusterPools[1];
     }

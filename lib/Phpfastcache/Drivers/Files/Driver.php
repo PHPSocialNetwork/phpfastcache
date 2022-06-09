@@ -34,7 +34,7 @@ use Phpfastcache\Util\Directory;
  * We are using getKey instead of getEncodedKey since this backend create filename that are
  * managed by defaultFileNameHashFunction and not defaultKeyHashFunction
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use IOHelperTrait;
 
@@ -58,7 +58,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return null|array
+     * @return ?array<string, mixed>
      * @throws PhpfastcacheIOException
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array

@@ -16,8 +16,11 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Cluster;
 
-use Psr\Cache\CacheItemPoolInterface;
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 
-interface AggregatablePoolInterface extends CacheItemPoolInterface
+interface AggregatablePoolInterface extends ExtendedCacheItemPoolInterface
 {
+    public function isAggregatedBy(): ?ClusterPoolInterface;
+
+    public function setAggregatedBy(ClusterPoolInterface $clusterPool): static;
 }

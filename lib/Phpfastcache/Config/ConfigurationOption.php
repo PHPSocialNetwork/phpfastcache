@@ -50,6 +50,7 @@ class ConfigurationOption extends AbstractConfigurationOption implements Configu
     protected ?object $superGlobalAccessor = null;
 
     /**
+     * @inheritDoc
      * @throws PhpfastcacheInvalidConfigurationException
      * @throws PhpfastcacheInvalidTypeException
      */
@@ -290,17 +291,15 @@ class ConfigurationOption extends AbstractConfigurationOption implements Configu
         return $this;
     }
 
-
     /**
      * @return object
-     * @throws PhpfastcacheInvalidArgumentException
-     * @throws PhpfastcacheLogicException
      */
     public function getSuperGlobalAccessor(): object
     {
         if (!isset($this->superGlobalAccessor)) {
-            $this->setSuperGlobalAccessor($this->getDefaultSuperGlobalAccessor());
+            $this->superGlobalAccessor = $this->getDefaultSuperGlobalAccessor();
         }
+
         return $this->superGlobalAccessor;
     }
 

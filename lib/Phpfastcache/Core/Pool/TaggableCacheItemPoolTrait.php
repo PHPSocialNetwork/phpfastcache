@@ -33,11 +33,7 @@ trait TaggableCacheItemPoolTrait
     use ExtendedCacheItemPoolTrait;
 
     /**
-     * @param array $tagNames
-     * @param int $option
-     * @param int $depth
-     * @param int $strategy
-     * @return string
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -60,9 +56,7 @@ trait TaggableCacheItemPoolTrait
     }
 
     /**
-     * @param array $tagNames
-     * @param int $strategy
-     * @return array
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -72,11 +66,7 @@ trait TaggableCacheItemPoolTrait
     {
         $items = [];
         foreach (\array_unique($tagNames) as $tagName) {
-            if (\is_string($tagName)) {
-                $items[] = $this->fetchItemsByTagFromBackend($tagName);
-            } else {
-                throw new PhpfastcacheInvalidArgumentException('$tagName must be a string');
-            }
+            $items[] = $this->fetchItemsByTagFromBackend($tagName);
         }
 
         $items = \array_merge([], ...$items);
@@ -103,7 +93,7 @@ trait TaggableCacheItemPoolTrait
 
     /**
      * @param string $tagName
-     * @return array
+     * @return ExtendedCacheItemInterface[]
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -143,9 +133,7 @@ trait TaggableCacheItemPoolTrait
     }
 
     /**
-     * @param array $tagNames
-     * @param int $strategy
-     * @return bool
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
@@ -166,9 +154,7 @@ trait TaggableCacheItemPoolTrait
     }
 
     /**
-     * @param string $tagName
-     * @param int $strategy
-     * @return bool
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
@@ -188,9 +174,7 @@ trait TaggableCacheItemPoolTrait
     }
 
     /**
-     * @param string $tagName
-     * @param int $strategy
-     * @return ExtendedCacheItemInterface[]
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -201,7 +185,7 @@ trait TaggableCacheItemPoolTrait
         $items = $this->fetchItemsByTagFromBackend($tagName);
         if ($strategy === TaggableCacheItemPoolInterface::TAG_STRATEGY_ONLY) {
             foreach ($items as $key => $item) {
-                if (\array_diff($item->getTags(), $tagName)) {
+                if (\array_diff($item->getTags(), [$tagName])) {
                     unset($items[$key]);
                 }
             }
@@ -210,10 +194,7 @@ trait TaggableCacheItemPoolTrait
     }
 
     /**
-     * @param array $tagNames
-     * @param int $step
-     * @param int $strategy
-     * @return bool
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -234,10 +215,7 @@ trait TaggableCacheItemPoolTrait
     }
 
     /**
-     * @param string $tagName
-     * @param int $step
-     * @param int $strategy
-     * @return bool
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -255,10 +233,7 @@ trait TaggableCacheItemPoolTrait
     }
 
     /**
-     * @param array $tagNames
-     * @param int $step
-     * @param int $strategy
-     * @return bool
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -279,10 +254,7 @@ trait TaggableCacheItemPoolTrait
     }
 
     /**
-     * @param string $tagName
-     * @param int $step
-     * @param int $strategy
-     * @return bool
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -300,10 +272,7 @@ trait TaggableCacheItemPoolTrait
     }
 
     /**
-     * @param array $tagNames
-     * @param array|string $data
-     * @param int $strategy
-     * @return bool
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -324,10 +293,7 @@ trait TaggableCacheItemPoolTrait
     }
 
     /**
-     * @param string $tagName
-     * @param array|string $data
-     * @param int $strategy
-     * @return bool
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -345,10 +311,7 @@ trait TaggableCacheItemPoolTrait
     }
 
     /**
-     * @param array $tagNames
-     * @param array|string $data
-     * @param int $strategy
-     * @return bool
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -369,10 +332,7 @@ trait TaggableCacheItemPoolTrait
     }
 
     /**
-     * @param string $tagName
-     * @param array|string $data
-     * @param int $strategy
-     * @return bool
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -390,7 +350,7 @@ trait TaggableCacheItemPoolTrait
     }
 
     /**
-     * @param array $wrapper
+     * @param array<mixed> $wrapper
      * @return string[]
      */
     protected function driverUnwrapTags(array $wrapper): array
@@ -487,8 +447,8 @@ trait TaggableCacheItemPoolTrait
     }
 
     /**
-     * @param array $keys
-     * @return array
+     * @param array<string> $keys
+     * @return array<string>
      */
     protected function getTagKeys(array $keys): array
     {

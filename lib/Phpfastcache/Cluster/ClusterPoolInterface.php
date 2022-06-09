@@ -22,7 +22,7 @@ use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 interface ClusterPoolInterface extends ExtendedCacheItemPoolInterface
 {
     /**
-     * @return ExtendedCacheItemPoolInterface[]
+     * @return AggregatablePoolInterface[]
      */
     public function getClusterPools(): array;
 

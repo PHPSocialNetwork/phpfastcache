@@ -53,40 +53,47 @@ interface EventManagerInterface
      * @return self
      */
     public static function getInstance(): EventManagerInterface;
-/**
+
+    /**
      * @param EventManagerInterface $eventManagerInstance
      * @return void
      */
     public static function setInstance(EventManagerInterface $eventManagerInstance): void;
-/**
+
+    /**
      * @param string $eventName
-     * @param array ...$args
+     * @param array<mixed> $args
      */
     public function dispatch(string $eventName, ...$args): void;
-/**
+
+    /**
      * @param string $name
-     * @param array $arguments
+     * @param array<mixed> $arguments
      * @throws PhpfastcacheInvalidArgumentException
      * @throws BadMethodCallException
      */
     public function __call(string $name, array $arguments): void;
-/**
+
+    /**
      * @param callable $callback
      * @param string $callbackName
      */
     public function onEveryEvents(callable $callback, string $callbackName): void;
-/**
-     * @param array $events
+
+    /**
+     * @param string[] $events
      * @param callable $callback
      */
     public function on(array $events, callable $callback): void;
-/**
+
+    /**
      * @param string $eventName
      * @param string $callbackName
      * @return bool
      */
     public function unbindEventCallback(string $eventName, string $callbackName): bool;
-/**
+
+    /**
      * @return bool
      */
     public function unbindAllEventCallbacks(): bool;

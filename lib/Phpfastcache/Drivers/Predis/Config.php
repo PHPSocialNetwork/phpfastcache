@@ -33,7 +33,7 @@ class Config extends ConfigurationOption
     protected bool $persistent = false;
     protected string $scheme = 'unix';
 /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getPredisConfigArray(): array
     {

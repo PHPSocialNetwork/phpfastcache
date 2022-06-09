@@ -31,7 +31,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
  * Class Driver
  * @method Config getConfig()
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait;
 
@@ -86,7 +86,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return null|array
+     * @return ?array<string, mixed>
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {

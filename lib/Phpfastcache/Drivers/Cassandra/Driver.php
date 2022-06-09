@@ -34,7 +34,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  * @property CassandraSession|null $instance Instance of driver service
  * @method Config getConfig()
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait;
 
@@ -63,10 +63,11 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             ->withPort($clientConfig->getPort());
 
         if (!empty($clientConfig->isSslEnabled())) {
+            $sslBuilder = Cassandra::ssl();
             if (!empty($clientConfig->isSslVerify())) {
-                $sslBuilder = Cassandra::ssl()->withVerifyFlags(Cassandra::VERIFY_PEER_CERT);
+                $sslBuilder->withVerifyFlags(Cassandra::VERIFY_PEER_CERT);
             } else {
-                $sslBuilder = Cassandra::ssl()->withVerifyFlags(Cassandra::VERIFY_NONE);
+                $sslBuilder->withVerifyFlags(Cassandra::VERIFY_NONE);
             }
 
             $clusterBuilder->withSSL($sslBuilder->build());
@@ -121,12 +122,12 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return null|array
+     * @return ?array<string, mixed>
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         try {
-            $options = new Cassandra\ExecutionOptions(
+            $options = $this->getCompatibleExecutionOptionsArgument(
                 [
                     'arguments' => ['cache_id' => $item->getKey()],
                     'page_size' => 1,
@@ -160,7 +161,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
         try {
             $cacheData = $this->encode($this->driverPreWrap($item));
-            $options = new Cassandra\ExecutionOptions(
+            $options = $this->getCompatibleExecutionOptionsArgument(
                 [
                     'arguments' => [
                         'cache_uuid' => new Cassandra\Uuid(''),
@@ -199,7 +200,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
              */
             return $result instanceof Cassandra\Rows;
         } catch (InvalidArgumentException $e) {
-            throw new PhpfastcacheInvalidArgumentException($e, 0, $e);
+            throw new PhpfastcacheInvalidArgumentException($e->getMessage(), 0, $e);
         }
     }
 
@@ -213,7 +214,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         $this->assertCacheItemType($item, Item::class);
 
         try {
-            $options = new Cassandra\ExecutionOptions(
+            $options = $this->getCompatibleExecutionOptionsArgument(
                 [
                     'arguments' => [
                         'cache_id' => $item->getKey(),
@@ -302,5 +303,18 @@ HELP;
             ->setRawData([])
             ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setInfo('The cache size represents only the cache data itself without counting data structures associated to the cache entries.');
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     * @return array<string, mixed>|Cassandra\ExecutionOptions
+     */
+    protected function getCompatibleExecutionOptionsArgument(array $options): mixed
+    {
+        if ($this->getConfig()->isUseLegacyExecutionOptions()) {
+            return new Cassandra\ExecutionOptions($options);
+        }
+
+        return $options;
     }
 }

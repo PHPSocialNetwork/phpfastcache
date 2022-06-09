@@ -216,7 +216,7 @@ interface TaggableCacheItemPoolInterface
      * @param string $tagName
      *   The tag for which to append
      *
-     * @param array|string $data
+     * @param array<mixed>|string $data
      *
      * @param int $strategy
      *
@@ -235,7 +235,7 @@ interface TaggableCacheItemPoolInterface
      * @param string[] $tagNames
      *   The tag for which to append
      *
-     * @param array|string $data
+     * @param array<mixed>|string $data
      *
      * @param int $strategy
      *
@@ -254,7 +254,7 @@ interface TaggableCacheItemPoolInterface
      * @param string $tagName
      *   The tag for which to prepend
      *
-     * @param array|string $data
+     * @param array<mixed>|string $data
      *
      * @param int $strategy
      *
@@ -273,7 +273,7 @@ interface TaggableCacheItemPoolInterface
      * @param string[] $tagNames
      *   The tag for which to prepend
      *
-     * @param array|string $data
+     * @param array<mixed>|string $data
      *
      * @param int $strategy
      *

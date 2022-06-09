@@ -37,7 +37,7 @@ use Solarium\QueryType\Select\Result\Document as SolariumDocument;
  * @property SolariumClient $instance
  * @method Config getConfig()
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait;
 
@@ -134,7 +134,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return null|array
+     * @return ?array<string, mixed>
      * @throws \Exception
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
@@ -158,7 +158,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @param SolariumDocument $document
-     * @return array
+     * @return array<mixed>
      * @throws \Exception
      */
     protected function decodeDocument(SolariumDocument $document): array

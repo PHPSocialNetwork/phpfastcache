@@ -38,7 +38,7 @@ use Psr\Http\Message\UriInterface;
  * @property AwsDynamoDbClient $instance
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait;
 
@@ -120,7 +120,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return null|array
+     * @return ?array<string, mixed>
      * @throws \Exception
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
@@ -281,6 +281,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
             ->setSize($data['dynamoTable']['TableSizeBytes'] ?? 0);
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
     protected function encodeDocument(array $data): array
     {
         $data[self::DRIVER_DATA_WRAPPER_INDEX] = $this->encode($data[self::DRIVER_DATA_WRAPPER_INDEX]);
@@ -288,6 +292,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return $data;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
     protected function decodeDocument(array $data): array
     {
         $data[self::DRIVER_DATA_WRAPPER_INDEX] = $this->decode($data[self::DRIVER_DATA_WRAPPER_INDEX]);

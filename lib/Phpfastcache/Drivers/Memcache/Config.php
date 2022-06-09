@@ -36,11 +36,14 @@ class Config extends ConfigurationOption
      *         ]
      *      ]);
      */
+
+    /** @var array<array<string, mixed>>  */
     protected array $servers = [];
     protected string $host = '127.0.0.1';
     protected int $port = 11211;
-/**
-     * @return array
+
+    /**
+     * @return array<array<string, mixed>>
      */
     public function getServers(): array
     {
@@ -58,7 +61,7 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @param array $servers
+     * @param array<array<string, mixed>> $servers
      * @return self
      * @throws PhpfastcacheInvalidConfigurationException
      * @throws PhpfastcacheLogicException

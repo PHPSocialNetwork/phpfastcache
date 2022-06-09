@@ -21,37 +21,22 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 class Config extends ConfigurationOption
 {
-    /**
-     * @var string
-     */
     protected string $host = '127.0.0.1';
-/**
-     * @var int
-     */
+
     protected int $port = 9042;
-/**
-     * @var int
-     */
+
     protected int $timeout = 2;
-/**
-     * @var string
-     */
+
     protected string $username = '';
-/**
-     * @var string
-     */
+
     protected string $password = '';
-/**
-     * @var bool
-     */
+
     protected bool $sslEnabled = false;
-/**
-     * @var bool
-     */
+
     protected bool $sslVerify = false;
-/**
-     * @return string
-     */
+
+    protected bool $useLegacyExecutionOptions = false;
+
     public function getHost(): string
     {
         return $this->host;
@@ -186,6 +171,26 @@ class Config extends ConfigurationOption
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->sslVerify = $sslVerify;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUseLegacyExecutionOptions(): bool
+    {
+        return $this->useLegacyExecutionOptions;
+    }
+
+    /**
+     * @param bool $useLegacyExecutionOptions
+     * @return $this
+     * @throws PhpfastcacheLogicException
+     */
+    public function setUseLegacyExecutionOptions(bool $useLegacyExecutionOptions): static
+    {
+        $this->enforceLockedProperty(__FUNCTION__);
+        $this->useLegacyExecutionOptions = $useLegacyExecutionOptions;
         return $this;
     }
 }

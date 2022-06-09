@@ -19,7 +19,7 @@ namespace Phpfastcache\Config;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
-trait IOConfigurationOptionTrait
+class IOConfigurationOption extends ConfigurationOption
 {
     protected bool $secureFileManipulation = false;
 

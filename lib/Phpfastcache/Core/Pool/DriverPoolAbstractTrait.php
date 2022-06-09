@@ -33,7 +33,7 @@ trait DriverPoolAbstractTrait
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return ?array
+     * @return ?array<string, mixed>
      */
     abstract protected function driverRead(ExtendedCacheItemInterface $item): ?array;
 

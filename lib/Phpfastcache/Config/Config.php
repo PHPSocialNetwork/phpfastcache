@@ -16,12 +16,21 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Config;
 
-\class_alias(ConfigurationOption::class, \Phpfastcache\Config\Config::class);
-\trigger_error(
-    \sprintf(
-        '%s class is deprecated and will be removed in v10, use %s instead.',
-        \Phpfastcache\Config\Config::class,
-        ConfigurationOption::class
-    ),
-    \E_USER_DEPRECATED
-);
+/**
+ * @deprecated This class is deprecated and will be removed in v10, use ConfigurationOption instead
+ */
+class Config extends ConfigurationOption
+{
+    public function __construct(array $parameters = [])
+    {
+        \trigger_error(
+            \sprintf(
+                '%s class is deprecated and will be removed in v10, use %s instead.',
+                self::class,
+                ConfigurationOption::class
+            ),
+            \E_USER_DEPRECATED
+        );
+        parent::__construct($parameters);
+    }
+}

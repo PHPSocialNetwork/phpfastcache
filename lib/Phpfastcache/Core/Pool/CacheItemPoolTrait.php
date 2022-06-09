@@ -17,10 +17,12 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Pool;
 
 use DateTime;
+use Phpfastcache\Config\ConfigurationOptionInterface;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\ItemBatch;
 use Phpfastcache\Event\Event;
+use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheCoreException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
@@ -30,9 +32,15 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Psr\Cache\CacheItemInterface;
 use RuntimeException;
 
+/**
+ * @method string[] driverUnwrapTags(array $wrapper)
+ * @method void cleanItemTags(ExtendedCacheItemInterface $item)
+ */
 trait CacheItemPoolTrait
 {
-    use DriverBaseTrait;
+    use DriverBaseTrait {
+        DriverBaseTrait::__construct as __driverBaseConstruct;
+    }
 
     /**
      * @var string
@@ -50,6 +58,12 @@ trait CacheItemPoolTrait
     protected array $itemInstances = [];
 
     protected DriverIO $IO;
+
+    public function __construct(ConfigurationOptionInterface $config, string $instanceId, EventManagerInterface $em)
+    {
+        $this->IO = new DriverIO();
+        $this->__driverBaseConstruct($config, $instanceId, $em);
+    }
 
     /**
      * @throws PhpfastcacheLogicException
@@ -78,8 +92,7 @@ trait CacheItemPoolTrait
     }
 
     /**
-     * @param array $keys
-     * @return array
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -115,31 +128,21 @@ trait CacheItemPoolTrait
          * loop dispatching operations
          */
         if (!isset($this->itemInstances[$key]) || !$this->getConfig()->isUseStaticItemCaching()) {
-            if (\preg_match('~([' . \preg_quote(self::$unsupportedKeyChars, '~') . ']+)~', $key, $matches)) {
-                throw new PhpfastcacheInvalidArgumentException(
-                    'Unsupported key character detected: "' . $matches[1] . '". 
-                    Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers'
-                );
-            }
+            $this->validateCacheKey($key);
 
             $cacheSlamsSpendSeconds = 0;
+
             $itemClass = self::getItemClass();
             /** @var $item ExtendedCacheItemInterface */
             $item = new $itemClass($this, $key, $this->eventManager);
+            // $item = new (self::getItemClass())($this, $key, $this->eventManager);
+            // Uncomment above when this one will be fixed: https://github.com/phpmd/phpmd/issues/952
 
             getItemDriverRead:
             {
                 $driverArray = $this->driverRead($item);
 
             if ($driverArray) {
-                if (!\is_array($driverArray)) {
-                    throw new PhpfastcacheCoreException(
-                        sprintf(
-                            'The driverRead method returned an unexpected variable type: %s',
-                            \gettype($driverArray)
-                        )
-                    );
-                }
                 $driverData = $this->driverUnwrapData($driverArray);
 
                 if ($this->getConfig()->isPreventCacheSlams()) {
@@ -185,35 +188,7 @@ trait CacheItemPoolTrait
                 $item->setTags($this->driverUnwrapTags($driverArray));
 
                 getItemDriverExpired:
-                if ($item->isExpired()) {
-                    /**
-                     * Using driverDelete() instead of delete()
-                     * to avoid infinite loop caused by
-                     * getItem() call in delete() method
-                     * As we MUST return an item in any
-                     * way, we do not de-register here
-                     */
-                    $this->driverDelete($item);
-
-                    /**
-                     * Reset the Item
-                     */
-                    $item->set(null)
-                        ->expiresAfter((int) abs($this->getConfig()->getDefaultTtl()))
-                        ->setHit(false)
-                        ->setTags([]);
-                    if ($this->getConfig()->isItemDetailedDate()) {
-                        /**
-                         * If the itemDetailedDate has been
-                         * set after caching, we MUST inject
-                         * a new DateTime object on the fly
-                         */
-                        $item->setCreationDate(new DateTime());
-                        $item->setModificationDate(new DateTime());
-                    }
-                } else {
-                    $item->setHit(true);
-                }
+                $this->handleExpiredCacheItem($item);
             } else {
                 $item->expiresAfter((int) abs($this->getConfig()->getDefaultTtl()));
             }
@@ -222,12 +197,9 @@ trait CacheItemPoolTrait
             $item = $this->itemInstances[$key];
         }
 
+        $this->eventManager->dispatch(Event::CACHE_GET_ITEM, $this, $item);
 
-        if ($item !== null) {
-            $this->eventManager->dispatch(Event::CACHE_GET_ITEM, $this, $item);
-
-            $item->isHit() ? $this->getIO()->incReadHit() : $this->getIO()->incReadMiss();
-        }
+        $item->isHit() ? $this->getIO()->incReadHit() : $this->getIO()->incReadMiss();
 
         return $item;
     }
@@ -264,8 +236,7 @@ trait CacheItemPoolTrait
     }
 
     /**
-     * @param array $keys
-     * @return bool
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -310,7 +281,7 @@ trait CacheItemPoolTrait
             /**
              * Perform a tag cleanup to avoid memory leaks
              */
-            if (!\str_starts_with($key, self::DRIVER_TAGS_KEY_PREFIX)) {
+            if (!\str_starts_with($key, TaggableCacheItemPoolInterface::DRIVER_TAGS_KEY_PREFIX)) {
                 $this->cleanItemTags($item);
             }
 
@@ -432,5 +403,94 @@ trait CacheItemPoolTrait
     public function getIO(): DriverIO
     {
         return $this->IO;
+    }
+
+    /**
+     * @internal This method de-register an item from $this->itemInstances
+     */
+    protected function deregisterItem(string $item): static
+    {
+        unset($this->itemInstances[$item]);
+
+        if (\gc_enabled()) {
+            \gc_collect_cycles();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @throws PhpfastcacheLogicException
+     */
+    public function attachItem(CacheItemInterface $item): static
+    {
+        if (isset($this->itemInstances[$item->getKey()]) && \spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
+            throw new PhpfastcacheLogicException(
+                'The item already exists and cannot be overwritten because the Spl object hash mismatches ! 
+                You probably tried to re-attach a detached item which has been already retrieved from cache.'
+            );
+        }
+
+        if (!$this->getConfig()->isUseStaticItemCaching()) {
+            throw new PhpfastcacheLogicException(
+                'The static item caching option (useStaticItemCaching) is disabled so you cannot attach an item.'
+            );
+        }
+
+        $this->itemInstances[$item->getKey()] = $item;
+
+        return $this;
+    }
+
+    public function isAttached(CacheItemInterface $item): bool
+    {
+        if (isset($this->itemInstances[$item->getKey()])) {
+            return \spl_object_hash($item) === \spl_object_hash($this->itemInstances[$item->getKey()]);
+        }
+        return false;
+    }
+
+    protected function validateCacheKey(string $key): void
+    {
+        if (\preg_match('~([' . \preg_quote(self::$unsupportedKeyChars, '~') . ']+)~', $key, $matches)) {
+            throw new PhpfastcacheInvalidArgumentException(
+                'Unsupported key character detected: "' . $matches[1] . '". 
+                    Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers'
+            );
+        }
+    }
+
+    protected function handleExpiredCacheItem(ExtendedCacheItemInterface $item): void
+    {
+        if ($item->isExpired()) {
+            /**
+             * Using driverDelete() instead of delete()
+             * to avoid infinite loop caused by
+             * getItem() call in delete() method
+             * As we MUST return an item in any
+             * way, we do not de-register here
+             */
+            $this->driverDelete($item);
+
+            /**
+             * Reset the Item
+             */
+            $item->set(null)
+                ->expiresAfter((int) abs($this->getConfig()->getDefaultTtl()))
+                ->setHit(false)
+                ->setTags([]);
+
+            if ($this->getConfig()->isItemDetailedDate()) {
+                /**
+                 * If the itemDetailedDate has been
+                 * set after caching, we MUST inject
+                 * a new DateTime object on the fly
+                 */
+                $item->setCreationDate(new DateTime());
+                $item->setModificationDate(new DateTime());
+            }
+        } else {
+            $item->setHit(true);
+        }
     }
 }

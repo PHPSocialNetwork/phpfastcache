@@ -40,10 +40,16 @@ trait DriverBaseTrait
     use ClassNamespaceResolverTrait;
     use EventManagerDispatcherTrait;
 
+    /**
+     * @var string[]
+     */
     protected static array $cacheItemClasses = [];
 
     protected ConfigurationOptionInterface $config;
 
+    /**
+     * @var object|array<mixed>|null
+     */
     protected object|array|null $instance;
 
     protected string $driverName;
@@ -66,10 +72,9 @@ trait DriverBaseTrait
         $this->setEventManager($em);
         $this->setConfig($config);
         $this->instanceId = $instanceId;
-        $this->IO = new DriverIO();
 
         if (!$this->driverCheck()) {
-            throw new PhpfastcacheDriverCheckException(\sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
+            throw new PhpfastcacheDriverCheckException(\sprintf(ExtendedCacheItemPoolInterface::DRIVER_CHECK_FAILURE, $this->getDriverName()));
         }
 
         try {
@@ -78,7 +83,7 @@ trait DriverBaseTrait
         } catch (Throwable $e) {
             throw new PhpfastcacheDriverConnectException(
                 sprintf(
-                    self::DRIVER_CONNECT_FAILURE,
+                    ExtendedCacheItemPoolInterface::DRIVER_CONNECT_FAILURE,
                     $e::class,
                     $this->getDriverName(),
                     $e->getMessage(),
@@ -137,7 +142,7 @@ trait DriverBaseTrait
     /**
      * @param ExtendedCacheItemInterface $item
      * @param bool $stringifyDate
-     * @return array
+     * @return array<string, mixed>
      * @throws PhpfastcacheLogicException
      */
     public function driverPreWrap(ExtendedCacheItemInterface $item, bool $stringifyDate = false): array
@@ -145,8 +150,8 @@ trait DriverBaseTrait
         $wrap = [
             ExtendedCacheItemPoolInterface::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(), // Stored but not really used, allow you to quickly identify the cache key
             ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX => $item->getRawValue(),
+            ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),
             TaggableCacheItemPoolInterface::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
-            self::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),
         ];
 
         if ($this->getConfig()->isItemDetailedDate()) {
@@ -192,7 +197,7 @@ trait DriverBaseTrait
     }
 
     /**
-     * @param array $wrapper
+     * @param array<string, mixed> $wrapper
      * @return mixed
      * @throws \Exception
      */
@@ -202,42 +207,42 @@ trait DriverBaseTrait
     }
 
     /**
-     * @param array $wrapper
+     * @param array<string, mixed> $wrapper
      * @return DateTimeInterface
      */
     public function driverUnwrapEdate(array $wrapper): \DateTimeInterface
     {
-        if ($wrapper[self::DRIVER_EDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
-            return $wrapper[self::DRIVER_EDATE_WRAPPER_INDEX];
+        if ($wrapper[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
+            return $wrapper[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX];
         }
 
-        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[self::DRIVER_EDATE_WRAPPER_INDEX]);
+        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX]);
     }
 
     /**
-     * @param array $wrapper
+     * @param array<string, mixed> $wrapper
      * @return DateTimeInterface|null
      */
     public function driverUnwrapCdate(array $wrapper): ?\DateTimeInterface
     {
-        if ($wrapper[self::DRIVER_CDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
-            return $wrapper[self::DRIVER_CDATE_WRAPPER_INDEX];
+        if ($wrapper[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
+            return $wrapper[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX];
         }
 
-        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[self::DRIVER_CDATE_WRAPPER_INDEX]);
+        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX]);
     }
 
     /**
-     * @param array $wrapper
+     * @param array<string, mixed> $wrapper
      * @return DateTimeInterface|null
      */
     public function driverUnwrapMdate(array $wrapper): ?\DateTimeInterface
     {
-        if ($wrapper[self::DRIVER_MDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
-            return $wrapper[self::DRIVER_MDATE_WRAPPER_INDEX];
+        if ($wrapper[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
+            return $wrapper[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX];
         }
 
-        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[self::DRIVER_MDATE_WRAPPER_INDEX]);
+        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX]);
     }
 
     /**
@@ -252,10 +257,10 @@ trait DriverBaseTrait
      * Encode data types such as object/array
      * for driver that does not support
      * non-scalar value
-     * @param $data
+     * @param mixed $data
      * @return string
      */
-    protected function encode($data): string
+    protected function encode(mixed $data): string
     {
         return \serialize($data);
     }

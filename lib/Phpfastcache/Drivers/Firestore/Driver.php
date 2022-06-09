@@ -33,7 +33,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  * @method Config getConfig()
  * @property GoogleFirestoreClient $instance
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait;
 
@@ -87,7 +87,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return null|array
+     * @return ?array<string, mixed>
      * @throws \Exception
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
@@ -135,6 +135,10 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
         return true;
     }
 
+    /**
+     * @param array<string, mixed> $snapshotData
+     * @return array<string, mixed>
+     */
     protected function decodeFirestoreDocument(array $snapshotData): array
     {
         return \array_map(static function ($datum) {

@@ -28,12 +28,10 @@ use Psr\Cache\CacheItemInterface;
 trait ExtendedCacheItemPoolTrait
 {
     use CacheItemPoolTrait;
+    use AggregatablePoolTrait;
 
     /**
-     * @param array $keys
-     * @param int $options
-     * @param int $depth
-     * @return string
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -67,51 +65,6 @@ trait ExtendedCacheItemPoolTrait
         }
 
         return $this;
-    }
-
-    /**
-     * @internal This method de-register an item from $this->itemInstances
-     */
-    protected function deregisterItem(string $item): static
-    {
-        unset($this->itemInstances[$item]);
-
-        if (\gc_enabled()) {
-            \gc_collect_cycles();
-        }
-
-        return $this;
-    }
-
-    /**
-     * @throws PhpfastcacheLogicException
-     */
-    public function attachItem(CacheItemInterface $item): static
-    {
-        if (isset($this->itemInstances[$item->getKey()]) && \spl_object_hash($item) !== \spl_object_hash($this->itemInstances[$item->getKey()])) {
-            throw new PhpfastcacheLogicException(
-                'The item already exists and cannot be overwritten because the Spl object hash mismatches ! 
-                You probably tried to re-attach a detached item which has been already retrieved from cache.'
-            );
-        }
-
-        if (!$this->getConfig()->isUseStaticItemCaching()) {
-            throw new PhpfastcacheLogicException(
-                'The static item caching option (useStaticItemCaching) is disabled so you cannot attach an item.'
-            );
-        }
-
-        $this->itemInstances[$item->getKey()] = $item;
-
-        return $this;
-    }
-
-    public function isAttached(CacheItemInterface $item): bool
-    {
-        if (isset($this->itemInstances[$item->getKey()])) {
-            return \spl_object_hash($item) === \spl_object_hash($this->itemInstances[$item->getKey()]);
-        }
-        return false;
     }
 
     /**

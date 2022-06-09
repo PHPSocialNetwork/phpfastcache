@@ -41,7 +41,7 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  * @property ArangoConnection $instance
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait;
 
@@ -118,7 +118,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return null|array
+     * @return ?array<string, mixed>
      * @throws PhpfastcacheDriverException
      * @throws \Exception
      */
@@ -204,7 +204,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
      * @throws PhpfastcacheDriverConnectException
      * @throws ArangoException
      */
-    protected function createCollection($collectionName): bool
+    protected function createCollection(string $collectionName): bool
     {
         $collection = new ArangoCollection($collectionName);
 
@@ -241,7 +241,7 @@ class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterfac
 
     /**
      * @param ArangoDocument $document
-     * @return array
+     * @return array<string, mixed>
      * @throws \Exception
      */
     protected function decodeDocument(ArangoDocument $document): array

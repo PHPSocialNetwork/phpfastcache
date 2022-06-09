@@ -1,3 +1,17 @@
+## 9.1.2
+##### 09 june 2022
+- __API__
+  - Upgraded Phpfastcache API to `4.2.0` ([see changes](CHANGELOG_API.md))
+- __Core__
+  - Rewrote some core code to improve code maintainability & readability following Scrutinizer and Phpstan recommendations
+  - Fixed an issue with tags not properly reinitialized when a backend driver returns an expired cache item
+- __Drivers__
+  - Fixed #866 // Deprecated Method Cassandra\ExecutionOptions starting of Cassandra 1.3
+- __Misc__
+  - Increased PHPSTAN level to 6
+  - Fixed multiple fails of Travis CI
+  - Migrated Github issue templates from Markdown to YAML configurations
+
 ## 9.1.1
 ##### 15 april 2022
 - __Core__

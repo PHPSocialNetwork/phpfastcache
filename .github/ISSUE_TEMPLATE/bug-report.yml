@@ -41,6 +41,31 @@ body:
     attributes:
       label: Operating system + version
       description: "The operating system with version, ex: Ubuntu 18.04 or Windows 10"
+    validations:
+      required: true
+  - type: input
+    id: php
+    attributes:
+      label: PHP version
+      description: |
+        The PHP version you're running Phpfastcache on.
+        _Can be retrieved using command line `php -v | sed -n 1p`_
+    validations:
+      required: true
+  - type: input
+    id: connector
+    attributes:
+      label: Connector/Database version (if applicable)
+      description: |
+        The connector and/or SDK version + the database version if applicable, ex: 
+        - Couchbase 7.1.0 + PECL Extension 3.2.2
+        - Redis 7.0.0 + PECL Extension 5.3.7
+        - MongoDB 5.0.2 Community + mongodb/mongodb
+        - etc
+
+        **Be as much detailed as you can be !**
+    validations:
+      required: false
   - type: dropdown
     id: pfc_exact_version
     attributes:

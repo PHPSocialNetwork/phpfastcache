@@ -46,7 +46,7 @@ class Driver implements AggregatablePoolInterface
     {
         return <<<HELP
 <p>
-This driver rely on Zend Server 8.5+, see: https://www.zend.com/en/products/zend_server
+This driver rely on Zend Server 8.5+, see: https://www.zend.com/products/zend-server
 </p>
 HELP;
     }

@@ -8,7 +8,7 @@
  *
  * For full copyright and license information, please see the docs/CREDITS.txt file.
  *
- * @author  Georges.L (Geolim4)  <contact@geolim4.com>
+ * @author Georges.L (Geolim4) <contact@geolim4.com>
  *
  */
 

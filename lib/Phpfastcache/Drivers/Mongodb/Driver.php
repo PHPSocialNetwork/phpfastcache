@@ -316,8 +316,7 @@ class Driver implements AggregatablePoolInterface
                 $password ? ":{$password}" : '',
                 $username ? '@' : '',
                 $host,
-                $port !== 27017 && $port !== false ? ":{$port}" : '',
-                $databaseName ? "/{$databaseName}" : '',
+                $port !== false ? ":{$port}" : '',
                 count($options) > 0 ? '?' . http_build_query($options) : '',
             ]
         );

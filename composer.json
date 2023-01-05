@@ -54,7 +54,8 @@
         "doctrine/couchdb": "^dev-master#9eeb9e5",
         "triagens/arangodb": "^3.8",
         "google/cloud-firestore": "^1.20",
-        "aws/aws-sdk-php": "~3.0"
+        "aws/aws-sdk-php": "~3.0",
+        "psr/event-dispatcher": "~1.0"
     },
     "conflict": {
         "doctrine/couchdb": "<dev-master#9eeb9e5",

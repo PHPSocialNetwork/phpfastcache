@@ -13,8 +13,6 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\EventManager;
 use Phpfastcache\Tests\Helper\TestHelper;
 use Phpfastcache\Drivers\Solr\Config as SolrConfig;
@@ -22,6 +20,11 @@ use Phpfastcache\Drivers\Solr\Config as SolrConfig;
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Solr driver');
+
+if(!class_exists(Psr\EventDispatcher\EventDispatcherInterface::class)) {
+    $testHelper->assertSkip('PSR EventDispatcher is not installed !');
+    $testHelper->terminateTest();
+}
 
 /** @var SolrConfig $solrConfig */
 $solrConfig = $testHelper->preConfigure(new SolrConfig());

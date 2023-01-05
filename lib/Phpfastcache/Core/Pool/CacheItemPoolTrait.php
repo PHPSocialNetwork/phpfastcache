@@ -458,6 +458,13 @@ trait CacheItemPoolTrait
                     Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers'
             );
         }
+
+        if (strlen($key) > 64) {
+            throw new PhpfastcacheInvalidArgumentException(
+                'Cache key is too long (up to 64 chars maximum). 
+                    Please check: https://www.php-fig.org/psr/psr-6/'
+            );
+        }
     }
 
     protected function handleExpiredCacheItem(ExtendedCacheItemInterface $item): void

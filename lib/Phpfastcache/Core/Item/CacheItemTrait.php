@@ -120,7 +120,7 @@ trait CacheItemTrait
         if (\is_numeric($time)) {
             if ($time <= 0) {
                 /**
-                 * 5 years, however memcached or memory cached will be gone when u restart it
+                 * 5 months, however memcached or memory cached will be gone when u restart it
                  * just recommended for sqlite. files
                  */
                 $time = 30 * 24 * 3600 * 5;

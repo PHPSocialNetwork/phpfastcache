@@ -102,9 +102,9 @@ trait TaggableCacheItemPoolTrait
     protected function fetchItemsByTagFromBackend(string $tagName): array
     {
         $driverResponse = $this->getItem($this->getTagKey($tagName));
+
         if ($driverResponse->isHit()) {
             $tagsItems = (array)$driverResponse->get();
-
             /**
              * getItems() may provide expired item(s)
              * themselves provided by a cache of item
@@ -407,9 +407,21 @@ trait TaggableCacheItemPoolTrait
              * avoid to use array_unique
              * that has slow performances
              */
+            $data = \array_merge((array)$data, [$item->getKey() => $expTimestamp]);
+            $tagsItem->set($data);
 
-            $tagsItem->set(\array_merge((array)$data, [$item->getKey() => $expTimestamp]))
-                ->expiresAt($item->getExpirationDate());
+            if (!$tagsItem->isHit() || $tagsItem->getExpirationDate() < $item->getExpirationDate()) {
+                $tagsItem->expiresAt($item->getExpirationDate());
+            }
+
+            /**
+             * Recalculate the expiration date
+             *
+             * If the $tagsItem does not have
+             * any cache item references left
+             * then remove it from tagsItems index
+             */
+            $tagsItem->expiresAt((new DateTime())->setTimestamp(max($data)));
 
             $this->driverWrite($tagsItem);
             $tagsItem->setHit(true);

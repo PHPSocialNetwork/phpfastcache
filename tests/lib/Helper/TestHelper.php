@@ -570,17 +570,23 @@ class TestHelper
         } elseif ($exception instanceof PhpfastcacheDriverConnectException) {
             $this->assertSkip('A driver could not be initialized due to network/authentication issue: ' . $exception->getMessage());
         } else {
+            $relativeFilename = '~' . str_replace($this->getProjectDir(), '', realpath($exception->getFile()));
             $this->assertFail(
                 \sprintf(
                     'Uncaught exception "%s" in "%s" line %d with message: "%s"',
                     get_class($exception),
-                    $exception->getFile(),
+                    str_replace('\\', '/', $relativeFilename),
                     $exception->getLine(),
                     $exception->getMessage()
                 )
             );
         }
         $this->terminateTest();
+    }
+
+    public function getProjectDir(): string {
+
+        return dirname(__DIR__, 3);
     }
 
     public function getRandomKey(string $prefix = 'test_', int $minBlockLength = 3): string

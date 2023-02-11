@@ -82,10 +82,11 @@ body:
         See our [global support timeline](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV4%CB%96%5D-Global-support-timeline) ⌚
       multiple: false
       options:
-        - 9.1.2 ✅
-        - 9.1.1 🔶
-        - 9.1.0 🔶
-        - 9.1.0-dev 🔶
+        - 9.1.3 ✅
+        - 9.1.2 🔶
+        - 9.1.1 ❌
+        - 9.1.0 ❌
+        - 9.1.0-dev ❌
         - 9.0.2 ❌
         - 9.0.1 ❌
         - 9.0.0-rc ❌
@@ -99,7 +100,8 @@ body:
         - 9.0.0-alpha ❌
         - 9.0.0-dev ❌
         - 9.0.0 ❌
-        - 8.1.3 🔶
+        - 8.1.4 🔶
+        - 8.1.3 ❌
         - 8.1.2 ❌
         - 8.1.1 ❌
         - 8.1.0 ❌

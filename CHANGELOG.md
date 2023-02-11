@@ -1,4 +1,11 @@
 ## 9.1.2
+##### 12 february 2023
+- __Core__
+  - Fixed #893 // getItemsByTag() - empty after one item has expired
+- __Misc__
+  - Fixed multiple code typo & updated README.md
+
+## 9.1.2
 ##### 09 june 2022
 - __API__
   - Upgraded Phpfastcache API to `4.2.0` ([see changes](CHANGELOG_API.md))

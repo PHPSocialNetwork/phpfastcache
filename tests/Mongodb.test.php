@@ -14,7 +14,6 @@
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Drivers\Mongodb\Config;
-use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);

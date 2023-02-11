@@ -361,8 +361,17 @@ trait TaggableCacheItemPoolTrait
              * that has slow performances
              */
 
-            $tagsItem->set(\array_merge((array)$data, [$item->getKey() => $expTimestamp]))
-                ->expiresAt($item->getExpirationDate());
+            $data = \array_merge((array)$data, [$item->getKey() => $expTimestamp]);
+            $tagsItem->set($data);
+
+            /**
+             * Recalculate the expiration date
+             *
+             * If the $tagsItem does not have
+             * any cache item references left
+             * then remove it from tagsItems index
+             */
+            $tagsItem->expiresAt((new DateTime())->setTimestamp(max($data)));
 
             $this->driverWrite($tagsItem);
             $tagsItem->setHit(true);

@@ -1,3 +1,9 @@
+## 8.1.4
+#### _"Masks fell, for good.."_
+##### 12 february 2023
+- __Core__
+  - Fixed #893 // getItemsByTag() - empty after one item has expired
+
 ## 8.1.3
 #### _"Don't throw the masks, yet."_
 ##### 25 may 2022

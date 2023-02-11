@@ -1,4 +1,4 @@
-## 9.1.2
+## 9.1.3
 ##### 12 february 2023
 - __Core__
   - Fixed #893 // getItemsByTag() - empty after one item has expired

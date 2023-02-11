@@ -1,8 +1,8 @@
 Because the V9 is **relatively** not backward compatible with the V8, here's a guide to help you to migrate your code:
 
 ### :warning: Minimum php version increased to 8.0+
-As of the V9 the mandatory minimum php version has been increased to 8.0+.
-Once released, the php version 8.1 will be unit-tested 
+As of the V9 the mandatory php version has been increased to 8.0+.
+Once released, the php versions 8.1, 8.2 will be unit-tested 
 
 ### Embedded autoload has been removed (and therefore, embedded dependencies too)
 Use [Composer](https://getcomposer.org/doc/03-cli.md#require) to include Phpfastcache in your project
@@ -33,7 +33,7 @@ It is now replaced by `Couchbasev3` driver (SDK 3), the configuration options re
 
 See [EVENTS.md](./../EVENTS.md) file for more information
 ### Upgraded Phpfastcache API
-- The Phpfastcache API has been upgraded to `4.0.0` with BC breaks. [See full changes](./../../CHANGELOG_API.md)
+- The Phpfastcache API has been upgraded to `4.0.0` introducing BC breaks. [See full changes](./../../CHANGELOG_API.md)
 - Renamed `Api::getPhpFastCacheVersion()` to `Api::getPhpfastcacheVersion()`
 - Renamed `Api::getPhpFastCacheChangelog()` to `Api::getPhpfastcacheChangelog()`
 - Renamed `Api::getPhpFastCacheGitHeadHash()` to `Api::getPhpfastcacheGitHeadHash()`
@@ -50,7 +50,7 @@ However, the `Devrandom` driver with configurable factor chance and data length 
 ### Configuration object will now be locked once the cache pool instance is running
 If you try to set a configuration value after the cache pool instance is being built, an exception will be thrown.
 
-### Removed `Cookie` driver because of its potential dangerosity
+### Removed `Cookie` driver because of its potential dangerousness
 However, you can always implement it by yourself if you want to by putting it back from previous versions using `\Phpfastcache\CacheManager::addCustomDriver()` method
 
 ------

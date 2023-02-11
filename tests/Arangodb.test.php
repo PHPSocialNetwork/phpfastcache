@@ -13,9 +13,7 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Drivers\Arangodb\Config as ArangodbConfig;
-use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\EventManager;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Tests\Helper\TestHelper;

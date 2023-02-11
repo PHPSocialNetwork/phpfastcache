@@ -33,7 +33,7 @@ try {
     $cacheInstance = CacheManager::getInstance('Couchbasev3', $config);
     $testHelper->runCRUDTests($cacheInstance);
 } catch (PhpfastcacheDriverConnectException $e) {
-    $testHelper->assertSkip('Couchdb server unavailable: ' . $e->getMessage());
+    $testHelper->assertSkip('Couchbase server unavailable: ' . $e->getMessage());
     $testHelper->terminateTest();
 }
 $testHelper->terminateTest();

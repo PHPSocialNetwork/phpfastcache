@@ -410,10 +410,6 @@ trait TaggableCacheItemPoolTrait
             $data = \array_merge((array)$data, [$item->getKey() => $expTimestamp]);
             $tagsItem->set($data);
 
-            if (!$tagsItem->isHit() || $tagsItem->getExpirationDate() < $item->getExpirationDate()) {
-                $tagsItem->expiresAt($item->getExpirationDate());
-            }
-
             /**
              * Recalculate the expiration date
              *

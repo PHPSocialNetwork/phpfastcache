@@ -35,6 +35,13 @@ if (is_null($CachedString2->get())) {
     $cacheInstance->save($CachedString2);
 }
 
+$CachedString3 = $cacheInstance->getItem("key_3");
+if (is_null($CachedString3->get())) {
+    $CachedString3->set("data3")->expiresAfter(4);
+    $CachedString3->addTag("query");
+    $cacheInstance->save($CachedString3);
+}
+
 $cacheInstance->detachAllItems();
 $testHelper->printInfoText('Items created and saved, sleeping 6 secondes to force "key_1" to expire');
 sleep(6);

@@ -270,11 +270,18 @@ class Driver implements AggregatablePoolInterface
             }
         }
 
+        $version = 'Unknown version';
+        if (method_exists($this->instance, 'getVersion')) {
+            $version = $this->instance::getVersion();
+        } elseif (defined($this->instance::class . '::VERSION')) {
+            $version = constant($this->instance::class . '::VERSION');
+        }
+
         return (new DriverStatistic())
             ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setInfo(sprintf(
                 'Solarium %s and Solr %s for %s %s. %d document(s) stored in the "%s" core',
-                $this->instance::VERSION,
+                $version,
                 $serverSystemInfo['lucene']['solr-spec-version'] ?? '[unknown SOLR version]',
                 $serverSystemInfo['system']['name'] ?? '[unknown OS]',
                 $serverSystemInfo['system']['version'] ?? '[unknown OS version]',

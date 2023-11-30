@@ -23,6 +23,7 @@ use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
+use ReflectionExtension;
 
 /**
  * @property Cluster $instance Instance of driver service
@@ -64,6 +65,11 @@ class Driver implements AggregatablePoolInterface
     {
         if (!\class_exists(ClusterOptions::class)) {
             throw new PhpfastcacheDriverCheckException('You are using the Couchbase PHP SDK 2.x which is no longer supported in Phpfastcache v9');
+        }
+
+        $extVersion = (new ReflectionExtension('couchbase'))->getVersion();
+        if (version_compare($extVersion, '4.0.0', '<') || version_compare($extVersion, '5.0.0', '>=')) {
+            throw new PhpfastcacheDriverCheckException("You are using Couchbase extension $extVersion, You need to use a Couchbase V4 extension");
         }
 
         $this->currentParentPID = posix_getppid();

@@ -17,29 +17,24 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Redis;
 
 use DateTime;
-use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Redis as RedisClient;
 
 /**
- * @property \Redis $instance
+ * @property RedisClient $instance
  * @method Config getConfig()
  */
-class Driver implements AggregatablePoolInterface
+class Driver extends DriverAbstract
 {
-    use TaggableCacheItemPoolTrait;
-
     /**
      * @return bool
      */
     public function driverCheck(): bool
     {
-        return extension_loaded('Redis');
+        return extension_loaded('Redis') && class_exists(RedisClient::class);
     }
 
     /**
@@ -54,10 +49,10 @@ class Driver implements AggregatablePoolInterface
         return (new DriverStatistic())
             ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setRawData($info)
-            ->setSize((int)$info['used_memory'])
+            ->setSize((int)$info['used_memory_dataset'])
             ->setInfo(
                 sprintf(
-                    "The Redis daemon v%s, php-ext v%s, is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
+                    "The Redis daemon v%s, php-ext v%s, is up since %s.\n For more information see RawData.",
                     $info['redis_version'],
                     \phpversion("redis"),
                     $date->format(DATE_RFC2822)
@@ -118,52 +113,18 @@ class Driver implements AggregatablePoolInterface
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
-     * @return ?array<string, mixed>
+     * @return array<int, string>
+     * @throws \RedisException
      */
-    protected function driverRead(ExtendedCacheItemInterface $item): ?array
+    protected function driverReadAllKeys(string $pattern = '*'): iterable
     {
-        $val = $this->instance->get($item->getKey());
-        if (!$val) {
-            return null;
+        $i = -1;
+        $keys = $this->instance->scan($i, $pattern === '' ? '*' : $pattern, ExtendedCacheItemPoolInterface::MAX_ALL_KEYS_COUNT);
+        if (is_iterable($keys)) {
+            return $keys;
+        } else {
+            return [];
         }
-
-        return $this->decode($val);
-    }
-
-    /**
-     * @param ExtendedCacheItemInterface $item
-     * @return mixed
-     * @throws PhpfastcacheInvalidArgumentException
-     * @throws PhpfastcacheLogicException
-     */
-    protected function driverWrite(ExtendedCacheItemInterface $item): bool
-    {
-        $this->assertCacheItemType($item, Item::class);
-
-        $ttl = $item->getExpirationDate()->getTimestamp() - time();
-
-        /**
-         * @see https://redis.io/commands/setex
-         * @see https://redis.io/commands/expire
-         */
-        if ($ttl <= 0) {
-            return $this->instance->expire($item->getKey(), 0);
-        }
-
-        return $this->instance->setex($item->getKey(), $ttl, $this->encode($this->driverPreWrap($item)));
-    }
-
-    /**
-     * @param ExtendedCacheItemInterface $item
-     * @return bool
-     * @throws PhpfastcacheInvalidArgumentException
-     */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
-    {
-        $this->assertCacheItemType($item, Item::class);
-
-        return (bool) $this->instance->del($item->getKey());
     }
 
     /**

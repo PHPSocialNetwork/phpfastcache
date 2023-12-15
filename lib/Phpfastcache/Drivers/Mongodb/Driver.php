@@ -34,6 +34,7 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Psr\Cache\CacheItemInterface;
 
@@ -47,6 +48,8 @@ class Driver implements AggregatablePoolInterface
 
     public const MONGODB_DEFAULT_DB_NAME = 'phpfastcache'; // Public because used in config
 
+    public const MONGODB_INDEX_KEY = '_id';
+
     /**
      * @var Collection
      */
@@ -56,6 +59,8 @@ class Driver implements AggregatablePoolInterface
      * @var Database
      */
     public $database;
+
+    protected string $documentPrefix;
 
     /**
      * @return bool
@@ -82,6 +87,7 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverConnect(): bool
     {
+        $this->documentPrefix = $this->getConfig()->getDocumentPrefix();
         $timeout = $this->getConfig()->getTimeout() * 1000;
         $collectionName = $this->getConfig()->getCollectionName();
         $databaseName = $this->getConfig()->getDatabaseName();
@@ -115,19 +121,23 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
-        $document = $this->getCollection()->findOne(['_id' => $this->getMongoDbItemKey($item)]);
+        $document = $this->getCollection()->findOne([self::MONGODB_INDEX_KEY => $this->getMongoDbItemKey($item)]);
 
         if ($document) {
             $return = [
-                self::DRIVER_DATA_WRAPPER_INDEX => $this->decode($document[self::DRIVER_DATA_WRAPPER_INDEX]->getData()),
+                self::DRIVER_DATA_WRAPPER_INDEX => $this->unserialize($document[self::DRIVER_DATA_WRAPPER_INDEX]->getData()),
                 self::DRIVER_TAGS_WRAPPER_INDEX => $document[self::DRIVER_TAGS_WRAPPER_INDEX]->jsonSerialize(),
                 self::DRIVER_EDATE_WRAPPER_INDEX => $document[self::DRIVER_EDATE_WRAPPER_INDEX]->toDateTime(),
             ];
 
-            if (!empty($this->getConfig()->isItemDetailedDate())) {
+            if ($this->getConfig()->isItemDetailedDate()) {
                 $return += [
-                    self::DRIVER_MDATE_WRAPPER_INDEX => $document[self::DRIVER_MDATE_WRAPPER_INDEX]->toDateTime(),
-                    self::DRIVER_CDATE_WRAPPER_INDEX => $document[self::DRIVER_CDATE_WRAPPER_INDEX]->toDateTime(),
+                    self::DRIVER_MDATE_WRAPPER_INDEX => isset($document[self::DRIVER_MDATE_WRAPPER_INDEX])
+                        ? $document[self::DRIVER_MDATE_WRAPPER_INDEX]->toDateTime()
+                        : new \DateTime(),
+                    self::DRIVER_CDATE_WRAPPER_INDEX => isset($document[self::DRIVER_CDATE_WRAPPER_INDEX])
+                        ? $document[self::DRIVER_CDATE_WRAPPER_INDEX]->toDateTime()
+                        : new \DateTime(),
                 ];
             }
 
@@ -135,6 +145,58 @@ class Driver implements AggregatablePoolInterface
         }
 
         return null;
+    }
+
+    protected function driverReadMultiple(ExtendedCacheItemInterface ...$items): array
+    {
+        $driverArrays = [];
+        $keys = array_map(fn(ExtendedCacheItemInterface $item) => $this->getMongoDbItemKey($item), $items);
+        $documents = $this->getCollection()->find([self::MONGODB_INDEX_KEY => ['$in' => array_values($keys)]]);
+
+        foreach ($documents as $document) {
+            $driverArray = [
+                self::DRIVER_DATA_WRAPPER_INDEX => $this->unserialize($document[self::DRIVER_DATA_WRAPPER_INDEX]->getData()),
+                self::DRIVER_TAGS_WRAPPER_INDEX => $document[self::DRIVER_TAGS_WRAPPER_INDEX]->jsonSerialize(),
+                self::DRIVER_EDATE_WRAPPER_INDEX => $document[self::DRIVER_EDATE_WRAPPER_INDEX]->toDateTime(),
+            ];
+            if ($this->getConfig()->isItemDetailedDate()) {
+                $driverArray[self::DRIVER_MDATE_WRAPPER_INDEX] = isset($document[self::DRIVER_MDATE_WRAPPER_INDEX])
+                    ? $document[self::DRIVER_MDATE_WRAPPER_INDEX]->toDateTime()
+                    : new \DateTime();
+                $driverArray[self::DRIVER_CDATE_WRAPPER_INDEX] = isset($document[self::DRIVER_CDATE_WRAPPER_INDEX])
+                    ? $document[self::DRIVER_MDATE_WRAPPER_INDEX]->toDateTime()
+                    : new \DateTime();
+            }
+            $driverArrays[$document[self::DRIVER_KEY_WRAPPER_INDEX]] = $driverArray;
+        }
+        return $driverArrays;
+    }
+
+
+    /**
+     * @return array<int, string>
+     * @throws \RedisException
+     * @throws PhpfastcacheInvalidTypeException
+     */
+    protected function driverReadAllKeys(string $pattern = ''): iterable
+    {
+        $filters = ($pattern !== '' ? [self::DRIVER_KEY_WRAPPER_INDEX => ['$regex' => str_replace('*', '(.*)', $pattern)]] : []);
+        $documents = $this->getCollection()->find(
+            $filters,
+            [
+                'limit' => ExtendedCacheItemPoolInterface::MAX_ALL_KEYS_COUNT,
+                'typeMap' => [
+                    'document' => 'array',
+                    'root' => 'array'
+                ],
+                'projection' => [
+                    self::MONGODB_INDEX_KEY => 0,
+                    self::DRIVER_KEY_WRAPPER_INDEX => 1,
+                ]
+            ]
+        )->toArray();
+
+        return array_column($documents, self::DRIVER_KEY_WRAPPER_INDEX);
     }
 
     /**
@@ -146,12 +208,11 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
         try {
             $set = [
                 self::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(),
-                self::DRIVER_DATA_WRAPPER_INDEX => new Binary($this->encode($item->getRawValue()), Binary::TYPE_GENERIC),
+                self::DRIVER_DATA_WRAPPER_INDEX => new Binary($this->encode($item->_getData()), Binary::TYPE_GENERIC),
                 self::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
                 self::DRIVER_EDATE_WRAPPER_INDEX => new UTCDateTime($item->getExpirationDate()),
             ];
@@ -163,7 +224,7 @@ class Driver implements AggregatablePoolInterface
                 ];
             }
             $result = $this->getCollection()->updateOne(
-                ['_id' => $this->getMongoDbItemKey($item)],
+                [self::MONGODB_INDEX_KEY => $this->getMongoDbItemKey($item)],
                 [
                     '$set' => $set,
                 ],
@@ -183,9 +244,8 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
-        $deletionResult = $this->getCollection()->deleteOne(['_id' =>  $this->getMongoDbItemKey($item)]);
+        $deletionResult = $this->getCollection()->deleteOne([self::MONGODB_INDEX_KEY =>  $this->getMongoDbItemKey($item)]);
 
         return $deletionResult->isAcknowledged();
     }
@@ -325,7 +385,7 @@ class Driver implements AggregatablePoolInterface
 
     protected function getMongoDbItemKey(ExtendedCacheItemInterface $item): string
     {
-        return 'pfc_' . $item->getEncodedKey();
+        return $this->documentPrefix . $item->getEncodedKey();
     }
 
     /**

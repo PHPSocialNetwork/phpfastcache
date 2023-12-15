@@ -23,6 +23,7 @@ class Event implements EventInterface
     use UninstanciableObjectTrait;
 
     public const CACHE_GET_ITEM = 'CacheGetItem';
+    public const CACHE_GET_ITEMS = 'CacheGetItems';
     public const CACHE_DELETE_ITEM = 'CacheDeleteItem';
     public const CACHE_SAVE_ITEM = 'CacheSaveItem';
     public const CACHE_SAVE_MULTIPLE_ITEMS = 'CacheSaveMultipleItems';
@@ -37,6 +38,7 @@ class Event implements EventInterface
     public const CACHE_ITEM_SET = 'CacheItemSet';
     public const CACHE_ITEM_EXPIRE_AT = 'CacheItemExpireAt';
     public const CACHE_ITEM_EXPIRE_AFTER = 'CacheItemExpireAfter';
+    public const CACHE_GET_ALL_ITEMS = 'CacheGetAllItems';
 
     public static function getEvents(): array
     {

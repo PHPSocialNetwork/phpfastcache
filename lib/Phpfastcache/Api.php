@@ -28,7 +28,7 @@ class Api
 {
     use UninstanciableObjectTrait;
 
-    protected static string $version = '4.2.0';
+    protected static string $version = '4.3.0';
 
     /**
      * This method will return the current

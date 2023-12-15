@@ -232,6 +232,7 @@ class ConfigurationOption extends AbstractConfigurationOption implements Configu
     }
 
     /**
+     * @deprecated This method is deprecated and will be soon moved to IOConfigurationOption class, which means they will only be available for `IO` drivers.
      * @return bool
      */
     public function isPreventCacheSlams(): bool
@@ -240,18 +241,27 @@ class ConfigurationOption extends AbstractConfigurationOption implements Configu
     }
 
     /**
+     * @deprecated This method is deprecated and will be soon moved to IOConfigurationOption class, which means they will only be available for `IO` drivers.
      * @param bool $preventCacheSlams
      * @return ConfigurationOption
      * @throws PhpfastcacheLogicException
      */
     public function setPreventCacheSlams(bool $preventCacheSlams): static
     {
+        if ($preventCacheSlams !== $this->preventCacheSlams) {
+            trigger_error(
+                'This method is deprecated and will be soon moved to IOConfigurationOption class, which means they will only be available for `IO` drivers.',
+                E_USER_DEPRECATED
+            );
+        }
+
         $this->enforceLockedProperty(__FUNCTION__);
         $this->preventCacheSlams = $preventCacheSlams;
         return $this;
     }
 
     /**
+     * @deprecated This method is deprecated and will be soon moved to IOConfigurationOption class, which means they will only be available for `IO` drivers.
      * @return int
      */
     public function getCacheSlamsTimeout(): int
@@ -260,12 +270,19 @@ class ConfigurationOption extends AbstractConfigurationOption implements Configu
     }
 
     /**
+     * @deprecated This method is deprecated and will be soon moved to IOConfigurationOption class, which means they will only be available for `IO` drivers.
      * @param int $cacheSlamsTimeout
      * @return ConfigurationOption
      * @throws PhpfastcacheLogicException
      */
     public function setCacheSlamsTimeout(int $cacheSlamsTimeout): static
     {
+        if ($cacheSlamsTimeout !== $this->cacheSlamsTimeout) {
+            trigger_error(
+                'This method is deprecated and will be soon moved to IOConfigurationOption class, which means they will only be available for `IO` drivers.',
+                E_USER_DEPRECATED
+            );
+        }
         $this->enforceLockedProperty(__FUNCTION__);
         $this->cacheSlamsTimeout = $cacheSlamsTimeout;
         return $this;

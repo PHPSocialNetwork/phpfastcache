@@ -160,7 +160,7 @@ trait TaggableCacheItemTrait
     public function cloneInto(ExtendedCacheItemInterface $itemTarget, ?ExtendedCacheItemPoolInterface $itemPoolTarget = null): void
     {
         $itemTarget->setEventManager($this->getEventManager())
-            ->set($this->getRawValue())
+            ->set($this->_getData())
             ->setHit($this->isHit())
             ->setTags($this->getTags())
             ->expiresAt(clone $this->getExpirationDate())

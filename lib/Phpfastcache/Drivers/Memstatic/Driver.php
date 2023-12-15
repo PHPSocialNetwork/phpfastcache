@@ -21,6 +21,7 @@ use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Psr\Cache\CacheItemInterface;
 
@@ -63,6 +64,18 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
+     * @return array<int, string>
+     */
+    protected function driverReadAllKeys(string $pattern = ''): iterable
+    {
+        return array_filter(array_keys($this->staticStack), function (string $key) use ($pattern) {
+            return $pattern
+                ? preg_match('/' . str_replace('*', '(.*)', $pattern) . '/', $key)
+                : true;
+        });
+    }
+
+    /**
      * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
@@ -70,7 +83,6 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
         $this->staticStack[$item->getKey()] = $this->driverPreWrap($item);
         return true;
@@ -83,7 +95,6 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
         $key = $item->getKey();
         if (isset($this->staticStack[$key])) {

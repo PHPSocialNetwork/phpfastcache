@@ -298,7 +298,7 @@ class Driver implements AggregatablePoolInterface
      */
     protected function decodeDocument(array $data): array
     {
-        $data[self::DRIVER_DATA_WRAPPER_INDEX] = $this->decode($data[self::DRIVER_DATA_WRAPPER_INDEX]);
+        $data[self::DRIVER_DATA_WRAPPER_INDEX] = $this->unserialize($data[self::DRIVER_DATA_WRAPPER_INDEX]);
 
         return $data;
     }

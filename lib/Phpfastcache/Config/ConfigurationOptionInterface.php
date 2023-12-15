@@ -109,27 +109,6 @@ interface ConfigurationOptionInterface extends LockableConfigurationInterface
     /**
      * @return bool
      */
-    public function isPreventCacheSlams(): bool;
-
-    /**
-     * @param bool $preventCacheSlams
-     * @return ConfigurationOption
-     */
-    public function setPreventCacheSlams(bool $preventCacheSlams): static;
-
-    /**
-     * @return int
-     */
-    public function getCacheSlamsTimeout(): int;
-
-    /**
-     * @param int $cacheSlamsTimeout
-     * @return ConfigurationOption
-     */
-    public function setCacheSlamsTimeout(int $cacheSlamsTimeout): static;
-    /**
-     * @return bool
-     */
     public function isUseStaticItemCaching(): bool;
 
     /**

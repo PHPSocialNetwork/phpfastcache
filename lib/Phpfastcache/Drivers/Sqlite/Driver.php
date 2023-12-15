@@ -277,7 +277,6 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
         try {
             $stm = $this->getDb($item->getEncodedKey())
@@ -303,7 +302,6 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
         try {
             $stm = $this->getDb($item->getEncodedKey())
                 ->prepare("DELETE FROM `caching` WHERE (`exp` <= :exp) OR (`keyword`=:keyword) ");

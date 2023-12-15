@@ -29,7 +29,7 @@ $cacheInstance = CacheManager::getInstance($defaultDriver);
 $eventInstance = $cacheInstance->getEventManager();
 $testHelper->debugEvents($eventInstance);
 $eventInstance->onCacheSaveItem(static function (ExtendedCacheItemPoolInterface $itemPool, ExtendedCacheItemInterface $item) {
-    if ($item->getRawValue() === 1000) {
+    if ($item->_getData() === 1000) {
         $item->increment(337);
     }
 });

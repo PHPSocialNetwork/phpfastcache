@@ -44,7 +44,7 @@ interface ExtendedCacheItemInterface extends
     public function getEncodedKey(): string;
 
     /**
-     * Returns the raw value, regardless of hit status.
+     * Returns the cache item value, regardless of hit status.
      * This method can be called if the cache item is NOT YET
      * persisted, and you need to access to its set value.
      *
@@ -53,9 +53,10 @@ interface ExtendedCacheItemInterface extends
      *
      * @return mixed
      *
-     * @internal
+     * @internal This method is used internally by phpfastcache, so you should not use it in your application.
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
-    public function getRawValue(): mixed;
+    public function _getData(): mixed; // @phpcs:ignore
 
     /**
      * @return DateTimeInterface

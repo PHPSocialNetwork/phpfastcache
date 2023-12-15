@@ -77,7 +77,6 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
         return (bool)$this->instance->set($item->getKey(), $this->encode($this->driverPreWrap($item)));
     }
@@ -89,7 +88,6 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
         return $this->instance->delete($item->getKey());
     }

@@ -19,6 +19,9 @@ namespace Phpfastcache\Config;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
+/**
+ * @todo: As of V10, imports cache slams properties.
+ */
 class IOConfigurationOption extends ConfigurationOption
 {
     protected bool $secureFileManipulation = false;
@@ -60,7 +63,7 @@ class IOConfigurationOption extends ConfigurationOption
 
     /**
      * @param bool $secureFileManipulation
-     * @return self
+     * @return static
      * @throws PhpfastcacheLogicException
      */
     public function setSecureFileManipulation(bool $secureFileManipulation): static
@@ -113,13 +116,54 @@ class IOConfigurationOption extends ConfigurationOption
 
     /**
      * @param int $defaultChmod
-     * @return self
+     * @return static
      * @throws PhpfastcacheLogicException
      */
     public function setDefaultChmod(int $defaultChmod): static
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->defaultChmod = $defaultChmod;
+        return $this;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isPreventCacheSlams(): bool
+    {
+        return $this->preventCacheSlams;
+    }
+
+    /**
+     * @param bool $preventCacheSlams
+     * @return static
+     * @throws PhpfastcacheLogicException
+     */
+    public function setPreventCacheSlams(bool $preventCacheSlams): static
+    {
+        $this->enforceLockedProperty(__FUNCTION__);
+        $this->preventCacheSlams = $preventCacheSlams;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCacheSlamsTimeout(): int
+    {
+        return $this->cacheSlamsTimeout;
+    }
+
+    /**
+     * @param int $cacheSlamsTimeout
+     * @return static
+     * @throws PhpfastcacheLogicException
+     */
+    public function setCacheSlamsTimeout(int $cacheSlamsTimeout): static
+    {
+        $this->enforceLockedProperty(__FUNCTION__);
+        $this->cacheSlamsTimeout = $cacheSlamsTimeout;
         return $this;
     }
 }

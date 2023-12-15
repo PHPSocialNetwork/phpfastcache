@@ -13,8 +13,7 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Config\ConfigurationOption;
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Config\IOConfigurationOption;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Entities\ItemBatch;
 use Phpfastcache\EventManager;
@@ -24,7 +23,7 @@ chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Cache Slams Protection');
 $defaultDriver = (!empty($argv[ 1 ]) ? ucfirst($argv[ 1 ]) : 'Files');
-$driverInstance = CacheManager::getInstance($defaultDriver, new ConfigurationOption([
+$driverInstance = CacheManager::getInstance($defaultDriver, new IOConfigurationOption([
   'preventCacheSlams' => true,
   'cacheSlamsTimeout' => 20
 ]));

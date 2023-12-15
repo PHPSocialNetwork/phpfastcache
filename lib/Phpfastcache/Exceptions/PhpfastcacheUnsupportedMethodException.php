@@ -16,6 +16,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Exceptions;
 
-class PhpfastcacheUnsupportedOperationException extends PhpfastcacheUnsupportedException
+class PhpfastcacheUnsupportedMethodException extends PhpfastcacheUnsupportedException
 {
 }

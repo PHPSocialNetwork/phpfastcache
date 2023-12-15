@@ -21,6 +21,8 @@ use DateTimeInterface;
 use Phpfastcache\Config\ConfigurationOptionInterface;
 use Phpfastcache\Event\EventManagerDispatcherTrait;
 use Phpfastcache\Event\EventManagerInterface;
+use Phpfastcache\Exceptions\PhpfastcacheCorruptedDataException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
 use Throwable;
@@ -67,7 +69,7 @@ trait DriverBaseTrait
      * @throws PhpfastcacheIOException
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function __construct(ConfigurationOptionInterface $config, string $instanceId, EventManagerInterface $em)
+    public function __construct(#[\SensitiveParameter] ConfigurationOptionInterface $config, string $instanceId, EventManagerInterface $em)
     {
         $this->setEventManager($em);
         $this->setConfig($config);
@@ -79,7 +81,6 @@ trait DriverBaseTrait
 
         try {
             $this->driverConnect();
-            $config->lock($this);
         } catch (Throwable $e) {
             throw new PhpfastcacheDriverConnectException(
                 sprintf(
@@ -93,6 +94,8 @@ trait DriverBaseTrait
                 0,
                 $e
             );
+        } finally {
+            $config->lock($this);
         }
     }
 
@@ -149,7 +152,7 @@ trait DriverBaseTrait
     {
         $wrap = [
             ExtendedCacheItemPoolInterface::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(), // Stored but not really used, allow you to quickly identify the cache key
-            ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX => $item->getRawValue(),
+            ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX => $item->_getData(),
             ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),
             TaggableCacheItemPoolInterface::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
         ];
@@ -266,13 +269,30 @@ trait DriverBaseTrait
     }
 
     /**
-     * Decode data types such as object/array
+     * Decode data stored in the cache
      * for driver that does not support
-     * non-scalar value
+     * non-scalar value storage.
      * @param string|null $value
-     * @return mixed
+     * @return array<string, mixed>|null
+     * @throws PhpfastcacheDriverException
      */
-    protected function decode(?string $value): mixed
+    protected function decode(?string $value): ?array
+    {
+        $decoded = $this->unserialize($value);
+
+        if ($decoded === null || is_array($decoded)) {
+            return $decoded;
+        }
+        throw new PhpfastcacheCorruptedDataException(
+            sprintf(
+                'Failed to unserialize data from the cache, expected array or null but got "%s". Stored data may be corrupted.',
+                gettype($decoded)
+            ),
+            $value
+        );
+    }
+
+    protected function unserialize(?string $value): mixed
     {
         return $value ? \unserialize($value, ['allowed_classes' => true]) : null;
     }

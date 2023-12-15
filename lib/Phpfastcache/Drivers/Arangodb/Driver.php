@@ -156,7 +156,7 @@ class Driver implements AggregatablePoolInterface
         $document = new ArangoDocument();
         $document->setInternalKey($item->getEncodedKey());
         $document->set(self::DRIVER_KEY_WRAPPER_INDEX, $item->getKey());
-        $document->set(self::DRIVER_DATA_WRAPPER_INDEX, $this->encode($item->getRawValue()));
+        $document->set(self::DRIVER_DATA_WRAPPER_INDEX, $this->encode($item->_getData()));
         $document->set(self::DRIVER_TAGS_WRAPPER_INDEX, $item->getTags());
         $document->set(self::DRIVER_EDATE_WRAPPER_INDEX, $item->getExpirationDate());
         $document->set(self::TTL_FIELD_NAME, $item->getExpirationDate()->getTimestamp());
@@ -249,7 +249,7 @@ class Driver implements AggregatablePoolInterface
         $value = [
             self::DRIVER_KEY_WRAPPER_INDEX => $document->get(self::DRIVER_KEY_WRAPPER_INDEX),
             self::DRIVER_TAGS_WRAPPER_INDEX => $document->get(self::DRIVER_TAGS_WRAPPER_INDEX),
-            self::DRIVER_DATA_WRAPPER_INDEX => $this->decode(
+            self::DRIVER_DATA_WRAPPER_INDEX => $this->unserialize(
                 $document->get(self::DRIVER_DATA_WRAPPER_INDEX),
             ),
         ];

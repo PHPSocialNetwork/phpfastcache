@@ -16,6 +16,10 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Exceptions;
 
-class PhpfastcacheUnsupportedOperationException extends PhpfastcacheUnsupportedException
+class PhpfastcacheCorruptedDataException extends PhpfastcacheDriverException
 {
+    public function __construct(protected $message = '', protected mixed $corruptedData = null)
+    {
+        parent::__construct($message);
+    }
 }

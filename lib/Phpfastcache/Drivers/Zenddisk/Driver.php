@@ -95,7 +95,6 @@ HELP;
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
         $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
@@ -109,7 +108,6 @@ HELP;
      */
     protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
         return (bool)zend_disk_cache_delete($item->getKey());
     }

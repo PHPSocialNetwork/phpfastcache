@@ -1,3 +1,15 @@
+## 4.3.0
+- Created method `ExtendedCacheItemPoolTrait::getAllItems(string $pattern = ''): iterable` which will return all the items stored in the cache. This method have some limitations, ([see more in the Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV5%CB%96%5D-Fetching-all-keys)).
+- Deprecated `ConfigurationOption::isPreventCacheSlams()` for future removal, use `IOConfigurationOption::isPreventCacheSlams()` instead.
+- Deprecated `ConfigurationOption::setPreventCacheSlams()` for future removal, use `IOConfigurationOption::setPreventCacheSlams()` instead.
+- Deprecated `ConfigurationOption::getCacheSlamsTimeout()` for future removal, use `IOConfigurationOption::getCacheSlamsTimeout()` instead.
+- Deprecated `ConfigurationOption::setCacheSlamsTimeout()` for future removal, use `IOConfigurationOption::setCacheSlamsTimeout()` instead.
+- Created `IOConfigurationOption::isPreventCacheSlams()`. This method will **only be available** for `Files, Sqlite, Leveldb` drivers.
+- Created `IOConfigurationOption::setPreventCacheSlams()`. This method will **only be available** for `Files, Sqlite, Leveldb` drivers.
+- Created `IOConfigurationOption::getCacheSlamsTimeout()`. This method will **only be available** for `Files, Sqlite, Leveldb` drivers.
+- Created `IOConfigurationOption::setCacheSlamsTimeout()`. This method will **only be available** for `Files, Sqlite, Leveldb` drivers.
+
+
 ## 4.2.0
 - Created method `\Phpfastcache\Cluster\AggregatablePoolInterface::isAggregatedBy(): ?ClusterPoolInterface` which will return the aggregator object for Cluster aggregators
 - Created method `\Phpfastcache\Cluster\AggregatablePoolInterface::setAggregatedBy(ClusterPoolInterface $clusterPool): static` which will allow to set the aggregator object

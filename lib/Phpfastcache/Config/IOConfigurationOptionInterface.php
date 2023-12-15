@@ -39,4 +39,12 @@ interface IOConfigurationOptionInterface extends ConfigurationOptionInterface
     public function getDefaultChmod(): int;
 
     public function setDefaultChmod(int $defaultChmod): static;
+
+    public function isPreventCacheSlams(): bool;
+
+    public function setPreventCacheSlams(bool $preventCacheSlams): static;
+
+    public function getCacheSlamsTimeout(): int;
+
+    public function setCacheSlamsTimeout(int $cacheSlamsTimeout): static;
 }

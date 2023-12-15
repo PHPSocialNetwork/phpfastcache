@@ -14,7 +14,7 @@
 
 declare(strict_types=1);
 
-namespace Phpfastcache\Drivers\Wincache;
+namespace Phpfastcache\Drivers\Redis;
 
 use DateTime;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
@@ -23,46 +23,18 @@ use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
+use Redis as RedisClient;
+use RedisCluster as RedisClusterClient;
 
 /**
+ * @property RedisClient|RedisClusterClient $instance
  * @method Config getConfig()
  */
-class Driver implements AggregatablePoolInterface
+abstract class DriverAbstract implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait;
-
-    /**
-     * @return bool
-     */
-    public function driverCheck(): bool
-    {
-        return extension_loaded('wincache') && function_exists('wincache_ucache_set');
-    }
-
-    /**
-     * @return DriverStatistic
-     */
-    public function getStats(): DriverStatistic
-    {
-        $memInfo = wincache_ucache_meminfo();
-        $info = wincache_ucache_info();
-        $date = (new DateTime())->setTimestamp(time() - $info['total_cache_uptime']);
-
-        return (new DriverStatistic())
-            ->setInfo(sprintf("The Wincache daemon is up since %s.\n For more information see RawData.", $date->format(DATE_RFC2822)))
-            ->setSize($memInfo['memory_free'] - $memInfo['memory_total'])
-            ->setData(implode(', ', array_keys($this->itemInstances)))
-            ->setRawData($memInfo);
-    }
-
-    /**
-     * @return bool
-     */
-    protected function driverConnect(): bool
-    {
-        return true;
-    }
 
     /**
      * @param ExtendedCacheItemInterface $item
@@ -70,13 +42,23 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
-        $val = wincache_ucache_get($item->getKey(), $suc);
-
-        if ($suc === false || empty($val)) {
+        $val = $this->instance->get($item->getKey());
+        if (!$val) {
             return null;
         }
 
-        return $val;
+        return $this->decode($val);
+    }
+
+
+    protected function driverReadMultiple(ExtendedCacheItemInterface ...$items): array
+    {
+        $keys = $this->getKeys($items);
+
+        return array_combine($keys, array_map(
+            fn($val) => $val ? $this->decode($val) : null,
+            $this->instance->mGet($keys)
+        ));
     }
 
     /**
@@ -87,8 +69,19 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
+        $this->assertCacheItemType($item, self::getItemClass());
 
-        return wincache_ucache_set($item->getKey(), $this->driverPreWrap($item), $item->getTtl());
+        $ttl = $item->getExpirationDate()->getTimestamp() - time();
+
+        /**
+         * @see https://redis.io/commands/setex
+         * @see https://redis.io/commands/expire
+         */
+        if ($ttl <= 0) {
+            return $this->instance->expire($item->getKey(), 0);
+        }
+
+        return $this->instance->setex($item->getKey(), $ttl, $this->encode($this->driverPreWrap($item)));
     }
 
     /**
@@ -99,14 +92,6 @@ class Driver implements AggregatablePoolInterface
     protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
 
-        return wincache_ucache_delete($item->getKey());
-    }
-
-    /**
-     * @return bool
-     */
-    protected function driverClear(): bool
-    {
-        return wincache_ucache_clear();
+        return (bool) $this->instance->del($item->getKey());
     }
 }

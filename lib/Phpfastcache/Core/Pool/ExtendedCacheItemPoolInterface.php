@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Pool;
 
 use InvalidArgumentException;
-use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Config\ConfigurationOptionInterface;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
@@ -25,6 +24,7 @@ use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Event\EventManagerDispatcherInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
+use Phpfastcache\Exceptions\PhpfastcacheUnsupportedMethodException;
 use Phpfastcache\Util\ClassNamespaceResolverInterface;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
@@ -63,6 +63,11 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      * Modification date Index
      */
     public const DRIVER_MDATE_WRAPPER_INDEX = 'm';
+
+    /**
+     * Hard-limit count  of items returns by getAllItems()
+     */
+    public const MAX_ALL_KEYS_COUNT = 9999;
 
     /**
      * Return the config class name
@@ -133,6 +138,26 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      *
      */
     public function getItems(array $keys = []): iterable;
+
+    /**
+     * Returns the WHOLE cache as a traversable set of cache items.
+     * A hard-limit of 9999 items is defined internally to prevent
+     * serious performances issues of your application.
+     * @see ExtendedCacheItemPoolInterface::MAX_ALL_KEYS_COUNT
+     *
+     * @param string $pattern
+     * An optional pattern supported by a limited range of drivers.
+     * If this parameter is unsupported by the driver, a PhpfastcacheInvalidArgumentException will be thrown.
+     *
+     * @return iterable<ExtendedCacheItemInterface>
+     *   A traversable collection of Cache Items keyed by the cache keys of
+     *   each item. However, if no keys are returned by the backend then an empty
+     *   traversable WILL be returned instead.
+     *
+     * @throws PhpfastcacheInvalidArgumentException If the driver does not support the $pattern argument
+     * @throws PhpfastcacheUnsupportedMethodException If the driver does not permit to list all the keys through this implementation.
+     */
+    public function getAllItems(string $pattern = ''): iterable;
 
     /**
      * Returns A json string that represents an array of items.

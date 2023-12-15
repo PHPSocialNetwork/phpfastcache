@@ -29,6 +29,7 @@ class Config extends ConfigurationOption
     protected string $collectionName = 'phpfastcache';
     protected string $databaseName = Driver::MONGODB_DEFAULT_DB_NAME;
     protected string $protocol = 'mongodb';
+    protected string $documentPrefix = 'pfc_';
 
     /** @var array<mixed>  */
     protected array $servers = [];
@@ -257,6 +258,26 @@ class Config extends ConfigurationOption
     {
         $this->enforceLockedProperty(__FUNCTION__);
         $this->protocol = $protocol;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocumentPrefix(): string
+    {
+        return $this->documentPrefix;
+    }
+
+    /**
+     * @param string $documentPrefix
+     * @return self
+     * @throws PhpfastcacheLogicException
+     */
+    public function setDocumentPrefix(string $documentPrefix): static
+    {
+        $this->enforceLockedProperty(__FUNCTION__);
+        $this->documentPrefix = $documentPrefix;
         return $this;
     }
 }

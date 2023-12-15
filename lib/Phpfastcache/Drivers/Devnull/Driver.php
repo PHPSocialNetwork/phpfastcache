@@ -60,7 +60,6 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
         return true;
     }
@@ -81,7 +80,6 @@ class Driver implements ExtendedCacheItemPoolInterface
      */
     protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
         return true;
     }

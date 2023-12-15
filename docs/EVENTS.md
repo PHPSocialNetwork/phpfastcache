@@ -75,7 +75,19 @@ This is an exhaustive list, and it will be updated as soon as new events will be
         - *ExtendedCacheItemPoolInterface::getItems()*
         - *ExtendedCacheItemPoolInterface::getItemsByTag()*
         - *ExtendedCacheItemPoolInterface::getItemsAsJsonString()*
-
+- onCacheGetItems(*Callable* **$callback**)
+    - **Callback arguments**
+        - *ExtendedCacheItemPoolInterface* **$itemPool**
+        - *ExtendedCacheItemInterface[]* **$items**
+    - **Scope**
+        - ItemPool
+    - **Description**
+        - Allow you to manipulate a set of items just before it gets returned by the getItems() method.
+    - **Risky Circular Methods**
+        - *ExtendedCacheItemPoolInterface::getItem()*
+        - *ExtendedCacheItemPoolInterface::getItems()*
+        - *ExtendedCacheItemPoolInterface::getItemsByTag()*
+        - *ExtendedCacheItemPoolInterface::getItemsAsJsonString()*
 - onCacheDeleteItem(*Callable* **$callback**)
     - **Callback arguments**
         - *ExtendedCacheItemPoolInterface* **$itemPool**

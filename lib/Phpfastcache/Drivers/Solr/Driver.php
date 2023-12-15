@@ -117,7 +117,7 @@ class Driver implements AggregatablePoolInterface
         $doc->{$this->getSolrField(self::SOLR_DEFAULT_ID_FIELD)} = $item->getEncodedKey();
         $doc->{$this->getSolrField(self::SOLR_DISCRIMINATOR_FIELD)} = self::SOLR_DISCRIMINATOR_VALUE;
         $doc->{$this->getSolrField(self::DRIVER_KEY_WRAPPER_INDEX)} = $item->getKey();
-        $doc->{$this->getSolrField(self::DRIVER_DATA_WRAPPER_INDEX)} = $this->encode($item->getRawValue());
+        $doc->{$this->getSolrField(self::DRIVER_DATA_WRAPPER_INDEX)} = $this->encode($item->_getData());
         $doc->{$this->getSolrField(self::DRIVER_TAGS_WRAPPER_INDEX)} = $item->getTags();
         $doc->{$this->getSolrField(self::DRIVER_EDATE_WRAPPER_INDEX)} = $item->getExpirationDate()->format(\DateTimeInterface::ATOM);
 
@@ -156,6 +156,62 @@ class Driver implements AggregatablePoolInterface
         return null;
     }
 
+    protected function driverReadMultiple(ExtendedCacheItemInterface ...$items): array
+    {
+        $query = $this->instance->createSelect()
+            ->setQuery(
+                implode(
+                    ' OR ',
+                    array_map(
+                        fn($key) => "{$this->getSolrField($this::SOLR_DEFAULT_ID_FIELD)}:{$key}",
+                        $this->getKeys($items, true)
+                    )
+                )
+            )
+            ->setRows(count($items));
+
+        $results = $this->instance->execute($query);
+
+        if ($results instanceof \IteratorAggregate) {
+            $driverArrays = [];
+            foreach ($results->getIterator() as $document) {
+                $driverArrays[$document->getFields()[$this->getSolrField(self::DRIVER_KEY_WRAPPER_INDEX)]] = $this->decodeDocument($document);
+            }
+
+            return $driverArrays;
+        }
+
+        return [];
+    }
+
+    /**
+     * @return array<string, mixed>
+     * @throws PhpfastcacheInvalidTypeException
+     */
+    protected function driverReadAllKeys(string $pattern = ''): iterable
+    {
+        $query = $this->instance->createSelect()
+            ->setQuery(
+                sprintf(
+                    '%s:%s AND %s:%s',
+                    $this->getSolrField(self::DRIVER_KEY_WRAPPER_INDEX),
+                    $pattern === '' ? '*' : $pattern,
+                    $this->getSolrField($this::SOLR_DISCRIMINATOR_FIELD),
+                    $this::SOLR_DISCRIMINATOR_VALUE
+                )
+            )
+            ->setRows(ExtendedCacheItemPoolInterface::MAX_ALL_KEYS_COUNT);
+
+        /** @var \Solarium\QueryType\Select\Result\Result $results */
+        $results = $this->instance->execute($query);
+
+        return array_map(
+            fn(SolariumDocument $document) => $document->getFields()[$this->getSolrField(self::DRIVER_KEY_WRAPPER_INDEX)],
+            $results->getIterator()->getArrayCopy()
+        );
+    }
+
+
     /**
      * @param SolariumDocument $document
      * @return array<mixed>
@@ -176,7 +232,7 @@ class Driver implements AggregatablePoolInterface
         $value = [
             self::DRIVER_KEY_WRAPPER_INDEX => $key,
             self::DRIVER_TAGS_WRAPPER_INDEX => $fields[$this->getSolrField(self::DRIVER_TAGS_WRAPPER_INDEX)] ?? [],
-            self::DRIVER_DATA_WRAPPER_INDEX => $this->decode(
+            self::DRIVER_DATA_WRAPPER_INDEX => $this->unserialize(
                 $fields[$this->getSolrField(self::DRIVER_DATA_WRAPPER_INDEX)],
             ),
         ];

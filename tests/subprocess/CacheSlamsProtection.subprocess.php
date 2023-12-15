@@ -13,13 +13,13 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Config\IOConfigurationOption;
 use Phpfastcache\Entities\ItemBatch;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-$driverInstance = CacheManager::getInstance('Files', new ConfigurationOption([
+$driverInstance = CacheManager::getInstance('Files', new IOConfigurationOption([
   'preventCacheSlams' => true,
   'cacheSlamsTimeout' => 15
 ]));

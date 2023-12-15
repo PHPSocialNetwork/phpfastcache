@@ -22,6 +22,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 /**
  * == ItemPool Events ==
  * @method Void onCacheGetItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheGetItems(Callable $callable, ?string $callbackName = null)
  * @method Void onCacheDeleteItem(Callable $callable, ?string $callbackName = null)
  * @method Void onCacheSaveItem(Callable $callable, ?string $callbackName = null)
  * @method Void onCacheSaveMultipleItems(Callable $callable, ?string $callbackName = null)

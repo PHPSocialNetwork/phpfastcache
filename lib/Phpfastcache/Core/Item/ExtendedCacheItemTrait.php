@@ -93,8 +93,9 @@ trait ExtendedCacheItemTrait
 
     /**
      * @inheritDoc
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
-    public function getRawValue(): mixed
+    public function _getData(): mixed // @phpcs:ignore
     {
         return $this->data;
     }
@@ -281,7 +282,7 @@ trait ExtendedCacheItemTrait
 
     /**
      * Return the data as a well-formatted string.
-     * Any scalar value will be casted to an array
+     * Any scalar value will be cast to an array
      * @param int $options \json_encode() options
      * @param int $depth \json_encode() depth
      * @return string

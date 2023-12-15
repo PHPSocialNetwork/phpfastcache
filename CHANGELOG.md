@@ -1,3 +1,18 @@
+## 9.2.0
+##### xx january 2024
+- __API__
+  - Upgraded Phpfastcache API to `4.3.0` ([see changes](CHANGELOG_API.md))
+- __Drivers__
+  - Implemented #906 // **Added `RedisCluster` driver support**
+- __Pool__
+  - Added `ExtendedCacheItemPoolTrait::getAllItems` to allow you to retrieve all items in the cache. This method have some limitations, ([see more in the Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV5%CB%96%5D-Fetching-all-keys)).
+- __Core__
+  - Configuration methods`ConfigurationOption::isPreventCacheSlams()`, `ConfigurationOption::setPreventCacheSlams()`, `ConfigurationOption::getCacheSlamsTimeout()`, `ConfigurationOption::setCacheSlamsTimeout()` are deprecated. ([See changes](CHANGELOG_API.md)).
+  - Fixed #907 // Internal "driver decode()" method will now throw an if the string data looks corrupted.
+  - Internal: Implemented multiple keys fetch (*if supported by the backend*) to improve the performances behind all `getItems()` calls. Currently only supported in some backends, but it may evolve in the future.
+- __Misc__
+  - Fixed multiple code typo & updated README.md
+
 ## 9.1.3
 ##### 12 february 2023
 - __Core__

@@ -41,7 +41,7 @@
   * A very high-performance NoSQL driver using a key-value pair system.
 * Predis
   * A high-performance memory driver using a in-memory data structure storage. Less efficient than Redis driver as it is an embedded library.
-* Redis/RedisCluster
+* Redis/Rediscluster
   * A very high-performance memory driver using a in-memory data structure storage. More efficient than Predis driver as it is an compiled library.
   * RedisCluster use the RedisCluster class with a different driver name but behave slightly differently than Redis driver.
 * Riak **(REMOVED in v8.0.6)**

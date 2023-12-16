@@ -30,13 +30,9 @@ use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 
 /**
- * IMPORTANT NOTICE
- *
- * If you modify this file please make sure that
- * the ActOnAll helper will also get those modifications
- * since it does no longer implements this interface
- * @see \Phpfastcache\Helper\ActOnAll
- *
+ * Extended cache item pool interface that
+ * contains all the phpfastcache-related
+ * methods that does not belong to PSR-6.
  */
 interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventManagerDispatcherInterface, ClassNamespaceResolverInterface, TaggableCacheItemPoolInterface
 {

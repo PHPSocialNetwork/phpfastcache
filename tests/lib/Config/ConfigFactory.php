@@ -18,7 +18,7 @@ namespace Phpfastcache\Tests\Config;
 
 use Phpfastcache\Config\ConfigurationOptionInterface;
 use Phpfastcache\Drivers\Mongodb\Config as MongodbConfig;
-use Phpfastcache\Drivers\RedisCluster\Config as RedisClusterConfig;
+use Phpfastcache\Drivers\Rediscluster\Config as RedisClusterConfig;
 use Phpfastcache\Helper\UninstanciableObjectTrait;
 
 class ConfigFactory

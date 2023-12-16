@@ -14,7 +14,7 @@
 
 declare(strict_types=1);
 
-namespace Phpfastcache\Drivers\RedisCluster;
+namespace Phpfastcache\Drivers\Rediscluster;
 
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;

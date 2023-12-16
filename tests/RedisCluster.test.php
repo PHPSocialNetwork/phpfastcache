@@ -15,12 +15,12 @@
 use Phpfastcache\CacheManager;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Tests\Helper\TestHelper;
-use Phpfastcache\Drivers\RedisCluster\Config as RedisConfig;
+use Phpfastcache\Drivers\Rediscluster\Config as RedisConfig;
 use Redis as RedisClient;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
-$testHelper = new TestHelper('Redis bundled client');
+$testHelper = new TestHelper('Redis cluster');
 
 try {
     $config =  new RedisConfig();

@@ -147,6 +147,10 @@ class Driver implements AggregatablePoolInterface
         return null;
     }
 
+    /**
+     * @param ExtendedCacheItemInterface ...$items
+     * @return array<array<string, mixed>>
+     */
     protected function driverReadMultiple(ExtendedCacheItemInterface ...$items): array
     {
         $driverArrays = [];

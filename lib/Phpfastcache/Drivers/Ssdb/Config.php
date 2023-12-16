@@ -40,9 +40,7 @@ class Config extends ConfigurationOption
      */
     public function setHost(string $host): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->host = $host;
-        return $this;
+        return $this->setProperty('host', $host);
     }
 
     /**
@@ -60,9 +58,7 @@ class Config extends ConfigurationOption
      */
     public function setPort(int $port): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->port = $port;
-        return $this;
+        return $this->setProperty('port', $port);
     }
 
     /**
@@ -80,9 +76,7 @@ class Config extends ConfigurationOption
      */
     public function setPassword(string $password): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->password = $password;
-        return $this;
+        return $this->setProperty('password', $password);
     }
 
     /**
@@ -100,8 +94,6 @@ class Config extends ConfigurationOption
      */
     public function setTimeout(int $timeout): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->timeout = $timeout;
-        return $this;
+        return $this->setProperty('timeout', $timeout);
     }
 }

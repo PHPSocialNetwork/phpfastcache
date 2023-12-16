@@ -2,6 +2,8 @@
 ##### xx january 2024
 - __API__
   - Upgraded Phpfastcache API to `4.3.0` ([see changes](CHANGELOG_API.md))
+- __Events__
+  - EventManager is now scoped to its own poll if retrieved through `ExtendedCacheItemPoolTrait::->getEventManager()`. Global EventManager `EventManager::getInstance()` remains unchanged, see [EVENTS.md](./docs/EVENTS.md).
 - __Drivers__
   - Implemented #906 // **Added `RedisCluster` driver support**
 - __Pool__

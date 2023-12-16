@@ -31,6 +31,8 @@ class Config extends ConfigurationOption
     protected string $bucketName = self::DEFAULT_VALUE;
     protected string $scopeName = self::DEFAULT_VALUE;
     protected string $collectionName = self::DEFAULT_VALUE;
+
+
     public function getHost(): string
     {
         return $this->host;
@@ -43,9 +45,7 @@ class Config extends ConfigurationOption
      */
     public function setHost(string $host): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->host = $host;
-        return $this;
+        return $this->setProperty('host', $host);
     }
 
     /**
@@ -63,9 +63,7 @@ class Config extends ConfigurationOption
      */
     public function setPort(int $port): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->port = $port;
-        return $this;
+        return $this->setProperty('port', $port);
     }
 
     /**
@@ -83,9 +81,7 @@ class Config extends ConfigurationOption
      */
     public function setUsername(string $username): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->username = $username;
-        return $this;
+        return $this->setProperty('username', $username);
     }
 
     /**
@@ -103,9 +99,7 @@ class Config extends ConfigurationOption
      */
     public function setPassword(string $password): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->password = $password;
-        return $this;
+        return $this->setProperty('password', $password);
     }
 
     /**
@@ -123,9 +117,7 @@ class Config extends ConfigurationOption
      */
     public function setBucketName(string $bucketName): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->bucketName = $bucketName;
-        return $this;
+        return $this->setProperty('bucketName', $bucketName);
     }
     /**
      * @return string
@@ -142,9 +134,7 @@ class Config extends ConfigurationOption
      */
     public function setScopeName(string $scopeName): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->scopeName = $scopeName;
-        return $this;
+        return $this->setProperty('scopeName', $scopeName);
     }
 
     /**
@@ -162,8 +152,6 @@ class Config extends ConfigurationOption
      */
     public function setCollectionName(string $collectionName): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->collectionName = $collectionName;
-        return $this;
+        return $this->setProperty('collectionName', $collectionName);
     }
 }

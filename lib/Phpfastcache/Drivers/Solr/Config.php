@@ -67,9 +67,7 @@ class Config extends ConfigurationOption
      */
     public function setHost(string $host): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->host = $host;
-        return $this;
+        return $this->setProperty('host', $host);
     }
 
     /**
@@ -87,9 +85,7 @@ class Config extends ConfigurationOption
      */
     public function setPort(int $port): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->port = $port;
-        return $this;
+        return $this->setProperty('port', $port);
     }
 
     /**
@@ -107,9 +103,7 @@ class Config extends ConfigurationOption
      */
     public function setCoreName(string $coreName): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->coreName = $coreName;
-        return $this;
+        return $this->setProperty('coreName', $coreName);
     }
 
     /**
@@ -127,9 +121,7 @@ class Config extends ConfigurationOption
      */
     public function setScheme(string $scheme): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->scheme = $scheme;
-        return $this;
+        return $this->setProperty('scheme', $scheme);
     }
 
     /**
@@ -160,9 +152,7 @@ class Config extends ConfigurationOption
      */
     public function setEventDispatcher(EventDispatcherInterface $eventDispatcher): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->eventDispatcher = $eventDispatcher;
-        return $this;
+        return $this->setProperty('eventDispatcher', $eventDispatcher);
     }
 
     /**
@@ -181,14 +171,11 @@ class Config extends ConfigurationOption
      */
     public function setMappingSchema(array $mappingSchema): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
         $diff = array_diff(array_keys(self::DEFAULT_MAPPING_SCHEMA), array_keys($mappingSchema));
         if ($diff) {
             throw new PhpfastcacheInvalidArgumentException('Missing keys for the solr mapping schema: ' . \implode(', ', $diff));
         }
-
-        $this->mappingSchema = $mappingSchema;
-        return $this;
+        return $this->setProperty('mappingSchema', $mappingSchema);
     }
 
     /**
@@ -206,8 +193,6 @@ class Config extends ConfigurationOption
      */
     public function setEndpointName(string $endpointName): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->endpointName = $endpointName;
-        return $this;
+        return $this->setProperty('endpointName', $endpointName);
     }
 }

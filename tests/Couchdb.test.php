@@ -28,7 +28,7 @@ try {
     $cacheInstance = CacheManager::getInstance('Couchdb', $config);
 } catch (PhpfastcacheDriverConnectException $e) {
     try {
-        $testHelper->printDebugText('Unable to connect to Couchdb as an anynymous, trying with default credential...');
+        $testHelper->printDebugText('Unable to connect to Couchdb as an anonymous, trying with default credential...');
         $config->setUsername('admin');
         $config->setPassword('travis');
         $cacheInstance = CacheManager::getInstance('Couchdb', $config);

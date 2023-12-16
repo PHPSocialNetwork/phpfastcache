@@ -17,11 +17,11 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\RedisCluster;
 
 use DateTime;
+use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
-use Phpfastcache\Drivers\Redis\DriverAbstract as RedisDriverAbstract;
+use Phpfastcache\Drivers\Redis\RedisDriverTrait;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use RedisCluster;
 
@@ -29,8 +29,12 @@ use RedisCluster;
  * @property RedisCluster $instance
  * @method Config getConfig()
  */
-class Driver extends RedisDriverAbstract
+class Driver implements AggregatablePoolInterface
 {
+    use RedisDriverTrait, TaggableCacheItemPoolTrait {
+        RedisDriverTrait::driverReadMultiple insteadof TaggableCacheItemPoolTrait;
+    }
+
     /**
      * @return bool
      */

@@ -17,6 +17,8 @@ declare(strict_types=1);
 namespace Phpfastcache\Event;
 
 use BadMethodCallException;
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Exceptions\PhpfastcacheEventManagerException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
 /**
@@ -98,4 +100,17 @@ interface EventManagerInterface
      * @return bool
      */
     public function unbindAllEventCallbacks(): bool;
+
+    /**
+     * @param ExtendedCacheItemPoolInterface $pool
+     * @return EventManagerInterface
+     */
+    public function getScopedEventManager(ExtendedCacheItemPoolInterface $pool): EventManagerInterface;
+
+    /**
+     * @param ExtendedCacheItemPoolInterface $pool
+     * @return EventManagerInterface
+     * @throws PhpfastcacheEventManagerException
+     */
+    public function setItemPoolContext(ExtendedCacheItemPoolInterface $pool): EventManagerInterface;
 }

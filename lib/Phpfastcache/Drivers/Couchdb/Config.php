@@ -45,11 +45,9 @@ class Config extends ConfigurationOption
      */
     public function setDatabase(string $database): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-/** @see https://docs.couchdb.org/en/latest/api/database/common.html#put--db */
+        /** @see https://docs.couchdb.org/en/latest/api/database/common.html#put--db */
         if (\preg_match('#^[a-z][a-z0-9_\-+\$()/]+$#', $database)) {
-            $this->database = $database;
-            return $this;
+            return $this->setProperty('database', $database);
         }
 
         throw new PhpfastcacheInvalidArgumentException(sprintf("Error: illegal_database_name Name: '%s'. 
@@ -71,9 +69,7 @@ class Config extends ConfigurationOption
      */
     public function setHost(string $host): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->host = $host;
-        return $this;
+        return $this->setProperty('host', $host);
     }
 
     /**
@@ -91,9 +87,7 @@ class Config extends ConfigurationOption
      */
     public function setPort(int $port): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->port = $port;
-        return $this;
+        return $this->setProperty('port', $port);
     }
 
     /**
@@ -111,9 +105,7 @@ class Config extends ConfigurationOption
      */
     public function setUsername(string $username): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->username = $username;
-        return $this;
+        return $this->setProperty('username', $username);
     }
 
     /**
@@ -131,9 +123,7 @@ class Config extends ConfigurationOption
      */
     public function setPassword(string $password): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->password = $password;
-        return $this;
+        return $this->setProperty('password', $password);
     }
 
     /**
@@ -151,9 +141,7 @@ class Config extends ConfigurationOption
      */
     public function setSsl(bool $ssl): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->ssl = $ssl;
-        return $this;
+        return $this->setProperty('ssl', $ssl);
     }
 
     /**
@@ -171,8 +159,6 @@ class Config extends ConfigurationOption
      */
     public function setTimeout(int $timeout): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->timeout = $timeout;
-        return $this;
+        return $this->setProperty('timeout', $timeout);
     }
 }

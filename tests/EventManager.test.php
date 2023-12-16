@@ -22,7 +22,7 @@ use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
-$testHelper = new TestHelper('EventManager');
+$testHelper = new TestHelper('EventManager (Unscoped)');
 $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 
 $cacheInstance = CacheManager::getInstance($defaultDriver);

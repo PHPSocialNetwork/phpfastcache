@@ -56,9 +56,7 @@ class Config extends ConfigurationOption
      */
     public function setCollection(string $collection): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->collection = $collection;
-        return $this;
+        return $this->setProperty('collection', $collection);
     }
 
     /**
@@ -76,13 +74,12 @@ class Config extends ConfigurationOption
      */
     public function setGoogleCloudProject(?string $googleCloudProject): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
         if ($googleCloudProject !== null) {
             if (!$this->isAllowEnvCredentialOverride()) {
                 throw new PhpfastcacheLogicException('You are not allowed to override GCP environment variables.');
             }
             \putenv("GOOGLE_CLOUD_PROJECT=$googleCloudProject");
-            $this->googleApplicationCredential = $googleCloudProject;
+            return $this->setProperty('googleCloudProject', $googleCloudProject);
         }
         return $this;
     }
@@ -102,13 +99,12 @@ class Config extends ConfigurationOption
      */
     public function setGoogleApplicationCredential(?string $googleApplicationCredential): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
         if ($googleApplicationCredential !== null) {
             if (!$this->isAllowEnvCredentialOverride()) {
                 throw new PhpfastcacheLogicException('You are not allowed to override GCP environment variables.');
             }
             \putenv("GOOGLE_APPLICATION_CREDENTIALS=$googleApplicationCredential");
-            $this->googleApplicationCredential = $googleApplicationCredential;
+            return $this->setProperty('googleApplicationCredential', $googleApplicationCredential);
         }
         return $this;
     }
@@ -127,7 +123,6 @@ class Config extends ConfigurationOption
      */
     public function setAllowEnvCredentialOverride(bool $allowEnvCredentialOverride): Config
     {
-        $this->allowEnvCredentialOverride = $allowEnvCredentialOverride;
-        return $this;
+        return $this->setProperty('allowEnvCredentialOverride', $allowEnvCredentialOverride);
     }
 }

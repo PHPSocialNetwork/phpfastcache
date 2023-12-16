@@ -72,9 +72,7 @@ class Config extends ConfigurationOption
      */
     public function setDatabase(string $database): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->database = $database;
-        return $this;
+        return $this->setProperty('database', $database);
     }
 
     public function getCollection(): string
@@ -87,9 +85,7 @@ class Config extends ConfigurationOption
      */
     public function setCollection(string $collection): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->collection = $collection;
-        return $this;
+        return $this->setProperty('collection', $collection);
     }
 
     /**
@@ -107,9 +103,7 @@ class Config extends ConfigurationOption
      */
     public function setEndpoint(string|array $endpoint): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->endpoint = $endpoint;
-        return $this;
+        return $this->setProperty('endpoint', $endpoint);
     }
 
     public function getConnection(): string
@@ -122,9 +116,7 @@ class Config extends ConfigurationOption
      */
     public function setConnection(string $connection): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->connection = $connection;
-        return $this;
+        return $this->setProperty('connection', $connection);
     }
 
     public function getAuthType(): string
@@ -137,9 +129,7 @@ class Config extends ConfigurationOption
      */
     public function setAuthType(string $authType): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->authType = $authType;
-        return $this;
+        return $this->setProperty('authType', $authType);
     }
 
     public function getAuthUser(): string
@@ -152,9 +142,7 @@ class Config extends ConfigurationOption
      */
     public function setAuthUser(string $authUser): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->authUser = $authUser;
-        return $this;
+        return $this->setProperty('authUser', $authUser);
     }
 
     public function getAuthPasswd(): string
@@ -167,9 +155,7 @@ class Config extends ConfigurationOption
      */
     public function setAuthPasswd(string $authPasswd): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->authPasswd = $authPasswd;
-        return $this;
+        return $this->setProperty('authPasswd', $authPasswd);
     }
 
     /**
@@ -187,9 +173,7 @@ class Config extends ConfigurationOption
      */
     public function setAuthJwt(?string $authJwt): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->authJwt = $authJwt;
-        return $this;
+        return $this->setProperty('authJwt', $authJwt);
     }
 
     public function isAutoCreate(): bool
@@ -202,9 +186,7 @@ class Config extends ConfigurationOption
      */
     public function setAutoCreate(bool $autoCreate): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->autoCreate = $autoCreate;
-        return $this;
+        return $this->setProperty('autoCreate', $autoCreate);
     }
 
     public function getConnectTimeout(): int
@@ -217,9 +199,7 @@ class Config extends ConfigurationOption
      */
     public function setConnectTimeout(int $connectTimeout): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->connectTimeout = $connectTimeout;
-        return $this;
+        return $this->setProperty('connectTimeout', $connectTimeout);
     }
 
     public function getRequestTimeout(): int
@@ -232,9 +212,7 @@ class Config extends ConfigurationOption
      */
     public function setRequestTimeout(int $requestTimeout): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->requestTimeout = $requestTimeout;
-        return $this;
+        return $this->setProperty('requestTimeout', $requestTimeout);
     }
 
     public function getUpdatePolicy(): string
@@ -247,9 +225,7 @@ class Config extends ConfigurationOption
      */
     public function setUpdatePolicy(string $updatePolicy): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->updatePolicy = $updatePolicy;
-        return $this;
+        return $this->setProperty('updatePolicy', $updatePolicy);
     }
 
     public function isVerifyCert(): bool
@@ -262,9 +238,7 @@ class Config extends ConfigurationOption
      */
     public function setVerifyCert(bool $verifyCert): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->verifyCert = $verifyCert;
-        return $this;
+        return $this->setProperty('verifyCert', $verifyCert);
     }
 
     public function isSelfSigned(): bool
@@ -277,9 +251,7 @@ class Config extends ConfigurationOption
      */
     public function setSelfSigned(bool $selfSigned): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->selfSigned = $selfSigned;
-        return $this;
+        return $this->setProperty('selfSigned', $selfSigned);
     }
 
     public function getCiphers(): string
@@ -292,9 +264,7 @@ class Config extends ConfigurationOption
      */
     public function setCiphers(string $ciphers): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->ciphers = $ciphers;
-        return $this;
+        return $this->setProperty('ciphers', $ciphers);
     }
 
     /**
@@ -312,8 +282,6 @@ class Config extends ConfigurationOption
      */
     public function setTraceFunction(?\Closure $traceFunction): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->traceFunction = $traceFunction;
-        return $this;
+        return $this->setProperty('traceFunction', $traceFunction);
     }
 }

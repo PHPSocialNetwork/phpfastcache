@@ -39,6 +39,8 @@ class Event implements EventInterface
     public const CACHE_ITEM_EXPIRE_AT = 'CacheItemExpireAt';
     public const CACHE_ITEM_EXPIRE_AFTER = 'CacheItemExpireAfter';
     public const CACHE_GET_ALL_ITEMS = 'CacheGetAllItems';
+    public const CACHE_DRIVER_CHECKED = 'CacheDriverChecked';
+    public const CACHE_DRIVER_CONNECTED = 'CacheDriverConnected';
 
     public static function getEvents(): array
     {

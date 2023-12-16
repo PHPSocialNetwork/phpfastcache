@@ -61,9 +61,7 @@ class Config extends ConfigurationOption
      */
     public function setHost(string $host): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->host = $host;
-        return $this;
+        return $this->setProperty('host', $host);
     }
 
     /**
@@ -81,9 +79,7 @@ class Config extends ConfigurationOption
      */
     public function setPort(int $port): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->port = $port;
-        return $this;
+        return $this->setProperty('port', $port);
     }
 
     /**
@@ -101,9 +97,7 @@ class Config extends ConfigurationOption
      */
     public function setPassword(string $password): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->password = $password;
-        return $this;
+        return $this->setProperty('password', $password);
     }
 
     /**
@@ -121,9 +115,7 @@ class Config extends ConfigurationOption
      */
     public function setDatabase(int $database): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->database = $database;
-        return $this;
+        return $this->setProperty('database', $database);
     }
 
     /**
@@ -141,9 +133,7 @@ class Config extends ConfigurationOption
      */
     public function setTimeout(int $timeout): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->timeout = $timeout;
-        return $this;
+        return $this->setProperty('timeout', $timeout);
     }
 
     /**
@@ -161,9 +151,7 @@ class Config extends ConfigurationOption
      */
     public function setPredisClient(?Client $predisClient = null): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->predisClient = $predisClient;
-        return $this;
+        return $this->setProperty('predisClient', $predisClient);
     }
 
     /**
@@ -183,9 +171,7 @@ class Config extends ConfigurationOption
      */
     public function setOptPrefix(string $optPrefix): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->optPrefix = trim($optPrefix);
-        return $this;
+        return $this->setProperty('optPrefix', trim($optPrefix));
     }
 
     /**
@@ -203,9 +189,7 @@ class Config extends ConfigurationOption
      */
     public function setPersistent(bool $persistent): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->persistent = $persistent;
-        return $this;
+        return $this->setProperty('persistent', $persistent);
     }
 
     /**
@@ -224,11 +208,9 @@ class Config extends ConfigurationOption
      */
     public function setScheme(string $scheme): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
         if (!in_array($scheme, ['unix', 'tls'], true)) {
             throw new PhpfastcacheInvalidConfigurationException('Invalid scheme: ' . $scheme);
         }
-        $this->scheme = $scheme;
-        return $this;
+        return $this->setProperty('scheme', $scheme);
     }
 }

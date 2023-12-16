@@ -71,7 +71,6 @@ class Config extends ConfigurationOption
      */
     public function setServers(array $servers): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
         foreach ($servers as $server) {
             if (\array_key_exists('saslUser', $server) || array_key_exists('saslPassword', $server)) {
                 throw new PhpfastcacheInvalidConfigurationException('Unlike Memcached, Memcache does not support SASL authentication');
@@ -101,8 +100,7 @@ class Config extends ConfigurationOption
                 throw new PhpfastcacheInvalidConfigurationException('Port should not be defined along with path');
             }
         }
-        $this->servers = $servers;
-        return $this;
+        return $this->setProperty('servers', $servers);
     }
 
     /**
@@ -120,9 +118,7 @@ class Config extends ConfigurationOption
      */
     public function setHost(string $host): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->host = $host;
-        return $this;
+        return $this->setProperty('host', $host);
     }
 
     /**
@@ -140,8 +136,6 @@ class Config extends ConfigurationOption
      */
     public function setPort(int $port): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->port = $port;
-        return $this;
+        return $this->setProperty('port', $port);
     }
 }

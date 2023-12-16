@@ -156,6 +156,11 @@ class Driver implements AggregatablePoolInterface
         return null;
     }
 
+    /**
+     * @param ExtendedCacheItemInterface ...$items
+     * @return array<array<string, mixed>>
+     * @throws \Exception
+     */
     protected function driverReadMultiple(ExtendedCacheItemInterface ...$items): array
     {
         $query = $this->instance->createSelect()

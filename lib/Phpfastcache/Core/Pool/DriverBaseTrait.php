@@ -19,6 +19,7 @@ namespace Phpfastcache\Core\Pool;
 use DateTime;
 use DateTimeInterface;
 use Phpfastcache\Config\ConfigurationOptionInterface;
+use Phpfastcache\Event\Event;
 use Phpfastcache\Event\EventManagerDispatcherTrait;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheCorruptedDataException;
@@ -50,9 +51,9 @@ trait DriverBaseTrait
     protected ConfigurationOptionInterface $config;
 
     /**
-     * @var object|array<mixed>|null
+     * @var object|null
      */
-    protected object|array|null $instance;
+    protected ?object $instance;
 
     protected string $driverName;
 
@@ -71,16 +72,19 @@ trait DriverBaseTrait
      */
     public function __construct(#[\SensitiveParameter] ConfigurationOptionInterface $config, string $instanceId, EventManagerInterface $em)
     {
-        $this->setEventManager($em);
+        $this->setEventManager($em->getScopedEventManager($this));
         $this->setConfig($config);
         $this->instanceId = $instanceId;
 
         if (!$this->driverCheck()) {
             throw new PhpfastcacheDriverCheckException(\sprintf(ExtendedCacheItemPoolInterface::DRIVER_CHECK_FAILURE, $this->getDriverName()));
         }
+        $this->eventManager->dispatch(Event::CACHE_DRIVER_CHECKED, $this);
 
         try {
             $this->driverConnect();
+            $config->lock($this); // Lock the config only after a successful driver connection.
+            $this->eventManager->dispatch(Event::CACHE_DRIVER_CONNECTED, $this, $this->instance ?? null);
         } catch (Throwable $e) {
             throw new PhpfastcacheDriverConnectException(
                 sprintf(
@@ -94,8 +98,6 @@ trait DriverBaseTrait
                 0,
                 $e
             );
-        } finally {
-            $config->lock($this);
         }
     }
 

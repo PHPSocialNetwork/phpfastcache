@@ -28,7 +28,7 @@ class Config extends ConfigurationOption
      * Multiple server can be added this way:
      *       $cfg->setServers([
      *         [
-     *           // If you use an UNIX socket set the host and port to null
+     *           // If you use a UNIX socket set the host and port to null
      *           'host' => '127.0.0.1',
      *           //'path' => 'path/to/unix/socket',
      *           'port' => 11211,
@@ -60,9 +60,7 @@ class Config extends ConfigurationOption
      */
     public function setSaslUser(string $saslUser): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->saslUser = $saslUser;
-        return $this;
+        return $this->setProperty('saslUser', $saslUser);
     }
 
     /**
@@ -80,9 +78,7 @@ class Config extends ConfigurationOption
      */
     public function setSaslPassword(string $saslPassword): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->saslPassword = $saslPassword;
-        return $this;
+        return $this->setProperty('saslPassword', $saslPassword);
     }
 
     /**
@@ -116,7 +112,6 @@ class Config extends ConfigurationOption
      */
     public function setServers(array $servers): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
         foreach ($servers as $server) {
             if ($diff = array_diff(array_keys($server), ['host', 'port', 'saslUser', 'saslPassword', 'path'])) {
                 throw new PhpfastcacheInvalidConfigurationException('Unknown keys for memcached server: ' . implode(', ', $diff));
@@ -146,8 +141,8 @@ class Config extends ConfigurationOption
                 throw new PhpfastcacheInvalidConfigurationException('If provided, saslUser and saslPassword must be a string');
             }
         }
-        $this->servers = $servers;
-        return $this;
+
+        return $this->setProperty('servers', $servers);
     }
 
     /**
@@ -165,9 +160,7 @@ class Config extends ConfigurationOption
      */
     public function setHost(string $host): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->host = $host;
-        return $this;
+        return $this->setProperty('host', $host);
     }
 
     /**
@@ -185,9 +178,7 @@ class Config extends ConfigurationOption
      */
     public function setPort(int $port): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->port = $port;
-        return $this;
+        return $this->setProperty('port', $port);
     }
 
     /**
@@ -207,8 +198,6 @@ class Config extends ConfigurationOption
      */
     public function setOptPrefix(string $optPrefix): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->optPrefix = trim($optPrefix);
-        return $this;
+        return $this->setProperty('optPrefix', trim($optPrefix));
     }
 }

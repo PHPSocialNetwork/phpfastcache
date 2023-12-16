@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Memcached;
 
 use DateTime;
-use Exception;
 use Memcached as MemcachedSoftware;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Config\ConfigurationOption;
@@ -155,6 +154,10 @@ class Driver implements AggregatablePoolInterface
         return $val;
     }
 
+    /**
+     * @param ExtendedCacheItemInterface ...$items
+     * @return array<array<string, mixed>>
+     */
     protected function driverReadMultiple(ExtendedCacheItemInterface ...$items): array
     {
         $keys = $this->getKeys($items);

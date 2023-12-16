@@ -6,7 +6,7 @@ parameters:
 		- '#PHPDoc tag @(.*)#' # (Really) Annoying PHPDoc tag issues...
 		- '#Call to an undefined method phpssdb(.*)#' # Phpstan is not able to know the magic of Ssdb __call() implementation
 		-
-			message: '#(Method|Class) Couchbase(.*)#' # Phpstan not differencing coucbase and couchbase_v3 stubs from jetbrains/phpstorm-stubs
+			message: '#(Method|Class) Couchbase(.*)#' # Phpstan not differencing couchbase and couchbase_v3 stubs from jetbrains/phpstorm-stubs
 			path: lib/Phpfastcache/Drivers/Couchbasev3/Driver.php
 		-
 			message: '#Cannot call method getPayload\(\) on int#' # Issue in predis/predis => https://github.com/predis/predis/pull/710
@@ -14,3 +14,9 @@ parameters:
 		-
 			message: '#Cannot assign offset (.*) to string|Offset (.*) on string#' # Issue in arangodb/arangodb-php => https://github.com/arangodb/arangodb-php/issues/293
 			path: lib/Phpfastcache/Drivers/Arangodb/Driver.php
+		-
+			message: '#Dead catch - Phpfastcache\\Exceptions\\PhpfastcacheUnsupportedMethodException is never thrown in the try block.#' #https://github.com/phpstan/phpstan/issues/10315
+			path: lib/Phpfastcache/Core/Pool/CacheItemPoolTrait.php
+		-
+			message: '#(.*)RedisCluster(.*)#' # https://github.com/phpstan/phpstan/issues/10316
+			path: lib/Phpfastcache/Drivers/RedisCluster/Driver.php

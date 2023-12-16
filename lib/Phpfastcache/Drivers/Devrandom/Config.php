@@ -39,9 +39,7 @@ class Config extends ConfigurationOption
      */
     public function setDataLength(int $dataLength): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->dataLength = $dataLength;
-        return $this;
+        return $this->setProperty('dataLength', $dataLength);
     }
 
     /**
@@ -60,11 +58,9 @@ class Config extends ConfigurationOption
      */
     public function setChanceOfRetrieval(int $chanceOfRetrieval): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
         if ($chanceOfRetrieval < 0 || $chanceOfRetrieval > 100) {
             throw new PhpfastcacheInvalidArgumentException('Chance of retrieval must be between 0 and 100');
         }
-        $this->chanceOfRetrieval = $chanceOfRetrieval;
-        return $this;
+        return $this->setProperty('chanceOfRetrieval', $chanceOfRetrieval);
     }
 }

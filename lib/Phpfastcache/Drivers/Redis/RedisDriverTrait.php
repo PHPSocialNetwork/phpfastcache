@@ -16,14 +16,8 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Redis;
 
-use DateTime;
-use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
-use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Redis as RedisClient;
 use RedisCluster as RedisClusterClient;
@@ -32,10 +26,8 @@ use RedisCluster as RedisClusterClient;
  * @property RedisClient|RedisClusterClient $instance
  * @method Config getConfig()
  */
-abstract class DriverAbstract implements AggregatablePoolInterface
+trait RedisDriverTrait
 {
-    use TaggableCacheItemPoolTrait;
-
     /**
      * @param ExtendedCacheItemInterface $item
      * @return ?array<string, mixed>
@@ -50,7 +42,12 @@ abstract class DriverAbstract implements AggregatablePoolInterface
         return $this->decode($val);
     }
 
-
+    /**
+     * @param ExtendedCacheItemInterface ...$items
+     * @return array<array<string, mixed>>
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverException
+     * @throws \RedisException
+     */
     protected function driverReadMultiple(ExtendedCacheItemInterface ...$items): array
     {
         $keys = $this->getKeys($items);

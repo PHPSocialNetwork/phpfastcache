@@ -23,6 +23,9 @@ use RedisCluster as RedisClusterClient;
 
 class Config extends ConfigurationOption
 {
+    /**
+     * @var array<string>
+     */
     protected array $clusters = [];
     protected string $password = '';
     protected int $timeout = 5;
@@ -32,7 +35,7 @@ class Config extends ConfigurationOption
     protected ?int $slaveFailover = null;
 
     /**
-     * @return array
+     * @return array<string>
      */
     public function getClusters(): array
     {
@@ -51,18 +54,12 @@ class Config extends ConfigurationOption
     }
 
     /**
-     * @param string[] $clusters
+     * @param string $clusters
      * @return Config
      */
-    public function setClusters(string ...$clusters): static
+    public function setClusters(...$clusters): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        if (count($clusters) === 1 && is_array($clusters[0])) {
-            $this->clusters = $clusters[0];
-        } else {
-            $this->clusters = $clusters;
-        }
-        return $this;
+        return $this->setProperty('clusters', $clusters);
     }
 
     /**
@@ -81,9 +78,7 @@ class Config extends ConfigurationOption
      */
     public function setPassword(string $password): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->password = $password;
-        return $this;
+        return $this->setProperty('password', $password);
     }
 
     /**
@@ -101,9 +96,7 @@ class Config extends ConfigurationOption
      */
     public function setTimeout(int $timeout): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->timeout = $timeout;
-        return $this;
+        return $this->setProperty('timeout', $timeout);
     }
 
     /**
@@ -121,9 +114,7 @@ class Config extends ConfigurationOption
      */
     public function setReadTimeout(int $readTimeout): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->readTimeout = $readTimeout;
-        return $this;
+        return $this->setProperty('readTimeout', $readTimeout);
     }
 
 
@@ -142,9 +133,7 @@ class Config extends ConfigurationOption
      */
     public function setRedisClusterClient(?RedisClusterClient $redisClusterClient): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->redisClusterClient = $redisClusterClient;
-        return $this;
+        return $this->setProperty('redisClusterClient', $redisClusterClient);
     }
 
     /**
@@ -164,9 +153,7 @@ class Config extends ConfigurationOption
      */
     public function setOptPrefix(string $optPrefix): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->optPrefix = trim($optPrefix);
-        return $this;
+        return $this->setProperty('optPrefix', trim($optPrefix));
     }
 
     /**
@@ -184,7 +171,6 @@ class Config extends ConfigurationOption
      */
     public function setSlaveFailover(?int $slaveFailover): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
         if (
             $slaveFailover !== null && !in_array($slaveFailover, [
             RedisClusterClient::FAILOVER_NONE,
@@ -195,7 +181,6 @@ class Config extends ConfigurationOption
         ) {
             throw new PhpfastcacheInvalidArgumentException('Invalid Slave Failover option: ' . $slaveFailover);
         }
-        $this->slaveFailover = $slaveFailover;
-        return $this;
+        return $this->setProperty('slaveFailover', $slaveFailover);
     }
 }

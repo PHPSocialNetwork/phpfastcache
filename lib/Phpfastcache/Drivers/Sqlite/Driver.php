@@ -37,6 +37,8 @@ class Driver implements AggregatablePoolInterface
 {
     use IOHelperTrait;
 
+    /** @var array<PDO>  */
+    protected array $dbInstances = [];
     protected const INDEXING_FILE = 'indexing';
 
     protected int $maxSize = 10;
@@ -141,7 +143,7 @@ class Driver implements AggregatablePoolInterface
         /**
          * init instant
          */
-        if (!isset($this->instance[$instant])) {
+        if (!isset($this->dbInstances[$instant])) {
             // check DB Files ready or not
             $tableCreated = false;
             if ($reset || !file_exists($this->sqliteDir . '/db' . $instant)) {
@@ -154,11 +156,11 @@ class Driver implements AggregatablePoolInterface
                 $this->initDB($pdo);
             }
 
-            $this->instance[$instant] = $pdo;
+            $this->dbInstances[$instant] = $pdo;
             unset($pdo);
         }
 
-        return $this->instance[$instant];
+        return $this->dbInstances[$instant];
     }
 
     /**
@@ -323,7 +325,7 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverClear(): bool
     {
-        $this->instance = [];
+        $this->dbInstances = [];
         $this->indexing = null;
 
         // delete everything before reset indexing

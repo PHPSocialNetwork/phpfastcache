@@ -218,7 +218,7 @@ trait CacheItemPoolTrait
                 if ($driverArray) {
                     $driverData = $this->driverUnwrapData($driverArray);
 
-                    if ($config instanceof IOConfigurationOptionInterface && $this->getConfig()->isPreventCacheSlams()) {
+                    if ($config instanceof IOConfigurationOptionInterface && $config->isPreventCacheSlams()) {
                         while ($driverData instanceof ItemBatch) {
                             if ($driverData->getItemDate()->getTimestamp() + $config->getCacheSlamsTimeout() < \time()) {
                                 /**

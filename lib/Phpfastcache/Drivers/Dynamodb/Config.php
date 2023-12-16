@@ -59,13 +59,12 @@ class Config extends ConfigurationOption
      */
     public function setAwsAccessKeyId(?string $awsAccessKeyId): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
         if ($awsAccessKeyId !== null) {
             if (!$this->isAllowEnvCredentialOverride()) {
                 throw new PhpfastcacheLogicException('You are not allowed to override AWS environment variables.');
             }
             \putenv("AWS_ACCESS_KEY_ID=$awsAccessKeyId");
-            $this->awsAccessKeyId = $awsAccessKeyId;
+            return $this->setProperty('awsAccessKeyId', $awsAccessKeyId);
         }
         return $this;
     }
@@ -85,13 +84,12 @@ class Config extends ConfigurationOption
      */
     public function setAwsSecretAccessKey(?string $awsSecretAccessKey): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
         if ($awsSecretAccessKey !== null) {
             if (!$this->isAllowEnvCredentialOverride()) {
                 throw new PhpfastcacheLogicException('You are not allowed to override AWS environment variables.');
             }
             \putenv("AWS_SECRET_ACCESS_KEY=$awsSecretAccessKey");
-            $this->awsSecretAccessKey = $awsSecretAccessKey;
+            return $this->setProperty('awsSecretAccessKey', $awsSecretAccessKey);
         }
         return $this;
     }
@@ -111,9 +109,7 @@ class Config extends ConfigurationOption
      */
     public function setAllowEnvCredentialOverride(bool $allowEnvCredentialOverride): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->allowEnvCredentialOverride = $allowEnvCredentialOverride;
-        return $this;
+        return $this->setProperty('allowEnvCredentialOverride', $allowEnvCredentialOverride);
     }
 
     /**
@@ -131,12 +127,10 @@ class Config extends ConfigurationOption
      */
     public function setEndpoint(?string $endpoint): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
         if (!\str_starts_with($endpoint, 'https://') && \str_ends_with($endpoint, 'amazonaws.com')) {
             $endpoint = 'https://' . $endpoint;
         }
-        $this->endpoint = $endpoint;
-        return $this;
+        return $this->setProperty('endpoint', $endpoint);
     }
 
     /**
@@ -154,9 +148,7 @@ class Config extends ConfigurationOption
      */
     public function setRegion(string $region): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->region = $region;
-        return $this;
+        return $this->setProperty('region', $region);
     }
 
     /**
@@ -174,9 +166,7 @@ class Config extends ConfigurationOption
      */
     public function setTable(string $table): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->table = $table;
-        return $this;
+        return $this->setProperty('table', $table);
     }
 
     /**
@@ -194,9 +184,7 @@ class Config extends ConfigurationOption
      */
     public function setDebugEnabled(bool $debugEnabled): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->debugEnabled = $debugEnabled;
-        return $this;
+        return $this->setProperty('debugEnabled', $debugEnabled);
     }
 
     /**
@@ -214,9 +202,7 @@ class Config extends ConfigurationOption
      */
     public function setVersion(string $version): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->version = $version;
-        return $this;
+        return $this->setProperty('version', $version);
     }
 
     /**
@@ -234,8 +220,6 @@ class Config extends ConfigurationOption
      */
     public function setPartitionKey(string $partitionKey): Config
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->partitionKey = $partitionKey;
-        return $this;
+        return $this->setProperty('partitionKey', $partitionKey);
     }
 }

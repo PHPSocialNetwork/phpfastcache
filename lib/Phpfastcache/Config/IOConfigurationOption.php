@@ -47,10 +47,7 @@ class IOConfigurationOption extends ConfigurationOption
      */
     public function setSecurityKey(string $securityKey): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->securityKey = $securityKey;
-
-        return $this;
+        return $this->setProperty('securityKey', $securityKey);
     }
 
     /**
@@ -68,9 +65,7 @@ class IOConfigurationOption extends ConfigurationOption
      */
     public function setSecureFileManipulation(bool $secureFileManipulation): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->secureFileManipulation = $secureFileManipulation;
-        return $this;
+        return $this->setProperty('secureFileManipulation', $secureFileManipulation);
     }
 
 
@@ -90,7 +85,6 @@ class IOConfigurationOption extends ConfigurationOption
      */
     public function setCacheFileExtension(string $cacheFileExtension): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
         $safeFileExtensions = \explode('|', IOConfigurationOptionInterface::SAFE_FILE_EXTENSIONS);
 
         if (\str_contains($cacheFileExtension, '.')) {
@@ -102,8 +96,7 @@ class IOConfigurationOption extends ConfigurationOption
             );
         }
 
-        $this->cacheFileExtension = $cacheFileExtension;
-        return $this;
+        return $this->setProperty('cacheFileExtension', $cacheFileExtension);
     }
 
     /**
@@ -121,9 +114,7 @@ class IOConfigurationOption extends ConfigurationOption
      */
     public function setDefaultChmod(int $defaultChmod): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->defaultChmod = $defaultChmod;
-        return $this;
+        return $this->setProperty('defaultChmod', $defaultChmod);
     }
 
 
@@ -142,9 +133,7 @@ class IOConfigurationOption extends ConfigurationOption
      */
     public function setPreventCacheSlams(bool $preventCacheSlams): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->preventCacheSlams = $preventCacheSlams;
-        return $this;
+        return $this->setProperty('preventCacheSlams', $preventCacheSlams);
     }
 
     /**
@@ -162,8 +151,6 @@ class IOConfigurationOption extends ConfigurationOption
      */
     public function setCacheSlamsTimeout(int $cacheSlamsTimeout): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->cacheSlamsTimeout = $cacheSlamsTimeout;
-        return $this;
+        return $this->setProperty('cacheSlamsTimeout', $cacheSlamsTimeout);
     }
 }

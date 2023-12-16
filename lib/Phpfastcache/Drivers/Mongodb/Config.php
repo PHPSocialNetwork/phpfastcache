@@ -55,9 +55,7 @@ class Config extends ConfigurationOption
      */
     public function setHost(string $host): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->host = $host;
-        return $this;
+        return $this->setProperty('host', $host);
     }
 
     /**
@@ -75,9 +73,7 @@ class Config extends ConfigurationOption
      */
     public function setPort(int $port): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->port = $port;
-        return $this;
+        return $this->setProperty('port', $port);
     }
 
     /**
@@ -95,9 +91,7 @@ class Config extends ConfigurationOption
      */
     public function setTimeout(int $timeout): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->timeout = $timeout;
-        return $this;
+        return $this->setProperty('timeout', $timeout);
     }
 
     /**
@@ -115,9 +109,7 @@ class Config extends ConfigurationOption
      */
     public function setUsername(string $username): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->username = $username;
-        return $this;
+        return $this->setProperty('username', $username);
     }
 
     /**
@@ -135,9 +127,7 @@ class Config extends ConfigurationOption
      */
     public function setPassword(string $password): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->password = $password;
-        return $this;
+        return $this->setProperty('password', $password);
     }
 
     /**
@@ -155,9 +145,7 @@ class Config extends ConfigurationOption
      */
     public function setServers(array $servers): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->servers = $servers;
-        return $this;
+        return $this->setProperty('servers', $servers);
     }
 
     /**
@@ -175,9 +163,7 @@ class Config extends ConfigurationOption
      */
     public function setCollectionName(string $collectionName): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->collectionName = $collectionName;
-        return $this;
+        return $this->setProperty('collectionName', $collectionName);
     }
 
     /**
@@ -195,9 +181,7 @@ class Config extends ConfigurationOption
      */
     public function setDatabaseName(string $databaseName): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->databaseName = $databaseName;
-        return $this;
+        return $this->setProperty('databaseName', $databaseName);
     }
 
     /**
@@ -216,9 +200,7 @@ class Config extends ConfigurationOption
      */
     public function setOptions(array $options): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->options = $options;
-        return $this;
+        return $this->setProperty('options', $options);
     }
 
     /**
@@ -236,9 +218,7 @@ class Config extends ConfigurationOption
      */
     public function setDriverOptions(array $driverOptions): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->driverOptions = $driverOptions;
-        return $this;
+        return $this->setProperty('driverOptions', $driverOptions);
     }
 
     /**
@@ -256,9 +236,7 @@ class Config extends ConfigurationOption
      */
     public function setProtocol(string $protocol): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->protocol = $protocol;
-        return $this;
+        return $this->setProperty('protocol', $protocol);
     }
 
     /**
@@ -276,8 +254,6 @@ class Config extends ConfigurationOption
      */
     public function setDocumentPrefix(string $documentPrefix): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->documentPrefix = $documentPrefix;
-        return $this;
+        return $this->setProperty('documentPrefix', $documentPrefix);
     }
 }

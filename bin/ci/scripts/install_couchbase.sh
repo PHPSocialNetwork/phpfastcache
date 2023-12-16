@@ -2,9 +2,10 @@
 
 set -e
 
-export CB_VERSION=7.1.0
+# https://packages.couchbase.com/releases/7.1.1/couchbase-server-community_7.1.1-ubuntu18.04_amd64.deb
+export CB_VERSION=7.1.1
 export CB_RELEASE_URL=https://packages.couchbase.com/releases
-export CB_PACKAGE=couchbase-server-community_7.1.0-ubuntu18.04_amd64.deb
+export CB_PACKAGE=couchbase-server-community_7.1.1-ubuntu18.04_amd64.deb
 
 # Community Edition requires that all nodes provision all services or data service only
 export SERVICES="kv,n1ql,index,fts"
@@ -74,4 +75,4 @@ curl -i "http://127.0.0.1:8091/pools/default/buckets" \
     -u ${USERNAME}:${PASSWORD} \
 
 
-echo "# Couchbase running successfully" 
+echo "# Couchbase running successfully"

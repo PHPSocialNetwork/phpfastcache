@@ -264,11 +264,11 @@ class TestHelper
             exit(1);
         }
 
-        if (!$this->numOfSkippedTests && $this->numOfPassedTests) {
-            exit(0);
+        if ($this->numOfSkippedTests) {
+            exit($this->numOfPassedTests ? 0 : 2);
         }
 
-        exit(2);
+        exit(0);
     }
 
     /**

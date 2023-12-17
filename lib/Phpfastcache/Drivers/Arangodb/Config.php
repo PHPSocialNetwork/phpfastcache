@@ -70,7 +70,7 @@ class Config extends ConfigurationOption
     /**
      * @throws PhpfastcacheLogicException
      */
-    public function setDatabase(string $database): Config
+    public function setDatabase(string $database): static
     {
         return $this->setProperty('database', $database);
     }
@@ -83,7 +83,7 @@ class Config extends ConfigurationOption
     /**
      * @throws PhpfastcacheLogicException
      */
-    public function setCollection(string $collection): Config
+    public function setCollection(string $collection): static
     {
         return $this->setProperty('collection', $collection);
     }
@@ -98,10 +98,9 @@ class Config extends ConfigurationOption
 
     /**
      * @param string|array<string> $endpoint
-     * @return $this
      * @throws PhpfastcacheLogicException
      */
-    public function setEndpoint(string|array $endpoint): Config
+    public function setEndpoint(string|array $endpoint): static
     {
         return $this->setProperty('endpoint', $endpoint);
     }
@@ -114,7 +113,7 @@ class Config extends ConfigurationOption
     /**
      * @throws PhpfastcacheLogicException
      */
-    public function setConnection(string $connection): Config
+    public function setConnection(string $connection): static
     {
         return $this->setProperty('connection', $connection);
     }
@@ -127,7 +126,7 @@ class Config extends ConfigurationOption
     /**
      * @throws PhpfastcacheLogicException
      */
-    public function setAuthType(string $authType): Config
+    public function setAuthType(string $authType): static
     {
         return $this->setProperty('authType', $authType);
     }
@@ -140,7 +139,7 @@ class Config extends ConfigurationOption
     /**
      * @throws PhpfastcacheLogicException
      */
-    public function setAuthUser(string $authUser): Config
+    public function setAuthUser(string $authUser): static
     {
         return $this->setProperty('authUser', $authUser);
     }
@@ -153,7 +152,7 @@ class Config extends ConfigurationOption
     /**
      * @throws PhpfastcacheLogicException
      */
-    public function setAuthPasswd(string $authPasswd): Config
+    public function setAuthPasswd(string $authPasswd): static
     {
         return $this->setProperty('authPasswd', $authPasswd);
     }
@@ -168,10 +167,9 @@ class Config extends ConfigurationOption
 
     /**
      * @param string|null $authJwt
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setAuthJwt(?string $authJwt): Config
+    public function setAuthJwt(?string $authJwt): static
     {
         return $this->setProperty('authJwt', $authJwt);
     }
@@ -184,7 +182,7 @@ class Config extends ConfigurationOption
     /**
      * @throws PhpfastcacheLogicException
      */
-    public function setAutoCreate(bool $autoCreate): Config
+    public function setAutoCreate(bool $autoCreate): static
     {
         return $this->setProperty('autoCreate', $autoCreate);
     }
@@ -197,7 +195,7 @@ class Config extends ConfigurationOption
     /**
      * @throws PhpfastcacheLogicException
      */
-    public function setConnectTimeout(int $connectTimeout): Config
+    public function setConnectTimeout(int $connectTimeout): static
     {
         return $this->setProperty('connectTimeout', $connectTimeout);
     }
@@ -210,7 +208,7 @@ class Config extends ConfigurationOption
     /**
      * @throws PhpfastcacheLogicException
      */
-    public function setRequestTimeout(int $requestTimeout): Config
+    public function setRequestTimeout(int $requestTimeout): static
     {
         return $this->setProperty('requestTimeout', $requestTimeout);
     }
@@ -223,7 +221,7 @@ class Config extends ConfigurationOption
     /**
      * @throws PhpfastcacheLogicException
      */
-    public function setUpdatePolicy(string $updatePolicy): Config
+    public function setUpdatePolicy(string $updatePolicy): static
     {
         return $this->setProperty('updatePolicy', $updatePolicy);
     }
@@ -236,7 +234,7 @@ class Config extends ConfigurationOption
     /**
      * @throws PhpfastcacheLogicException
      */
-    public function setVerifyCert(bool $verifyCert): Config
+    public function setVerifyCert(bool $verifyCert): static
     {
         return $this->setProperty('verifyCert', $verifyCert);
     }
@@ -249,7 +247,7 @@ class Config extends ConfigurationOption
     /**
      * @throws PhpfastcacheLogicException
      */
-    public function setSelfSigned(bool $selfSigned): Config
+    public function setSelfSigned(bool $selfSigned): static
     {
         return $this->setProperty('selfSigned', $selfSigned);
     }
@@ -262,7 +260,7 @@ class Config extends ConfigurationOption
     /**
      * @throws PhpfastcacheLogicException
      */
-    public function setCiphers(string $ciphers): Config
+    public function setCiphers(string $ciphers): static
     {
         return $this->setProperty('ciphers', $ciphers);
     }
@@ -277,10 +275,9 @@ class Config extends ConfigurationOption
 
     /**
      * @param \Closure|null $traceFunction
-     * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setTraceFunction(?\Closure $traceFunction): Config
+    public function setTraceFunction(?\Closure $traceFunction): static
     {
         return $this->setProperty('traceFunction', $traceFunction);
     }

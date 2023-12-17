@@ -98,7 +98,7 @@ class CacheManager
             $driverClass = $driver;
         } else {
             $driver = self::normalizeDriverName($driver);
-            $driverClass = self::validateDriverClass(self::getDriverClass($driver));
+            $driverClass = self::getDriverClass($driver);
         }
         $config = self::validateConfig($config);
         $instanceId = $instanceId ?: self::getInstanceHash($driverClass, $config);
@@ -168,25 +168,6 @@ class CacheManager
     public static function normalizeDriverName(string $driverName): string
     {
         return \ucfirst(\strtolower(\trim($driverName)));
-    }
-
-    /**
-     * @param string $driverClass
-     * @return string
-     * @throws PhpfastcacheDriverException
-     */
-    protected static function validateDriverClass(string $driverClass): string
-    {
-        if (!\is_a($driverClass, ExtendedCacheItemPoolInterface::class, true)) {
-            throw new PhpfastcacheDriverException(
-                \sprintf(
-                    'Class "%s" does not implement "%s"',
-                    $driverClass,
-                    ExtendedCacheItemPoolInterface::class
-                )
-            );
-        }
-        return $driverClass;
     }
 
     /**

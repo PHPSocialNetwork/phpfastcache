@@ -26,10 +26,16 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  */
 class Config extends ConfigurationOption
 {
+    protected int $batchSize = 100;
     protected ?string $googleCloudProject = null;
     protected ?string $googleApplicationCredential = null;
     protected bool $allowEnvCredentialOverride = false;
-    protected string $collection;
+    protected string $collectionName = 'phpfastcache';
+
+    /**
+     * @see \Google\Cloud\Firestore\FirestoreClient::DEFAULT_DATABASE
+     */
+    protected string $databaseName = '(default)';
 
     /**
      * @inheritDoc
@@ -41,23 +47,78 @@ class Config extends ConfigurationOption
         $this->googleApplicationCredential = $this->getSuperGlobalAccessor()('SERVER', 'GOOGLE_APPLICATION_CREDENTIALS');
     }
 
-    /**
-     * @return string
-     */
-    public function getCollection(): string
+    public function getBatchSize(): int
     {
-        return $this->collection;
+        return $this->batchSize;
+    }
+
+    public function setBatchSize(int $batchSize): Config
+    {
+        return $this->setProperty('batchSize', $batchSize);
     }
 
     /**
-     * @param string $collection
+     * @return string
+     * @deprecated As of 9.2, will be removed in v10.
+     * @see self::getCollectionName()
+     */
+    public function getCollection(): string
+    {
+        return $this->collectionName;
+    }
+
+    /**
+     * @param string $collectionName
+     * @return Config
+     * @throws PhpfastcacheLogicException
+     * @see self::setCollectionName()
+     * @deprecated As of 9.2, will be removed in v10.
+     */
+    public function setCollection(string $collectionName): Config
+    {
+        if (isset($this->collectionName) && $collectionName !== $this->collectionName) {
+            trigger_error('getCollection/setCollection methods are deprecated, use getCollectionName/setCollectionName instead', E_USER_DEPRECATED);
+        }
+        return $this->setProperty('collectionName', $collectionName);
+    }
+
+    /**
+     * @return string
+     */
+    public function getCollectionName(): string
+    {
+        return $this->collectionName;
+    }
+
+    /**
+     * @param string $collectionName
      * @return Config
      * @throws PhpfastcacheLogicException
      */
-    public function setCollection(string $collection): Config
+    public function setCollectionName(string $collectionName): Config
     {
-        return $this->setProperty('collection', $collection);
+        return $this->setProperty('collectionName', $collectionName);
     }
+
+    /**
+     * @return string
+     */
+    public function getDatabaseName(): string
+    {
+        return $this->databaseName;
+    }
+
+    /**
+     * @param string $databaseName
+     * @return Config
+     * @throws PhpfastcacheLogicException
+     */
+    public function setDatabaseName(string $databaseName): Config
+    {
+        return $this->setProperty('databaseName', $databaseName);
+    }
+
+
 
     /**
      * @return string|null

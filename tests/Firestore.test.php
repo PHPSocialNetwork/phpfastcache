@@ -29,13 +29,11 @@ $testHelper = new TestHelper('Google Firestore driver');
  * @see https://github.com/googleapis/google-auth-library-php/issues/363
  */
 
-
-
 $config = new FirestoreConfig();
 
 try {
     $config->setItemDetailedDate(true);
-    $config->setCollection('phpfastcache');
+    $config->setCollectionName('phpfastcache');
     $cacheInstance = CacheManager::getInstance('Firestore', $config);
     $testHelper->runCRUDTests($cacheInstance);
 } catch (PhpfastcacheDriverConnectException $e) {

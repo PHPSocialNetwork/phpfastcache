@@ -13,10 +13,8 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Tests\Helper\TestHelper;
 use Phpfastcache\Drivers\Rediscluster\Config as RedisConfig;
-use Redis as RedisClient;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';

@@ -49,6 +49,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
  * @method Void onArangodbCollectionParams(Callable $callable, ?string $callbackName = null)
  * @method Void onDynamodbCreateTable(Callable $callable, ?string $callbackName = null)
  * @method Void onSolrBuildEndpoint(Callable $callable, ?string $callbackName = null)
+ * @method Void onFirestoreClientOptions(Callable $callable, ?string $callbackName = null)
  */
 interface EventManagerInterface
 {

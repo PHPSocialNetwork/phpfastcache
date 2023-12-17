@@ -18,12 +18,15 @@ namespace Phpfastcache\Drivers\Firestore;
 
 use Google\Cloud\Core\Blob as GoogleBlob;
 use Google\Cloud\Core\Timestamp as GoogleTimestamp;
+use Google\Cloud\Firestore\DocumentSnapshot;
 use Google\Cloud\Firestore\FirestoreClient as GoogleFirestoreClient;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
+use Phpfastcache\Event\EventReferenceParameter;
+use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
@@ -37,12 +40,26 @@ class Driver implements AggregatablePoolInterface
 {
     use TaggableCacheItemPoolTrait;
 
+    public const MINIMUM_FIRESTORE_CLIENT_VERSION = '1.35.0';
+
     /**
      * @return bool
      */
     public function driverCheck(): bool
     {
-        return \class_exists(GoogleFirestoreClient::class) && \extension_loaded('grpc');
+        if (!\class_exists(GoogleFirestoreClient::class) || !\extension_loaded('grpc')) {
+            return false;
+        }
+
+        if (!version_compare(GoogleFirestoreClient::VERSION, self::MINIMUM_FIRESTORE_CLIENT_VERSION, '>=')) {
+            throw new PhpfastcacheDriverCheckException(
+                sprintf(
+                    'Firestore client version must be at least %s or greater.',
+                    self::MINIMUM_FIRESTORE_CLIENT_VERSION
+                )
+            );
+        }
+        return true;
     }
 
     /**
@@ -64,7 +81,11 @@ class Driver implements AggregatablePoolInterface
             throw new PhpfastcacheDriverConnectException('The environment configuration GOOGLE_APPLICATION_CREDENTIALS must be set and the JSON file must be readable.');
         }
 
-        $this->instance = new GoogleFirestoreClient();
+        $options = ['database' => $this->getConfig()->getDatabaseName()];
+
+        $this->eventManager->dispatch(Event::FIRESTORE_CLIENT_OPTIONS, $this, new EventReferenceParameter($options));
+
+        $this->instance = new GoogleFirestoreClient($options);
 
         return true;
     }
@@ -75,7 +96,7 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        $this->instance->collection($this->getConfig()->getCollection())
+        $this->instance->collection($this->getConfig()->getCollectionName())
             ->document($item->getKey())
             ->set(
                 $this->driverPreWrap($item),
@@ -92,7 +113,7 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
-        $doc = $this->instance->collection($this->getConfig()->getCollection())
+        $doc = $this->instance->collection($this->getConfig()->getCollectionName())
             ->document($item->getKey());
 
         $snapshotData = $doc->snapshot()->data();
@@ -105,12 +126,57 @@ class Driver implements AggregatablePoolInterface
     }
 
     /**
+     * @return array<int, string>
+     * @throws PhpfastcacheInvalidArgumentException
+     */
+    protected function driverReadAllKeys(string $pattern = ''): iterable
+    {
+        if ($pattern !== '') {
+            throw new PhpfastcacheInvalidArgumentException('Firestore does not support a pattern argument');
+        }
+        $data = [];
+        $documents = $this->instance->collection($this->getConfig()->getCollectionName())
+            ->limit(ExtendedCacheItemPoolInterface::MAX_ALL_KEYS_COUNT)
+            ->documents();
+
+        /** @var DocumentSnapshot[] $documents */
+        foreach ($documents as $document) {
+            $data[] = $document->id();
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param ExtendedCacheItemInterface ...$items
+     * @return array<array<string, mixed>>
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverException
+     * @throws \RedisException
+     */
+    protected function driverReadMultiple(ExtendedCacheItemInterface ...$items): array
+    {
+        $data = [];
+        $keys = $this->getKeys($items);
+        $documents = $this->instance->collection($this->getConfig()->getCollectionName())
+            ->limit(ExtendedCacheItemPoolInterface::MAX_ALL_KEYS_COUNT)
+            ->where(ExtendedCacheItemPoolInterface::DRIVER_KEY_WRAPPER_INDEX, 'in', $keys)
+            ->documents();
+
+        /** @var DocumentSnapshot[] $documents */
+        foreach ($documents as $document) {
+            $data[$document->id()] = $this->decodeFirestoreDocument($document->data());
+        }
+
+        return $data;
+    }
+
+    /**
      * @param ExtendedCacheItemInterface $item
      * @return bool
      */
     protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        $this->instance->collection($this->getConfig()->getCollection())
+        $this->instance->collection($this->getConfig()->getCollectionName())
             ->document($item->getKey())
             ->delete();
 
@@ -122,15 +188,15 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverClear(): bool
     {
-        $batchSize = 100;
-        $collection = $this->instance->collection($this->getConfig()->getCollection());
-        $documents = $collection->limit($batchSize)->documents();
-        while (!$documents->isEmpty()) {
+        $batchSize = $this->getConfig()->getBatchSize();
+        $collection = $this->instance->collection($this->getConfig()->getCollectionName());
+        do {
+            $documents = $collection->limit($batchSize)->documents();
+            /** @var DocumentSnapshot $document */
             foreach ($documents as $document) {
                 $document->reference()->delete();
             }
-            $documents = $collection->limit($batchSize)->documents();
-        }
+        } while (!$documents->isEmpty());
 
         return true;
     }
@@ -160,9 +226,14 @@ class Driver implements AggregatablePoolInterface
 
     public function getStats(): DriverStatistic
     {
+        $info = sprintf(
+            'Firestore client v%s, collection "%s". No additional info provided by Google Firestore',
+            defined($this->instance::class . '::VERSION') ? $this->instance::VERSION : '[unknown version]',
+            $this->getConfig()->getCollectionName(),
+        );
         return (new DriverStatistic())
             ->setData(implode(', ', array_keys($this->itemInstances)))
-            ->setInfo('No info provided by Google Firestore')
+            ->setInfo($info)
             ->setRawData([])
             ->setSize(0);
     }

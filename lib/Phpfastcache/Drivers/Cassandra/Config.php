@@ -44,7 +44,6 @@ class Config extends ConfigurationOption
 
     /**
      * @param string $host
-     * @return self
      * @throws PhpfastcacheLogicException
      */
     public function setHost(string $host): static
@@ -62,7 +61,6 @@ class Config extends ConfigurationOption
 
     /**
      * @param int $port
-     * @return self
      * @throws PhpfastcacheLogicException
      */
     public function setPort(int $port): static
@@ -80,7 +78,6 @@ class Config extends ConfigurationOption
 
     /**
      * @param int $timeout
-     * @return self
      * @throws PhpfastcacheLogicException
      */
     public function setTimeout(int $timeout): static
@@ -98,7 +95,6 @@ class Config extends ConfigurationOption
 
     /**
      * @param string $username
-     * @return self
      * @throws PhpfastcacheLogicException
      */
     public function setUsername(string $username): static
@@ -116,7 +112,6 @@ class Config extends ConfigurationOption
 
     /**
      * @param string $password
-     * @return self
      * @throws PhpfastcacheLogicException
      */
     public function setPassword(string $password): static
@@ -134,7 +129,6 @@ class Config extends ConfigurationOption
 
     /**
      * @param bool $sslEnabled
-     * @return self
      * @throws PhpfastcacheLogicException
      */
     public function setSslEnabled(bool $sslEnabled): static
@@ -152,7 +146,6 @@ class Config extends ConfigurationOption
 
     /**
      * @param bool $sslVerify
-     * @return self
      * @throws PhpfastcacheLogicException
      */
     public function setSslVerify(bool $sslVerify): static
@@ -170,7 +163,6 @@ class Config extends ConfigurationOption
 
     /**
      * @param bool $useLegacyExecutionOptions
-     * @return $this
      * @throws PhpfastcacheLogicException
      */
     public function setUseLegacyExecutionOptions(bool $useLegacyExecutionOptions): static

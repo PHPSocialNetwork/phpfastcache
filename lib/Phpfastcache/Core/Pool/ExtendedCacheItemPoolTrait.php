@@ -46,8 +46,8 @@ trait ExtendedCacheItemPoolTrait
         $this->eventManager->dispatch(Event::CACHE_GET_ALL_ITEMS, $this, new EventReferenceParameter($driverReadAllKeysCallback));
         $keys = $driverReadAllKeysCallback($pattern);
 
-        if ((is_array($keys) && $keys !== []) || is_countable($keys) && count($keys) > 0) {
-            return $this->getItems($keys);
+        if (count($keys) > 0) {
+            return $this->getItems($keys instanceof \Traversable ? iterator_to_array($keys) : $keys);
         }
 
         return [];

@@ -39,7 +39,7 @@ class EventReferenceParameter
             $newType = \gettype($newValue);
             if ($newType !== $currentType) {
                 throw new PhpfastcacheInvalidTypeException(\sprintf(
-                    'You tried to change the variable type from "%s" to "%s" which is not allowed.',
+                    'You tried to change the variable type from "%s" to "%s", which is not allowed.',
                     $currentType,
                     $newType
                 ));

@@ -14,6 +14,8 @@
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Event\Event;
+use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheUnsupportedMethodException;
 use Phpfastcache\Tests\Helper\TestHelper;
@@ -38,7 +40,7 @@ EventManager::getInstance()->on([Event::CACHE_GET_ALL_ITEMS], static function(Ex
         return $callback($pattern);
     });
 });
-$drivers = ['Mongodb', 'Memstatic', 'Redis', 'RedisCluster', 'Solr'];
+$drivers = ['Mongodb', 'Memstatic', 'Redis', 'RedisCluster', 'Solr', 'Firestore'];
 $driversConfigs = ConfigFactory::getDefaultConfigs();
 foreach ($drivers as $i => $driverName) {
     $testHelper->printNoteText(
@@ -49,7 +51,20 @@ foreach ($drivers as $i => $driverName) {
             count($drivers),
         )
     );
-    $poolCache = CacheManager::getInstance($driverName, $driversConfigs[$driverName] ?? null);
+    try {
+        $poolCache = CacheManager::getInstance($driverName, $driversConfigs[$driverName] ?? null);
+    } catch (PhpfastcacheDriverConnectException|PhpfastcacheDriverCheckException $e){
+        $testHelper->assertSkip(
+            sprintf(
+                "<blue>Skipping</blue> <red>%s</red> <blue>against getAllItems() method</blue> (Caught <red>%s</red>)",
+                strtoupper($driverName),
+                $e::class,
+            )
+        );
+        $testHelper->printNewLine();
+        continue;
+    }
+
     $eventFlag = false;
 
     $poolCache->clear();
@@ -99,7 +114,7 @@ foreach ($drivers as $i => $driverName) {
         }
 
     } catch (PhpfastcacheInvalidArgumentException) {
-        $testHelper->assertSkip("Pattern argument unssuported by $driverName driver");
+        $testHelper->assertSkip("Pattern argument unsupported by $driverName driver");
     }
 
     $testHelper->printNewLine(1);

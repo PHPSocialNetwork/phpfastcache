@@ -70,22 +70,28 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverConnect(): bool
     {
-        $gcpId = $this->getConfig()->getSuperGlobalAccessor()('SERVER', 'GOOGLE_CLOUD_PROJECT');
-        $gacPath = $this->getConfig()->getSuperGlobalAccessor()('SERVER', 'GOOGLE_APPLICATION_CREDENTIALS');
+        if ($this->getConfig()->getFirestoreClient()) {
+            $this->instance = $this->getConfig()->getFirestoreClient();
+        } else {
+            $gcpId = $this->getConfig()->getSuperGlobalAccessor()('SERVER', 'GOOGLE_CLOUD_PROJECT');
+            $gacPath = $this->getConfig()->getSuperGlobalAccessor()('SERVER', 'GOOGLE_APPLICATION_CREDENTIALS');
 
-        if (empty($gcpId)) {
-            throw new PhpfastcacheDriverConnectException('The environment configuration GOOGLE_CLOUD_PROJECT must be set');
+            if (empty($gcpId)) {
+                throw new PhpfastcacheDriverConnectException('The environment configuration GOOGLE_CLOUD_PROJECT must be set');
+            }
+
+            if (empty($gacPath) || !\is_readable($gacPath)) {
+                throw new PhpfastcacheDriverConnectException(
+                    'The environment configuration GOOGLE_APPLICATION_CREDENTIALS must be set and the JSON file must be readable.'
+                );
+            }
+
+            $options = ['database' => $this->getConfig()->getDatabaseName()];
+
+            $this->eventManager->dispatch(Event::FIRESTORE_CLIENT_OPTIONS, $this, new EventReferenceParameter($options));
+
+            $this->instance = new GoogleFirestoreClient($options);
         }
-
-        if (empty($gacPath) || !\is_readable($gacPath)) {
-            throw new PhpfastcacheDriverConnectException('The environment configuration GOOGLE_APPLICATION_CREDENTIALS must be set and the JSON file must be readable.');
-        }
-
-        $options = ['database' => $this->getConfig()->getDatabaseName()];
-
-        $this->eventManager->dispatch(Event::FIRESTORE_CLIENT_OPTIONS, $this, new EventReferenceParameter($options));
-
-        $this->instance = new GoogleFirestoreClient($options);
 
         return true;
     }
@@ -171,13 +177,14 @@ class Driver implements AggregatablePoolInterface
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
         $this->instance->collection($this->getConfig()->getCollectionName())
-            ->document($item->getKey())
+            ->document($key)
             ->delete();
 
         return true;

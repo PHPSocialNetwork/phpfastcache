@@ -40,7 +40,7 @@ EventManager::getInstance()->on([Event::CACHE_GET_ALL_ITEMS], static function(Ex
         return $callback($pattern);
     });
 });
-$drivers = ['Mongodb', 'Memstatic', 'Redis', 'RedisCluster', 'Solr', 'Firestore'];
+$drivers = ['Mongodb', 'Memstatic', 'Predis', 'Redis', 'RedisCluster', 'Solr', 'Firestore'];
 $driversConfigs = ConfigFactory::getDefaultConfigs();
 foreach ($drivers as $i => $driverName) {
     $testHelper->printNoteText(
@@ -56,9 +56,10 @@ foreach ($drivers as $i => $driverName) {
     } catch (PhpfastcacheDriverConnectException|PhpfastcacheDriverCheckException $e){
         $testHelper->assertSkip(
             sprintf(
-                "<blue>Skipping</blue> <red>%s</red> <blue>against getAllItems() method</blue> (Caught <red>%s</red>)",
+                "<blue>Skipping</blue> <red>%s</red> <blue>against getAllItems() method</blue> (Caught <red>%s</red>: <yellow>%s</yellow>)",
                 strtoupper($driverName),
                 $e::class,
+                $e->getMessage(),
             )
         );
         $testHelper->printNewLine();

@@ -127,15 +127,15 @@ class Driver implements AggregatablePoolInterface
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
-     * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
 
         try {
-            $this->getCollection()->remove($item->getEncodedKey());
+            $this->getCollection()->remove($encodedKey);
             return true;
         } catch (DocumentNotFoundException) {
             return true;

@@ -89,7 +89,6 @@ trait DriverBaseTrait
             throw new PhpfastcacheDriverConnectException(
                 sprintf(
                     ExtendedCacheItemPoolInterface::DRIVER_CONNECT_FAILURE,
-                    $e::class,
                     $this->getDriverName(),
                     $e->getMessage(),
                     $e->getLine() ?: 'unknown line',

@@ -17,6 +17,7 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Drivers\Files\Driver as FilesDriver;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Psr\Cache\CacheItemInterface;
+use Random\RandomException;
 
 /**
  * Class Driver
@@ -43,10 +44,13 @@ class Driver extends FilesDriver
     }
 
     /**
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
      * @throws PhpfastcacheDriverException
+     * @throws RandomException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
         throw new PhpfastcacheDriverException('Error code found: ' . \bin2hex(\random_bytes(8)));
     }

@@ -170,17 +170,18 @@ class Driver implements AggregatablePoolInterface
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
         $options = [
             'returnOld' => false
         ];
 
         try {
-            $this->documentHandler->removeById($this->getConfig()->getCollection(), $item->getEncodedKey(), null, $options);
+            $this->documentHandler->removeById($this->getConfig()->getCollection(), $encodedKey, null, $options);
             return true;
         } catch (ArangoException) {
             return false;

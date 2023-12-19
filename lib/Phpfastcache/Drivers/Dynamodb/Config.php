@@ -60,11 +60,14 @@ class Config extends ConfigurationOption
     public function setAwsAccessKeyId(?string $awsAccessKeyId): Config
     {
         if ($awsAccessKeyId !== null) {
-            if (!$this->isAllowEnvCredentialOverride()) {
-                throw new PhpfastcacheLogicException('You are not allowed to override AWS environment variables.');
+            if (!getenv('AWS_ACCESS_KEY_ID')) {
+                if (!$this->isAllowEnvCredentialOverride()) {
+                    throw new PhpfastcacheLogicException('You are not allowed to override AWS environment variables.');
+                }
+                \putenv("AWS_ACCESS_KEY_ID=$awsAccessKeyId");
             }
-            \putenv("AWS_ACCESS_KEY_ID=$awsAccessKeyId");
-            return $this->setProperty('awsAccessKeyId', $awsAccessKeyId);
+
+            return $this->setProperty('awsAccessKeyId', getenv('AWS_ACCESS_KEY_ID'));
         }
         return $this;
     }
@@ -85,11 +88,14 @@ class Config extends ConfigurationOption
     public function setAwsSecretAccessKey(?string $awsSecretAccessKey): Config
     {
         if ($awsSecretAccessKey !== null) {
-            if (!$this->isAllowEnvCredentialOverride()) {
-                throw new PhpfastcacheLogicException('You are not allowed to override AWS environment variables.');
+            if (!getenv('AWS_SECRET_ACCESS_KEY')) {
+                if (!$this->isAllowEnvCredentialOverride()) {
+                    throw new PhpfastcacheLogicException('You are not allowed to override AWS environment variables.');
+                }
+                \putenv("AWS_SECRET_ACCESS_KEY=$awsSecretAccessKey");
             }
-            \putenv("AWS_SECRET_ACCESS_KEY=$awsSecretAccessKey");
-            return $this->setProperty('awsSecretAccessKey', $awsSecretAccessKey);
+
+            return $this->setProperty('awsSecretAccessKey', getenv('AWS_SECRET_ACCESS_KEY'));
         }
         return $this;
     }

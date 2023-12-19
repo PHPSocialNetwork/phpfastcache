@@ -16,8 +16,8 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Firestore;
 
+use Google\Cloud\Firestore\FirestoreClient as GoogleFirestoreClient;
 use Phpfastcache\Config\ConfigurationOption;
-use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
@@ -31,6 +31,7 @@ class Config extends ConfigurationOption
     protected ?string $googleApplicationCredential = null;
     protected bool $allowEnvCredentialOverride = false;
     protected string $collectionName = 'phpfastcache';
+    protected ?GoogleFirestoreClient $firestoreClient = null;
 
     /**
      * @see \Google\Cloud\Firestore\FirestoreClient::DEFAULT_DATABASE
@@ -136,11 +137,13 @@ class Config extends ConfigurationOption
     public function setGoogleCloudProject(?string $googleCloudProject): Config
     {
         if ($googleCloudProject !== null) {
-            if (!$this->isAllowEnvCredentialOverride()) {
-                throw new PhpfastcacheLogicException('You are not allowed to override GCP environment variables.');
+            if (!getenv('GOOGLE_CLOUD_PROJECT')) {
+                if (!$this->isAllowEnvCredentialOverride()) {
+                    throw new PhpfastcacheLogicException('You are not allowed to override GCP environment variables.');
+                }
+                \putenv("GOOGLE_CLOUD_PROJECT=$googleCloudProject");
             }
-            \putenv("GOOGLE_CLOUD_PROJECT=$googleCloudProject");
-            return $this->setProperty('googleCloudProject', $googleCloudProject);
+            return $this->setProperty('googleCloudProject', getenv('GOOGLE_CLOUD_PROJECT'));
         }
         return $this;
     }
@@ -161,11 +164,13 @@ class Config extends ConfigurationOption
     public function setGoogleApplicationCredential(?string $googleApplicationCredential): Config
     {
         if ($googleApplicationCredential !== null) {
-            if (!$this->isAllowEnvCredentialOverride()) {
-                throw new PhpfastcacheLogicException('You are not allowed to override GCP environment variables.');
+            if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
+                if (!$this->isAllowEnvCredentialOverride()) {
+                    throw new PhpfastcacheLogicException('You are not allowed to override GCP environment variables.');
+                }
+                \putenv("GOOGLE_APPLICATION_CREDENTIALS=$googleApplicationCredential");
             }
-            \putenv("GOOGLE_APPLICATION_CREDENTIALS=$googleApplicationCredential");
-            return $this->setProperty('googleApplicationCredential', $googleApplicationCredential);
+            return $this->setProperty('googleApplicationCredential', getenv('GOOGLE_APPLICATION_CREDENTIALS'));
         }
         return $this;
     }
@@ -185,5 +190,23 @@ class Config extends ConfigurationOption
     public function setAllowEnvCredentialOverride(bool $allowEnvCredentialOverride): Config
     {
         return $this->setProperty('allowEnvCredentialOverride', $allowEnvCredentialOverride);
+    }
+
+    /**
+     * @return GoogleFirestoreClient|null
+     */
+    public function getFirestoreClient(): ?GoogleFirestoreClient
+    {
+        return $this->firestoreClient;
+    }
+
+    /**
+     * @param GoogleFirestoreClient|null $firestoreClient
+     * @return Config
+     * @throws PhpfastcacheLogicException
+     */
+    public function setRedisClient(?GoogleFirestoreClient $firestoreClient): Config
+    {
+        return $this->setProperty('firestoreClient', $firestoreClient);
     }
 }

@@ -72,10 +72,36 @@ trait DriverPoolAbstractTrait
     abstract protected function driverWrite(ExtendedCacheItemInterface $item): bool;
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param ExtendedCacheItemInterface ...$item
+     * @return bool
+     * @throws PhpfastcacheUnsupportedMethodException
+     */
+    protected function driverWriteMultiple(ExtendedCacheItemInterface ...$item): bool
+    {
+        /**
+         * @todo Implement bulk writes to be for v10:
+         * For methods commit() and saveMultiple()
+         */
+        throw new PhpfastcacheUnsupportedMethodException();
+    }
+
+
+    /**
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
      */
-    abstract protected function driverDelete(ExtendedCacheItemInterface $item): bool;
+    abstract protected function driverDelete(string $key, string $encodedKey): bool;
+
+    /**
+     * @param string[] $keys
+     * @return bool
+     * @throws PhpfastcacheUnsupportedMethodException
+     */
+    protected function driverDeleteMultiple(array $keys): bool
+    {
+        throw new PhpfastcacheUnsupportedMethodException();
+    }
 
     /**
      * @return bool

@@ -242,14 +242,13 @@ class Driver implements AggregatablePoolInterface
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
-     * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
-
-        $deletionResult = $this->getCollection()->deleteOne([self::MONGODB_INDEX_KEY =>  $this->getMongoDbItemKey($item)]);
+        $deletionResult = $this->getCollection()->deleteOne([self::MONGODB_INDEX_KEY =>  $this->getMongoDbKey($encodedKey)]);
 
         return $deletionResult->isAcknowledged();
     }
@@ -389,7 +388,12 @@ class Driver implements AggregatablePoolInterface
 
     protected function getMongoDbItemKey(ExtendedCacheItemInterface $item): string
     {
-        return $this->documentPrefix . $item->getEncodedKey();
+        return $this->getMongoDbKey($item->getEncodedKey());
+    }
+
+    protected function getMongoDbKey(string $encodedKey): string
+    {
+        return $this->documentPrefix . $encodedKey;
     }
 
     /**

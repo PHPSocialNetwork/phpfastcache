@@ -391,6 +391,7 @@ class TestHelper
         }
 
         $cacheKey = 'cache_key_' . bin2hex(random_bytes(8) . '_' . random_int(100, 999));
+        $cacheKey2 = 'cache_key_' . bin2hex(random_bytes(8) . '_' . random_int(100, 999));
         $cacheValue = 'cache_data_' . random_int(1000, 999999);
         $cacheTag = 'cache_tag_' . bin2hex(random_bytes(8) . '_' . random_int(100, 999));
         $cacheTag2 = 'cache_tag_' . bin2hex(random_bytes(8) . '_' . random_int(100, 999));
@@ -540,6 +541,14 @@ class TestHelper
                 $this->assertFail('The cache item still exists in pool.');
                 return;
             }
+            unset($cacheItem);
+
+            $cacheItems = $pool->getItems([$cacheKey, $cacheKey2]);
+            foreach ($cacheItems as $cacheItem) {
+                $cacheItem->set(str_shuffle($cacheValue));
+                $pool->save($cacheItem);
+            }
+            $pool->deleteItems(array_keys($cacheItems));
         }
 
         $this->printInfoText(

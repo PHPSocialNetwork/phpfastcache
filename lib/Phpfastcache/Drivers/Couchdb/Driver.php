@@ -131,7 +131,12 @@ HELP;
 
     protected function getCouchDbItemKey(ExtendedCacheItemInterface $item): string
     {
-        return 'pfc_' . $item->getEncodedKey();
+        return $this->getCouchDbKey($item->getEncodedKey());
+    }
+
+    protected function getCouchDbKey(string $encodedKey): string
+    {
+        return 'pfc_' . $encodedKey;
     }
 
     /**
@@ -203,16 +208,16 @@ HELP;
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
      * @throws PhpfastcacheDriverException
-     * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
 
         try {
-            $this->instance->deleteDocument($this->getCouchDbItemKey($item), $this->getLatestDocumentRevision($this->getCouchDbItemKey($item)));
+            $this->instance->deleteDocument($this->getCouchDbKey($encodedKey), $this->getLatestDocumentRevision($this->getCouchDbKey($encodedKey)));
         } catch (CouchDBException $e) {
             throw new PhpfastcacheDriverException('Got error while trying to delete a document: ' . $e->getMessage(), 0, $e);
         }

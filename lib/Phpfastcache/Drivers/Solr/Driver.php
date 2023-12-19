@@ -263,14 +263,15 @@ class Driver implements AggregatablePoolInterface
 
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
         $update = $this->instance->createUpdate();
 
-        $update->addDeleteQuery($this->getSolrField(self::SOLR_DEFAULT_ID_FIELD) . ':' . $item->getEncodedKey());
+        $update->addDeleteQuery($this->getSolrField(self::SOLR_DEFAULT_ID_FIELD) . ':' . $encodedKey);
         $update->addDeleteQuery($this->getSolrField(self::SOLR_DISCRIMINATOR_FIELD) . ':' . self::SOLR_DISCRIMINATOR_VALUE);
         $update->addCommit();
 

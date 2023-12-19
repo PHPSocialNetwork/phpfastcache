@@ -368,7 +368,9 @@ trait TaggableCacheItemPoolTrait
      */
     protected function cleanItemTags(ExtendedCacheItemInterface $item): void
     {
-        $this->driverWriteTags($item->removeTags($item->getTags()));
+        if (!empty($item->getTags()) || !empty($item->getRemovedTags())) {
+            $this->driverWriteTags($item->removeTags($item->getTags()));
+        }
     }
 
     /**

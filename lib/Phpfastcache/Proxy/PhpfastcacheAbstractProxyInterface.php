@@ -27,6 +27,7 @@ use Psr\Cache\CacheItemInterface;
 /**
  * @method ExtendedCacheItemInterface getItem(string $key) Retrieve an item and returns an empty item if not found
  * @method ExtendedCacheItemInterface[] getItems(string[] $keys) Retrieve an item and returns an empty item if not found
+ * @method ExtendedCacheItemInterface[] getAllItems(string $pattern = ''): Retrieve all items int the cache with a hard-limit of 9999
  * @method bool hasItem(string $key) Tests if an item exists
  * @method static string getConfigClass()
  * @method ConfigurationOption getItemClass()

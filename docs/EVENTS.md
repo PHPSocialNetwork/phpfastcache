@@ -89,6 +89,7 @@ The order of execution of the events is always the following:
         - *ExtendedCacheItemPoolInterface::getItems()*
         - *ExtendedCacheItemPoolInterface::getItemsByTag()*
         - *ExtendedCacheItemPoolInterface::getItemsAsJsonString()*
+
 - onCacheGetItems(*Callable* **$callback**)
     - **Callback arguments**
         - *ExtendedCacheItemPoolInterface* **$itemPool**
@@ -102,6 +103,7 @@ The order of execution of the events is always the following:
         - *ExtendedCacheItemPoolInterface::getItems()*
         - *ExtendedCacheItemPoolInterface::getItemsByTag()*
         - *ExtendedCacheItemPoolInterface::getItemsAsJsonString()*
+
 - onCacheDeleteItem(*Callable* **$callback**)
     - **Callback arguments**
         - *ExtendedCacheItemPoolInterface* **$itemPool**
@@ -109,9 +111,26 @@ The order of execution of the events is always the following:
     - **Scope**
         - ItemPool
     - **Description**
-        - Allow you to manipulate an item after being deleted. :exclamation: **Caution** The provided item is in pool detached-state.
+        - Allow you to manipulate an item after being deleted (this event is not fired if `deleteItems()` is called). :exclamation: **Caution** The provided item is in pool detached-state.
     - **Risky Circular Methods**
         - *ExtendedCacheItemPoolInterface::deleteItem()*
+        - *ExtendedCacheItemPoolInterface::deleteItems()*
+        - *ExtendedCacheItemPoolInterface::getItem()*
+        - *ExtendedCacheItemPoolInterface::getItems()*
+        - *ExtendedCacheItemPoolInterface::getItemsByTag()*
+        - *ExtendedCacheItemPoolInterface::getItemsAsJsonString()*
+
+- onCacheDeleteItems(*Callable* **$callback**)
+    - **Callback arguments**
+        - *ExtendedCacheItemPoolInterface* **$itemPool**
+        - *ExtendedCacheItemInterface[]* **$items**
+    - **Scope**
+        - ItemPool
+    - **Description**
+        - Allow you to manipulate multiple items after being deleted. :exclamation: **Caution** The provided item is in pool detached-state.
+    - **Risky Circular Methods**
+        - *ExtendedCacheItemPoolInterface::deleteItem()*
+        - *ExtendedCacheItemPoolInterface::deleteItems()*
         - *ExtendedCacheItemPoolInterface::getItem()*
         - *ExtendedCacheItemPoolInterface::getItems()*
         - *ExtendedCacheItemPoolInterface::getItemsByTag()*
@@ -203,6 +222,7 @@ The order of execution of the events is always the following:
         - *ExtendedCacheItemPoolInterface::getItems()*
         - *ExtendedCacheItemPoolInterface::getItemsByTag()*
         - *ExtendedCacheItemPoolInterface::getItemsAsJsonString()*
+
 - onCacheDriverChecked(*Callable* **$callback**)
     - **Callback arguments**
         - *ExtendedCacheItemPoolInterface* **$itemPool**

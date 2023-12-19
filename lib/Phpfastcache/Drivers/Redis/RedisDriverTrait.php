@@ -82,13 +82,22 @@ trait RedisDriverTrait
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
-     * @throws PhpfastcacheInvalidArgumentException
+     * @throws \RedisException
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
+        return (bool) $this->instance->del($key);
+    }
 
-        return (bool) $this->instance->del($item->getKey());
+    /**
+     * @param string[] $keys
+     * @return bool
+     */
+    protected function driverDeleteMultiple(array $keys): bool
+    {
+        return (bool) $this->instance->del(...$keys);
     }
 }

@@ -33,6 +33,7 @@ class Driver implements AggregatablePoolInterface
 {
     use RedisDriverTrait, TaggableCacheItemPoolTrait {
         RedisDriverTrait::driverReadMultiple insteadof TaggableCacheItemPoolTrait;
+        RedisDriverTrait::driverDeleteMultiple insteadof TaggableCacheItemPoolTrait;
     }
 
     /**

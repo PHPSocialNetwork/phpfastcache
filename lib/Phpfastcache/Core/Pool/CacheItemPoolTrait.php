@@ -163,6 +163,7 @@ trait CacheItemPoolTrait
                         } else {
                             $item->expiresAfter((int) abs($this->getConfig()->getDefaultTtl()));
                         }
+                        $item->isHit() ? $this->getIO()->incReadHit() : $this->getIO()->incReadMiss();
                     }
                 }
             } else {
@@ -316,15 +317,39 @@ trait CacheItemPoolTrait
      */
     public function deleteItems(array $keys): bool
     {
-        $return = true;
-        foreach ($keys as $key) {
-            $result = $this->deleteItem($key);
-            if ($result !== true) {
-                $return = false;
+        if (count($keys) > 1) {
+            $return = true;
+            try {
+                $items = $this->getItems($keys);
+                $return = $this->driverDeleteMultiple($keys);
+                foreach ($items as $item) {
+                    $item->setHit(false);
+
+                    if (!\str_starts_with($item->getKey(), TaggableCacheItemPoolInterface::DRIVER_TAGS_KEY_PREFIX)) {
+                        $this->cleanItemTags($item);
+                    }
+                }
+                $this->getIO()->incWriteHit();
+                $this->eventManager->dispatch(Event::CACHE_DELETE_ITEMS, $this, $items);
+                $this->deregisterItems($keys);
+            } catch (PhpfastcacheUnsupportedMethodException) {
+                foreach ($keys as $key) {
+                    $result = $this->deleteItem($key);
+                    if ($result !== true) {
+                        $return = false;
+                    }
+                }
             }
+
+            return $return;
         }
 
-        return $return;
+        $index = array_key_first($keys);
+        if ($index !== null) {
+            return $this->deleteItem($keys[$index]);
+        }
+
+        return false;
     }
 
     /**
@@ -338,7 +363,8 @@ trait CacheItemPoolTrait
     public function deleteItem(string $key): bool
     {
         $item = $this->getItem($key);
-        if ($item->isHit() && $this->driverDelete($item)) {
+        if ($item->isHit()) {
+            $result = $this->driverDelete($item->getKey(), $item->getEncodedKey());
             $item->setHit(false);
             $this->getIO()->incWriteHit();
 
@@ -357,7 +383,7 @@ trait CacheItemPoolTrait
                 $this->cleanItemTags($item);
             }
 
-            return true;
+            return $result;
         }
 
         return false;
@@ -397,8 +423,8 @@ trait CacheItemPoolTrait
             $return = true;
             foreach ($this->deferredList as $key => $item) {
                 $result = $this->save($item);
+                unset($this->deferredList[$key]);
                 if ($result !== true) {
-                    unset($this->deferredList[$key]);
                     $return = $result;
                 }
             }
@@ -495,6 +521,21 @@ trait CacheItemPoolTrait
     }
 
     /**
+     * @param string[] $itemKeys
+     * @internal This method de-register multiple items from $this->itemInstances
+     */
+    protected function deregisterItems(array $itemKeys): static
+    {
+        $this->itemInstances = array_diff_key($this->itemInstances, array_flip($itemKeys));
+
+        if (\gc_enabled()) {
+            \gc_collect_cycles();
+        }
+
+        return $this;
+    }
+
+    /**
      * @throws PhpfastcacheLogicException
      */
     public function attachItem(CacheItemInterface $item): static
@@ -547,7 +588,7 @@ trait CacheItemPoolTrait
              * As we MUST return an item in any
              * way, we do not de-register here
              */
-            $this->driverDelete($item);
+            $this->driverDelete($item->getKey(), $item->getEncodedKey());
 
             /**
              * Reset the Item

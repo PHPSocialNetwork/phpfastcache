@@ -89,14 +89,12 @@ class Driver implements ExtendedCacheItemPoolInterface
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
-     * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
-
-        $key = $item->getKey();
         if (isset($this->staticStack[$key])) {
             unset($this->staticStack[$key]);
             return true;

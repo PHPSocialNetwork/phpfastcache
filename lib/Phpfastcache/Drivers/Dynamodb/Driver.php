@@ -146,18 +146,19 @@ class Driver implements AggregatablePoolInterface
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
-        $key = $this->marshaler->marshalItem([
-            $this->getConfig()->getPartitionKey() => $item->getKey()
+        $dynKey = $this->marshaler->marshalItem([
+            $this->getConfig()->getPartitionKey() => $key
         ]);
 
         $result = $this->instance->deleteItem([
             'TableName' => $this->getConfig()->getTable(),
-            'Key' => $key
+            'Key' => $dynKey
         ]);
 
         return ($result->get('@metadata')['statusCode'] ?? null) === 200;

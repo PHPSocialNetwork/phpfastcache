@@ -25,6 +25,7 @@ class Event implements EventInterface
     public const CACHE_GET_ITEM = 'CacheGetItem';
     public const CACHE_GET_ITEMS = 'CacheGetItems';
     public const CACHE_DELETE_ITEM = 'CacheDeleteItem';
+    public const CACHE_DELETE_ITEMS = 'CacheDeleteItems';
     public const CACHE_SAVE_ITEM = 'CacheSaveItem';
     public const CACHE_SAVE_MULTIPLE_ITEMS = 'CacheSaveMultipleItems';
     public const CACHE_SAVE_DEFERRED_ITEM = 'CacheSaveDeferredItem';

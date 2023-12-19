@@ -18,6 +18,7 @@ local.properties
 .idea
 .gitignore
 .idea/
+.run/
 
 # External tool builders
 .externalToolBuilders/

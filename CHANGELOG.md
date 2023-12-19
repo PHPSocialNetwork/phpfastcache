@@ -12,6 +12,7 @@
   - Configuration methods`ConfigurationOption::isPreventCacheSlams()`, `ConfigurationOption::setPreventCacheSlams()`, `ConfigurationOption::getCacheSlamsTimeout()`, `ConfigurationOption::setCacheSlamsTimeout()` are deprecated. ([See changes](CHANGELOG_API.md)).
   - Fixed #907 // Internal "driver decode()" method will now throw an if the string data looks corrupted.
   - Internal: Implemented multiple keys fetch (*if supported by the backend*) to improve the performances behind all `getItems()` calls. Currently only supported in some backends, but it may evolve in the future.
+  - Internal: Implemented multiple keys delete (*if supported by the backend*) to improve the performances behind all `deleteItems()` calls. Currently only supported in some backends, but it may evolve in the future.
 - __Misc__
   - Fixed multiple code typo & updated README.md
 

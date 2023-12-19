@@ -95,15 +95,16 @@ class Driver implements AggregatablePoolInterface
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
      * @throws PhpfastcacheIOException
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
 
-        $filePath = $this->getFilePath($item->getKey(), true);
+        $filePath = $this->getFilePath($key, true);
         if (\file_exists($filePath) && @\unlink($filePath)) {
             \clearstatcache(true, $filePath);
             $dir = \dirname($filePath);

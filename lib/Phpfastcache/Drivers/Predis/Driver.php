@@ -26,6 +26,7 @@ use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Predis\Client as PredisClient;
+use Predis\Collection\Iterator as PredisIterator;
 use Predis\Connection\ConnectionException as PredisConnectionException;
 
 /**
@@ -151,6 +152,37 @@ HELP;
         return $this->decode($val);
     }
 
+
+    /**
+     * @param ExtendedCacheItemInterface ...$items
+     * @return array<array<string, mixed>>
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverException
+     * @throws \RedisException
+     */
+    protected function driverReadMultiple(ExtendedCacheItemInterface ...$items): array
+    {
+        $keys = $this->getKeys($items);
+
+        return array_combine($keys, array_map(
+            fn($val) => $val ? $this->decode($val) : null,
+            $this->instance->mget($keys)
+        ));
+    }
+
+    /**
+     * @return array<int, string>
+     * @throws \RedisException
+     */
+    protected function driverReadAllKeys(string $pattern = '*'): iterable
+    {
+        $keys = [];
+        foreach (new PredisIterator\Keyspace($this->instance, $pattern, ExtendedCacheItemPoolInterface::MAX_ALL_KEYS_COUNT) as $key) {
+            $keys[] = $key;
+        }
+        return $keys;
+    }
+
+
     /**
      * @param ExtendedCacheItemInterface $item
      * @return mixed
@@ -174,14 +206,22 @@ HELP;
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
-     * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
+        return (bool)$this->instance->del([$key]);
+    }
 
-        return (bool)$this->instance->del([$item->getKey()]);
+    /**
+     * @param string[] $keys
+     * @return bool
+     */
+    protected function driverDeleteMultiple(array $keys): bool
+    {
+        return (bool) $this->instance->del(...$keys);
     }
 
     /**

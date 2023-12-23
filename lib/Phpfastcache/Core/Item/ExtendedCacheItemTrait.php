@@ -77,15 +77,8 @@ trait ExtendedCacheItemTrait
      */
     public function getEncodedKey(): string
     {
-        // Only calculate the encoded key on demand to save resources
         if (!isset($this->encodedKey)) {
-            $keyHashFunction = $this->driver->getConfig()->getDefaultKeyHashFunction();
-
-            if ($keyHashFunction) {
-                $this->encodedKey = $keyHashFunction($this->getKey());
-            } else {
-                $this->encodedKey = $this->getKey();
-            }
+            $this->encodedKey = $this->driver->getEncodedKey($this->getKey());
         }
 
         return $this->encodedKey;

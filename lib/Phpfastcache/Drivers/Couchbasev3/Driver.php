@@ -22,6 +22,7 @@ use Couchbase\Cluster;
 use Couchbase\ClusterOptions;
 use Couchbase\Collection;
 use Couchbase\DocumentNotFoundException;
+use Couchbase\GetResult;
 use Couchbase\Scope;
 use Couchbase\UpsertOptions;
 use DateTimeInterface;
@@ -35,6 +36,8 @@ use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
+use Phpfastcache\Exceptions\PhpfastcacheUnsupportedException;
+use Phpfastcache\Exceptions\PhpfastcacheUnsupportedMethodException;
 
 /**
  * @property Cluster $instance Instance of driver service
@@ -107,6 +110,33 @@ class Driver implements AggregatablePoolInterface
 
     /**
      * @param ExtendedCacheItemInterface $item
+     * @return ?array<string, mixed>
+     */
+    protected function driverReadMultiple(ExtendedCacheItemInterface ...$items): array
+    {
+        try {
+            $keys = $this->getKeys($items, true);
+            $results = [];
+            /**
+             * CouchbaseBucket::get() returns a GetResult interface
+             */
+            /** @var GetResult $document */
+            foreach ($this->getCollection()->getMulti($this->getKeys($items, true)) as $document) {
+                $content = $document->content();
+                if ($content) {
+                    $decodedDocument = $this->decodeDocument($content);
+                    $results[$decodedDocument[ExtendedCacheItemPoolInterface::DRIVER_KEY_WRAPPER_INDEX]] = $this->decodeDocument($content);
+                }
+            }
+
+            return $results;
+        } catch (DocumentNotFoundException) {
+            return [];
+        }
+    }
+
+    /**
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
@@ -135,8 +165,7 @@ class Driver implements AggregatablePoolInterface
     {
 
         try {
-            $this->getCollection()->remove($encodedKey);
-            return true;
+            return $this->getCollection()->remove($encodedKey)->mutationToken() !== null;
         } catch (DocumentNotFoundException) {
             return true;
         } catch (CouchbaseException) {
@@ -144,12 +173,39 @@ class Driver implements AggregatablePoolInterface
         }
     }
 
+
+    /**
+     * @param string[] $keys
+     * @return bool
+     */
+    protected function driverDeleteMultiple(array $keys): bool
+    {
+        try {
+            $this->getCollection()->removeMulti(array_map(fn(string $key) => $this->getEncodedKey($key), $keys));
+            return true;
+        } catch (CouchbaseException) {
+            return false;
+        }
+    }
+
+
     /**
      * @return bool
+     * @throws PhpfastcacheUnsupportedMethodException
      */
     protected function driverClear(): bool
     {
+        if (!$this->instance->buckets()->getBucket($this->getConfig()->getBucketName())->flushEnabled()) {
+            $this->instance->buckets()->getBucket($this->getConfig()->getBucketName())->enableFlush(true);
+            if (!$this->instance->buckets()->getBucket($this->getConfig()->getBucketName())->flushEnabled()) {
+                throw new PhpfastcacheUnsupportedMethodException(
+                    'Flushing operation is not enabled on your Bucket. See https://docs.couchbase.com/server/current/manage/manage-buckets/flush-bucket.html'
+                );
+            }
+        }
+
         $this->instance->buckets()->flush($this->getConfig()->getBucketName());
+
         return true;
     }
 

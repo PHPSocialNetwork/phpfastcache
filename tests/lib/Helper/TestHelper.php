@@ -18,6 +18,7 @@ namespace Phpfastcache\Tests\Helper;
 use League\CLImate\CLImate;
 use Phpfastcache\Api;
 use Phpfastcache\Config\ConfigurationOptionInterface;
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
@@ -543,12 +544,20 @@ class TestHelper
             }
             unset($cacheItem);
 
+            $this->printInfoText('Testing deleting multiple keys at once.');
             $cacheItems = $pool->getItems([$cacheKey, $cacheKey2]);
             foreach ($cacheItems as $cacheItem) {
                 $cacheItem->set(str_shuffle($cacheValue));
                 $pool->save($cacheItem);
             }
             $pool->deleteItems(array_keys($cacheItems));
+
+            if(count(array_filter(array_map(fn(ExtendedCacheItemInterface $item) => $item->isHit(), $pool->getItems([$cacheKey, $cacheKey2])))) === 0) {
+                $this->assertPass('The cache items does no longer exists in pool.');
+            } else {
+                $this->assertFail('The cache items still exists in pool.');
+                return;
+            }
         }
 
         $this->printInfoText(

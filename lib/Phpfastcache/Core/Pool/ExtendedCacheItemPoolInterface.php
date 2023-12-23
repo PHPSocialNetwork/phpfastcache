@@ -78,6 +78,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
     public static function getItemClass(): string;
 
     /**
+     * @param string $key
+     * @return string
+     */
+    public function getEncodedKey(string $key): string;
+
+    /**
      * @return ConfigurationOptionInterface
      */
     public function getConfig(): ConfigurationOptionInterface;

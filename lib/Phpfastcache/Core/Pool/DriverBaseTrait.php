@@ -142,6 +142,24 @@ trait DriverBaseTrait
         return self::$cacheItemClasses[static::class];
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function getEncodedKey(string $key): string
+    {
+        $keyHashFunction = $this->getConfig()->getDefaultKeyHashFunction();
+
+        if ($keyHashFunction) {
+            if (\is_callable($keyHashFunction)) {
+                return $keyHashFunction($key);
+            }
+            throw new PhpfastcacheLogicException('Unable to build the encoded key (defaultKeyHashFunction is not callable)');
+        }
+
+        return $key;
+    }
+
+
 
     /**
      * @param ExtendedCacheItemInterface $item

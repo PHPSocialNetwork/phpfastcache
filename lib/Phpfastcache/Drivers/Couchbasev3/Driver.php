@@ -110,12 +110,11 @@ class Driver implements AggregatablePoolInterface
 
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return ?array<string, mixed>
+     * @return array<array<string, mixed>>
      */
     protected function driverReadMultiple(ExtendedCacheItemInterface ...$items): array
     {
         try {
-            $keys = $this->getKeys($items, true);
             $results = [];
             /**
              * CouchbaseBucket::get() returns a GetResult interface
@@ -197,6 +196,7 @@ class Driver implements AggregatablePoolInterface
     {
         if (!$this->instance->buckets()->getBucket($this->getConfig()->getBucketName())->flushEnabled()) {
             $this->instance->buckets()->getBucket($this->getConfig()->getBucketName())->enableFlush(true);
+            /** @phpstan-ignore-next-line */
             if (!$this->instance->buckets()->getBucket($this->getConfig()->getBucketName())->flushEnabled()) {
                 throw new PhpfastcacheUnsupportedMethodException(
                     'Flushing operation is not enabled on your Bucket. See https://docs.couchbase.com/server/current/manage/manage-buckets/flush-bucket.html'

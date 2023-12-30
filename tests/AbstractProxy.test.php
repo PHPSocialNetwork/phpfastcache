@@ -21,7 +21,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('phpfastcacheAbstractProxy class');
 $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 
-$myCustomClass = new class($defaultDriver) extends PhpfastcacheAbstractProxy{};
-
-$testHelper->runCRUDTests($myCustomClass);
+$testHelper->runCRUDTests(
+    new class($defaultDriver) extends PhpfastcacheAbstractProxy{}
+);
 $testHelper->terminateTest();

@@ -103,6 +103,7 @@ class EventManager implements EventManagerInterface
     /**
      * @param callable $callback
      * @param string $callbackName
+     * @throws PhpfastcacheEventManagerException
      */
     public function onEveryEvents(callable $callback, string $callbackName): void
     {
@@ -116,8 +117,11 @@ class EventManager implements EventManagerInterface
     /**
      * @throws PhpfastcacheEventManagerException
      */
-    public function on(array $events, callable $callback): void
+    public function on(array|string $events, callable $callback): void
     {
+        if (is_string($events)) {
+            $events = [$events];
+        }
         foreach ($events as $event) {
             if (!\preg_match('#^([a-zA-Z])*$#', $event)) {
                 throw new PhpfastcacheEventManagerException(\sprintf('Invalid event name "%s"', $event));
@@ -187,3 +191,7 @@ class EventManager implements EventManagerInterface
         return $this;
     }
 }
+
+// phpcs:disable
+\class_alias(EventManager::class, PhpfastcacheEventManager::class); // @phpstan-ignore-line
+// phpcs:enable

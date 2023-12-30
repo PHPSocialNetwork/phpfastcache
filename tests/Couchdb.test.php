@@ -16,6 +16,7 @@ use Phpfastcache\CacheManager;
 use Phpfastcache\Drivers\Couchdb\Config as CouchdbConfig;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Tests\Helper\TestHelper;
+use Phpfastcache\Tests\Config\ConfigFactory;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -31,7 +32,7 @@ try {
         $testHelper->printDebugText('Unable to connect to Couchdb as an anonymous, trying with default credential...');
         $config->setUsername('admin');
         $config->setPassword('travis');
-        $cacheInstance = CacheManager::getInstance('Couchdb', $config);
+        $cacheInstance = CacheManager::getInstance('Couchdb', ConfigFactory::getDefaultConfig('Couchdb'));
     } catch (PhpfastcacheDriverConnectException $e) {
         $testHelper->assertSkip('Couchdb server unavailable: ' . $e->getMessage());
         $testHelper->terminateTest();

@@ -34,9 +34,7 @@ use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
-use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
-use Psr\Cache\CacheItemInterface;
 
 /**
  * @property Client $instance Instance of driver service
@@ -176,11 +174,8 @@ class Driver implements AggregatablePoolInterface
         return $driverArrays;
     }
 
-
     /**
      * @return array<int, string>
-     * @throws \RedisException
-     * @throws PhpfastcacheInvalidTypeException
      */
     protected function driverReadAllKeys(string $pattern = ''): iterable
     {

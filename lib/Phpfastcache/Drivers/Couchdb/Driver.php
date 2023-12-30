@@ -24,6 +24,7 @@ use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
+use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
@@ -95,13 +96,16 @@ HELP;
         $url .= ":{$clientConfig->getPort()}";
         $url .= '/' . \urlencode($this->getDatabaseName());
 
-        $this->instance = CouchDBClient::create(
-            [
-                'dbname' => $this->getDatabaseName(),
-                'url' => $url,
-                'timeout' => $clientConfig->getTimeout(),
-            ]
-        );
+        $options = [
+            'dbname' => $this->getDatabaseName(),
+            'url' => $url,
+            'timeout' => $clientConfig->getTimeout(),
+            'headers' => []
+        ];
+
+        $this->eventManager->dispatch(Event::COUCHDB_CREATE_OPTIONS, $this, new EventReferenceParameter($options));
+
+        $this->instance = CouchDBClient::create($options);
 
         $this->createDatabase();
 
@@ -165,10 +169,65 @@ HELP;
     }
 
     /**
+     * @param ExtendedCacheItemInterface ...$items
+     * @return array<array<string, mixed>>
+     * @throws PhpfastcacheDriverException
+     */
+    protected function driverReadMultiple(ExtendedCacheItemInterface ...$items): array
+    {
+        $response = $this->instance->findDocuments(
+            array_map(
+                fn(string $key) => $this->getCouchDbKey($key),
+                $this->getKeys($items, true)
+            )
+        );
+
+        if ($response->status === 404 || empty($response->body['rows'])) {
+            return [];
+        }
+
+        if ($response->status === 200) {
+            $driverArrays = [];
+            foreach ($response->body['rows'] as $row) {
+                if (isset($row['doc'])) {
+                    $doc = $this->decodeDocument($row['doc']);
+                    $driverArrays[$doc[self::DRIVER_KEY_WRAPPER_INDEX]] = $doc;
+                }
+            }
+            return $driverArrays;
+        }
+
+        throw new PhpfastcacheDriverException('Got unexpected HTTP status: ' . $response->status);
+    }
+
+    /**
+     * @return array<int, string>
+     * @throws PhpfastcacheDriverException
+     * @throws PhpfastcacheInvalidArgumentException
+     */
+    protected function driverReadAllKeys(string $pattern = ''): iterable
+    {
+        if ($pattern !== '') {
+            $this->throwUnsupportedDriverReadAllPattern();
+        }
+
+        $response = $this->instance->allDocs(ExtendedCacheItemPoolInterface::MAX_ALL_KEYS_COUNT);
+
+        if ($response->status === 404 || empty($response->body['rows'])) {
+            return [];
+        }
+
+        if ($response->status === 200) {
+            return array_map(static fn(array $row) => $row['doc'][self::DRIVER_KEY_WRAPPER_INDEX], $response->body['rows']);
+        }
+
+        throw new PhpfastcacheDriverException('Got unexpected HTTP status: ' . $response->status);
+    }
+
+    /**
      * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheDriverException
-     * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool

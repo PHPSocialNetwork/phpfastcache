@@ -32,9 +32,9 @@ class CacheContract
     /**
      * @throws InvalidArgumentException
      */
-    public function get(string $cacheKey, callable $callback, DateInterval|int $expiresAfter = null): mixed
+    public function get(string|\Stringable $cacheKey, callable $callback, DateInterval|int $expiresAfter = null): mixed
     {
-        $cacheItem = $this->cacheInstance->getItem($cacheKey);
+        $cacheItem = $this->cacheInstance->getItem((string) $cacheKey);
 
         if (!$cacheItem->isHit()) {
             /*

@@ -37,13 +37,13 @@ $cacheValue = (new CacheContract($cacheInstance))->get($cacheKey, static functio
         $testHelper->assertFail('The callback has not received the cache item as a parameter (introduced in 8.0.6).');
     }
     /**
-     * No parameter are passed
+     * No parameters are passed
      * to this closure
      */
     $testHelper->printText('Entering in closure as the cache item does not come from the cache backend.');
 
     /**
-     * Here's your database/webservice/etc stuff
+     * Here's your database/webservice/etc. stuff
      */
 
     return $RandomCacheValue . '-1337';

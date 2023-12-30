@@ -5,13 +5,14 @@
     "keywords": ["abstract", "cache","caching","php cache","mysql cache","apc","apcu","arangodb","dynamodb","firestore","memcache","memcached","wincache","files cache","pdo cache","cache class","redis","redis cluster","predis","cookie", "mongodb", "cassandra", "couchdb", "couchbase", "LevelDb", "Solr", "Ssdb", "Wincache", "xcache","zend","zend disk cache","zend memory cache","zend data cache","zend server"],
     "homepage": "https://www.phpfastcache.com",
     "license": "MIT",
+    "readme": "README.md",
     "minimum-stability": "stable",
     "authors": [
             {
                 "name": "Georges.L",
                 "email": "contact@geolim4.com",
                 "homepage": "https://github.com/Geolim4",
-                "role": "Actual Project Manager/Developer"
+                "role": "Project Manager"
             },
             {
                 "name": "Contributors",
@@ -23,7 +24,16 @@
         "psr/cache": "^2.0||^3.0",
         "psr/simple-cache": "^2.0||^3.0",
         "ext-mbstring": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "doctrine/couchdb": "dev-master",
+        "phpfastcache/phpssdb": "~1.2",
+        "predis/predis": "~1.1",
+        "mongodb/mongodb": "~1.9",
+        "triagens/arangodb": "~3.8",
+        "aws/aws-sdk-php": "~3.2",
+        "google/cloud-firestore": "~1.39",
+        "solarium/solarium": "~6.1",
+        "symfony/var-dumper": "^6.0"
     },
     "require-dev": {
         "league/climate": "^3.8",
@@ -35,9 +45,11 @@
     },
     "suggest": {
         "ext-apcu": "*",
+        "ext-curl": "*",
         "ext-intl": "*",
         "ext-memcached": "*",
         "ext-cassandra": "*",
+        "ext-grpc": "*",
         "ext-memcache": "*",
         "ext-mongodb": "*",
         "ext-redis": "*",
@@ -62,14 +74,20 @@
     },
     "autoload": {
         "psr-4": {
-            "Phpfastcache\\": "lib/Phpfastcache/",
+            "Phpfastcache\\": "lib/Phpfastcache/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Phpfastcache\\Tests\\": "tests/lib/"
         }
     },
     "support": {
         "issues": "https://github.com/PHPSocialNetwork/phpfastcache/issues",
         "wiki": "https://github.com/PHPSocialNetwork/phpfastcache/wiki",
-        "source": "https://github.com/PHPSocialNetwork/phpfastcache"
+        "docs": "https://github.com/PHPSocialNetwork/phpfastcache/wiki",
+        "source": "https://github.com/PHPSocialNetwork/phpfastcache",
+        "security": "https://github.com/PHPSocialNetwork/phpfastcache/blob/master/SECURITY.md"
     },
     "funding": [
         {

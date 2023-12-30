@@ -47,6 +47,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
  * == Driver-specific events ==
  * @method Void onArangodbConnection(Callable $callable, ?string $callbackName = null)
  * @method Void onArangodbCollectionParams(Callable $callable, ?string $callbackName = null)
+ * @method Void onCouchdbCreateOptions(Callable $callable, ?string $callbackName = null)
  * @method Void onDynamodbCreateTable(Callable $callable, ?string $callbackName = null)
  * @method Void onSolrBuildEndpoint(Callable $callable, ?string $callbackName = null)
  * @method Void onFirestoreClientOptions(Callable $callable, ?string $callbackName = null)
@@ -85,10 +86,10 @@ interface EventManagerInterface
     public function onEveryEvents(callable $callback, string $callbackName): void;
 
     /**
-     * @param string[] $events
+     * @param string[]|string $events
      * @param callable $callback
      */
-    public function on(array $events, callable $callback): void;
+    public function on(array|string $events, callable $callback): void;
 
     /**
      * @param string $eventName

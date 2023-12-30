@@ -25,8 +25,8 @@ use Phpfastcache\Exceptions\PhpfastcacheLogicException;
  */
 class Config extends ConfigurationOption
 {
-    protected string $database;
-    protected string $collection;
+    protected string $database = 'phpfastcache';
+    protected string $collection = 'phpfastcache';
 
     /**
      * @var string|array<string>

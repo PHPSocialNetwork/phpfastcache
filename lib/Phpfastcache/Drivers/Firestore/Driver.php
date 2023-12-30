@@ -138,7 +138,7 @@ class Driver implements AggregatablePoolInterface
     protected function driverReadAllKeys(string $pattern = ''): iterable
     {
         if ($pattern !== '') {
-            throw new PhpfastcacheInvalidArgumentException('Firestore does not support a pattern argument');
+            $this->throwUnsupportedDriverReadAllPattern();
         }
         $data = [];
         $documents = $this->instance->collection($this->getConfig()->getCollectionName())

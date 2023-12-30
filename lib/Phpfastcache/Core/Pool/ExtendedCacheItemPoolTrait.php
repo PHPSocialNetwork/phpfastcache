@@ -118,4 +118,18 @@ trait ExtendedCacheItemPoolTrait
     {
         return '';
     }
+
+    /**
+     * @throws PhpfastcacheInvalidArgumentException
+     */
+    public function throwUnsupportedDriverReadAllPattern(string $linkReference = ''): void
+    {
+        throw new PhpfastcacheInvalidArgumentException(
+            sprintf(
+                '%s does not support a pattern argument.%s',
+                $this->getDriverName(),
+                $linkReference ? " See $linkReference" : ''
+            )
+        );
+    }
 }

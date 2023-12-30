@@ -16,8 +16,15 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Memstatic;
 
-use Phpfastcache\Config\ConfigurationOption;
-
-class Config extends ConfigurationOption
+/**
+ * @deprecated Memstatic driver has changed its name, it is now called "Memory".
+ * @see \Phpfastcache\Drivers\Memory\Config
+ */
+class Config extends \Phpfastcache\Drivers\Memory\Config
 {
+    public function __construct(array $parameters = [])
+    {
+        trigger_error('Memstatic driver has changed its name, it is now called "Memory"', E_USER_DEPRECATED);
+        parent::__construct($parameters);
+    }
 }

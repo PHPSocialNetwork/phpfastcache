@@ -22,6 +22,7 @@ use Phpfastcache\Core\Pool\TaggableCacheItemPoolInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Solarium\Core\Client\Adapter\AdapterInterface;
 
 class Config extends ConfigurationOption
 {
@@ -42,6 +43,7 @@ class Config extends ConfigurationOption
     protected string $scheme = 'http';
     protected EventDispatcherInterface $eventDispatcher;
     protected string $path = '/';
+    protected ?AdapterInterface $adapter = null;
 
     /** @var array<string, string> */
     protected array $mappingSchema = self::DEFAULT_MAPPING_SCHEMA;
@@ -194,5 +196,15 @@ class Config extends ConfigurationOption
     public function setEndpointName(string $endpointName): Config
     {
         return $this->setProperty('endpointName', $endpointName);
+    }
+
+    public function getAdapter(): ?AdapterInterface
+    {
+        return $this->adapter;
+    }
+
+    public function setAdapter(?AdapterInterface $adapter): Config
+    {
+        return $this->setProperty('adapter', $adapter);
     }
 }

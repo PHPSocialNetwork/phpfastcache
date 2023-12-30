@@ -16,113 +16,18 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Memstatic;
 
-use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
-use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
-use Phpfastcache\Exceptions\PhpfastcacheLogicException;
-use Psr\Cache\CacheItemInterface;
+use Phpfastcache\Config\ConfigurationOptionInterface;
+use Phpfastcache\Event\EventManagerInterface;
 
 /**
- * Class Driver
- * @method Config getConfig()
+ * @deprecated Memstatic driver has changed its name, it is now called "Memory".
+ * @see \Phpfastcache\Drivers\Memory\Driver
  */
-class Driver implements ExtendedCacheItemPoolInterface
+class Driver extends \Phpfastcache\Drivers\Memory\Driver
 {
-    use TaggableCacheItemPoolTrait;
-
-    /**
-     * @var array<string, array<string, mixed>>
-     */
-    protected array $staticStack = [];
-
-    /**
-     * @return bool
-     */
-    public function driverCheck(): bool
+    public function __construct(#[\SensitiveParameter] ConfigurationOptionInterface $config, string $instanceId, EventManagerInterface $em)
     {
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    protected function driverConnect(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @param ExtendedCacheItemInterface $item
-     * @return ?array<string, mixed>
-     */
-    protected function driverRead(ExtendedCacheItemInterface $item): ?array
-    {
-        return $this->staticStack[$item->getKey()] ?? null;
-    }
-
-    /**
-     * @return array<int, string>
-     */
-    protected function driverReadAllKeys(string $pattern = ''): iterable
-    {
-        return array_filter(array_keys($this->staticStack), function (string $key) use ($pattern) {
-            return $pattern
-                ? preg_match('/' . str_replace('*', '(.*)', $pattern) . '/', $key)
-                : true;
-        });
-    }
-
-    /**
-     * @param ExtendedCacheItemInterface $item
-     * @return bool
-     * @throws PhpfastcacheInvalidArgumentException
-     * @throws PhpfastcacheLogicException
-     */
-    protected function driverWrite(ExtendedCacheItemInterface $item): bool
-    {
-
-        $this->staticStack[$item->getKey()] = $this->driverPreWrap($item);
-        return true;
-    }
-
-    /**
-     * @param string $key
-     * @param string $encodedKey
-     * @return bool
-     */
-    protected function driverDelete(string $key, string $encodedKey): bool
-    {
-        if (isset($this->staticStack[$key])) {
-            unset($this->staticStack[$key]);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    protected function driverClear(): bool
-    {
-        unset($this->staticStack);
-        $this->staticStack = [];
-        return true;
-    }
-
-    /**
-     * @return DriverStatistic
-     */
-    public function getStats(): DriverStatistic
-    {
-        $stat = new DriverStatistic();
-        $stat->setInfo('[Memstatic] A memory static driver')
-            ->setSize(mb_strlen(serialize($this->staticStack)))
-            ->setData(implode(', ', array_keys($this->itemInstances)))
-            ->setRawData($this->staticStack);
-
-        return $stat;
+        trigger_error('Memstatic driver has changed its name, it is now called "Memory"', E_USER_DEPRECATED);
+        parent::__construct($config, $instanceId, $em);
     }
 }

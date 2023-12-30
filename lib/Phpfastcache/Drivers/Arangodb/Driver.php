@@ -292,13 +292,16 @@ class Driver implements AggregatablePoolInterface
         try {
             $adminHandler = new AdminHandler($this->instance);
             $rawData['adminInfo'] = $adminHandler->getServerVersion(true);
+
             $infoText = \sprintf(
-                '%s server v%s "%s" edition (%s/%s).',
+                '%s server v%s "%s" edition (%s/%s). Database/Collection: "%s"/"%s"',
                 \ucfirst($rawData['adminInfo']['server']),
                 $rawData['adminInfo']['version'] ?? 'unknown version',
                 $rawData['adminInfo']['license'] ?? 'unknown licence',
                 $rawData['adminInfo']['details']['architecture'] ?? 'unknown architecture',
                 $rawData['adminInfo']['details']['platform'] ?? 'unknown platform',
+                $this->instance->getDatabase(),
+                $rawData['collectionInfo']->getName(),
             );
         } catch (ArangoException $e) {
             $infoText = 'No readable human data, encountered an error while trying to get details: ' . $e->getMessage();

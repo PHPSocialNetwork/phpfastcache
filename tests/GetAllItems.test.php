@@ -40,7 +40,18 @@ EventManager::getInstance()->on([Event::CACHE_GET_ALL_ITEMS], static function(Ex
         return $callback($pattern);
     });
 });
-$drivers = ['Mongodb', 'Memstatic', 'Predis', 'Redis', 'RedisCluster', 'Solr', 'Firestore'];
+
+$drivers = [
+    'Couchdb',
+    'Mongodb',
+    'Memstatic',
+    'Predis',
+    'Redis',
+    'RedisCluster',
+    'Solr',
+    'Firestore'
+];
+
 $driversConfigs = ConfigFactory::getDefaultConfigs();
 foreach ($drivers as $i => $driverName) {
     $testHelper->printNoteText(

@@ -331,6 +331,16 @@ The order of execution of the events is always the following:
         - Allow you to alter the parameters built used to create the collection
     - **Risky Circular Methods**: None
 
+#### Couchdb (v9.2)
+- onCouchdbCreateOptions(*Callable* **$callback**)
+    - **Callback arguments**
+        - *ExtendedCacheItemPoolInterface* **$itemPool**
+        - *EventReferenceParameter($options)* **$options** _via EventReferenceParameter object_ **(type modification forbidden)**
+    - **Scope**
+        - Arangodb Driver
+    - **Description**
+        - Allow you to alter the options built used to create the Couchdb client instance.
+    - **Risky Circular Methods**: None
 #### Dynamodb
 - onDynamodbCreateTable(*Callable* **$callback**)
     - **Callback arguments**

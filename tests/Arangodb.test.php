@@ -17,25 +17,13 @@ use Phpfastcache\Drivers\Arangodb\Config as ArangodbConfig;
 use Phpfastcache\EventManager;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Tests\Helper\TestHelper;
+use Phpfastcache\Tests\Config\ConfigFactory;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../vendor/autoload.php';
 $testHelper = new TestHelper('Arangodb driver');
 
-$config = new ArangodbConfig();
-
-$config->setItemDetailedDate(true);
-
 try {
-    $config->setCollection('phpfastcache');
-    $config->setAuthUser('phpfastcache');
-    $config->setAuthPasswd('travis');
-    $config->setDatabase('phpfastcache');
-    $config->setConnectTimeout(5);
-    $config->setAutoCreate(true);
-/*    $config->setTraceFunction(\Closure::fromCallable(static function ($type, $data) use ($testHelper){
-        $testHelper->printDebugText(sprintf('Trace for %s: %s', strtoupper($type), $data));
-    }));*/
     EventManager::getInstance()->on(['ArangodbConnection', 'ArangodbCollectionParams'], static function() use ($testHelper){
         $args = func_get_args();
         $eventName = $args[array_key_last($args)];
@@ -46,7 +34,7 @@ try {
             )
         );
     });
-    $cacheInstance = CacheManager::getInstance('Arangodb', $config);
+    $cacheInstance = CacheManager::getInstance('Arangodb', ConfigFactory::getDefaultConfig('Arangodb'));
     $testHelper->runCRUDTests($cacheInstance);
 } catch (PhpfastcacheDriverConnectException $e) {
     $testHelper->assertSkip('Arangodb server unavailable: ' . $e->getMessage());

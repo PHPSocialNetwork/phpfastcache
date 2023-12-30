@@ -179,7 +179,7 @@ class Driver implements AggregatablePoolInterface
     protected function driverReadAllKeys(string $pattern = ''): iterable
     {
         if ($pattern !== '') {
-            throw new PhpfastcacheInvalidArgumentException('Memcached does not support a pattern argument, see https://www.php.net/manual/en/memcached.getallkeys.php');
+            $this->throwUnsupportedDriverReadAllPattern('https://www.php.net/manual/en/memcached.getallkeys.php');
         }
         $keys = $this->instance->getAllKeys();
 

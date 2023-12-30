@@ -16,15 +16,18 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Memstatic;
 
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Core\Item\TaggableCacheItemTrait;
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Event\EventManagerInterface;
 
-class Item implements ExtendedCacheItemInterface
+/**
+ * @deprecated Memstatic driver has changed its name, it is now called "Memory".
+ * @see \Phpfastcache\Drivers\Memory\Item
+ */
+class Item extends \Phpfastcache\Drivers\Memory\Item
 {
-    use TaggableCacheItemTrait;
-
-    protected function getDriverClass(): string
+    public function __construct(ExtendedCacheItemPoolInterface $driver, string $key, EventManagerInterface $em)
     {
-        return Driver::class;
+        trigger_error('Memstatic driver has changed its name, it is now called "Memory"', E_USER_DEPRECATED);
+        parent::__construct($driver, $key, $em);
     }
 }

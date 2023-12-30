@@ -8,6 +8,7 @@
 - Created `IOConfigurationOption::setPreventCacheSlams()`. This method will **only be available** for `Files, Sqlite, Leveldb` drivers.
 - Created `IOConfigurationOption::getCacheSlamsTimeout()`. This method will **only be available** for `Files, Sqlite, Leveldb` drivers.
 - Created `IOConfigurationOption::setCacheSlamsTimeout()`. This method will **only be available** for `Files, Sqlite, Leveldb` drivers.
+- Method `EventManagerInterface::on(array|string $events, callable $callback)` now accepts a single `string $events` or an `array $events`.
 
 
 ## 4.2.0

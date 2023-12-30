@@ -95,7 +95,11 @@ class Driver implements AggregatablePoolInterface
 
         $this->eventManager->dispatch(Event::SOLR_BUILD_ENDPOINT, $this, new EventReferenceParameter($endpoint));
 
-        $this->instance = new SolariumClient(new SolariumCurlAdapter(), $this->getConfig()->getEventDispatcher(), $endpoint);
+        $this->instance = new SolariumClient(
+            $this->getConfig()->getAdapter() ?: new SolariumCurlAdapter(),
+            $this->getConfig()->getEventDispatcher(),
+            $endpoint
+        );
 
         try {
             return $this->instance->ping($this->instance->createPing())->getStatus() === 0;
@@ -126,7 +130,7 @@ class Driver implements AggregatablePoolInterface
             $doc->{$this->getSolrField(self::DRIVER_CDATE_WRAPPER_INDEX)} = $item->getCreationDate()->format(\DateTimeInterface::ATOM);
         }
 
-        $update->addDocument($doc);
+        $update->addDocument($doc, true);
         $update->addCommit();
 
         return $this->instance->update($update)->getStatus() === 0;

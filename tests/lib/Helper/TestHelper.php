@@ -344,7 +344,7 @@ class TestHelper
         if ($errorType === '[FATAL ERROR]') {
             $this->assertFail(
                 \sprintf(
-                    "<red>A critical error has been caught: \"%s\" in %s line %d</red>",
+                    "<red>A critical error has been caught:</red> <light_red>\"%s\" in %s line %d</light_red>",
                     "$errorType $errstr",
                     $errfile,
                     $errline
@@ -353,7 +353,7 @@ class TestHelper
         } else {
             $this->printDebugText(
                 \sprintf(
-                    "<yellow>A non-critical error has been caught: \"%s\" in %s line %d</yellow>",
+                    "<yellow>A non-critical error has been caught:</yellow> <light_cyan>\"%s\" in %s line %d</light_cyan>",
                     "$errorType $errstr",
                     $errfile,
                     $errline
@@ -591,11 +591,11 @@ class TestHelper
             $relativeFilename = '~' . str_replace($this->getProjectDir(), '', realpath($exception->getFile()));
             $this->assertFail(
                 \sprintf(
-                    'Uncaught exception "%s" in "%s" line %d with message: "%s"',
-                    get_class($exception),
+                    '<red>Uncaught exception</red> <light_red>"\\%s"</light_red> <red>in</red> <light_red>"%s"</light_red> <red>line</red> <light_red>%d</light_red> <red>with message</red>: <light_red>"%s"</light_red>',
+                    $exception::class,
                     str_replace('\\', '/', $relativeFilename),
                     $exception->getLine(),
-                    $exception->getMessage()
+                    $exception->getMessage() ?: '[No message provided]'
                 )
             );
         }

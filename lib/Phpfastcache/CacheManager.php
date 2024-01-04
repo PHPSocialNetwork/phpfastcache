@@ -22,6 +22,7 @@ use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverNotFoundException;
+use Phpfastcache\Exceptions\PhpfastcacheExtensionNotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheInstanceNotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
@@ -114,11 +115,16 @@ class CacheManager
                     EventManager::getInstance()
                 );
             } else {
-                throw new PhpfastcacheDriverNotFoundException(sprintf(
-                    'The driver "%s" does not exist or does not implement %s',
-                    $driver,
-                    ExtendedCacheItemPoolInterface::class
-                ));
+                try {
+                    ExtensionManager::loadExtension($driver);
+                    return CacheManager::getInstance($driver, $config, $instanceId);
+                } catch (PhpfastcacheExtensionNotFoundException) {
+                    throw new PhpfastcacheDriverNotFoundException(sprintf(
+                        'The driver "%s" does not exist or does not implement %s',
+                        $driver,
+                        ExtendedCacheItemPoolInterface::class
+                    ));
+                }
             }
         }
 
@@ -285,6 +291,15 @@ class CacheManager
     }
 
     /**
+     * @param string $driverName
+     * @return bool
+     */
+    public static function customDriverExists(string $driverName): bool
+    {
+        return isset(self::$driverCustoms[$driverName]);
+    }
+
+    /**
      * Return the list of available drivers Capitalized
      * with optional FQCN as key
      *
@@ -298,6 +313,7 @@ class CacheManager
 
         if (self::getDefaultNamespacePath() === self::getNamespacePath()) {
             if ($driverList === null) {
+                ExtensionManager::autoloadExtensions();
                 $prefix = self::CORE_DRIVER_NAMESPACE;
                 $classMap = self::createClassMap(__DIR__ . '/Drivers');
                 $driverList = [];

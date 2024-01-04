@@ -80,6 +80,7 @@ class Driver implements AggregatablePoolInterface
             if (!empty($clientConfig->getPassword())) {
                 $this->instance->auth($clientConfig->getPassword());
             }
+            $this->instance->ping();
 
             return true;
         } catch (SSDBException $e) {

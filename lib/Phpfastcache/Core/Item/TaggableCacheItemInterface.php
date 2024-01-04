@@ -63,6 +63,11 @@ interface TaggableCacheItemInterface
     public function hasTag(string $tagName): bool;
 
     /**
+     * @return bool
+     */
+    public function isTagged(): bool;
+
+    /**
      * @param string[] $tagNames
      * @param int $strategy
      * @return bool
@@ -109,4 +114,9 @@ interface TaggableCacheItemInterface
      * @return string[]
      */
     public function getRemovedTags(): array;
+
+    /**
+     * @return ExtendedCacheItemInterface
+     */
+    public function clearRemovedTags(): ExtendedCacheItemInterface;
 }

@@ -485,7 +485,9 @@ trait CacheItemPoolTrait
 
 
         if ($this->driverWrite($item) && $this->driverWriteTags($item)) {
-            $item->setHit(true);
+            $item->setHit(true)
+                ->clearRemovedTags();
+
             if ($this->getConfig()->isItemDetailedDate()) {
                 $item->setModificationDate(new \DateTime());
             }

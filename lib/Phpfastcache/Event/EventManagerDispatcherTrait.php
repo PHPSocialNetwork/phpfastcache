@@ -41,6 +41,7 @@ trait EventManagerDispatcherTrait
     }
 
     /**
+     * @deprecated Will be removed in v10
      * @return bool
      */
     public function hasEventManager(): bool

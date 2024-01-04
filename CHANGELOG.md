@@ -2,10 +2,15 @@
 ##### xx january 2024
 - __API__
   - Upgraded Phpfastcache API to `4.3.0` ([see changes](CHANGELOG_API.md))
+- __Extensions__ (💡 New in 9.2)
+  - Created an extension mechanism to allow future driver to be loaded independently, see [README.md](README.md)
+  - Created first extension for `Couchbasev4` support which will be moved to a [sub-repository](https://github.com/PHPSocialNetwork/couchbasev4-extension).
+  - **IMPORTANT**: *AS OF V10* the following drivers will be **MOVED** to their own sub-repositories an extension: `Arangodb`, `Couchdb`, `Cassandra`, `Dynamodb`, `Firestore`, `Mongodb`. However `Couchbasev3` will stay in the core for compatibility reason but will be deprecated. 
 - __Events__
   - EventManager is now scoped to its own poll if retrieved through `ExtendedCacheItemPoolTrait::->getEventManager()`. Global EventManager `EventManager::getInstance()` remains unchanged, see [EVENTS.md](./docs/EVENTS.md).
-  - `EventManagerInterface::on()` now accepts a single `string $events` or an `array $events`.
+  - `EventManagerInterface::on()` now also accepts a single `string $events`.
   - Alias `\Phpfastcache\PhpfastcacheEventManager` of `\Phpfastcache\EventManager` has been added to improve your code import readability.
+  - Deprecated `\Phpfastcache\Event\EventManagerDispatcherInterface::hasEventManager` to be removed for v10.
 - __Drivers__
   - Implemented #906 // **Added `RedisCluster` driver support**
   - Driver `Memstatic` has changed its name to `Memory` for more consistency.
@@ -17,6 +22,8 @@
   - Internal: Implemented multiple keys fetch (*if supported by the backend*) to improve the performances behind all `getItems()` calls. Currently only supported in some backends, but it may evolve in the future.
   - Internal: Implemented multiple keys delete (*if supported by the backend*) to improve the performances behind all `deleteItems()` calls. Currently only supported in some backends, but it may evolve in the future.
   - `\Phpfastcache\CacheContract::get()` now accepts a `\Stringable $cacheKey` argument.
+- __Tags__
+  - Added `\Phpfastcache\Core\Item\TaggableCacheItemInterface::isTagged(): bool`
 - __Misc__
   - Fixed multiple code typo & updated README.md
 

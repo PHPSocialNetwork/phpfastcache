@@ -69,6 +69,14 @@ trait TaggableCacheItemTrait
     }
 
     /**
+     * @return bool
+     */
+    public function isTagged(): bool
+    {
+        return !empty($this->tags);
+    }
+
+    /**
      * @param string[] $tagNames
      * @param int $strategy
      * @return bool
@@ -151,6 +159,16 @@ trait TaggableCacheItemTrait
     public function getRemovedTags(): array
     {
         return \array_diff($this->removedTags, $this->tags);
+    }
+
+    /**
+     * @return ExtendedCacheItemInterface
+     */
+    public function clearRemovedTags(): ExtendedCacheItemInterface
+    {
+        $this->removedTags = [];
+
+        return $this;
     }
 
     /**

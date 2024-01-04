@@ -4,11 +4,13 @@
 - Deprecated `ConfigurationOption::setPreventCacheSlams()` for future removal, use `IOConfigurationOption::setPreventCacheSlams()` instead.
 - Deprecated `ConfigurationOption::getCacheSlamsTimeout()` for future removal, use `IOConfigurationOption::getCacheSlamsTimeout()` instead.
 - Deprecated `ConfigurationOption::setCacheSlamsTimeout()` for future removal, use `IOConfigurationOption::setCacheSlamsTimeout()` instead.
+- Deprecated `\Phpfastcache\Event\EventManagerDispatcherInterface::hasEventManager` to be removed for v10.
 - Created `IOConfigurationOption::isPreventCacheSlams()`. This method will **only be available** for `Files, Sqlite, Leveldb` drivers.
 - Created `IOConfigurationOption::setPreventCacheSlams()`. This method will **only be available** for `Files, Sqlite, Leveldb` drivers.
 - Created `IOConfigurationOption::getCacheSlamsTimeout()`. This method will **only be available** for `Files, Sqlite, Leveldb` drivers.
 - Created `IOConfigurationOption::setCacheSlamsTimeout()`. This method will **only be available** for `Files, Sqlite, Leveldb` drivers.
-- Method `EventManagerInterface::on(array|string $events, callable $callback)` now accepts a single `string $events` or an `array $events`.
+- Method `EventManagerInterface::on(array|string $events, callable $callback)` now also accepts a single `string $events`.
+- Added `\Phpfastcache\Core\Item\TaggableCacheItemInterface::isTagged`.
 
 
 ## 4.2.0

@@ -12,7 +12,7 @@
                 "name": "Georges.L",
                 "email": "contact@geolim4.com",
                 "homepage": "https://github.com/Geolim4",
-                "role": "Project Manager"
+                "role": "Actual Project Manager/Developer"
             },
             {
                 "name": "Contributors",
@@ -24,16 +24,7 @@
         "psr/cache": "^2.0||^3.0",
         "psr/simple-cache": "^2.0||^3.0",
         "ext-mbstring": "*",
-        "ext-json": "*",
-        "doctrine/couchdb": "dev-master",
-        "phpfastcache/phpssdb": "~1.2",
-        "predis/predis": "~1.1",
-        "mongodb/mongodb": "~1.9",
-        "triagens/arangodb": "~3.8",
-        "aws/aws-sdk-php": "~3.2",
-        "google/cloud-firestore": "~1.39",
-        "solarium/solarium": "~6.1",
-        "symfony/var-dumper": "^6.0"
+        "ext-json": "*"
     },
     "require-dev": {
         "league/climate": "^3.8",

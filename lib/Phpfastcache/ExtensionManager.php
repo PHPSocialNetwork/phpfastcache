@@ -27,6 +27,9 @@ final class ExtensionManager
 {
     use UninstanciableObjectTrait;
 
+    /**
+     * @var array<string, string>
+     */
     protected static array $registeredExtensions = [];
 
     public static function registerExtension(string $extensionName, string $driverClassName): void

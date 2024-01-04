@@ -313,7 +313,6 @@ class CacheManager
 
         if (self::getDefaultNamespacePath() === self::getNamespacePath()) {
             if ($driverList === null) {
-                ExtensionManager::autoloadExtensions();
                 $prefix = self::CORE_DRIVER_NAMESPACE;
                 $classMap = self::createClassMap(__DIR__ . '/Drivers');
                 $driverList = [];

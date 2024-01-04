@@ -40,6 +40,13 @@ class Driver implements AggregatablePoolInterface
         return extension_loaded('wincache') && function_exists('wincache_ucache_set');
     }
 
+    public function getHelp(): string
+    {
+        return <<<HELP
+Wincache PECL extension is not maintained anymore and has been superseded. Check sourceforge for more informations: https://sourceforge.net/projects/wincache/'
+HELP;
+    }
+
     /**
      * @return DriverStatistic
      */

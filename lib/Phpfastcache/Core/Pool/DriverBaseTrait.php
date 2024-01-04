@@ -77,7 +77,13 @@ trait DriverBaseTrait
         $this->instanceId = $instanceId;
 
         if (!$this->driverCheck()) {
-            throw new PhpfastcacheDriverCheckException(\sprintf(ExtendedCacheItemPoolInterface::DRIVER_CHECK_FAILURE, $this->getDriverName()));
+            throw new PhpfastcacheDriverCheckException(
+                \sprintf(
+                    ExtendedCacheItemPoolInterface::DRIVER_CHECK_FAILURE,
+                    $this->getDriverName(),
+                    $this->getHelp() ? " Additionally, {$this->getHelp()}" : ''
+                )
+            );
         }
         $this->eventManager->dispatch(Event::CACHE_DRIVER_CHECKED, $this);
 
@@ -92,7 +98,7 @@ trait DriverBaseTrait
                     $this->getDriverName(),
                     $e->getMessage(),
                     $e->getLine() ?: 'unknown line',
-                    $e->getFile() ?: 'unknown file'
+                    $e->getFile() ?: 'unknown file',
                 ),
                 0,
                 $e

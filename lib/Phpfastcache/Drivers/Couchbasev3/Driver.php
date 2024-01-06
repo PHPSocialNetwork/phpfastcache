@@ -46,20 +46,13 @@ use Phpfastcache\Exceptions\PhpfastcacheUnsupportedMethodException;
  */
 class Driver implements AggregatablePoolInterface
 {
-    use TaggableCacheItemPoolTrait {
-        __construct as __baseConstruct;
-    }
+    use TaggableCacheItemPoolTrait;
 
     protected Scope $scope;
 
     protected Collection $collection;
 
     protected CouchbaseBucket $bucketInstance;
-
-    public function __construct(ConfigurationOption $config, string $instanceId, EventManagerInterface $em)
-    {
-        $this->__baseConstruct($config, $instanceId, $em);
-    }
 
     /**
      * @return bool

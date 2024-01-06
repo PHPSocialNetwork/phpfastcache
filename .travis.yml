@@ -24,7 +24,6 @@ php:
   - 8.0
   - 8.1
   - 8.2
-  # - nightly # nightly is currently too much unstable many bundled extension are not available...
 jobs:
   fast_finish: true
   allow_failures:
@@ -37,6 +36,8 @@ before_install:
 # Memcache however seems to be compatible with PHP 7 and 8: https://pecl.php.net/package/memcache
 #
   # - ./bin/ci/scripts/install_arangodb.sh;
+  - phpenv config-add bin/ci/php_common.ini
+  - phpenv config-rm xdebug.ini
   - composer install
   - composer require phwoolcon/ci-pecl-cacher -n
   - "./bin/ci/scripts/install_solr.sh || echo \"Solr install failed\""
@@ -54,13 +55,9 @@ before_install:
   - "yes | ./vendor/bin/ci-pecl-install memcache || echo \"PECL Memcache install failed\""
   - "yes | ./vendor/bin/ci-pecl-install memcached || echo \"PECL Memcached install failed\""
   - "yes | ./vendor/bin/ci-pecl-install couchbase-3.2.2 couchbase || echo \"PECL Couchbase install failed\"" # @todo UPGRADE TO COUCHBASE 4.x.x once we upgraded from Bionic to Focal
-  - phpenv config-add bin/ci/php_common.ini
-  - phpenv config-rm xdebug.ini
 install:
   - "[[ $TRAVIS_PHP_VERSION != \"nightly\" ]] && ./bin/ci/scripts/install_dependencies.sh || ./bin/ci/scripts/install_dependencies_lite.sh"
 
 script:
-  - ./vendor/bin/phpcs lib/ --report=summary
-  - ./vendor/bin/phpmd lib/ ansi phpmd.xml
-  - "[[ $TRAVIS_PHP_VERSION != \"nightly\" ]] && ./vendor/bin/phpstan analyse lib/ -l 6 -c phpstan.neon 2>&1 || ./vendor/bin/phpstan analyse lib/ -l 4 -c phpstan_lite.neon 2>&1"
-  - php -f ./bin/ci/run_tests.php
+  - composer run-script quality
+  - composer run-script tests

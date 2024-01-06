@@ -34,14 +34,8 @@ jobs:
       - name: Install dependencies
         run: ./bin/ci/scripts/install_dependencies.sh
 
-      - name: Run PHPCS
-        run: ./vendor/bin/phpcs lib/  --report=summary
-
-      - name: Run PHPMD
-        run: ./vendor/bin/phpmd lib/ ansi phpmd.xml
-
-      - name: Run PHPSTAN (lite)
-        run: ./vendor/bin/phpstan analyse lib/ -l 6 -c phpstan_lite.neon 2>&1
+      - name: Run QUALITY
+        run: composer run-script quality
 
       - name: Run TESTS
         env:
@@ -49,4 +43,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
           GOOGLE_CLOUD_PROJECT: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
-        run: php -f ./bin/ci/run_tests.php
+        run: composer run-script tests

@@ -1,0 +1,83 @@
+name: Phpfastcache Tests
+on: [push, pull_request]
+jobs:
+  run:
+    runs-on: ${{ matrix.operating-system }}
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+        php-versions: ['8.0', '8.1', '8.2', '8.3']
+    name: PHP ${{ matrix.php-versions }} quality/tests on ${{ matrix.operating-system }}
+    env:
+      extensions: mbstring, intl, pdo_sqlite, json, redis, grpc, couchbase-3.2.2
+      key: cache-v1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Couchbase Server
+        run: ./bin/ci/scripts/install_couchbase.sh
+
+      - name: Setup cache environment
+        id: extcache
+        uses: shivammathur/cache-extensions@v1
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: ${{ env.extensions }}
+          key: ${{ env.key }}
+
+      - name: Cache extensions
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.extcache.outputs.dir }}
+          key: ${{ steps.extcache.outputs.key }}
+          restore-keys: ${{ steps.extcache.outputs.key }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          coverage: none
+          php-version: ${{ matrix.php-versions }}
+          extensions: ${{ env.extensions }}
+          ini-values: apc.enabled=1, apc.shm_size=32M, apc.ttl=7200, apc.enable_cli=1, apc.serializer=php
+
+      - name: Setup Memcached server
+        uses: niden/actions-memcached@v7
+
+      - name: Setup Redis server
+        uses: zhulik/redis-action@v1.0.0
+        with:
+          redis version: '5'
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+
+      - name: Setup GCP environment
+        run: "./bin/ci/scripts/setup_gcp.sh || echo \"GCP setup failed (maybe due to fork limitation)\""
+        env:
+          BASE64_GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.BASE64_GOOGLE_APPLICATION_CREDENTIALS }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+
+      - name: Install dependencies
+        run: ./bin/ci/scripts/install_dependencies.sh
+
+      - name: Run quality tools
+        run: composer run-script quality
+
+      - name: Run tests
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          GOOGLE_CLOUD_PROJECT: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
+        run: composer run-script tests

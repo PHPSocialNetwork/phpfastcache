@@ -38,7 +38,7 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1616981CC4A088B2
 echo "deb https://packages.couchbase.com/ubuntu bionic bionic/main" | sudo tee /etc/apt/sources.list.d/couchbase.list
 echo "deb https://packages.couchbase.com/clients/c/repos/deb/ubuntu1804 bionic bionic/main" | sudo tee /etc/apt/sources.list.d/couchbase.list
 sudo apt-get update
-sudo apt-get install -yq libcouchbase3 libcouchbase-dev build-essential libssl1.0.0 runit wget python-httplib2 chrpath tzdata lsof lshw sysstat net-tools numactl
+sudo apt-get install -yq libcouchbase3 libcouchbase-dev build-essential libssl1.1 runit wget python3-httplib2 chrpath tzdata lsof lshw sysstat net-tools numactl libtinfo5
 
 echo "# Downloading couchbase v${CB_VERSION}"
 wget -q -N $CB_RELEASE_URL/$CB_VERSION/$CB_PACKAGE

@@ -1,0 +1,144 @@
+name: "Report a bug for a Phpfastcache Extension"
+title: "<NAME THE FEATURE> - <SUMMARIZE THE PROBLEM>"
+description: Create a report to help us improve a Phpfastcache extension
+labels: ["Needs triage 🔎"]
+assignees: ["Geolim4"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Before you start
+
+        **Are you looking for development help?**
+        ↩ Please note that we cannot provide assistance on web development. We recommend asking around on a dedicated help forum like StackOverflow.
+
+        ### Issue etiquette
+        
+        When opening an issue, please:
+        - Follow the project's [Code of Conduct](https://github.com/PHPSocialNetwork/phpfastcache/blob/master/CODE_OF_CONDUCT.md) as well as the [GitHub Community Guidelines](https://docs.github.com/en/site-policy/github-terms/github-community-guidelines).
+        - Check for an [existing issue](https://github.com/PHPSocialNetwork/phpfastcache/issues) first. If someone else has opened an issue describing the same problem, please upvote their issue rather than creating another one.
+        - Keep issues relevant to the project. Irrelevant issues will be automatically closed and marked as spam, and repeated offenses may result in exclusion from our organization.
+        - Provide as much detail as possible. The more detail you are able to provide, the better!
+        - Write issues primarily in English. While translation tools are available, we will be able to provide better assistance with pre-translated content. You are more than welcome to include a version of the issue body in your preferred language alongside the English version.
+        - **Make sure that you searched an answer on our [wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki)**
+
+        ---
+  - type: dropdown
+    id: extension
+    attributes:
+      label: Which extension is this issue about ?
+      options:
+        - Couchbasev4
+    validations:
+      required: true
+  - type: dropdown
+    id: type
+    attributes:
+      label: What type of issue is this?
+      options:
+        - Incorrect/unexpected/unexplainable behavior
+        - Exception/Error/Warning/Notice/Deprecation
+        - PSR-6/16 standard violation
+        - Wiki/Documentation/Readme typo/fault or lack of documentation
+        - Incompatibility (be specific)
+        - Other (Please Specify)
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system + version
+      description: "The operating system with version, ex: Ubuntu 18.04 or Windows 10"
+    validations:
+      required: true
+  - type: input
+    id: php
+    attributes:
+      label: PHP version
+      description: |
+        The PHP version you're running Phpfastcache on.
+        _Can be retrieved using command line `php -v | sed -n 1p`_
+    validations:
+      required: true
+  - type: input
+    id: connector
+    attributes:
+      label: Connector/Database version (if applicable)
+      description: |
+        The connector and/or SDK version + the database version if applicable, ex: 
+        - Couchbase 7.1.0 + PECL Extension 3.2.2
+        - Redis 7.0.0 + PECL Extension 5.3.7
+        - MongoDB 5.0.2 Community + mongodb/mongodb
+        - etc
+
+        **Be as much detailed as you can be !**
+    validations:
+      required: false
+  - type: input
+    id: extension_exact_version
+    attributes:
+      label: Extension version (NOT THE PHPFASTCACHE VERSION)
+      description: |
+        Please keep in mind that some versions are partially or no longer supported.
+
+        See our [global support timeline](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV4%CB%96%5D-Global-support-timeline) ⌚
+    validations:
+      required: true
+  - type: input
+    id: pfc_exact_version
+    attributes:
+      label: Phpfastcache version
+      description: |
+        Please keep in mind that some versions are partially or no longer supported.
+
+        See our [global support timeline](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV4%CB%96%5D-Global-support-timeline) ⌚
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Describe the issue you're facing
+      description: Provide as much detail as possible. The more detail you are able to provide, the better!
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: If applicable, please describe the behavior you expected
+    validations:
+      required: false
+  - type: textarea
+    id: code_sample
+    attributes:
+      label: Code sample (optional)
+      description: If applicable, please provide a code sample
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggestion to fix the issue (optional)
+      description: Do you have an suggestion on how to fix this issue ?
+  - type: textarea
+    id: references
+    attributes:
+      label: References (optional)
+      description: Can you link to any release notes, bugs, pull requests, or Stack-Overflow link related to this?
+  - type: textarea
+    id: more_info
+    attributes:
+      label: Do you have anything more you want to share? (optional)
+      description: For example, screenshots, screen recordings, or sample code, logs, etc.
+  - type: checkboxes
+    id: wiki_confirmation
+    attributes:
+      label: Have you searched in our Wiki before posting ?
+      description: Our Wiki contains tons of information, make sure you've searched over it before posting this issue.
+      options:
+        - label: I have searched over the Wiki
+          required: true
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        You've finished 👏 
+        The following fields are prefilled and should not be modified. Please click **Submit new issue**.

@@ -1,11 +1,11 @@
 ## 9.2.0
-##### xx january 2024
+##### 10 january 2024
 - __API__
   - Upgraded Phpfastcache API to `4.3.0` ([see changes](CHANGELOG_API.md))
 - __Extensions__ (💡 New in 9.2)
   - Created an extension mechanism to allow future driver to be loaded independently, see [README.md](README.md)
   - Created first extension for `Couchbasev4` support which will be moved to a [sub-repository](https://github.com/PHPSocialNetwork/couchbasev4-extension).
-  - **IMPORTANT**: *AS OF V10* the following drivers will be **MOVED** to their own sub-repositories an extension: `Arangodb`, `Couchdb`, `Cassandra`, `Dynamodb`, `Firestore`, `Mongodb`. However `Couchbasev3` will stay in the core for compatibility reason but will be deprecated. 
+  - **IMPORTANT**: *AS OF V10* the following drivers will be **MOVED** to their own sub-repositories as a standalone extension: `Arangodb`, `Couchdb`, `Cassandra`, `Dynamodb`, `Firestore`, `Mongodb`, `Solr`. However `Couchbasev3` will stay in the core for compatibility reasons but will be deprecated. 
 - __Events__
   - EventManager is now scoped to its own poll if retrieved through `ExtendedCacheItemPoolTrait::->getEventManager()`. Global EventManager `EventManager::getInstance()` remains unchanged, see [EVENTS.md](./docs/EVENTS.md).
   - `EventManagerInterface::on()` now also accepts a single `string $events`.
@@ -14,6 +14,7 @@
 - __Drivers__
   - Implemented #906 // **Added `RedisCluster` driver support**
   - Driver `Memstatic` has changed its name to `Memory` for more consistency.
+  - Driver `Wincache` is now deprecated and will be removed as of v10 due to the lack of updates to PHP 8 [as officially stated by PHP](https://www.php.net/manual/en/install.windows.recommended.php).
 - __Pool__
   - Added `ExtendedCacheItemPoolTrait::getAllItems` to allow you to retrieve all items in the cache. This method have some limitations, ([see more in the Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV5%CB%96%5D-Fetching-all-keys)).
 - __Core__

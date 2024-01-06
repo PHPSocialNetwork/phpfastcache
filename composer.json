@@ -24,7 +24,16 @@
         "psr/cache": "^2.0||^3.0",
         "psr/simple-cache": "^2.0||^3.0",
         "ext-mbstring": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "doctrine/couchdb": "dev-master",
+        "phpfastcache/phpssdb": "~1.2",
+        "predis/predis": "~1.1",
+        "mongodb/mongodb": "~1.9",
+        "triagens/arangodb": "~3.8",
+        "aws/aws-sdk-php": "~3.2",
+        "google/cloud-firestore": "~1.39",
+        "solarium/solarium": "~6.1",
+        "symfony/var-dumper": "^6.0"
     },
     "require-dev": {
         "league/climate": "^3.8",
@@ -32,7 +41,8 @@
         "phpmd/phpmd": "@stable",
         "squizlabs/php_codesniffer": "@stable",
         "phpstan/phpstan": "^1.5",
-        "jetbrains/phpstorm-stubs": "dev-master"
+        "jetbrains/phpstorm-stubs": "dev-master",
+        "phpfastcache/phpfastcache-devtools": "^9.2"
     },
     "suggest": {
         "ext-apcu": "*",

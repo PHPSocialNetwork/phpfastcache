@@ -72,6 +72,7 @@ echo "# 4) Setting up the bucket"
 curl -i "http://127.0.0.1:8091/pools/default/buckets" \
     -d name=phpfastcache \
     -d ramQuotaMB=256 \
+    -d flushEnabled=1 \
     -u ${USERNAME}:${PASSWORD} \
 
 

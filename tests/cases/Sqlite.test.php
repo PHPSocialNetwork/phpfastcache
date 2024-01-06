@@ -19,7 +19,7 @@ use Phpfastcache\Tests\Helper\TestHelper;
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
 $testHelper = new TestHelper('Sqlite');
-CacheManager::setDefaultConfig(new ConfigurationOption(['path' => __DIR__ . '/../cache']));
+CacheManager::setDefaultConfig(new ConfigurationOption(['path' => __DIR__ . '/../../cache']));
 
 $cacheInstance = CacheManager::getInstance('Sqlite');
 

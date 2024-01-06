@@ -19,6 +19,9 @@ namespace Phpfastcache\Drivers\Wincache;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Item\TaggableCacheItemTrait;
 
+/**
+ * @deprecated will be removed as of v10 due to the lack of updates to PHP8 as officially stated by PHP: https://www.php.net/manual/en/install.windows.recommended.php
+ */
 class Item implements ExtendedCacheItemInterface
 {
     use TaggableCacheItemTrait;

@@ -18,6 +18,18 @@ namespace Phpfastcache\Drivers\Wincache;
 
 use Phpfastcache\Config\ConfigurationOption;
 
+/**
+ * @deprecated will be removed as of v10 due to the lack of updates to PHP8 as officially stated by PHP: https://www.php.net/manual/en/install.windows.recommended.php
+ */
 class Config extends ConfigurationOption
 {
+    public function __construct(array $parameters = [])
+    {
+        trigger_error(
+            'Wincache is now deprecated and will be removed as of v10 due to the lack of updates to PHP8 as officially stated by PHP:
+            https://www.php.net/manual/en/install.windows.recommended.php',
+            E_USER_DEPRECATED
+        );
+        parent::__construct($parameters);
+    }
 }

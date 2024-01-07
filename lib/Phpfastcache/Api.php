@@ -70,7 +70,7 @@ class Api
         }
 
         if (\function_exists('shell_exec')) {
-            $command = 'git -C "' . __DIR__ . '" describe --abbrev=0 --tags';
+            $command = 'git -C "' . __DIR__ . '" describe --abbrev=0 --tags ' . (DIRECTORY_SEPARATOR === '\\' ? '2>nul' : '2>/dev/null');
             $stdout = \shell_exec($command);
             if (\is_string($stdout)) {
                 return trim($stdout);
@@ -133,7 +133,7 @@ class Api
         }
 
         if (\function_exists('shell_exec')) {
-            $stdout = \shell_exec('git rev-parse --short HEAD');
+            $stdout = \shell_exec('git rev-parse --short HEAD ' . (DIRECTORY_SEPARATOR === '\\' ? '2>nul' : '2>/dev/null'));
             if (\is_string($stdout)) {
                 return '#' . \trim($stdout);
             }

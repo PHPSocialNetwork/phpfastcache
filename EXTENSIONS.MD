@@ -7,7 +7,6 @@ The 9.2 make the beginning of a new external extensions:
 - `Arangodb`
 - `Couchbasev4`
 - `Couchdb`
-- `Cassandra`
 - `Dynamodb`
 - `Firestore`
 - `Mongodb`

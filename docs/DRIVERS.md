@@ -5,8 +5,10 @@
   * The Alternative Php User Cache (APCU) driver. A memory cache for regular performances.
 * Arangodb **(Added in v9)**
   * A very high-performance NoSQL driver using a key-value pair system.
+  * :new: Is now a composer extension separated from the Phpfastcache core as of v9.2: `phpfastcache/arangodb-extension`
 * Cassandra
   * A very high-performance NoSQL driver using a key-value pair system. Please note that the Driver rely on php's Datastax extension: https://github.com/datastax/php-driver
+  * As of PHP an unofficial fork has been launched due to Datastax lack of maintenance: https://github.com/he4rt/scylladb-php-driver
 * Cookie **(REMOVED in v9)**
   * A cookie driver to store non-sensitive scalar (only) data. Limited storage up to 4Ko.
 * Couchbase **(REMOVED in v9)**
@@ -19,6 +21,7 @@
   * :new: It is now a [separated extension](https://github.com/PHPSocialNetwork/couchbasev4-extension) which is no longer part of the Phpfastcache's core.
 * Couchdb
   * A very high-performance NoSQL driver using a key-value pair system.
+  * :new: Is now a composer extension separated from the Phpfastcache core as of v9.2: `phpfastcache/couchdb-extension`
 * Devfalse **(REMOVED in v9)**
    * A development driver that return false for everything except driverCheck().
 * Devnull
@@ -29,10 +32,12 @@
   * A development driver with configurable factor chance and data length.
 * Dynamodb **(Added in v9)**
   * An AWS cloud NoSQL driver using a key-value pair system. Be careful when flushing the table as it will delete and recreate the table due to a Dynamodb limitation.
+  * :new: Is now a composer extension separated from the Phpfastcache core as of v9.2: `phpfastcache/dynamodb-extension`
 * Files
   * A file driver that use serialization for storing data for regular performances. A _$path_ config must be specified, else the system temporary directory will be used.
 * Firestore **(Added in v9)**
   * A GCP cloud NoSQL driver using a key-value pair system. Collections are created automatically on-the-fly.
+  * :new: Is now a composer extension separated from the Phpfastcache core as of v9.2: `phpfastcache/firestore-extension` 
 * Leveldb
   * A NoSQL driver using a key-value pair system. A _$path_ config must be specified, else the system temporary directory will be used.
 * Memcache
@@ -43,6 +48,7 @@
   * The Memstatic driver is a memory static driver that expires when the script execution ends.
 * Mongodb
   * A very high-performance NoSQL driver using a key-value pair system.
+  * :new: Is now a composer extension separated from the Phpfastcache core as of v9.2: `phpfastcache/mongodb-extension`
 * Predis
   * A high-performance memory driver using a in-memory data structure storage. Less efficient than Redis driver as it is an embedded library.
 * Redis/Rediscluster
@@ -52,6 +58,7 @@
   * A very high-performance NoSQL driver using a key-value pair system.
 * Solr **(Added in v9.1)**
   * A Solr driver that use Solarium as PHP client for good performances.
+  * :new: Is now a composer extension separated from the Phpfastcache core as of v9.2: `phpfastcache/solr-extension`
 * Sqlite
   * A Sqlite driver that use serialization for storing data for regular performances. A _$path_ config must be specified, else the system temporary directory will be used.
 * Ssdb

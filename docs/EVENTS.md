@@ -317,15 +317,7 @@ See [Arangodb extension event documentation](https://github.com/PHPSocialNetwork
 See [Couchdb extension event documentation](https://github.com/PHPSocialNetwork/couchdb-extension#events).
 
 #### Dynamodb
-- onDynamodbCreateTable(*Callable* **$callback**)
-    - **Callback arguments**
-        - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *EventReferenceParameter($params)* **$params** _via EventReferenceParameter object_ **(type modification forbidden)**
-    - **Scope**
-        - Dynamodb Driver
-    - **Description**
-        - Allow you to alter the parameters built used to create the table
-    - **Risky Circular Methods**: None
+See [Dynamodb extension event documentation](https://github.com/PHPSocialNetwork/dynamodb-extension#events).
 
 #### Solr
 See [Solr extension event documentation](https://github.com/PHPSocialNetwork/solr-extension#events).

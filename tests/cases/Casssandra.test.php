@@ -13,14 +13,12 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Drivers\Mongodb\Config;
 use Phpfastcache\Tests\Helper\TestHelper;
-use Phpfastcache\Tests\Config\ConfigFactory;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
-$testHelper = new TestHelper('Mongodb driver');
-
-$cacheInstance = CacheManager::getInstance('Mongodb', ConfigFactory::getDefaultConfig('Mongodb'));
-$testHelper->runCRUDTests($cacheInstance);
+$testHelper = new TestHelper('Apcu test (CRUD)');
+$pool = CacheManager::getInstance('Cassandra');
+$pool->clear();
+$testHelper->runCRUDTests($pool);
 $testHelper->terminateTest();

@@ -42,13 +42,10 @@ EventManager::getInstance()->on([Event::CACHE_GET_ALL_ITEMS], static function(Ex
 });
 
 $drivers = [
-    'Couchdb',
-    'Mongodb',
-    'Memstatic',
+    'Memory',
     'Predis',
     'Redis',
     'RedisCluster',
-    'Solr',
     'Firestore'
 ];
 

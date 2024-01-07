@@ -15,26 +15,26 @@ The simplicity of abstraction: One class for many backend cache. You don't need 
 ### Supported drivers at this day *
 :bulb: Feel free to propose a driver by making a new **[Pull Request](https://github.com/PHPSocialNetwork/phpfastcache/compare)**, they are welcome !
 
-| Regular drivers                                                                 | High performances drivers                                                                | Development drivers  _(Core)_              | Cluster-Aggregated drivers _(Core)_   |
-|---------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|--------------------------------------------|---------------------------------------|
-| `Apcu` _(Core)_  <br>_(APC support removed)_                                    | `Arangodb` _([Extension](https://github.com/PHPSocialNetwork/arangodb-extension))_       | `Devnull`                                  | `FullReplicationCluster`              |
-| `Dynamodb` (AWS)                                                                | `Cassandra`                                                                              | `Devrandom`                                | `SemiReplicationCluster`              |
-| `Files` _(Core)_                                                                | `CouchBasev3` _(Core)_<br>_(Will be deprecated as of v10)_                               | `Memory`<br>(Previously named `Memstatic`) | `MasterSlaveReplicationCluster`       |
-| `Firestore` (GCP)                                                               | `CouchBasev4` _([Extension](https://github.com/PHPSocialNetwork/couchbasev4-extension))_ |                                            | `RandomReplicationCluster`            |
-| `Leveldb` _(Core)_                                                              | `Couchdb` _([Extension](https://github.com/PHPSocialNetwork/couchdb-extension))_         |                                            |                                       |
-| `Memcache(d)` _(Core)_                                                          | `Mongodb` _([Extension](https://github.com/PHPSocialNetwork/mongodb-extension))_         |                                            |                                       |
-| `Solr` _([Extension](https://github.com/PHPSocialNetwork/solr-extension))_      | `Predis` _(Core)_                                                                        |                                            |                                       |
-| `Sqlite` _(Core)_                                                               | `Redis`/`RedisCluster` _(Core)_                                                          |                                            |                                       |
-| `Wincache` _(Core)_  <br>(**Deprecated** as of v9.2, will be removed as of v10) | `Ssdb` _(Core)_                                                                          |                                            |                                       |
-| `Zend Disk Cache` _(Core)_                                                      | `Zend Memory Cache` _(Core)_                                                             |                                            |                                       |
-|                                                                                 |                                                                                          |                                            |                                       |
+| Regular drivers                                                                      | High performances drivers                                                                        | Development drivers  _(Core)_              | Cluster-Aggregated drivers _(Core)_   |
+|--------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|--------------------------------------------|---------------------------------------|
+| `Apcu` _(Core)_  <br>_(APC support removed)_                                         | `Arangodb` _([Extension](https://github.com/PHPSocialNetwork/arangodb-extension))_               | `Devnull`                                  | `FullReplicationCluster`              |
+| `Dynamodb` _([Extension](https://github.com/PHPSocialNetwork/dynamodb-extension))_   | `Cassandra` <br> _(PHP extension is no more maintained by Datastax, might be deprecated in v10)_ | `Devrandom`                                | `SemiReplicationCluster`              |
+| `Files` _(Core)_                                                                     | `CouchBasev3` _(Core)_<br>_(Will be deprecated as of v10)_                                       | `Memory`<br>(Previously named `Memstatic`) | `MasterSlaveReplicationCluster`       |
+| `Firestore` _([Extension](https://github.com/PHPSocialNetwork/firestore-extension))_ | `CouchBasev4` _([Extension](https://github.com/PHPSocialNetwork/couchbasev4-extension))_         |                                            | `RandomReplicationCluster`            |
+| `Leveldb` _(Core)_                                                                   | `Couchdb` _([Extension](https://github.com/PHPSocialNetwork/couchdb-extension))_                 |                                            |                                       |
+| `Memcache(d)` _(Core)_                                                               | `Mongodb` _([Extension](https://github.com/PHPSocialNetwork/mongodb-extension))_                 |                                            |                                       |
+| `Solr` _([Extension](https://github.com/PHPSocialNetwork/solr-extension))_           | `Predis` _(Core)_                                                                                |                                            |                                       |
+| `Sqlite` _(Core)_                                                                    | `Redis`/`RedisCluster` _(Core)_                                                                  |                                            |                                       |
+| `Wincache` _(Core)_  <br>(**Deprecated** as of v9.2, will be removed as of v10)      | `Ssdb` _(Core)_                                                                                  |                                            |                                       |
+| `Zend Disk Cache` _(Core)_                                                           | `Zend Memory Cache` _(Core)_                                                                     |                                            |                                       |
+|                                                                                      |                                                                                                  |                                            |                                       |
 
 \* Driver descriptions available in [DOCS/DRIVERS.md](./docs/DRIVERS.md)
 
 :new: As of v9.2 a new Couchbase extension has been released: [Couchbasev4](https://github.com/PHPSocialNetwork/couchbasev4-extension)
 
 This new extension **is the beginning of a new era** for Phpfastcache along with some others:\
-Many drivers has been moved from the core to their own sub-repository as a standalone extension: `Arangodb`, `Couchdb`, `Cassandra`, `Dynamodb`, `Firestore`, `Mongodb`, `Solr`.\
+Many drivers has been moved from the core to their own sub-repository as a standalone extension: `Arangodb`, `Couchdb`, `Dynamodb`, `Firestore`, `Mongodb`, `Solr`.\
 They can be easily added through composer, ex: `composer install phpfastcache/couchbasev4-extension`
 However `Couchbasev3` **will stay in the core** for compatibility reasons but will be deprecated.
 

@@ -1,5 +1,10 @@
+## 9.2.1
+##### 07 january 2024
+- __Misc__
+  - Added additional check in cache manager for extensions
+
 ## 9.2.0
-##### 10 january 2024
+##### 07 january 2024
 - __API__
   - Upgraded Phpfastcache API to `4.3.0` ([see changes](CHANGELOG_API.md))
 - __Extensions__ (💡 New in 9.2)

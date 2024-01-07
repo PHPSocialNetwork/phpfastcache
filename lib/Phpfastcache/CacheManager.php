@@ -119,10 +119,19 @@ class CacheManager
                     ExtensionManager::loadExtension($driver);
                     return CacheManager::getInstance($driver, $config, $instanceId);
                 } catch (PhpfastcacheExtensionNotFoundException) {
+                    // Temporary check until v10
+                    $extensionWarning = '';
+                    if (in_array($driver, ['Arangodb', 'Couchdb', 'Dynamodb', 'Firestore', 'Mongodb', 'Solr'], true)) {
+                        $extensionWarning .= sprintf(
+                            'However, it seems that you are using a driver which is now an extension. Run the following command to solve this issue: %s',
+                            sprintf('composer install phpfastcache/%s-extension', strtolower($driver))
+                        );
+                    }
                     throw new PhpfastcacheDriverNotFoundException(sprintf(
-                        'The driver "%s" does not exist or does not implement %s',
+                        'The driver "%s" does not exist or does not implement %s. %s',
                         $driver,
-                        ExtendedCacheItemPoolInterface::class
+                        ExtendedCacheItemPoolInterface::class,
+                        $extensionWarning,
                     ));
                 }
             }

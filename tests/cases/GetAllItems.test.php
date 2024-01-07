@@ -46,7 +46,6 @@ $drivers = [
     'Predis',
     'Redis',
     'RedisCluster',
-    'Firestore'
 ];
 
 $driversConfigs = ConfigFactory::getDefaultConfigs();

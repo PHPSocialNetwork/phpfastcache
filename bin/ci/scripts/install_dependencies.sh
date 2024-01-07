@@ -3,4 +3,4 @@
 composer self-update
 composer validate
 composer install
-composer require -W phpfastcache/phpssdb:~1.2 predis/predis:~1.1
+composer require -W phpfastcache/phpssdb:^1.2 predis/predis:^2.0

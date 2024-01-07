@@ -8,14 +8,12 @@ parameters:
         - '#PHPDoc tag @(.*)#'
         # Phpstan is not able to know the magic of Ssdb __call() implementation
         - '#Call to an undefined method phpssdb(.*)#'
+
         # Phpstan not differencing couchbase and couchbase_v3 stubs from jetbrains/phpstorm-stubs
         -
             message: '#(Method|Class) Couchbase(.*)#'
             path: lib/Phpfastcache/Drivers/Couchbasev3/Driver.php
-        # Issue in predis/predis => https://github.com/predis/predis/pull/710
-        -
-            message: '#Cannot call method getPayload\(\) on int#'
-            path: lib/Phpfastcache/Drivers/Predis/Driver.php
+
         # See https://github.com/phpstan/phpstan/issues/10315
         -
             message: '#Dead catch - Phpfastcache\\Exceptions\\PhpfastcacheUnsupportedMethodException is never thrown in the try block.#'

@@ -51,7 +51,7 @@
         "ext-wincache": "*",
         "ext-leveldb": "*",
         "ext-couchbase": "^3.0",
-        "predis/predis": "^1.1",
+        "predis/predis": "^2.0",
         "phpfastcache/phpssdb": "~1.1.0",
         "phpfastcache/arangodb-extension": "^9.2",
         "phpfastcache/couchbasev4-extension": "^9.2",

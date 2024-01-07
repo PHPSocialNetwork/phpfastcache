@@ -68,8 +68,8 @@ HELP;
     public function getStats(): DriverStatistic
     {
         $info = $this->instance->info();
-        $size = (isset($info['Memory']['used_memory']) ? $info['Memory']['used_memory'] : 0);
-        $version = (isset($info['Server']['redis_version']) ? $info['Server']['redis_version'] : 0);
+        $size = ($info['Memory']['used_memory'] ?? 0);
+        $version = ($info['Server']['redis_version'] ?? 0);
         $date = (isset($info['Server']['uptime_in_seconds']) ? (new DateTime())->setTimestamp(time() - $info['Server']['uptime_in_seconds']) : 'unknown date');
 
         return (new DriverStatistic())
@@ -78,8 +78,9 @@ HELP;
             ->setSize((int)$size)
             ->setInfo(
                 sprintf(
-                    "The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
+                    "The Redis daemon v%s (with Predis v%s) is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
                     $version,
+                    PredisClient::VERSION,
                     $date->format(DATE_RFC2822)
                 )
             );
@@ -93,7 +94,7 @@ HELP;
     protected function driverConnect(): bool
     {
         /**
-         * In case of an user-provided
+         * In case of a user-provided
          * Predis client just return here
          */
         if ($this->getConfig()->getPredisClient() instanceof PredisClient) {

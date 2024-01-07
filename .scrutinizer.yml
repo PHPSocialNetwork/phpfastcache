@@ -12,7 +12,7 @@
 build:
   dependencies:
     override:
-      - "composer require -W --ignore-platform-reqs phpfastcache/phpssdb:~1.1 predis/predis:~1.1 aws/aws-sdk-php:~3.2 google/cloud-firestore:~1.20 solarium/solarium:~6.1"
+      - "composer require -W --ignore-platform-reqs phpfastcache/phpssdb:^1.2 predis/predis:^2.0"
   nodes:
     analysis:
       project_setup:

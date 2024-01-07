@@ -328,12 +328,4 @@ See [Couchdb extension event documentation](https://github.com/PHPSocialNetwork/
     - **Risky Circular Methods**: None
 
 #### Solr
-- onSolrBuildEndpoint(*Callable* **$callback**)
-    - **Callback arguments**
-        - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *EventReferenceParameter($params)* **$endpoints** _via EventReferenceParameter object_ **(type modification forbidden)**
-    - **Scope**
-        - Solr Driver
-    - **Description**
-        - Allow you to alter the endpoints built used to connect to Solr server
-    - **Risky Circular Methods**: None
+See [Solr extension event documentation](https://github.com/PHPSocialNetwork/solr-extension#events).

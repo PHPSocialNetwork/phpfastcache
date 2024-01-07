@@ -63,7 +63,8 @@
         "google/cloud-firestore": "^1.20",
         "aws/aws-sdk-php": "~3.0",
         "phpfastcache/arangodb-extension": "^9.2",
-        "phpfastcache/couchdb-extension": "^9.2"
+        "phpfastcache/couchdb-extension": "^9.2",
+        "phpfastcache/solr-extension": "^9.2"
     },
     "conflict": {
         "solarium/solarium": "<6.1"

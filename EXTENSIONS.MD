@@ -11,6 +11,7 @@ The 9.2 make the beginning of a new external extensions:
 - `Dynamodb`
 - `Firestore`
 - `Mongodb`
+- `Solr`
 
 There's only 2 steps:
 

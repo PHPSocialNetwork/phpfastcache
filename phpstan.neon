@@ -16,10 +16,6 @@ parameters:
         -
             message: '#Cannot call method getPayload\(\) on int#'
             path: lib/Phpfastcache/Drivers/Predis/Driver.php
-        # Issue in arangodb/arangodb-php => https://github.com/arangodb/arangodb-php/issues/293
-        -
-            message: '#Cannot assign offset (.*) to string|Offset (.*) on string#'
-            path: lib/Phpfastcache/Drivers/Arangodb/Driver.php
         # See https://github.com/phpstan/phpstan/issues/10315
         -
             message: '#Dead catch - Phpfastcache\\Exceptions\\PhpfastcacheUnsupportedMethodException is never thrown in the try block.#'

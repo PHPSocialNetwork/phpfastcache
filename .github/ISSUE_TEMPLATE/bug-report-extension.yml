@@ -28,7 +28,11 @@ body:
     attributes:
       label: Which extension is this issue about ?
       options:
+        - Arangodb
         - Couchbasev4
+        - Couchdb
+        - Mongodb
+        - Solr
     validations:
       required: true
   - type: dropdown
@@ -68,7 +72,7 @@ body:
         The connector and/or SDK version + the database version if applicable, ex: 
         - Couchbase 7.1.0 + PECL Extension 3.2.2
         - Redis 7.0.0 + PECL Extension 5.3.7
-        - MongoDB 5.0.2 Community + mongodb/mongodb
+        - MongoDB 5.0.2 Community + mongodb/mongodb version x.x.x
         - etc
 
         **Be as much detailed as you can be !**

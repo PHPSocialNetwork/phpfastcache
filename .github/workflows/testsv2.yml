@@ -2,6 +2,7 @@ name: Phpfastcache Tests
 on: [push, pull_request]
 jobs:
   run:
+    environment: github-ci
     runs-on: ${{ matrix.operating-system }}
     timeout-minutes: 60
     strategy:

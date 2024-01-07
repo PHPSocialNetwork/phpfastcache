@@ -3,9 +3,10 @@
 - __API__
   - Upgraded Phpfastcache API to `4.3.0` ([see changes](CHANGELOG_API.md))
 - __Extensions__ (💡 New in 9.2)
-  - Created an extension mechanism to allow future driver to be loaded independently, see [README.md](README.md)
-  - Created first extension for `Couchbasev4` support which will be moved to a [sub-repository](https://github.com/PHPSocialNetwork/couchbasev4-extension).
-  - **IMPORTANT**: *AS OF V10* the following drivers will be **MOVED** to their own sub-repositories as a standalone extension: `Arangodb`, `Couchdb`, `Cassandra`, `Dynamodb`, `Firestore`, `Mongodb`, `Solr`. However `Couchbasev3` will stay in the core for compatibility reasons but will be deprecated. 
+  - Created an extension mechanism to allow some drivers to be loaded independently, see [README.md](README.md)
+  - Created extension for `Couchbasev4` support to its own [sub-repository](https://github.com/PHPSocialNetwork/couchbasev4-extension).
+  - **IMPORTANT**: *AS OF v9.2* the following drivers has been **MOVED** to their own sub-repositories as a standalone extension: `Arangodb`, `Couchdb`, `Cassandra`, `Dynamodb`, `Firestore`, `Mongodb`, `Solr`. However `Couchbasev3` will stay in the core for compatibility reasons but will be deprecated. 
+  - **IMPORTANT**: *AS OF v10* extensions will have their namespaces permanently moved from `Phpfastcache\Drivers\EXT_NAME\{Config, Driver, Event, Item}` to `Phpfastcache\Extensions\Drivers\EXT_NAME\{Config, Driver, Event, Item}`. For now an alias is ensuring compatibility.
 - __Events__
   - EventManager is now scoped to its own poll if retrieved through `ExtendedCacheItemPoolTrait::->getEventManager()`. Global EventManager `EventManager::getInstance()` remains unchanged, see [EVENTS.md](./docs/EVENTS.md).
   - `EventManagerInterface::on()` now also accepts a single `string $events`.

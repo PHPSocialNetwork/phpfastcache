@@ -15,8 +15,6 @@ language: php
 services:
   - memcached
   - redis
-  - mongodb
-  - docker
 cache:
   directories:
     - $HOME/pecl_cache
@@ -40,15 +38,12 @@ before_install:
   - phpenv config-rm xdebug.ini
   - composer install
   - composer require phwoolcon/ci-pecl-cacher -n
-  - "./bin/ci/scripts/install_solr.sh || echo \"Solr install failed\""
   - "./bin/ci/scripts/install_ssdb.sh || echo \"SSDB install failed\""
   - "./bin/ci/scripts/install_couchbase.sh || echo \"Couchbase install failed\""
-  - "./bin/ci/scripts/setup_mongodb.sh || echo \"Setup Mongodb failed\""
   - "./bin/ci/scripts/setup_gcp.sh || echo \"GCP setup failed\""
   - "pecl channel-update pecl.php.net || echo \"PECL Channel update failed\""
   # - yes | pecl install -f grpc-stable  | grep -v --line-buffered "/tmp/pear/install/grpc"; # This pecl install is partially muted due to too much output written
   - "yes | ./vendor/bin/ci-pecl-install grpc | grep -v --line-buffered \"/tmp/pear/install/grpc\" || echo \"PECL GRPC install failed\""
-  #- "yes | (./vendor/bin/ci-pecl-install mongodb) || echo \"PECL Mongodb install failed\"" # Mongodb seems to be provided In Bionic: https://docs.travis-ci.com/user/reference/bionic/#php-support
   # - "yes | ./vendor/bin/ci-pecl-install apcu || echo \"PECL Apcu install failed\"" # Apcu seems to be provided In Bionic: https://docs.travis-ci.com/user/reference/bionic/#php-support
   - "yes | ./vendor/bin/ci-pecl-install memcache || echo \"PECL Memcache install failed\""
   - "yes | ./vendor/bin/ci-pecl-install memcached || echo \"PECL Memcached install failed\""

@@ -19,6 +19,10 @@
                 "homepage": "https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors"
             }
     ],
+    "provide": {
+        "psr/cache-implementation": "2.0|3.0",
+        "psr/simple-cache-implementation": "2.0|3.0"
+    },
     "require": {
         "php": ">=8.0",
         "psr/cache": "^2.0||^3.0",
@@ -56,12 +60,12 @@
         "phpfastcache/phpssdb": "~1.1.0",
         "solarium/solarium": "~6.1",
         "doctrine/couchdb": "^dev-master#9eeb9e5",
-        "triagens/arangodb": "^3.8",
         "google/cloud-firestore": "^1.20",
-        "aws/aws-sdk-php": "~3.0"
+        "aws/aws-sdk-php": "~3.0",
+        "phpfastcache/arangodb-extension": "^9.2",
+        "phpfastcache/couchdb-extension": "^9.2"
     },
     "conflict": {
-        "doctrine/couchdb": "<dev-master#9eeb9e5",
         "solarium/solarium": "<6.1"
     },
     "autoload": {
@@ -69,13 +73,9 @@
             "Phpfastcache\\": "lib/Phpfastcache/"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Phpfastcache\\Tests\\": "tests/lib/"
-        }
-    },
     "scripts": {
         "phpcs": "vendor/bin/phpcs lib/ --report=summary",
+        "phpcbf": "vendor/bin/phpcbf lib/ --report=summary",
         "phpmd": "vendor/bin/phpmd lib/ ansi phpmd.xml",
         "phpstan": "vendor/bin/phpstan analyse lib/ -l 6 -c phpstan.neon",
         "quality": ["@phpcs", "@phpmd", "@phpstan"],

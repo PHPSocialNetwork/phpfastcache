@@ -311,36 +311,11 @@ The order of execution of the events is always the following:
 
 ### Driver-specific Events (as of V9)
 #### Arangodb
-- onArangodbConnection(*Callable* **$callback**)
-    - **Callback arguments**
-        - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *EventReferenceParameter($connectionOptions)* **$connectionOptions** _via EventReferenceParameter object_ **(type modification forbidden)**
-    - **Scope**
-        - Arangodb Driver
-    - **Description**
-        - Allow you to alter the parameters built used to connect to Arangodb server
-    - **Risky Circular Methods**: None
-
-- onArangodbCollectionParams(*Callable* **$callback**)
-    - **Callback arguments**
-        - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *EventReferenceParameter($params)* **$params** _via EventReferenceParameter object_ **(type modification forbidden)**
-    - **Scope**
-        - Arangodb Driver
-    - **Description**
-        - Allow you to alter the parameters built used to create the collection
-    - **Risky Circular Methods**: None
+See [Arangodb extension event documentation](https://github.com/PHPSocialNetwork/arangodb-extension#events).
 
 #### Couchdb (v9.2)
-- onCouchdbCreateOptions(*Callable* **$callback**)
-    - **Callback arguments**
-        - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *EventReferenceParameter($options)* **$options** _via EventReferenceParameter object_ **(type modification forbidden)**
-    - **Scope**
-        - Arangodb Driver
-    - **Description**
-        - Allow you to alter the options built used to create the Couchdb client instance.
-    - **Risky Circular Methods**: None
+See [Couchdb extension event documentation](https://github.com/PHPSocialNetwork/couchdb-extension#events).
+
 #### Dynamodb
 - onDynamodbCreateTable(*Callable* **$callback**)
     - **Callback arguments**

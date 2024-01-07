@@ -21,7 +21,6 @@ use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
- * @see https://github.com/arangodb/arangodb-php/blob/devel/examples/init.php
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class Config extends ConfigurationOption

@@ -12,15 +12,15 @@
 build:
   dependencies:
     override:
-      - "composer require -W --ignore-platform-reqs doctrine/couchdb:dev-master phpfastcache/phpssdb:~1.1 predis/predis:~1.1 mongodb/mongodb:~1.9 triagens/arangodb:~3.8 aws/aws-sdk-php:~3.2 google/cloud-firestore:~1.20 solarium/solarium:~6.1"
+      - "composer require -W --ignore-platform-reqs phpfastcache/phpssdb:~1.1 predis/predis:~1.1 mongodb/mongodb:~1.9 aws/aws-sdk-php:~3.2 google/cloud-firestore:~1.20 solarium/solarium:~6.1"
   nodes:
     analysis:
       project_setup:
         override: true
       tests:
         override: [php-scrutinizer-run]
-  environment: 
-    php: 
+  environment:
+    php:
       version: 8.0.0
       ini:
         date.timezone: 'Europe/Paris'
@@ -31,13 +31,13 @@ build:
         - memcache
 checks:
   php: true
-coding_style: 
-  php: 
-    spaces: 
-      around_operators: 
+coding_style:
+  php:
+    spaces:
+      around_operators:
         concatenation: true
-filter: 
-  excluded_paths: 
+filter:
+  excluded_paths:
     - .github/*
     - bin/*
     - docs/*
@@ -48,15 +48,15 @@ filter:
 tools:
   external_code_coverage: false
   php_code_coverage: true
-  php_code_sniffer: 
-    config: 
+  php_code_sniffer:
+    config:
       standard: PSR12
     enabled: true
-    filter: 
-      paths: 
+    filter:
+      paths:
         - lib/*
-  php_mess_detector: 
+  php_mess_detector:
     enabled: true
-    filter: 
-      paths: 
+    filter:
+      paths:
         - lib/*

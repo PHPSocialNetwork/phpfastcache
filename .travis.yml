@@ -41,9 +41,7 @@ before_install:
   - composer install
   - composer require phwoolcon/ci-pecl-cacher -n
   - "./bin/ci/scripts/install_solr.sh || echo \"Solr install failed\""
-  - "./bin/ci/scripts/install_arangodb.sh || echo \"Arangodb install failed\""
   - "./bin/ci/scripts/install_ssdb.sh || echo \"SSDB install failed\""
-  - "./bin/ci/scripts/install_couchdb.sh || echo \"Couchdb install failed\""
   - "./bin/ci/scripts/install_couchbase.sh || echo \"Couchbase install failed\""
   - "./bin/ci/scripts/setup_mongodb.sh || echo \"Setup Mongodb failed\""
   - "./bin/ci/scripts/setup_gcp.sh || echo \"GCP setup failed\""

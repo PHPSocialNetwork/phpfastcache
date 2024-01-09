@@ -16,16 +16,29 @@ declare(strict_types=1);
 
 namespace Phpfastcache;
 
-use Phpfastcache\Exceptions\PhpfastcacheDriverNotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheExtensionNotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Exceptions\PhpfastcacheUnsupportedOperationException;
 use Phpfastcache\Helper\UninstanciableObjectTrait;
 
+/**
+ * @internal This extension manager is meant to manager officials Phpfastcache's extensions.
+ * @see \Phpfastcache\CacheManager::addCustomDriver() to add you own drivers.
+ */
 final class ExtensionManager
 {
     use UninstanciableObjectTrait;
+
+    public const KNOWN_EXTENSION_NAMES = [
+        'Arangodb',
+        'Couchbasev4',
+        'Couchdb',
+        'Dynamodb',
+        'Firestore',
+        'Mongodb',
+        'Solr'
+    ];
 
     /**
      * @var array<string, string>
@@ -34,47 +47,36 @@ final class ExtensionManager
 
     public static function registerExtension(string $extensionName, string $driverClassName): void
     {
+        if (!str_starts_with($driverClassName, ltrim('Phpfastcache\\Extensions\\', '\\'))) {
+            throw new PhpfastcacheInvalidArgumentException(
+                'Only extensions from "\\Phpfastcache\\Extensions\\" namespace are allowed. Use CacheManager::addCustomDriver() to create your own extensions.'
+            );
+        }
         self::$registeredExtensions[$extensionName] = $driverClassName;
     }
 
-    /**
-     * Autoload all the discoverable extensions.
-     *
-     * @return void
-     * @throws PhpfastcacheExtensionNotFoundException
-     * @throws PhpfastcacheInvalidArgumentException
-     * @throws PhpfastcacheLogicException
-     * @throws PhpfastcacheUnsupportedOperationException
-     */
-    public static function autoloadExtensions(): void
+    public static function extensionExists(string $extensionName): bool
     {
-        foreach (self::$registeredExtensions as $extension) {
-            self::loadExtension($extension);
-        }
+        return isset(self::$registeredExtensions[$extensionName]);
     }
 
     /**
      * @param string $name
-     * @return void
+     * @return string
      * @throws PhpfastcacheExtensionNotFoundException
-     * @throws PhpfastcacheInvalidArgumentException
-     * @throws PhpfastcacheLogicException
-     * @throws PhpfastcacheUnsupportedOperationException
      */
-    public static function loadExtension(string $name): void
+    public static function getExtension(string $name): string
     {
-        if (!CacheManager::customDriverExists($name)) {
-            if (isset(self::$registeredExtensions[$name])) {
-                CacheManager::addCustomDriver($name, self::$registeredExtensions[$name]);
-            } else {
-                throw new PhpfastcacheExtensionNotFoundException(
-                    sprintf(
-                        'Unable too find the %s extension. Make sure that you you added through composer: `composer require phpfastcache/%s-extension`',
-                        $name,
-                        strtolower($name)
-                    )
-                );
-            }
+        if (isset(self::$registeredExtensions[$name])) {
+            return self::$registeredExtensions[$name];
+        } else {
+            throw new PhpfastcacheExtensionNotFoundException(
+                sprintf(
+                    'Unable too find the %s extension. Make sure that you you added through composer: `composer require phpfastcache/%s-extension`',
+                    $name,
+                    strtolower($name)
+                )
+            );
         }
     }
 }

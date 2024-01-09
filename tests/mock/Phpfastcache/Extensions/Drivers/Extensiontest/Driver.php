@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * This file is part of Phpfastcache.
@@ -12,10 +11,11 @@
  * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
-declare(strict_types=1);
+namespace Phpfastcache\Extensions\Drivers\Extensiontest;
 
-namespace Phpfastcache\Exceptions;
+use Phpfastcache\Drivers\Files\Driver as FilesDriver;
 
-class PhpfastcacheExtensionNotFoundException extends PhpfastcacheDriverNotFoundException
+class Driver extends FilesDriver
 {
+
 }

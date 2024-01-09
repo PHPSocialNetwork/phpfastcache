@@ -23,6 +23,7 @@ use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverNotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheExtensionNotFoundException;
+use Phpfastcache\Exceptions\PhpfastcacheExtensionNotInstalledException;
 use Phpfastcache\Exceptions\PhpfastcacheInstanceNotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
@@ -60,6 +61,11 @@ class CacheManager
     protected static array $driverCustoms = [];
 
     /**
+     * @var string[]
+     */
+    protected static array $driverExtensions = [];
+
+    /**
      * @param string $instanceId
      * @return ExtendedCacheItemPoolInterface
      * @throws PhpfastcacheInstanceNotFoundException
@@ -91,6 +97,7 @@ class CacheManager
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheDriverNotFoundException
+     * @throws PhpfastcacheExtensionNotInstalledException
      * @throws PhpfastcacheLogicException
      */
     public static function getInstance(string $driver, ?ConfigurationOptionInterface $config = null, ?string $instanceId = null): ExtendedCacheItemPoolInterface
@@ -116,22 +123,19 @@ class CacheManager
                 );
             } else {
                 try {
-                    ExtensionManager::loadExtension($driver);
+                    self::$driverExtensions[$driver] = ExtensionManager::getExtension($driver);
                     return CacheManager::getInstance($driver, $config, $instanceId);
                 } catch (PhpfastcacheExtensionNotFoundException) {
-                    // Temporary check until v10
-                    $extensionWarning = '';
-                    if (in_array($driver, ['Arangodb', 'Couchdb', 'Dynamodb', 'Firestore', 'Mongodb', 'Solr'], true)) {
-                        $extensionWarning .= sprintf(
-                            'However, it seems that you are using a driver which is now an extension. Run the following command to solve this issue: %s',
+                    if (in_array($driver, ExtensionManager::KNOWN_EXTENSION_NAMES, true)) {
+                        throw new PhpfastcacheExtensionNotInstalledException(sprintf(
+                            'You requested a driver which is now an extension. Run the following command to solve this issue: %s',
                             sprintf('composer install phpfastcache/%s-extension', strtolower($driver))
-                        );
+                        ));
                     }
                     throw new PhpfastcacheDriverNotFoundException(sprintf(
-                        'The driver "%s" does not exist or does not implement %s. %s',
+                        'The driver "%s" does not exist or does not implement %s.',
                         $driver,
                         ExtendedCacheItemPoolInterface::class,
-                        $extensionWarning,
                     ));
                 }
             }
@@ -191,7 +195,9 @@ class CacheManager
      */
     public static function getDriverClass(string $driverName): string
     {
-        if (!empty(self::$driverCustoms[$driverName])) {
+        if (!empty(self::$driverExtensions[$driverName])) {
+            $driverClass = self::$driverExtensions[$driverName];
+        } elseif (!empty(self::$driverCustoms[$driverName])) {
             $driverClass = self::$driverCustoms[$driverName];
         } elseif (!empty(self::$driverOverrides[$driverName])) {
             $driverClass = self::$driverOverrides[$driverName];

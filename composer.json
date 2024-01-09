@@ -37,7 +37,7 @@
         "squizlabs/php_codesniffer": "@stable",
         "phpstan/phpstan": "@stable",
         "jetbrains/phpstorm-stubs": "dev-master",
-        "phpfastcache/phpfastcache-devtools": "^9.2"
+        "phpfastcache/phpfastcache-devtools": "dev-master"
     },
     "suggest": {
         "ext-apcu": "*",
@@ -60,9 +60,6 @@
         "phpfastcache/firestore-extension": "^9.2",
         "phpfastcache/mongodb-extension": "^9.2",
         "phpfastcache/solr-extension": "^9.2"
-    },
-    "conflict": {
-        "solarium/solarium": "<6.1"
     },
     "autoload": {
         "psr-4": {

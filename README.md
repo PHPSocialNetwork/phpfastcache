@@ -3,7 +3,7 @@
 
 #### :warning: Please note that the V9 is mostly a PHP 8 type aware update of Phpfastcache with some significant changes !
 > As the V9 is **relatively** not compatible with previous versions, please read carefully the [migration guide](./docs/migration/MigratingFromV8ToV9.md) to ensure you the smoothest migration possible.
-One of the biggest change is the configuration system which is now an object that replace the primitive array that we used to implement back then. 
+One of the biggest changes is the configuration system which is now an object that replace the primitive array that we used to implement back then. 
 Also, please note that the V9 requires at least PHP 8 or higher to works properly.
 
 ---------------------------
@@ -24,15 +24,15 @@ The simplicity of abstraction: One class for many backend cache. You don't need 
 | `Leveldb` _(Core)_                                                                   | `Couchdb` _([Extension](https://github.com/PHPSocialNetwork/couchdb-extension))_                 |                                            |                                       |
 | `Memcache(d)` _(Core)_                                                               | `Mongodb` _([Extension](https://github.com/PHPSocialNetwork/mongodb-extension))_                 |                                            |                                       |
 | `Solr` _([Extension](https://github.com/PHPSocialNetwork/solr-extension))_           | `Predis` _(Core)_                                                                                |                                            |                                       |
-| `Sqlite` _(Core)_                                                                    | `Redis`/`RedisCluster` _(Core)_                                                                  |                                            |                                       |
-| `Wincache` _(Core)_  <br>(**Deprecated** as of v9.2, will be removed as of v10)      | `Ssdb` _(Core)_                                                                                  |                                            |                                       |
-| `Zend Disk Cache` _(Core)_                                                           | `Zend Memory Cache` _(Core)_                                                                     |                                            |                                       |
-|                                                                                      |                                                                                                  |                                            |                                       |
+| `Sqlite` _(Core)_                                                                    | `Ravendb` _([Extension](https://github.com/PHPSocialNetwork/ravendb-extension))                  |                                            |                                       |
+| `Wincache` _(Core)_  <br>(**Deprecated** as of v9.2, will be removed as of v10)      | `Redis`/`RedisCluster` _(Core)_                                                                  |                                            |                                       |
+| `Zend Disk Cache` _(Core)_                                                           | `Ssdb` _(Core)_                                                                                  |                                            |                                       |
+|                                                                                      | `Zend Memory Cache` _(Core)_                                                                     |                                            |                                       |
 
 \* Driver descriptions available in [DOCS/DRIVERS.md](./docs/DRIVERS.md)
 
 :new: As of v9.2 a new Couchbase extension has been released: [Couchbasev4](https://github.com/PHPSocialNetwork/couchbasev4-extension)
-
+Also a new driver extension has been added: `Ravendb`. The driver will be **actively developed** in the feature to allow better fine-grained configuration.
 This new extension **is the beginning of a new era** for Phpfastcache along with some others:\
 Many drivers has been moved from the core to their own sub-repository as a standalone extension: `Arangodb`, `Couchdb`, `Dynamodb`, `Firestore`, `Mongodb`, `Solr`.\
 They can be easily added through composer, ex: `composer install phpfastcache/couchbasev4-extension`

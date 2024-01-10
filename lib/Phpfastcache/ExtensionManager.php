@@ -18,8 +18,6 @@ namespace Phpfastcache;
 
 use Phpfastcache\Exceptions\PhpfastcacheExtensionNotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
-use Phpfastcache\Exceptions\PhpfastcacheLogicException;
-use Phpfastcache\Exceptions\PhpfastcacheUnsupportedOperationException;
 use Phpfastcache\Helper\UninstanciableObjectTrait;
 
 /**
@@ -37,6 +35,7 @@ final class ExtensionManager
         'Dynamodb',
         'Firestore',
         'Mongodb',
+        'Ravendb',
         'Solr'
     ];
 

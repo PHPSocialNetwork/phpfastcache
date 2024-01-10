@@ -31,7 +31,10 @@ body:
         - Arangodb
         - Couchbasev4
         - Couchdb
+        - Dynamodb
+        - Firestore
         - Mongodb
+        - Ravendb
         - Solr
     validations:
       required: true

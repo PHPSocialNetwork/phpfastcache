@@ -1,3 +1,8 @@
+## 9.2.2
+##### 10 january 2024
+- __Core__
+  - Added internal proxy class
+
 ## 9.2.1
 ##### 07 january 2024
 - __Misc__

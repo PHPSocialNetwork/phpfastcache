@@ -1,7 +1,7 @@
 ## 9.2.2
-##### 10 january 2024
+##### 11 january 2024
 - __Core__
-  - Added internal proxy class
+  - Added optional prefix to `\Phpfastcache\Core\Pool\CacheItemPoolTrait::getKeys()`
 
 ## 9.2.1
 ##### 07 january 2024

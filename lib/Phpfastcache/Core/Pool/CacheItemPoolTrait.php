@@ -617,12 +617,13 @@ trait CacheItemPoolTrait
     /**
      * @param ExtendedCacheItemInterface[] $items
      * @param bool $encoded
+     * @param string $keyPrefix
      * @return string[]
      */
-    protected function getKeys(array $items, bool $encoded = false): array
+    protected function getKeys(array $items, bool $encoded = false, string $keyPrefix = ''): array
     {
         return array_map(
-            static fn(ExtendedCacheItemInterface $item) => $encoded ? $item->getEncodedKey() : $item->getKey(),
+            static fn(ExtendedCacheItemInterface $item) => $keyPrefix . ($encoded ? $item->getEncodedKey() : $item->getKey()),
             $items
         );
     }

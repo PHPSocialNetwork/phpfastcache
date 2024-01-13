@@ -1,3 +1,12 @@
+## 9.2.3
+##### 11 january 2024
+- __Drivers__
+  - **Added support of `Ravendb` as an extension with its own [sub-repository](https://github.com/PHPSocialNetwork/ravendb-extension).**
+  - Deprecated `\Phpfastcache\Entities\DriverStatistic::getData()`. Will be removed as of v10.
+  - Deprecated `\Phpfastcache\Entities\DriverStatistic::setData()`. Will be removed as of v10.
+  - Added `\Phpfastcache\Entities\DriverStatistic::getCount(): int|null`. If applicable will return the count of cache objects stored in driver database/collection. Null otherwise.
+  - Added `\Phpfastcache\Entities\DriverStatistic::setCount()`
+
 ## 9.2.2
 ##### 11 january 2024
 - __Core__
@@ -14,7 +23,7 @@
   - Upgraded Phpfastcache API to `4.3.0` ([see changes](CHANGELOG_API.md))
 - __Extensions__ (💡 New in 9.2)
   - Created an extension mechanism to allow some drivers to be loaded independently, see [README.md](README.md)
-  - Created extension for `Couchbasev4` support to its own [sub-repository](https://github.com/PHPSocialNetwork/couchbasev4-extension).
+  - Added support of `Couchbasev4` as an extension with its own [sub-repository](https://github.com/PHPSocialNetwork/couchbasev4-extension).
   - **IMPORTANT**: *AS OF v9.2* the following drivers has been **MOVED** to their own sub-repositories as a standalone extension: `Arangodb`, `Couchdb`, `Dynamodb`, `Firestore`, `Mongodb`, `Solr`. However `Couchbasev3` will stay in the core for compatibility reasons but will be deprecated. 
   - **IMPORTANT**: *AS OF v10* extensions will have their namespaces permanently moved from `Phpfastcache\Drivers\EXT_NAME\{Config, Driver, Event, Item}` to `Phpfastcache\Extensions\Drivers\EXT_NAME\{Config, Driver, Event, Item}`. For now an alias is ensuring compatibility.
 - __Events__

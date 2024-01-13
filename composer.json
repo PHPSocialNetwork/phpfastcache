@@ -59,6 +59,7 @@
         "phpfastcache/dynamodb-extension": "^9.2",
         "phpfastcache/firestore-extension": "^9.2",
         "phpfastcache/mongodb-extension": "^9.2",
+        "phpfastcache/ravendb-extension": "^9.2",
         "phpfastcache/solr-extension": "^9.2"
     },
     "autoload": {

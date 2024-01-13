@@ -21,7 +21,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Helper\UninstanciableObjectTrait;
 
 /**
- * @internal This extension manager is meant to manager officials Phpfastcache's extensions.
+ * @internal This extension manager is meant to manage officials Phpfastcache's extensions.
  * @see \Phpfastcache\CacheManager::addCustomDriver() to add you own drivers.
  */
 final class ExtensionManager

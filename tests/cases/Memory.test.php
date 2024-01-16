@@ -17,7 +17,7 @@ use Phpfastcache\Tests\Helper\TestHelper;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
-$testHelper = new TestHelper('Memstatic driver');
+$testHelper = new TestHelper('Memory driver');
 $cacheInstance = CacheManager::getInstance('Memory');
 
 $testHelper->runCRUDTests($cacheInstance);

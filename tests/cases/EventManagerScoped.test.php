@@ -15,10 +15,10 @@
 use Phpfastcache\CacheManager;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\EventManager;
-use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Tests\Helper\TestHelper;
+use Phpfastcache\Event\Event\EventInterface;
+use Phpfastcache\Event\Events;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -36,36 +36,36 @@ $globalGetItemEventManagerCount = 0;
 $filesGetItemEventManagerCount = 0;
 $redisGetItemEventManagerCount = 0;
 
-EventManager::getInstance()->addGlobalListener(static function (string $eventName) use ($testHelper, &$globalEveryEventsEvents) {
-    $testHelper->printInfoText(sprintf('<light_yellow>[Global]</light_yellow> <blue>Global "addGlobalListener" has been called for</blue> <magenta>"%s"</magenta>', $eventName));
-    $globalEveryEventsEvents[$eventName] = ($globalEveryEventsEvents[$eventName] ?? 0) + 1;
+EventManager::getInstance()->addGlobalListener(static function (EventInterface $event) use ($testHelper, &$globalEveryEventsEvents) {
+    $testHelper->printInfoText(sprintf('<light_yellow>[Global]</light_yellow> <blue>Global "addGlobalListener" has been called for</blue> <magenta>"%s"</magenta>', $event::getName()));
+    $globalEveryEventsEvents[$event::getName()] = ($globalEveryEventsEvents[$event::getName()] ?? 0) + 1;
 }, 'GlobalEveryEvent');
 
-EventManager::getInstance()->onCacheGetItem(static function (ExtendedCacheItemPoolInterface $itemPool, ExtendedCacheItemInterface $item, string $eventName) use ($testHelper, &$globalGetItemEventManagerCount) {
+EventManager::getInstance()->addListener(Events::CACHE_GET_ITEM, static function (\Phpfastcache\Event\Event\CacheGetItemEvent $event) use ($testHelper, &$globalGetItemEventManagerCount) {
     $testHelper->assertPass('<light_yellow>[Global]</light_yellow> Global event manager received events from multiple pool instances');
     $globalGetItemEventManagerCount++;
 });
 
-$filesCacheInstance->getEventManager()->addGlobalListener(static function (string $eventName) use ($testHelper, &$filesEveryEventsEventEvents) {
-    $testHelper->printInfoText(sprintf('<yellow>[Files]</yellow> <cyan>Scoped "addGlobalListener" has been called for</cyan> <magenta>"%s"</magenta>', $eventName));
-    $filesEveryEventsEventEvents[$eventName] = ($filesEveryEventsEventEvents[$eventName] ?? 0) + 1;
+$filesCacheInstance->getEventManager()->addGlobalListener(static function (EventInterface $event) use ($testHelper, &$filesEveryEventsEventEvents) {
+    $testHelper->printInfoText(sprintf('<yellow>[Files]</yellow> <cyan>Scoped "addGlobalListener" has been called for</cyan> <magenta>"%s"</magenta>', $event::getName()));
+    $filesEveryEventsEventEvents[$event::getName()] = ($filesEveryEventsEventEvents[$event::getName()] ?? 0) + 1;
 }, 'GlobalEveryEvent');
 
 
-$filesCacheInstance->getEventManager()->onCacheGetItem(static function (ExtendedCacheItemPoolInterface $itemPool, ExtendedCacheItemInterface $item, string $eventName) use ($testHelper, &$filesGetItemEventManagerCount)  {
-    if($itemPool->getDriverName() === 'Files') {
+$filesCacheInstance->getEventManager()->addListener(Events::CACHE_GET_ITEM, static function (\Phpfastcache\Event\Event\CacheGetItemEvent $event) use ($testHelper, &$filesGetItemEventManagerCount)  {
+    if($event->getItemPool()->getDriverName() === 'Files') {
         $testHelper->assertPass('<yellow>[Files]</yellow> Scoped event manager received only events of its own pool instance');
         $filesGetItemEventManagerCount++;
     }
 });
 
-$redisCacheInstance->getEventManager()->addGlobalListener(static function (string $eventName) use ($testHelper, &$redisEveryEventsEventEvents) {
-    $testHelper->printInfoText(sprintf('<yellow>[Redis]</yellow> <cyan>Scoped "addGlobalListener" has been called for</cyan> <magenta>"%s"</magenta>', $eventName));
-    $redisEveryEventsEventEvents[$eventName] = ($redisEveryEventsEventEvents[$eventName] ?? 0) + 1;
+$redisCacheInstance->getEventManager()->addGlobalListener(static function (\Phpfastcache\Event\Event\EventInterface $event) use ($testHelper, &$redisEveryEventsEventEvents) {
+    $testHelper->printInfoText(sprintf('<yellow>[Redis]</yellow> <cyan>Scoped "addGlobalListener" has been called for</cyan> <magenta>"%s"</magenta>', $event::getName()));
+    $redisEveryEventsEventEvents[$event::getName()] = ($redisEveryEventsEventEvents[$event::getName()] ?? 0) + 1;
 }, 'GlobalEveryEvent');
 
-$redisCacheInstance->getEventManager()->onCacheGetItem(static function (ExtendedCacheItemPoolInterface $itemPool, ExtendedCacheItemInterface $item, string $eventName) use ($testHelper, &$redisGetItemEventManagerCount)  {
-    if($itemPool->getDriverName() === 'Redis') {
+$redisCacheInstance->getEventManager()->addListener(Events::CACHE_GET_ITEM, static function (\Phpfastcache\Event\Event\CacheGetItemEvent $event) use ($testHelper, &$redisGetItemEventManagerCount)  {
+    if($event->getItemPool()->getDriverName() === 'Redis') {
         $testHelper->assertPass('<yellow>[Files]</yellow> Scoped event manager received only events of its own pool instance');
         $redisGetItemEventManagerCount++;
     }

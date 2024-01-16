@@ -32,9 +32,9 @@ $testHelper = new TestHelper('Testing getAllItems() method');
 /**
  * https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV5%CB%96%5D-Fetching-all-keys
  */
-EventManager::getInstance()->addListener([Events::CACHE_GET_ALL_ITEMS], static function(ExtendedCacheItemPoolInterface $driver, EventReferenceParameter $referenceParameter) use ($testHelper, &$eventFlag){
-    $callback = $referenceParameter->getParameterValue();
-    $referenceParameter->setParameterValue(function(string $pattern) use ($callback, &$eventFlag, $testHelper) {
+EventManager::getInstance()->addListener([Events::CACHE_GET_ALL_ITEMS], static function(\Phpfastcache\Event\Event\CacheGetAllItemsEvent $event) use ($testHelper, &$eventFlag){
+    $callback = $event->getEventReferenceParameter()->getParameterValue();
+    $event->getEventReferenceParameter()->setParameterValue(function(string $pattern) use ($callback, &$eventFlag, $testHelper) {
         $eventFlag = true;
         $testHelper->printInfoText('The custom event Event::CACHE_GET_ALL_ITEMS has been called.');
         return $callback($pattern);

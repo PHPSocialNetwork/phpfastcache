@@ -14,10 +14,9 @@
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Config\IOConfigurationOption;
-use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Entities\ItemBatch;
 use Phpfastcache\EventManager;
 use Phpfastcache\Tests\Helper\TestHelper;
+use Phpfastcache\Event\Events;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -29,8 +28,8 @@ $driverInstance = CacheManager::getInstance($defaultDriver, new IOConfigurationO
 ]));
 
 if (!$testHelper->isHHVM()) {
-    EventManager::getInstance()->onCacheGetItemInSlamBatch(function (ExtendedCacheItemPoolInterface $itemPool, ItemBatch $driverData, $cacheSlamsSpendSeconds) use ($testHelper) {
-        $testHelper->printText("Looping in batch for {$cacheSlamsSpendSeconds} second(s) with a batch from " . $driverData->getItemDate()->format(\DateTime::W3C));
+    EventManager::getInstance()->addListener(Events::CACHE_GET_ITEM_IN_SLAM_BATCH, function (\Phpfastcache\Event\Event\CacheGetItemInSlamBatchItemPoolEvent $event) use ($testHelper) {
+        $testHelper->printText("Looping in batch for {$event->getCacheSlamsSpendSeconds()} second(s) with a batch from " . $event->getItemBatch()->getItemDate()->format(\DateTime::W3C));
     });
 
     $testHelper->runSubProcess('CacheSlamsProtection');

@@ -43,9 +43,10 @@ $clusterAggregator->disaggregateDriver($unwantedPool);
 $cluster = $clusterAggregator->getCluster(AggregatorInterface::STRATEGY_MASTER_SLAVE);
 
 $testPasses = false;
-$cluster->getEventManager()->onCacheReplicationSlaveFallback(
-    static function (ExtendedCacheItemPoolInterface $pool, string $actionName) use (&$testPasses) {
-        if ($actionName === 'getItem') {
+$cluster->getEventManager()->addListener(
+    \Phpfastcache\Event\Events::CACHE_REPLICATION_SLAVE_FALLBACK,
+    static function (\Phpfastcache\Event\Event\CacheReplicationSlaveFallbackItemPoolEvent $event) use (&$testPasses) {
+        if ($event->getMethodCaller() === 'getItem') {
             $testPasses = true;
         }
     }

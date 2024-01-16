@@ -19,7 +19,7 @@ chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../mock/Autoload.php';
 $testHelper = new TestHelper('Atomic Operations');
-$pool = CacheManager::getInstance('Memstatic');
+$pool = CacheManager::getInstance('Memory');
 $testHelper->printInfoText('Testing APPEND/PREPEND methods...');
 
 {

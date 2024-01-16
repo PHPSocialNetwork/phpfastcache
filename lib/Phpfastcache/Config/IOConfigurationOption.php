@@ -19,9 +19,6 @@ namespace Phpfastcache\Config;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
-/**
- * @todo: As of V10, imports cache slams properties.
- */
 class IOConfigurationOption extends ConfigurationOption
 {
     protected bool $secureFileManipulation = false;
@@ -31,6 +28,10 @@ class IOConfigurationOption extends ConfigurationOption
     protected string $cacheFileExtension = 'txt';
 
     protected int $defaultChmod = 0777;
+
+    protected bool $preventCacheSlams = false;
+
+    protected int $cacheSlamsTimeout = 15;
 
     /**
      * @return string

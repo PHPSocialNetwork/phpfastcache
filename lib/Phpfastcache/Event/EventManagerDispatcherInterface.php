@@ -28,10 +28,4 @@ interface EventManagerDispatcherInterface
      * @return mixed
      */
     public function setEventManager(EventManagerInterface $eventManager): static;
-
-    /**
-     * @return bool
-     * @deprecated Will be removed in v10
-     */
-    public function hasEventManager(): bool;
 }

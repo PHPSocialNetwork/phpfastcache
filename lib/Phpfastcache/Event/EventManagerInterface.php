@@ -20,39 +20,13 @@ use BadMethodCallException;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\PhpfastcacheEventManagerException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\EventDispatcher\ListenerProviderInterface;
 
 /**
- * == ItemPool Events ==
- * @method Void onCacheGetItem(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheGetItems(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheDeleteItem(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheSaveItem(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheSaveMultipleItems(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheSaveDeferredItem(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheCommitItem(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheClearItem(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheWriteFileOnDisk(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheGetItemInSlamBatch(Callable $callable, ?string $callbackName = null)
- *
- * == ItemPool Events (Cluster) ==
- * @method Void onCacheReplicationSlaveFallback(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheReplicationRandomPoolChosen(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheClusterBuilt(Callable $callable, ?string $callbackName = null)
- *
- * == Item Events ==
- * @method Void onCacheItemSet(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheItemExpireAt(Callable $callable, ?string $callbackName = null)
- * @method Void onCacheItemExpireAfter(Callable $callable, ?string $callbackName = null)
- *
- * == Driver-specific events ==
- * @method Void onArangodbConnection(Callable $callable, ?string $callbackName = null)
- * @method Void onArangodbCollectionParams(Callable $callable, ?string $callbackName = null)
- * @method Void onCouchdbCreateOptions(Callable $callable, ?string $callbackName = null)
- * @method Void onDynamodbCreateTable(Callable $callable, ?string $callbackName = null)
- * @method Void onSolrBuildEndpoint(Callable $callable, ?string $callbackName = null)
- * @method Void onFirestoreClientOptions(Callable $callable, ?string $callbackName = null)
+ * @see EventsInterface for the list of available events.
  */
-interface EventManagerInterface
+interface EventManagerInterface extends EventDispatcherInterface, ListenerProviderInterface
 {
     /**
      * @return self
@@ -66,12 +40,6 @@ interface EventManagerInterface
     public static function setInstance(EventManagerInterface $eventManagerInstance): void;
 
     /**
-     * @param string $eventName
-     * @param array<mixed> $args
-     */
-    public function dispatch(string $eventName, ...$args): void;
-
-    /**
      * @param string $name
      * @param array<mixed> $arguments
      * @throws PhpfastcacheInvalidArgumentException
@@ -83,13 +51,13 @@ interface EventManagerInterface
      * @param callable $callback
      * @param string $callbackName
      */
-    public function onEveryEvents(callable $callback, string $callbackName): void;
+    public function addGlobalListener(callable $callback, string $callbackName): void;
 
     /**
      * @param string[]|string $events
      * @param callable $callback
      */
-    public function on(array|string $events, callable $callback): void;
+    public function addListener(array|string $events, callable $callback): void;
 
     /**
      * @param string $eventName

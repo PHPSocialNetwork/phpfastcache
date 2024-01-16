@@ -61,7 +61,6 @@ class Driver implements AggregatablePoolInterface
          */
         $stat->setInfo(sprintf("Ssdb-server v%s with a total of %s call(s).\n For more information see RawData.", $info[2], $info[6]))
             ->setRawData($info)
-            ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setSize($this->instance->dbsize());
 
         return $stat;

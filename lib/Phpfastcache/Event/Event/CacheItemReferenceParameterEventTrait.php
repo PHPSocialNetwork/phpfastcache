@@ -14,20 +14,19 @@
 
 declare(strict_types=1);
 
-namespace Phpfastcache\Drivers\Wincache;
+namespace Phpfastcache\Event\Event;
 
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Core\Item\TaggableCacheItemTrait;
+use Phpfastcache\Event\EventReferenceParameter;
 
-/**
- * @deprecated will be removed as of v10 due to the lack of updates to PHP8 as officially stated by PHP: https://www.php.net/manual/en/install.windows.recommended.php
- */
-class Item implements ExtendedCacheItemInterface
+trait CacheItemReferenceParameterEventTrait
 {
-    use TaggableCacheItemTrait;
-
-    protected function getDriverClass(): string
+    public function __construct(protected ExtendedCacheItemInterface $item, protected EventReferenceParameter $eventReferenceParameter)
     {
-        return Driver::class;
+    }
+
+    public function getEventReferenceParameter(): EventReferenceParameter
+    {
+        return $this->eventReferenceParameter;
     }
 }

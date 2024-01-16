@@ -36,8 +36,8 @@ $globalGetItemEventManagerCount = 0;
 $filesGetItemEventManagerCount = 0;
 $redisGetItemEventManagerCount = 0;
 
-EventManager::getInstance()->onEveryEvents(static function (string $eventName) use ($testHelper, &$globalEveryEventsEvents) {
-    $testHelper->printInfoText(sprintf('<light_yellow>[Global]</light_yellow> <blue>Global "onEveryEvents" has been called for</blue> <magenta>"%s"</magenta>', $eventName));
+EventManager::getInstance()->addGlobalListener(static function (string $eventName) use ($testHelper, &$globalEveryEventsEvents) {
+    $testHelper->printInfoText(sprintf('<light_yellow>[Global]</light_yellow> <blue>Global "addGlobalListener" has been called for</blue> <magenta>"%s"</magenta>', $eventName));
     $globalEveryEventsEvents[$eventName] = ($globalEveryEventsEvents[$eventName] ?? 0) + 1;
 }, 'GlobalEveryEvent');
 
@@ -46,8 +46,8 @@ EventManager::getInstance()->onCacheGetItem(static function (ExtendedCacheItemPo
     $globalGetItemEventManagerCount++;
 });
 
-$filesCacheInstance->getEventManager()->onEveryEvents(static function (string $eventName) use ($testHelper, &$filesEveryEventsEventEvents) {
-    $testHelper->printInfoText(sprintf('<yellow>[Files]</yellow> <cyan>Scoped "onEveryEvents" has been called for</cyan> <magenta>"%s"</magenta>', $eventName));
+$filesCacheInstance->getEventManager()->addGlobalListener(static function (string $eventName) use ($testHelper, &$filesEveryEventsEventEvents) {
+    $testHelper->printInfoText(sprintf('<yellow>[Files]</yellow> <cyan>Scoped "addGlobalListener" has been called for</cyan> <magenta>"%s"</magenta>', $eventName));
     $filesEveryEventsEventEvents[$eventName] = ($filesEveryEventsEventEvents[$eventName] ?? 0) + 1;
 }, 'GlobalEveryEvent');
 
@@ -59,8 +59,8 @@ $filesCacheInstance->getEventManager()->onCacheGetItem(static function (Extended
     }
 });
 
-$redisCacheInstance->getEventManager()->onEveryEvents(static function (string $eventName) use ($testHelper, &$redisEveryEventsEventEvents) {
-    $testHelper->printInfoText(sprintf('<yellow>[Redis]</yellow> <cyan>Scoped "onEveryEvents" has been called for</cyan> <magenta>"%s"</magenta>', $eventName));
+$redisCacheInstance->getEventManager()->addGlobalListener(static function (string $eventName) use ($testHelper, &$redisEveryEventsEventEvents) {
+    $testHelper->printInfoText(sprintf('<yellow>[Redis]</yellow> <cyan>Scoped "addGlobalListener" has been called for</cyan> <magenta>"%s"</magenta>', $eventName));
     $redisEveryEventsEventEvents[$eventName] = ($redisEveryEventsEventEvents[$eventName] ?? 0) + 1;
 }, 'GlobalEveryEvent');
 

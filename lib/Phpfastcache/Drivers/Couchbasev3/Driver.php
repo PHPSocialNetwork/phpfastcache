@@ -217,7 +217,6 @@ class Driver implements AggregatablePoolInterface
         return (new DriverStatistic())
             ->setSize(0)
             ->setRawData($info)
-            ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setInfo($info['sdk'] . "\n For more information see RawData.");
     }
 

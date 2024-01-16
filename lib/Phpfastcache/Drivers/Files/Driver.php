@@ -88,7 +88,7 @@ class Driver implements AggregatablePoolInterface
         $data = $this->encode($this->driverPreWrap($item));
 
         try {
-            return $this->writeFile($filePath, $data, $this->getConfig()->isSecureFileManipulation());
+            return $this->writeFile($filePath, $data);
         } catch (Exception) {
             return false;
         }

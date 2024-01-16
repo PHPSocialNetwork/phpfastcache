@@ -39,13 +39,4 @@ trait EventManagerDispatcherTrait
         $this->eventManager = $em;
         return $this;
     }
-
-    /**
-     * @deprecated Will be removed in v10
-     * @return bool
-     */
-    public function hasEventManager(): bool
-    {
-        return isset($this->eventManager);
-    }
 }

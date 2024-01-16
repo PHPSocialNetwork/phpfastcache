@@ -19,7 +19,8 @@ namespace Phpfastcache\Core\Pool\IO;
 use Phpfastcache\Config\IOConfigurationOptionInterface;
 use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Event\Event;
+use Phpfastcache\Event\Event\CacheWriteFileOnDiskItemPoolEvent;
+use Phpfastcache\Event\Events;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Util\Directory;
@@ -59,12 +60,6 @@ trait IOHelperTrait
                     'tmp' => $this->tmp,
                 ]
             );
-
-        if ($this->getConfig()->isUseStaticItemCaching()) {
-            $stat->setData(implode(', ', \array_keys($this->itemInstances)));
-        } else {
-            $stat->setData('No data available since static item caching option (useStaticItemCaching) is disabled.');
-        }
 
         return $stat;
     }
@@ -274,16 +269,15 @@ trait IOHelperTrait
     /**
      * @param string $file
      * @param string $data
-     * @param bool $secureFileManipulation
      * @return bool
      * @throws PhpfastcacheIOException
      * @throws \Exception
      */
-    protected function writeFile(string $file, string $data, bool $secureFileManipulation = false): bool
+    protected function writeFile(string $file, string $data): bool
     {
-        $this->eventManager->dispatch(Event::CACHE_WRITE_FILE_ON_DISK, $this, $file, $secureFileManipulation);
+        $this->eventManager->dispatch(new CacheWriteFileOnDiskItemPoolEvent($this, $file));
 
-        if ($secureFileManipulation) {
+        if ($this->getConfig()->isSecureFileManipulation()) {
             $tmpFilename = Directory::getAbsolutePath(
                 dirname($file) . \DIRECTORY_SEPARATOR . 'tmp_' . $this->getConfig()->getDefaultFileNameHashFunction()(
                     \bin2hex(\random_bytes(16))

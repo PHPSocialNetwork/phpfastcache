@@ -19,7 +19,8 @@ namespace Phpfastcache\Cluster;
 use Exception;
 use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
-use Phpfastcache\Event\Event;
+use Phpfastcache\Event\Event\CacheItemPoolEventClusterBuilt;
+use Phpfastcache\Event\Events;
 use Phpfastcache\EventManager;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
@@ -151,7 +152,7 @@ class ClusterAggregator implements AggregatorInterface
                     ...\array_values($this->driverPools)
                 );
 
-                $this->cluster->getEventManager()->dispatch(Event::CACHE_CLUSTER_BUILT, $this, $this->cluster);
+                $this->cluster->getEventManager()->dispatch(new CacheItemPoolEventClusterBuilt($this->cluster, $this));
             }
         } else {
             throw new PhpfastcacheInvalidArgumentException('Unknown cluster strategy');

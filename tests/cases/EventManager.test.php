@@ -19,6 +19,7 @@ use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\EventManager;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Tests\Helper\TestHelper;
+use Phpfastcache\Event\Events;
 
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -28,15 +29,15 @@ $defaultDriver = (!empty($argv[1]) ? ucfirst($argv[1]) : 'Files');
 $cacheInstance = CacheManager::getInstance($defaultDriver);
 $eventInstance = $cacheInstance->getEventManager();
 $testHelper->debugEvents($eventInstance);
-$eventInstance->onCacheSaveItem(static function (ExtendedCacheItemPoolInterface $itemPool, ExtendedCacheItemInterface $item) {
-    if ($item->_getData() === 1000) {
-        $item->increment(337);
+$eventInstance->addListener(Events::CACHE_SAVE_ITEM, static function (\Phpfastcache\Event\Event\CacheItemPoolEventSaveItem $event) {
+    if ($event->getCacheItem()->_getData() === 1000) {
+        $event->getCacheItem()->increment(337);
     }
 });
 
-$eventInstance->onCacheItemSet(static function (ExtendedCacheItemInterface $item, EventReferenceParameter $eventReferenceParameter) use ($testHelper) {
+$eventInstance->addListener(Events::CACHE_ITEM_SET, static function (\Phpfastcache\Event\Event\CacheItemSetEvent $event) use ($testHelper) {
     try{
-        $eventReferenceParameter->setParameterValue(1000);
+        $event->getEventReferenceParameter()->setParameterValue(1000);
         $testHelper->assertPass('The event reference parameter accepted a value type change');
     } catch(PhpfastcacheInvalidTypeException){
         $testHelper->assertFail('The event reference parameter denied a value type change');
@@ -60,15 +61,15 @@ unset($item);
 $eventInstance->unbindAllEventCallbacks();
 $testHelper->debugEvents($eventInstance);
 
-$eventInstance->onCacheSaveMultipleItems(static function (ExtendedCacheItemPoolInterface $itemPool, EventReferenceParameter $eventReferenceParameter) use ($testHelper) {
-    $parameterValue = $eventReferenceParameter->getParameterValue();
+$eventInstance->addListener(Events::CACHE_SAVE_MULTIPLE_ITEMS, static function (\Phpfastcache\Event\Event\CacheSaveMultipleItemsItemPoolEvent $event) use ($testHelper) {
+    $parameterValue = $event->getEventReferenceParameter()->getParameterValue();
 
     try{
-        $eventReferenceParameter->setParameterValue(null);
+        $event->getEventReferenceParameter()->setParameterValue(null);
         $testHelper->assertFail('The event reference parameter accepted a value type change');
     } catch(PhpfastcacheInvalidTypeException){
         $testHelper->assertPass('The event reference parameter denied a value type change');
-        $eventReferenceParameter->setParameterValue([]);
+        $event->getEventReferenceParameter()->setParameterValue([]);
     }
 
     if (is_array($parameterValue) && count($parameterValue) === 2) {

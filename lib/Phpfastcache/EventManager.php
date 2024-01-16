@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Phpfastcache;
 
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Event\Event\EventInterface;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheEventManagerException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
@@ -35,7 +36,7 @@ class EventManager implements EventManagerInterface
     protected ?ExtendedCacheItemPoolInterface $itemPoolContext = null;
 
     /** @var array<string, array<string, callable>> */
-    protected array $events = [
+    protected array $listeners = [
         self::ON_EVERY_EVENT => []
     ];
 
@@ -56,25 +57,39 @@ class EventManager implements EventManagerInterface
         self::$instance = $eventManagerInstance;
     }
 
-    public function dispatch(string $eventName, ...$args): void
+    /**
+     * @param object $event
+     * @return object
+     * @throws PhpfastcacheInvalidArgumentException
+     */
+    public function dispatch(object $event)
     {
-        /**
-         * Replace array_key_exists by isset
-         * due to performance issue on huge
-         * loop dispatching operations
-         */
-        if (isset($this->events[$eventName]) && $eventName !== self::ON_EVERY_EVENT) {
-            $loopArgs = array_merge($args, [$eventName]);
-            foreach ($this->events[$eventName] as $event) {
-                /**
-                 * @todo V10: BC Break: Put eventName as first parameter (like self::ON_EVERY_EVENT)
-                 */
-                $event(...$loopArgs);
+        if ($event instanceof EventInterface) {
+            $eventName = $event::getName();
+
+            if (isset($this->listeners[$eventName]) && $eventName !== self::ON_EVERY_EVENT) {
+                foreach ($this->listeners[$eventName] as $listener) {
+                    if ($event->isPropagationStopped()) {
+                        return $event;
+                    }
+                    $listener($event);
+                }
             }
+            foreach ($this->listeners[self::ON_EVERY_EVENT] as $listener) {
+                if ($event->isPropagationStopped()) {
+                    return $event;
+                }
+                $listener($event);
+            }
+            return $event;
         }
-        foreach ($this->events[self::ON_EVERY_EVENT] as $event) {
-            $event($eventName, ...$args);
-        }
+
+        throw new PhpfastcacheInvalidArgumentException(
+            sprintf(
+                'Method EventManager::dispatch() only accept %s events.',
+                EventInterface::class
+            )
+        );
     }
 
     /**
@@ -85,15 +100,18 @@ class EventManager implements EventManagerInterface
     public function __call(string $name, array $arguments): void
     {
         if (\str_starts_with($name, 'on')) {
-            $name = \substr($name, 2);
-            if (\is_callable($arguments[0])) {
-                if (isset($arguments[1]) && \is_string($arguments[0])) {
-                    $this->events[$name][$arguments[1]] = $arguments[0];
-                } else {
-                    $this->events[$name][] = $arguments[0];
-                }
+            trigger_error(
+                sprintf(
+                    'Method "%s()" is deprecated, please use method "%s()" instead. See the migration guide if you seek for detailed help.',
+                    $name,
+                    $name === 'onEveryEvents' ? 'addGlobalListener' : 'addListener'
+                ),
+                E_USER_DEPRECATED
+            );
+            if ($name === 'onEveryEvents') {
+                $this->addGlobalListener($arguments[0], $arguments[1] ?? spl_object_hash($arguments[0]));
             } else {
-                throw new PhpfastcacheInvalidArgumentException(\sprintf('Expected Callable, got "%s"', \gettype($arguments[0])));
+                $this->addListener(\substr($name, 2), $arguments[0]);
             }
         } else {
             throw new PhpfastcacheEventManagerException('An event must start with "on" such as "onCacheGetItem"');
@@ -105,29 +123,34 @@ class EventManager implements EventManagerInterface
      * @param string $callbackName
      * @throws PhpfastcacheEventManagerException
      */
-    public function onEveryEvents(callable $callback, string $callbackName): void
+    public function addGlobalListener(callable $callback, string $callbackName): void
     {
-        if ($callbackName === '') {
-            throw new PhpfastcacheEventManagerException('Callbackname cannot be empty');
+        if (trim($callbackName) === '') {
+            throw new PhpfastcacheEventManagerException('Parameter $callbackName cannot be empty');
         }
-        $this->events[self::ON_EVERY_EVENT][$callbackName] = $callback;
+        $this->listeners[self::ON_EVERY_EVENT][$callbackName] = $callback;
     }
 
 
     /**
      * @throws PhpfastcacheEventManagerException
+     * @throws PhpfastcacheInvalidArgumentException
      */
-    public function on(array|string $events, callable $callback): void
+    public function addListener(array|string $events, callable|string $callback): void
     {
         if (is_string($events)) {
             $events = [$events];
+        }
+
+        if (!is_callable($callback)) {
+            throw new PhpfastcacheInvalidArgumentException(\sprintf('Argument $callback is not callable.'));
         }
         foreach ($events as $event) {
             if (!\preg_match('#^([a-zA-Z])*$#', $event)) {
                 throw new PhpfastcacheEventManagerException(\sprintf('Invalid event name "%s"', $event));
             }
 
-            $this->{'on' . \ucfirst($event)}($callback);
+            $this->listeners[$event][] = $callback;
         }
     }
 
@@ -138,8 +161,8 @@ class EventManager implements EventManagerInterface
      */
     public function unbindEventCallback(string $eventName, string $callbackName): bool
     {
-        $return = isset($this->events[$eventName][$callbackName]);
-        unset($this->events[$eventName][$callbackName]);
+        $return = isset($this->listeners[$eventName][$callbackName]);
+        unset($this->listeners[$eventName][$callbackName]);
 
         return $return;
     }
@@ -149,7 +172,7 @@ class EventManager implements EventManagerInterface
      */
     public function unbindAllEventCallbacks(): bool
     {
-        $this->events = [
+        $this->listeners = [
             self::ON_EVERY_EVENT => []
         ];
 
@@ -184,14 +207,23 @@ class EventManager implements EventManagerInterface
         }
         $this->itemPoolContext = $pool;
 
-        $this->onEveryEvents(function (string $eventName, ...$args) {
-            EventManager::getInstance()->dispatch($eventName, ...$args);
+        $this->addGlobalListener(static function (EventInterface $event) {
+            self::getInstance()->dispatch($event);
         }, 'Scoped' . $pool->getDriverName() . spl_object_hash($this));
 
         return $this;
     }
-}
 
-// phpcs:disable
-\class_alias(EventManager::class, PhpfastcacheEventManager::class); // @phpstan-ignore-line
-// phpcs:enable
+    /**
+     * @param object $event
+     * @return array<callable>
+     */
+    public function getListenersForEvent(object $event): iterable
+    {
+        if ($event instanceof EventInterface) {
+            return $this->listeners[$event::getName()] ?? [];
+        }
+
+        return [];
+    }
+}

@@ -14,12 +14,13 @@
 
 declare(strict_types=1);
 
-namespace Phpfastcache\Event;
+namespace Phpfastcache\Event\Event;
 
-interface EventInterface
+use Phpfastcache\Event\EventsInterface;
+
+class CacheItemPoolEventClearItems extends AbstractItemPoolEvent
 {
-    /**
-     * @return array<string, string>
-     */
-    public static function getEvents(): array;
+    use CacheItemsEventTrait;
+
+    public const EVENT_NAME = EventsInterface::CACHE_CLEAR_ITEMS;
 }

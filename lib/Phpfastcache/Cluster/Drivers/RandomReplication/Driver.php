@@ -18,7 +18,8 @@ namespace Phpfastcache\Cluster\Drivers\RandomReplication;
 
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Cluster\Drivers\MasterSlaveReplication\Driver as MasterSlaveReplicationDriver;
-use Phpfastcache\Event\Event;
+use Phpfastcache\Event\Event\CacheReplicationRandomPoolChosenItemPoolEvent;
+use Phpfastcache\Event\Events;
 use Phpfastcache\Event\EventManagerInterface;
 use ReflectionException;
 use ReflectionMethod;
@@ -46,9 +47,10 @@ class Driver extends MasterSlaveReplicationDriver
         $randomPool = $driverPools[\random_int(0, \count($driverPools) - 1)];
 
         $this->eventManager->dispatch(
-            Event::CACHE_REPLICATION_RANDOM_POOL_CHOSEN,
-            $this,
-            $randomPool
+            new CacheReplicationRandomPoolChosenItemPoolEvent(
+                $this,
+                $randomPool
+            )
         );
 
         $this->clusterPools = [$randomPool];

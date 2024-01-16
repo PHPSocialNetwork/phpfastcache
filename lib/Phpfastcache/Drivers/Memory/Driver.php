@@ -120,7 +120,6 @@ class Driver implements ExtendedCacheItemPoolInterface
         $stat = new DriverStatistic();
         $stat->setInfo('[Memstatic] A memory static driver')
             ->setSize(mb_strlen(serialize($this->staticStack)))
-            ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setRawData($this->staticStack);
 
         return $stat;

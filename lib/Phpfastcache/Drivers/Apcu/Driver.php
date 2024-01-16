@@ -52,7 +52,6 @@ class Driver implements AggregatablePoolInterface
         $date = (new DateTime())->setTimestamp($stats['start_time']);
 
         return (new DriverStatistic())
-            ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setInfo(
                 sprintf(
                     "The APCU cache is up since %s, and have %d item(s) in cache.\n For more information see RawData.",

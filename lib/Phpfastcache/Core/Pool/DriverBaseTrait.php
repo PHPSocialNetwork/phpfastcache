@@ -19,7 +19,9 @@ namespace Phpfastcache\Core\Pool;
 use DateTime;
 use DateTimeInterface;
 use Phpfastcache\Config\ConfigurationOptionInterface;
-use Phpfastcache\Event\Event;
+use Phpfastcache\Event\Event\CacheDriverCheckedEvent;
+use Phpfastcache\Event\Event\CacheDriverConnectedEvent;
+use Phpfastcache\Event\Events;
 use Phpfastcache\Event\EventManagerDispatcherTrait;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheCorruptedDataException;
@@ -85,12 +87,12 @@ trait DriverBaseTrait
                 )
             );
         }
-        $this->eventManager->dispatch(Event::CACHE_DRIVER_CHECKED, $this);
+        $this->eventManager->dispatch(new CacheDriverCheckedEvent($this));
 
         try {
             $this->driverConnect();
             $config->lock($this); // Lock the config only after a successful driver connection.
-            $this->eventManager->dispatch(Event::CACHE_DRIVER_CONNECTED, $this, $this->instance ?? null);
+            $this->eventManager->dispatch(new CacheDriverConnectedEvent($this, $this->instance ?? null));
         } catch (Throwable $e) {
             throw new PhpfastcacheDriverConnectException(
                 sprintf(

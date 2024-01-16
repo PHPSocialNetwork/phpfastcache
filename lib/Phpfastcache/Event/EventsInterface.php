@@ -16,12 +16,8 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Event;
 
-use Phpfastcache\Helper\UninstanciableObjectTrait;
-
-class Event implements EventInterface
+interface EventsInterface
 {
-    use UninstanciableObjectTrait;
-
     public const CACHE_GET_ITEM = 'CacheGetItem';
     public const CACHE_GET_ITEMS = 'CacheGetItems';
     public const CACHE_DELETE_ITEM = 'CacheDeleteItem';
@@ -30,7 +26,7 @@ class Event implements EventInterface
     public const CACHE_SAVE_MULTIPLE_ITEMS = 'CacheSaveMultipleItems';
     public const CACHE_SAVE_DEFERRED_ITEM = 'CacheSaveDeferredItem';
     public const CACHE_COMMIT_ITEM = 'CacheCommitItem';
-    public const CACHE_CLEAR_ITEM = 'CacheClearItem';
+    public const CACHE_CLEAR_ITEMS = 'CacheClearItems';
     public const CACHE_WRITE_FILE_ON_DISK = 'CacheWriteFileOnDisk';
     public const CACHE_GET_ITEM_IN_SLAM_BATCH = 'CacheGetItemInSlamBatch';
     public const CACHE_REPLICATION_SLAVE_FALLBACK = 'CacheReplicationSlaveFallback';
@@ -43,8 +39,8 @@ class Event implements EventInterface
     public const CACHE_DRIVER_CHECKED = 'CacheDriverChecked';
     public const CACHE_DRIVER_CONNECTED = 'CacheDriverConnected';
 
-    public static function getEvents(): array
-    {
-        return (new \ReflectionClass(static::class))->getConstants();
-    }
+    /**
+     * @return array<string, string>
+     */
+    public static function getEvents(): array;
 }

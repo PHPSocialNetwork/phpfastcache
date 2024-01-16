@@ -20,7 +20,7 @@ use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Cluster\ClusterPoolAbstract;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Event\Event;
+use Phpfastcache\Event\Event\CacheReplicationSlaveFallbackItemPoolEvent;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheCoreException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
@@ -80,9 +80,10 @@ class Driver extends ClusterPoolAbstract
         } catch (PhpfastcacheExceptionInterface $e) {
             try {
                 $this->eventManager->dispatch(
-                    Event::CACHE_REPLICATION_SLAVE_FALLBACK,
-                    $this,
-                    \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']
+                    new CacheReplicationSlaveFallbackItemPoolEvent(
+                        $this,
+                        \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']
+                    )
                 );
                 return $operation($this->getSlavePool());
             } catch (PhpfastcacheExceptionInterface $e) {

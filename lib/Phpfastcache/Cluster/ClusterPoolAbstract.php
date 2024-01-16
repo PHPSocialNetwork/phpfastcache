@@ -235,16 +235,6 @@ abstract class ClusterPoolAbstract implements ClusterPoolInterface
             )
         );
 
-        $stats->setData(
-            \implode(
-                ', ',
-                \array_map(
-                    static fn (ExtendedCacheItemPoolInterface $pool) => $pool->getStats()->getData(),
-                    $this->clusterPools
-                )
-            )
-        );
-
         return $stats;
     }
 }

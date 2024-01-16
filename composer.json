@@ -6,7 +6,7 @@
     "homepage": "https://www.phpfastcache.com",
     "license": "MIT",
     "readme": "README.md",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "authors": [
             {
                 "name": "Georges.L",
@@ -21,14 +21,16 @@
     ],
     "provide": {
         "psr/cache-implementation": "2.0|3.0",
-        "psr/simple-cache-implementation": "2.0|3.0"
+        "psr/simple-cache-implementation": "2.0|3.0",
+        "psr/event-dispatcher-implementation": "^1.0"
     },
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.2",
         "psr/cache": "^2.0||^3.0",
         "psr/simple-cache": "^2.0||^3.0",
         "ext-mbstring": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
         "league/climate": "^3.8",
@@ -37,7 +39,7 @@
         "squizlabs/php_codesniffer": "@stable",
         "phpstan/phpstan": "@stable",
         "jetbrains/phpstorm-stubs": "dev-master",
-        "phpfastcache/phpfastcache-devtools": "dev-master"
+        "phpfastcache/phpfastcache-devtools": "^10.0.0-ALPHA"
     },
     "suggest": {
         "ext-apcu": "*",

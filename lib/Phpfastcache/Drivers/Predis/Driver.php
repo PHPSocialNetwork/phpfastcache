@@ -73,7 +73,6 @@ HELP;
         $date = (isset($info['Server']['uptime_in_seconds']) ? (new DateTime())->setTimestamp(time() - $info['Server']['uptime_in_seconds']) : 'unknown date');
 
         return (new DriverStatistic())
-            ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setRawData($info)
             ->setSize((int)$size)
             ->setInfo(

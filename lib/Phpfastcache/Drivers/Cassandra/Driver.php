@@ -299,7 +299,6 @@ HELP;
         return (new DriverStatistic())
             ->setSize($result->first()['cache_size'])
             ->setRawData([])
-            ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setInfo('The cache size represents only the cache data itself without counting data structures associated to the cache entries.');
     }
 

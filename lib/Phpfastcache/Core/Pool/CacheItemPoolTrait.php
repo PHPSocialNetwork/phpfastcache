@@ -22,7 +22,16 @@ use Phpfastcache\Config\IOConfigurationOptionInterface;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
 use Phpfastcache\Entities\ItemBatch;
-use Phpfastcache\Event\Event;
+use Phpfastcache\Event\Event\CacheGetItemInSlamBatchItemPoolEvent;
+use Phpfastcache\Event\Event\CacheItemPoolEventClearItems;
+use Phpfastcache\Event\Event\CacheCommitItemEvent;
+use Phpfastcache\Event\Event\CacheItemPoolEventDeleteItem;
+use Phpfastcache\Event\Event\CacheItemPoolEventDeleteItems;
+use Phpfastcache\Event\Event\CacheGetItemEvent;
+use Phpfastcache\Event\Event\CacheItemPoolEventGetItems;
+use Phpfastcache\Event\Event\CacheSaveDeferredItemItemPoolEvent;
+use Phpfastcache\Event\Event\CacheItemPoolEventSaveItem;
+use Phpfastcache\Event\Events;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheCoreException;
@@ -104,12 +113,13 @@ trait CacheItemPoolTrait
     public function getItems(array $keys = []): iterable
     {
         $items = [];
+        $config = $this->getConfig();
 
         /**
          * Usually, drivers that are able to enable cache slams
          * does not benefit of driverReadMultiple() call.
          */
-        if (!$this->getConfig()->isPreventCacheSlams()) {
+        if (!($config instanceof IOConfigurationOptionInterface) || !$config->isPreventCacheSlams()) {
             $this->validateCacheKeys(...$keys);
 
             /**
@@ -182,7 +192,7 @@ trait CacheItemPoolTrait
             return $collection;
         }
 
-        $this->eventManager->dispatch(Event::CACHE_GET_ITEMS, $this, $items);
+        $this->eventManager->dispatch(new CacheItemPoolEventGetItems($this, $items));
 
         return $items;
     }
@@ -233,10 +243,10 @@ trait CacheItemPoolTrait
                                 return;
                             }
 
-                            $this->eventManager->dispatch(Event::CACHE_GET_ITEM_IN_SLAM_BATCH, $this, $driverData, $cacheSlamsSpendSeconds);
+                            $this->eventManager->dispatch(new CacheGetItemInSlamBatchItemPoolEvent($this, $driverData, $cacheSlamsSpendSeconds));
 
                             /**
-                             * Wait for a second before
+                             * Wait for a 1/10 second before
                              * attempting to get exit
                              * the current batch process
                              */
@@ -270,7 +280,7 @@ trait CacheItemPoolTrait
             $item = $this->itemInstances[$key];
         }
 
-        $this->eventManager->dispatch(Event::CACHE_GET_ITEM, $this, $item);
+        $this->eventManager->dispatch(new CacheGetItemEvent($this, $item));
 
         $item->isHit() ? $this->getIO()->incReadHit() : $this->getIO()->incReadMiss();
 
@@ -299,7 +309,7 @@ trait CacheItemPoolTrait
      */
     public function clear(): bool
     {
-        $this->eventManager->dispatch(Event::CACHE_CLEAR_ITEM, $this, $this->itemInstances);
+        $this->eventManager->dispatch(new CacheItemPoolEventClearItems($this, $this->itemInstances));
 
         $this->getIO()->incWriteHit();
         // Faster than detachAllItems()
@@ -330,7 +340,7 @@ trait CacheItemPoolTrait
                     }
                 }
                 $this->getIO()->incWriteHit();
-                $this->eventManager->dispatch(Event::CACHE_DELETE_ITEMS, $this, $items);
+                $this->eventManager->dispatch(new CacheItemPoolEventDeleteItems($this, $items));
                 $this->deregisterItems($keys);
             } catch (PhpfastcacheUnsupportedMethodException) {
                 foreach ($keys as $key) {
@@ -368,7 +378,7 @@ trait CacheItemPoolTrait
             $item->setHit(false);
             $this->getIO()->incWriteHit();
 
-            $this->eventManager->dispatch(Event::CACHE_DELETE_ITEM, $this, $item);
+            $this->eventManager->dispatch(new CacheItemPoolEventDeleteItem($this, $item));
 
             /**
              * De-register the item instance
@@ -402,7 +412,7 @@ trait CacheItemPoolTrait
             throw new RuntimeException('Spl object hash mismatches ! You probably tried to save a detached item which has been already retrieved from cache.');
         }
 
-        $this->eventManager->dispatch(Event::CACHE_SAVE_DEFERRED_ITEM, $this, $item);
+        $this->eventManager->dispatch(new CacheSaveDeferredItemItemPoolEvent($this, $item));
         $this->deferredList[$item->getKey()] = $item;
 
         return true;
@@ -417,7 +427,7 @@ trait CacheItemPoolTrait
      */
     public function commit(): bool
     {
-        $this->eventManager->dispatch(Event::CACHE_COMMIT_ITEM, $this, new EventReferenceParameter($this->deferredList));
+        $this->eventManager->dispatch(new CacheCommitItemEvent($this, new EventReferenceParameter($this->deferredList)));
 
         if (\count($this->deferredList)) {
             $return = true;
@@ -462,7 +472,7 @@ trait CacheItemPoolTrait
         }
 
         $this->assertCacheItemType($item, self::getItemClass());
-        $this->eventManager->dispatch(Event::CACHE_SAVE_ITEM, $this, $item);
+        $this->eventManager->dispatch(new CacheItemPoolEventSaveItem($this, $item));
 
         if ($this->getConfig() instanceof IOConfigurationOptionInterface && $this->getConfig()->isPreventCacheSlams()) {
             /**

@@ -80,25 +80,6 @@ class DriverStatistic
     }
 
     /**
-     * Return an array of item keys used by this driver instance (deprecated as of v9.2.3, will be removed as of v10)
-     * @deprecated as of phpfastcache 9.2.3, will be removed as of v10
-     */
-    public function getData(): string
-    {
-        return $this->data;
-    }
-
-    /**
-     * @deprecated as of phpfastcache 9.2.3, will be removed as of v10
-     */
-    public function setData(string $data): static
-    {
-        $this->data = ($data ?: '');
-
-        return $this;
-    }
-
-    /**
      * Return a bunch of random data provided by the driver. Any type can be provided, usually an array
      * @return mixed
      */
@@ -123,7 +104,6 @@ class DriverStatistic
             'Info' => 'Cache Information',
             'Size' => 'Cache Size',
             'Count' => 'Cache database/collection count',
-            'Data' => 'Cache items keys (Deprecated)',
             'RawData' => 'Cache raw data',
         ];
     }

@@ -17,7 +17,9 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Pool;
 
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Event\Event;
+use Phpfastcache\Event\Event\CacheGetAllItemsEvent;
+use Phpfastcache\Event\Event\CacheSaveMultipleItemsItemPoolEvent;
+use Phpfastcache\Event\Events;
 use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheCoreException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
@@ -43,7 +45,7 @@ trait ExtendedCacheItemPoolTrait
          * This event allow you to customize the callback and wrap it to an invoker
          * like SebastianBergmann\Invoke\Invoke, so you can set up custom timeouts.
          */
-        $this->eventManager->dispatch(Event::CACHE_GET_ALL_ITEMS, $this, new EventReferenceParameter($driverReadAllKeysCallback));
+        $this->eventManager->dispatch(new CacheGetAllItemsEvent($this, new EventReferenceParameter($driverReadAllKeysCallback)));
         $keys = $driverReadAllKeysCallback($pattern);
 
         if (count($keys) > 0) {
@@ -100,7 +102,7 @@ trait ExtendedCacheItemPoolTrait
      */
     public function saveMultiple(ExtendedCacheItemInterface ...$items): bool
     {
-        $this->eventManager->dispatch(Event::CACHE_SAVE_MULTIPLE_ITEMS, $this, new EventReferenceParameter($items));
+        $this->eventManager->dispatch(new CacheSaveMultipleItemsItemPoolEvent($this, new EventReferenceParameter($items)));
 
         if (\count($items)) {
             foreach ($items as $item) {

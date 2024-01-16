@@ -54,7 +54,6 @@ class Driver implements AggregatablePoolInterface
         $date = (new DateTime())->setTimestamp(time() - $info['uptime_in_seconds']);
 
         return (new DriverStatistic())
-            ->setData(implode(', ', array_keys($this->itemInstances)))
             ->setRawData($info)
             ->setSize((int)$info['used_memory_dataset'])
             ->setInfo(

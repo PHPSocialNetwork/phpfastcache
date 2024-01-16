@@ -13,7 +13,7 @@
  */
 
 use Phpfastcache\CacheManager;
-use Phpfastcache\Event\Event;
+use Phpfastcache\Event\Events;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
@@ -32,7 +32,7 @@ $testHelper = new TestHelper('Testing getAllItems() method');
 /**
  * https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV5%CB%96%5D-Fetching-all-keys
  */
-EventManager::getInstance()->on([Event::CACHE_GET_ALL_ITEMS], static function(ExtendedCacheItemPoolInterface $driver, EventReferenceParameter $referenceParameter) use ($testHelper, &$eventFlag){
+EventManager::getInstance()->addListener([Events::CACHE_GET_ALL_ITEMS], static function(ExtendedCacheItemPoolInterface $driver, EventReferenceParameter $referenceParameter) use ($testHelper, &$eventFlag){
     $callback = $referenceParameter->getParameterValue();
     $referenceParameter->setParameterValue(function(string $pattern) use ($callback, &$eventFlag, $testHelper) {
         $eventFlag = true;

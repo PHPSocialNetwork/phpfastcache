@@ -109,7 +109,7 @@ class EventManager implements EventManagerInterface
                 E_USER_DEPRECATED
             );
             if ($name === 'onEveryEvents') {
-                $this->addGlobalListener($arguments[0], $arguments[1] ?? spl_object_hash($arguments[0]));
+                $this->addGlobalListener($arguments[0]);
             } else {
                 $this->addListener(\substr($name, 2), $arguments[0]);
             }
@@ -120,15 +120,10 @@ class EventManager implements EventManagerInterface
 
     /**
      * @param callable $callback
-     * @param string $callbackName
-     * @throws PhpfastcacheEventManagerException
      */
-    public function addGlobalListener(callable $callback, string $callbackName): void
+    public function addGlobalListener(callable $callback): void
     {
-        if (trim($callbackName) === '') {
-            throw new PhpfastcacheEventManagerException('Parameter $callbackName cannot be empty');
-        }
-        $this->listeners[self::ON_EVERY_EVENT][$callbackName] = $callback;
+        $this->listeners[self::ON_EVERY_EVENT][] = $callback;
     }
 
 
@@ -155,34 +150,19 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * @param string $eventName
-     * @param string $callbackName
      * @return bool
      */
-    public function unbindEventCallback(string $eventName, string $callbackName): bool
-    {
-        $return = isset($this->listeners[$eventName][$callbackName]);
-        unset($this->listeners[$eventName][$callbackName]);
-
-        return $return;
-    }
-
-    /**
-     * @return bool
-     */
-    public function unbindAllEventCallbacks(): bool
+    public function unbindAllListeners(): void
     {
         $this->listeners = [
             self::ON_EVERY_EVENT => []
         ];
-
-        return true;
     }
 
     public function __clone(): void
     {
         $this->isScopedEventManager = true;
-        $this->unbindAllEventCallbacks();
+        $this->unbindAllListeners();
     }
 
     /**
@@ -209,7 +189,7 @@ class EventManager implements EventManagerInterface
 
         $this->addGlobalListener(static function (EventInterface $event) {
             self::getInstance()->dispatch($event);
-        }, 'Scoped' . $pool->getDriverName() . spl_object_hash($this));
+        });
 
         return $this;
     }

@@ -1,85 +1,50 @@
 :mega: As of the V6, Phpfastcache provides an event mechanism.
-You can subscribe to an event by passing a Closure to an active event:
+You can subscribe to an event by passing a Closure/Callable to an active event:
 
 ```php
 use Phpfastcache\EventManager;
 
 /**
-* Bind the event callback
+* Bind the listener
 */
-EventManager::getInstance()->onCacheGetItem(function(ExtendedCacheItemPoolInterface $itemPool, ExtendedCacheItemInterface $item){
-    $item->set('[HACKED BY EVENT] ' . $item->get());
+use Phpfastcache\Event\EventsInterface;
+use Phpfastcache\Event\Event\CacheGetItemEvent;
+
+EventManager::getInstance()->addListener(EventsInterface::CACHE_GET_ITEM, static function(CacheGetItemEvent $event){
+    $event->getCacheItem()->set('[HACKED BY EVENT] ' . $item->get());
 });
 
 ```
 
-An event callback can get unbind but you MUST provide a name to the callback previously:
+~~An event callback can get unbind, but you MUST provide a name to the callback previously:~~
+**/!\ Method `unbindEventCallback` has been removed as of V10.**
 
-
-```php
-use Phpfastcache\EventManager;
-
-/**
-* Bind the event callback
-*/
-EventManager::getInstance()->onCacheGetItem(function(ExtendedCacheItemPoolInterface $itemPool, ExtendedCacheItemInterface $item){
-    $item->set('[HACKED BY EVENT] ' . $item->get());
-}, 'myCallbackName');
-
-
-/**
-* Unbind the event callback
-*/
-EventManager::getInstance()->unbindEventCallback('onCacheGetItem', 'myCallbackName');
-
-```
 
 :new: in V8
+You can simply subscribe to **every** event at once of Phpfastcache.
 
-You can simply subscribe to **every** events at once of Phpfastcache.
 ```php
 <?php
 use Phpfastcache\EventManager;
 
-EventManager::getInstance()->onEveryEvents(static function (string $eventName, ...$args) {
-    echo sprintf("Triggered event '{$eventName}' with %d arguments provided", count($args));
-}, 'debugCallback');
+EventManager::getInstance()->addGlobalListener(static function (\Phpfastcache\Event\Event\EventInterface $event) {
+    echo sprintf('Triggered event %s', $event->getName());
+});
 ```
 
 This is an exhaustive list, and it will be updated as soon as new events will be added to the Core.
 
+:warning: Changed in V10:
 
-:new: In V9
-
-- Some callback parameter, that are __NOT__ objects, are passed by reference via the new `\Phpfastcache\Event\EventReferenceParameter` class.\
-  This class is instantiated and passed to the callback with the original value passed **by reference** allowing you to either read or re-write its value.\
-  If it's allowed by the event dispatcher the type can be changed or not.\
-  If you try to while it's not allowed, you will get a `PhpfastcacheInvalidArgumentException` when trying to call `\Phpfastcache\Event\EventReferenceParameter::setParameterValue()`\
-  Finally the class `\Phpfastcache\Event\EventReferenceParameter` is `invokable` and trying to do so will return you the parameter value.\
-- A method named `unbindAllEventCallbacks(): bool` has been added to `EventManagerInterface` to allow you to unbind/clear all event from an event instance.
-- Event callbacks will now receive the `eventName` as an extra _last_ callback parameter (except for `onEveryEvents` callbacks)
-- Added `EventManagerInterface::on(array $eventNames, $callback)` method, to subscribe to multiple events in once with the same callback
-
-:warning: Changed in V9.2
-
-As of the V9.2 there is a slight change with the EventManager:
-EventManager is now scoped to its own poll if retrieved through `ExtendedCacheItemPoolTrait::->getEventManager()`.
-This means, that the behavior is not more consistent:\
-An EventManager retrieved through `ExtendedCacheItemPoolTrait::->getEventManager()` will now **ONLY** fire events related to this pool instance.\
-However, the global EventManager `EventManager::getInstance()` remains unchanged and will fire any events no matter what pool emitted it.
-The order of execution of the events is always the following:
-
-1. Scoped named Event through `ExtendedCacheItemPoolTrait::->getEventManager()->onXxxxxXxxxx(...)`
-2. Scoped `onEveryEvent` Event through `ExtendedCacheItemPoolTrait::->getEventManager()->onEveryEvent(...)`
-3. Unscoped named event through `EventManager::getInstance()->onXxxxxXxxxx(...)`
-4. Unscoped `onEveryEvent` event through `EventManager::getInstance()->onEveryEvent(...)`
+1. Method `onEveryEvent` is DEPRECATED and changed its name. It is now called `addGlobalListener`.
+2. Method `unbindAllEventCallbacks` has been renamed to `unbindAllListeners`.
+3. Methods `onXxxxxxXxxxx` are now DEPRECATED. Use method `addListener()` instead.
 
 ## List of active events:
 ### ItemPool Events
-- onCacheGetItem(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_GET_ITEM, *Callable* **$callback**)
     - **Callback arguments**
-      - *ExtendedCacheItemPoolInterface* **$itemPool**
-      - *ExtendedCacheItemInterface* **$item**
+      - *\Phpfastcache\Event\Event\CacheGetItemEvent* **$event**
     - **Scope**
         - ItemPool
     - **Description**
@@ -90,10 +55,9 @@ The order of execution of the events is always the following:
         - *ExtendedCacheItemPoolInterface::getItemsByTag()*
         - *ExtendedCacheItemPoolInterface::getItemsAsJsonString()*
 
-- onCacheGetItems(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_GET_ITEMS, *Callable* **$callback**)
     - **Callback arguments**
-        - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *ExtendedCacheItemInterface[]* **$items**
+        - *\Phpfastcache\Event\Event\CacheGetItemsEvent* **$event**
     - **Scope**
         - ItemPool
     - **Description**
@@ -104,14 +68,26 @@ The order of execution of the events is always the following:
         - *ExtendedCacheItemPoolInterface::getItemsByTag()*
         - *ExtendedCacheItemPoolInterface::getItemsAsJsonString()*
 
-- onCacheDeleteItem(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_GET_ALL_ITEMS, *Callable* **$callback**)
     - **Callback arguments**
-        - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *ExtendedCacheItemInterface* **$item**
+        - *\Phpfastcache\Event\Event\CacheGetAllItemsEvent* **$event**
     - **Scope**
         - ItemPool
     - **Description**
-        - Allow you to manipulate an item after being deleted (this event is not fired if `deleteItems()` is called). :exclamation: **Caution** The provided item is in pool detached-state.
+        - Allow you to manipulate a set of cache keys just before they get fetched from the backend.
+    - **Risky Circular Methods**
+        - *ExtendedCacheItemPoolInterface::getItem()*
+        - *ExtendedCacheItemPoolInterface::getItems()*
+        - *ExtendedCacheItemPoolInterface::getItemsByTag()*
+        - *ExtendedCacheItemPoolInterface::getItemsAsJsonString()*
+
+- addListener(EventsInterface::CACHE_DELETE_ITEM, *Callable* **$callback**)
+    - **Callback arguments**
+        - *\Phpfastcache\Event\Event\CacheDeleteItemEvent* **$event**
+    - **Scope**
+        - ItemPool
+    - **Description**
+        - Allow you to manipulate an item after being deleted (this event is not fired if `deleteItems()` is called). :exclamation: **Caution** The provided item is in pool-detached state.
     - **Risky Circular Methods**
         - *ExtendedCacheItemPoolInterface::deleteItem()*
         - *ExtendedCacheItemPoolInterface::deleteItems()*
@@ -120,10 +96,9 @@ The order of execution of the events is always the following:
         - *ExtendedCacheItemPoolInterface::getItemsByTag()*
         - *ExtendedCacheItemPoolInterface::getItemsAsJsonString()*
 
-- onCacheDeleteItems(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_DELETE_ITEMS, *Callable* **$callback**)
     - **Callback arguments**
-        - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *ExtendedCacheItemInterface[]* **$items**
+        - *\Phpfastcache\Event\Event\CacheDeleteItemsEvent* **$event**
     - **Scope**
         - ItemPool
     - **Description**
@@ -136,10 +111,9 @@ The order of execution of the events is always the following:
         - *ExtendedCacheItemPoolInterface::getItemsByTag()*
         - *ExtendedCacheItemPoolInterface::getItemsAsJsonString()*
 
-- onCacheSaveItem(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_SAVE_ITEM, *Callable* **$callback**)
     - **Callback arguments**
-        - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *ExtendedCacheItemInterface* **$item**
+        - *\Phpfastcache\Event\Event\CacheSaveItemEvent* **$event**
     - **Scope**
         - ItemPool
     - **Description**
@@ -148,10 +122,9 @@ The order of execution of the events is always the following:
         - *ExtendedCacheItemPoolInterface::commit()*
         - *ExtendedCacheItemPoolInterface::save()*
 
-- onCacheSaveMultipleItems(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_SAVE_MULTIPLE_ITEMS, *Callable* **$callback**)
     - **Callback arguments**
-        - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *EventReferenceParameter($items)* **$items** _via EventReferenceParameter object_ **(type modification forbidden)**
+        - *\Phpfastcache\Event\EventCacheSaveMultipleItemsEvent* **$event**
     - **Scope**
         - ItemPool
     - **Description**
@@ -161,10 +134,9 @@ The order of execution of the events is always the following:
         - *ExtendedCacheItemPoolInterface::save()*
         - *ExtendedCacheItemPoolInterface::saveMultiple()*
 
-- onCacheSaveDeferredItem(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_SAVE_DEFERRED_ITEM, (*Callable* **$callback**)
     - **Callback arguments**
-        - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *ExtendedCacheItemInterface* **$item**
+        - *\Phpfastcache\Event\CacheSaveDeferredItemEvent* **$event**
     - **Scope**
         - ItemPool
     - **Description**
@@ -172,10 +144,9 @@ The order of execution of the events is always the following:
     - **Risky Circular Methods**
         - *ExtendedCacheItemPoolInterface::saveDeferred()*
 
-- onCacheCommitItem(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_COMMIT_ITEM, *Callable* **$callback**)
     - **Callback arguments**
-        - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *EventReferenceParameter($items)* **$items** _via EventReferenceParameter object_ **(type modification forbidden)**
+        - *\Phpfastcache\Event\CacheCommitItemEvent* **$event**
     - **Scope**
         - ItemPool
     - **Description**
@@ -183,10 +154,9 @@ The order of execution of the events is always the following:
     - **Risky Circular Methods**
         - *ExtendedCacheItemPoolInterface::commit()*
 
-- onCacheClearItem(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_CLEAR_ITEMS, *Callable* **$callback**)
     - **Callback arguments**
-        - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *ExtendedCacheItemInterface[]* **$items**
+        - *\Phpfastcache\Event\CacheClearItemsEvent* **$event**
     - **Scope**
         - ItemPool
     - **Description**
@@ -195,11 +165,9 @@ The order of execution of the events is always the following:
         - *ExtendedCacheItemPoolInterface::clear()*
         - *ExtendedCacheItemPoolInterface::clean()*
 
- - onCacheWriteFileOnDisk(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_WRITE_FILE_ON_DISK, *Callable* **$callback**)
     - **Callback arguments**
-        - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *string* **$file**
-        - *bool* **$secureFileManipulation**
+        - *\Phpfastcache\Event\CacheWriteFileOnDiskEvent* **$event**
     - **Scope**
         - ItemPool
     - **Description**
@@ -207,11 +175,9 @@ The order of execution of the events is always the following:
     - **Risky Circular Methods**
         - *ExtendedCacheItemPoolInterface::writefile()*
 
-- onCacheGetItemInSlamBatch(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_GET_ITEM_IN_SLAM_BATCH, *Callable* **$callback**)
     - **Callback arguments**
-        - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *ItemBatch* **$driverData**
-        - *int* **$cacheSlamsSpendSeconds**
+        - *\Phpfastcache\Event\CacheGetItemInSlamBatchEvent* **$event**
     - **Scope**
         - ItemPool
     - **Description**
@@ -223,19 +189,18 @@ The order of execution of the events is always the following:
         - *ExtendedCacheItemPoolInterface::getItemsByTag()*
         - *ExtendedCacheItemPoolInterface::getItemsAsJsonString()*
 
-- onCacheDriverChecked(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_DRIVER_CHECKED, **$callback**)
     - **Callback arguments**
-        - *ExtendedCacheItemPoolInterface* **$itemPool**
+        - *\Phpfastcache\Event\CacheDriverCheckedEvent* **$event**
     - **Scope**
         - ItemPool
     - **Description**
         - Allow you to bind an event when the driver prerequisites has passed but before it the `driverConnect()` is called.
     - **Risky Circular Methods**
         - *(none)*
-- onCacheDriverConnected(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_DRIVER_CONNECTED, *Callable* **$callback**)
     - **Callback arguments**
-        - *ExtendedCacheItemPoolInterface* **$itemPool**
-        - *object* **$instance** Internal instance of the backend connect
+        - *\Phpfastcache\Event\CacheDriverConnectedEvent* **$event**
     - **Scope**
         - ItemPool
     - **Description**
@@ -243,10 +208,9 @@ The order of execution of the events is always the following:
     - **Risky Circular Methods**
         - *(none)*
 ### ItemPool Events (Cluster) 
-- onCacheReplicationSlaveFallback(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_GET_ITEM_IN_SLAM_BATCH, *Callable* **$callback**)
     - **Callback arguments**
-        - *ClusterPoolInterface* **$self**
-        - *string* **$caller**
+        - *\Phpfastcache\Event\CacheReplicationSlaveFallbackEvent* **$event**
     - **Scope**
         - Cluster pool
     - **Description**
@@ -254,10 +218,9 @@ The order of execution of the events is always the following:
     - **Risky Circular Methods**
         - N/A
 
-- onCacheReplicationRandomPoolChosen(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_REPLICATION_RANDOM_POOL_CHOSEN, *Callable* **$callback**)
     - **Callback arguments**
-        - *ClusterPoolInterface* **$self**
-        - *ExtendedCacheItemPoolInterface* **$randomPool**
+        - *\Phpfastcache\Event\CacheReplicationRandomPoolChosenEvent* **$event**
     - **Scope**
         - Cluster pool
     - **Description**
@@ -265,10 +228,9 @@ The order of execution of the events is always the following:
     - **Risky Circular Methods**
         - N/A
 
-- onCacheClusterBuilt(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_CLUSTER_BUILT, *Callable* **$callback**)
     - **Callback arguments**
-        - *AggregatorInterface* **$clusterAggregator**
-        - *ClusterPoolInterface* **$cluster**
+        - *\Phpfastcache\Event\CacheClusterBuiltEvent* **$event**
     - **Scope**
         - Cluster aggregator
     - **Description**
@@ -276,10 +238,9 @@ The order of execution of the events is always the following:
     - **Risky Circular Methods**
         - *$clusterAggregator::getCluster()*
 ### Item Events
-- onCacheItemSet(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_ITEM_SET, *Callable* **$callback**)
     - **Callback arguments**
-        - *ExtendedCacheItemInterface* **$item**
-        - *EventReferenceParameter($value)* **$value** _via EventReferenceParameter object_ **(type modification allowed)**
+        - *\Phpfastcache\Event\CacheItemSetEvent* **$event**
     - **Scope**
         - Item
     - **Description**
@@ -287,10 +248,9 @@ The order of execution of the events is always the following:
     - **Risky Circular Methods**
         - *ExtendedCacheItemInterface::get()*
 
-- onCacheItemExpireAt(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_ITEM_EXPIRE_AT, *Callable* **$callback**)
     - **Callback arguments**
-        - *ExtendedCacheItemInterface* **$item**
-        - *\DateTimeInterface* **$expiration**
+        - *\Phpfastcache\Event\CacheItemExpireAtEvent* **$event**
     - **Scope**
         - Item
     - **Description**
@@ -298,10 +258,9 @@ The order of execution of the events is always the following:
     - **Risky Circular Methods**
         - *ExtendedCacheItemInterface::expiresAt()*
 
-- onCacheItemExpireAfter(*Callable* **$callback**)
+- addListener(EventsInterface::CACHE_ITEM_EXPIRE_AFTER, *Callable* **$callback**)
     - **Callback arguments**
-        - *ExtendedCacheItemInterface* **$item**
-        - *int | \DateInterval* **$time**
+        - *\Phpfastcache\Event\CacheItemExpireAfterEvent* **$event**
     - **Scope**
         - Item
     - **Description**

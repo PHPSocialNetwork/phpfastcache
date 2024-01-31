@@ -25,12 +25,12 @@ abstract class AbstractItemPoolEvent extends AbstractStoppableEvent implements E
         return static::EVENT_NAME;
     }
 
-    public function __construct(protected ExtendedCacheItemPoolInterface $itemPool)
+    public function __construct(protected ExtendedCacheItemPoolInterface $cachePool)
     {
     }
 
-    public function getItemPool(): ExtendedCacheItemPoolInterface
+    public function getCachePool(): ExtendedCacheItemPoolInterface
     {
-        return $this->itemPool;
+        return $this->cachePool;
     }
 }

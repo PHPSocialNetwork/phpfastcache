@@ -23,9 +23,9 @@ class CacheDriverConnectedEvent extends AbstractItemPoolEvent
 {
     public const EVENT_NAME = EventsInterface::CACHE_DRIVER_CONNECTED;
 
-    public function __construct(ExtendedCacheItemPoolInterface $itemPool, protected ?object $driverInstance)
+    public function __construct(ExtendedCacheItemPoolInterface $cachePool, protected ?object $driverInstance)
     {
-        parent::__construct($itemPool);
+        parent::__construct($cachePool);
     }
 
     /**

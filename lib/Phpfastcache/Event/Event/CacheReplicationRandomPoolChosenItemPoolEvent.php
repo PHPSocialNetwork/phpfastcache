@@ -26,9 +26,9 @@ class CacheReplicationRandomPoolChosenItemPoolEvent extends AbstractItemPoolEven
 {
     public const EVENT_NAME = EventsInterface::CACHE_REPLICATION_RANDOM_POOL_CHOSEN;
 
-    public function __construct(ExtendedCacheItemPoolInterface $itemPool, protected ExtendedCacheItemPoolInterface $randomPool)
+    public function __construct(ExtendedCacheItemPoolInterface $cachePool, protected ExtendedCacheItemPoolInterface $randomPool)
     {
-        parent::__construct($itemPool);
+        parent::__construct($cachePool);
     }
 
     /**

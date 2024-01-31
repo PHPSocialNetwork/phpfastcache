@@ -24,9 +24,9 @@ class CacheItemExpireAtEvent extends AbstractItemEvent
 {
     public const EVENT_NAME = EventsInterface::CACHE_ITEM_EXPIRE_AT;
 
-    public function __construct(ExtendedCacheItemInterface $item, protected \DateTimeInterface $expireAt)
+    public function __construct(ExtendedCacheItemInterface $cacheItem, protected \DateTimeInterface $expireAt)
     {
-        parent::__construct($item);
+        parent::__construct($cacheItem);
     }
 
     /**

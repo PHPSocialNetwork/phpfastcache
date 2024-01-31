@@ -58,7 +58,7 @@ if ($cacheInstance->getItem($cacheKey)->get() === 1337) {
 }
 $cacheInstance->clear();
 unset($item);
-$eventInstance->unbindAllEventCallbacks();
+$eventInstance->unbindAllListeners();
 $testHelper->debugEvents($eventInstance);
 
 $eventInstance->addListener(Events::CACHE_SAVE_MULTIPLE_ITEMS, static function (\Phpfastcache\Event\Event\CacheSaveMultipleItemsItemPoolEvent $event) use ($testHelper) {

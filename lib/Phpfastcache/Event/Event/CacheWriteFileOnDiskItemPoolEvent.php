@@ -23,9 +23,9 @@ class CacheWriteFileOnDiskItemPoolEvent extends AbstractItemPoolEvent
 {
     public const EVENT_NAME = EventsInterface::CACHE_WRITE_FILE_ON_DISK;
 
-    public function __construct(ExtendedCacheItemPoolInterface $itemPool, protected string $file)
+    public function __construct(ExtendedCacheItemPoolInterface $cachePool, protected string $file)
     {
-        parent::__construct($itemPool);
+        parent::__construct($cachePool);
     }
 
     /**

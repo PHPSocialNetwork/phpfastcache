@@ -26,9 +26,9 @@ class CacheReplicationSlaveFallbackItemPoolEvent extends AbstractItemPoolEvent
 {
     public const EVENT_NAME = EventsInterface::CACHE_REPLICATION_SLAVE_FALLBACK;
 
-    public function __construct(ExtendedCacheItemPoolInterface $itemPool, protected string $methodCaller)
+    public function __construct(ExtendedCacheItemPoolInterface $cachePool, protected string $methodCaller)
     {
-        parent::__construct($itemPool);
+        parent::__construct($cachePool);
     }
 
     /**

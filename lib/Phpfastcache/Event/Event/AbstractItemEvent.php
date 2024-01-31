@@ -25,12 +25,12 @@ abstract class AbstractItemEvent extends AbstractStoppableEvent implements Event
         return static::EVENT_NAME;
     }
 
-    public function __construct(protected ExtendedCacheItemInterface $item)
+    public function __construct(protected ExtendedCacheItemInterface $cacheItem)
     {
     }
 
-    public function getItem(): ExtendedCacheItemInterface
+    public function getCacheItem(): ExtendedCacheItemInterface
     {
-        return $this->item;
+        return $this->cacheItem;
     }
 }

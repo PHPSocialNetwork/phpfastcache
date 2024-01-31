@@ -22,7 +22,7 @@ use Psr\Cache\CacheItemInterface;
 
 trait CacheItemEventTrait
 {
-    public function __construct(protected ExtendedCacheItemPoolInterface $itemPool, protected ExtendedCacheItemInterface|CacheItemInterface $cacheItem)
+    public function __construct(protected ExtendedCacheItemPoolInterface $cachePool, protected ExtendedCacheItemInterface|CacheItemInterface $cacheItem)
     {
     }
 

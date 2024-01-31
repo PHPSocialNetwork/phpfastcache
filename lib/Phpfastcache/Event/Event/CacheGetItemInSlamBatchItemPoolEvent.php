@@ -24,9 +24,9 @@ class CacheGetItemInSlamBatchItemPoolEvent extends AbstractItemPoolEvent
 {
     public const EVENT_NAME = EventsInterface::CACHE_GET_ITEM_IN_SLAM_BATCH;
 
-    public function __construct(ExtendedCacheItemPoolInterface $itemPool, protected ItemBatch $itemBatch, protected float|int $cacheSlamsSpendSeconds)
+    public function __construct(ExtendedCacheItemPoolInterface $cachePool, protected ItemBatch $cacheItemBatch, protected float|int $cacheSlamsSpendSeconds)
     {
-        parent::__construct($itemPool);
+        parent::__construct($cachePool);
     }
 
     /**
@@ -34,7 +34,7 @@ class CacheGetItemInSlamBatchItemPoolEvent extends AbstractItemPoolEvent
      */
     public function getItemBatch(): ItemBatch
     {
-        return $this->itemBatch;
+        return $this->cacheItemBatch;
     }
 
     /**

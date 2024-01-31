@@ -22,7 +22,6 @@ use DateTimeInterface;
 use Phpfastcache\Event\Event\CacheItemSetEvent;
 use Phpfastcache\Event\Event\CacheItemExpireAfterEvent;
 use Phpfastcache\Event\Event\CacheItemExpireAtEvent;
-use Phpfastcache\Event\Events;
 use Phpfastcache\Event\EventManagerDispatcherTrait;
 use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;

@@ -53,7 +53,7 @@ $filesCacheInstance->getEventManager()->addGlobalListener(static function (Event
 
 
 $filesCacheInstance->getEventManager()->addListener(Events::CACHE_GET_ITEM, static function (\Phpfastcache\Event\Event\CacheGetItemEvent $event) use ($testHelper, &$filesGetItemEventManagerCount)  {
-    if($event->getItemPool()->getDriverName() === 'Files') {
+    if($event->getCachePool()->getDriverName() === 'Files') {
         $testHelper->assertPass('<yellow>[Files]</yellow> Scoped event manager received only events of its own pool instance');
         $filesGetItemEventManagerCount++;
     }
@@ -65,7 +65,7 @@ $redisCacheInstance->getEventManager()->addGlobalListener(static function (\Phpf
 }, 'GlobalEveryEvent');
 
 $redisCacheInstance->getEventManager()->addListener(Events::CACHE_GET_ITEM, static function (\Phpfastcache\Event\Event\CacheGetItemEvent $event) use ($testHelper, &$redisGetItemEventManagerCount)  {
-    if($event->getItemPool()->getDriverName() === 'Redis') {
+    if($event->getCachePool()->getDriverName() === 'Redis') {
         $testHelper->assertPass('<yellow>[Files]</yellow> Scoped event manager received only events of its own pool instance');
         $redisGetItemEventManagerCount++;
     }

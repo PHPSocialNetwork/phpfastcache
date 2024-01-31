@@ -2,7 +2,18 @@ Because the V10 is **relatively** not backward compatible with the V9, here's a 
 
 ### :warning: Minimum php version increased to 8.2+
 As of the V9 the mandatory php version has been increased to 8.2+.
-Once released, the php versions 8.3, 8.4 will be unit-tested 
+Once released, the php versions 8.3, 8.4 will be unit-tested
+
+
+### :warning: Important changes in Event mechanisms
+#### EventManager and its event now implements the [PSR-14: Event Dispatcher](https://www.php-fig.org/psr/psr-14/)
+Which means there's some unavoidable and backward breaking changes: 
+
+1. Method `onEveryEvent` is DEPRECATED and changed its name. It is now called `addGlobalListener`.
+2. Method `unbindAllEventCallbacks` has been renamed to `unbindAllListeners`.
+3. Method `unbindEventCallback` has been removed.
+4. Methods `onXxxxxxXxxxx` are now DEPRECATED. Use method `addListener()` instead. See the list of available events in `Phpfastcache\Event\EventsInterface`;
+5. Callback now receive an `\Phpfastcache\Event\Event\EventInterface` object as their unique parameter. The exact object name depends of the event you subscribed on.
 
 ### Added Microsoft Azure Cosmos DB driver
 Extension Cosmosdb has been added has an extension: `phpfastcache/cosmosdb-extension`.

@@ -16,7 +16,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Event\Event;
 
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Event\EventsInterface;
 
 class CacheGetItemEvent extends AbstractItemPoolEvent

@@ -193,45 +193,25 @@ Internally, the Psr16 adapter calls the Phpfastcache Api via the cache manager.
 Introducing to events
 ---------------------------
 
-:mega: As of the V6, Phpfastcache provides an event mechanism.
+:mega: As of the V6, Phpfastcache provides an event mechanism.\
 You can subscribe to an event by passing a Closure to an active event:
 
 ```php
 <?php
 
-use Phpfastcache\EventManager;
+use Phpfastcache\Event\EventsInterface;
+use Phpfastcache\Event\Event\CacheGetItemEvent;
+
 
 /**
 * Bind the event callback
 */
-EventManager::getInstance()->onCacheGetItem(function(ExtendedCacheItemPoolInterface $itemPool, ExtendedCacheItemInterface $item){
-    $item->set('[HACKED BY EVENT] ' . $item->get());
+EventManager::getInstance()->addListener(EventsInterface::CACHE_GET_ITEM, static function(CacheGetItemEvent $event){
+    $event->getCacheItem()->set('[HACKED BY EVENT] ' . $item->get());
 });
 
 ```
-
-An event callback can get unbind but you MUST provide a name to the callback previously:
-
-```php
-<?php
-use Phpfastcache\EventManager;
-
-/**
-* Bind the event callback
-*/
-EventManager::getInstance()->onCacheGetItem(function(ExtendedCacheItemPoolInterface $itemPool, ExtendedCacheItemInterface $item){
-    $item->set('[HACKED BY EVENT] ' . $item->get());
-}, 'myCallbackName');
-
-
-/**
-* Unbind the event callback
-*/
-EventManager::getInstance()->unbindEventCallback('onCacheGetItem', 'myCallbackName');
-
-```
-:new: As of the **V8** you can simply subscribe to **every** event of Phpfastcache.
-
+:warning: V10 introduced some notable changes to the event mechanisms.\
 More information about the implementation and the events are available on the [Wiki](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Introducing-to-events)
 
 ---------------------------
@@ -239,8 +219,7 @@ Introducing new helpers
 ---------------------------
 :books: As of the V6, Phpfastcache provides some helpers to make your code easier.
 
-- (:warning: Removed in v8, [why ?](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Act-on-all-instances)) ~~The [ActOnAll Helper](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Act-on-all-instances) to help you to act on multiple instance at once.~~
-- The [CacheConditional Helper](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Cache-Conditional) to help you to make the basic conditional statement more easier.
+- The [CacheContract](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Cache-Conditional) to help you to make the basic conditional statement easier.
 - The [Psr16 adapter](https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%CB%96%5D-Psr16-adapter) 
 
 May more will come in the future, feel free to contribute !
@@ -272,7 +251,8 @@ use Phpfastcache\Config\ConfigurationOption;
 // Please note that as of the V6.1 the "path" config 
 // can also be used for Unix sockets (Redis, Memcache, etc)
 CacheManager::setDefaultConfig(new ConfigurationOption([
-    'path' => '/var/www/phpfastcache.com/dev/tmp', // or in windows "C:/tmp/"
+    'defaultTtl' => 900,
+    'defaultTtl' => '/var/www/phpfastcache.com/dev/tmp', // or in windows "C:/tmp/"
 ]));
 
 // In your class, function, you can call the Cache
@@ -283,7 +263,7 @@ $InstanceCache = CacheManager::getInstance('files');
  * product_page is "identity keyword";
  */
 $key = "product_page";
-$CachedString = $InstanceCache->getItem($key);
+$cacheItem = $InstanceCache->getItem($key);
 
 $your_product_data = [
     'First product',
@@ -292,29 +272,24 @@ $your_product_data = [
      /* ... */
 ];
 
-if (!$CachedString->isHit()) {
-    $CachedString->set($your_product_data)->expiresAfter(5);//in seconds, also accepts Datetime
-	$InstanceCache->save($CachedString); // Save the cache item just like you do with doctrine and entities
+if (!$cacheItem->isHit()) {
+    $cacheItem->set($your_product_data)->expiresAfter(5);//in seconds, also accepts Datetime
+	$cacheItem->save($cacheItem); // Save the cache item just like you do with doctrine and entities
 
     echo 'FIRST LOAD // WROTE OBJECT TO CACHE // RELOAD THE PAGE AND SEE // ';
-    echo $CachedString->get();
+    echo $cacheItem->get();
 
 } else {
     echo 'READ FROM CACHE // ';
-    echo $CachedString->get()[0];// Will print 'First product'
+    echo $cacheItem->get()[0];// Will print 'First product'
 }
 
 /**
  * use your products here or return them;
  */
-echo implode('<br />', $CachedString->get());// Will echo your product list
+echo implode('<br />', $cacheItem->get());// Will echo your product list
 
 ```
-
-##### :floppy_disk: Legacy support (Without Composer)
-~~* See the file examples/withoutComposer.php for more information.~~\
-:warning: The legacy autoload will be removed in the next major release :warning:\
-Please include Phpfastcache through composer by running `composer require phpfastcache/phpfastcache`.
 
 #### :zap: Step 3: Enjoy ! Your website is now faster than lightning !
 For curious developers, there is a lot of other examples available [here](./docs/examples).

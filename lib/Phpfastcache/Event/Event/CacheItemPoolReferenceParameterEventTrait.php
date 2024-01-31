@@ -24,7 +24,7 @@ use Phpfastcache\Event\EventReferenceParameter;
  */
 trait CacheItemPoolReferenceParameterEventTrait
 {
-    public function __construct(protected ExtendedCacheItemPoolInterface $itemPool, protected EventReferenceParameter $eventReferenceParameter)
+    public function __construct(protected ExtendedCacheItemPoolInterface $cachePool, protected EventReferenceParameter $eventReferenceParameter)
     {
     }
 

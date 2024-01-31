@@ -16,7 +16,6 @@ declare(strict_types=1);
 
 namespace Phpfastcache\Event\Event;
 
-use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
 
 interface EventInterface extends StoppableEventInterface

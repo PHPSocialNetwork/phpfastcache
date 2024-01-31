@@ -51,7 +51,7 @@ interface EventManagerInterface extends EventDispatcherInterface, ListenerProvid
      * @param callable $callback
      * @param string $callbackName
      */
-    public function addGlobalListener(callable $callback, string $callbackName): void;
+    public function addGlobalListener(callable $callback): void;
 
     /**
      * @param string[]|string $events
@@ -60,16 +60,9 @@ interface EventManagerInterface extends EventDispatcherInterface, ListenerProvid
     public function addListener(array|string $events, callable $callback): void;
 
     /**
-     * @param string $eventName
-     * @param string $callbackName
      * @return bool
      */
-    public function unbindEventCallback(string $eventName, string $callbackName): bool;
-
-    /**
-     * @return bool
-     */
-    public function unbindAllEventCallbacks(): bool;
+    public function unbindAllListeners(): void;
 
     /**
      * @param ExtendedCacheItemPoolInterface $pool

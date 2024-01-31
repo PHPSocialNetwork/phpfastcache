@@ -21,7 +21,7 @@ use Phpfastcache\Event\EventReferenceParameter;
 
 trait CacheItemReferenceParameterEventTrait
 {
-    public function __construct(protected ExtendedCacheItemInterface $item, protected EventReferenceParameter $eventReferenceParameter)
+    public function __construct(protected ExtendedCacheItemInterface $cacheItem, protected EventReferenceParameter $eventReferenceParameter)
     {
     }
 

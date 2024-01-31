@@ -24,9 +24,9 @@ class CacheItemPoolEventClusterBuilt extends AbstractItemPoolEvent
 {
     public const EVENT_NAME = EventsInterface::CACHE_CLUSTER_BUILT;
 
-    public function __construct(ExtendedCacheItemPoolInterface $itemPool, protected AggregatorInterface $clusterAggregator)
+    public function __construct(ExtendedCacheItemPoolInterface $cachePool, protected AggregatorInterface $clusterAggregator)
     {
-        parent::__construct($itemPool);
+        parent::__construct($cachePool);
     }
 
     /**

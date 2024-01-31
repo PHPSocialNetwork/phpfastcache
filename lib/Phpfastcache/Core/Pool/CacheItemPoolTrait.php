@@ -41,6 +41,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Exceptions\PhpfastcacheUnsupportedMethodException;
+use Phpfastcache\Wiki;
 use Psr\Cache\CacheItemInterface;
 use RuntimeException;
 
@@ -132,14 +133,14 @@ trait CacheItemPoolTrait
                     unset($keys[$index]);
                 }
             }
-            $keys = array_values($keys);
+            $keys = \array_values($keys);
 
             /**
              * If there's still keys to fetch, let's choose the right method (if supported).
              */
-            if (count($keys) > 1) {
-                $items = array_merge(
-                    array_combine($keys, array_map(fn($key) => new (self::getItemClass())($this, $key, $this->eventManager), $keys)),
+            if (\count($keys) > 1) {
+                $items = \array_merge(
+                    \array_combine($keys, \array_map(fn($key) => new (self::getItemClass())($this, $key, $this->eventManager), $keys)),
                     $items
                 );
 
@@ -149,9 +150,9 @@ trait CacheItemPoolTrait
                     /**
                      * Fallback for drivers that does not yet implement driverReadMultiple() method.
                      */
-                    $driverArrays = array_combine(
-                        array_map(fn($item) => $item->getKey(), $items),
-                        array_map(fn($item) => $this->driverRead($item), $items)
+                    $driverArrays = \array_combine(
+                        \array_map(fn($item) => $item->getKey(), $items),
+                        \array_map(fn($item) => $this->driverRead($item), $items)
                     );
                 } finally {
                     foreach ($items as $item) {
@@ -171,13 +172,13 @@ trait CacheItemPoolTrait
                             $item->setTags($this->driverUnwrapTags($driverArray));
                             $this->handleExpiredCacheItem($item);
                         } else {
-                            $item->expiresAfter((int) abs($this->getConfig()->getDefaultTtl()));
+                            $item->expiresAfter((int) \abs($this->getConfig()->getDefaultTtl()));
                         }
                         $item->isHit() ? $this->getIO()->incReadHit() : $this->getIO()->incReadMiss();
                     }
                 }
             } else {
-                $index = array_key_first($keys);
+                $index = \array_key_first($keys);
                 if ($index !== null) {
                     $items[$keys[$index]] = $this->getItem($keys[$index]);
                 }
@@ -327,7 +328,7 @@ trait CacheItemPoolTrait
      */
     public function deleteItems(array $keys): bool
     {
-        if (count($keys) > 1) {
+        if (\count($keys) > 1) {
             $return = true;
             try {
                 $items = $this->getItems($keys);
@@ -354,7 +355,7 @@ trait CacheItemPoolTrait
             return $return;
         }
 
-        $index = array_key_first($keys);
+        $index = \array_key_first($keys);
         if ($index !== null) {
             return $this->deleteItem($keys[$index]);
         }
@@ -538,7 +539,7 @@ trait CacheItemPoolTrait
      */
     protected function deregisterItems(array $itemKeys): static
     {
-        $this->itemInstances = array_diff_key($this->itemInstances, array_flip($itemKeys));
+        $this->itemInstances = \array_diff_key($this->itemInstances, \array_flip($itemKeys));
 
         if (\gc_enabled()) {
             \gc_collect_cycles();
@@ -584,7 +585,7 @@ trait CacheItemPoolTrait
             if (\preg_match('~([' . \preg_quote(self::$unsupportedKeyChars, '~') . ']+)~', $key, $matches)) {
                 throw new PhpfastcacheInvalidArgumentException(
                     'Unsupported key character detected: "' . $matches[1] . '". 
-                    Please check: https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers'
+                    Please check: ' . Wiki::UNSUPPORTED_KEY_CHARS
                 );
             }
         }
@@ -632,7 +633,7 @@ trait CacheItemPoolTrait
      */
     protected function getKeys(array $items, bool $encoded = false, string $keyPrefix = ''): array
     {
-        return array_map(
+        return \array_map(
             static fn(ExtendedCacheItemInterface $item) => $keyPrefix . ($encoded ? $item->getEncodedKey() : $item->getKey()),
             $items
         );

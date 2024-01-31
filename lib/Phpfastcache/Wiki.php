@@ -23,4 +23,5 @@ class Wiki
     use UninstanciableObjectTrait;
 
     public const FETCH_ALL_KEY_URL = 'https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV5%CB%96%5D-Fetching-all-keys';
+    public const UNSUPPORTED_KEY_CHARS = 'https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV6%5D-Unsupported-characters-in-key-identifiers';
 }

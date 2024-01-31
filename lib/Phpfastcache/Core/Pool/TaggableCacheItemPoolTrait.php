@@ -446,7 +446,7 @@ trait TaggableCacheItemPoolTrait
              * then remove it from tagsItems index
              */
             if (\count($data)) {
-                $tagsItem->expiresAt((new DateTime())->setTimestamp(max($data)));
+                $tagsItem->expiresAt((new DateTime())->setTimestamp(\max($data)));
                 $this->driverWrite($tagsItem);
                 $tagsItem->setHit(true);
             } else {

@@ -307,13 +307,13 @@ trait DriverBaseTrait
     {
         $decoded = $this->unserialize($value);
 
-        if ($decoded === null || is_array($decoded)) {
+        if ($decoded === null || \is_array($decoded)) {
             return $decoded;
         }
         throw new PhpfastcacheCorruptedDataException(
-            sprintf(
+            \sprintf(
                 'Failed to unserialize data from the cache, expected array or null but got "%s". Stored data may be corrupted.',
-                gettype($decoded)
+                \gettype($decoded)
             ),
             $value
         );

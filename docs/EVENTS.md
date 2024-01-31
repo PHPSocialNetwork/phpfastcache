@@ -28,7 +28,7 @@ You can simply subscribe to **every** event at once of Phpfastcache.
 use Phpfastcache\EventManager;
 
 EventManager::getInstance()->addGlobalListener(static function (\Phpfastcache\Event\Event\EventInterface $event) {
-    echo sprintf('Triggered event %s', $event->getName());
+    echo sprintf('Triggered event %s', $event::getName());
 });
 ```
 

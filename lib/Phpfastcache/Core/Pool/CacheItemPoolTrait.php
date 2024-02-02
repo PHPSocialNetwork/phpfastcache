@@ -31,13 +31,11 @@ use Phpfastcache\Event\Event\CacheGetItemEvent;
 use Phpfastcache\Event\Event\CacheItemPoolEventGetItems;
 use Phpfastcache\Event\Event\CacheSaveDeferredItemItemPoolEvent;
 use Phpfastcache\Event\Event\CacheItemPoolEventSaveItem;
-use Phpfastcache\Event\Events;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Event\EventReferenceParameter;
 use Phpfastcache\Exceptions\PhpfastcacheCoreException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
-use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Exceptions\PhpfastcacheUnsupportedMethodException;
@@ -113,6 +111,7 @@ trait CacheItemPoolTrait
      */
     public function getItems(array $keys = []): iterable
     {
+        $gcStatus = gc_enabled();
         $items = [];
         $config = $this->getConfig();
 
@@ -139,6 +138,9 @@ trait CacheItemPoolTrait
              * If there's still keys to fetch, let's choose the right method (if supported).
              */
             if (\count($keys) > 1) {
+                if ($gcStatus) {
+                    gc_disable();
+                }
                 $items = \array_merge(
                     \array_combine($keys, \array_map(fn($key) => new (self::getItemClass())($this, $key, $this->eventManager), $keys)),
                     $items
@@ -176,6 +178,9 @@ trait CacheItemPoolTrait
                         }
                         $item->isHit() ? $this->getIO()->incReadHit() : $this->getIO()->incReadMiss();
                     }
+                    if ($gcStatus) {
+                        gc_enable();
+                    }
                 }
             } else {
                 $index = \array_key_first($keys);
@@ -204,7 +209,6 @@ trait CacheItemPoolTrait
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheInvalidArgumentException
      * @throws PhpfastcacheLogicException
-     * @throws PhpfastcacheDriverException
      *
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.GotoStatement)
@@ -534,12 +538,16 @@ trait CacheItemPoolTrait
     }
 
     /**
-     * @param string[] $itemKeys
+     * @param ?string[] $itemKeys
      * @internal This method de-register multiple items from $this->itemInstances
      */
-    protected function deregisterItems(array $itemKeys): static
+    protected function deregisterItems(?array $itemKeys): static
     {
-        $this->itemInstances = \array_diff_key($this->itemInstances, \array_flip($itemKeys));
+        if ($itemKeys !== null) {
+            $this->itemInstances = \array_diff_key($this->itemInstances, \array_flip($itemKeys));
+        } else {
+            $this->itemInstances = [];
+        }
 
         if (\gc_enabled()) {
             \gc_collect_cycles();

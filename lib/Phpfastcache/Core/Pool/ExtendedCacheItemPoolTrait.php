@@ -76,11 +76,7 @@ trait ExtendedCacheItemPoolTrait
 
     public function detachAllItems(): static
     {
-        foreach ($this->itemInstances as $item) {
-            $this->detachItem($item);
-        }
-
-        return $this;
+        return  $this->deregisterItems(null);
     }
 
     public function detachItem(CacheItemInterface $item): static

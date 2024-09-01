@@ -3,7 +3,7 @@
 
 #### :warning: Please note that the V9 is mostly a PHP 8 type aware update of Phpfastcache with some significant changes !
 > As the V9 is **relatively** not compatible with previous versions, please read carefully the [migration guide](./docs/migration/MigratingFromV8ToV9.md) to ensure you the smoothest migration possible.
-One of the biggest change is the configuration system which is now an object that replace the primitive array that we used to implement back then. 
+One of the biggest changes is the configuration system which is now an object that replace the primitive array that we used to implement back then. 
 Also, please note that the V9 requires at least PHP 8 or higher to works properly.
 
 ---------------------------
@@ -24,10 +24,11 @@ The simplicity of abstraction: One class for many backend cache. You don't need 
 | `Leveldb` _(Core)_                                                                   | `Couchdb` _([Extension](https://github.com/PHPSocialNetwork/couchdb-extension))_                 |                                            |                                       |
 | `Memcache(d)` _(Core)_                                                               | `Mongodb` _([Extension](https://github.com/PHPSocialNetwork/mongodb-extension))_                 |                                            |                                       |
 | `Solr` _([Extension](https://github.com/PHPSocialNetwork/solr-extension))_           | `Predis` _(Core)_                                                                                |                                            |                                       |
-| `Sqlite` _(Core)_                                                                    | `Redis`/`RedisCluster` _(Core)_                                                                  |                                            |                                       |
-| `Wincache` _(Core)_  <br>(**Deprecated** as of v9.2, will be removed as of v10)      | `Ssdb` _(Core)_                                                                                  |                                            |                                       |
-| `Zend Disk Cache` _(Core)_                                                           | `Zend Memory Cache` _(Core)_                                                                     |                                            |                                       |
-|                                                                                      |                                                                                                  |                                            |                                       |
+| `Sqlite` _(Core)_                                                                    | `Ravendb` _([Extension](https://github.com/PHPSocialNetwork/ravendb-extension))                  |                                            |                                       |
+| ` Wincache` _(Core)_  <br>(**Deprecated** as of v9.2, will be removed as of v10)     | `Relay` ([By end of 2024](https://relay.so/))                                                                         |
+| `Zend Disk Cache` _(Core)_                                                           | `Redis`/`RedisCluster` _(Core)_                                                                  |                                            |                                       |
+|                                                                                      | `Ssdb` _(Core)_                                                                                  |                                            |                                       |
+|                                                                                      | `Zend Memory Cache` _(Core)_                                                                     |                                            |                                       |
 
 \* Driver descriptions available in [DOCS/DRIVERS.md](./docs/DRIVERS.md)
 
@@ -310,11 +311,6 @@ if (!$CachedString->isHit()) {
 echo implode('<br />', $CachedString->get());// Will echo your product list
 
 ```
-
-##### :floppy_disk: Legacy support (Without Composer)
-~~* See the file examples/withoutComposer.php for more information.~~\
-:warning: The legacy autoload will be removed in the next major release :warning:\
-Please include Phpfastcache through composer by running `composer require phpfastcache/phpfastcache`.
 
 #### :zap: Step 3: Enjoy ! Your website is now faster than lightning !
 For curious developers, there is a lot of other examples available [here](./docs/examples).

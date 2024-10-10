@@ -98,7 +98,7 @@ class Config extends ConfigurationOption
      * @return static
      * @throws PhpfastcacheLogicException
      */
-    public function setDatabase(int $database = null): static
+    public function setDatabase(?int $database = null): static
     {
         return $this->setProperty('database', $database);
     }

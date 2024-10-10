@@ -86,7 +86,7 @@ interface AggregatorInterface
      *
      * @return void
      */
-    public function aggregateDriverByName(string $driverName, ConfigurationOption $driverConfig = null): void;
+    public function aggregateDriverByName(string $driverName, ?ConfigurationOption $driverConfig = null): void;
 
     /**
      * @param AggregatablePoolInterface $driverPool

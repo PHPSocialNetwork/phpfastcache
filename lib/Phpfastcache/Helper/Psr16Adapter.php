@@ -49,7 +49,7 @@ class Psr16Adapter implements CacheInterface
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheDriverNotFoundException
      */
-    public function __construct(string|ExtendedCacheItemPoolInterface $driver, ConfigurationOptionInterface $config = null)
+    public function __construct(string|ExtendedCacheItemPoolInterface $driver, ?ConfigurationOptionInterface $config = null)
     {
         if ($driver instanceof ExtendedCacheItemPoolInterface) {
             if ($config !== null) {

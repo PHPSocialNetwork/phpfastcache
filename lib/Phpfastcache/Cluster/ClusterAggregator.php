@@ -94,7 +94,7 @@ class ClusterAggregator implements AggregatorInterface
      * @throws PhpfastcacheDriverNotFoundException
      * @throws PhpfastcacheLogicException
      */
-    public function aggregateDriverByName(string $driverName, ConfigurationOption $driverConfig = null): void
+    public function aggregateDriverByName(string $driverName, ?ConfigurationOption $driverConfig = null): void
     {
         if (isset($this->cluster)) {
             throw new PhpfastcacheLogicException('The cluster has been already build, cannot aggregate more pools.');

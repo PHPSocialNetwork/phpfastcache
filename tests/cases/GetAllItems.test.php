@@ -44,7 +44,7 @@ EventManager::getInstance()->on([Event::CACHE_GET_ALL_ITEMS], static function(Ex
 $drivers = [
     'Memory',
     'Predis',
-    'Redis',
+    //'Redis',
     'RedisCluster',
 ];
 

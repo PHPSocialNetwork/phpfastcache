@@ -28,6 +28,7 @@ chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 $testHelper = new TestHelper('Testing getAllItems() method');
+$testHelper->printText('[<blue>EXTENTION:</blue> (redis) <yellow>v' . \phpversion('redis') . '</yellow>]');
 
 /**
  * https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV5%CB%96%5D-Fetching-all-keys

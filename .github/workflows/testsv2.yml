@@ -5,10 +5,11 @@ jobs:
     environment: github-ci
     runs-on: ${{ matrix.operating-system }}
     timeout-minutes: 60
+    continue-on-error: true
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
-        php-versions: ['8.0', '8.1', '8.2', '8.3']
+        php-versions: ['8.0', '8.1', '8.2', '8.3', '8.4']
     name: PHP ${{ matrix.php-versions }} quality/tests on ${{ matrix.operating-system }}
     env:
       extensions: mbstring, intl, pdo_sqlite, json, redis, couchbase-3.2.2

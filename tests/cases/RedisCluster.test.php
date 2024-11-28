@@ -19,6 +19,7 @@ use Phpfastcache\Drivers\Rediscluster\Config as RedisConfig;
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
 $testHelper = new TestHelper('Redis cluster');
+$testHelper->printText('[<blue>EXTENTION:</blue> (redis) <yellow>v' . \phpversion('redis') . '</yellow>]');
 
 try {
     $config =  new RedisConfig();

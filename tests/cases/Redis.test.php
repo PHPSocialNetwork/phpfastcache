@@ -21,6 +21,7 @@ use Redis as RedisClient;
 chdir(__DIR__);
 require_once __DIR__ . '/../../vendor/autoload.php';
 $testHelper = new TestHelper('Redis bundled client');
+$testHelper->printText('[<blue>EXTENTION:</blue> (redis) <yellow>v' . \phpversion('redis') . '</yellow>]');
 
 try {
     if (!class_exists(RedisClient::class)) {

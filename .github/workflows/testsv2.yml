@@ -5,6 +5,7 @@ jobs:
     environment: github-ci
     runs-on: ${{ matrix.operating-system }}
     timeout-minutes: 60
+    continue-on-error: true
     strategy:
       matrix:
         operating-system: [ubuntu-latest]

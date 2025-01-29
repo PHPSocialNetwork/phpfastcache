@@ -126,7 +126,7 @@ class Driver implements AggregatablePoolInterface
     {
         $result = [[]];
         foreach ($this->instance->_masters() as $master) {
-            $i = null;
+            $i = 0;
             $pattern = $pattern === '' ? '*' : $pattern;
             do {
                 $result[] = $this->instance->scan(

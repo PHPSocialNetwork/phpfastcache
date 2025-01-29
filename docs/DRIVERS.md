@@ -57,6 +57,9 @@
 * Redis/Rediscluster
   * A very high-performance memory driver using a in-memory data structure storage. More efficient than Predis driver as it is an compiled library.
   * RedisCluster use the RedisCluster class with a different driver name but behave slightly differently than Redis driver.
+* Relay **(Planned for v9.3.0)**
+  * A very high-performance memory driver based on a Redis backend
+  * Relay.so aims to be faster than Redis/Predis using a new php extension. Will be available by the end of 2024.
 * Riak **(REMOVED in v8.0.6)**
   * A very high-performance NoSQL driver using a key-value pair system.
 * Solr **(Added in v9.1)**

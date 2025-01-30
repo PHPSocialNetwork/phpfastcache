@@ -129,7 +129,7 @@ class Driver implements AggregatablePoolInterface
             $i = 0;
             $pattern = $pattern === '' ? '*' : $pattern;
             do {
-                $result[] = $this->instance->scan($i, $master, $pattern, 10);
+                $result[] = $this->instance->scan($i, $master, $pattern);
                 if (\count($result) > ExtendedCacheItemPoolInterface::MAX_ALL_KEYS_COUNT) {
                     break;
                 }

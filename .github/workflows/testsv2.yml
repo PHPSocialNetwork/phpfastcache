@@ -7,7 +7,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        operating-system: [ubuntu-latest]
+        operating-system: [ubuntu-22.04]
         php-versions: ['8.0', '8.1', '8.2', '8.3']
     name: PHP ${{ matrix.php-versions }} quality/tests on ${{ matrix.operating-system }}
     env:

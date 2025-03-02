@@ -125,13 +125,15 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverReadAllKeys(string $pattern = '*'): iterable
     {
-        $i = -1;
-        $keys = $this->instance->scan($i, $pattern === '' ? '*' : $pattern, ExtendedCacheItemPoolInterface::MAX_ALL_KEYS_COUNT);
-        if (is_iterable($keys)) {
-            return $keys;
-        } else {
-            return [];
-        }
+        $i = null;
+        $pattern = $pattern === '' ? '*' : $pattern;
+        do {
+            $keys[] = $this->instance->scan($i, $pattern);
+            if (\count($keys) > ExtendedCacheItemPoolInterface::MAX_ALL_KEYS_COUNT) {
+                break;
+            }
+        } while ($i > 0);
+        return \array_merge([], ...$keys);
     }
 
     /**

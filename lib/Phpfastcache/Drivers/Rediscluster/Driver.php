@@ -62,7 +62,8 @@ class Driver implements AggregatablePoolInterface
                     trim(<<<EOF
                         Redis Cluster version v%s, php-ext v%s with %d master nodes and %d slaves connected are up since %s.
                         For more information see RawData.
-                    EOF),
+                    EOF
+                    ),
                     implode(', ', array_unique(array_column($infos, 'redis_version'))),
                     \phpversion("redis"),
                     count($masters),
@@ -123,21 +124,18 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverReadAllKeys(string $pattern = '*'): iterable
     {
-        $keys = [[]];
+        $result = [[]];
         foreach ($this->instance->_masters() as $master) {
-            $i = -1;
-            $result = $this->instance->scan(
-                $i,
-                $master,
-                $pattern === '' ? '*' : $pattern,
-                ExtendedCacheItemPoolInterface::MAX_ALL_KEYS_COUNT
-            );
-            if (is_array($result)) {
-                $keys[] = $result;
-            }
+            $i = 0;
+            $pattern = $pattern === '' ? '*' : $pattern;
+            do {
+                $result[] = $this->instance->scan($i, $master, $pattern);
+                if (\count($result) > ExtendedCacheItemPoolInterface::MAX_ALL_KEYS_COUNT) {
+                    break;
+                }
+            } while ($i > 0);
         }
-
-        return array_unique(array_merge(...$keys));
+        return array_unique(\array_merge(...$result));
     }
 
     /**

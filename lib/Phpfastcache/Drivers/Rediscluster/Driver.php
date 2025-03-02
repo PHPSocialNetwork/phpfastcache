@@ -24,6 +24,7 @@ use Phpfastcache\Drivers\Redis\RedisDriverTrait;
 use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use RedisCluster;
+use Redis;
 
 /**
  * @property RedisCluster $instance
@@ -105,10 +106,10 @@ class Driver implements AggregatablePoolInterface
             $this->getConfig()->getPassword()
         );
 
-        $this->instance->setOption(RedisCluster::OPT_SCAN, RedisCluster::SCAN_RETRY);
+        $this->instance->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY);
 
         if ($this->getConfig()->getOptPrefix()) {
-            $this->instance->setOption(RedisCluster::OPT_PREFIX, $this->getConfig()->getOptPrefix());
+            $this->instance->setOption(Redis::OPT_PREFIX, $this->getConfig()->getOptPrefix());
         }
 
         if ($this->getConfig()->getSlaveFailover()) {

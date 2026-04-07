@@ -1,0 +1,112 @@
+# Phpfastcache
+
+> A high-performance PHP caching library that provides a unified abstraction layer over many cache backends. PSR-6 and PSR-16 compliant.
+
+## Overview
+
+Phpfastcache is an open-source PHP caching library designed for building reactive applications. It offers a single, consistent API across dozens of cache backends — from file-based caching to Redis clusters, Memcached, Couchbase, MongoDB, and more. The library focuses on performance, security, and portability.
+
+- **Current stable version**: 9.2.4
+- **License**: MIT
+- **Requires**: PHP >= 8.0
+- **Standards**: PSR-6 (Cache Interface), PSR-16 (Simple Cache), PSR-12 (Coding Style)
+- **Package**: `composer require phpfastcache/phpfastcache`
+
+## Supported Cache Drivers
+
+### Core Drivers (included)
+- Apcu, Files, Leveldb, Memcache(d), Sqlite, Wincache (deprecated), Zend Disk Cache, Zend Memory Cache
+- CouchBasev3 (deprecated, will be removed in v10)
+- Predis, Redis, RedisCluster, Ssdb
+- Devnull, Devrandom, Memory (development drivers)
+
+### Extension Drivers (install separately via Composer)
+- Arangodb (`phpfastcache/arangodb-extension`)
+- Cassandra
+- Couchbasev4 (`phpfastcache/couchbasev4-extension`)
+- Couchdb (`phpfastcache/couchdb-extension`)
+- Dynamodb (`phpfastcache/dynamodb-extension`)
+- Firestore (`phpfastcache/firestore-extension`)
+- Mongodb (`phpfastcache/mongodb-extension`)
+- Ravendb (`phpfastcache/ravendb-extension`)
+- Solr (`phpfastcache/solr-extension`)
+
+### Cluster/Aggregated Drivers
+- FullReplicationCluster, SemiReplicationCluster, MasterSlaveReplicationCluster, RandomReplicationCluster
+
+## Quick Start
+
+```php
+use Phpfastcache\CacheManager;
+use Phpfastcache\Drivers\Redis\Config as RedisConfig;
+
+// Setup Redis (or any other driver)
+$cacheInstance = CacheManager::getInstance('redis', new RedisConfig([
+    'host' => '127.0.0.1',
+    'port' => 6379,
+]));
+
+// Get a cache item
+$item = $cacheInstance->getItem('my_key');
+
+if (!$item->isHit()) {
+    $item->set('my_value')
+         ->expiresAfter(300); // 5 minutes
+    $cacheInstance->save($item);
+}
+
+echo $item->get(); // "my_value"
+```
+
+## Key APIs
+
+### Cache Item (ExtendedCacheItemInterface)
+- `get()` / `set($value)` — Get/set cached value
+- `isHit()` — Check if cache entry exists and is valid
+- `expiresAfter($ttl)` / `expiresAt($expiration)` — Set TTL
+- `getTtl()` — Get remaining TTL
+- `addTag($tagName)` / `addTags(array)` / `removeTag($tagName)` — Tag management
+- `getTags()` / `hasTag($tagName)` / `hasTags(array, $strategy)` — Tag queries
+- `append($data)` / `prepend($data)` — Modify string/array data
+- `increment($step)` / `decrement($step)` — Atomic counters
+- `isExpired()` / `isEmpty()` / `isNull()` — State checks
+- `getCreationDate()` / `getModificationDate()` / `getExpirationDate()` — Date metadata
+
+### Cache Pool (ExtendedCacheItemPoolInterface)
+- `getItem($key)` / `getItems(array $keys)` — Retrieve items
+- `save($item)` / `saveDeferred($item)` / `commit()` — Persist items
+- `deleteItem($key)` / `deleteItems(array $keys)` — Delete items
+- `hasItem($key)` — Check existence
+- `clear()` — Flush all items
+- `getItemsByTag($tagName)` / `deleteItemsByTag($tagName)` — Tag-based operations
+- `getAllItems()` — Retrieve all cached items (driver support varies)
+- `getStats()` — Driver statistics
+
+## Configuration
+
+Configuration is done via driver-specific `Config` objects extending `\Phpfastcache\Config\ConfigurationOption`.
+
+Common options:
+- `path` — Cache directory for file-based drivers
+- `host` / `port` — Connection details for network drivers
+- `defaultTtl` — Default time-to-live in seconds
+- `itemDetailedDate` — Enable creation/modification date tracking
+- `preventCacheSlams` — Prevent cache stampede (deprecated in v9.2)
+
+## Events
+
+Phpfastcache supports an event-driven architecture via `EventManager`:
+- Pool-scoped events via `$pool->getEventManager()`
+- Global events via `EventManager::getInstance()`
+- Supports: `onCacheGetItem`, `onCacheSaveItem`, `onCacheDeleteItem`, `onCacheClearItem`, `onCacheWriteFileOnDisk`, and more
+
+## Documentation
+
+- [GitHub Repository](https://github.com/TruCopilot/phpfastcache)
+- [Wiki](https://github.com/TruCopilot/phpfastcache/wiki)
+- [Examples](https://github.com/TruCopilot/phpfastcache/tree/master/docs/examples)
+- [Migration Guide (V8 to V9)](https://github.com/TruCopilot/phpfastcache/blob/master/docs/migration/MigratingFromV8ToV9.md)
+- [Configuration Options](https://github.com/TruCopilot/phpfastcache/blob/master/docs/OPTIONS.md)
+- [Events Documentation](https://github.com/TruCopilot/phpfastcache/blob/master/docs/EVENTS.md)
+- [Driver Details](https://github.com/TruCopilot/phpfastcache/blob/master/docs/DRIVERS.md)
+- [Changelog](https://github.com/TruCopilot/phpfastcache/blob/master/CHANGELOG.md)
